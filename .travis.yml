@@ -1,2 +1,5 @@
 language: csharp
 solution: src/Promitor.sln
+dotnet: 2.0
+script:
+ - dotnet restore
