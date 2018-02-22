@@ -8,5 +8,5 @@ os:
 #    - master
 script:
  - dotnet --info
- - dotnet build
+ - dotnet build src/Promitor.sln
  # - dotnet restore
