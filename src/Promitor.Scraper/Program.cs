@@ -6,7 +6,7 @@ namespace Promitor.Scraper
     {
         static void Main(string[] args)
         {
-            Console.WritLine("Hello World!");
+            Console.WriteLine("Hello World!");
         }
     }
 }
