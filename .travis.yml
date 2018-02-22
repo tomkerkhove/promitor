@@ -1,0 +1,11 @@
+language: csharp
+solution: src/Promitor.sln
+dotnet: 2.0.0
+os:  
+  - linux
+branches:  
+ only:
+   - master
+script:
+ - dotnet --info
+ - dotnet build src/Promitor.sln
