@@ -8,4 +8,5 @@ os:
 #    - master
 script:
  - dotnet --info
+ - dotnet build
  # - dotnet restore
