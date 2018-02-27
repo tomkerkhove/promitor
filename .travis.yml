@@ -8,4 +8,4 @@ branches:
    - master
 script:
  - dotnet --info
- - dotnet build src/Promitor.sln
+ - dotnet build src/Promitor.sln --configuration release

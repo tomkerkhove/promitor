@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Scraper", "Promitor.Scraper\Promitor.Scraper.csproj", "{459A2D34-2592-411F-889F-16F6C1E3EF52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper", "Promitor.Scraper\Promitor.Scraper.csproj", "{459A2D34-2592-411F-889F-16F6C1E3EF52}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Promitor.Compose", "Promitor.Compose.dcproj", "{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}"
 EndProject
@@ -24,7 +24,6 @@ Global
 		{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
