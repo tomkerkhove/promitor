@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Promitor.Scraper</name>
+    </assembly>
+    <members>
+        <member name="M:Promitor.Scraper.Controllers.v1.ConfigurationController.Get">
+            <summary>
+                Provides a list of all configured metrics to scrape
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)" -->
+        <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+                Add support for exposing a prometheus scaraping endpoint
+            </summary>
+            <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
+        </member>
+    </members>
+</doc>

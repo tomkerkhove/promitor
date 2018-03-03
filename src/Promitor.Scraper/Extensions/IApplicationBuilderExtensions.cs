@@ -5,11 +5,33 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class IApplicationBuilderExtensions
     {
-        public static void UsePrometheusScraper(this IApplicationBuilder app)
+        /// <summary>
+        ///     Add support for Open API & Develerop UI
+        /// </summary>
+        public static void UseOpenApiUi(this IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(swaggerUiOptions =>
+            {
+                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
+                swaggerUiOptions.DisplayOperationId();
+                swaggerUiOptions.EnableDeepLinking();
+                swaggerUiOptions.DocumentTitle = "Promitor API";
+                swaggerUiOptions.DocExpansion(DocExpansion.List);
+                swaggerUiOptions.DisplayRequestDuration();
+                swaggerUiOptions.EnableFilter();
+            });
+        }
+
+        /// <summary>
+        ///     Add support for exposing a prometheus scaraping endpoint
+        /// </summary>
+        /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
+        public static void UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
             var prometheusOptions = new PrometheusOptions
             {
-                MapPath = "prometheus/scrape"
+                MapPath = scrapeEndpointPath
             };
 
             app.UsePrometheusServer(prometheusOptions);
