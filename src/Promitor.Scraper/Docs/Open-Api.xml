@@ -9,6 +9,11 @@
                 Provides a list of all configured metrics to scrape
             </summary>
         </member>
+        <member name="M:Promitor.Scraper.Scraping.ScrapeEndpoint.GetBasePath(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Determines the base path under which the scrape endpoint is configured to be exposed
+            </summary>
+        </member>
         <!-- Badly formed XML comment ignored for member "M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)" -->
         <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
             <summary>

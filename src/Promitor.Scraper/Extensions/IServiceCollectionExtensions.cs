@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
-        public static void UseOpenApiSpecifications(this IServiceCollection services, int apiVersion)
+        public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
             {
@@ -19,6 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     Url = "https://blog.tomkerkhove.be"
                 },
                 Title = $"Promitor v{apiVersion}",
+                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '{prometheusScrapeEndpointPath}'",
                 Version = $"v{apiVersion}",
                 License = new License
                 {
