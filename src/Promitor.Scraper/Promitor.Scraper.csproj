@@ -11,10 +11,14 @@
 
   <ItemGroup>
     <None Remove="Docs\Open-Api.xml" />
+    <None Remove="metrics.yaml" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Docs\Open-Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="metrics.yaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
