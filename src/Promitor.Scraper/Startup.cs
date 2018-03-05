@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Promitor.Scraper.Configuration.Providers;
+using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Scraping;
 
 namespace Promitor.Scraper
@@ -12,7 +14,7 @@ namespace Promitor.Scraper
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddEnvironmentVariables();
-            
+
             Configuration = configurationBuilder.Build();
             ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
         }
@@ -38,6 +40,8 @@ namespace Promitor.Scraper
         {
             services.AddMvc();
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
+
+            services.AddTransient<IScrapeConfigurationProvider, ScrapeConfigurationProvider>();
         }
     }
 }

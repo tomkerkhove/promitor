@@ -4,6 +4,11 @@
         <name>Promitor.Scraper</name>
     </assembly>
     <members>
+        <member name="M:Promitor.Scraper.Configuration.Providers.Interfaces.IScrapeConfigurationProvider.GetConfiguration">
+            <summary>
+                Gets scraping configuration
+            </summary>
+        </member>
         <member name="M:Promitor.Scraper.Controllers.v1.ConfigurationController.Get">
             <summary>
                 Provides a list of all configured metrics to scrape
