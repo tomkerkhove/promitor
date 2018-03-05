@@ -7,11 +7,6 @@ Azure Monitor Scraper for Prometheus
 Configuration is done via YAML file that needs to be in the `/config` folder.
 
 ```yaml
-scrapeEndpoint:
-   uriPath: "prometheus/scrape"
-azureAuthentication:
-   applicationId: "xyz"
-   applicationSecret: "abc"
 metrics:
   - name: "queue-size"
     resourceType: "Microsoft.ServiceBus"

@@ -12,7 +12,7 @@ namespace Promitor.Scraper
         {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddEnvironmentVariables();
-
+            
             Configuration = configurationBuilder.Build();
             ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
         }
