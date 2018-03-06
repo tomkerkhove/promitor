@@ -8,10 +8,6 @@ EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Promitor.Compose", "Promitor.Compose.dcproj", "{C7A61DB3-7CB7-4F2B-8C7D-D81FF6E34617}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Containers", "Containers", "{37703234-FAB3-42C9-BDA2-978C3F5EE93E}"
-	ProjectSection(SolutionItems) = preProject
-		.dockerignore = .dockerignore
-		Dockerfile = Dockerfile
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{19235B76-EE2F-4343-AA08-47615EC684EC}"
 EndProject
