@@ -3,15 +3,14 @@
 
 Azure Monitor Scraper for Prometheus
 
+----------------------------
+:rotating_light: This is under active development and subject to change.
+----------------------------
+
 # Configuration
 Configuration is done via YAML file that needs to be in the `/config` folder.
 
 ```yaml
-scrapeEndpoint:
-   uriPath: "prometheus/scrape"
-azureAuthentication:
-   applicationId: "xyz"
-   applicationSecret: "abc"
 metrics:
   - name: "queue-size"
     resourceType: "Microsoft.ServiceBus"
