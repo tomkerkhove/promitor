@@ -14,77 +14,11 @@
                 Provides a list of all configured metrics to scrape
             </summary>
         </member>
-        <member name="T:Promitor.Scraper.Scheduling.Cron.CrontabField">
+        <member name="M:Promitor.Scraper.Scheduling.Cron.CronSchedule.Parse(System.String)">
             <summary>
-                Represents a single crontab field.
+                Parses the Cron schedule into a Cron expression
             </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Days(System.String)">
-            <summary>
-                Parses a crontab field expression representing days in any given month.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.DaysOfWeek(System.String)">
-            <summary>
-                Parses a crontab field expression representing days of a week.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Hours(System.String)">
-            <summary>
-                Parses a crontab field expression representing hours.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Minutes(System.String)">
-            <summary>
-                Parses a crontab field expression representing minutes.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Months(System.String)">
-            <summary>
-                Parses a crontab field expression representing months.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Parse(Promitor.Scraper.Scheduling.Cron.CrontabFieldKind,System.String)">
-            <summary>
-                Parses a crontab field expression given its kind.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Accumulate(System.Int32,System.Int32,System.Int32)">
-            <summary>
-                Accumulates the given range (start to end) and interval of values
-                into the current set of the field.
-            </summary>
-            <remarks>
-                To set the entire range of values representable by the field,
-                set
-                <param name="start" />
-                and
-                <param name="end" />
-                to -1 and
-                <param name="interval" />
-                to 1.
-            </remarks>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.GetFirst">
-            <summary>
-                Gets the first value of the field or -1.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Next(System.Int32)">
-            <summary>
-                Gets the next value of the field that occurs after the given
-                start value or -1 if there is no next value available.
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Scheduling.Cron.CrontabField.Contains(System.Int32)">
-            <summary>
-                Determines if the given value occurs in the field.
-            </summary>
-        </member>
-        <member name="T:Promitor.Scraper.Scheduling.Cron.CrontabSchedule">
-            <summary>
-                Represents a schedule initialized from the crontab expression.
-            </summary>
+            <param name="rawCronSchedule">Raw Cron schedule to use</param>
         </member>
         <member name="M:Promitor.Scraper.Scraping.ScrapeEndpoint.GetBasePath(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
