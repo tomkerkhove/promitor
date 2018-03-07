@@ -7,12 +7,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Promitor.Scraper.Configuration;
 using Promitor.Scraper.Configuration.Providers;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Scheduling.Cron;
 using Promitor.Scraper.Scraping;
 
 namespace Promitor.Scraper
 {
     public class Startup
     {
+        private const string DefaultCronSchedule = "*/5 * * * *";
+
         public Startup(IHostingEnvironment env)
         {
             ValidateSetup();
@@ -40,21 +43,14 @@ namespace Promitor.Scraper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
-
             services.AddTransient<IScrapeConfigurationProvider, ScrapeConfigurationProvider>();
+
+            services.AddMvc();
+            services.UseCronScheduler();
+            services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
         }
 
-        private IConfiguration BuildConfiguration()
-        {
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddEnvironmentVariables();
-
-            return configurationBuilder.Build();
-        }
-
-        private void ValidateSetup()
+        private static void ValidateScrapingConfiguration()
         {
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(configurationPath))
@@ -72,6 +68,41 @@ namespace Promitor.Scraper
             }
 
             Console.WriteLine($"Scrape configuration found at '{configurationPath}'");
+        }
+
+        private IConfiguration BuildConfiguration()
+        {
+            var configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddEnvironmentVariables();
+
+            return configurationBuilder.Build();
+        }
+
+        private void ValidateScrapingSchedule()
+        {
+            var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule);
+            if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
+            {
+                Console.WriteLine($"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
+                Environment.SetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule, DefaultCronSchedule);
+                scrapingCronSchedule = DefaultCronSchedule;
+            }
+
+            try
+            {
+                CrontabSchedule.Parse(scrapingCronSchedule);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine($"No valid scraping schedule was specified - '{scrapingCronSchedule}'. Details: {exception.Message}");
+                throw;
+            }
+        }
+
+        private void ValidateSetup()
+        {
+            ValidateScrapingConfiguration();
+            ValidateScrapingSchedule();
         }
     }
 }
