@@ -7,8 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Promitor.Scraper.Configuration;
 using Promitor.Scraper.Configuration.Providers;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Scheduling.Cron;
 using Promitor.Scraper.Scraping;
-using Shuttle.Core.Cron;
 
 namespace Promitor.Scraper
 {
@@ -90,7 +90,7 @@ namespace Promitor.Scraper
 
             try
             {
-                new CronExpression(scrapingCronSchedule);
+                CronSchedule.Parse(scrapingCronSchedule);
             }
             catch (Exception exception)
             {
