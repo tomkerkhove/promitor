@@ -9,7 +9,7 @@ namespace Promitor.Scraper.Validation.Steps
     {
         private const string DefaultCronSchedule = "*/5 * * * *";
 
-        public void Validate()
+        public ValidationResult Validate()
         {
             var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule);
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
@@ -22,11 +22,12 @@ namespace Promitor.Scraper.Validation.Steps
             try
             {
                 CronSchedule.Parse(scrapingCronSchedule);
+                return ValidationResult.Successful;
             }
             catch (Exception exception)
             {
                 Console.WriteLine($"No valid scraping schedule was specified - '{scrapingCronSchedule}'. Details: {exception.Message}");
-                throw;
+                return ValidationResult.Fail($"No valid scraping schedule was specified - '{scrapingCronSchedule}'.");
             }
         }
     }

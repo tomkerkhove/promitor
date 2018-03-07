@@ -7,7 +7,7 @@ namespace Promitor.Scraper.Validation.Steps
 {
     public class ConfigurationPathValidationStep : IValidationStep
     {
-        public void Validate()
+        public ValidationResult Validate()
         {
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(configurationPath))
@@ -21,10 +21,12 @@ namespace Promitor.Scraper.Validation.Steps
             {
                 var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
                 Console.WriteLine(errorMessage);
-                throw new Exception(errorMessage);
+
+                return ValidationResult.Fail(errorMessage);
             }
 
             Console.WriteLine($"Scrape configuration found at '{configurationPath}'");
+            return ValidationResult.Successful;
         }
     }
 }

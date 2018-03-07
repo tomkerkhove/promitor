@@ -2,6 +2,6 @@
 {
     public interface IValidationStep
     {
-        void Validate();
+        ValidationResult Validate();
     }
 }
