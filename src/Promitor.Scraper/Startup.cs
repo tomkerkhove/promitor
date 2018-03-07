@@ -57,6 +57,13 @@ namespace Promitor.Scraper
         private void ValidateSetup()
         {
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
+            if (string.IsNullOrWhiteSpace(configurationPath))
+            {
+                Console.WriteLine("No scrape configuration configured, falling back to default one...");
+                configurationPath = "default-scrape-configuration.yaml";
+                Environment.SetEnvironmentVariable(EnvironmentVariables.ConfigurationPath, configurationPath);
+            }
+
             if (File.Exists(configurationPath) == false)
             {
                 var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
