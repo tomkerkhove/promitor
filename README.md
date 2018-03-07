@@ -5,26 +5,16 @@ Azure Monitor Scraper for Prometheus
 
 ----------------------------
 
-:rotating_light: This is under active development and subject to change.
+:rotating_light: This is under active development and not ready yet. Expect some (major) changes.
 
 ----------------------------
 
-# Running it Promitor Scraper locally
-Run it locally with the default scrape configuration with no metrics configured
-```
-❯ docker run -d -p 8999:80 -e "PROMITOR_CONFIGURATION_PATH=default-scrape-configuration.yaml" tomkerkhove/promitor-scraper:alpha
-```
+# Documentation
+All documentation can be found in the wiki.
 
-# Configuration
-Configuration is done via YAML file that needs to be in the `/config` folder.
-
-```yaml
-metrics:
-  - name: "queue-size"
-    resourceType: "Microsoft.ServiceBus"
-  - name: "api-requests-count"
-    resourceType: "Microsoft.WebApps"
-```
+Here are some interesting topics:
+- [Running Promitor Scraper](https://github.com/tomkerkhove/promitor/wiki/Running-Promitor-Scraper)
+- [Configuration](https://github.com/tomkerkhove/promitor/wiki/Configuration)
 
 # Powered By
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet)
