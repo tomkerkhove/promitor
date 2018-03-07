@@ -63,6 +63,8 @@ namespace Promitor.Scraper
                 Console.WriteLine(errorMessage);
                 throw new Exception(errorMessage);
             }
+
+            Console.WriteLine($"Scrape configuration found at '{configurationPath}'");
         }
     }
 }
