@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using Promitor.Scraper.Scheduling;
+using Promitor.Scraper.Scheduling.Infrastructure.Extensions;
+using Promitor.Scraper.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
@@ -9,6 +13,16 @@ namespace Microsoft.Extensions.DependencyInjection
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
+        public static void UseCronScheduler(this IServiceCollection services)
+        {
+            services.AddSingleton<IScheduledTask, AzureMonitorScrapingTask>();
+            services.AddScheduler((sender, args) =>
+            {
+                Console.Write(args.Exception.Message);
+                args.SetObserved();
+            });
+        }
+
         public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
