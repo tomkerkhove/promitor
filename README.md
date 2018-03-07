@@ -9,6 +9,12 @@ Azure Monitor Scraper for Prometheus
 
 ----------------------------
 
+# Running it Promitor Scraper locally
+Run it locally with the default scrape configuration with no metrics configured
+```
+❯ docker run -d -p 8999:80 -e "PROMITOR_CONFIGURATION_PATH=default-scrape-configuration.yaml" tomkerkhove/promitor-scraper:alpha
+```
+
 # Configuration
 Configuration is done via YAML file that needs to be in the `/config` folder.
 

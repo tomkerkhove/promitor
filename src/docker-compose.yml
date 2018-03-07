@@ -1,8 +1,0 @@
-version: '3'
-
-services:
-  promitor.scraper:
-    image: promitor.scraper
-    build:
-      context: ./Promitor.Scraper
-      dockerfile: Dockerfile

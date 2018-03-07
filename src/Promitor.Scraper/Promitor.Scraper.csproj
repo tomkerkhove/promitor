@@ -5,6 +5,23 @@
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Docs\Open-Api.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Docs\Open-Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="default-scrape-configuration.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
@@ -12,6 +29,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
     <PackageReference Include="Prometheus.Client.Owin" Version="1.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="2.1.0" />
+    <PackageReference Include="YamlDotNet" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
