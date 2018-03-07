@@ -1,9 +1,9 @@
 ﻿namespace Promitor.Scraper.Configuration
 {
-    internal class EnvironmentVariables
+    public class EnvironmentVariables
     {
-        internal const string ScrapeEndpointPath = "PROMITOR_SCRAPEENDPOINT_BASEPATH";
-        internal const string ConfigurationPath = "PROMITOR_CONFIGURATION_PATH";
-        internal const string ScrapeCronSchedule = "PROMITOR_SCRAPE_SCHEDULE";
+        public const string ScrapeEndpointPath = "PROMITOR_SCRAPEENDPOINT_BASEPATH";
+        public const string ConfigurationPath = "PROMITOR_CONFIGURATION_PATH";
+        public const string ScrapeCronSchedule = "PROMITOR_SCRAPE_SCHEDULE";
     }
 }

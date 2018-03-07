@@ -9,3 +9,4 @@ branches:
 script:
  - dotnet --info
  - dotnet build src/Promitor.sln --configuration release
+ - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
