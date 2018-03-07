@@ -1,5 +1,0 @@
-metrics:
-  - name: "my-name"
-    resourceType: "Microsoft.ServiceBus"
-  - name: "my-name"
-    resourceType: "Microsoft.WebApps"
