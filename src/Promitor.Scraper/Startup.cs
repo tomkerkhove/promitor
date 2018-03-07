@@ -90,7 +90,7 @@ namespace Promitor.Scraper
 
             try
             {
-                CrontabSchedule.Parse(scrapingCronSchedule);
+                CronSchedule.Parse(scrapingCronSchedule);
             }
             catch (Exception exception)
             {
