@@ -9,16 +9,12 @@ Azure Monitor Scraper for Prometheus
 
 ----------------------------
 
-# Documentation
-All documentation can be found in the wiki.
+## Documentation
+All documentation can be found in the [wiki](https://github.com/tomkerkhove/promitor/wiki).
 
 Here are some interesting topics:
 - [Running Promitor Scraper](https://github.com/tomkerkhove/promitor/wiki/Running-Promitor-Scraper)
 - [Configuration](https://github.com/tomkerkhove/promitor/wiki/Configuration)
 
-# Powered By
-- [YamlDotNet](https://github.com/aaubry/YamlDotNet)
-- [Travic CI](https://travis-ci.com/)
-
-# License Information
+## License Information
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
