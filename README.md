@@ -9,11 +9,16 @@ Azure Monitor Scraper for Prometheus
 
 ----------------------------
 
+## Running Promitor Scraper
+Running Promitor Scraper with the default metrics configuration is super easy:
+```
+docker run -d -p 8999:80 tomkerkhove/promitor-scraper:alpha
+```
+
 ## Documentation
 All documentation can be found in the [wiki](https://github.com/tomkerkhove/promitor/wiki).
 
 Here are some interesting topics:
-- [Running Promitor Scraper](https://github.com/tomkerkhove/promitor/wiki/Running-Promitor-Scraper)
 - [Configuration](https://github.com/tomkerkhove/promitor/wiki/Configuration)
 
 ## License Information
