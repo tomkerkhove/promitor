@@ -9,6 +9,22 @@ Azure Monitor Scraper for Prometheus
 
 ----------------------------
 
+# Build & Running the image
+1. Move to the project folder
+```
+❯ cd src\Promitor.Scraper
+``` 
+
+2. Build the docker image
+```
+❯ docker build . -t promitor-scraper
+```
+
+3. Run it locally with the default scrape configuration with no metrics configured
+```
+❯ docker run -d -p 8999:80 -e "PROMITOR_CONFIGURATION_PATH=default-scrape-configuration.yaml" promitor-scraper 
+```
+
 # Configuration
 Configuration is done via YAML file that needs to be in the `/config` folder.
 
