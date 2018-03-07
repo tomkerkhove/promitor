@@ -1,5 +1,5 @@
 # Promitor - Azure Monitor Scraper for Prometheus 
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](./LICENSE)[![Build Status](https://travis-ci.com/tomkerkhove/promitor.svg?token=GsSXSXe5xF8ZdYK5qExq&branch=master)](https://travis-ci.com/tomkerkhove/promitor)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](./LICENSE)[![Build Status](https://travis-ci.org/tomkerkhove/promitor.svg?branch=master)](https://travis-ci.org/tomkerkhove/promitor)
 
 Azure Monitor Scraper for Prometheus
 
