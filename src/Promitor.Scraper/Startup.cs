@@ -1,21 +1,19 @@
-﻿using System;
-using System.IO;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Promitor.Scraper.Configuration;
 using Promitor.Scraper.Configuration.Providers;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
-using Promitor.Scraper.Scheduling.Cron;
 using Promitor.Scraper.Scraping;
+using Promitor.Scraper.Validation;
+using Promitor.Scraper.Validation.Interfaces;
+using Promitor.Scraper.Validation.Steps;
 
 namespace Promitor.Scraper
 {
     public class Startup
     {
-        private const string DefaultCronSchedule = "*/5 * * * *";
-
         public Startup(IHostingEnvironment env)
         {
             ValidateSetup();
@@ -50,26 +48,6 @@ namespace Promitor.Scraper
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
         }
 
-        private static void ValidateScrapingConfiguration()
-        {
-            var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
-            if (string.IsNullOrWhiteSpace(configurationPath))
-            {
-                Console.WriteLine("No scrape configuration configured, falling back to default one...");
-                configurationPath = "default-scrape-configuration.yaml";
-                Environment.SetEnvironmentVariable(EnvironmentVariables.ConfigurationPath, configurationPath);
-            }
-
-            if (File.Exists(configurationPath) == false)
-            {
-                var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
-                Console.WriteLine(errorMessage);
-                throw new Exception(errorMessage);
-            }
-
-            Console.WriteLine($"Scrape configuration found at '{configurationPath}'");
-        }
-
         private IConfiguration BuildConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder();
@@ -78,31 +56,15 @@ namespace Promitor.Scraper
             return configurationBuilder.Build();
         }
 
-        private void ValidateScrapingSchedule()
-        {
-            var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule);
-            if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
-            {
-                Console.WriteLine($"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
-                Environment.SetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule, DefaultCronSchedule);
-                scrapingCronSchedule = DefaultCronSchedule;
-            }
-
-            try
-            {
-                CronSchedule.Parse(scrapingCronSchedule);
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine($"No valid scraping schedule was specified - '{scrapingCronSchedule}'. Details: {exception.Message}");
-                throw;
-            }
-        }
-
         private void ValidateSetup()
         {
-            ValidateScrapingConfiguration();
-            ValidateScrapingSchedule();
+            var validationSteps = new List<IValidationStep>
+            {
+                new ConfigurationPathValidationStep(),
+                new ScrapingScheduleValidationStep()
+            };
+
+            Validator.Run(validationSteps);
         }
     }
 }
