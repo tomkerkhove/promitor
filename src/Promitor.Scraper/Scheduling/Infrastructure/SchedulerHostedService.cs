@@ -24,7 +24,7 @@ namespace Promitor.Scraper.Scheduling.Infrastructure
             {
                 _scheduledTasks.Add(new SchedulerTaskWrapper
                 {
-                    Schedule = CrontabSchedule.Parse(scheduledTask.Schedule),
+                    Schedule = CronSchedule.Parse(scheduledTask.Schedule),
                     Task = scheduledTask,
                     NextRunTime = referenceTime
                 });
