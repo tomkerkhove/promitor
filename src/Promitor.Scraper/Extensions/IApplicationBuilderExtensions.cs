@@ -27,14 +27,21 @@ namespace Microsoft.AspNetCore.Builder
         ///     Add support for exposing a prometheus scaraping endpoint
         /// </summary>
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
-        public static void UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
+        public static IApplicationBuilder UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
+            if (scrapeEndpointPath.StartsWith("/"))
+            {
+                scrapeEndpointPath = scrapeEndpointPath.Substring(1);
+            }
+            
             var prometheusOptions = new PrometheusOptions
             {
                 MapPath = scrapeEndpointPath
             };
 
             app.UsePrometheusServer(prometheusOptions);
+            
+            return app;
         }
     }
 }
