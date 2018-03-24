@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         {
             // Arrange
             const string invalidCron = "Invalid * * * *";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule, invalidCron);
+            Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, invalidCron);
 
             // Act
             var scrapingScheduleValidationStep = new ScrapingScheduleValidationStep();
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         {
             // Arrange
             const string validCron = "* * * * *";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule, validCron);
+            Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, validCron);
 
             // Act
             var scrapingScheduleValidationStep = new ScrapingScheduleValidationStep();
