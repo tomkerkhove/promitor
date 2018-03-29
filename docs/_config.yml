@@ -1,3 +1,5 @@
 theme: jekyll-theme-cayman
 title: Promitor
 description: [An Azure Monitor scraper for Prometheus]
+plugins:
+  - jemoji
