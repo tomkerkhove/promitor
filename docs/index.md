@@ -3,8 +3,6 @@ layout: default
 title: Promitor - An Azure Monitor scraper for Prometheus
 ---
 
-Azure Monitor Scraper for Prometheus
-
 ----------------------------
 
 :rotating_light: This is under active development and not ready yet. Expect some (major) changes.
