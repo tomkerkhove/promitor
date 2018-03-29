@@ -1,0 +1,5 @@
+theme: jekyll-theme-cayman
+title: Promitor
+description: [An Azure Monitor scraper for Prometheus]
+github:
+ repository_url: https://github.com/tomkerkhove/promitor
