@@ -33,9 +33,9 @@ docker run -d -p 8999:80 tomkerkhove/promitor-scraper:alpha
 
 # Acknowledgments
 
+- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
 - [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client) - .NET client for prometheus.io
 - [Shuttle.Core.Cron](https://github.com/Shuttle/Shuttle.Core.Cron) - Cron expression parsing
-- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet) - .NET library for YAML
 
 # License Information
