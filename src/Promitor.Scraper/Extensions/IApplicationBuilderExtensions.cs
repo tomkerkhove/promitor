@@ -3,6 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
 {
+    // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
         /// <summary>
@@ -36,7 +37,8 @@ namespace Microsoft.AspNetCore.Builder
             
             var prometheusOptions = new PrometheusOptions
             {
-                MapPath = scrapeEndpointPath
+                MapPath = scrapeEndpointPath,
+                UseDefaultCollectors = false
             };
 
             app.UsePrometheusServer(prometheusOptions);
