@@ -23,8 +23,7 @@ namespace Promitor.Scraper.Controllers.v1
         [HttpGet]
         [SwaggerOperation("Get Scrape Configuration")]
         [SwaggerResponse((int) HttpStatusCode.OK, Description = "Configuration concerning the metrics to scrape", Type = typeof(List<MetricDefinition>))]
-        [SwaggerResponse((int) HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape"
-        )]
+        [SwaggerResponse((int) HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
         public IEnumerable<MetricDefinition> Get()
         {
             var scrapeConfiguration = scrapeConfigurationProvider.GetConfiguration();
