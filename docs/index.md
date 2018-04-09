@@ -31,5 +31,12 @@ docker run -d -p 8999:80 tomkerkhove/promitor-scraper:alpha
 # Documentation
 - [Configuration](Configuration)
 
+# Acknowledgments
+
+- [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client) - .NET client for prometheus.io
+- [Shuttle.Core.Cron](https://github.com/Shuttle/Shuttle.Core.Cron) - Cron expression parsing
+- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
+- [YamlDotNet](https://github.com/aaubry/YamlDotNet) - .NET library for YAML
+
 # License Information
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
