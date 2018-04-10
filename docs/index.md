@@ -29,7 +29,7 @@ docker run -d -p 8999:80 tomkerkhove/promitor-scraper:alpha
 - Azure Service Bus Queue
 
 # Documentation
-- [Configuration](Configuration)
+- [Configuration](configuration)
 
 # Acknowledgments
 
