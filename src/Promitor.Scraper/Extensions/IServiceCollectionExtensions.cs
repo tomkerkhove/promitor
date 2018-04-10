@@ -13,6 +13,10 @@ namespace Microsoft.Extensions.DependencyInjection
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        ///     Defines to use the cron scheduler
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
         public static void UseCronScheduler(this IServiceCollection services)
         {
             services.AddSingleton<IScheduledTask, AzureMonitorScrapingTask>();
@@ -23,6 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
             });
         }
 
+        /// <summary>
+        ///     Use OpenAPI specification
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        /// <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
+        /// <param name="apiVersion">Version of the API</param>
         public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
