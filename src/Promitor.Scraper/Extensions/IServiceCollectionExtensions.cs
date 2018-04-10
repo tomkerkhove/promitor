@@ -13,6 +13,10 @@ namespace Microsoft.Extensions.DependencyInjection
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        ///     Defines to use the cron scheduler
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
         public static void UseCronScheduler(this IServiceCollection services)
         {
             services.AddSingleton<IScheduledTask, AzureMonitorScrapingTask>();
@@ -23,6 +27,12 @@ namespace Microsoft.Extensions.DependencyInjection
             });
         }
 
+        /// <summary>
+        ///     Use OpenAPI specification
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        /// <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
+        /// <param name="apiVersion">Version of the API</param>
         public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
@@ -33,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     Url = "https://blog.tomkerkhove.be"
                 },
                 Title = $"Promitor v{apiVersion}",
-                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '{prometheusScrapeEndpointPath}'",
+                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
                 Version = $"v{apiVersion}",
                 License = new License
                 {

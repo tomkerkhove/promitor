@@ -1,1 +1,5 @@
-﻿metrics:
+﻿azureMetadata:
+  tenantId: ""
+  subscriptionId: ""
+  resourceGroupName: ""
+metrics:

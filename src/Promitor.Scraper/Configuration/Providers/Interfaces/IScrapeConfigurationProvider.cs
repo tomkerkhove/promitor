@@ -1,4 +1,4 @@
-﻿using Promitor.Scraper.Configuration.Model;
+﻿using Promitor.Scraper.Model.Configuration;
 
 namespace Promitor.Scraper.Configuration.Providers.Interfaces
 {

@@ -289,3 +289,7 @@ __pycache__/
 
 # VS Code
 .vscode/*
+
+# Local Jekyll output
+_site/*
+docs/_site/*

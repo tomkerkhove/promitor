@@ -11,11 +11,11 @@ namespace Promitor.Scraper.Validation.Steps
 
         public ValidationResult Validate()
         {
-            var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule);
+            var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
             {
                 Console.WriteLine($"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
-                Environment.SetEnvironmentVariable(EnvironmentVariables.ScrapeCronSchedule, DefaultCronSchedule);
+                Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, DefaultCronSchedule);
                 scrapingCronSchedule = DefaultCronSchedule;
             }
 

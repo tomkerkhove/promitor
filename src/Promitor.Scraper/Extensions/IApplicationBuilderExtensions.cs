@@ -3,6 +3,7 @@
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
 {
+    // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
         /// <summary>
@@ -27,14 +28,22 @@ namespace Microsoft.AspNetCore.Builder
         ///     Add support for exposing a prometheus scaraping endpoint
         /// </summary>
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
-        public static void UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
+        public static IApplicationBuilder UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
+            if (scrapeEndpointPath.StartsWith("/"))
+            {
+                scrapeEndpointPath = scrapeEndpointPath.Substring(1);
+            }
+            
             var prometheusOptions = new PrometheusOptions
             {
-                MapPath = scrapeEndpointPath
+                MapPath = scrapeEndpointPath,
+                UseDefaultCollectors = false
             };
 
             app.UsePrometheusServer(prometheusOptions);
+            
+            return app;
         }
     }
 }
