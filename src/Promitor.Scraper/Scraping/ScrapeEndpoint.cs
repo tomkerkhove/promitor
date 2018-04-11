@@ -3,7 +3,6 @@ using Promitor.Scraper.Configuration;
 
 namespace Promitor.Scraper.Scraping
 {
-    // TODO: Write unit tests for all scenarios
     public static class ScrapeEndpoint
     {
         private const string DefaultScrapeEndpoint = "prometheus/scrape";
@@ -19,7 +18,7 @@ namespace Promitor.Scraper.Scraping
                 return DefaultScrapeEndpoint;
             }
 
-            return scrapeEndpointPath.StartsWith("/") == false ? $"/{scrapeEndpointPath}" : scrapeEndpointPath;
+            return scrapeEndpointPath.StartsWith("/") ? scrapeEndpointPath.Substring(1) : scrapeEndpointPath;
         }
     }
 }

@@ -30,11 +30,6 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         public static IApplicationBuilder UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
-            if (scrapeEndpointPath.StartsWith("/"))
-            {
-                scrapeEndpointPath = scrapeEndpointPath.Substring(1);
-            }
-            
             var prometheusOptions = new PrometheusOptions
             {
                 MapPath = scrapeEndpointPath,
