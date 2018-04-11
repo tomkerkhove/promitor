@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Promitor - Configuration
+title: Promitor - General Configuration
 ---
 
 Here is an overview of how you can configure Promitor.
