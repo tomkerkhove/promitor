@@ -14,14 +14,19 @@
                 Provides a list of all configured metrics to scrape
             </summary>
         </member>
-        <member name="P:Promitor.Scraper.Model.Configuration.Metrics.MetricDefinition.AzureMetricName">
+        <member name="P:Promitor.Scraper.Model.Configuration.AzureMetricConfiguration.Aggregation">
+            <summary>
+                Type of aggregation to query the Azure Monitor metric
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Model.Configuration.AzureMetricConfiguration.MetricName">
             <summary>
                 Name of the Azure Monitor metric to query
             </summary>
         </member>
-        <member name="P:Promitor.Scraper.Model.Configuration.Metrics.MetricDefinition.AzureMetricAggregation">
+        <member name="P:Promitor.Scraper.Model.Configuration.Metrics.MetricDefinition.AzureMetricConfiguration">
             <summary>
-                Type of aggregation to query the Azure Monitor metric
+                Configuration about the Azure Monitor metric to scrape
             </summary>
         </member>
         <member name="P:Promitor.Scraper.Model.Configuration.Metrics.MetricDefinition.Description">
