@@ -1,8 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,10 +7,8 @@ using Promitor.Scraper.Configuration.Providers;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Scraping;
 using Promitor.Scraper.Validation;
-using Promitor.Scraper.Validation;
 using Promitor.Scraper.Validation.Interfaces;
 using Promitor.Scraper.Validation.Steps;
-using Validator = Promitor.Scraper.Validation.Validator;
 
 namespace Promitor.Scraper
 {

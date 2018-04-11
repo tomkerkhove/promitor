@@ -23,7 +23,7 @@ namespace Promitor.Scraper.Scraping.ResouceTypes
         protected override async Task ScrapeResourceAsync(MonitorManagementClient monitoringClient, ServiceBusQueueMetricDefinition metricDefinition)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.Namespace);
-            var foundMetric = await QueryAzureMonitorAsync(monitoringClient, resourceUri, metricDefinition.QueueName, metricDefinition.AzureMetricName, metricDefinition.AzureMetricAggregation);
+            var foundMetric = await QueryAzureMonitorAsync(monitoringClient, resourceUri, metricDefinition.QueueName, metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.AzureMetricConfiguration.Aggregation);
 
             var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
             gauge.Set(foundMetric);

@@ -13,7 +13,7 @@
         public class Scraping
         {
             public const string CronSchedule = "PROMITOR_SCRAPE_SCHEDULE";
-            public const string EndpointPath = "PROMITOR_SCRAPEENDPOINT_BASEPATH";
+            public const string Path = "PROMITOR_SCRAPE_BASEPATH";
         }
     }
 }

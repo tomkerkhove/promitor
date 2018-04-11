@@ -1,18 +1,11 @@
-﻿using Microsoft.Azure.Management.Monitor.Models;
-
-namespace Promitor.Scraper.Model.Configuration.Metrics
+﻿namespace Promitor.Scraper.Model.Configuration.Metrics
 {
     public class MetricDefinition
     {
         /// <summary>
-        ///     Name of the Azure Monitor metric to query
+        ///     Configuration about the Azure Monitor metric to scrape
         /// </summary>
-        public string AzureMetricName { get; set; }
-
-        /// <summary>
-        ///     Type of aggregation to query the Azure Monitor metric
-        /// </summary>
-        public AggregationType AzureMetricAggregation { get; set; }
+        public AzureMetricConfiguration AzureMetricConfiguration { get; set; }
 
         /// <summary>
         ///     Description concerning metric that will be made available in the scraping endpoint
