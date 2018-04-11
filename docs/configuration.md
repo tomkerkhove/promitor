@@ -20,6 +20,6 @@ The following environment variables need to be provided:
 - **PROMITOR_AUTH_APPID** - Id of the Azure AD entity to authenticate with
 - **PROMITOR_AUTH_APPKEY** - Secret of the Azure AD entity to authenticate with
 
-The entity in the Azure AD needs to have `Monitoring Reader` permission on the resource group that will be queried.
+The entity in the Azure AD needs to have `Monitoring Reader` permission on the resource group that will be queried. More information can be found [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-roles-permissions-security).
 
 [&larr; back](.)
