@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Scraping
         /// </summary>
         public static string GetBasePath(IConfiguration configuration)
         {
-            var scrapeEndpointPath = configuration.GetValue<string>(EnvironmentVariables.Scraping.EndpointPath);
+            var scrapeEndpointPath = configuration.GetValue<string>(EnvironmentVariables.Scraping.Path);
             if (string.IsNullOrWhiteSpace(scrapeEndpointPath))
             {
                 return DefaultScrapeEndpoint;
