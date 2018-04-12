@@ -1,3 +1,3 @@
-# promitor.io
+# Documenation for Promitor
 
-Coming soon.
+Contains all the documentation for [promitor.io](https://promitor.io)

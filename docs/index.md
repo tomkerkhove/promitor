@@ -20,16 +20,17 @@ docker run -d -p 8999:80 tomkerkhove/promitor-scraper:alpha
 
 # Features
 
-- Automatically scrape Azure Monitor metrics
-- Provide scraping endpoint for Prometheus
-- Easily deployable via a Docker image
-
-## Supported Built-In Metrics
-
-- Azure Service Bus Queue
+- Automatically scrapes Azure Monitor metrics
+- Provides scraping endpoint for Prometheus
+- Built-in support for a variety of Azure services ([overview](configuration/metrics))
+- Easy to declare metrics to scrape via YAML & APIs
+- Easily deployable via Docker & Kubernetes
 
 # Documentation
-- [Configuration](configuration)
+- **Configuration**
+    - [Scraping](configuration#scraping)
+    - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
+    - [Metrics Declaration](configuration/metrics)
 
 # Acknowledgments
 
