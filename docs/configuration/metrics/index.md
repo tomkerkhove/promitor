@@ -43,4 +43,4 @@ Every metric that is being declared needs to define the following fields:
 
 - [Azure Service Bus Queue](service-bus-queue)
 
-[&larr; back](.)
+[&larr; back](/)
