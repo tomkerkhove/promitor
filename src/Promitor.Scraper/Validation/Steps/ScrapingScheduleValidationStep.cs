@@ -15,7 +15,6 @@ namespace Promitor.Scraper.Validation.Steps
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
             {
                 Console.WriteLine($"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
-                Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, DefaultCronSchedule);
                 scrapingCronSchedule = DefaultCronSchedule;
             }
 
