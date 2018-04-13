@@ -9,7 +9,7 @@ Here is an overview of how you can configure Promitor.
 Promitor automatically scrapes Azure Monitor and makes the information available based on the metrics configuration.
 
 The behavior of this can be configured with the following environment variables:
-- **PROMITOR_CONFIGURATION_PATH** - Defines the location of the YAML file that defines what metrics to scrape.
+- **PROMITOR_CONFIGURATION_PATH** - Defines the location of the YAML file that declares what Azure Monitor metrics to scrape. If nothing is specified, `/config/metrics.yaml` will be used.
 - **PROMITOR_SCRAPE_BASEPATH** - Controls the path where the scraping endpoint for Prometheus is being exposed. If nothing is specified, `/prometheus/scrape` will be used.
 - **PROMITOR_SCRAPE_SCHEDULE** - A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. If configured is specified, `*/5 * * * *` will be used.
 
