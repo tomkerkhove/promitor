@@ -29,4 +29,5 @@ azureMetricConfiguration:
   aggregation: Average
 ```
 
-[&larr; back](.)
+[&larr; back to metrics declarations](/configuration/metrics)<br />
+[&larr; back to introduction](/)
