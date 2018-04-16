@@ -5,14 +5,16 @@ using Promitor.Scraper.Validation.Interfaces;
 
 namespace Promitor.Scraper.Validation.Steps
 {
-    public class ConfigurationPathValidationStep : IValidationStep
+    public class ConfigurationPathValidationStep : ValidationStep, IValidationStep
     {
+        public string ComponentName { get; } = "Metrics Declaration Path";
+
         public ValidationResult Validate()
         {
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
-                Console.WriteLine("No scrape configuration configured, falling back to default one...");
+                LogMessage("No scrape configuration configured, falling back to default one...");
                 configurationPath = "default-scrape-configuration.yaml";
                 Environment.SetEnvironmentVariable(EnvironmentVariables.ConfigurationPath, configurationPath);
             }
@@ -20,13 +22,11 @@ namespace Promitor.Scraper.Validation.Steps
             if (File.Exists(configurationPath) == false)
             {
                 var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
-                Console.WriteLine(errorMessage);
-
-                return ValidationResult.Fail(errorMessage);
+                return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            Console.WriteLine($"Scrape configuration found at '{configurationPath}'");
-            return ValidationResult.Successful;
+            LogMessage($"Scrape configuration found at '{configurationPath}'");
+            return ValidationResult.Successful(ComponentName);
         }
     }
 }
