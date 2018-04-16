@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,10 +17,17 @@ namespace Promitor.Scraper
     {
         public Startup(IHostingEnvironment env)
         {
+            WelcomeToPromitor();
+
             ValidateSetup();
 
             Configuration = BuildConfiguration();
             ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
+        }
+
+        private static void WelcomeToPromitor()
+        {
+            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         public IConfiguration Configuration { get; }
