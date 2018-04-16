@@ -11,8 +11,9 @@
         </member>
         <member name="M:Promitor.Scraper.Controllers.v1.ConfigurationController.Get">
             <summary>
-                Provides a list of all configured metrics to scrape
+                Get Metrics Declaration
             </summary>
+            <remarks>Provides a list of all configured metrics to scrape</remarks>
         </member>
         <member name="P:Promitor.Scraper.Model.Configuration.AzureMetricConfiguration.Aggregation">
             <summary>
