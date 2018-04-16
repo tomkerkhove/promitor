@@ -19,6 +19,7 @@ namespace Promitor.Scraper.Validation.Steps
                 LogMessage(
                     $"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
                 scrapingCronSchedule = DefaultCronSchedule;
+                Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, scrapingCronSchedule);
             }
 
             try
