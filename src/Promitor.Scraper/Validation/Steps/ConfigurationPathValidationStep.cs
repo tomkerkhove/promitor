@@ -9,7 +9,7 @@ namespace Promitor.Scraper.Validation.Steps
     {
         public string ComponentName { get; } = "Metrics Declaration Path";
 
-        public ValidationResult Validate()
+        public ValidationResult Run()
         {
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(configurationPath))

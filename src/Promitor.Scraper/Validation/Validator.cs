@@ -8,15 +8,6 @@ namespace Promitor.Scraper.Validation
 {
     public static class Validator
     {
-        private const string SeperationText = "-------------------------------------------------";
-        private const string StartValidationText = "Starting validation of configuration...";
-        private const string ValidationStepSuccessfulText = "\tValidation step succeeded.";
-
-        private const string GeneralValidationFailed =
-            "Configuration is invalid. Please fix them before running Promitor again";
-
-        private const string GeneralValidationSucceeded = "Configuration is valid.";
-
         public static void Run(List<IValidationStep> validationSteps)
         {
             if (validationSteps == null)
@@ -45,18 +36,18 @@ namespace Promitor.Scraper.Validation
 
         private static void OutputValidationIntroduction()
         {
-            Console.WriteLine(SeperationText);
-            Console.WriteLine(StartValidationText);
+            Console.WriteLine(Constants.Texts.Validation.SeperationText);
+            Console.WriteLine(Constants.Texts.Validation.StartValidationText);
         }
 
         private static void OutputValidationResult(bool isValidationSuccessful)
         {
             var generalValidationOutcome = isValidationSuccessful
-                ? GeneralValidationFailed
-                : GeneralValidationSucceeded;
+                ? Constants.Texts.Validation.GeneralValidationFailed
+                : Constants.Texts.Validation.GeneralValidationSucceeded;
 
             Console.WriteLine(generalValidationOutcome);
-            Console.WriteLine(SeperationText);
+            Console.WriteLine(Constants.Texts.Validation.SeperationText);
         }
 
         private static List<ValidationResult> RunValidationSteps(List<IValidationStep> validationSteps)
@@ -72,20 +63,21 @@ namespace Promitor.Scraper.Validation
             for (var currentValidationStep = 1; currentValidationStep <= totalValidationSteps; currentValidationStep++)
             {
                 var validationStep = validationSteps[currentValidationStep - 1];
-                var validationResult = ValidateStep(validationStep, currentValidationStep, totalValidationSteps);
+                var validationResult = RunValidationStep(validationStep, currentValidationStep, totalValidationSteps);
                 validationResults.Add(validationResult);
             }
 
             return validationResults;
         }
 
-        private static ValidationResult ValidateStep(IValidationStep validationStep, int currentStep, int totalSteps)
+        private static ValidationResult RunValidationStep(IValidationStep validationStep, int currentStep,
+            int totalSteps)
         {
             Console.WriteLine($"\tValidation step {currentStep}/{totalSteps}: {validationStep.ComponentName}");
 
-            var validationResult = validationStep.Validate();
+            var validationResult = validationStep.Run();
             var validationOutcome = validationResult.IsSuccessful
-                ? ValidationStepSuccessfulText
+                ? Constants.Texts.Validation.ValidationStepSuccessfulText
                 : $"\tValidation step failed. Error(s): {validationResult.Message}";
             Console.WriteLine(validationOutcome);
 

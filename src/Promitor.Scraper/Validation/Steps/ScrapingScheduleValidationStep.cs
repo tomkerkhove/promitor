@@ -11,7 +11,7 @@ namespace Promitor.Scraper.Validation.Steps
 
         public string ComponentName { get; } = "Cron Schedule";
 
-        public ValidationResult Validate()
+        public ValidationResult Run()
         {
             var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
