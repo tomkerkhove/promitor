@@ -2,6 +2,7 @@
 {
     public interface IValidationStep
     {
-        ValidationResult Validate();
+        string ComponentName { get; }
+        ValidationResult Run();
     }
 }

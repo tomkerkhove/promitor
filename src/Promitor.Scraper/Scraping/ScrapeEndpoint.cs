@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using Promitor.Scraper.Configuration;
 
 namespace Promitor.Scraper.Scraping
@@ -15,6 +16,7 @@ namespace Promitor.Scraper.Scraping
             var scrapeEndpointPath = configuration.GetValue<string>(EnvironmentVariables.Scraping.Path);
             if (string.IsNullOrWhiteSpace(scrapeEndpointPath))
             {
+                Console.WriteLine($"No scraping endpoint was specified, falling back to default '{DefaultScrapeEndpoint}'...");
                 return DefaultScrapeEndpoint;
             }
 

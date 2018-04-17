@@ -18,7 +18,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
 
             // Act
             var scrapingScheduleValidationStep = new ScrapingScheduleValidationStep();
-            var validationResult = scrapingScheduleValidationStep.Validate();
+            var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
             Assert.False(validationResult.IsSuccessful);
@@ -33,7 +33,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
 
             // Act
             var scrapingScheduleValidationStep = new ScrapingScheduleValidationStep();
-            var validationResult = scrapingScheduleValidationStep.Validate();
+            var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
             Assert.True(validationResult.IsSuccessful);
