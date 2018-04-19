@@ -24,7 +24,7 @@
 
         internal static class Defaults
         {
-            internal const string DefaultMetricsDeclarationPath = "/config/metrics-declaration.yaml";
+            internal const string MetricsDeclarationPath = "/config/metrics-declaration.yaml";
         }
     }
 }
