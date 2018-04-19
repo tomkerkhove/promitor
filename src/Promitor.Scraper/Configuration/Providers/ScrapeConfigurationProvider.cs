@@ -9,15 +9,13 @@ namespace Promitor.Scraper.Configuration.Providers
 {
     public class ScrapeConfigurationProvider : IScrapeConfigurationProvider
     {
-        private const string DefaultScrapeConfigurationPath = "/config/metrics.yaml";
-
         public ScrapeConfiguration GetConfiguration()
         {
             var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(scrapingConfigurationPath))
             {
-                Console.WriteLine($"No scraping configuration path was specified, falling back to default '{DefaultScrapeConfigurationPath}'...");
-                scrapingConfigurationPath = DefaultScrapeConfigurationPath;
+                Console.WriteLine($"No scraping configuration path was specified, falling back to default '{Constants.Defaults.MetricsDeclarationPath}'...");
+                scrapingConfigurationPath = Constants.Defaults.MetricsDeclarationPath;
             }
 
             var rawConfiguration = File.ReadAllText(scrapingConfigurationPath);
