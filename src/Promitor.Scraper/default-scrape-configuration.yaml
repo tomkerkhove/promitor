@@ -1,5 +1,0 @@
-﻿azureConfiguration:
-  tenantId: "foo"
-  subscriptionId: "bar"
-  resourceGroupName: "promitor"
-metrics:

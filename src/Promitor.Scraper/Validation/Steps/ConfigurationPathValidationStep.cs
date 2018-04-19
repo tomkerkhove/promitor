@@ -15,7 +15,7 @@ namespace Promitor.Scraper.Validation.Steps
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
                 LogMessage("No scrape configuration configured, falling back to default one...");
-                configurationPath = "default-scrape-configuration.yaml";
+                configurationPath = Constants.Defaults.MetricsDeclarationPath;
                 Environment.SetEnvironmentVariable(EnvironmentVariables.ConfigurationPath, configurationPath);
             }
 
