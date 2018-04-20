@@ -17,8 +17,8 @@ Running Promitor Scraper with the default metrics configuration is super easy:
 ```
 docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
-						 -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-						 tomkerkhove/promitor-scraper:alpha
+                         -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
+                         tomkerkhove/promitor-scraper:alpha
 ```
 
 # Features
