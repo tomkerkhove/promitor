@@ -1,4 +1,7 @@
-﻿namespace Promitor.Scraper.Validation
+﻿using System.Collections.Generic;
+using System.Text;
+
+namespace Promitor.Scraper.Validation
 {
     public class ValidationResult
     {
@@ -14,18 +17,28 @@
             Message = failureMessage;
         }
 
-        public bool IsSuccessful { get; set; }
-        public string Message { get; set; }
         public string ComponentName { get; set; }
 
-        public static ValidationResult Successful(string componentName)
-        {
-            return new ValidationResult(componentName, isSuccessful:true);
-        }
+        public bool IsSuccessful { get; set; }
+        public string Message { get; set; }
 
         public static ValidationResult Failure(string componentName, string failureMessage)
         {
             return new ValidationResult(componentName, isSuccessful: false, failureMessage: failureMessage);
+        }
+
+        public static ValidationResult Failure(string componentName, List<string> failureMessages)
+        {
+            var errorBuilder = new StringBuilder();
+            failureMessages.ForEach(errorMessage => errorBuilder.AppendLine($"- {errorMessage}"));
+
+            var failureMessage = errorBuilder.ToString();
+            return new ValidationResult(componentName, isSuccessful: false, failureMessage: failureMessage);
+        }
+
+        public static ValidationResult Successful(string componentName)
+        {
+            return new ValidationResult(componentName, isSuccessful: true);
         }
     }
 }

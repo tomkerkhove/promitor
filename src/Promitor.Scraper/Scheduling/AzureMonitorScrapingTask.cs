@@ -13,11 +13,11 @@ namespace Promitor.Scraper.Scheduling
 {
     public class AzureMonitorScrapingTask : IScheduledTask
     {
-        private readonly IScrapeConfigurationProvider scrapeConfigurationProvider;
+        private readonly IMetricsDeclarationProvider metricsDeclarationProvider;
 
-        public AzureMonitorScrapingTask(IScrapeConfigurationProvider scrapeConfigurationProvider)
+        public AzureMonitorScrapingTask(IMetricsDeclarationProvider metricsDeclarationProvider)
         {
-            this.scrapeConfigurationProvider = scrapeConfigurationProvider;
+            this.metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         public string Schedule => Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
@@ -26,7 +26,7 @@ namespace Promitor.Scraper.Scheduling
         {
             Console.WriteLine($"Scraping Azure Monitor - {DateTimeOffset.Now}");
 
-            var scrapeConfiguration = scrapeConfigurationProvider.GetConfiguration();
+            var scrapeConfiguration = metricsDeclarationProvider.Get();
 
             var scrapingTasks = new List<Task>();
 
