@@ -86,7 +86,7 @@ namespace Promitor.Scraper.Validation.Steps
             {
                 errorMessages.Add("Invalid azure metric configuration is configured");
                 return errorMessages;
-            }
+            }   
 
             if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
             {

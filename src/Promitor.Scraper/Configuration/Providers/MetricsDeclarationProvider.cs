@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Configuration.Providers
         {
             var rawMetricsDeclaration = GetSerializedDeclaration();
             var input = new StringReader(rawMetricsDeclaration);
-            var deserializer = GetYamlDeserializer();
+            var deserializer = YamlSerialization.CreateDeserializer();
 
             var config = deserializer.Deserialize<MetricsDeclaration>(input);
             return config;
@@ -30,15 +30,6 @@ namespace Promitor.Scraper.Configuration.Providers
 
             var rawMetricsDeclaration = File.ReadAllText(scrapingConfigurationPath);
             return rawMetricsDeclaration;
-        }
-
-        private static Deserializer GetYamlDeserializer()
-        {
-            var builder = new DeserializerBuilder();
-            builder.IgnoreUnmatchedProperties();
-            builder.WithNamingConvention(new CamelCaseNamingConvention());
-
-            return builder.Build();
         }
     }
 }
