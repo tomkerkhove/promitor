@@ -10,11 +10,11 @@ namespace Promitor.Scraper.Controllers.v1
     [Route("api/v1/configuration")]
     public class ConfigurationController : Controller
     {
-        private readonly IScrapeConfigurationProvider _scrapeConfigurationProvider;
+        private readonly IMetricsDeclarationProvider metricsDeclarationProvider;
 
-        public ConfigurationController(IScrapeConfigurationProvider scrapeConfigurationProvider)
+        public ConfigurationController(IMetricsDeclarationProvider metricsDeclarationProvider)
         {
-            _scrapeConfigurationProvider = scrapeConfigurationProvider;
+            this.metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         /// <summary>
@@ -22,13 +22,14 @@ namespace Promitor.Scraper.Controllers.v1
         /// </summary>
         /// <remarks>Provides a list of all configured metrics to scrape</remarks>
         [HttpGet]
-        [SwaggerOperation("get-metrics-declaration")]
+        [Route("metric-declaration")]
+        [SwaggerOperation("get-configuration-metrics-declaration")]
         [SwaggerResponse((int) HttpStatusCode.OK, Description = "Configuration concerning the metrics to scrape",
             Type = typeof(List<MetricDefinition>))]
         [SwaggerResponse((int) HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
         public IEnumerable<MetricDefinition> Get()
         {
-            var scrapeConfiguration = _scrapeConfigurationProvider.GetConfiguration();
+            var scrapeConfiguration = metricsDeclarationProvider.Get();
             return scrapeConfiguration.Metrics;
         }
     }

@@ -25,11 +25,6 @@ namespace Promitor.Scraper
             ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
         }
 
-        private static void WelcomeToPromitor()
-        {
-            Console.WriteLine(Constants.Texts.Welcome);
-        }
-
         public IConfiguration Configuration { get; }
         public string ScrapeEndpointBasePath { get; }
 
@@ -49,11 +44,16 @@ namespace Promitor.Scraper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IScrapeConfigurationProvider, ScrapeConfigurationProvider>();
+            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
 
             services.AddMvc();
             services.UseCronScheduler();
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
+        }
+
+        private static void WelcomeToPromitor()
+        {
+            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         private IConfiguration BuildConfiguration()
@@ -66,10 +66,12 @@ namespace Promitor.Scraper
 
         private void ValidateSetup()
         {
+            var scrapeConfigurationProvider = new MetricsDeclarationProvider();
             var validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(),
-                new ScrapingScheduleValidationStep()
+                new ScrapingScheduleValidationStep(),
+                new MetricsDeclarationValidationStep(scrapeConfigurationProvider)
             };
 
             Validator.Run(validationSteps);

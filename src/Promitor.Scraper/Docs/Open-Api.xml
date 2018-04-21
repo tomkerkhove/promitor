@@ -4,9 +4,14 @@
         <name>Promitor.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Scraper.Configuration.Providers.Interfaces.IScrapeConfigurationProvider.GetConfiguration">
+        <member name="M:Promitor.Scraper.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.Get">
             <summary>
-                Gets scraping configuration
+                Gets the configured metrics declaration
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.GetSerializedDeclaration">
+            <summary>
+                Gets the serialized metrics declaration
             </summary>
         </member>
         <member name="M:Promitor.Scraper.Controllers.v1.ConfigurationController.Get">

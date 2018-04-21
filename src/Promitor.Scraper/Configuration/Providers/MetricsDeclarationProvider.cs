@@ -7,9 +7,19 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace Promitor.Scraper.Configuration.Providers
 {
-    public class ScrapeConfigurationProvider : IScrapeConfigurationProvider
+    public class MetricsDeclarationProvider : IMetricsDeclarationProvider
     {
-        public ScrapeConfiguration GetConfiguration()
+        public virtual MetricsDeclaration Get()
+        {
+            var rawMetricsDeclaration = GetSerializedDeclaration();
+            var input = new StringReader(rawMetricsDeclaration);
+            var deserializer = GetYamlDeserializer();
+
+            var config = deserializer.Deserialize<MetricsDeclaration>(input);
+            return config;
+        }
+
+        public virtual string GetSerializedDeclaration()
         {
             var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
             if (string.IsNullOrWhiteSpace(scrapingConfigurationPath))
@@ -18,12 +28,8 @@ namespace Promitor.Scraper.Configuration.Providers
                 scrapingConfigurationPath = Constants.Defaults.MetricsDeclarationPath;
             }
 
-            var rawConfiguration = File.ReadAllText(scrapingConfigurationPath);
-            var input = new StringReader(rawConfiguration);
-            var deserializer = GetYamlDeserializer();
-
-            var config = deserializer.Deserialize<ScrapeConfiguration>(input);
-            return config;
+            var rawMetricsDeclaration = File.ReadAllText(scrapingConfigurationPath);
+            return rawMetricsDeclaration;
         }
 
         private static Deserializer GetYamlDeserializer()

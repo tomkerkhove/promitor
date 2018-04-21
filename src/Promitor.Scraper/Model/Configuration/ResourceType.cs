@@ -2,6 +2,7 @@
 {
     public enum ResourceType
     {
-        ServiceBusQueue
+        NotSpecified = 0,
+        ServiceBusQueue = 1
     }
 }
