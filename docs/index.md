@@ -21,6 +21,8 @@ docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          tomkerkhove/promitor-scraper:alpha
 ```
 
+Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-scraper/).
+
 # Features
 
 - Automatically scrapes Azure Monitor metrics
