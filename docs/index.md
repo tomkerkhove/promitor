@@ -18,7 +18,7 @@ Running Promitor Scraper with the default metrics configuration is super easy:
 docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
                          -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-scraper:alpha
+                         tomkerkhove/promitor-scraper:v1.0-alpha
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-scraper/).
@@ -30,6 +30,10 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 - Built-in support for a variety of Azure services ([overview](configuration/metrics))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
+- More on the way ([backlog](https://github.com/tomkerkhove/promitor/issues))
+
+# Known Limitations
+- Metrics interval does not take scraping cron schedule into account ([#60](https://github.com/tomkerkhove/promitor/issues/60))
 
 # Documentation
 - **Configuration**
