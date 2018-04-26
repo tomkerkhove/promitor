@@ -20,13 +20,13 @@ Supported metrics:
 Example:
 ```yaml
 name: demo_queue_size
-description: "Size of the 'myqueue' queue"
+description: "Amount of active messages of the 'myqueue' queue"
 resourceType: ServiceBusQueue
 namespace: promitor-messaging
 queueName: orders
 azureMetricConfiguration:
-  metricName: Size
-  aggregation: Average
+  metricName: ActiveMessages
+  aggregation: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />
