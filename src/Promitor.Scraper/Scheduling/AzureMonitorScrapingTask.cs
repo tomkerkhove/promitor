@@ -41,7 +41,7 @@ namespace Promitor.Scraper.Scheduling
 
         private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefinition metricDefinitionDefinition)
         {
-            Console.WriteLine($"Scraping {metricDefinitionDefinition.Name} of type {metricDefinitionDefinition.ResourceType}");
+            Console.WriteLine($"\t> Scraping {metricDefinitionDefinition.Name} of type {metricDefinitionDefinition.ResourceType}");
 
             var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
