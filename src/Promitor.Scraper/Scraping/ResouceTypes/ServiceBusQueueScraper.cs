@@ -36,7 +36,8 @@ namespace Promitor.Scraper.Scraping.ResouceTypes
             var timeSeriesElement = metric?.Timeseries.FirstOrDefault();
             if (timeSeriesElement == null)
             {
-                throw new ScrapingException(metric?.Name.Value, $"No time series found for metric '{metric?.Name}'");
+                var metricName = metric?.Name?.Value;
+                throw new ScrapingException(metricName, $"No time series found for metric '{metricName}'");
             }
 
             var lastestMetricData = timeSeriesElement.Data.OrderByDescending(measurePoint => measurePoint.TimeStamp)
