@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor;
 using Microsoft.Azure.Management.Monitor.Models;
 using Microsoft.Rest.Azure.OData;
-using Newtonsoft.Json;
 using Prometheus.Client;
 using Promitor.Scraper.Model;
 using Promitor.Scraper.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Scraping.Exceptions;
 
 namespace Promitor.Scraper.Scraping.ResouceTypes
 {
@@ -29,14 +29,18 @@ namespace Promitor.Scraper.Scraping.ResouceTypes
             gauge.Set(foundMetric);
         }
 
-        private double ExtractMostRecentMetricData(Response metrics, AggregationType metricAggregation)
+        private double ExtractMostRecentMetricData(Metric metric, AggregationType metricAggregation)
         {
             var currentStamp = DateTime.UtcNow;
 
-            var metric = metrics.Value.First();
-            var timeSeriesElement = metric.Timeseries.First();
+            var timeSeriesElement = metric?.Timeseries.FirstOrDefault();
+            if (timeSeriesElement == null)
+            {
+                throw new ScrapingException(metric?.Name.Value, $"No time series found for metric '{metric?.Name}'");
+            }
+
             var lastestMetricData = timeSeriesElement.Data.OrderByDescending(measurePoint => measurePoint.TimeStamp)
-                                                          .First(measurePoint => measurePoint.TimeStamp < currentStamp);
+                .First(measurePoint => measurePoint.TimeStamp < currentStamp);
 
             switch (metricAggregation)
             {
@@ -63,16 +67,19 @@ namespace Promitor.Scraper.Scraping.ResouceTypes
             if (metricDefinitions.FirstOrDefault(
                     metric => string.Equals(metric.Name.Value, metricName, StringComparison.InvariantCultureIgnoreCase)) == null)
             {
-                Console.WriteLine("Invalid metric");
+                Console.WriteLine(value: "Invalid metric");
             }
 
             var odataFilterMetrics = new ODataQuery<MetadataValue>($"EntityName eq '{queueName}'");
 
             var metrics = await monitoringClient.Metrics.ListAsync(resourceId, metricnames: metricName, odataQuery: odataFilterMetrics, aggregation: metricAggregation.ToString(), interval: TimeSpan.FromMinutes(value: 1));
-            var rawMetrics = JsonConvert.SerializeObject(metrics, Formatting.Indented);
-            Console.WriteLine(rawMetrics);
+            var foundMetric = metrics.Value.FirstOrDefault();
+            if (foundMetric == null)
+            {
+                throw new ScrapingException(metricName, $"No metric was found for '{metricName}'");
+            }
 
-            var metricData = ExtractMostRecentMetricData(metrics, metricAggregation);
+            var metricData = ExtractMostRecentMetricData(foundMetric, metricAggregation);
 
             return metricData;
         }
