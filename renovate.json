@@ -2,6 +2,7 @@
   "branchPrefix":"renovate-",
   "separateMajorMinor": false,
   "labels":["dependencies"],
+  "ignoreDeps":["Microsoft.AspNetCore.All"],
   "extends": [
     "config:base"
   ],
