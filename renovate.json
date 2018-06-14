@@ -1,4 +1,5 @@
 {
+  "branchPrefix":"renovate-",
   "extends": [
     "config:base"
   ],
