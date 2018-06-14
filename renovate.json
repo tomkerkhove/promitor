@@ -1,6 +1,7 @@
 {
   "branchPrefix":"renovate-",
   "separateMajorMinor": false,
+  "labels":["dependency-management"],
   "extends": [
     "config:base"
   ],
