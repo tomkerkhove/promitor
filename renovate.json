@@ -1,0 +1,10 @@
+{
+  "branchPrefix":"renovate-",
+  "separateMajorMinor": false,
+  "extends": [
+    "config:base"
+  ],
+  "nuget": {
+    "enabled": true
+   }
+}
