@@ -43,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     Url = "https://blog.tomkerkhove.be"
                 },
                 Title = $"Promitor v{apiVersion}",
-                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../{prometheusScrapeEndpointPath}\" target=\"_blank\">/{prometheusScrapeEndpointPath}</a>'",
+                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
                 Version = $"v{apiVersion}",
                 License = new License
                 {

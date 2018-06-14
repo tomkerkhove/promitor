@@ -1,4 +1,4 @@
-﻿using Prometheus.Client.Owin;
+﻿using Prometheus.Client.AspNetCore;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
@@ -25,18 +25,16 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         /// <summary>
-        ///     Add support for exposing a prometheus scaraping endpoint
+        ///     Add support for exposing a prometheus scraping endpoint
         /// </summary>
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         public static IApplicationBuilder UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
-            var prometheusOptions = new PrometheusOptions
+            app.UsePrometheusServer(prometheusOptions =>
             {
-                MapPath = scrapeEndpointPath,
-                UseDefaultCollectors = false
-            };
-
-            app.UsePrometheusServer(prometheusOptions);
+                prometheusOptions.MapPath = scrapeEndpointPath;
+                prometheusOptions.UseDefaultCollectors = false;
+            });
             
             return app;
         }

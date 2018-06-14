@@ -6,7 +6,7 @@ namespace Promitor.Scraper.Scraping
 {
     public static class ScrapeEndpoint
     {
-        private const string DefaultScrapeEndpoint = "prometheus/scrape";
+        private const string DefaultScrapeEndpoint = "/prometheus/scrape";
 
         /// <summary>
         ///     Determines the base path under which the scrape endpoint is configured to be exposed
