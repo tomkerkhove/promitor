@@ -28,7 +28,6 @@
     <PackageReference Include="Microsoft.Azure.Management.Monitor" Version="0.19.1-preview" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.3.2" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="1.5.0" />
-    <PackageReference Include="Prometheus.Client.Owin" Version="1.5.0" />
     <PackageReference Include="Shuttle.Core.Cron" Version="10.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.5.0" />
     <PackageReference Include="YamlDotNet" Version="4.3.2" />
