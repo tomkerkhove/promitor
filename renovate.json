@@ -2,7 +2,7 @@
   "branchPrefix":"renovate-",
   "separateMajorMinor": false,
   "labels":["dependencies"],
-  "ignoreDeps":["Microsoft.AspNetCore.All"],
+  "ignoreDeps":["Microsoft.AspNetCore.All","microsoft/dotnet"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "extends": [
