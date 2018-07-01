@@ -17,7 +17,7 @@ namespace Promitor.Scraper
     {
         public Startup(IHostingEnvironment env)
         {
-            WelcomeToPromitor();
+            WelcomeToomitor();
 
             ValidateSetup();
 
