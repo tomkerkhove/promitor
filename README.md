@@ -1,7 +1,6 @@
 # Promitor - Azure Monitor Scraper for Prometheus 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg&style=flat-square)](./LICENSE)[![Build Status](	https://img.shields.io/travis/tomkerkhove/promitor&style=flat-square)](https://travis-ci.org/tomkerkhove/promitor) [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg&style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)
 [![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg&style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)
-[![Known Vulnerabilities in Docs](https://snyk.io/test/github/tomkerkhove/promitor/badge.svg?style=flat-square&targetFile=docs/Gemfile.lock)](https://snyk.io/test/github/tomkerkhove/promitor?targetFile=docs/Gemfile.lock)
 
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a subset of Azure Monitor metrics inside your cluster.
