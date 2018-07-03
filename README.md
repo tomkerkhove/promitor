@@ -22,8 +22,14 @@ This is licensed under The MIT License (MIT). Which means that you can use, copy
 
 ## Thank you!
 
-- **Travis CI** is a hosted, distributed continuous integration service used to build our pull requests. ![Travis CI](./media/travis-ci-black.png)
+- **Travis CI** is a hosted, distributed continuous integration service used to build our pull requests.
 
-- **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed. ![Snyk](./media/snyk-dark.png)
+![Travis CI](./media/travis-ci-black.png)
 
-- **Renovate** saves us time and reduces risk by automating the tedious process of updating dependencies. ![Renovate](./media/renovate.jpg)
+- **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed.
+
+![Snyk](./media/snyk-dark.png)
+
+- **Renovate** saves us time and reduces risk by automating the tedious process of updating dependencies.
+
+![Renovate](./media/renovate.jpg)
