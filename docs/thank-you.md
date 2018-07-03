@@ -8,15 +8,15 @@ Here is an overview of the services that are so kind to support us:
 
 - **Travis CI** is a hosted, distributed continuous integration service used to build our pull requests.
 
-![Travis CI](/docs/media/travis-ci-black.png)
+![Travis CI](./media/travis-ci-black.png)
 
 - **Renovate** saves us time and reduces risk by automating the tedious process of updating dependencies.
 
-![Renovate](/docs/media/renovate.jpg)
+![Renovate](./media/renovate.jpg)
 
 - **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed.
 
-![Snyk](/docs/media/snyk-dark.png)
+![Snyk](./media/snyk-dark.png)
 
 # GitHub Apps
 We are using the following GitHub Apps:
