@@ -21,15 +21,4 @@ All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We w
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
 
 ## Thank you!
-
-- **Travis CI** is a hosted, distributed continuous integration service used to build our pull requests.
-
-![Travis CI](./media/travis-ci-black.png)
-
-- **Renovate** saves us time and reduces risk by automating the tedious process of updating dependencies.
-
-![Renovate](./media/renovate.jpg)
-
-- **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed.
-
-![Snyk](./media/snyk-dark.png)
+We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you.md)!
