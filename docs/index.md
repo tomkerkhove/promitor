@@ -42,8 +42,8 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
     - [Metrics Declaration](configuration/metrics)
 
-# License Information
-This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
-
 # Thank you!
 We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you)!
+
+# License Information
+This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
