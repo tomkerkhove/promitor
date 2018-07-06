@@ -56,6 +56,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSwaggerGen(swaggerGenerationOptions =>
             {
+                swaggerGenerationOptions.EnableAnnotations();
                 swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
                 swaggerGenerationOptions.DescribeAllEnumsAsStrings();
 
