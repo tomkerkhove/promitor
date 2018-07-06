@@ -3,7 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Model.Configuration.Metrics;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Scraper.Controllers.v1
 {
@@ -23,7 +23,7 @@ namespace Promitor.Scraper.Controllers.v1
         /// <remarks>Provides a list of all configured metrics to scrape</remarks>
         [HttpGet]
         [Route("metric-declaration")]
-        [SwaggerOperation("get-configuration-metrics-declaration")]
+        [SwaggerOperation(OperationId = "Configuration_Get")]
         [SwaggerResponse((int) HttpStatusCode.OK, Description = "Configuration concerning the metrics to scrape",
             Type = typeof(List<MetricDefinition>))]
         [SwaggerResponse((int) HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
