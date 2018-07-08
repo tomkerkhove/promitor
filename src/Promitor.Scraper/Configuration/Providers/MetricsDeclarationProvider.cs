@@ -2,8 +2,6 @@
 using System.IO;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Model.Configuration;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace Promitor.Scraper.Configuration.Providers
 {
@@ -21,7 +19,7 @@ namespace Promitor.Scraper.Configuration.Providers
 
         public virtual string GetSerializedDeclaration()
         {
-            var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
+            var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
             if (string.IsNullOrWhiteSpace(scrapingConfigurationPath))
             {
                 Console.WriteLine($"No scraping configuration path was specified, falling back to default '{Constants.Defaults.MetricsDeclarationPath}'...");

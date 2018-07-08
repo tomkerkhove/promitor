@@ -8,16 +8,19 @@ using Promitor.Scraper.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics;
 using Promitor.Scraper.Scheduling.Interfaces;
 using Promitor.Scraper.Scraping.Factories;
+using Promitor.Scraper.Telemetry.Interfaces;
 
 namespace Promitor.Scraper.Scheduling
 {
     public class AzureMonitorScrapingTask : IScheduledTask
     {
         private readonly IMetricsDeclarationProvider metricsDeclarationProvider;
+        private readonly IExceptionTracker exceptionTracker;
 
-        public AzureMonitorScrapingTask(IMetricsDeclarationProvider metricsDeclarationProvider)
+        public AzureMonitorScrapingTask(IMetricsDeclarationProvider metricsDeclarationProvider, IExceptionTracker exceptionTracker)
         {
             this.metricsDeclarationProvider = metricsDeclarationProvider;
+            this.exceptionTracker = exceptionTracker;
         }
 
         public string Schedule => Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
@@ -30,13 +33,20 @@ namespace Promitor.Scraper.Scheduling
 
             var scrapingTasks = new List<Task>();
 
-            foreach (var metricDefinition in scrapeConfiguration.Metrics)
+            try
             {
-                var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);
-                scrapingTasks.Add(scrapingTask);
-            }
+                foreach (var metricDefinition in scrapeConfiguration.Metrics)
+                {
+                    var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);
+                    scrapingTasks.Add(scrapingTask);
+                }
 
-            await Task.WhenAll(scrapingTasks);
+                await Task.WhenAll(scrapingTasks);
+            }
+            catch (Exception exception)
+            {
+                exceptionTracker.Track(exception);
+            }
         }
 
         private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefinition metricDefinitionDefinition)

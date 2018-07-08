@@ -11,12 +11,12 @@ namespace Promitor.Scraper.Validation.Steps
 
         public ValidationResult Run()
         {
-            var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.ConfigurationPath);
+            var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
                 LogMessage("No scrape configuration configured, falling back to default one...");
                 configurationPath = Constants.Defaults.MetricsDeclarationPath;
-                Environment.SetEnvironmentVariable(EnvironmentVariables.ConfigurationPath, configurationPath);
+                Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, configurationPath);
             }
 
             if (File.Exists(configurationPath) == false)

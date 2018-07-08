@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Promitor.Scraper.Configuration.Providers;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Scraping;
+using Promitor.Scraper.Telemetry;
+using Promitor.Scraper.Telemetry.Interfaces;
 using Promitor.Scraper.Validation;
 using Promitor.Scraper.Validation.Interfaces;
 using Promitor.Scraper.Validation.Steps;
@@ -45,6 +47,7 @@ namespace Promitor.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
+            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
 
             services.AddMvc();
             services.UseCronScheduler();
