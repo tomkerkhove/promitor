@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
+using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders;
 using Promitor.Scraper.Tests.Unit.Stubs;
-using Promitor.Scraper.Validation.Steps;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Validation
 {
-    [Category(category: "Unit")]
+    [Category("Unit")]
     public class MetricsDeclarationValidationStepTests
     {
         [Fact]
@@ -25,7 +25,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
@@ -191,7 +191,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
     }
 }

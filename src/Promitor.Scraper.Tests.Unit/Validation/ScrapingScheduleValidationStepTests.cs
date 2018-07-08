@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using Promitor.Scraper.Configuration;
-using Promitor.Scraper.Validation.Steps;
+using Promitor.Scraper.Host;
+using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Validation

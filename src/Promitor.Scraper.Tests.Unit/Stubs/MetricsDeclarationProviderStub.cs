@@ -1,5 +1,5 @@
-﻿using Promitor.Scraper.Configuration.Providers;
-using Promitor.Scraper.Configuration.Providers.Interfaces;
+﻿using Promitor.Scraper.Host.Configuration.Providers;
+using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
 
 namespace Promitor.Scraper.Tests.Unit.Stubs
 {

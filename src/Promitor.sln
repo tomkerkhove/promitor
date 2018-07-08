@@ -3,15 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper", "Promitor.Scraper\Promitor.Scraper.csproj", "{459A2D34-2592-411F-889F-16F6C1E3EF52}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{19235B76-EE2F-4343-AA08-47615EC684EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Scraper.Tests.Unit", "Promitor.Scraper.Tests.Unit\Promitor.Scraper.Tests.Unit.csproj", "{D53C3256-A239-4FA9-8B54-56487570EE33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper.Tests.Unit", "Promitor.Scraper.Tests.Unit\Promitor.Scraper.Tests.Unit.csproj", "{D53C3256-A239-4FA9-8B54-56487570EE33}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{34CA9F50-3DF7-490F-A22F-A7C63650F8AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{857812E5-6A3B-415E-BBB4-90CF0B61C037}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Core.Telemetry", "Promitor.Core.Telemetry\Promitor.Core.Telemetry.csproj", "{EF19E7C2-271B-4651-BF70-0AC4E0834463}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper.Host", "Promitor.Scraper.Host\Promitor.Scraper.Host.csproj", "{D4428510-993A-44F1-A8B2-63EE497327D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,22 +23,27 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{459A2D34-2592-411F-889F-16F6C1E3EF52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{459A2D34-2592-411F-889F-16F6C1E3EF52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{459A2D34-2592-411F-889F-16F6C1E3EF52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{459A2D34-2592-411F-889F-16F6C1E3EF52}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D53C3256-A239-4FA9-8B54-56487570EE33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D53C3256-A239-4FA9-8B54-56487570EE33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D53C3256-A239-4FA9-8B54-56487570EE33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D53C3256-A239-4FA9-8B54-56487570EE33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF19E7C2-271B-4651-BF70-0AC4E0834463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF19E7C2-271B-4651-BF70-0AC4E0834463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF19E7C2-271B-4651-BF70-0AC4E0834463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF19E7C2-271B-4651-BF70-0AC4E0834463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4428510-993A-44F1-A8B2-63EE497327D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4428510-993A-44F1-A8B2-63EE497327D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4428510-993A-44F1-A8B2-63EE497327D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4428510-993A-44F1-A8B2-63EE497327D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{459A2D34-2592-411F-889F-16F6C1E3EF52} = {19235B76-EE2F-4343-AA08-47615EC684EC}
 		{19235B76-EE2F-4343-AA08-47615EC684EC} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{D53C3256-A239-4FA9-8B54-56487570EE33} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
+		{EF19E7C2-271B-4651-BF70-0AC4E0834463} = {857812E5-6A3B-415E-BBB4-90CF0B61C037}
+		{D4428510-993A-44F1-A8B2-63EE497327D7} = {19235B76-EE2F-4343-AA08-47615EC684EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

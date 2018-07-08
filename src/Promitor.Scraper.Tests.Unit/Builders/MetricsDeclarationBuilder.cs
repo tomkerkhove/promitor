@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Models;
-using Promitor.Scraper.Model.Configuration;
+using Promitor.Scraper.Host;
+using Promitor.Scraper.Host.Configuration.Model;
+using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Tests.Unit.Builders
