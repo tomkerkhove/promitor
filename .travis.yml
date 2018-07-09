@@ -8,4 +8,4 @@ branches:
  only:
    - master
 script:
- - docker build --no-cache src\Promitor.Scraper\Dockerfile
+ - docker build --no-cache src/Promitor.Scraper/Dockerfile
