@@ -3,7 +3,7 @@ WORKDIR /build
 COPY . /dotnet-sources/.
 RUN dotnet publish /dotnet-sources/Promitor.Scraper.csproj --configuration release -o output
 
-FROM microsoft/aspnetcore:2.0@sha256:87ad2237a0e82a6630a331f6c8d5de199ded473f3a8284481eca9a6a560da3e8 as runtime
+FROM microsoft/aspnetcore:2.0@sha256:cd0ce9bddfccdb95773b39034a85f3dd061562ab04547027b09061abc5c91575 as runtime
 WORKDIR /app
 EXPOSE 80
 COPY --from=build /dotnet-sources/output .
