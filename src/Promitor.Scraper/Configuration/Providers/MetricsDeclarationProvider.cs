@@ -2,6 +2,7 @@
 using System.IO;
 using Promitor.Scraper.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Model.Configuration;
+using Promitor.Scraper.Serialization;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
