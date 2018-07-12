@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
     public class MetricsDeclarationValidationStepTests
     {
         [Fact]
-        public void MetricsDeclaration_DeclarationWithDuplicateMetricNames_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithDuplicateMetricNames_Fails()
         {
             // Arrange
             const string metricName = "my_metric";
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveResourceGroupName_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveResourceGroupName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(resourceGroupName: string.Empty)
@@ -45,7 +45,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveSubscriptionId_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveSubscriptionId_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(subscriptionId: string.Empty)
@@ -61,7 +61,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveTenantId_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveTenantId_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(string.Empty)
@@ -94,7 +94,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithoutMetadata_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithoutMetadata_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithoutMetadata()
@@ -127,7 +127,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithoutMetricName_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -144,7 +144,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithoutQueueName_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithoutQueueName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -161,7 +161,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
         }
 
         [Fact]
-        public void MetricsDeclaration_DeclarationWithoutServiceBusNamespace_ValidationFails()
+        public void MetricsDeclaration_DeclarationWithoutServiceBusNamespace_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
