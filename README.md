@@ -5,12 +5,6 @@
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a subset of Azure Monitor metrics inside your cluster.
 
-----------------------------
-
-:rotating_light: This is under active development and not ready yet. Expect some (major) changes.
-
-----------------------------
-
 ## Documentation
 All documentation is available on [promitor.io](https://promitor.io)
 
