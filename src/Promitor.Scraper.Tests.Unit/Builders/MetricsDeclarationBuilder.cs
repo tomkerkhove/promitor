@@ -2,6 +2,7 @@
 using Microsoft.Azure.Management.Monitor.Models;
 using Promitor.Scraper.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Serialization;
 
 namespace Promitor.Scraper.Tests.Unit.Builders
 {

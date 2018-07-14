@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  promitor.scraper:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - PROMITOR_AUTH_APPID=<PROMITOR_AUTH_APPID>
+      - PROMITOR_AUTH_APPKEY=<PROMITOR_AUTH_APPKEY>
+    ports:
+      - "80"
