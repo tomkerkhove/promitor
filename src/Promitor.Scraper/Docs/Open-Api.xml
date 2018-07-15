@@ -91,7 +91,7 @@
                 Metadata concerning the Azure resources
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Scraping.Scraper`1.ScrapeResourceAsync(Microsoft.Azure.Management.Monitor.MonitorManagementClient,`0)">
+        <member name="M:Promitor.Scraper.Scraping.Scraper`1.ScrapeResourceAsync(Microsoft.Azure.Management.Monitor.Fluent.MonitorManagementClient,`0)">
             <summary>
                 Scrapes the configured resource
             </summary>

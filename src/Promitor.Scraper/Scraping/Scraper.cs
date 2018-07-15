@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor;
+using Microsoft.Azure.Management.Monitor.Fluent;
 using Microsoft.Rest;
 using Microsoft.Rest.Azure.Authentication;
 using Newtonsoft.Json;
