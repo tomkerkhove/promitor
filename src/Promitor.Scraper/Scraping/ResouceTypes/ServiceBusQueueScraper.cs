@@ -1,6 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Azure.Management.Monitor.Fluent;
-using Prometheus.Client;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Model;
 using Promitor.Scraper.Model.Configuration;
@@ -16,19 +14,15 @@ namespace Promitor.Scraper.Scraping.ResouceTypes
         {
         }
 
-        protected override async Task ScrapeResourceAsync(MonitorManagementClient monitoringClient, ServiceBusQueueMetricDefinition metricDefinition)
+        protected override async Task<double> ScrapeResourceAsync(AzureMonitorClient azureMonitorClient, ServiceBusQueueMetricDefinition metricDefinition)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.Namespace);
 
-            // TODO: Inject
-            var monitorClient = new AzureMonitorClient(AzureMetadata.TenantId, AzureMetadata.SubscriptionId, this.AzureCredentials.ApplicationId, this.AzureCredentials.Secret);
-
             var filter = $"EntityName eq '{metricDefinition.QueueName}'";
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetric = await monitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, filter, resourceUri);
-            
-            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
-            gauge.Set(foundMetric);
+            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, filter);
+
+            return foundMetricValue;
         }
     }
 }
