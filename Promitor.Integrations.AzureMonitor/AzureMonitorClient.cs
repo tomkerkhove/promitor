@@ -10,7 +10,7 @@ namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
-        private readonly IAzure authenticatedAzureSubscription;
+        private readonly IAzure _authenticatedAzureSubscription;
 
         public AzureMonitorClient(string azureTenantId, string subscriptionId, string applicationId,
             string applicationSecret)
@@ -18,7 +18,7 @@ namespace Promitor.Integrations.AzureMonitor
             var credentials = new AzureCredentialsFactory().FromServicePrincipal(applicationId, applicationSecret,
                 azureTenantId, AzureEnvironment.AzureGlobalCloud);
 
-            authenticatedAzureSubscription = Azure.Authenticate(credentials)
+            _authenticatedAzureSubscription = Azure.Authenticate(credentials)
                 .WithSubscription(subscriptionId);
         }
 
@@ -28,7 +28,7 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 // Get all metrics
                 var metricsDefinitions =
-                    await authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);
+                    await _authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);
 
                 var metricDefinition =
                     metricsDefinitions.SingleOrDefault(definition => definition.Name.Value == metricName);
@@ -43,7 +43,7 @@ namespace Promitor.Integrations.AzureMonitor
                     .StartingFrom(recordDateTime.AddDays(-5))
                     .EndsBefore(recordDateTime)
                     .WithAggregation(metricAggregation.ToString())
-                    //.WithOdataFilter(metricFilter)
+                    .WithOdataFilter(metricFilter)
                     .WithInterval(TimeSpan.FromMinutes(5)) // TODO: Align with cron
                     .ExecuteAsync();
 
