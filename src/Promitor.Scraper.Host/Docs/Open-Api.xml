@@ -56,7 +56,7 @@
             </summary>
             <param name="rawCronSchedule">Raw Cron schedule to use</param>
         </member>
-        <member name="M:Promitor.Scraper.Host.Scraping.Factories.MetricScraperFactory.CreateScraper(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.ResourceType)">
+        <member name="M:Promitor.Scraper.Host.Scraping.Factories.MetricScraperFactory.CreateScraper(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.ResourceType,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
             <summary>
                 Creates a scraper that is capable of scraping a specific resource type
             </summary>
@@ -74,12 +74,13 @@
             </summary>
             <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
         </member>
-        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.#ctor(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.AzureCredentials)">
+        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.#ctor(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.AzureCredentials,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
             <summary>
                 Constructor
             </summary>
             <param name="azureMetadata">Metadata concerning the Azure resources</param>
             <param name="azureCredentials">Credentials used to authenticate to Microsoft Azure</param>
+            <param name="exceptionTracker">Exception tracker</param>
         </member>
         <member name="P:Promitor.Scraper.Host.Scraping.Scraper`1.AzureCredentials">
             <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Promitor.Core.Telemetry.Interfaces;
@@ -33,27 +32,20 @@ namespace Promitor.Scraper.Host.Scheduling
 
             var scrapingTasks = new List<Task>();
 
-            try
+            foreach (var metricDefinition in scrapeConfiguration.Metrics)
             {
-                foreach (var metricDefinition in scrapeConfiguration.Metrics)
-                {
-                    var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);
-                    scrapingTasks.Add(scrapingTask);
-                }
+                var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);
+                scrapingTasks.Add(scrapingTask);
+            }
 
-                await Task.WhenAll(scrapingTasks);
-            }
-            catch (Exception exception)
-            {
-                _exceptionTracker.Track(exception);
-            }
+            await Task.WhenAll(scrapingTasks);
         }
 
         private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefinition metricDefinitionDefinition)
         {
             Console.WriteLine($"\t> Scraping {metricDefinitionDefinition.Name} of type {metricDefinitionDefinition.ResourceType}");
 
-            var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType);
+            var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType, _exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

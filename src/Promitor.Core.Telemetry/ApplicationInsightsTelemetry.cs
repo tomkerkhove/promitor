@@ -11,8 +11,7 @@ namespace Promitor.Core.Telemetry
 
         public ApplicationInsightsTelemetry()
         {
-            var instrumentationKey =
-                Environment.GetEnvironmentVariable(EnvironmentVariables.Telemetry.InstrumentationKey);
+            var instrumentationKey = Environment.GetEnvironmentVariable(EnvironmentVariables.Telemetry.InstrumentationKey);
             var telemetryConfiguration = new TelemetryConfiguration
             {
                 DisableTelemetry = false

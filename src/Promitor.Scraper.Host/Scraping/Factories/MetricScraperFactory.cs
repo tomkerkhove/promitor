@@ -1,4 +1,5 @@
 ﻿using System;
+using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Model.Configuration;
@@ -14,14 +15,14 @@ namespace Promitor.Scraper.Host.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
-        internal static IScraper<MetricDefinition> CreateScraper(AzureMetadata azureMetadata, ResourceType metricDefinitionResourceType)
+        internal static IScraper<MetricDefinition> CreateScraper(AzureMetadata azureMetadata, ResourceType metricDefinitionResourceType, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
 
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(azureMetadata, azureCredentials);
+                    return new ServiceBusQueueScraper(azureMetadata, azureCredentials, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
