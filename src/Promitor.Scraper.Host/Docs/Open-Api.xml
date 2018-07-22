@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Promitor.Scraper.Host</name>
+    </assembly>
+    <members>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.AzureMetricConfiguration.Aggregation">
+            <summary>
+                Type of aggregation to query the Azure Monitor metric
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.AzureMetricConfiguration.MetricName">
+            <summary>
+                Name of the Azure Monitor metric to query
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.Metrics.MetricDefinition.AzureMetricConfiguration">
+            <summary>
+                Configuration about the Azure Monitor metric to scrape
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.Metrics.MetricDefinition.Description">
+            <summary>
+                Description concerning metric that will be made available in the scraping endpoint
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.Metrics.MetricDefinition.Name">
+            <summary>
+                Name of the metric to use when exposing in the scraping endpoint
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.Metrics.MetricDefinition.ResourceType">
+            <summary>
+                Type of resource that is configured
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.Get">
+            <summary>
+                Gets the configured metrics declaration
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.GetSerializedDeclaration">
+            <summary>
+                Gets the serialized metrics declaration
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.Get">
+            <summary>
+                Get Metrics Declaration
+            </summary>
+            <remarks>Provides a list of all configured metrics to scrape</remarks>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Scheduling.Cron.CronSchedule.Parse(System.String)">
+            <summary>
+                Parses the Cron schedule into a Cron expression
+            </summary>
+            <param name="rawCronSchedule">Raw Cron schedule to use</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Scraping.Factories.MetricScraperFactory.CreateScraper(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.ResourceType,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
+            <summary>
+                Creates a scraper that is capable of scraping a specific resource type
+            </summary>
+            <param name="azureMetadata">Metadata concerning the Azure resources</param>
+            <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Scraping.ScrapeEndpoint.GetBasePath(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Determines the base path under which the scrape endpoint is configured to be exposed
+            </summary>
+        </member>
+        <member name="T:Promitor.Scraper.Host.Scraping.Scraper`1">
+            <summary>
+                Azure Monitor Scrape
+            </summary>
+            <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.#ctor(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.AzureCredentials,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
+            <summary>
+                Constructor
+            </summary>
+            <param name="azureMetadata">Metadata concerning the Azure resources</param>
+            <param name="azureCredentials">Credentials used to authenticate to Microsoft Azure</param>
+            <param name="exceptionTracker">Exception tracker</param>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Scraping.Scraper`1.AzureCredentials">
+            <summary>
+                Credentials used to authenticate to Microsoft Azure
+            </summary>
+        </member>
+        <member name="P:Promitor.Scraper.Host.Scraping.Scraper`1.AzureMetadata">
+            <summary>
+                Metadata concerning the Azure resources
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.ScrapeResourceAsync(Promitor.Integrations.AzureMonitor.AzureMonitorClient,`0)">
+            <summary>
+                Scrapes the configured resource
+            </summary>
+            <param name="azureMonitorClient">Client to query Azure Monitor</param>
+            <param name="metricDefinition">Definition of the metric to scrape</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Add support for Open API with API explorer
+            </summary>
+            <param name="app">Application Builder</param>
+        </member>
+        <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+                Add support for exposing a prometheus scraping endpoint
+            </summary>
+            <param name="app">Application Builder</param>
+            <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseCronScheduler(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines to use the cron scheduler
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
+            <summary>
+                Use OpenAPI specification
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
+            <param name="apiVersion">Version of the API</param>
+        </member>
+    </members>
+</doc>

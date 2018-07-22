@@ -31,6 +31,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 - Built-in support for a variety of Azure services ([overview](configuration/metrics))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
+- Sends telemetry to Azure Application Insights
 - More on the way ([backlog](https://github.com/tomkerkhove/promitor/issues))
 
 # Known Limitations

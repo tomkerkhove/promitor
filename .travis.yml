@@ -13,4 +13,4 @@ script:
  - dotnet --info
  - dotnet build src/Promitor.sln --configuration release
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --list-tests
- - docker build ./src/ --file ./src/Promitor.Scraper/Dockerfile --no-cache
+ - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --no-cache
