@@ -42,6 +42,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
     - [Metrics Declaration](configuration/metrics)
+    - [Telemetry](configuration#telemetry)
 
 # Thank you!
 We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you)!
