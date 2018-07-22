@@ -1,7 +1,7 @@
 sudo: required
 language: csharp
 solution: src/Promitor.sln
-dotnet: 2.1.0
+dotnet: 2.1.302
 services:
   - docker
 os:  
