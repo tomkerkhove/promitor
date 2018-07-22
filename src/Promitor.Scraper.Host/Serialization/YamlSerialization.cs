@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace Promitor.Scraper.Host
+namespace Promitor.Scraper.Host.Serialization
 {
     public static class YamlSerialization
     {

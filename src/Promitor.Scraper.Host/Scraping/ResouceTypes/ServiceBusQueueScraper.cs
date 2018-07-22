@@ -1,14 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Azure.Management.Monitor;
-using Microsoft.Azure.Management.Monitor.Models;
-using Microsoft.Rest.Azure.OData;
-using Prometheus.Client;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Model.Configuration;
-using Promitor.Scraper.Host.Scraping.Exceptions;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Scraper.Model;
-using Promitor.Scraper.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Host.Scraping.ResouceTypes

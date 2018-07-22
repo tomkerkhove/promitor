@@ -1,6 +1,4 @@
-﻿using Promitor.Scraper.Host.Configuration.Model;
-
-namespace Promitor.Scraper.Host.Configuration.Model.Metrics
+﻿namespace Promitor.Scraper.Host.Configuration.Model.Metrics
 {
     public class MetricDefinition
     {

@@ -7,10 +7,6 @@ using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Host.Scraping.Interfaces;
 using Prometheus.Client;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Scraper.Model;
-using Promitor.Scraper.Model.Configuration;
-using Promitor.Scraper.Model.Configuration.Metrics;
-using Promitor.Scraper.Scraping.Interfaces;
 
 namespace Promitor.Scraper.Host.Scraping
 {
