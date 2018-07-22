@@ -5,16 +5,16 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
 {
     public class MetricsDeclarationProviderStub : MetricsDeclarationProvider, IMetricsDeclarationProvider
     {
-        private readonly string rawMetricsDeclaration;
+        private readonly string _rawMetricsDeclaration;
 
         public MetricsDeclarationProviderStub(string rawMetricsDeclaration)
         {
-            this.rawMetricsDeclaration = rawMetricsDeclaration;
+            this._rawMetricsDeclaration = rawMetricsDeclaration;
         }
 
         public override string GetSerializedDeclaration()
         {
-            return rawMetricsDeclaration;
+            return _rawMetricsDeclaration;
         }
     }
 }

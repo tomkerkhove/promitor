@@ -9,12 +9,12 @@ namespace Promitor.Scraper.Tests.Unit.Builders
 {
     public class MetricsDeclarationBuilder
     {
-        private readonly AzureMetadata azureMetadata;
-        private readonly List<ServiceBusQueueMetricDefinition> metrics = new List<ServiceBusQueueMetricDefinition>();
+        private readonly AzureMetadata _azureMetadata;
+        private readonly List<ServiceBusQueueMetricDefinition> _metrics = new List<ServiceBusQueueMetricDefinition>();
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
-            this.azureMetadata = azureMetadata;
+            this._azureMetadata = azureMetadata;
         }
 
         public static MetricsDeclarationBuilder WithMetadata(string tenantId = "tenantId", string subscriptionId = "subscriptionId", string resourceGroupName = "resourceGroupName")
@@ -38,8 +38,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders
         {
             var metricsDeclaration = new MetricsDeclaration
             {
-                AzureMetadata = azureMetadata,
-                Metrics = metrics
+                AzureMetadata = _azureMetadata,
+                Metrics = _metrics
             };
 
             var serializer = YamlSerialization.CreateSerializer();
@@ -61,7 +61,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
                     Aggregation = AggregationType.Average
                 }
             };
-            metrics.Add(metric);
+            _metrics.Add(metric);
 
             return this;
         }

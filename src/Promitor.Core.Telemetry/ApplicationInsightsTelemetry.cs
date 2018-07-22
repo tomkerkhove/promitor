@@ -7,7 +7,7 @@ namespace Promitor.Core.Telemetry
 {
     public class ApplicationInsightsTelemetry : IExceptionTracker
     {
-        private readonly TelemetryClient telemetryClient;
+        private readonly TelemetryClient _telemetryClient;
 
         public ApplicationInsightsTelemetry()
         {
@@ -23,12 +23,12 @@ namespace Promitor.Core.Telemetry
                 telemetryConfiguration.InstrumentationKey = instrumentationKey;
             }
 
-            telemetryClient = new TelemetryClient(telemetryConfiguration);
+            _telemetryClient = new TelemetryClient(telemetryConfiguration);
         }
 
         public void Track(Exception exception)
         {
-            telemetryClient.TrackException(exception);
+            _telemetryClient.TrackException(exception);
         }
     }
 }

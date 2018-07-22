@@ -14,13 +14,13 @@ namespace Promitor.Scraper.Host.Scheduling
 {
     public class AzureMonitorScrapingTask : IScheduledTask
     {
-        private readonly IMetricsDeclarationProvider metricsDeclarationProvider;
-        private readonly IExceptionTracker exceptionTracker;
+        private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
+        private readonly IExceptionTracker _exceptionTracker;
 
         public AzureMonitorScrapingTask(IMetricsDeclarationProvider metricsDeclarationProvider, IExceptionTracker exceptionTracker)
         {
-            this.metricsDeclarationProvider = metricsDeclarationProvider;
-            this.exceptionTracker = exceptionTracker;
+            this._metricsDeclarationProvider = metricsDeclarationProvider;
+            this._exceptionTracker = exceptionTracker;
         }
 
         public string Schedule => Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             Console.WriteLine($"Scraping Azure Monitor - {DateTimeOffset.Now}");
 
-            var scrapeConfiguration = metricsDeclarationProvider.Get();
+            var scrapeConfiguration = _metricsDeclarationProvider.Get();
 
             var scrapingTasks = new List<Task>();
 
@@ -49,7 +49,7 @@ namespace Promitor.Scraper.Host.Scheduling
             }
             catch (Exception exception)
             {
-                exceptionTracker.Track(exception);
+                _exceptionTracker.Track(exception);
             }
         }
 

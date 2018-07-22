@@ -10,22 +10,22 @@ namespace Promitor.Scraper.Host.Validation.Steps
 {
     public class MetricsDeclarationValidationStep : ValidationStep, IValidationStep
     {
-        private readonly IMetricsDeclarationProvider metricsDeclarationProvider;
+        private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
 
         public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider)
         {
-            this.metricsDeclarationProvider = metricsDeclarationProvider;
+            this._metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         public string ComponentName { get; } = "Metrics Declaration";
 
         public ValidationResult Run()
         {
-            var rawMetricsConfiguration = metricsDeclarationProvider.GetSerializedDeclaration();
+            var rawMetricsConfiguration = _metricsDeclarationProvider.GetSerializedDeclaration();
             LogMessage("Following metrics configuration was configured:");
             LogMessage(rawMetricsConfiguration);
 
-            var metricsDeclaration = metricsDeclarationProvider.Get();
+            var metricsDeclaration = _metricsDeclarationProvider.Get();
             if (metricsDeclaration == null)
             {
                 return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
