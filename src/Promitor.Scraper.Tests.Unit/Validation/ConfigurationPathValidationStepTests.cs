@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
     public class ConfigurationPathValidationStepTests
     {
         [Fact]
-        public void ConfigurationPath_FileDoesNotExist_Succeeds()
+        public void ConfigurationPath_FileDoesNotExist_Fails()
         {
             // Arrange
             const string validConfigurationPath = "Invalid";

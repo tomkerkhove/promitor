@@ -74,6 +74,7 @@ namespace Promitor.Scraper.Host
             {
                 new ConfigurationPathValidationStep(),
                 new ScrapingScheduleValidationStep(),
+                new AzureAuthenticationValidationStep(),
                 new MetricsDeclarationValidationStep(scrapeConfigurationProvider)
             };
 

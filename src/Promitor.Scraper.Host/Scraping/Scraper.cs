@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.Management.Monitor;
-using Microsoft.Rest;
-using Microsoft.Rest.Azure.Authentication;
 using Newtonsoft.Json;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Host.Scraping.Interfaces;
+using Prometheus.Client;
+using Promitor.Integrations.AzureMonitor;
+using Promitor.Scraper.Model;
+using Promitor.Scraper.Model.Configuration;
+using Promitor.Scraper.Model.Configuration.Metrics;
+using Promitor.Scraper.Scraping.Interfaces;
 
 namespace Promitor.Scraper.Host.Scraping
 {
@@ -15,7 +18,8 @@ namespace Promitor.Scraper.Host.Scraping
     ///     Azure Monitor Scrape
     /// </summary>
     /// <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
-    public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition> where TMetricDefinition : MetricDefinition, new()
+    public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition>
+        where TMetricDefinition : MetricDefinition, new()
     {
         /// <summary>
         ///     Constructor
@@ -50,28 +54,18 @@ namespace Promitor.Scraper.Host.Scraping
                 throw new ArgumentException($"Could not cast metric definition of type '{metricDefinition.ResourceType}' to {typeof(TMetricDefinition)}. Payload: {JsonConvert.SerializeObject(metricDefinition)}");
             }
 
-            var monitoringClient = await GetAzureMonitorClientAsync();
+            var azureMonitorClient = new AzureMonitorClient(AzureMetadata.TenantId, AzureMetadata.SubscriptionId, AzureCredentials.ApplicationId, AzureCredentials.Secret);
+            var foundMetricValue = await ScrapeResourceAsync(azureMonitorClient, castedMetricDefinition);
 
-            await ScrapeResourceAsync(monitoringClient, castedMetricDefinition);
+            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
+            gauge.Set(foundMetricValue);
         }
 
         /// <summary>
         ///     Scrapes the configured resource
         /// </summary>
-        /// <param name="monitoringClient">Client to query Azure Monitor</param>
+        /// <param name="azureMonitorClient">Client to query Azure Monitor</param>
         /// <param name="metricDefinition">Definition of the metric to scrape</param>
-        protected abstract Task ScrapeResourceAsync(MonitorManagementClient monitoringClient, TMetricDefinition metricDefinition);
-
-        private async Task<ServiceClientCredentials> AuthenticateWithAzureAsync()
-        {
-            return await ApplicationTokenProvider.LoginSilentAsync(AzureMetadata.TenantId, AzureCredentials.ApplicationId, AzureCredentials.Secret);
-        }
-
-        private async Task<MonitorManagementClient> GetAzureMonitorClientAsync()
-        {
-            var azureServiceCredentials = await AuthenticateWithAzureAsync();
-            var monitoringClient = new MonitorManagementClient(azureServiceCredentials);
-            return monitoringClient;
-        }
+        protected abstract Task<double> ScrapeResourceAsync(AzureMonitorClient azureMonitorClient, TMetricDefinition metricDefinition);
     }
 }

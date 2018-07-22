@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  promitor.scraper:
+    image: tomkerkhove/promitor-scraper
+    build:
+      context: .
+      dockerfile: Promitor.Scraper/Dockerfile
+    volumes:
+      - "./../samples/promitor-sample.yaml:/config/metrics-declaration.yaml"

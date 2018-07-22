@@ -2,6 +2,11 @@
 using System.IO;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Model.Configuration;
+using Promitor.Scraper.Serialization;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Promitor.Scraper.Host.Configuration.Providers
 {

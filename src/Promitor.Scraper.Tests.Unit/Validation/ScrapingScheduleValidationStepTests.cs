@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation
     public class ScrapingScheduleValidationStepTests
     {
         [Fact]
-        public void ScrapingSchedule_InvalidCron_Succeeds()
+        public void ScrapingSchedule_InvalidCron_Fails()
         {
             // Arrange
             const string invalidCron = "Invalid * * * *";

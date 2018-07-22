@@ -7,8 +7,9 @@ namespace Microsoft.AspNetCore.Builder
     public static class IApplicationBuilderExtensions
     {
         /// <summary>
-        ///     Add support for Open API & Develerop UI
+        ///     Add support for Open API with API explorer
         /// </summary>
+        /// <param name="app">Application Builder</param>
         public static void UseOpenApiUi(this IApplicationBuilder app)
         {
             app.UseSwagger();
@@ -27,6 +28,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         ///     Add support for exposing a prometheus scraping endpoint
         /// </summary>
+        /// <param name="app">Application Builder</param>
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         public static IApplicationBuilder UsePrometheusScraper(this IApplicationBuilder app, string scrapeEndpointPath)
         {
