@@ -11,6 +11,8 @@ using Promitor.Integrations.AzureMonitor.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
+    using Guard;
+
     public class AzureMonitorClient
     {
         private readonly IAzure _authenticatedAzureSubscription;
@@ -26,10 +28,10 @@ namespace Promitor.Integrations.AzureMonitor
         public AzureMonitorClient(string tenantId, string subscriptionId, string applicationId,
             string applicationSecret)
         {
-            Guard.Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
-            Guard.Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
-            Guard.Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-            Guard.Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+            Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
+            Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
+            Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+            Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
 
             var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, AzureEnvironment.AzureGlobalCloud);
 
@@ -47,8 +49,8 @@ namespace Promitor.Integrations.AzureMonitor
         public async Task<double> QueryMetricAsync(string metricName, AggregationType metricAggregation,
             string resourceId, string metricFilter = null)
         {
-            Guard.Guard.NotNullOrWhitespace(metricName, nameof(metricName));
-            Guard.Guard.NotNullOrWhitespace(resourceId, nameof(resourceId));
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotNullOrWhitespace(resourceId, nameof(resourceId));
 
             // Get all metrics
             var metricsDefinitions = await _authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);

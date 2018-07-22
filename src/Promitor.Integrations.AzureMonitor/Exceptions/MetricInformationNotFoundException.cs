@@ -2,6 +2,8 @@
 
 namespace Promitor.Integrations.AzureMonitor.Exceptions
 {
+    using Guard;
+
     public class MetricInformationNotFoundException : Exception
     {
         /// <summary>
@@ -11,8 +13,8 @@ namespace Promitor.Integrations.AzureMonitor.Exceptions
         /// <param name="details">Details that provide more context about the scenario</param>
         public MetricInformationNotFoundException(string metricName, string details) : base($"No metric information was found for '{metricName}'. Reason: '{details}'")
         {
-            Guard.Guard.NotNullOrWhitespace(metricName, nameof(metricName));
-            Guard.Guard.NotNullOrWhitespace(details, nameof(details));
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotNullOrWhitespace(details, nameof(details));
 
             MetricName = metricName;
             Details = details;
