@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Management.Monitor.Models;
+﻿using Microsoft.Azure.Management.Monitor.Fluent.Models;
 
 namespace Promitor.Scraper.Model.Configuration
 {

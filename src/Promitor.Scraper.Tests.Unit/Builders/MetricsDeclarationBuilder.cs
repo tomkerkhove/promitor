@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Azure.Management.Monitor.Models;
+using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Model.Configuration;
 using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
 using Promitor.Scraper.Serialization;

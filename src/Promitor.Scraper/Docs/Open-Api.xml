@@ -91,18 +91,24 @@
                 Metadata concerning the Azure resources
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Scraping.Scraper`1.ScrapeResourceAsync(Microsoft.Azure.Management.Monitor.MonitorManagementClient,`0)">
+        <member name="M:Promitor.Scraper.Scraping.Scraper`1.ScrapeResourceAsync(Promitor.Integrations.AzureMonitor.AzureMonitorClient,`0)">
             <summary>
                 Scrapes the configured resource
             </summary>
-            <param name="monitoringClient">Client to query Azure Monitor</param>
+            <param name="azureMonitorClient">Client to query Azure Monitor</param>
             <param name="metricDefinition">Definition of the metric to scrape</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)" -->
+        <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Add support for Open API with API explorer
+            </summary>
+            <param name="app">Application Builder</param>
+        </member>
         <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
             <summary>
                 Add support for exposing a prometheus scraping endpoint
             </summary>
+            <param name="app">Application Builder</param>
             <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseCronScheduler(Microsoft.Extensions.DependencyInjection.IServiceCollection)">

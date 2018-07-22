@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{783A
 		..\samples\promitor-sample.yaml = ..\samples\promitor-sample.yaml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{05524B1B-9965-4E36-9626-A2823B8588AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.AzureMonitor", "Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj", "{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{D61A88B9-F9BB-43E2-ABD3-754E3ED32317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D61A88B9-F9BB-43E2-ABD3-754E3ED32317}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D61A88B9-F9BB-43E2-ABD3-754E3ED32317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,7 @@ Global
 		{459A2D34-2592-411F-889F-16F6C1E3EF52} = {19235B76-EE2F-4343-AA08-47615EC684EC}
 		{19235B76-EE2F-4343-AA08-47615EC684EC} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{D53C3256-A239-4FA9-8B54-56487570EE33} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
+		{E39EA07D-C6E3-4D5A-8748-DB0CB8E08C1F} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

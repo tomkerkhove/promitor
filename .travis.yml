@@ -1,7 +1,7 @@
 sudo: required
 language: csharp
 solution: src/Promitor.sln
-dotnet: 2.0.0
+dotnet: 2.1.302
 services:
   - docker
 os:  
@@ -13,4 +13,4 @@ script:
  - dotnet --info
  - dotnet build src/Promitor.sln --configuration release
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --list-tests
- - docker build src/Promitor.Scraper/ --no-cache
+ - docker build ./src/ --file ./src/Promitor.Scraper/Dockerfile --no-cache
