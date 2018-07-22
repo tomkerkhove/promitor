@@ -19,8 +19,8 @@ namespace Promitor.Scraper.Host.Scheduling
 
         public AzureMonitorScrapingTask(IMetricsDeclarationProvider metricsDeclarationProvider, IExceptionTracker exceptionTracker)
         {
-            this._metricsDeclarationProvider = metricsDeclarationProvider;
-            this._exceptionTracker = exceptionTracker;
+            _metricsDeclarationProvider = metricsDeclarationProvider;
+            _exceptionTracker = exceptionTracker;
         }
 
         public string Schedule => Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
@@ -35,10 +35,6 @@ namespace Promitor.Scraper.Host.Scheduling
 
             try
             {
-                var activity = new Activity("Scrape Monitor");
-                var t = Activity.Current;
-                
-                Console.WriteLine();
                 foreach (var metricDefinition in scrapeConfiguration.Metrics)
                 {
                     var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);

@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider)
         {
-            this._metricsDeclarationProvider = metricsDeclarationProvider;
+            _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         public string ComponentName { get; } = "Metrics Declaration";

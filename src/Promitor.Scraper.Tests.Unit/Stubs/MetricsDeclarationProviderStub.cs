@@ -9,7 +9,7 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
 
         public MetricsDeclarationProviderStub(string rawMetricsDeclaration)
         {
-            this._rawMetricsDeclaration = rawMetricsDeclaration;
+            _rawMetricsDeclaration = rawMetricsDeclaration;
         }
 
         public override string GetSerializedDeclaration()

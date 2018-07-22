@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
-            this._azureMetadata = azureMetadata;
+            _azureMetadata = azureMetadata;
         }
 
         public static MetricsDeclarationBuilder WithMetadata(string tenantId = "tenantId", string subscriptionId = "subscriptionId", string resourceGroupName = "resourceGroupName")

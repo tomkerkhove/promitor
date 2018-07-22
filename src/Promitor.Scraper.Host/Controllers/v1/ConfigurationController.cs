@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Host.Controllers.v1
 
         public ConfigurationController(IMetricsDeclarationProvider metricsDeclarationProvider)
         {
-            this._metricsDeclarationProvider = metricsDeclarationProvider;
+            _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         /// <summary>
