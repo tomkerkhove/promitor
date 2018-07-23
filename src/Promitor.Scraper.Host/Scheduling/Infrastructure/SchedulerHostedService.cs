@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Promitor.Scraper.Host.Scheduling.Cron;
 using Promitor.Scraper.Scheduling.Interfaces;
 
-/*
- * Based on example by Maarten Balliauw - https://blog.maartenballiauw.be/post/2017/08/01/building-a-scheduled-cache-updater-in-aspnet-core-2.html
- * Thank you!
- */
 namespace Promitor.Scraper.Host.Scheduling.Infrastructure
 {
-    public class SchedulerHostedService : HostedService
+    public class SchedulerHostedService : BackgroundService
     {
         private readonly List<SchedulerTaskWrapper> _scheduledTasks = new List<SchedulerTaskWrapper>();
 
@@ -22,12 +19,14 @@ namespace Promitor.Scraper.Host.Scheduling.Infrastructure
 
             foreach (var scheduledTask in scheduledTasks)
             {
-                _scheduledTasks.Add(new SchedulerTaskWrapper
+                var scheduledWrapper = new SchedulerTaskWrapper
                 {
                     Schedule = CronSchedule.Parse(scheduledTask.Schedule),
                     Task = scheduledTask,
                     NextRunTime = referenceTime
-                });
+                };
+
+                _scheduledTasks.Add(scheduledWrapper);
             }
         }
 
@@ -48,7 +47,7 @@ namespace Promitor.Scraper.Host.Scheduling.Infrastructure
             var taskFactory = new TaskFactory(TaskScheduler.Current);
             var referenceTime = DateTime.UtcNow;
 
-            var tasksThatShouldRun = _scheduledTasks.Where(t => t.ShouldRun(referenceTime)).ToList();
+            var tasksThatShouldRun = _scheduledTasks.Where(task => task.ShouldRun(referenceTime)).ToList();
 
             foreach (var taskThatShouldRun in tasksThatShouldRun)
             {
