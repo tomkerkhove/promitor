@@ -2,6 +2,7 @@
   "branchPrefix":"renovate-",
   "separateMajorMinor": false,
   "labels":["dependencies"],
+  "assignees": ["@tomkerkhove"],
   "ignoreDeps":["Microsoft.AspNetCore.All","microsoft/dotnet"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
