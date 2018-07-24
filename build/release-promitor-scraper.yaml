@@ -1,3 +1,4 @@
+name: $(Image.Version)
 resources:
 - repo: self
 queue:
