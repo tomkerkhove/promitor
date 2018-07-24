@@ -6,11 +6,14 @@ Collection of all YAML descriptions of our VSTS builds.
 Releasing Promitor Scraper is done with `release-promitor-scraper.yaml`.
 
 ### Additional configuration
-Build Number Format: `$(Image.Version)`
+**Build Number Format:**
 
-Variables:
-| Variable Name | Settable at queue time | Default Value                                       |
-|:--------------|:-----------------------|:----------------------------------------------------|
-| Release.Title | :x:                    | `v$(Build.BuildNumber)`                             |
-| Image.Name    | :x:                    | `tomkerkhove/promitor-scraper:$(Build.BuildNumber)` |
-| Image.Version | :x:                    | `0.1.0`                                             |
+`$(Image.Version)`
+
+**Variables:**
+
+| Variable Name   | Description                                                       | Settable at queue time | Default Value                                       |
+|:----------------|:------------------------------------------------------------------|:---------------------:|:----------------------------------------------------|
+| `Release.Title` | Title of the GitHub release                                       | :white_check_mark:     | *v$(Build.BuildNumber)*                             |
+| `Image.Name`    | Full container image name that will be used to push to Docker Hub | :white_check_mark:     | *tomkerkhove/promitor-scraper:$(Build.BuildNumber)* |
+| `Image.Version` | New image version of the container image                          | :white_check_mark:     | *0.1.0*                                             |
