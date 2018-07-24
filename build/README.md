@@ -15,5 +15,4 @@ Releasing Promitor Scraper is done with `release-promitor-scraper.yaml`.
 | Variable Name   | Description                                                       | Settable at queue time | Default Value                                       |
 |:----------------|:------------------------------------------------------------------|:---------------------:|:----------------------------------------------------|
 | `Release.Title` | Title of the GitHub release                                       | :white_check_mark:     | *v$(Build.BuildNumber)*                             |
-| `Image.Name`    | Full container image name that will be used to push to Docker Hub | :white_check_mark:     | *tomkerkhove/promitor-scraper:$(Build.BuildNumber)* |
 | `Image.Version` | New image version of the container image                          | :white_check_mark:     | *0.1.0*                                             |
