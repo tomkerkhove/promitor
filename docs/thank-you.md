@@ -25,6 +25,10 @@ We are using the following GitHub Apps:
 - [Request Info](https://github.com/apps/request-info) - Requests more info from newly opened Pull Requests and Issues
 - [Stale](https://github.com/apps/Stale) - Closes abandoned issues after a period of inactivity.
 
+# Visual Studio Team Services (VSTS) Extensions 
+
+- [GitHub Tool](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) - Create and modify GitHub Releases in Visual Studio Team Services Build and Release Management ([Marketplace](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) | [GitHub](https://github.com/marceloavf/github-tools-vsts))
+
 # NuGet Packages
 Here is an overview of the NuGet packages that we rely on:
 - [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
