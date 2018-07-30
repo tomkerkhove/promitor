@@ -31,7 +31,7 @@ We are using the following GitHub Apps:
 
 # Visual Studio Team Services (VSTS) Extensions 
 
-- [GitHub Tool](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) - Create and modify GitHub Releases in Visual Studio Team Services Build and Release Management ([Marketplace](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) | [GitHub](https://github.com/marceloavf/github-tools-vsts))
+- [GitHub Tool](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) - Create and modify GitHub Releases in Visual Studio Team Services Build and Release Management ([Marketplace](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) \| [GitHub](https://github.com/marceloavf/github-tools-vsts))
 
 # NuGet Packages
 Here is an overview of the NuGet packages that we rely on:
