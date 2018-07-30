@@ -12,7 +12,7 @@ All documentation is available on [promitor.io](https://promitor.io)
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We welcome bug reports, improvement suggestions and pull requests.
 
 ## Thank you!
-We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you.md)!
+We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](https://promitor.io/thank-you)!
 
 ## License Information
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
