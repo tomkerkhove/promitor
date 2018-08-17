@@ -17,7 +17,7 @@ _For more information about advanced configuration, read our documentation [here
 ```
 
 # Kubernetes
-We currently provide [a sample declaration](https://github.com/tomkerkhove/promitor/blob/features-kubernetes-spec/deploy/kubernetes-spec.yaml) which deploys all the required infrastructure on your Kubernetes cluster.
+We currently provide [a sample declaration](https://github.com/tomkerkhove/promitor/tree/master/deploy) which deploys all the required infrastructure on your Kubernetes cluster.
 
 Once downloaded, you can deploy it by running this command:
 ```
