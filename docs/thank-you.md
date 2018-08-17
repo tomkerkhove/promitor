@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Promitor - Thank you!
+title: Thank you!
 ---
 
 # Automation

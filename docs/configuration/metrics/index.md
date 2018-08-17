@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Promitor - Metrics Declaration
+title: Metrics Declaration
 ---
 
 All the Azure Monitor metrics that needs to be scraped are consolidated in one YAML file.

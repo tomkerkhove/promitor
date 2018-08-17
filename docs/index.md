@@ -26,12 +26,16 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to Azure Application Insights
-- More on the way ([backlog](https://github.com/tomkerkhove/promitor/issues))
+
+And there is more on the way - Check our [backlog](https://github.com/tomkerkhove/promitor/issues) and vote for features!
 
 # Known Limitations
 - Metrics interval does not take scraping cron schedule into account ([#60](https://github.com/tomkerkhove/promitor/issues/60))
 
 # Documentation
+- **Deployment**
+    - [Running Promitor on Docker](deployment#docker)
+    - [Running Promitor on Kubernetes](deployment#kubernetes)
 - **Configuration**
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
