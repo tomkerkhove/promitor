@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Promitor - Azure Service Bus Queue Declaration
+title: Azure Service Bus Queue Declaration
 ---
 
 ## Azure Service Bus Queue
