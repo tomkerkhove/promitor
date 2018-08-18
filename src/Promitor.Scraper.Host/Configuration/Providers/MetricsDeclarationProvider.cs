@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Host.Configuration.Providers
     {
         public virtual MetricsDeclaration Get()
         {
-            var rawMetricsDeclaration = GetSerializedDeclaration();
+            var rawMetricsDeclaration = ReadRawDeclaration();
             var input = new StringReader(rawMetricsDeclaration);
             var deserializer = YamlSerialization.CreateDeserializer();
 
@@ -18,7 +18,7 @@ namespace Promitor.Scraper.Host.Configuration.Providers
             return config;
         }
 
-        public virtual string GetSerializedDeclaration()
+        public virtual string ReadRawDeclaration()
         {
             var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
             if (string.IsNullOrWhiteSpace(scrapingConfigurationPath))
