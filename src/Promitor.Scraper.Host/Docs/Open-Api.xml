@@ -39,7 +39,7 @@
                 Gets the configured metrics declaration
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.ReadDeclaration">
+        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.ReadRawDeclaration">
             <summary>
                 Gets the serialized metrics declaration
             </summary>
@@ -56,7 +56,7 @@
             </summary>
             <param name="rawCronSchedule">Raw Cron schedule to use</param>
         </member>
-        <member name="M:Promitor.Scraper.Host.Scraping.Factories.MetricScraperFactory.CreateScraper(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.ResourceType,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
+        <member name="M:Promitor.Scraper.Host.Scraping.Factories.MetricScraperFactory.CreateScraper(Promitor.Scraper.Host.Configuration.Model.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.ResourceType,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
             <summary>
                 Creates a scraper that is capable of scraping a specific resource type
             </summary>
@@ -74,7 +74,7 @@
             </summary>
             <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
         </member>
-        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.#ctor(Promitor.Scraper.Host.Model.Configuration.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.AzureCredentials,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
+        <member name="M:Promitor.Scraper.Host.Scraping.Scraper`1.#ctor(Promitor.Scraper.Host.Configuration.Model.AzureMetadata,Promitor.Scraper.Host.Configuration.Model.AzureCredentials,Promitor.Core.Telemetry.Interfaces.IExceptionTracker)">
             <summary>
                 Constructor
             </summary>
