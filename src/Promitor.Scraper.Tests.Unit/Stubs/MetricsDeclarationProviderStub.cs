@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }
 
-        public override string GetSerializedDeclaration()
+        public override string ReadRawDeclaration()
         {
             return _rawMetricsDeclaration;
         }

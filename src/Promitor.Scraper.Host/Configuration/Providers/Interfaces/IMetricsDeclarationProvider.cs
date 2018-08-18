@@ -12,6 +12,6 @@ namespace Promitor.Scraper.Host.Configuration.Providers.Interfaces
         /// <summary>
         ///     Gets the serialized metrics declaration
         /// </summary>
-        string GetSerializedDeclaration();
+        string ReadRawDeclaration();
     }
 }

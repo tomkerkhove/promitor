@@ -21,7 +21,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public ValidationResult Run()
         {
-            var rawMetricsConfiguration = _metricsDeclarationProvider.GetSerializedDeclaration();
+            var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             LogMessage("Following metrics configuration was configured:");
             LogMessage(rawMetricsConfiguration);
 
