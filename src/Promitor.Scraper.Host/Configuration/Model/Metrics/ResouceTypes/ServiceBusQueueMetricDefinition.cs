@@ -1,7 +1,4 @@
-﻿using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
-
-namespace Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes
+﻿namespace Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes
 {
     public class ServiceBusQueueMetricDefinition : MetricDefinition
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Promitor.Scraper.Scheduling.Interfaces;
+using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Shuttle.Core.Cron;
 
 /*

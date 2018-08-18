@@ -4,9 +4,8 @@ using System.Linq;
 using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Model.Configuration;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Serialization;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization

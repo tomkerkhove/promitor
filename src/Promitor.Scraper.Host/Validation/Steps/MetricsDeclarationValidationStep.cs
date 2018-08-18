@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Promitor.Scraper.Host.Configuration.Model;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
-using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Host.Validation.Interfaces;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Host.Validation.Steps
 {

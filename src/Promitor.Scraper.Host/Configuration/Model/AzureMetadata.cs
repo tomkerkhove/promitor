@@ -1,4 +1,4 @@
-﻿namespace Promitor.Scraper.Host.Model.Configuration
+﻿namespace Promitor.Scraper.Host.Configuration.Model
 {
     public class AzureMetadata
     {

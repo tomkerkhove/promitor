@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Model.Configuration;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Serialization;
 
 namespace Promitor.Scraper.Tests.Unit.Builders
