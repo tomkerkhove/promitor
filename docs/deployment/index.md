@@ -21,7 +21,7 @@ We currently provide [a sample declaration](https://github.com/tomkerkhove/promi
 
 Once downloaded, you can deploy it by running this command:
 ```
-❯ kubectl apply --file .\deploy\kubernetes-spec.yaml
+❯ kubectl apply --file .\deploy\kubernetes-spec.yaml --namespace promitor
 ```
 
 Want to use Helm? Make sure to vote for [this feature](https://github.com/tomkerkhove/promitor/issues/17).
