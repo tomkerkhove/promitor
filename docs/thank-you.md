@@ -39,3 +39,6 @@ Here is an overview of the NuGet packages that we rely on:
 - [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client) - .NET client for prometheus.io
 - [Shuttle.Core.Cron](https://github.com/Shuttle/Shuttle.Core.Cron) - Cron expression parsing
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet) - .NET library for YAML
+- [Guard.NET](https://github.com/george-pancescu/Guard) - Library that facilitates runtime checks of code and allows to define preconditions and invariants within a method
+- [Bogus](https://github.com/bchavez/Bogus) - A simple and sane data generator for populating objects
+- [xUnit](https://github.com/xunit/xunit) - Free, open source, community-focused unit testing tool for the .NET
