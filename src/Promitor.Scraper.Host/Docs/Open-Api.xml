@@ -39,7 +39,7 @@
                 Gets the configured metrics declaration
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.ReadDeclaration">
+        <member name="M:Promitor.Scraper.Host.Configuration.Providers.Interfaces.IMetricsDeclarationProvider.ReadRawDeclaration">
             <summary>
                 Gets the serialized metrics declaration
             </summary>
