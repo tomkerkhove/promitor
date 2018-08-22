@@ -1,7 +1,13 @@
-# Promitor - Azure Monitor Scraper for Prometheus 
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](./LICENSE) [![Build Status](https://travis-ci.com/tomkerkhove/promitor.svg?branch=master)](https://travis-ci.com/tomkerkhove/promitor) [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/) 
-[![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)
+<p align=center><img src="./media/logo/promitor.png" alt="Promitor Logo" height="150"></p>
 
+<h1 align="center">Azure Monitor Scraper for Prometheus</h1>
+
+<p align="center">
+    <a href="./LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square" alt="License"></a>
+<a href="https://travis-ci.com/tomkerkhove/promitor" rel="nofollow"><img src="https://travis-ci.com/tomkerkhove/promitor.svg?branch=master" alt="Build Status"></a>
+<a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
+<a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Stars"></a>
+</p>
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
 
