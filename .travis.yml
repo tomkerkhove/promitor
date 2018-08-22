@@ -17,4 +17,9 @@ script:
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --list-tests
  - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --no-cache
  - cd ./src/Promitor.Scraper.Host
- - snyk test --packageManager=nuget
+ - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
+ - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
+ - cd ..
+ - cd ./Promitor.Integrations.AzureMonitor
+ - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
+ - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
