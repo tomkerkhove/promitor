@@ -3,7 +3,7 @@
   "separateMajorMinor": false,
   "labels":["dependencies"],
   "assignees": ["@tomkerkhove"],
-  "ignoreDeps":["Microsoft.AspNetCore.All","microsoft/dotnet"],
+  "ignoreDeps":["Microsoft.AspNetCore.App","microsoft/dotnet"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "extends": [
