@@ -10,7 +10,11 @@ branches:
  only:
    - master
 script:
+ - npm install -g snyk
+ - snyk auth
  - dotnet --info
  - dotnet build src/Promitor.sln --configuration release
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --list-tests
  - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --no-cache
+ - cd /src/Promitor.Scraper.Host
+ - snyk test --packageManager=nuget
