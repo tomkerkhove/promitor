@@ -1,4 +1,4 @@
-<p align=center><img src="./media/logo/promitor.png" alt="Promitor Logo" height="150"></p>
+<p align=center><img src="./docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
 
 <h1 align="center">Azure Monitor Scraper for Prometheus</h1>
 
