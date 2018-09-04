@@ -5,7 +5,7 @@ using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
-using Promitor.Scraper.Host.Serialization;
+using Promitor.Scraper.Host.Configuration.Serialization;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization
@@ -28,12 +28,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
                 }
             };
 
-            var yamlSerializer = YamlSerialization.CreateSerializer();
-            var yamlDeserializer = YamlSerialization.CreateDeserializer();
-
             // Act
-            var serializedConfiguration = yamlSerializer.Serialize(scrapingConfiguration);
-            var deserializedConfiguration = yamlDeserializer.Deserialize<MetricsDeclaration>(serializedConfiguration);
+            var serializedConfiguration = ConfigurationSerializer.Serialize(scrapingConfiguration);
+            var deserializedConfiguration = ConfigurationSerializer.Deserialize(serializedConfiguration);
 
             // Assert
             Assert.NotNull(deserializedConfiguration);

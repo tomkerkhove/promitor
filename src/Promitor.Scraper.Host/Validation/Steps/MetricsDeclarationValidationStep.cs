@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Promitor.Scraper.Host.Configuration.Model;
+using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
@@ -40,7 +43,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
         }
 
-        private List<string> DetectDuplicateMetrics(List<ServiceBusQueueMetricDefinition> metrics)
+        private List<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
             var duplicateMetricNames = metrics.GroupBy(metric => metric.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
@@ -86,7 +89,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             {
                 errorMessages.Add("Invalid azure metric configuration is configured");
                 return errorMessages;
-            }   
+            }
 
             if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
             {
@@ -96,7 +99,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return errorMessages;
         }
 
-        private List<string> ValidateMetric(ServiceBusQueueMetricDefinition metric)
+        private List<string> ValidateMetric(MetricDefinition metric)
         {
             var errorMessages = new List<string>();
 
@@ -106,24 +109,23 @@ namespace Promitor.Scraper.Host.Validation.Steps
                 return errorMessages;
             }
 
-            if (string.IsNullOrWhiteSpace(metric.Namespace))
+            if (metric.ResourceType == ResourceType.NotSpecified)
             {
-                errorMessages.Add($"{metric.Namespace} is not configured");
-            }
-
-            if (string.IsNullOrWhiteSpace(metric.QueueName))
-            {
-                errorMessages.Add($"{metric.QueueName} is not configured");
+                errorMessages.Add($"{metric.ResourceType} '{nameof(ResourceType.NotSpecified)}' is not supported");
             }
 
             if (string.IsNullOrWhiteSpace(metric.Name))
             {
-                errorMessages.Add($"{metric.QueueName} is not configured");
+                errorMessages.Add($"{metric.Name} is not configured");
             }
 
-            if (metric.ResourceType == ResourceType.NotSpecified)
+            switch (metric.ResourceType)
             {
-                errorMessages.Add($"{metric.ResourceType} '{nameof(ResourceType.NotSpecified)}' is not supported");
+                case ResourceType.ServiceBusQueue:
+                    ValidateServiceBusQueueMetricConfiguration(metric as ServiceBusQueueMetricDefinition, errorMessages);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(metric), metric.ResourceType, $"No validation rules are defined for metric type '{metric.ResourceType}'");
             }
 
             var metricsConfigurationErrorMessages = ValidateAzureMetricConfiguration(metric.AzureMetricConfiguration);
@@ -132,7 +134,25 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return errorMessages;
         }
 
-        private List<string> ValidateMetrics(List<ServiceBusQueueMetricDefinition> metrics)
+        private void ValidateServiceBusQueueMetricConfiguration(ServiceBusQueueMetricDefinition serviceBusQueueMetricDefinition, List<string> errorMessages)
+        {
+            if (serviceBusQueueMetricDefinition == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.Namespace))
+            {
+                errorMessages.Add($"{serviceBusQueueMetricDefinition.Namespace} is not configured");
+            }
+
+            if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.QueueName))
+            {
+                errorMessages.Add($"{serviceBusQueueMetricDefinition.QueueName} is not configured");
+            }
+        }
+
+        private List<string> ValidateMetrics(List<MetricDefinition> metrics)
         {
             var errorMessages = new List<string>();
 

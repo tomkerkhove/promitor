@@ -2,14 +2,14 @@
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
-using Promitor.Scraper.Host.Serialization;
+using Promitor.Scraper.Host.Configuration.Serialization;
 
 namespace Promitor.Scraper.Tests.Unit.Builders
 {
     public class MetricsDeclarationBuilder
     {
         private readonly AzureMetadata _azureMetadata;
-        private readonly List<ServiceBusQueueMetricDefinition> _metrics = new List<ServiceBusQueueMetricDefinition>();
+        private readonly List<Host.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Host.Configuration.Model.Metrics.MetricDefinition>();
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
@@ -41,8 +41,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
                 Metrics = _metrics
             };
 
-            var serializer = YamlSerialization.CreateSerializer();
-            return serializer.Serialize(metricsDeclaration);
+            return ConfigurationSerializer.Serialize(metricsDeclaration);
         }
 
         public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string serviceBusNamespace = "foo-space", string azureMetricName = "Total")
