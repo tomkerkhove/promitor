@@ -5,7 +5,6 @@ using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
-using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
@@ -65,17 +64,17 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(azureMetadata.TenantId))
             {
-                errorMessages.Add($"{azureMetadata.TenantId} is not configured");
+                errorMessages.Add("No tenant id is configured");
             }
 
             if (string.IsNullOrWhiteSpace(azureMetadata.SubscriptionId))
             {
-                errorMessages.Add($"{azureMetadata.SubscriptionId} is not configured");
+                errorMessages.Add("No subscription id is configured");
             }
 
             if (string.IsNullOrWhiteSpace(azureMetadata.ResourceGroupName))
             {
-                errorMessages.Add($"{azureMetadata.ResourceGroupName} is not configured");
+                errorMessages.Add("No resource group name is not configured");
             }
 
             return errorMessages;
@@ -93,7 +92,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
             {
-                errorMessages.Add($"No {azureMetricConfiguration.MetricName} is configured");
+                errorMessages.Add("No metric name for Azure is configured");
             }
 
             return errorMessages;
@@ -116,7 +115,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(metric.Name))
             {
-                errorMessages.Add($"{metric.Name} is not configured");
+                errorMessages.Add("No metric name is configured");
             }
 
             switch (metric.ResourceType)
@@ -143,12 +142,12 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.Namespace))
             {
-                errorMessages.Add($"{serviceBusQueueMetricDefinition.Namespace} is not configured");
+                errorMessages.Add("No Service Bus Namespace is configured");
             }
 
             if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.QueueName))
             {
-                errorMessages.Add($"{serviceBusQueueMetricDefinition.QueueName} is not configured");
+                errorMessages.Add("No queue name is configured");
             }
         }
 
