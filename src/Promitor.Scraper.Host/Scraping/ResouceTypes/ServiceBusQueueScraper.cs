@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Host.Scraping.ResouceTypes
 {

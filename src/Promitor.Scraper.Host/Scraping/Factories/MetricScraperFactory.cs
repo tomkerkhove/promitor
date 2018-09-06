@@ -2,7 +2,6 @@
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
-using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Host.Scraping.Interfaces;
 using Promitor.Scraper.Host.Scraping.ResouceTypes;
 
