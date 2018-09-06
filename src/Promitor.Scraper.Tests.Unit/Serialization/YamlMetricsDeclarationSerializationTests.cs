@@ -4,9 +4,8 @@ using System.Linq;
 using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Model.Configuration;
-using Promitor.Scraper.Host.Serialization;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Configuration.Serialization;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization
@@ -23,18 +22,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             var scrapingConfiguration = new MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
-                Metrics = new List<ServiceBusQueueMetricDefinition>
+                Metrics = new List<Host.Configuration.Model.Metrics.MetricDefinition>
                 {
                     serviceBusMetricDefinition
                 }
             };
-            
-            var yamlSerializer = YamlSerialization.CreateSerializer();
-            var yamlDeserializer = YamlSerialization.CreateDeserializer();
 
             // Act
-            var serializedConfiguration = yamlSerializer.Serialize(scrapingConfiguration);
-            var deserializedConfiguration = yamlDeserializer.Deserialize<MetricsDeclaration>(serializedConfiguration);
+            var serializedConfiguration = ConfigurationSerializer.Serialize(scrapingConfiguration);
+            var deserializedConfiguration = ConfigurationSerializer.Deserialize(serializedConfiguration);
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
@@ -49,8 +45,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             Assert.Equal(serviceBusMetricDefinition.Name, deserializedMetricDefinition.Name);
             Assert.Equal(serviceBusMetricDefinition.Description, deserializedMetricDefinition.Description);
             Assert.Equal(serviceBusMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
-            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedMetricDefinition.Namespace);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedMetricDefinition.QueueName);
+            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
+            Assert.NotNull(deserializedServiceBusMetricDefinition);
+            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
+            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
             Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
             Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
             Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);

@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Telemetry", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper.Host", "Promitor.Scraper.Host\Promitor.Scraper.Host.csproj", "{D4428510-993A-44F1-A8B2-63EE497327D7}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D61A88B9-F9BB-43E2-ABD3-754E3ED32317}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Promitor.Docker", "Promitor.Docker.dcproj", "{D61A88B9-F9BB-43E2-ABD3-754E3ED32317}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{783A67B3-B14F-414C-9471-BCF69EBADA17}"
 	ProjectSection(SolutionItems) = preProject

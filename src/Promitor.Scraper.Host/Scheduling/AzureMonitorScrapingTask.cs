@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
-using Promitor.Scraper.Host.Model.Configuration;
+using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Promitor.Scraper.Host.Scraping.Factories;
-using Promitor.Scraper.Scheduling.Interfaces;
 
 namespace Promitor.Scraper.Host.Scheduling
 {

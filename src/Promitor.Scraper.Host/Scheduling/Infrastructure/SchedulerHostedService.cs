@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Promitor.Scraper.Host.Scheduling.Cron;
-using Promitor.Scraper.Scheduling.Interfaces;
+using Promitor.Scraper.Host.Scheduling.Interfaces;
 
 namespace Promitor.Scraper.Host.Scheduling.Infrastructure
 {

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Promitor.Scraper.Host.Configuration.Model;
+using Promitor.Scraper.Host.Configuration.Model.Metrics;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
-using Promitor.Scraper.Host.Model.Configuration;
 using Promitor.Scraper.Host.Validation.Interfaces;
-using Promitor.Scraper.Model.Configuration.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions;
 
 namespace Promitor.Scraper.Host.Validation.Steps
 {
@@ -41,7 +43,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
         }
 
-        private List<string> DetectDuplicateMetrics(List<ServiceBusQueueMetricDefinition> metrics)
+        private List<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
             var duplicateMetricNames = metrics.GroupBy(metric => metric.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
@@ -63,77 +65,23 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(azureMetadata.TenantId))
             {
-                errorMessages.Add($"{azureMetadata.TenantId} is not configured");
+                errorMessages.Add("No tenant id is configured");
             }
 
             if (string.IsNullOrWhiteSpace(azureMetadata.SubscriptionId))
             {
-                errorMessages.Add($"{azureMetadata.SubscriptionId} is not configured");
+                errorMessages.Add("No subscription id is configured");
             }
 
             if (string.IsNullOrWhiteSpace(azureMetadata.ResourceGroupName))
             {
-                errorMessages.Add($"{azureMetadata.ResourceGroupName} is not configured");
+                errorMessages.Add("No resource group name is not configured");
             }
 
             return errorMessages;
         }
 
-        private List<string> ValidateAzureMetricConfiguration(AzureMetricConfiguration azureMetricConfiguration)
-        {
-            var errorMessages = new List<string>();
-
-            if (azureMetricConfiguration == null)
-            {
-                errorMessages.Add("Invalid azure metric configuration is configured");
-                return errorMessages;
-            }   
-
-            if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
-            {
-                errorMessages.Add($"No {azureMetricConfiguration.MetricName} is configured");
-            }
-
-            return errorMessages;
-        }
-
-        private List<string> ValidateMetric(ServiceBusQueueMetricDefinition metric)
-        {
-            var errorMessages = new List<string>();
-
-            if (metric == null)
-            {
-                errorMessages.Add("Invalid metric is configured");
-                return errorMessages;
-            }
-
-            if (string.IsNullOrWhiteSpace(metric.Namespace))
-            {
-                errorMessages.Add($"{metric.Namespace} is not configured");
-            }
-
-            if (string.IsNullOrWhiteSpace(metric.QueueName))
-            {
-                errorMessages.Add($"{metric.QueueName} is not configured");
-            }
-
-            if (string.IsNullOrWhiteSpace(metric.Name))
-            {
-                errorMessages.Add($"{metric.QueueName} is not configured");
-            }
-
-            if (metric.ResourceType == ResourceType.NotSpecified)
-            {
-                errorMessages.Add($"{metric.ResourceType} '{nameof(ResourceType.NotSpecified)}' is not supported");
-            }
-
-            var metricsConfigurationErrorMessages = ValidateAzureMetricConfiguration(metric.AzureMetricConfiguration);
-            errorMessages.AddRange(metricsConfigurationErrorMessages);
-
-            return errorMessages;
-        }
-
-        private List<string> ValidateMetrics(List<ServiceBusQueueMetricDefinition> metrics)
+        private List<string> ValidateMetrics(List<MetricDefinition> metrics)
         {
             var errorMessages = new List<string>();
 
@@ -143,11 +91,9 @@ namespace Promitor.Scraper.Host.Validation.Steps
                 return errorMessages;
             }
 
-            foreach (var metric in metrics)
-            {
-                var metricErrorMessages = ValidateMetric(metric);
-                errorMessages.AddRange(metricErrorMessages);
-            }
+            var metricsValidator = new MetricsValidator();
+            var metricErrorMessages = metricsValidator.Validate(metrics);
+            errorMessages.AddRange(metricErrorMessages);
 
             // Detect duplicate metric names
             var duplicateMetricNames = DetectDuplicateMetrics(metrics);

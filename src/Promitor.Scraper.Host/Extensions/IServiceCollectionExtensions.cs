@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Hosting;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Scheduling.Infrastructure.Extensions;
-using Promitor.Scraper.Scheduling.Interfaces;
+using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
