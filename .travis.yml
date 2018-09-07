@@ -1,6 +1,5 @@
 sudo: required
 language: csharp
-solution: src/Promitor.sln
 dotnet: 2.1.302
 services:
   - docker
@@ -18,9 +17,5 @@ script:
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --no-build
  - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --no-cache
  - cd ./src/Promitor.Scraper.Host
- - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
- - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
- - cd ..
- - cd ./Promitor.Integrations.AzureMonitor
  - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
  - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
