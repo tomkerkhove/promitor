@@ -3,6 +3,7 @@
     public enum ResourceType
     {
         NotSpecified = 0,
-        ServiceBusQueue = 1
+        ServiceBusQueue = 1,
+        Generic = 2
     }
 }
