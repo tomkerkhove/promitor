@@ -49,7 +49,12 @@ namespace Promitor.Scraper.Host
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
 
-            services.AddMvc();
+            services.AddMvc()
+                    .AddJsonOptions(jsonOptions =>
+                    {
+                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                    });
             services.UseCronScheduler();
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
         }
