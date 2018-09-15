@@ -41,6 +41,7 @@ Every metric that is being declared needs to define the following fields:
 
 # Supported Azure Services
 
+- [Generic Azure Resource](generic-azure-resource)
 - [Azure Service Bus Queue](service-bus-queue)
 
 [&larr; back](/)
