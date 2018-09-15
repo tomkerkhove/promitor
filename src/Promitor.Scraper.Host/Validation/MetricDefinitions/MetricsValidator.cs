@@ -52,6 +52,9 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
                     var validator = new ServiceBusQueueMetricValidator();
                     metricDefinitionValidationErrors = validator.Validate(metric as ServiceBusQueueMetricDefinition);
                     break;
+                case ResourceType.Generic:
+                    metricDefinitionValidationErrors=new List<string>();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(metric), metric.ResourceType, $"No validation rules are defined for metric type '{metric.ResourceType}'");
             }

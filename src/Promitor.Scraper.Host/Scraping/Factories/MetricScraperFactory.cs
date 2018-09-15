@@ -22,6 +22,8 @@ namespace Promitor.Scraper.Host.Scraping.Factories
             {
                 case ResourceType.ServiceBusQueue:
                     return new ServiceBusQueueScraper(azureMetadata, azureCredentials, exceptionTracker);
+                    case ResourceType.Generic:
+                        return new GenericScraper(azureMetadata, azureCredentials, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
