@@ -19,9 +19,25 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
                 case ResourceType.ServiceBusQueue:
                     metricDefinition = DeserializeServiceBusQueueMetric(node);
                     break;
+                case ResourceType.Generic:
+                    metricDefinition = DeserializeGenericMetric(node);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(resourceType), resourceType, $"No deserialization was found for {resourceType}");
             }
+
+            return metricDefinition;
+        }
+
+        private MetricDefinition DeserializeGenericMetric(YamlMappingNode metricNode)
+        {
+            var metricDefinition = DeserializeMetricDefinition<GenericMetricDefinition>(metricNode);
+
+            var filter = metricNode.Children[new YamlScalarNode("filter")];
+            var resourceUri = metricNode.Children[new YamlScalarNode("resourceUri")];
+
+            metricDefinition.Filter = filter?.ToString();
+            metricDefinition.ResourceUri = resourceUri?.ToString();
 
             return metricDefinition;
         }
