@@ -99,6 +99,13 @@
             <param name="azureMonitorClient">Client to query Azure Monitor</param>
             <param name="metricDefinition">Definition of the metric to scrape</param>
         </member>
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces.IMetricValidator`1.Validate(`0)">
+            <summary>
+                Validates a specific metric definition
+            </summary>
+            <param name="metricDefinition">Metric definition to validate</param>
+            <returns>List of validation errors</returns>
+        </member>
         <member name="M:Microsoft.AspNetCore.Builder.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
                 Add support for Open API with API explorer
