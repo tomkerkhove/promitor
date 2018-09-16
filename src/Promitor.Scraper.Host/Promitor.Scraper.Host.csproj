@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.3" />
-    <PackageReference Include="Prometheus.Client.AspNetCore" Version="1.5.1" />
+    <PackageReference Include="Prometheus.Client.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Shuttle.Core.Cron" Version="10.0.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="3.0.0" />

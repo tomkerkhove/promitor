@@ -14,6 +14,7 @@ namespace Promitor.Scraper.Host.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        /// <param name="exceptionTracker">Tracker used to log exceptions</param>
         internal static IScraper<MetricDefinition> CreateScraper(AzureMetadata azureMetadata, ResourceType metricDefinitionResourceType, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
