@@ -2,7 +2,7 @@
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
-namespace Promitor.Scraper.Host.Validation.MetricDefinitions
+namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
     public class ServiceBusQueueMetricValidator : IMetricValidator<ServiceBusQueueMetricDefinition>
     {

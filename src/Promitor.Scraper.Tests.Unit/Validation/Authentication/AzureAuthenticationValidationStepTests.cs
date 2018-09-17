@@ -4,7 +4,7 @@ using Promitor.Scraper.Host;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
 
-namespace Promitor.Scraper.Tests.Unit.Validation
+namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
 {
     [Category("Unit")]
     public class AzureAuthenticationValidationStepTests

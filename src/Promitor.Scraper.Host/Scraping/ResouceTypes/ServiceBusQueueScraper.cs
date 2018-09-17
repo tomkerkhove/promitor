@@ -10,7 +10,8 @@ namespace Promitor.Scraper.Host.Scraping.ResouceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ServiceBus/namespaces/{2}";
 
-        public ServiceBusQueueScraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IExceptionTracker exceptionTracker) : base(azureMetadata, azureCredentials, exceptionTracker)
+        public ServiceBusQueueScraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, azureCredentials, exceptionTracker)
         {
         }
 

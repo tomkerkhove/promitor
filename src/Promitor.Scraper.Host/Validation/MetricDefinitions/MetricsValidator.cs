@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {
@@ -49,8 +50,12 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             switch (metric.ResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    var validator = new ServiceBusQueueMetricValidator();
-                    metricDefinitionValidationErrors = validator.Validate(metric as ServiceBusQueueMetricDefinition);
+                    var serviceBusQueueMetricValidator = new ServiceBusQueueMetricValidator();
+                    metricDefinitionValidationErrors = serviceBusQueueMetricValidator.Validate(metric as ServiceBusQueueMetricDefinition);
+                    break;
+                case ResourceType.Generic:
+                    var genericMetricDefinition = new GenericMetricValidator();
+                    metricDefinitionValidationErrors = genericMetricDefinition.Validate(metric as GenericMetricDefinition);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(metric), metric.ResourceType, $"No validation rules are defined for metric type '{metric.ResourceType}'");
