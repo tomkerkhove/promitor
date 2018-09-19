@@ -40,9 +40,9 @@ Every metric that is being declared needs to define the following fields:
 - `azureMetricConfiguration.aggregation` - The aggregation that needs to be used when querying Azure Monitor
 
 # Supported Azure Services
+Every Azure service is supported and can be scraped by using the [Generic Azure Resource](generic-azure-resource).
 
+We also provide a simplified way to configure the following Azure resources:
 - [Azure Service Bus Queue](service-bus-queue)
-
-Can't find the Azure service that you want? You can still use the [Generic Azure Resource](generic-azure-resource).
 
 [&larr; back](/)
