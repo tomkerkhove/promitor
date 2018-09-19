@@ -14,6 +14,9 @@
 ## Documentation
 All documentation is available on [promitor.io](https://promitor.io)
 
+## Adding a new scraper
+TBD
+
 ## Contribution
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We welcome bug reports, improvement suggestions and pull requests.
 
