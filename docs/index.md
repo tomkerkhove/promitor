@@ -15,9 +15,10 @@ title: Promitor - An Azure Monitor scraper for Prometheus
 # Running Promitor Scraper
 Running Promitor Scraper is super easy:
 ```
-docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                         -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
-                         -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
+docker run -d -p 8999:80 --name promitor-scraper
+                         --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                         --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
+                         --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
                          tomkerkhove/promitor-scraper:0.2.0
 ```
 
