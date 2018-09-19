@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containo-orders-api
-          image: tomkerkhove/promitor-scraper:0.2.0-azure-applicationinsights-1
+          image: tomkerkhove/promitor-scraper:0.2.0
           env:
           - name:  PROMITOR_AUTH_APPID
             # Provide the Azure AD App Id
