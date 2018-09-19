@@ -43,4 +43,6 @@ Every metric that is being declared needs to define the following fields:
 
 - [Azure Service Bus Queue](service-bus-queue)
 
+Can't find the Azure service that you want? You can still use the [Generic Azure Resource](generic-azure-resource).
+
 [&larr; back](/)
