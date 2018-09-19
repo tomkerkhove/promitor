@@ -14,11 +14,10 @@
 ## Documentation
 All documentation is available on [promitor.io](https://promitor.io)
 
-## Adding a new scraper
-TBD
-
 ## Contribution
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We welcome bug reports, improvement suggestions and pull requests.
+
+Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/metrics/)? You can contribute by [adding one yourself](Adding-a-scraper.md)!
 
 ## Thank you!
 We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](https://promitor.io/thank-you)!
