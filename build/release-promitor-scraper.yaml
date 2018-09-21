@@ -3,7 +3,6 @@ resources:
 - repo: self
 queue:
   name: Hosted Linux Preview
-  condition: succeeded()
   demands: npm
 variables:
   Image.Name: 'tomkerkhove/promitor-scraper:$(Build.BuildNumber)'
