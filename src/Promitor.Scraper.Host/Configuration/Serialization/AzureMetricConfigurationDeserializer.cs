@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Scraper.Host.Configuration.Model;
+using GuardNet;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
 {
-    using Guard;
-
     internal class AzureMetricConfigurationDeserializer:Deserializer<AzureMetricConfiguration>
     {
         internal override AzureMetricConfiguration Deserialize(YamlMappingNode node)

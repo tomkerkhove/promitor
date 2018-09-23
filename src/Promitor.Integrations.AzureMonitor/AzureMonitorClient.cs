@@ -7,12 +7,11 @@ using Microsoft.Azure.Management.Monitor.Fluent;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
+using GuardNet;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
-    using Guard;
-
     public class AzureMonitorClient
     {
         private readonly IAzure _authenticatedAzureSubscription;

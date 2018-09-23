@@ -1,4 +1,5 @@
 ﻿using Promitor.Scraper.Host.Configuration.Model;
+using GuardNet;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
@@ -7,7 +8,7 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
     {
         internal override AzureMetadata Deserialize(YamlMappingNode node)
         {
-            Guard.Guard.NotNull(node, nameof(node));
+            Guard.NotNull(node, nameof(node));
 
             var tenantId = node.Children[new YamlScalarNode("tenantId")];
             var subscriptionId = node.Children[new YamlScalarNode("subscriptionId")];

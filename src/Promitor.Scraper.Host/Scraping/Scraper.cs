@@ -7,6 +7,7 @@ using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Scraping.Interfaces;
+using GuardNet;
 
 namespace Promitor.Scraper.Host.Scraping
 {
@@ -27,7 +28,7 @@ namespace Promitor.Scraper.Host.Scraping
         /// <param name="exceptionTracker">Exception tracker</param>
         protected Scraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IExceptionTracker exceptionTracker)
         {
-            Guard.Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
+            Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
             _exceptionTracker = exceptionTracker;
 

@@ -4,12 +4,11 @@ using System.Linq;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Serialization;
+using GuardNet;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
 {
-    using Guard;
-
     public class ConfigurationSerializer
     {
         public static MetricsDeclaration Deserialize(string rawMetricsDeclaration)
