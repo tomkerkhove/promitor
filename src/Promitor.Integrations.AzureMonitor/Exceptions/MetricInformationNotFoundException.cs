@@ -1,9 +1,8 @@
 ﻿using System;
+using GuardNet;
 
 namespace Promitor.Integrations.AzureMonitor.Exceptions
 {
-    using Guard;
-
     public class MetricInformationNotFoundException : Exception
     {
         /// <summary>
