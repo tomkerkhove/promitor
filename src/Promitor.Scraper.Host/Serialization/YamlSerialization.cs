@@ -7,7 +7,7 @@ namespace Promitor.Scraper.Host.Serialization
     {
         private static readonly INamingConvention NamingConvention = new CamelCaseNamingConvention();
 
-        public static Deserializer CreateDeserializer()
+        public static IDeserializer CreateDeserializer()
         {
             var builder = new DeserializerBuilder();
             builder.IgnoreUnmatchedProperties();
@@ -16,7 +16,7 @@ namespace Promitor.Scraper.Host.Serialization
             return builder.Build();
         }
 
-        public static Serializer CreateSerializer()
+        public static ISerializer CreateSerializer()
         {
             var builder = new SerializerBuilder();
             builder.WithNamingConvention(NamingConvention);
