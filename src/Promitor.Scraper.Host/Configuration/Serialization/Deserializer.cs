@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using GuardNet;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
@@ -10,7 +11,7 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
 
         internal List<TObject> Deserialize(YamlSequenceNode nodes)
         {
-            Guard.Guard.NotNull(nodes, nameof(nodes));
+            Guard.NotNull(nodes, nameof(nodes));
 
             var deserializedObjects = new List<TObject>();
             foreach (var item in nodes)
