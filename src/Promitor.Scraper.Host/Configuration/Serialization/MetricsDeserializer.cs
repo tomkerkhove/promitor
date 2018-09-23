@@ -2,6 +2,7 @@
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
+using GuardNet;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
@@ -58,7 +59,7 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
         private static TMetricDefinition DeserializeMetricDefinition<TMetricDefinition>(YamlMappingNode metricNode)
             where TMetricDefinition : MetricDefinition, new()
         {
-            Guard.Guard.NotNull(metricNode, nameof(metricNode));
+            Guard.NotNull(metricNode, nameof(metricNode));
 
             var name = metricNode.Children[new YamlScalarNode("name")];
             var description = metricNode.Children[new YamlScalarNode("description")];
