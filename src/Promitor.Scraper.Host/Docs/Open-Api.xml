@@ -62,6 +62,7 @@
             </summary>
             <param name="azureMetadata">Metadata concerning the Azure resources</param>
             <param name="metricDefinitionResourceType">Resource type to scrape</param>
+            <param name="exceptionTracker">Tracker used to log exceptions</param>
         </member>
         <member name="M:Promitor.Scraper.Host.Scraping.ScrapeEndpoint.GetBasePath(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>

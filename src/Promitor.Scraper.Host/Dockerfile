@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.401-sdk AS build
+FROM microsoft/dotnet:2.1.402-sdk AS build
 WORKDIR /src
 COPY Promitor.Scraper.Host/* Promitor.Scraper.Host/
 COPY Promitor.Core.Telemetry/* Promitor.Core.Telemetry/
@@ -6,7 +6,7 @@ COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
 RUN dotnet --info
 RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release -o app
 
-FROM microsoft/dotnet:2.1.3-aspnetcore-runtime as runtime
+FROM microsoft/dotnet:2.1.4-aspnetcore-runtime as runtime
 WORKDIR /app
 EXPOSE 80
 COPY --from=build /src/Promitor.Scraper.Host/app .

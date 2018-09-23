@@ -4,6 +4,7 @@ using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
+using GuardNet;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {
@@ -11,7 +12,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
     {
         public List<string> Validate(List<MetricDefinition> metrics)
         {
-            Guard.Guard.NotNull(metrics, nameof(metrics));
+            Guard.NotNull(metrics, nameof(metrics));
 
             var errorMessages = new List<string>();
 
@@ -26,7 +27,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 
         public List<string> Validate(MetricDefinition metric)
         {
-            Guard.Guard.NotNull(metric, nameof(metric));
+            Guard.NotNull(metric, nameof(metric));
 
             var errorMessages = new List<string>();
 
