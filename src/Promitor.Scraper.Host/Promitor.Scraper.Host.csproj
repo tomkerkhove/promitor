@@ -38,7 +38,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="3.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.3" />
-    <PackageReference Include="YamlDotNet" Version="5.2.0" />
+    <PackageReference Include="YamlDotNet" Version="5.2.1" />
   </ItemGroup>
 
   <ItemGroup>
