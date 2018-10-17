@@ -15,6 +15,7 @@ metrics:
     description: "Size of all queues in our Azure Service Bus namespace (determined with Generic provider)"
     resourceType: Generic
     resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+    # filter is deliberately omitted given filter is optional
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation: Total
