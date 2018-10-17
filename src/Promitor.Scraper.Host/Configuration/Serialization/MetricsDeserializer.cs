@@ -34,10 +34,13 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
         {
             var metricDefinition = DeserializeMetricDefinition<GenericMetricDefinition>(metricNode);
 
-            var filter = metricNode.Children[new YamlScalarNode("filter")];
+            if(metricNode.Children.TryGetValue(new YamlScalarNode("filter"), out var filterNode))
+            {
+                metricDefinition.Filter = filterNode?.ToString();
+            }
+
             var resourceUri = metricNode.Children[new YamlScalarNode("resourceUri")];
 
-            metricDefinition.Filter = filter?.ToString();
             metricDefinition.ResourceUri = resourceUri?.ToString();
 
             return metricDefinition;

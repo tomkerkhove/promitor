@@ -10,11 +10,6 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             var errorMessages = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(genericMetricDefinition.Filter))
-            {
-                errorMessages.Add("No filter is configured");
-            }
-
             if (string.IsNullOrWhiteSpace(genericMetricDefinition.ResourceUri))
             {
                 errorMessages.Add("No resource uri is configured");
