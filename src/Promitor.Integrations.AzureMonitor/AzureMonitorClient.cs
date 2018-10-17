@@ -62,8 +62,7 @@ namespace Promitor.Integrations.AzureMonitor
             var recordDateTime = DateTime.UtcNow;
 
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, metricAggregation, metricFilter, metricDefinition,
-                recordDateTime);
+            var relevantMetric = await GetRelevantMetric(metricName, metricAggregation, metricFilter, metricDefinition, recordDateTime);
 
             // Get the most recent value for that metric
             var mostRecentMetricValue = GetMostRecentMetricValue(metricName, relevantMetric.Timeseries, recordDateTime);

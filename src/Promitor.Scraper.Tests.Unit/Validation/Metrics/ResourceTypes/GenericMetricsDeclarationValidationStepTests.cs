@@ -27,7 +27,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void GenericMetricsDeclaration_DeclarationWithoutFilter_Fails()
+        public void GenericMetricsDeclaration_DeclarationWithoutFilter_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -40,7 +40,24 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+        }
+
+        [Fact]
+        public void GenericMetricsDeclaration_DeclarationWithFilter_Succeeded()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithGenericMetric(filter: "EntityName eq \'invoices\'")
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
 
         [Fact]

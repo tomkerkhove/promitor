@@ -19,7 +19,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "Promitor.Docker", "Promitor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{783A67B3-B14F-414C-9471-BCF69EBADA17}"
 	ProjectSection(SolutionItems) = preProject
-		..\samples\promitor-sample.yaml = ..\samples\promitor-sample.yaml
+		..\samples\promitor-sample-1.yaml = ..\samples\promitor-sample-1.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{05524B1B-9965-4E36-9626-A2823B8588AA}"
