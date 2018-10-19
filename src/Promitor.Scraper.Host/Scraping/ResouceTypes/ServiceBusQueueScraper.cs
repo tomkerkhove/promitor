@@ -21,7 +21,7 @@ namespace Promitor.Scraper.Host.Scraping.ResouceTypes
 
             var filter = $"EntityName eq '{metricDefinition.QueueName}'";
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, filter);
+            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, MetricType.NotSpecified, filter);
 
             return foundMetricValue;
         }

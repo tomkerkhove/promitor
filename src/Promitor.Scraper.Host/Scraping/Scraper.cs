@@ -8,6 +8,7 @@ using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Scraping.Interfaces;
 using GuardNet;
+using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Host.Scraping
 {
@@ -63,7 +64,7 @@ namespace Promitor.Scraper.Host.Scraping
                 var azureMonitorClient = new AzureMonitorClient(AzureMetadata.TenantId, AzureMetadata.SubscriptionId, AzureCredentials.ApplicationId, AzureCredentials.Secret);
                 var foundMetricValue = await ScrapeResourceAsync(azureMonitorClient, castedMetricDefinition);
                 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
+                Gauge gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
                 gauge.Set(foundMetricValue);
             }
             catch (Exception exception)

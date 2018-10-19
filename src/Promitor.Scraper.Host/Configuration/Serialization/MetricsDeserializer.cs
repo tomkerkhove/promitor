@@ -4,6 +4,7 @@ using Promitor.Scraper.Host.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using GuardNet;
 using YamlDotNet.RepresentationModel;
+using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Scraper.Host.Configuration.Serialization
 {
@@ -34,13 +35,17 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
         {
             var metricDefinition = DeserializeMetricDefinition<GenericMetricDefinition>(metricNode);
 
-            if(metricNode.Children.TryGetValue(new YamlScalarNode("filter"), out var filterNode))
+            if(metricNode.Children.TryGetValue(new YamlScalarNode("filter"), out YamlNode filterNode))
             {
-                metricDefinition.Filter = filterNode?.ToString();
+                metricDefinition.Filter = filterNode.ToString();
             }
 
+            if (metricNode.Children.TryGetValue(new YamlScalarNode("metricType"), out YamlNode metricTypeNode))
+            {
+                metricDefinition.MetricType = (MetricType)Enum.Parse(typeof(MetricType), metricTypeNode.ToString());
+            }
+            
             var resourceUri = metricNode.Children[new YamlScalarNode("resourceUri")];
-
             metricDefinition.ResourceUri = resourceUri?.ToString();
 
             return metricDefinition;
