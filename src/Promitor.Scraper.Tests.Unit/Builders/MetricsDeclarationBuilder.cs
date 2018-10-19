@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Serialization;
@@ -82,7 +83,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return new AzureMetricConfiguration
             {
                 MetricName = azureMetricName,
-                Aggregation = AggregationType.Average
+                Aggregation = AggregationType.Average,
+                MetricType = MetricType.NotSpecified
             };
         }
     }

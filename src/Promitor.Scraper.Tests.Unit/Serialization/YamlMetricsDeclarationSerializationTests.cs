@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Configuration.Serialization;
@@ -75,7 +76,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             var bogusGenerator = new Faker<AzureMetricConfiguration>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.MetricName, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => faker.PickRandom<AggregationType>());
+                .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => faker.PickRandom<AggregationType>())
+                .RuleFor(metricDefinition => metricDefinition.MetricType, faker => faker.PickRandom<MetricType>());
 
             return bogusGenerator.Generate();
 

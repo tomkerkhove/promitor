@@ -19,7 +19,7 @@ namespace Promitor.Scraper.Host.Scraping.ResouceTypes
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.ResourceUri);
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, metricDefinition.MetricType, metricDefinition.Filter);
+            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, metricDefinition.AzureMetricConfiguration.MetricType, metricDefinition.Filter);
 
             return foundMetricValue;
         }

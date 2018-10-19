@@ -39,12 +39,7 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
             {
                 metricDefinition.Filter = filterNode.ToString();
             }
-
-            if (metricNode.Children.TryGetValue(new YamlScalarNode("metricType"), out YamlNode metricTypeNode))
-            {
-                metricDefinition.MetricType = (MetricType)Enum.Parse(typeof(MetricType), metricTypeNode.ToString());
-            }
-            
+           
             var resourceUri = metricNode.Children[new YamlScalarNode("resourceUri")];
             metricDefinition.ResourceUri = resourceUri?.ToString();
 

@@ -4,6 +4,11 @@
         <name>Promitor.Scraper.Host</name>
     </assembly>
     <members>
+        <member name="P:Promitor.Scraper.Host.Configuration.Model.AzureMetricConfiguration.MetricType">
+            <summary>
+                The particular metric type that azure monitor exposes the metric as
+            </summary>
+        </member>
         <member name="P:Promitor.Scraper.Host.Configuration.Model.AzureMetricConfiguration.Aggregation">
             <summary>
                 Type of aggregation to query the Azure Monitor metric
