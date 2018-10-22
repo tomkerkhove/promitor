@@ -77,7 +77,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.MetricName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => faker.PickRandom<AggregationType>())
-                .RuleFor(metricDefinition => metricDefinition.MetricType, faker => faker.PickRandom<MetricType>());
+                .RuleFor(metricDefinition => metricDefinition.DataGranularity, faker => DataGranularityDescriptor.Default);
 
             return bogusGenerator.Generate();
 

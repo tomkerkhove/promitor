@@ -3,6 +3,7 @@ using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Configuration.Model;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
+using System;
 
 namespace Promitor.Scraper.Host.Scraping.ResouceTypes
 {
@@ -21,7 +22,8 @@ namespace Promitor.Scraper.Host.Scraping.ResouceTypes
 
             var filter = $"EntityName eq '{metricDefinition.QueueName}'";
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, MetricType.NotSpecified, filter);
+            var granularityDescriptor = DataGranularityDescriptor.Default;
+            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, granularityDescriptor, filter);
 
             return foundMetricValue;
         }

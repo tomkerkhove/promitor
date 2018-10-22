@@ -9,7 +9,8 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
 {
     internal class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfiguration>
     {
-        private readonly YamlScalarNode _metricTypeNode = new YamlScalarNode("metricType");
+        private readonly YamlScalarNode _dataGranularityNode = new YamlScalarNode("dataGranularity");
+        private readonly YamlScalarNode _specifiedGranularityNode = new YamlScalarNode("specifiedGranularity");
         private readonly YamlScalarNode _metricNameNode = new YamlScalarNode("metricName");
         private readonly YamlScalarNode _aggregationNode = new YamlScalarNode("aggregation"); 
         
@@ -19,25 +20,52 @@ namespace Promitor.Scraper.Host.Configuration.Serialization
             
             var metricName = node.Children[_metricNameNode];
             AggregationType aggregationType = AggregationType.None;
-            MetricType metricType = MetricType.NotSpecified;
+            DataGranularity dataGranularityType = DataGranularity.NotSpecified;
+            TimeSpan granularity = TimeSpan.Zero;
+            DataGranularityDescriptor dataGranularity = DataGranularityDescriptor.Default;
 
             if (node.Children.ContainsKey(_aggregationNode))
             {
                 YamlNode rawAggregation = node.Children[_aggregationNode];
-                Enum.TryParse(rawAggregation?.ToString(), out aggregationType);
+                if (!Enum.TryParse(rawAggregation?.ToString(), out aggregationType))
+                {
+                    throw new Exception("Could not deserialize configuration, unrecognized aggregation type");
+                }
             }
 
-            if (node.Children.ContainsKey(_metricTypeNode))
+            if (node.Children.ContainsKey(_dataGranularityNode))
             {
-                YamlNode rawMetricType = node.Children[_metricTypeNode];
-                Enum.TryParse(rawMetricType?.ToString(), out metricType);
+                YamlNode rawGranularityType = node.Children[_dataGranularityNode];
+                if (!Enum.TryParse(rawGranularityType?.ToString(), out dataGranularityType))
+                {
+                    throw new Exception("Could not deserialize configuration, unrecognized data granularity type");
+                }
+
+                if (dataGranularityType == DataGranularity.Specified)
+                {
+                    if (node.Children.ContainsKey(_specifiedGranularityNode))
+                    {
+                        YamlNode specifiedGranularityType = node.Children[_specifiedGranularityNode];
+                        granularity = TimeSpan.Parse(specifiedGranularityType?.ToString());
+                    }
+
+                    dataGranularity = new DataGranularityDescriptor { DataGranularity = dataGranularityType, SpecifiedTimeSpan = granularity };
+                }
+                else if (dataGranularityType == DataGranularity.Lowest)
+                {
+                    dataGranularity = new DataGranularityDescriptor { DataGranularity = dataGranularityType, SpecifiedTimeSpan = TimeSpan.Zero };
+                }
+                else
+                {
+                    throw new Exception("Could not deserialize configuration, unrecognized data granularity type");
+                }
             }
 
             var azureMetricConfiguration = new AzureMetricConfiguration
             {
                 MetricName = metricName?.ToString(),
                 Aggregation = aggregationType,
-                MetricType = metricType
+                DataGranularity = dataGranularity
             };
             return azureMetricConfiguration;
         }

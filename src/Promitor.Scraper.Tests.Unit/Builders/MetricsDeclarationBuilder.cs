@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Configuration.Model;
@@ -47,7 +48,13 @@ namespace Promitor.Scraper.Tests.Unit.Builders
 
         public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string serviceBusNamespace = "foo-space", string azureMetricName = "Total")
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var azureMetricConfiguration = new AzureMetricConfiguration
+            {
+                MetricName = azureMetricName,
+                Aggregation = AggregationType.Average,
+                DataGranularity = DataGranularityDescriptor.Default
+            };
+
             var metric = new ServiceBusQueueMetricDefinition
             {
                 ResourceType = ResourceType.ServiceBusQueue,
@@ -64,7 +71,13 @@ namespace Promitor.Scraper.Tests.Unit.Builders
 
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var azureMetricConfiguration = new AzureMetricConfiguration
+            {
+                MetricName = azureMetricName,
+                Aggregation = AggregationType.Average,
+                DataGranularity = new DataGranularityDescriptor()
+            };
+
             var metric = new GenericMetricDefinition
             {
                 Name = metricName,
@@ -76,16 +89,6 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             _metrics.Add(metric);
 
             return this;
-        }
-
-        private AzureMetricConfiguration CreateAzureMetricConfiguration(string azureMetricName)
-        {
-            return new AzureMetricConfiguration
-            {
-                MetricName = azureMetricName,
-                Aggregation = AggregationType.Average,
-                MetricType = MetricType.NotSpecified
-            };
         }
     }
 }

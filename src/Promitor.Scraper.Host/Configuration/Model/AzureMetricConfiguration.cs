@@ -8,7 +8,7 @@ namespace Promitor.Scraper.Host.Configuration.Model
         /// <summary>
         ///     The particular metric type that azure monitor exposes the metric as
         /// </summary>
-        public MetricType MetricType { get; set; }
+        public DataGranularityDescriptor DataGranularity { get; set; }
 
         /// <summary>
         ///     Type of aggregation to query the Azure Monitor metric
