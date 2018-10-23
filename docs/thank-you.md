@@ -14,9 +14,9 @@ Here is an overview of the services that are so kind to support us:
 
 ![Renovate](./media/logos/renovate.jpg)
 
-- **Visual Studio Team Services - CI/CD** allows us to build automated process for building our Docker image and pushing it to Docker Hub, create GitHub release and more without manual intervention.
+- **Azure Pipelines** allows us to build automated process for building our Docker image and pushing it to Docker Hub, create GitHub release and more without manual intervention.
 
-![Visual Studio Team Services - CI/CD](./media/logos/vsts.png)
+![Azure Pipelines](./media/logos/azure-pipelines.png)
 
 - **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed.
 
