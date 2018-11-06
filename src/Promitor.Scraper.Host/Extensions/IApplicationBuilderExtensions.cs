@@ -1,4 +1,5 @@
 ﻿using Prometheus.Client.AspNetCore;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.AspNetCore.Builder
