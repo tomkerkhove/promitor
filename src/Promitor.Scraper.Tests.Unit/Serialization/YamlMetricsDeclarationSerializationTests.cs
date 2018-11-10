@@ -3,9 +3,9 @@ using System.ComponentModel;
 using System.Linq;
 using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
-using Promitor.Scraper.Host.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization
@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             var scrapingConfiguration = new MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
-                Metrics = new List<Host.Configuration.Model.Metrics.MetricDefinition>
+                Metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>
                 {
                     serviceBusMetricDefinition
                 }

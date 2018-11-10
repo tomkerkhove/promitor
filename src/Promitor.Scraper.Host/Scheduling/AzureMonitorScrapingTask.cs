@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Promitor.Core;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
-using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Host.Scheduling.Interfaces;
-using Promitor.Scraper.Host.Scraping.Factories;
 
 namespace Promitor.Scraper.Host.Scheduling
 {

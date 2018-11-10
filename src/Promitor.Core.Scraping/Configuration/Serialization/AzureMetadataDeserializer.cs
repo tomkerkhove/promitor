@@ -1,0 +1,27 @@
+﻿using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model;
+using YamlDotNet.RepresentationModel;
+
+namespace Promitor.Core.Scraping.Configuration.Serialization
+{
+    internal class AzureMetadataDeserializer : Deserializer<AzureMetadata>
+    {
+        internal override AzureMetadata Deserialize(YamlMappingNode node)
+        {
+            Guard.NotNull(node, nameof(node));
+
+            var tenantId = node.Children[new YamlScalarNode("tenantId")];
+            var subscriptionId = node.Children[new YamlScalarNode("subscriptionId")];
+            var resourceGroupName = node.Children[new YamlScalarNode("resourceGroupName")];
+
+            var azureMetadata = new AzureMetadata
+            {
+                TenantId = tenantId?.ToString(),
+                SubscriptionId = subscriptionId?.ToString(),
+                ResourceGroupName = resourceGroupName?.ToString()
+            };
+
+            return azureMetadata;
+        }
+    }
+}

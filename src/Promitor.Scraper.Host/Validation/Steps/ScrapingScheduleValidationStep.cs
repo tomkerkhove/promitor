@@ -1,4 +1,5 @@
 ﻿using System;
+using Promitor.Core;
 using Promitor.Scraper.Host.Scheduling.Cron;
 using Promitor.Scraper.Host.Validation.Interfaces;
 

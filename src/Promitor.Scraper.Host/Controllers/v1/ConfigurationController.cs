@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
-using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Scraper.Host.Controllers.v1

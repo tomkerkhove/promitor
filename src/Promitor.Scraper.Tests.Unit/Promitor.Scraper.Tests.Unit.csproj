@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
     <ProjectReference Include="..\Promitor.Scraper.Host\Promitor.Scraper.Host.csproj" />
   </ItemGroup>
 

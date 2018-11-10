@@ -2,13 +2,14 @@
 using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Scheduling.Infrastructure.Extensions;
 using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.Extensions.DependencyInjection
+namespace Promitor.Scraper.Host.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions

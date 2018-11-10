@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
-using Promitor.Scraper.Host.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization;
 
 namespace Promitor.Scraper.Tests.Unit.Builders
 {
     public class MetricsDeclarationBuilder
     {
         private readonly AzureMetadata _azureMetadata;
-        private readonly List<Host.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Host.Configuration.Model.Metrics.MetricDefinition>();
+        private readonly List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>();
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {

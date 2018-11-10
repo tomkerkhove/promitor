@@ -21,10 +21,5 @@
                 internal const string GeneralValidationSucceeded = "Configuration is valid.";
             }
         }
-
-        internal static class Defaults
-        {
-            internal const string MetricsDeclarationPath = "/config/metrics-declaration.yaml";
-        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces
 {

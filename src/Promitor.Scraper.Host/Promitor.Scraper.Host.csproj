@@ -46,6 +46,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
+    <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
     <ProjectReference Include="..\Promitor.Core.Telemetry\Promitor.Core.Telemetry.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
   </ItemGroup>
