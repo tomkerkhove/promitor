@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
-using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {

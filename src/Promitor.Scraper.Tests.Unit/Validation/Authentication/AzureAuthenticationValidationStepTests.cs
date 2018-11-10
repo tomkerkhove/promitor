@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using Promitor.Scraper.Host;
+using Promitor.Core;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Promitor.Core;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
@@ -14,7 +15,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
                 LogMessage("No scrape configuration configured, falling back to default one...");
-                configurationPath = Constants.Defaults.MetricsDeclarationPath;
+                configurationPath = Promitor.Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
                 Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, configurationPath);
             }
 

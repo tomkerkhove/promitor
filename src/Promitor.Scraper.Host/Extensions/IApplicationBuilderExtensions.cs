@@ -1,8 +1,9 @@
-﻿using Prometheus.Client.AspNetCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Prometheus.Client.AspNetCore;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.AspNetCore.Builder
+namespace Promitor.Scraper.Host.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions

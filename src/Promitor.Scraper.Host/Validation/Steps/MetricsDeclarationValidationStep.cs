@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Promitor.Scraper.Host.Configuration.Model;
-using Promitor.Scraper.Host.Configuration.Model.Metrics;
-using Promitor.Scraper.Host.Configuration.Model.Metrics.ResouceTypes;
-using Promitor.Scraper.Host.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Scraper.Host.Validation.Interfaces;
 using Promitor.Scraper.Host.Validation.MetricDefinitions;
 
