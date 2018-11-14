@@ -15,7 +15,8 @@ script:
  - dotnet build src/Promitor.sln --configuration release
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --list-tests
  - dotnet test src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj --no-build
- - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --no-cache
+ - docker build ./src/ --file ./src/Promitor.Scraper.Host/Dockerfile --tag promitor-scraper-ci --no-cache
+ - docker run -d -p 8999:80 --name promitor-ci --env PROMITOR_AUTH_APPID='${AZUREMONITOR_ID}' --env PROMITOR_AUTH_APPKEY='${AZUREMONITOR_KEY}' --volume samples/promitor-sample.yaml:/config/metrics-declaration.yaml promitor-scraper-ci
  - cd ./src/Promitor.Scraper.Host
  - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
  - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
