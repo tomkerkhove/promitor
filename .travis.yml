@@ -20,3 +20,11 @@ script:
  - cd ./src/Promitor.Scraper.Host
  - snyk test --packageManager=nuget --org=tomkerkhove-github-marketplace
  - snyk monitor --packageManager=nuget --org=tomkerkhove-github-marketplace
+jobs:
+  include:
+    - stage: test
+      script: echo test
+    - stage: deploy
+      script:
+        - echo Deploy 1
+        - echo Deploy 2
