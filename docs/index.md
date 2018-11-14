@@ -47,6 +47,8 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
     - [Metrics Declaration](configuration/metrics)
     - [Telemetry](configuration#telemetry)
+- **Operations**
+    - [Health](operations#health)
 
 # Thank you!
 We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you)!
