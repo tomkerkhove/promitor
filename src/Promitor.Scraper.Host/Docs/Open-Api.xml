@@ -10,6 +10,12 @@
             </summary>
             <remarks>Provides a list of all configured metrics to scrape</remarks>
         </member>
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.HealthController.Get">
+            <summary>
+                Get Health
+            </summary>
+            <remarks>Provides an indication about the health of the scraper</remarks>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
                 Add support for Open API with API explorer

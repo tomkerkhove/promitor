@@ -77,7 +77,7 @@ namespace Promitor.Scraper.Host.Extensions
             }
 
             var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
-            var xmlDocumentationPath = $"{contentRootPath}\\Docs\\Open-Api.xml";
+            var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
         }
