@@ -18,11 +18,21 @@ A clear and concise description of what the bug is.
   2.
   3.
 
+## Configuration
+Provide insights in the configuration that you are using:
+- Configured scraping schedule: 
+
+<details>
+<summary>Used scraping configuration</summary>
+
+```yaml
+# Add your scraping configuration here
+```
+  
+</details>
+
 ## Specifications
 
   - Version:
   - Platform:
   - Subsystem:
-
-**Additional context**
-Add any other context about the problem here.
