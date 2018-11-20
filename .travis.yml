@@ -3,9 +3,9 @@ language: csharp
 dotnet: 2.1.403
 services:
   - docker
-os:  
+os:
   - linux
-branches:  
+branches:
  only:
    - master
 jobs:
