@@ -67,7 +67,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration);
 
             return bogusGenerator.Generate();
-
         }
 
         private AzureMetricConfiguration GenerateBogusAzureMetricConfiguration()
@@ -78,7 +77,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
                 .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => faker.PickRandom<AggregationType>());
 
             return bogusGenerator.Generate();
-
         }
 
         private AzureMetadata GenerateBogusAzureMetadata()
