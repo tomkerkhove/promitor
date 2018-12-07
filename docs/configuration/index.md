@@ -5,6 +5,10 @@ title: General Configuration
 
 Here is an overview of how you can configure Promitor.
 
+# Runtime
+The Promitor runtime is flexible and allows you to configure it to meet your needs:
+- **PROMITOR_HTTP_PORT** - Defines the port to serve HTTP traffic _(default 80)_
+
 # Scraping
 Promitor automatically scrapes Azure Monitor and makes the information available based on the metrics configuration.
 
