@@ -10,7 +10,6 @@ RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configur
 
 FROM microsoft/dotnet:2.1.6-aspnetcore-runtime as runtime
 WORKDIR /app
-EXPOSE 80
 COPY --from=build /src/Promitor.Scraper.Host/app .
 
 ENTRYPOINT ["dotnet", "Promitor.Scraper.Host.dll"]

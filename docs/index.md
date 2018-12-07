@@ -43,6 +43,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Running Promitor on Docker](deployment#docker)
     - [Running Promitor on Kubernetes](deployment#kubernetes)
 - **Configuration**
+    - [Runtime](configuration#runtime)
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
     - [Metrics Declaration](configuration/metrics)

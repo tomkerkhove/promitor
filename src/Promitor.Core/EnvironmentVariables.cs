@@ -2,6 +2,11 @@
 {
     public class EnvironmentVariables
     {
+        public class Runtime
+        {
+            public const string HttpPort = "PROMITOR_HTTP_PORT";
+        }
+
         public class Authentication
         {
             public const string ApplicationId = "PROMITOR_AUTH_APPID";
