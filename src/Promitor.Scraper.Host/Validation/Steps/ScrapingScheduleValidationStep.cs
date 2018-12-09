@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
 using Promitor.Scraper.Host.Scheduling.Cron;
 using Promitor.Scraper.Host.Validation.Interfaces;
@@ -9,6 +11,14 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         private const string DefaultCronSchedule = "*/5 * * * *";
 
+        public ScrapingScheduleValidationStep() : base(NullLogger.Instance)
+        {
+        }
+
+        public ScrapingScheduleValidationStep(ILogger logger) : base(logger)
+        {
+        }
+
         public string ComponentName { get; } = "Cron Schedule";
 
         public ValidationResult Run()
@@ -16,8 +26,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
             {
-                LogMessage(
-                    $"No scraping schedule was specified, falling back to default '{DefaultCronSchedule}' cron schedule...");
+                Logger.LogWarning("No scraping schedule was specified, falling back to default '{ScrapeSchedule}' cron schedule...", DefaultCronSchedule);
                 scrapingCronSchedule = DefaultCronSchedule;
                 Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, scrapingCronSchedule);
             }
@@ -29,10 +38,8 @@ namespace Promitor.Scraper.Host.Validation.Steps
             }
             catch (Exception exception)
             {
-                LogMessage(
-                    $"No valid scraping schedule was specified - '{scrapingCronSchedule}'. Details: {exception.Message}");
-                return ValidationResult.Failure(ComponentName,
-                    $"No valid scraping schedule was specified - '{scrapingCronSchedule}'.");
+                Logger.LogError("No valid scraping schedule was specified ('{ScrapeSchedule}' - Exception: {Exception})", DefaultCronSchedule, exception);
+                return ValidationResult.Failure(ComponentName, $"No valid scraping schedule was specified - '{scrapingCronSchedule}'.");
             }
         }
     }

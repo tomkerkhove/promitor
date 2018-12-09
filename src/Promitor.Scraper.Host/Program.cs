@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Management.ContainerInstance.Fluent.Models;
+using Microsoft.Extensions.Logging;
 using Promitor.Core;
 
 namespace Promitor.Scraper.Host
@@ -26,7 +25,10 @@ namespace Promitor.Scraper.Host
 
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            BuildWebHost(args)
+                .Welcome()
+                .ValidateSetup()
+                .Run();
         }
 
         private static int DetermineHttpPort()

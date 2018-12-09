@@ -1,12 +1,15 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 
 namespace Promitor.Scraper.Host.Validation.Steps
 {
     public class ValidationStep
     {
-        public void LogMessage(string message)
+        protected ILogger Logger { get; }
+
+        public ValidationStep(ILogger logger)
         {
-            Console.WriteLine($"\t\t{message}");
+            Logger = logger;
         }
     }
 }
