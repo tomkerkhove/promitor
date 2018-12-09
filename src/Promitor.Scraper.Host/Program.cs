@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Diagnostics.Views;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
@@ -25,10 +26,16 @@ namespace Promitor.Scraper.Host
 
         public static void Main(string[] args)
         {
+            Welcome();
+
             BuildWebHost(args)
-                .Welcome()
                 .ValidateSetup()
                 .Run();
+        }
+
+        private static void Welcome()
+        {
+            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         private static int DetermineHttpPort()
