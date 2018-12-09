@@ -74,16 +74,16 @@ namespace Promitor.Scraper.Host.Validation
 
         private ValidationResult RunValidationStep(IValidationStep validationStep, int currentStep, int totalSteps)
         {
-            _validationLogger.LogInformation("Validation step {currentStep}/{totalSteps}: {validationStepName}", currentStep, totalSteps, validationStep.ComponentName);
+            _validationLogger.LogInformation("Start Validation step {currentStep}/{totalSteps}: {validationStepName}", currentStep, totalSteps, validationStep.ComponentName);
 
             var validationResult = validationStep.Run();
             if (validationResult.IsSuccessful)
             {
-                _validationLogger.LogInformation("Validation step succeeded");
+                _validationLogger.LogInformation("Validation step {currentStep}/{totalSteps} succeeded", currentStep, totalSteps);
             }
             else
             {
-                _validationLogger.LogWarning("Validation step failed. Error(s): {validationMessage}", validationResult.Message);
+                _validationLogger.LogWarning("Validation step {currentStep}/{totalSteps} failed. Error(s): {validationMessage}", currentStep, totalSteps, validationResult.Message);
             }
 
             return validationResult;

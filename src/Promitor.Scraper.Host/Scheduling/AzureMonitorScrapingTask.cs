@@ -49,7 +49,7 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             _logger.LogInformation("Scraping '{metricName}' for resource type '{resourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType, _exceptionTracker);
+            var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType, _logger,_exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }
