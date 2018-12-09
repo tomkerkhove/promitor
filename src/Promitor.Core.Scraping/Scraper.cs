@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prometheus.Client;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -19,17 +20,20 @@ namespace Promitor.Core.Scraping
         where TMetricDefinition : MetricDefinition, new()
     {
         private readonly IExceptionTracker _exceptionTracker;
+        private readonly ILogger _logger;
 
         /// <summary>
         ///     Constructor
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="azureCredentials">Credentials used to authenticate to Microsoft Azure</param>
+        /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Exception tracker</param>
-        protected Scraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IExceptionTracker exceptionTracker)
+        protected Scraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
+            _logger = logger;
             _exceptionTracker = exceptionTracker;
 
             AzureMetadata = azureMetadata ?? throw new ArgumentNullException(nameof(azureMetadata));
@@ -62,7 +66,9 @@ namespace Promitor.Core.Scraping
 
                 var azureMonitorClient = new AzureMonitorClient(AzureMetadata.TenantId, AzureMetadata.SubscriptionId, AzureCredentials.ApplicationId, AzureCredentials.Secret);
                 var foundMetricValue = await ScrapeResourceAsync(azureMonitorClient, castedMetricDefinition);
-                
+
+                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}'", foundMetricValue, metricDefinition.Name);
+
                 var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
                 gauge.Set(foundMetricValue);
             }
