@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Core.Telemetry.Interfaces;
@@ -10,8 +11,8 @@ namespace Promitor.Core.Scraping.ResouceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ServiceBus/namespaces/{2}";
 
-        public ServiceBusQueueScraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, azureCredentials, exceptionTracker)
+        public ServiceBusQueueScraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, azureCredentials, logger, exceptionTracker)
         {
         }
 
