@@ -13,7 +13,7 @@ _For more information about advanced configuration, read our documentation [here
 ❯ docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
                          -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-scraper:0.3.0
+                         tomkerkhove/promitor-scraper:0.4
 ```
 
 # Kubernetes
