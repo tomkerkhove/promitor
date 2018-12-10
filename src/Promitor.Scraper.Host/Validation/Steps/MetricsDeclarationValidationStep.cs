@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -12,7 +14,11 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
 
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider)
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider) : this(metricsDeclarationProvider, NullLogger.Instance)
+        {
+        }
+
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base(logger)
         {
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
@@ -22,9 +28,8 @@ namespace Promitor.Scraper.Host.Validation.Steps
         public ValidationResult Run()
         {
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
-            LogMessage("Following metrics configuration was configured:");
-            LogMessage(rawMetricsConfiguration);
-
+            Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
+            
             var metricsDeclaration = _metricsDeclarationProvider.Get();
             if (metricsDeclaration == null)
             {

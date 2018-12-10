@@ -19,7 +19,7 @@ docker run -d -p 8999:80 --name promitor-scraper
                          --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-scraper:0.3.0
+                         tomkerkhove/promitor-scraper:0.4
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-scraper/).
@@ -43,6 +43,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Running Promitor on Docker](deployment#docker)
     - [Running Promitor on Kubernetes](deployment#kubernetes)
 - **Configuration**
+    - [Runtime](configuration#runtime)
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
     - [Metrics Declaration](configuration/metrics)

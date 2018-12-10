@@ -17,8 +17,11 @@ spec:
     spec:
       containers:
         - name: containo-orders-api
-          image: tomkerkhove/promitor-scraper:0.3.0
+          image: tomkerkhove/promitor-scraper:0.4
           env:
+          - name:  PROMITOR_HTTP_PORT
+            # Optional - Defines the port number on which HTTP traffic will be served.Provide the Azure AD App Id (default is 80)
+            value: "88"
           - name:  PROMITOR_AUTH_APPID
             # Provide the Azure AD App Id
             # See documentation for more information - https://promitor.io/configuration/#authentication-with-azure-monitor
@@ -75,7 +78,7 @@ spec:
   ports:
   - protocol: TCP
     port: 1337
-    targetPort: 80
+    targetPort: 88
 ---
 apiVersion: v1
 kind: Secret

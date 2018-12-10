@@ -4,8 +4,9 @@ services:
   promitor.scraper:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - PROMITOR_HTTP_PORT=88
       - PROMITOR_AUTH_APPID=<PROMITOR_AUTH_APPID>
       - PROMITOR_AUTH_APPKEY=<PROMITOR_AUTH_APPKEY>
       - PROMITOR_TELEMETRY_INSTRUMENTATIONKEY=
     ports:
-      - "80"
+      - "88"
