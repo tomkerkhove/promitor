@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containo-orders-api
-          image: tomkerkhove/promitor-scraper:0.3.0
+          image: tomkerkhove/promitor-scraper:0.4
           env:
           - name:  PROMITOR_HTTP_PORT
             # Optional - Defines the port number on which HTTP traffic will be served.Provide the Azure AD App Id (default is 80)
