@@ -18,9 +18,11 @@ The behavior of this can be configured with the following environment variables:
 - **PROMITOR_SCRAPE_SCHEDULE** - A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. If configured is specified, `*/5 * * * *` will be used.
 
 # Authentication with Azure Monitor
-Authentication with Azure Monitor is fully integrated with Azure AD where you will need to create an entity, preferably an Azure AD Application, that will be used for integrating with the Azure Monitor API.
+Authentication with Azure Monitor is fully integrated with Azure AD. In order to use Promitor, you'll need to create an Azure AD Application, that will be used for integrating with the Azure Monitor API.
 
-The following environment variables need to be provided:
+Creating an Azure AD Application is super easy, you can find guidance on this [here](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application).
+
+Once the AD Application is created, you'll need to [get the application id and secret](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key) to configure the following  environment variables:
 - **PROMITOR_AUTH_APPID** - Id of the Azure AD entity to authenticate with
 - **PROMITOR_AUTH_APPKEY** - Secret of the Azure AD entity to authenticate with
 
