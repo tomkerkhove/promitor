@@ -28,7 +28,7 @@ Here is an overview of the services that are so kind to support us:
 
 - **Codefactor** for continuously monitoring our code styling.
 
-![Codefactor](./media/logos/codefactor.jpg)
+![Codefactor](./media/logos/codefactor.png)
 
 # GitHub Apps
 We are using the following GitHub Apps:
