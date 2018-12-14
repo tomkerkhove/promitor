@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.1.500-sdk AS build
+FROM microsoft/dotnet:2.2.100-sdk AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
@@ -8,7 +8,7 @@ COPY Promitor.Scraper.Host/* Promitor.Scraper.Host/
 RUN dotnet --info
 RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release -o app
 
-FROM microsoft/dotnet:2.1.6-aspnetcore-runtime as runtime
+FROM microsoft/dotnet:2.2.0-aspnetcore-runtime as runtime
 WORKDIR /app
 COPY --from=build /src/Promitor.Scraper.Host/app .
 
