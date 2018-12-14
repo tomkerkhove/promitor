@@ -22,6 +22,14 @@ Here is an overview of the services that are so kind to support us:
 
 ![Snyk](./media/logos/snyk-dark.png)
 
+- **Netlify** allows us to provide previews of our documentation changes in our pull requests that make it easier to review them.
+
+![Netlify](./media/logos/netlify.png)
+
+- **Codefactor** for continuously monitoring our code styling.
+
+![Codefactor](./media/logos/codefactor.jpg)
+
 # GitHub Apps
 We are using the following GitHub Apps:
 - [WIP](https://github.com/apps/wip) - Do Not Merge – as a service
