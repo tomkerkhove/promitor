@@ -1,0 +1,7 @@
+apiversion: v1alpha
+kind: KubeValidatorConfig
+spec:
+  manifests:
+  - glob: deploy/*/*.yaml
+    schemas:
+    - version: 1.10.0
