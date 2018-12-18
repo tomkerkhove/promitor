@@ -1,5 +1,5 @@
 apiVersion: extensions/v1beta1
-kind: Deployment
+kind: Deployments
 metadata:
   name: promitor-scraper
 spec:
