@@ -42,6 +42,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
 - **Deployment**
     - [Running Promitor on Docker](deployment#docker)
     - [Running Promitor on Kubernetes](deployment#kubernetes)
+    - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Configuration**
     - [Runtime](configuration#runtime)
     - [Scraping](configuration#scraping)
