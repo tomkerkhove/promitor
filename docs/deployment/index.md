@@ -31,9 +31,10 @@ Depending on your scenario you might need a different update cadence for Docker 
 
 We provide a few options by offering multiple Docker tags:
 
-- **latest** - Ideal for experimentation and proof-of-concepts, but not recommended for running production workloads. (Not supported yet, see [#273](https://github.com/tomkerkhove/promitor/issues/273))
+- **latest** - Ideal for experimentation and proof-of-concepts, but not recommended for running production workloads. _(Not supported yet, see [#273](https://github.com/tomkerkhove/promitor/issues/273))_
 - **{major}.{minor}** - Representation of a specific feature set, but will be updated with feature & security patches.
-- **{major}.{minor}.{patch}** - Run a specific version of the runtime. _(Alternative could be to use [image digest pinning](https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier))
+- **{major}.{minor}.{patch}** - Run a specific version of the runtime.
+_(Alternative could be to use [image digest pinning](https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier))_
 
 ![Image Tagging Strategy](./../media/deploy-image-tagging-strategy.png)
 
