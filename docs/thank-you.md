@@ -36,6 +36,10 @@ We are using the following GitHub Apps:
 - [Reminders](https://github.com/apps/reminders) - Set reminders on Issues and Pull Requests
 - [Request Info](https://github.com/apps/request-info) - Requests more info from newly opened Pull Requests and Issues
 - [Stale](https://github.com/apps/Stale) - Closes abandoned issues after a period of inactivity.
+- [YAMBURGER](https://github.com/apps/yamburger) - Finds YAML syntax errors
+- [kubevalidator](https://github.com/apps/kubevalidator) - For validating our Kubernetes YAML specifications
+- [ImgBot](https://github.com/marketplace/imgbot) - Optimizing images across our repo
+
 
 # Azure Pipelines Extensions 
 
