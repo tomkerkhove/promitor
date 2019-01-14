@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <RuntimeFrameworkVersion>2.2.1</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
