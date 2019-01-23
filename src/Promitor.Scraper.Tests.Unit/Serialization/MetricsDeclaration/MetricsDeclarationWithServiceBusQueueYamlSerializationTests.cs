@@ -2,16 +2,16 @@
 using System.ComponentModel;
 using System.Linq;
 using Bogus;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Xunit;
+using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization
+namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class YamlMetricsDeclarationSerializationTests
+    public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests
     {
         [Fact]
         public void YamlSerialization_SerializeAndDeserializeValidConfigForServiceBus_SucceedsWithIdenticalOutput()
@@ -19,10 +19,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
             var serviceBusMetricDefinition = GenerateBogusServiceBusMetricDefinition();
-            var scrapingConfiguration = new MetricsDeclaration
+            var metricDefaults = GenerateBogusMetricDefaults();
+            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
-                Metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>
+                MetricDefaults = metricDefaults,
+                Metrics = new List<MetricDefinition>
                 {
                     serviceBusMetricDefinition
                 }
@@ -34,26 +36,27 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            Assert.NotNull(deserializedConfiguration.AzureMetadata);
-            Assert.Equal(azureMetadata.TenantId, deserializedConfiguration.AzureMetadata.TenantId);
-            Assert.Equal(azureMetadata.ResourceGroupName, deserializedConfiguration.AzureMetadata.ResourceGroupName);
-            Assert.Equal(azureMetadata.SubscriptionId, deserializedConfiguration.AzureMetadata.SubscriptionId);
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            Assert.NotNull(deserializedMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.Name, deserializedMetricDefinition.Name);
-            Assert.Equal(serviceBusMetricDefinition.Description, deserializedMetricDefinition.Description);
-            Assert.Equal(serviceBusMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
+            AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
             var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
+            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition, deserializedMetricDefinition);
+        }
+
+        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
             Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
             Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
             Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
-
         private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition()
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
@@ -65,27 +68,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
                 .RuleFor(metricDefinition => metricDefinition.Namespace, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration);
-
-            return bogusGenerator.Generate();
-        }
-
-        private AzureMetricConfiguration GenerateBogusAzureMetricConfiguration()
-        {
-            var bogusGenerator = new Faker<AzureMetricConfiguration>()
-                .StrictMode(ensureRulesForAllProperties: true)
-                .RuleFor(metricDefinition => metricDefinition.MetricName, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => faker.PickRandom<AggregationType>());
-
-            return bogusGenerator.Generate();
-        }
-
-        private AzureMetadata GenerateBogusAzureMetadata()
-        {
-            var bogusGenerator = new Faker<AzureMetadata>()
-                            .StrictMode(ensureRulesForAllProperties: true)
-                            .RuleFor(metadata => metadata.TenantId, faker => faker.Finance.Account())
-                            .RuleFor(metadata => metadata.ResourceGroupName, faker => faker.Name.FirstName())
-                            .RuleFor(metadata => metadata.SubscriptionId, faker => faker.Finance.Account());
 
             return bogusGenerator.Generate();
         }

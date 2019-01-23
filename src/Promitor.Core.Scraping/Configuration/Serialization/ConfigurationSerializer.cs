@@ -27,20 +27,28 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         private static MetricsDeclaration InterpretYamlStream(YamlStream metricsDeclarationYamlStream)
         {
             var document = metricsDeclarationYamlStream.Documents.First();
-            var rootNode = (YamlMappingNode)document.RootNode;
+            var rootNode = (YamlMappingNode) document.RootNode;
 
             AzureMetadata azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
-                var azureMetadataNode = (YamlMappingNode)rootNode.Children[new YamlScalarNode("azureMetadata")];
+                var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
                 var azureMetadataSerializer = new AzureMetadataDeserializer();
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
+            }
+
+            MetricDefaults metricDefaults = null;
+            if (rootNode.Children.ContainsKey("metricDefaults"))
+            {
+                var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
+                var metricDefaultsSerializer = new MetricDefaultsDeserializer();
+                metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
             List<MetricDefinition> metrics = null;
             if (rootNode.Children.ContainsKey("metrics"))
             {
-                var metricsNode = (YamlSequenceNode)rootNode.Children[new YamlScalarNode("metrics")];
+                var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
                 var metricsDeserializer = new MetricsDeserializer();
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
@@ -48,6 +56,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var metricsDeclaration = new MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
+                MetricDefaults = metricDefaults,
                 Metrics = metrics
             };
 

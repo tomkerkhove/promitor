@@ -6,16 +6,7 @@ namespace Promitor.Core.Serialization.Yaml
     public static class YamlSerialization
     {
         private static readonly INamingConvention NamingConvention = new CamelCaseNamingConvention();
-
-        public static IDeserializer CreateDeserializer()
-        {
-            var builder = new DeserializerBuilder();
-            builder.IgnoreUnmatchedProperties();
-            builder.WithNamingConvention(NamingConvention);
-
-            return builder.Build();
-        }
-
+        
         public static ISerializer CreateSerializer()
         {
             var builder = new SerializerBuilder();

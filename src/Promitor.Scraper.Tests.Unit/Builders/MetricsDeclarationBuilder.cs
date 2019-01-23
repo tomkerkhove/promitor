@@ -82,7 +82,10 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return new AzureMetricConfiguration
             {
                 MetricName = azureMetricName,
-                Aggregation = AggregationType.Average
+                Aggregation = new MetricAggregation
+                {
+                    Type = AggregationType.Average
+                }
             };
         }
     }

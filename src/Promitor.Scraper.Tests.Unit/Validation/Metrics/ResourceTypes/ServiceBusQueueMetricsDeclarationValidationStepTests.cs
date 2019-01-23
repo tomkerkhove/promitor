@@ -44,7 +44,9 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void 
+            
+            ServiceBusQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()

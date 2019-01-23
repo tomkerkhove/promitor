@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GuardNet;
+using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prometheus.Client;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
+using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
 namespace Promitor.Core.Scraping
 {
@@ -26,29 +27,40 @@ namespace Promitor.Core.Scraping
         ///     Constructor
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
-        /// <param name="azureCredentials">Credentials used to authenticate to Microsoft Azure</param>
+        /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
+        /// <param name="metricDefaults">Default configuration for metrics</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Exception tracker</param>
-        protected Scraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger, IExceptionTracker exceptionTracker)
+        protected Scraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient,
+            ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
+            Guard.NotNull(azureMetadata, nameof(azureMetadata));
+            Guard.NotNull(metricDefaults, nameof(metricDefaults));
+            Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
 
             _logger = logger;
             _exceptionTracker = exceptionTracker;
 
-            AzureMetadata = azureMetadata ?? throw new ArgumentNullException(nameof(azureMetadata));
-            AzureCredentials = azureCredentials ?? throw new ArgumentNullException(nameof(azureCredentials));
+            AzureMetadata = azureMetadata;
+            MetricDefaults = metricDefaults;
+            AzureMonitorClient = azureMonitorClient;
         }
-
-        /// <summary>
-        ///     Credentials used to authenticate to Microsoft Azure
-        /// </summary>
-        protected AzureCredentials AzureCredentials { get; }
 
         /// <summary>
         ///     Metadata concerning the Azure resources
         /// </summary>
         protected AzureMetadata AzureMetadata { get; }
+
+        /// <summary>
+        ///     Default configuration for metrics
+        /// </summary>
+        protected MetricDefaults MetricDefaults { get; }
+
+        /// <summary>
+        ///     Client to interact with Azure Monitor
+        /// </summary>
+        protected AzureMonitorClient AzureMonitorClient { get; }
 
         public async Task ScrapeAsync(MetricDefinition metricDefinition)
         {
@@ -64,8 +76,9 @@ namespace Promitor.Core.Scraping
                     throw new ArgumentException($"Could not cast metric definition of type '{metricDefinition.ResourceType}' to {typeof(TMetricDefinition)}. Payload: {JsonConvert.SerializeObject(metricDefinition)}");
                 }
 
-                var azureMonitorClient = new AzureMonitorClient(AzureMetadata.TenantId, AzureMetadata.SubscriptionId, AzureCredentials.ApplicationId, AzureCredentials.Secret);
-                var foundMetricValue = await ScrapeResourceAsync(azureMonitorClient, castedMetricDefinition);
+                var aggregationInterval = DetermineMetricAggregationInterval(metricDefinition);
+                var aggregationType = metricDefinition.AzureMetricConfiguration.Aggregation.Type;
+                var foundMetricValue = await ScrapeResourceAsync(castedMetricDefinition, aggregationType, aggregationInterval);
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}'", foundMetricValue, metricDefinition.Name);
 
@@ -78,11 +91,29 @@ namespace Promitor.Core.Scraping
             }
         }
 
+        private TimeSpan DetermineMetricAggregationInterval(MetricDefinition metricDefinition)
+        {
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
+
+            if (metricDefinition?.AzureMetricConfiguration?.Aggregation?.Interval != null)
+            {
+                return metricDefinition.AzureMetricConfiguration.Aggregation.Interval.Value;
+            }
+
+            if (MetricDefaults.Aggregation.Interval == null)
+            {
+                throw new Exception($"No default aggregation interval is configured nor on the metric configuration for '{metricDefinition.Name}'");
+            }
+
+            return MetricDefaults.Aggregation.Interval.Value;
+        }
+
         /// <summary>
         ///     Scrapes the configured resource
         /// </summary>
-        /// <param name="azureMonitorClient">Client to query Azure Monitor</param>
         /// <param name="metricDefinition">Definition of the metric to scrape</param>
-        protected abstract Task<double> ScrapeResourceAsync(AzureMonitorClient azureMonitorClient, TMetricDefinition metricDefinition);
+        /// <param name="aggregationType">Aggregation for the metric to use</param>
+        /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
+        protected abstract Task<double> ScrapeResourceAsync(TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
     }
 }
