@@ -16,8 +16,8 @@
   <ItemGroup>
     <PackageReference Include="Guard.NET" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.1" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.18.0" />
-    <PackageReference Include="Microsoft.Azure.Management.Monitor.Fluent" Version="1.18.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.19.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Monitor.Fluent" Version="1.19.0" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.4" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
