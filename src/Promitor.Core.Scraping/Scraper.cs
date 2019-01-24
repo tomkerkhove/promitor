@@ -69,7 +69,7 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}'", foundMetricValue, metricDefinition.Name);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: true);
                 gauge.Set(foundMetricValue);
             }
             catch (Exception exception)
