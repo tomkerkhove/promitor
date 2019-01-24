@@ -34,4 +34,4 @@ metrics:
       aggregation:
         type: Total
         # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
-        interval: 00:01:00
+        interval: 00:15:00
