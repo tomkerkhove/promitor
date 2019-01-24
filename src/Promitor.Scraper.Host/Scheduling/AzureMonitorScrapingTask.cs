@@ -47,7 +47,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
         private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefaults metricDefaults, MetricDefinition metricDefinitionDefinition)
         {
-            _logger.LogInformation("Scraping '{metricName}' for resource type '{resourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
+            _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
             var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType,azureMetadata, metricDefaults, _logger,_exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);

@@ -80,7 +80,7 @@ namespace Promitor.Core.Scraping
                 var aggregationType = metricDefinition.AzureMetricConfiguration.Aggregation.Type;
                 var foundMetricValue = await ScrapeResourceAsync(castedMetricDefinition, aggregationType, aggregationInterval);
 
-                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}'", foundMetricValue, metricDefinition.Name);
+                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", foundMetricValue, metricDefinition.Name, aggregationInterval);
 
                 var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description);
                 gauge.Set(foundMetricValue);
