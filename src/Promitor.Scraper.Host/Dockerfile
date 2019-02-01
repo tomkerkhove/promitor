@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2.102-sdk AS build
+FROM microsoft/dotnet:2.2.103-sdk AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
