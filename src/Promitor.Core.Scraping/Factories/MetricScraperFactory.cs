@@ -23,7 +23,7 @@ namespace Promitor.Core.Scraping.Factories
             MetricDefaults metricDefaults, ILogger logger, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials);
+            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, logger);
 
             switch (metricDefinitionResourceType)
             {
@@ -36,9 +36,9 @@ namespace Promitor.Core.Scraping.Factories
             }
         }
 
-        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials)
+        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger)
         {
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, logger);
             return azureMonitorClient;
         }
 

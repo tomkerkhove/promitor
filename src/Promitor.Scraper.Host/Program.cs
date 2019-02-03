@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Diagnostics.Views;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using Promitor.Core;
 
 namespace Promitor.Scraper.Host
