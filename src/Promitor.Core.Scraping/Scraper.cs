@@ -5,6 +5,7 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prometheus.Client;
+using Promitor.Core.Infrastructure;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
@@ -82,7 +83,9 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", foundMetricValue, metricDefinition.Name, aggregationInterval);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: true);
+                var metricsTimestampFeatureFlag = FeatureFlag.IsActive("METRICSTIMESTAMP", defaultFlagState: true);
+
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag);
                 gauge.Set(foundMetricValue);
             }
             catch (Exception exception)

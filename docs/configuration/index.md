@@ -17,6 +17,9 @@ The behavior of this can be configured with the following environment variables:
 - **PROMITOR_SCRAPE_BASEPATH** - Controls the path where the scraping endpoint for Prometheus is being exposed. If nothing is specified, `/prometheus/scrape` will be used.
 - **PROMITOR_SCRAPE_SCHEDULE** - A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. If configured is specified, `*/5 * * * *` will be used.
 
+We're also providing feature flags to opt-out of certain features:
+- **PROMITOR_FEATURE_METRICSTIMESTAMP** - Defines whether or not a timestamp should be included when the value was scraped on Azure Monitor. Supported values are `True` to opt-in & `False` to opt-out, if nothing is configured this will be turned on.
+
 # Authentication with Azure Monitor
 Authentication with Azure Monitor is fully integrated with Azure AD. In order to use Promitor, you'll need to [create an Azure AD Application](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application), that will be used for integrating with the Azure Monitor API.
 
