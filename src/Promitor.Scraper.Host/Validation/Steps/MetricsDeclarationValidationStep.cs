@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
         {
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
-            
+
             var metricsDeclaration = _metricsDeclarationProvider.Get();
             if (metricsDeclaration == null)
             {
@@ -40,7 +40,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
             validationErrors.AddRange(azureMetadataErrorMessages);
 
-            var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics);
+            var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics, metricsDeclaration.MetricDefaults);
             validationErrors.AddRange(metricsErrorMessages);
 
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
@@ -84,7 +84,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return errorMessages;
         }
 
-        private List<string> ValidateMetrics(List<MetricDefinition> metrics)
+        private List<string> ValidateMetrics(List<MetricDefinition> metrics, MetricDefaults metricDefaults)
         {
             var errorMessages = new List<string>();
 
@@ -94,7 +94,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
                 return errorMessages;
             }
 
-            var metricsValidator = new MetricsValidator();
+            var metricsValidator = new MetricsValidator(metricDefaults);
             var metricErrorMessages = metricsValidator.Validate(metrics);
             errorMessages.AddRange(metricErrorMessages);
 
