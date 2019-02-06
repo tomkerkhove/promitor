@@ -8,12 +8,14 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
+        private readonly ILogger _logger;
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
 
@@ -24,8 +26,8 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
-        public AzureMonitorClient(string tenantId, string subscriptionId, string applicationId,
-            string applicationSecret)
+        /// <param name="logger">Logger to use during interaction with Azure Monitor</param>
+        public AzureMonitorClient(string tenantId, string subscriptionId, string applicationId, string applicationSecret, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -35,17 +37,19 @@ namespace Promitor.Integrations.AzureMonitor
             var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, AzureEnvironment.AzureGlobalCloud);
 
             _authenticatedAzureSubscription = Azure.Authenticate(credentials).WithSubscription(subscriptionId);
+            _logger = logger;
         }
 
         /// <summary>
         ///     Queries Azure Monitor to get the latest value for a specific metric
         /// </summary>
         /// <param name="metricName">Name of the metric</param>
-        /// <param name="metricAggregation">Aggregation for the metric to use</param>
+        /// <param name="aggregationType">Aggregation for the metric to use</param>
+        /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         /// <param name="resourceId">Id of the resource to query</param>
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<double> QueryMetricAsync(string metricName, AggregationType metricAggregation,
+        public async Task<double> QueryMetricAsync(string metricName, AggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -61,22 +65,63 @@ namespace Promitor.Integrations.AzureMonitor
 
             var recordDateTime = DateTime.UtcNow;
 
+            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
+
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, metricAggregation, metricFilter, metricDefinition, recordDateTime);
+            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDefinition, recordDateTime);
 
             // Get the most recent value for that metric
             var mostRecentMetricValue = GetMostRecentMetricValue(metricName, relevantMetric.Timeseries, recordDateTime);
 
             // Get the metric value according to the requested aggregation type
-            var requestMetricAggregate = InterpretMetricValue(metricAggregation, mostRecentMetricValue);
+            var requestMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
 
             return requestMetricAggregate;
         }
 
-        private async Task<IMetric> GetRelevantMetric(string metricName, AggregationType metricAggregation,
+        private TimeSpan DetermineAggregationInterval(string metricName, TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
+        {
+            // Get perfect match
+            if (availableMetricPeriods.Any(availableMetricPeriod => availableMetricPeriod.TimeGrain == requestedAggregationInterval))
+            {
+                return requestedAggregationInterval;
+            }
+
+            var closestAggregationInterval = GetClosestAggregationInterval(requestedAggregationInterval, availableMetricPeriods);
+
+            _logger.LogWarning("{MetricName} will be using {ClosestAggregationInterval} aggregation interval rather than {RequestedAggregationInterval} given it was not available", metricName, closestAggregationInterval.ToString("g"), requestedAggregationInterval.ToString("g"));
+
+            return closestAggregationInterval;
+        }
+
+        private static TimeSpan GetClosestAggregationInterval(TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
+        {
+            TimeSpan closestAggregationIntervalDifference = TimeSpan.MaxValue;
+            TimeSpan closestAggregationInterval = TimeSpan.MaxValue;
+
+            foreach (var availableMetricPeriod in availableMetricPeriods)
+            {
+                if (availableMetricPeriod.TimeGrain.HasValue == false)
+                {
+                    continue;
+                }
+
+                var periodDifference = availableMetricPeriod.TimeGrain.Value - requestedAggregationInterval;
+
+                if (Math.Abs(periodDifference.TotalSeconds) < Math.Abs(closestAggregationIntervalDifference.TotalSeconds))
+                {
+                    closestAggregationIntervalDifference = periodDifference;
+                    closestAggregationInterval = availableMetricPeriod.TimeGrain.Value;
+                }
+            }
+
+            return closestAggregationInterval;
+        }
+
+        private async Task<IMetric> GetRelevantMetric(string metricName, AggregationType metricAggregation, TimeSpan metricInterval,
             string metricFilter, IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
-            var metricQuery = CreateMetricsQuery(metricAggregation, metricFilter, metricDefinition, recordDateTime);
+            var metricQuery = CreateMetricsQuery(metricAggregation, metricInterval, metricFilter, metricDefinition, recordDateTime);
             var metrics = await metricQuery.ExecuteAsync();
 
             // We already filtered this out so only expect to have one
@@ -131,14 +176,14 @@ namespace Promitor.Integrations.AzureMonitor
             }
         }
 
-        private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, string metricFilter,
+        private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter,
             IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
             var metricQuery = metricDefinition.DefineQuery()
                 .StartingFrom(recordDateTime.AddDays(-5))
                 .EndsBefore(recordDateTime)
                 .WithAggregation(metricAggregation.ToString())
-                .WithInterval(TimeSpan.FromMinutes(5)); // TODO: Align with cron
+                .WithInterval(metricsInterval);
 
             if (string.IsNullOrWhiteSpace(metricFilter) == false)
             {

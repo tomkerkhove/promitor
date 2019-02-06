@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
 using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {
     public class MetricsValidator
     {
+        private readonly MetricDefaults metricDefaults;
+
+        public MetricsValidator(MetricDefaults metricDefaults)
+        {
+            this.metricDefaults = metricDefaults;
+        }
+
         public List<string> Validate(List<MetricDefinition> metrics)
         {
             Guard.NotNull(metrics, nameof(metrics));
@@ -64,26 +71,9 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 
             errorMessages.AddRange(metricDefinitionValidationErrors);
 
-            var metricsConfigurationErrorMessages = ValidateAzureMetricConfiguration(metric.AzureMetricConfiguration);
+            var metricAggregationValidator = new AzureMetricConfigurationValidator(metricDefaults);
+            var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
             errorMessages.AddRange(metricsConfigurationErrorMessages);
-
-            return errorMessages;
-        }
-
-        private List<string> ValidateAzureMetricConfiguration(AzureMetricConfiguration azureMetricConfiguration)
-        {
-            var errorMessages = new List<string>();
-
-            if (azureMetricConfiguration == null)
-            {
-                errorMessages.Add("Invalid azure metric configuration is configured");
-                return errorMessages;
-            }
-
-            if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
-            {
-                errorMessages.Add("No metric name for Azure is configured");
-            }
 
             return errorMessages;
         }

@@ -38,18 +38,18 @@ namespace Promitor.Scraper.Host.Scheduling
 
             foreach (var metricDefinition in scrapeConfiguration.Metrics)
             {
-                var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, metricDefinition);
+                var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, scrapeConfiguration.MetricDefaults, metricDefinition);
                 scrapingTasks.Add(scrapingTask);
             }
 
             await Task.WhenAll(scrapingTasks);
         }
 
-        private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefinition metricDefinitionDefinition)
+        private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefaults metricDefaults, MetricDefinition metricDefinitionDefinition)
         {
-            _logger.LogInformation("Scraping '{metricName}' for resource type '{resourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
+            _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = MetricScraperFactory.CreateScraper(azureMetadata, metricDefinitionDefinition.ResourceType, _logger,_exceptionTracker);
+            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType,azureMetadata, metricDefaults, _logger,_exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

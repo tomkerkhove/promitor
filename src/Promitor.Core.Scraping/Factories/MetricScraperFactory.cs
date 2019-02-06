@@ -5,6 +5,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.ResouceTypes;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.Factories
 {
@@ -15,21 +16,30 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        /// <param name="metricDefaults">Default configuration for metrics</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Tracker used to log exceptions</param>
-        public static IScraper<MetricDefinition> CreateScraper(AzureMetadata azureMetadata, ResourceType metricDefinitionResourceType, ILogger logger, IExceptionTracker exceptionTracker)
+        public static IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
+            MetricDefaults metricDefaults, ILogger logger, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
+            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, logger);
 
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(azureMetadata, azureCredentials, logger, exceptionTracker);
+                    return new ServiceBusQueueScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.Generic:
-                    return new GenericScraper(azureMetadata, azureCredentials, logger, exceptionTracker);
+                    return new GenericScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger)
+        {
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, logger);
+            return azureMonitorClient;
         }
 
         private static AzureCredentials DetermineAzureCredentials()

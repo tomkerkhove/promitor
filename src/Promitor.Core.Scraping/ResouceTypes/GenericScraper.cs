@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
@@ -11,16 +13,16 @@ namespace Promitor.Core.Scraping.ResouceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/{2}";
 
-        public GenericScraper(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, azureCredentials, logger, exceptionTracker)
+        public GenericScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker)
         {
         }
 
-        protected override async Task<double> ScrapeResourceAsync(AzureMonitorClient azureMonitorClient, GenericMetricDefinition metricDefinition)
+        protected override async Task<double> ScrapeResourceAsync(GenericMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.ResourceUri);
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await azureMonitorClient.QueryMetricAsync(metricName, metricDefinition.AzureMetricConfiguration.Aggregation, resourceUri, metricDefinition.Filter);
+            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, metricDefinition.Filter);
 
             return foundMetricValue;
         }
