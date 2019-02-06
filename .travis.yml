@@ -12,7 +12,7 @@ branches:
 jobs:
   include:
     - stage: General
-      name: "Build, Test & Scan Codebase"
+      name: "Build & Test Codebase"
       script:
       - dotnet --info
       - dotnet build src/Promitor.sln --configuration release
