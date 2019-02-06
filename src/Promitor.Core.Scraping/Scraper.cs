@@ -4,6 +4,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prometheus.Client;
+using Promitor.Core.Infrastructure;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -69,7 +70,9 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}'", foundMetricValue, metricDefinition.Name);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: true);
+                var metricsTimestampFeatureFlag = FeatureFlag.IsActive("METRICSTIMESTAMP", defaultFlagState: true);
+
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag);
                 gauge.Set(foundMetricValue);
             }
             catch (Exception exception)
