@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using Bogus;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -29,10 +30,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                     serviceBusMetricDefinition
                 }
             };
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
 
             // Act
-            var serializedConfiguration = ConfigurationSerializer.Serialize(scrapingConfiguration);
-            var deserializedConfiguration = ConfigurationSerializer.Deserialize(serializedConfiguration);
+            var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
+            var deserializedConfiguration = configurationSerializer.Deserialize(serializedConfiguration);
 
             // Assert
             Assert.NotNull(deserializedConfiguration);

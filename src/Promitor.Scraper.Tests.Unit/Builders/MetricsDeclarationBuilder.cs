@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -41,7 +42,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders
                 Metrics = _metrics
             };
 
-            return ConfigurationSerializer.Serialize(metricsDeclaration);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            return configurationSerializer.Serialize(metricsDeclaration);
         }
 
         public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string serviceBusNamespace = "foo-space", string azureMetricName = "Total")

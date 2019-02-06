@@ -1,12 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal abstract class Deserializer<TObject>
     {
+        protected ILogger Logger { get; }
+
+        internal Deserializer(ILogger logger)
+        {
+            Guard.NotNull(logger, nameof(logger));
+
+            Logger = logger;
+        }
+
         internal abstract TObject Deserialize(YamlMappingNode node);
 
         internal List<TObject> Deserialize(YamlSequenceNode nodes)

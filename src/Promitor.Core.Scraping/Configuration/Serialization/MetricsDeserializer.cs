@@ -1,5 +1,6 @@
 ﻿using System;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
@@ -9,6 +10,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal class MetricsDeserializer : Deserializer<MetricDefinition>
     {
+        internal MetricsDeserializer(ILogger logger) : base(logger)
+        {
+        }
+
         internal override MetricDefinition Deserialize(YamlMappingNode node)
         {
             var rawResourceType = node.Children[new YamlScalarNode("resourceType")];
@@ -46,7 +51,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return metricDefinition;
         }
 
-        private static MetricDefinition DeserializeServiceBusQueueMetric(YamlMappingNode metricNode)
+        private MetricDefinition DeserializeServiceBusQueueMetric(YamlMappingNode metricNode)
         {
             var metricDefinition = DeserializeMetricDefinition<ServiceBusQueueMetricDefinition>(metricNode);
 
@@ -59,7 +64,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return metricDefinition;
         }
 
-        private static TMetricDefinition DeserializeMetricDefinition<TMetricDefinition>(YamlMappingNode metricNode)
+        private TMetricDefinition DeserializeMetricDefinition<TMetricDefinition>(YamlMappingNode metricNode)
             where TMetricDefinition : MetricDefinition, new()
         {
             Guard.NotNull(metricNode, nameof(metricNode));
@@ -68,7 +73,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var description = metricNode.Children[new YamlScalarNode("description")];
             var azureMetricConfigurationNode = (YamlMappingNode) metricNode.Children[new YamlScalarNode("azureMetricConfiguration")];
 
-            var azureMetricConfigurationDeserializer = new AzureMetricConfigurationDeserializer();
+            var azureMetricConfigurationDeserializer = new AzureMetricConfigurationDeserializer(Logger);
             var azureMetricConfiguration = azureMetricConfigurationDeserializer.Deserialize(azureMetricConfigurationNode);
 
             var metricDefinition = new TMetricDefinition

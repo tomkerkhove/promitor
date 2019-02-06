@@ -1,4 +1,5 @@
 ﻿using GuardNet;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
 
@@ -6,6 +7,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal class AzureMetadataDeserializer : Deserializer<AzureMetadata>
     {
+        internal AzureMetadataDeserializer(ILogger logger) : base(logger)
+        {
+        }
+
         internal override AzureMetadata Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));

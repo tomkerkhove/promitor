@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
 
@@ -6,6 +7,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal class AggregationDeserializer : Deserializer<Aggregation>
     {
+        internal AggregationDeserializer(ILogger logger) : base(logger)
+        {
+        }
+
         internal override Aggregation Deserialize(YamlMappingNode node)
         {
             var aggregation = new Aggregation();
@@ -15,6 +20,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             {
                 var rawIntervalNode = node.Children[new YamlScalarNode("interval")];
                 interval = TimeSpan.Parse(rawIntervalNode.ToString());
+                Logger.LogWarning("No default aggregation was configured, falling back to {AggregationInterval}", interval.ToString("g"));
             }
 
             aggregation.Interval = interval;

@@ -19,7 +19,7 @@ namespace Promitor.Scraper.Host.Validation
         {
             _validationLogger = new ConsoleLogger("Validation", (message, logLevel) => true, includeScopes: true);
 
-            var scrapeConfigurationProvider = new MetricsDeclarationProvider();
+            var scrapeConfigurationProvider = new MetricsDeclarationProvider(_validationLogger);
             _validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(_validationLogger),

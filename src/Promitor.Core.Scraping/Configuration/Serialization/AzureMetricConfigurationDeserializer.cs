@@ -1,4 +1,5 @@
 ﻿using GuardNet;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
 
@@ -6,9 +7,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfiguration>
     {
-        private readonly MetricAggregationDeserializer _metricAggregationDeserializer = new MetricAggregationDeserializer();
+        private readonly MetricAggregationDeserializer _metricAggregationDeserializer;
         private readonly YamlScalarNode _metricNode = new YamlScalarNode("metricName");
         private readonly YamlScalarNode _aggregationNode = new YamlScalarNode("aggregation");
+
+        internal AzureMetricConfigurationDeserializer(ILogger logger) : base(logger)
+        {
+            _metricAggregationDeserializer = new MetricAggregationDeserializer(logger);
+        }
 
         internal override AzureMetricConfiguration Deserialize(YamlMappingNode node)
         {

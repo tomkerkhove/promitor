@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using GuardNet;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Serialization.Yaml;
@@ -11,7 +12,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     public class ConfigurationSerializer
     {
-        public static MetricsDeclaration Deserialize(string rawMetricsDeclaration)
+        private readonly ILogger logger;
+        public ConfigurationSerializer(ILogger logger)
+        {
+            this.logger = logger;
+        }
+
+        public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
         {
             Guard.NotNullOrWhitespace(rawMetricsDeclaration, nameof(rawMetricsDeclaration));
 
@@ -24,7 +31,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return metricsDeclaration;
         }
 
-        private static MetricsDeclaration InterpretYamlStream(YamlStream metricsDeclarationYamlStream)
+        private MetricsDeclaration InterpretYamlStream(YamlStream metricsDeclarationYamlStream)
         {
             var document = metricsDeclarationYamlStream.Documents.First();
             var rootNode = (YamlMappingNode) document.RootNode;
@@ -33,7 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
                 var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
-                var azureMetadataSerializer = new AzureMetadataDeserializer();
+                var azureMetadataSerializer = new AzureMetadataDeserializer(logger);
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
             }
 
@@ -41,7 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("metricDefaults"))
             {
                 var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
-                var metricDefaultsSerializer = new MetricDefaultsDeserializer();
+                var metricDefaultsSerializer = new MetricDefaultsDeserializer(logger);
                 metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
@@ -49,7 +56,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("metrics"))
             {
                 var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
-                var metricsDeserializer = new MetricsDeserializer();
+                var metricsDeserializer = new MetricsDeserializer(logger);
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
 
@@ -63,7 +70,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return metricsDeclaration;
         }
 
-        public static string Serialize(MetricsDeclaration metricsDeclaration)
+        public string Serialize(MetricsDeclaration metricsDeclaration)
         {
             Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
 
