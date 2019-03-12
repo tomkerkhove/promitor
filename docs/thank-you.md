@@ -41,10 +41,6 @@ We are using the following GitHub Apps:
 - [ImgBot](https://github.com/marketplace/imgbot) - Optimizing images across our repo
 
 
-# Azure Pipelines Extensions 
-
-- [GitHub Tool](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) - Create and modify GitHub Releases in Azure Pipelines ([Marketplace](https://marketplace.visualstudio.com/items?itemName=marcelo-formentao.github-tools) \| [GitHub](https://github.com/marceloavf/github-tools-vsts))
-
 # NuGet Packages
 Here is an overview of the NuGet packages that we rely on:
 - [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
