@@ -28,7 +28,7 @@ jobs:
   displayName: Build Docker Image Tests
   condition: succeeded()
   pool:
-    vmImage: Hosted Ubuntu 1604
+    vmImage: ubuntu-16.04
   variables:
     Image.TaggedName: '$(Image.TaggedName)'
 
