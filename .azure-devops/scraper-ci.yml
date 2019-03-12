@@ -28,8 +28,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: ubuntu-16.04
-  variables:
-    Image.TaggedName: '$(Image.TaggedName)'
 
   steps:
   - task: Docker@1
