@@ -1,10 +1,9 @@
 name: PR$(System.PullRequest.PullRequestNumber)$(Rev:-rr)
-
 resources:
 - repo: self
-
+variables:
+  Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
-
 - job: Build_Job
   displayName: Build, Test & Scan Codebase
   condition: succeeded()
@@ -28,7 +27,6 @@ jobs:
   condition: succeeded()
   pool:
     vmImage: ubuntu-16.04
-
   steps:
   - task: Docker@1
     displayName: 'Build an image'
