@@ -6,10 +6,6 @@ title: Thank you!
 # Automation
 Here is an overview of the services that are so kind to support us:
 
-- **Travis CI** is a hosted, distributed continuous integration service used to build our pull requests.
-
-![Travis CI](./media/logos/travis-ci-black.png)
-
 - **Renovate** saves us time and reduces risk by automating the tedious process of updating dependencies.
 
 ![Renovate](./media/logos/renovate.jpg)
