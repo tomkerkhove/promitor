@@ -1,6 +1,6 @@
 sudo: required
 language: csharp
-dotnet: 2.2.104
+dotnet: 2.2.105
 dist: xenial
 services:
   - docker
