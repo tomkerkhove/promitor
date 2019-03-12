@@ -23,7 +23,6 @@ jobs:
       command: test
       projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
 
-
 - job: Docker_Job
   displayName: Build Docker Image Tests
   condition: succeeded()
