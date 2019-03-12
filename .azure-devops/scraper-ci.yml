@@ -9,7 +9,7 @@ jobs:
   displayName: Build, Test & Scan Codebase
   condition: succeeded()
   pool:
-    vmImage: Hosted VS2017
+    vmImage: vs2017-win2016
   steps:
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
