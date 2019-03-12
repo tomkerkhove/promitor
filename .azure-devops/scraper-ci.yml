@@ -55,12 +55,12 @@ jobs:
       containerName: 'promitor-ci'
       ports: '8999:80'
       volumes: '/samples/promitor-sample.yaml:/config/metrics-declaration.yaml promitor-scraper-ci'
-      envVars: |  
+      envVars: |
        PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
        PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
 
   - task: Docker@1
-    displayName: 'Push 'tomkerkhove/promitor-agent-scraper-ci' image to Docker Hub'
+    displayName: 'Push ''tomkerkhove/promitor-agent-scraper-ci'' image to Docker Hub'
     inputs:
       containerregistrytype: 'Container Registry'
       dockerRegistryEndpoint: 'Docker Hub'
