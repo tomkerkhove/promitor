@@ -4,7 +4,6 @@
 
 <p align="center">
     <a href="./LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square" alt="License"></a>
-<a href="https://travis-ci.com/tomkerkhove/promitor" rel="nofollow"><img src="https://travis-ci.com/tomkerkhove/promitor.svg?branch=master" alt="Build Status"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Stars"></a>
 <a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
