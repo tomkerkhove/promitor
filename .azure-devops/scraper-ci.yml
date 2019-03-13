@@ -1,6 +1,8 @@
 name: $(Date:yyyyMMdd)$(Rev:.r)
 resources:
 - repo: self
+trigger:
+- master
 variables:
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
