@@ -1,4 +1,4 @@
-name: PR$(System.PullRequest.PullRequestNumber)$(Rev:-rr)
+name: $(Date:yyyyMMdd)$(Rev:.r)PR$(System.PullRequest.PullRequestNumber)$(Rev:-rr)
 resources:
 - repo: self
 variables:
@@ -28,6 +28,21 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
+  - powershell: |
+      $prNumber = '$(System.PullRequest.PullRequestNumber)'
+      $buildNumber = '$(Build.BuildNumber)'
+      
+      Write-Host "Initial build number: '$buildNumber'"
+      Write-Host "PR Number '$prNumber'"
+      
+      if([string]::IsNullOrWhiteSpace($prNumber) -eq $false) {
+              $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+              Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+      }
+      
+      Write-Host "Build number is '$buildNumber'"
+
+      displayName: 'Determine Build Number'
   - task: Docker@1
     displayName: 'Build an image'
     inputs:
