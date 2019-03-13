@@ -41,7 +41,7 @@ jobs:
     displayName: 'Change Build Number to PR format'
     condition: eq(variables['Build.Reason'], 'PullRequest')
   - task: Docker@1
-    displayName: 'Build an image'
+    displayName: 'Build Docker image'
     inputs:
       containerregistrytype: 'Container Registry'
       dockerRegistryEndpoint: 'Docker Hub'
@@ -53,7 +53,7 @@ jobs:
       addDefaultLabels: false
 
   - task: Docker@1
-    displayName: 'Run an image'
+    displayName: 'Run Docker image'
     inputs:
       containerregistrytype: 'Container Registry'
       dockerRegistryEndpoint: 'Docker Hub'
@@ -71,8 +71,8 @@ jobs:
     inputs:
       containerregistrytype: 'Container Registry'
       dockerRegistryEndpoint: 'Docker Hub'
-      command: 'Push an image'
+      command: 'Push Docker image to Docker Hub for PRs'
       imageName: '$(Image.TaggedName)'
-    condition: ne(variables['Build.Reason'], 'PullRequest')
+    condition: eq(variables['Build.Reason'], 'PullRequest')
 
 
