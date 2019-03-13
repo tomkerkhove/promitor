@@ -1,6 +1,8 @@
-name: PR$(System.PullRequest.PullRequestNumber)$(Rev:-rr)
+name: $(Date:yyyyMMdd)$(Rev:.r)
 resources:
 - repo: self
+trigger:
+- master
 variables:
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
@@ -28,6 +30,16 @@ jobs:
   pool:
     vmImage: ubuntu-16.04
   steps:
+  - powershell: |
+      $prNumber = '$(System.PullRequest.PullRequestNumber)'
+      $buildNumber = '$(Build.BuildNumber)'
+      Write-Host "Initial build number: '$buildNumber'"
+      Write-Host "PR Number '$prNumber'"
+      $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+      Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+      Write-Host "Build number is '$buildNumber'"
+    displayName: 'Change Build Number to PR format'
+    condition: eq(variables['Build.Reason'], 'PullRequest')
   - task: Docker@1
     displayName: 'Build an image'
     inputs:
@@ -61,5 +73,6 @@ jobs:
       dockerRegistryEndpoint: 'Docker Hub'
       command: 'Push an image'
       imageName: '$(Image.TaggedName)'
+    condition: eq(variables['Build.Reason'], 'PullRequest')
 
 
