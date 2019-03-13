@@ -5,6 +5,7 @@
 <p align="center">
     <a href="./LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square" alt="License"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
+<a href="https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master" rel="nofollow"><img src="https://dev.azure.com/tomkerkhove/Promitor/_apis/build/status/Promitor%20CI%20-%20Scraper%20Agent?branchName=master" alt="Build Status"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Stars"></a>
 <a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
 </p>
