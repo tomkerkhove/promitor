@@ -65,6 +65,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
                     var genericMetricDefinition = new GenericMetricValidator();
                     metricDefinitionValidationErrors = genericMetricDefinition.Validate(metric as GenericMetricDefinition);
                     break;
+                case ResourceType.AzureQueue:
+                    var azureQueueMetricValidator = new AzureQueueMetricValidator();
+                    metricDefinitionValidationErrors = azureQueueMetricValidator.Validate(metric as AzureQueueMetricDefinition);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(metric), metric.ResourceType, $"No validation rules are defined for metric type '{metric.ResourceType}'");
             }

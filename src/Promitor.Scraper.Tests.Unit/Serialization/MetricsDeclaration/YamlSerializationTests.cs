@@ -20,6 +20,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
         }
 
+        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, AzureQueueMetricDefinition azureQueueMetricDefinition)
+        {
+            Assert.NotNull(deserializedMetricDefinition);
+            Assert.Equal(azureQueueMetricDefinition.Name, deserializedMetricDefinition.Name);
+            Assert.Equal(azureQueueMetricDefinition.Description, deserializedMetricDefinition.Description);
+            Assert.Equal(azureQueueMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
+        }
+
         protected void AssertMetricDefaults(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaults metricDefaults)
         {
             var deserializedMetricDefaults = deserializedConfiguration.MetricDefaults;

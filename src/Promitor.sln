@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Scraping", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core", "Promitor.Core\Promitor.Core.csproj", "{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Integrations.AzureQueue", "Promitor.Integrations.AzureQueue\Promitor.Integrations.AzureQueue.csproj", "{F929434C-07FB-4B55-A8EE-5C77D8B49809}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{59D7FFBC-3929-48AD-8C9C-242280D01CBD} = {9D006E55-567F-4521-9366-490679CA00BF}
 		{C3ADE514-95AD-4FDD-8577-45F7EADB4A23} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 		{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B} = {05524B1B-9965-4E36-9626-A2823B8588AA}
+		{F929434C-07FB-4B55-A8EE-5C77D8B49809} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}
