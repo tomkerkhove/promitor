@@ -13,6 +13,9 @@ The following fields need to be provided:
 
 Supported metrics:
 - Size
+- Duration
+
+Duration is the time in seconds of a recent message in the given queue
 
 Example:
 ```yaml
