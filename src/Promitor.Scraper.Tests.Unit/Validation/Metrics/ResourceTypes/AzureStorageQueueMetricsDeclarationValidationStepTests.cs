@@ -48,7 +48,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(string.Empty)
+                .WithAzureStorageQueueMetric(metricName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 

@@ -64,7 +64,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string accountName = "foo-account", string sasToken="?sig=foo", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string accountName = "foo-account", string sasToken="?sig=foo", string azureMetricName = "Size")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new AzureStorageQueueMetricDefinition
