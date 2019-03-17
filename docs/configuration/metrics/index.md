@@ -44,7 +44,7 @@ Every Azure service is supported and can be scraped by using the [Generic Azure 
 
 We also provide a simplified way to configure the following Azure resources:
 - [Azure Service Bus Queue](service-bus-queue)
-- [Azure Queue](azure-queue)
+- [Azure Storage Queue](azure-storage-queue)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
