@@ -4,13 +4,13 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
 
-namespace Promitor.Integrations.AzureQueue
+namespace Promitor.Integrations.AzureStorageQueue
 {
-    public class AzureQueue
+    public class AzureStorageQueue
     {
         private readonly ILogger _logger;
 
-        public AzureQueue(ILogger logger)
+        public AzureStorageQueue(ILogger logger)
         {
             _logger = logger;
         }

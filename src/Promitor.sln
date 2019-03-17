@@ -34,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Scraping", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core", "Promitor.Core\Promitor.Core.csproj", "{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Integrations.AzureQueue", "Promitor.Integrations.AzureQueue\Promitor.Integrations.AzureQueue.csproj", "{F929434C-07FB-4B55-A8EE-5C77D8B49809}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Integrations.AzureStorageQueue", "Promitor.Integrations.AzureStorageQueue\Promitor.Integrations.AzureStorageQueue.csproj", "{F929434C-07FB-4B55-A8EE-5C77D8B49809}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

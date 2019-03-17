@@ -14,14 +14,14 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithAzureQueueYamlSerializationTests : YamlSerializationTests
+    public class MetricsDeclarationWithAzureStorageQueueYamlSerializationTests : YamlSerializationTests
     {
         [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForAzureQueue_SucceedsWithIdenticalOutput()
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForAzureStorageQueue_SucceedsWithIdenticalOutput()
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var azureQueueMetricDefinition = GenerateBogusAzureQueueMetricDefinition();
+            var azureStorageQueueMetricDefinition = GenerateBogusAzureStorageQueueMetricDefinition();
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 MetricDefaults = metricDefaults,
                 Metrics = new List<MetricDefinition>
                 {
-                    azureQueueMetricDefinition
+                    azureStorageQueueMetricDefinition
                 }
             };
             var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
@@ -45,12 +45,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, azureQueueMetricDefinition);
-            var deserializedAzureQueueMetricDefinition = deserializedMetricDefinition as AzureQueueMetricDefinition;
-            AssertAzureQueueMetricDefinition(deserializedAzureQueueMetricDefinition, azureQueueMetricDefinition, deserializedMetricDefinition);
+            AssertMetricDefinition(deserializedMetricDefinition, azureStorageQueueMetricDefinition);
+            var deserializedAzureStorageQueueMetricDefinition = deserializedMetricDefinition as AzureStorageQueueMetricDefinition;
+            AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition, deserializedMetricDefinition);
         }
 
-        private static void AssertAzureQueueMetricDefinition(AzureQueueMetricDefinition deserializedServiceBusMetricDefinition, AzureQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertAzureStorageQueueMetricDefinition(AzureStorageQueueMetricDefinition deserializedServiceBusMetricDefinition, AzureStorageQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.AccountName, deserializedServiceBusMetricDefinition.AccountName);
@@ -63,14 +63,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
         
-        private AzureQueueMetricDefinition GenerateBogusAzureQueueMetricDefinition()
+        private AzureStorageQueueMetricDefinition GenerateBogusAzureStorageQueueMetricDefinition()
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
-            var bogusGenerator = new Faker<AzureQueueMetricDefinition>()
+            var bogusGenerator = new Faker<AzureStorageQueueMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.AzureQueue)
+                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.AzureStorageQueue)
                 .RuleFor(metricDefinition => metricDefinition.AccountName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.SasToken, faker => $"?sig={Base64UrlEncoder.Encode(faker.Lorem.Sentence(wordCount: 3))}")

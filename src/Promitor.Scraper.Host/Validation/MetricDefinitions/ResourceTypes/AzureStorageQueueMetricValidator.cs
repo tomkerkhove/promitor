@@ -4,25 +4,25 @@ using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class AzureQueueMetricValidator: IMetricValidator<AzureQueueMetricDefinition>
+    public class AzureStorageQueueMetricValidator: IMetricValidator<AzureStorageQueueMetricDefinition>
     {
-        public List<string> Validate(AzureQueueMetricDefinition metricDefinition)
+        public List<string> Validate(AzureStorageQueueMetricDefinition metricDefinition)
         {
             var errorMessages = new List<string>();
             
             if (string.IsNullOrWhiteSpace(metricDefinition.AccountName))
             {
-                errorMessages.Add("No Azure Queue Account Name is configured");
+                errorMessages.Add("No Azure Storage Queue Account Name is configured");
             }
             
             if (string.IsNullOrWhiteSpace(metricDefinition.QueueName))
             {
-                errorMessages.Add("No Azure Queue Name is configured");
+                errorMessages.Add("No Azure Storage Queue Name is configured");
             }
             
             if (string.IsNullOrWhiteSpace(metricDefinition.SasToken))
             {
-                errorMessages.Add("No Azure Queue SAS Token is configured");
+                errorMessages.Add("No Azure Storage Queue SAS Token is configured");
             }
 
             return errorMessages;

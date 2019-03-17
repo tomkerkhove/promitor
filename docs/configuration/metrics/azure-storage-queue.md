@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Azure Queue Declaration
+title: Azure Storage Queue Declaration
 ---
 
 ## Azure Queue
@@ -17,8 +17,8 @@ Supported metrics:
 Example:
 ```yaml
 name: demo_queue_size
-description: "Amount of active messages of the 'orders' queue"
-resourceType: AzureQueue
+description: "Amount of messages in the 'orders' queue"
+resourceType: AzureStorageQueue
 accountName: promitor
 queueName: orders
 azureMetricConfiguration:
