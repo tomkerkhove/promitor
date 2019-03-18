@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes
+﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
     public class ServiceBusQueueMetricDefinition : MetricDefinition
     {

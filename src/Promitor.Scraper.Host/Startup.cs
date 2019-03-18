@@ -49,6 +49,7 @@ namespace Promitor.Scraper.Host
                         jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
                         jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                     });
+            
             services.UseCronScheduler();
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
         }

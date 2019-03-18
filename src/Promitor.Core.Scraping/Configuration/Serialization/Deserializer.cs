@@ -26,8 +26,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var deserializedObjects = new List<TObject>();
             foreach (var item in nodes)
             {
-                var metricNode = item as YamlMappingNode;
-                if (metricNode == null)
+                if (!(item is YamlMappingNode metricNode))
                 {
                     throw new SerializationException($"Failed parsing metrics because we couldn't cast an item to {nameof(YamlMappingNode)}");
                 }
