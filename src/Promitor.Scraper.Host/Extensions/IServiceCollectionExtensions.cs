@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Promitor.Scraper.Host.Scheduling;
-using Promitor.Scraper.Host.Scheduling.Infrastructure.Extensions;
 using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -20,12 +20,15 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static void UseCronScheduler(this IServiceCollection services)
         {
-            services.AddSingleton<IScheduledTask, AzureMonitorScrapingTask>();
-            services.AddScheduler((sender, args) =>
+            services.AddScheduler(builder =>
             {
-                Console.Write(args.Exception.Message);
-                args.SetObserved();
+                builder.AddJob<MetricScrapingJob>();
+                builder.UnobservedTaskExceptionHandler = UnobservedHandler;
             });
+        }
+
+        private static void UnobservedHandler(object sender, UnobservedTaskExceptionEventArgs e)
+        {
         }
 
         /// <summary>
@@ -76,7 +79,7 @@ namespace Promitor.Scraper.Host.Extensions
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
