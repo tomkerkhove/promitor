@@ -155,7 +155,7 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetricValue;
         }
 
-        private double InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
+        private static double InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
         {
             switch (metricAggregation)
             {
