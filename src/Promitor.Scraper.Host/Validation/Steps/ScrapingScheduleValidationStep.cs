@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
+using Cronos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
-using Promitor.Scraper.Host.Scheduling.Cron;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
@@ -33,7 +34,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             try
             {
-                CronSchedule.Parse(scrapingCronSchedule);
+                CronExpression.Parse(scrapingCronSchedule);
                 return ValidationResult.Successful(ComponentName);
             }
             catch (Exception exception)

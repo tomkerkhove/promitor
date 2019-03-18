@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
-using Promitor.Scraper.Host.Scheduling.Infrastructure.Extensions;
-using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
@@ -20,11 +19,10 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static void UseCronScheduler(this IServiceCollection services)
         {
-            services.AddSingleton<IScheduledTask, AzureMonitorScrapingTask>();
-            services.AddScheduler((sender, args) =>
+            services.AddScheduler(builder =>
             {
-                Console.Write(args.Exception.Message);
-                args.SetObserved();
+                builder.AddJob<MetricScrapingJob>();
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
             });
         }
 
@@ -80,6 +78,15 @@ namespace Promitor.Scraper.Host.Extensions
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
+        }
+
+        private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
+        {
+            var exceptionTrackerService = services.FirstOrDefault(service => service.ServiceType == typeof(IExceptionTracker));
+            var exceptionTracker = (IExceptionTracker)exceptionTrackerService?.ImplementationInstance;
+            exceptionTracker?.Track(e.Exception);
+
+            e.SetObserved();
         }
     }
 }
