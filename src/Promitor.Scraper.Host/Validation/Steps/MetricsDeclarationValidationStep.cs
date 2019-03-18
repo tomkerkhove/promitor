@@ -46,7 +46,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
         }
 
-        private List<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
+        private static List<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
             var duplicateMetricNames = metrics.GroupBy(metric => metric.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return duplicateMetricNames;
         }
 
-        private List<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
+        private static List<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
         {
             var errorMessages = new List<string>();
 
@@ -84,7 +84,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return errorMessages;
         }
 
-        private List<string> ValidateMetrics(List<MetricDefinition> metrics, MetricDefaults metricDefaults)
+        private static List<string> ValidateMetrics(List<MetricDefinition> metrics, MetricDefaults metricDefaults)
         {
             var errorMessages = new List<string>();
 

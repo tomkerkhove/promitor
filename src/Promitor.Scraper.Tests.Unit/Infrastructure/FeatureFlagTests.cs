@@ -12,8 +12,8 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         public void FeatureFlag_FeatureIsConfiguredToBeOn_ReturnsOn()
         {
             // Arrange
-            const bool FlagState = true;
-            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", FlagState.ToString());
+            const bool flagState = true;
+            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", flagState.ToString());
 
             // Act
             var flagStatus = FeatureFlag.IsActive("TestFlag");
@@ -26,8 +26,8 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         public void FeatureFlag_FeatureIsConfiguredToBeOff_ReturnsOff()
         {
             // Arrange
-            const bool FlagState = false;
-            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", FlagState.ToString());
+            const bool flagState = false;
+            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", flagState.ToString());
 
             // Act
             var flagStatus = FeatureFlag.IsActive("TestFlag");
@@ -50,7 +50,7 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         public void FeatureFlag_FeatureIsNotConfiguredButDefaultStateIsOff_Returns0ff()
         {
             // Arrange
-            var defaultFlagState = false;
+            const bool defaultFlagState = false;
 
             // Act
             var flagStatus = FeatureFlag.IsActive("TestFlag", defaultFlagState: defaultFlagState);

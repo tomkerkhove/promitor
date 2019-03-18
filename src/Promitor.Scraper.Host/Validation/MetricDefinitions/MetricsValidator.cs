@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
