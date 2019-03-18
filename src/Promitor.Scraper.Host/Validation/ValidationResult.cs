@@ -17,10 +17,10 @@ namespace Promitor.Scraper.Host.Validation
             Message = failureMessage;
         }
 
-        public string ComponentName { get; set; }
+        public string ComponentName { get; }
 
-        public bool IsSuccessful { get; set; }
-        public string Message { get; set; }
+        public bool IsSuccessful { get; }
+        public string Message { get; }
 
         public static ValidationResult Failure(string componentName, string failureMessage)
         {
