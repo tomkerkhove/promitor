@@ -39,7 +39,7 @@ namespace Promitor.Scraper.Host.Extensions
                 prometheusOptions.MapPath = scrapeEndpointPath;
                 prometheusOptions.UseDefaultCollectors = false;
             });
-            
+
             return app;
         }
     }
