@@ -4,7 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Xunit;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
