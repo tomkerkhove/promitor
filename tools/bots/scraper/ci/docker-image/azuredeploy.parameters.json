@@ -1,0 +1,21 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApp.Name": {
+            "value": "#{LogicApp.Name}#"
+        },
+        "GitHub.Repo.Owner": {
+            "value": "#{GitHub.Repo.Owner}#"
+        },
+        "GitHub.Repo.Name": {
+            "value": "#{GitHub.Repo.Name}#"
+        },
+        "GitHub.Bot.Name": {
+            "value": "#{GitHub.Bot.Name}#"
+        },
+        "GitHub.Bot.Password": {
+            "value": "#{GitHub.Bot.Password}#"
+        }
+    }
+}

@@ -1,0 +1,184 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicApp.Name": {
+            "type": "string",
+            "maxLength": 80,
+            "metadata": {
+                "description": "Name of the Logic App that will handle new Docker Hub webhooks"
+            }
+        },
+        "GitHub.Repo.Owner": {
+            "type": "string",
+            "defaultValue": "tomkerkhove",
+            "metadata": {
+                "description": "Name of the owner for the GitHub repo"
+            }
+        },
+        "GitHub.Repo.Name": {
+            "type": "string",
+            "defaultValue": "promitor",
+            "metadata": {
+                "description": "Name of the GitHub repo"
+            }
+        },
+        "GitHub.Bot.Name": {
+            "type": "string",
+            "defaultValue": "promitor-bot",
+            "metadata": {
+                "description": "Name of the GitHub account that will act as a bot"
+            }
+        },
+        "GitHub.Bot.Password": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password to authenticate with for the GitHub account that will act as a bot"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2016-06-01",
+            "name": "[parameters('LogicApp.Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "actions": {
+                        "Define_GitHub_comment_text": {
+                            "inputs": "Docker image for this PR was built and is available on [Docker Hub](@{triggerBody()?['repository']?['repo_url']}).\n\nYou can pull it locally via the CLI:\n```shell\ndocker pull @{triggerBody()?['repository']?['repo_name']}:@{triggerBody()?['push_data']?['tag']}\n```",
+                            "runAfter": {
+                                "Determine_GitHub_Issue_Id": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Compose"
+                        },
+                        "Determine_GitHub_Issue_Id": {
+                            "inputs": "@replace(toLower(triggerBody()?['push_data']?['tag']), 'pr', '')",
+                            "runAfter": {},
+                            "type": "Compose"
+                        },
+                        "HTTP": {
+                            "inputs": {
+                                "authentication": {
+                                    "password": "[parameters('GitHub.Bot.Password')]",
+                                    "type": "Basic",
+                                    "username": "[parameters('GitHub.Bot.Name')]"
+                                },
+                                "body": {
+                                    "body": "@{outputs('Define_GitHub_comment_text')}"
+                                },
+                                "method": "POST",
+                                "uri": "@{concat('https://api.github.com/repos/', parameters('GitHub.Repo.Owner'),'/', parameters('GitHub.Repo.Name'),'/issues/', outputs('Determine_GitHub_Issue_Id'),'/comments')}"
+                            },
+                            "runAfter": {
+                                "Define_GitHub_comment_text": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http"
+                        }
+                    },
+                    "contentVersion": "1.0.0.0",
+                    "outputs": {},
+                    "parameters": {
+                        "GitHub.Repo.Owner": {
+                            "defaultValue": "[parameters('GitHub.Repo.Owner')]",
+                            "type": "string"
+                        },
+                        "GitHub.Repo.Name": {
+                            "defaultValue": "[parameters('GitHub.Repo.Name')]",
+                            "type": "string"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "inputs": {
+                                "schema": {
+                                    "properties": {
+                                        "callback_url": {
+                                            "type": "string"
+                                        },
+                                        "push_data": {
+                                            "properties": {
+                                                "images": {
+                                                    "type": "array"
+                                                },
+                                                "pushed_at": {
+                                                    "type": "integer"
+                                                },
+                                                "pusher": {
+                                                    "type": "string"
+                                                },
+                                                "tag": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "repository": {
+                                            "properties": {
+                                                "comment_count": {
+                                                    "type": "integer"
+                                                },
+                                                "date_created": {
+                                                    "type": "integer"
+                                                },
+                                                "description": {
+                                                    "type": "string"
+                                                },
+                                                "full_description": {
+                                                    "type": "string"
+                                                },
+                                                "is_official": {
+                                                    "type": "boolean"
+                                                },
+                                                "is_private": {
+                                                    "type": "boolean"
+                                                },
+                                                "is_trusted": {
+                                                    "type": "boolean"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "namespace": {
+                                                    "type": "string"
+                                                },
+                                                "owner": {
+                                                    "type": "string"
+                                                },
+                                                "repo_name": {
+                                                    "type": "string"
+                                                },
+                                                "repo_url": {
+                                                    "type": "string"
+                                                },
+                                                "star_count": {
+                                                    "type": "integer"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "kind": "Http",
+                            "type": "Request"
+                        }
+                    }
+                },
+                "parameters": {}
+            },
+            "dependsOn": []
+        }
+    ]
+}
