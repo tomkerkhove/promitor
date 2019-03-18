@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
-using Promitor.Scraper.Host.Scheduling.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
@@ -23,12 +22,8 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddScheduler(builder =>
             {
                 builder.AddJob<MetricScrapingJob>();
-                builder.UnobservedTaskExceptionHandler = UnobservedHandler;
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
             });
-        }
-
-        private static void UnobservedHandler(object sender, UnobservedTaskExceptionEventArgs e)
-        {
         }
 
         /// <summary>
@@ -79,10 +74,19 @@ namespace Promitor.Scraper.Host.Extensions
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
+        }
+
+        private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
+        {
+            var exceptionTrackerService = services.FirstOrDefault(service => service.ServiceType == typeof(IExceptionTracker));
+            var exceptionTracker = (IExceptionTracker)exceptionTrackerService?.ImplementationInstance;
+            exceptionTracker?.Track(e.Exception);
+
+            e.SetObserved();
         }
     }
 }
