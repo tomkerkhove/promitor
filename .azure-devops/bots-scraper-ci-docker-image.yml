@@ -13,7 +13,7 @@ steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in tooling'
   inputs:
-    rootDirectory: 'tools/bots/scraper/ci/docker-image/'
+    rootDirectory: 'deploy/automation/scraper/ci/'
     targetFiles: azuredeploy.parameters.json
     verbosity: detailed
     actionOnMissing: fail
@@ -24,8 +24,8 @@ steps:
     azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
     resourceGroupName: promitor
     location: 'West Europe'
-    csmFile: 'tools/bots/scraper/ci/docker-image/azuredeploy.json'
-    csmParametersFile: 'tools/bots/scraper/ci/docker-image/azuredeploy.parameters.json'
+    csmFile: 'deploy/automation/scraper/ci/azuredeploy.json'
+    csmParametersFile: 'deploy/automation/scraper/ci/azuredeploy.parameters.json'
 
 
 
