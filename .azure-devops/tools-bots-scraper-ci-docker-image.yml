@@ -8,7 +8,7 @@ variables:
   GitHub.Repo.Name: 'promitor'
   GitHub.Bot.Name: 'promitor-bot'
 pool:
-  vmImage: Hosted VS2017
+  vmImage: vs2017-win2016
 steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in tooling'
