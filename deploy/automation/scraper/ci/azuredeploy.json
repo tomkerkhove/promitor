@@ -201,13 +201,13 @@
             }
         },
         {
-            "name": "Scraper CI Bot - Docker Hub Integration Failed",
+            "name": "Scraper CI Bot - Docker Hub Integration Run Failed",
             "type": "Microsoft.Insights/metricAlerts",
             "location": "global",
             "apiVersion": "2018-03-01",
             "tags": {},
             "properties": {
-                "description": "Scraper CI Bot - Docker Hub integration failed to post a comment on the pull request in GitHub",
+                "description": "Scraper CI Bot - Docker Hub integration failed to run and post a comment on the pull request in GitHub",
                 "severity": 3,
                 "enabled": true,
                 "scopes": [
@@ -235,7 +235,47 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]"
+                "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]",
+                "[resourceId('Microsoft.Logic/workflows', parameters('LogicApp.Name'))]"
+            ]
+        },
+        {
+            "name": "Scraper CI Bot - Docker Hub Integration Trigger Failed",
+            "type": "Microsoft.Insights/metricAlerts",
+            "location": "global",
+            "apiVersion": "2018-03-01",
+            "tags": {},
+            "properties": {
+                "description": "Scraper CI Bot - Docker Hub integration failed to be triggered",
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[resourceId('Microsoft.Logic/workflows', parameters('LogicApp.Name'))]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                    "allOf": [
+                        {
+                            "name": "1st criterion",
+                            "metricName": "TriggersFailed",
+                            "dimensions": [],
+                            "operator": "GreaterThanOrEqual",
+                            "threshold": "1",
+                            "timeAggregation": "Total"
+                        }
+                    ]
+                },
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]",
+                "[resourceId('Microsoft.Logic/workflows', parameters('LogicApp.Name'))]"
             ]
         }
     ]
