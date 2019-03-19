@@ -7,7 +7,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
-namespace Promitor.Core.Scraping.ResouceTypes
+namespace Promitor.Core.Scraping.ResourceTypes
 {
     public class ServiceBusQueueScraper : Scraper<ServiceBusQueueMetricDefinition>
     {

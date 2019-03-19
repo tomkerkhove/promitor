@@ -137,13 +137,13 @@ namespace Promitor.Integrations.AzureMonitor
         private MetricValue GetMostRecentMetricValue(string metricName, IReadOnlyList<TimeSeriesElement> timeSeries,
             DateTime recordDateTime)
         {
-            var timeSerie = timeSeries.FirstOrDefault(); // TODO: Can we really do this?
-            if (timeSerie == null)
+            var firstTimeSeries = timeSeries.FirstOrDefault(); // TODO: Can we really do this?
+            if (firstTimeSeries == null)
             {
                 throw new MetricInformationNotFoundException(metricName, "No time series was found");
             }
 
-            var relevantMetricValue = timeSerie.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
+            var relevantMetricValue = firstTimeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
                 .OrderByDescending(metricValue => metricValue.TimeStamp)
                 .FirstOrDefault();
 

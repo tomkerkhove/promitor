@@ -11,6 +11,7 @@ using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
+// ReSharper disable All
 
 namespace Promitor.Core.Scraping
 {
@@ -105,7 +106,7 @@ namespace Promitor.Core.Scraping
 
             if (MetricDefaults.Aggregation.Interval == null)
             {
-                throw new Exception($"No default aggregation interval is configured nor on the metric configuration for '{metricDefinition.Name}'");
+                throw new Exception($"No default aggregation interval is configured nor on the metric configuration for '{metricDefinition?.Name}'");
             }
 
             return MetricDefaults.Aggregation.Interval.Value;

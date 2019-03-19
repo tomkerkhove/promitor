@@ -80,6 +80,7 @@ namespace Promitor.Scraper.Host.Extensions
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
         {
             var exceptionTrackerService = services.FirstOrDefault(service => service.ServiceType == typeof(IExceptionTracker));

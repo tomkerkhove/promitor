@@ -1,10 +1,11 @@
 ﻿using GuardNet;
+using Microsoft.AspNetCore.Hosting;
 using Promitor.Scraper.Host.Validation;
 
 // ReSharper disable once CheckNamespace
-namespace Microsoft.AspNetCore.Hosting
+namespace Promitor.Scraper.Host.Extensions
 {
-    public static class IWebHostExtensions
+    public static class WebHostExtensions
     {
         public static IWebHost ValidateSetup(this IWebHost webHost)
         {

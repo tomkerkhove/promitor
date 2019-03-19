@@ -11,6 +11,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces
         /// </summary>
         /// <param name="metricDefinition">Metric definition to validate</param>
         /// <returns>List of validation errors</returns>
+        // ReSharper disable once UnusedMember.Global
         List<string> Validate(TMetricDefinition metricDefinition);
     }
 }

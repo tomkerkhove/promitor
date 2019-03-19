@@ -10,11 +10,11 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {
     public class MetricsValidator
     {
-        private readonly MetricDefaults metricDefaults;
+        private readonly MetricDefaults _metricDefaults;
 
         public MetricsValidator(MetricDefaults metricDefaults)
         {
-            this.metricDefaults = metricDefaults;
+            _metricDefaults = metricDefaults;
         }
 
         public List<string> Validate(List<MetricDefinition> metrics)
@@ -71,7 +71,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 
             errorMessages.AddRange(metricDefinitionValidationErrors);
 
-            var metricAggregationValidator = new AzureMetricConfigurationValidator(metricDefaults);
+            var metricAggregationValidator = new AzureMetricConfigurationValidator(_metricDefaults);
             var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
             errorMessages.AddRange(metricsConfigurationErrorMessages);
 

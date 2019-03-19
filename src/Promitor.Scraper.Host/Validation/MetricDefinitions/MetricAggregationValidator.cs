@@ -9,7 +9,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 
         public MetricAggregationValidator(MetricDefaults metricDefaults)
         {
-            this._metricDefaults = metricDefaults;
+            _metricDefaults = metricDefaults;
         }
 
         public List<string> Validate(MetricAggregation metricsAggregation)
