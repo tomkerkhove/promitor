@@ -2,6 +2,7 @@ name: $(Date:yyyyMMdd)$(Rev:.r)
 resources:
 - repo: self
 trigger: none
+pr: none
 variables:
   LogicApp.Name: 'promitor-automation-github-ci-scraper'
   GitHub.Repo.Owner: 'tomkerkhove'
