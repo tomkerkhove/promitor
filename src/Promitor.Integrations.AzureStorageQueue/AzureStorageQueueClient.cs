@@ -54,7 +54,6 @@ namespace Promitor.Integrations.AzureStorageQueue
 
         private static CloudQueue GetQueueReference(string accountName, string queueName, string sasToken)
         {
-            
             var account = new CloudStorageAccount(new StorageCredentials(sasToken), accountName, null, true);
             var queueClient = account.CreateCloudQueueClient();
             return queueClient.GetQueueReference(queueName);
