@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 
 namespace Promitor.Scraper.Tests.Unit.Stubs
 {
