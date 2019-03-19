@@ -211,7 +211,7 @@
                 "severity": 3,
                 "enabled": true,
                 "scopes": [
-                    "[resourceId('Microsoft.Logic/workflows', variables('LogicApp.Name'))]"
+                    "[resourceId('Microsoft.Logic/workflows', parameters('LogicApp.Name'))]"
                 ],
                 "evaluationFrequency": "PT5M",
                 "windowSize": "PT5M",
