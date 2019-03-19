@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureStorageQueue;

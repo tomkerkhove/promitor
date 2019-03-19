@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
