@@ -246,7 +246,7 @@
             "apiVersion": "2018-03-01",
             "tags": {},
             "properties": {
-                "description": "Scraper CI Bot - Docker Hub integration failed to be triggered",
+                "description": "Scraper CI Bot - Docker Hub integration failed to be triggered due to an issue",
                 "severity": 3,
                 "enabled": true,
                 "scopes": [
