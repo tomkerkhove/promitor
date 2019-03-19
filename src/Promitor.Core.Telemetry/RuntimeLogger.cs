@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging.Console;
+#pragma warning disable 618
 
 namespace Promitor.Core.Telemetry
 {
