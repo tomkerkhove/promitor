@@ -39,10 +39,11 @@ We are using the following GitHub Apps:
 
 # NuGet Packages
 Here is an overview of the NuGet packages that we rely on:
+- [CronScheduler.AspNetCore](https://github.com/kdcllc/CronScheduler.AspNetCore) - Asp.Net Core 2.x Hosted or .Net Core 2.x Self-hosted Cron Scheduler
 - [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
 - [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client) - .NET client for prometheus.io
-- [Shuttle.Core.Cron](https://github.com/Shuttle/Shuttle.Core.Cron) - Cron expression parsing
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet) - .NET library for YAML
 - [Guard.NET](https://github.com/george-pancescu/Guard) - Library that facilitates runtime checks of code and allows to define preconditions and invariants within a method
+- [Cronos](https://github.com/HangfireIO/Cronos) - Fully-featured .NET library for working with Cron expressions. Built with time zones in mind and intuitively handles daylight saving time transitions
 - [Bogus](https://github.com/bchavez/Bogus) - A simple and sane data generator for populating objects
 - [xUnit](https://github.com/xunit/xunit) - Free, open source, community-focused unit testing tool for the .NET

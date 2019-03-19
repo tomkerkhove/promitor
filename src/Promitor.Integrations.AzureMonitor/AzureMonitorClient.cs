@@ -96,8 +96,8 @@ namespace Promitor.Integrations.AzureMonitor
 
         private static TimeSpan GetClosestAggregationInterval(TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
         {
-            TimeSpan closestAggregationIntervalDifference = TimeSpan.MaxValue;
-            TimeSpan closestAggregationInterval = TimeSpan.MaxValue;
+            var closestAggregationIntervalDifference = TimeSpan.MaxValue;
+            var closestAggregationInterval = TimeSpan.MaxValue;
 
             foreach (var availableMetricPeriod in availableMetricPeriods)
             {
@@ -155,7 +155,7 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetricValue;
         }
 
-        private double InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
+        private static double InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
         {
             switch (metricAggregation)
             {

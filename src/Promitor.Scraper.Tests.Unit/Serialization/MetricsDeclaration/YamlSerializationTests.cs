@@ -3,7 +3,7 @@ using System.ComponentModel;
 using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Xunit;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 

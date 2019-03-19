@@ -43,12 +43,6 @@
             <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
             <param name="apiVersion">Version of the API</param>
         </member>
-        <member name="M:Promitor.Scraper.Host.Scheduling.Cron.CronSchedule.Parse(System.String)">
-            <summary>
-                Parses the Cron schedule into a Cron expression
-            </summary>
-            <param name="rawCronSchedule">Raw Cron schedule to use</param>
-        </member>
         <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces.IMetricValidator`1.Validate(`0)">
             <summary>
                 Validates a specific metric definition
