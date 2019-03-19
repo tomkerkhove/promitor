@@ -1,10 +1,10 @@
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResouceTypes
 {
-    public class AzureStorageQueueMetricDefinition: MetricDefinition
+    public class StorageQueueMetricDefinition: MetricDefinition
     {
         public string AccountName { get; set; }
         public string QueueName { get; set; }
         public string SasToken { get; set; }
-        public override ResourceType ResourceType { get; set; } = ResourceType.AzureStorageQueue;
+        public override ResourceType ResourceType { get; set; } = ResourceType.StorageQueue;
     }
 }

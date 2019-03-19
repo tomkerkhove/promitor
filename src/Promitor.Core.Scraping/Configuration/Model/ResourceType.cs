@@ -5,6 +5,6 @@
         NotSpecified = 0,
         ServiceBusQueue = 1,
         Generic = 2,
-        AzureStorageQueue = 3
+        StorageQueue = 3
     }
 }

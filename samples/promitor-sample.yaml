@@ -42,6 +42,6 @@ metrics:
     queueName: testqueue
     sasToken: "?sv=2015-04-05&si=read&sig=zs87c3nUp1uiF4UAMMstXrLKhIpGOirFHRcQ4XYxxpY%3D"
     azureMetricConfiguration:
-      metricName: Size
+      metricName: MessageCount
       aggregation:
         type: Total

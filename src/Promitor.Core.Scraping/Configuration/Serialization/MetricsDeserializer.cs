@@ -28,7 +28,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 case ResourceType.Generic:
                     metricDefinition = DeserializeGenericMetric(node);
                     break;
-                case ResourceType.AzureStorageQueue:
+                case ResourceType.StorageQueue:
                     metricDefinition = DeserializeAzureStorageQueue(node);
                     break;
                 default:
@@ -69,7 +69,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
         private MetricDefinition DeserializeAzureStorageQueue(YamlMappingNode metricNode)
         {
-            var metricDefinition = DeserializeMetricDefinition<AzureStorageQueueMetricDefinition>(metricNode);
+            var metricDefinition = DeserializeMetricDefinition<StorageQueueMetricDefinition>(metricNode);
             var accountName = metricNode.Children[new YamlScalarNode("accountName")];
             var queueName = metricNode.Children[new YamlScalarNode("queueName")];
             var sasToken = metricNode.Children[new YamlScalarNode("sasToken")];

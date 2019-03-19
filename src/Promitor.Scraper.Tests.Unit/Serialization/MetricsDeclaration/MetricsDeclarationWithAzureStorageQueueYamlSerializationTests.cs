@@ -46,11 +46,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, azureStorageQueueMetricDefinition);
-            var deserializedAzureStorageQueueMetricDefinition = deserializedMetricDefinition as AzureStorageQueueMetricDefinition;
+            var deserializedAzureStorageQueueMetricDefinition = deserializedMetricDefinition as StorageQueueMetricDefinition;
             AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition, deserializedMetricDefinition);
         }
 
-        private static void AssertAzureStorageQueueMetricDefinition(AzureStorageQueueMetricDefinition deserializedServiceBusMetricDefinition, AzureStorageQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition deserializedServiceBusMetricDefinition, StorageQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.AccountName, deserializedServiceBusMetricDefinition.AccountName);
@@ -63,14 +63,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
         
-        private AzureStorageQueueMetricDefinition GenerateBogusAzureStorageQueueMetricDefinition()
+        private StorageQueueMetricDefinition GenerateBogusAzureStorageQueueMetricDefinition()
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
-            var bogusGenerator = new Faker<AzureStorageQueueMetricDefinition>()
+            var bogusGenerator = new Faker<StorageQueueMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.AzureStorageQueue)
+                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.StorageQueue)
                 .RuleFor(metricDefinition => metricDefinition.AccountName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.SasToken, faker => $"?sig={Base64UrlEncoder.Encode(faker.Lorem.Sentence(wordCount: 3))}")

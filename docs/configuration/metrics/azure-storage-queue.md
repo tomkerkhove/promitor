@@ -3,8 +3,8 @@ layout: default
 title: Azure Storage Queue Declaration
 ---
 
-## Azure Queue
-You can declare to scrape an Azure Queue via the `AzureQueue` resource type.
+## Azure Storage Queue
+You can declare to scrape an Azure Queue via the `StorageQueue` resource type.
 
 The following fields need to be provided:
 - `accountName` - The name of the storage account
@@ -12,7 +12,7 @@ The following fields need to be provided:
 - `sasToken` - The SAS token used to access the queue/account
 
 Supported metrics:
-- Size
+- MessageCount
 - Duration
 
 Duration is the time in seconds of a recent message in the given queue
@@ -25,7 +25,7 @@ resourceType: AzureStorageQueue
 accountName: promitor
 queueName: orders
 azureMetricConfiguration:
-  metricName: Size
+  metricName: MessageCount
   aggregation: Total
 ```
 
