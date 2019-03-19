@@ -1,7 +1,14 @@
 name: $(Date:yyyyMMdd)$(Rev:.r)
 resources:
 - repo: self
-trigger: none
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - deploy/automation/scraper/ci/*
 pr: none
 variables:
   LogicApp.Name: 'promitor-automation-github-ci-scraper'
