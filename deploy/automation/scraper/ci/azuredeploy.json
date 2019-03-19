@@ -37,7 +37,9 @@
             }
         }
     },
-    "variables": {},
+    "variables": {
+        "Alerts.ActionGroup.Name": "Promitor - Maintainers"
+    },
     "resources": [
         {
             "type": "Microsoft.Logic/workflows",
@@ -179,6 +181,62 @@
                 "parameters": {}
             },
             "dependsOn": []
+        },
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2018-03-01",
+            "name": "[variables('Alerts.ActionGroup.Name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "AlertHandler",
+                "enabled": true,
+                "smsReceivers": [],
+                "emailReceivers": [
+                    {
+                        "name": "Tom Kerkhove",
+                        "emailAddress": "kerkhove.tom@gmail.com"
+                    }
+                ],
+                "webhookReceivers": []
+            }
+        },
+        {
+            "name": "Scraper CI Bot - Docker Hub Integration Failed",
+            "type": "Microsoft.Insights/metricAlerts",
+            "location": "global",
+            "apiVersion": "2018-03-01",
+            "tags": {},
+            "properties": {
+                "description": "Scraper CI Bot - Docker Hub integration failed to post a comment on the pull request in GitHub",
+                "severity": 3,
+                "enabled": true,
+                "scopes": [
+                    "[resourceId('Microsoft.Logic/workflows', variables('LogicApp.Name'))]"
+                ],
+                "evaluationFrequency": "PT5M",
+                "windowSize": "PT5M",
+                "criteria": {
+                    "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria",
+                    "allOf": [
+                        {
+                            "name": "1st criterion",
+                            "metricName": "RunsFailed",
+                            "dimensions": [],
+                            "operator": "GreaterThanOrEqual",
+                            "threshold": "1",
+                            "timeAggregation": "Total"
+                        }
+                    ]
+                },
+                "actions": [
+                    {
+                        "actionGroupId": "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Insights/actionGroups', variables('Alerts.ActionGroup.Name'))]"
+            ]
         }
     ]
 }
