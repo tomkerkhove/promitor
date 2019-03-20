@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Integrations.AzureStorageQueue;
+using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResouceTypes
 {

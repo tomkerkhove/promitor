@@ -25,7 +25,7 @@
     <ProjectReference Include="..\Promitor.Core.Telemetry\Promitor.Core.Telemetry.csproj" />
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
-    <ProjectReference Include="..\Promitor.Integrations.AzureStorageQueue\Promitor.Integrations.AzureStorageQueue.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />
   </ItemGroup>
 
 </Project>

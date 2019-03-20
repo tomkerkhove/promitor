@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
             
             if (string.IsNullOrWhiteSpace(metricDefinition.AccountName))
             {
-                errorMessages.Add("No Azure Storage Queue Account Name is configured");
+                errorMessages.Add("No Azure Storage Account Name is configured");
             }
             
             if (string.IsNullOrWhiteSpace(metricDefinition.QueueName))
@@ -25,7 +25,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
                 errorMessages.Add("No Azure Storage Queue SAS Token is configured");
             }
 
-            if (metricDefinition.AzureMetricConfiguration.MetricName == "MessageCount"))
+            if (metricDefinition.AzureMetricConfiguration.MetricName == "MessageCount")
             {
                 errorMessages.Add($"Invalid metric name {metricDefinition.AzureMetricConfiguration.MetricName}");
             }
