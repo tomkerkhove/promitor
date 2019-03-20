@@ -25,7 +25,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
                 errorMessages.Add("No Azure Storage Queue SAS Token is configured");
             }
 
-            if (metricDefinition.AzureMetricConfiguration.MetricName == "MessageCount")
+            if (metricDefinition.AzureMetricConfiguration.MetricName != "MessageCount")
             {
                 errorMessages.Add($"Invalid metric name {metricDefinition.AzureMetricConfiguration.MetricName}");
             }
