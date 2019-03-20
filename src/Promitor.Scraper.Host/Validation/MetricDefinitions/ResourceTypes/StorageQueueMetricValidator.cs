@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
             
             if (string.IsNullOrWhiteSpace(metricDefinition.SasToken))
             {
-                errorMessages.Add("No Azure Storage Queue SAS Token is configured");
+                errorMessages.Add("No Azure Storage SAS Token is configured");
             }
 
             if (metricDefinition.AzureMetricConfiguration.MetricName != "MessageCount")
