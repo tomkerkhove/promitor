@@ -24,8 +24,8 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
-                Logger.LogWarning("No scrape configuration path configured, falling back to default one on '{configurationPath}'.", Promitor.Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
-                configurationPath = Promitor.Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
+                Logger.LogWarning("No scrape configuration path configured, falling back to default one on '{configurationPath}'.", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
+                configurationPath = Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
                 Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, configurationPath);
             }
 
@@ -35,7 +35,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
                 return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", Promitor.Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
+            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
             return ValidationResult.Successful(ComponentName);
         }
     }

@@ -8,7 +8,7 @@ using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureStorage;
 
-namespace Promitor.Core.Scraping.ResouceTypes
+namespace Promitor.Core.Scraping.ResourceTypes
 {
     public class StorageQueueScraper: Scraper<StorageQueueMetricDefinition>
     {

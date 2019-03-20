@@ -12,10 +12,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     public class ConfigurationSerializer
     {
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
         public ConfigurationSerializer(ILogger logger)
         {
-            this.logger = logger;
+            _logger = logger;
         }
 
         public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
@@ -40,7 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
                 var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
-                var azureMetadataSerializer = new AzureMetadataDeserializer(logger);
+                var azureMetadataSerializer = new AzureMetadataDeserializer(_logger);
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
             }
 
@@ -48,7 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("metricDefaults"))
             {
                 var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
-                var metricDefaultsSerializer = new MetricDefaultsDeserializer(logger);
+                var metricDefaultsSerializer = new MetricDefaultsDeserializer(_logger);
                 metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
@@ -56,7 +56,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (rootNode.Children.ContainsKey("metrics"))
             {
                 var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
-                var metricsDeserializer = new MetricsDeserializer(logger);
+                var metricsDeserializer = new MetricsDeserializer(_logger);
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
 

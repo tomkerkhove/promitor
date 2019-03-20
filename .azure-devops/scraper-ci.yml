@@ -24,6 +24,11 @@ jobs:
       command: test
       projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
 
+  - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
+    displayName: 'Automated code quality checks'
+    inputs:
+      SolutionOrProjectPath: src/Promitor.sln
+
 - job: Docker_Job
   displayName: Build Docker Image Tests
   condition: succeeded()

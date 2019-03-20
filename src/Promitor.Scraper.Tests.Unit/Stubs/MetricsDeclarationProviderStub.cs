@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 
 namespace Promitor.Scraper.Tests.Unit.Stubs
 {
-    public class MetricsDeclarationProviderStub : MetricsDeclarationProvider, IMetricsDeclarationProvider
+    public class MetricsDeclarationProviderStub : MetricsDeclarationProvider
     {
         private readonly string _rawMetricsDeclaration;
 

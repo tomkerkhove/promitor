@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Promitor.Core;
+using Promitor.Scraper.Host.Extensions;
 
 namespace Promitor.Scraper.Host
 {

@@ -9,18 +9,18 @@ namespace Promitor.Core.Scraping.Configuration.Providers
 {
     public class MetricsDeclarationProvider : IMetricsDeclarationProvider
     {
-        private readonly ConfigurationSerializer configurationSerializer;
+        private readonly ConfigurationSerializer _configurationSerializer;
 
         public MetricsDeclarationProvider(ILogger logger)
         {
-            configurationSerializer = new ConfigurationSerializer(logger);
+            _configurationSerializer = new ConfigurationSerializer(logger);
         }
 
         public virtual MetricsDeclaration Get()
         {
             var rawMetricsDeclaration = ReadRawDeclaration();
 
-            var config = configurationSerializer.Deserialize(rawMetricsDeclaration);
+            var config = _configurationSerializer.Deserialize(rawMetricsDeclaration);
             return config;
         }
 

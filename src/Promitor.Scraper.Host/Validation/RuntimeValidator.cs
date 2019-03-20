@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -7,6 +6,7 @@ using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
 using Promitor.Scraper.Host.Validation.Steps;
+#pragma warning disable 618
 
 namespace Promitor.Scraper.Host.Validation
 {

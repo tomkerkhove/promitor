@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
-using Promitor.Core.Scraping.ResouceTypes;
+using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 

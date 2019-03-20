@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.AspNetCore;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -35,6 +34,7 @@ namespace Promitor.Scraper.Host.Scheduling
         }
 
         public string CronSchedule { get; set; }
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public string CronTimeZone { get; }
         public bool RunImmediately { get; set; }
 
