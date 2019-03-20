@@ -59,6 +59,7 @@ namespace Promitor.Scraper.Host.Scheduling
                     var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, scrapeConfiguration.MetricDefaults, metricDefinition);
                     scrapingTasks.Add(scrapingTask);
                 }
+
                 await Task.WhenAll(scrapingTasks);
             }
             catch (Exception exception)
