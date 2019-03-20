@@ -63,6 +63,24 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
+        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken="?sig=promitor", string azureMetricName = "MessageCount")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new StorageQueueMetricDefinition
+            {
+                ResourceType = ResourceType.StorageQueue,
+                Name = metricName,
+                Description = metricDescription,
+                QueueName = queueName,
+                AccountName = accountName,
+                SasToken = sasToken,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+            _metrics.Add(metric);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);

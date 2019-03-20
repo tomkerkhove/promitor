@@ -31,6 +31,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ServiceBusQueueScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.Generic:
                     return new GenericScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                case ResourceType.StorageQueue:
+                    return new StorageQueueScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
