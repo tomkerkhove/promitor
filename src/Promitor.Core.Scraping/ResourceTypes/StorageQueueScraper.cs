@@ -10,7 +10,7 @@ using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class StorageQueueScraper: Scraper<StorageQueueMetricDefinition>
+    public class StorageQueueScraper : Scraper<StorageQueueMetricDefinition>
     {
         private readonly AzureStorageQueueClient _azureStorageQueueClient;
         public StorageQueueScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)

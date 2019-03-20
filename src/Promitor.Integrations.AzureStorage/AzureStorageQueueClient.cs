@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
+using Promitor.Integrations.AzureStorage.Exceptions;
 
 namespace Promitor.Integrations.AzureStorage
 {
-    public class AzureStorageQueueClient
+    public class AzureStorageQueueClient : AzureStorageClient
     {
         private readonly ILogger _logger;
 
@@ -29,15 +28,21 @@ namespace Promitor.Integrations.AzureStorage
         public async Task<int> GetQueueMessageCountAsync(string accountName, string queueName, string sasToken)
         {
             var queue = GetQueueReference(accountName, queueName, sasToken);
+            var doesQueueExist = await queue.ExistsAsync();
+            if (doesQueueExist == false)
+            {
+                throw new QueueNotFoundException(queueName);
+            }
+
             await queue.FetchAttributesAsync();
             var messageCount = queue.ApproximateMessageCount ?? 0;
             _logger.LogInformation("Current size of queue {0} is {1}", queueName, messageCount);
             return messageCount;
         }
 
-        private static CloudQueue GetQueueReference(string accountName, string queueName, string sasToken)
+        private CloudQueue GetQueueReference(string accountName, string queueName, string sasToken)
         {
-            var account = new CloudStorageAccount(new StorageCredentials(sasToken), accountName, null, true);
+            var account = AuthenticateWithSasToken(accountName, sasToken);
             var queueClient = account.CreateCloudQueueClient();
             return queueClient.GetQueueReference(queueName);
         }
