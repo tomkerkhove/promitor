@@ -36,8 +36,8 @@ metrics:
         # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
         interval: 00:15:00
   - name: demo_azurestoragequeue_queue_size
-    description: "Approximate amount of messages in 'testqueue' queue (determined with AzureStorageQueue provider)"
-    resourceType: AzureStorageQueue
+    description: "Approximate amount of messages in 'testqueue' queue (determined with StorageQueue provider)"
+    resourceType: StorageQueue
     accountName: testaccount
     queueName: testqueue
     sasToken: "?sv=2015-04-05&si=read&sig=zs87c3nUp1uiF4UAMMstXrLKhIpGOirFHRcQ4XYxxpY%3D"
