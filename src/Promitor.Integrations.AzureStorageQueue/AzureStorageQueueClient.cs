@@ -36,22 +36,6 @@ namespace Promitor.Integrations.AzureStorageQueue
             return messageCount;
         }
 
-        /// <summary>
-        ///     Query Azure Storage to find out the duration of the recently inserted message
-        /// </summary>
-        /// <param name="accountName">Name of the account</param>
-        /// <param name="queueName">Name of the Queue</param>
-        /// <param name="sasToken">SAS token used to authenticate to Azure Storage</param>
-        /// <returns>Duration of a recently inserted message in the queue</returns>
-        public async Task<double> GetLastMessageDurationAsync(string accountName, string queueName, string sasToken)
-        {
-            var queue = GetQueueReference(accountName, queueName, sasToken);
-            var msg = await queue.PeekMessageAsync();
-            var duration = msg.InsertionTime != null ? DateTimeOffset.Now - msg.InsertionTime.Value : TimeSpan.Zero;
-            _logger.LogInformation("Current duration of the last message in queue {0} is {1}", queueName, duration);
-            return duration.TotalSeconds;
-        }
-
         private static CloudQueue GetQueueReference(string accountName, string queueName, string sasToken)
         {
             var account = new CloudStorageAccount(new StorageCredentials(sasToken), accountName, null, true);
