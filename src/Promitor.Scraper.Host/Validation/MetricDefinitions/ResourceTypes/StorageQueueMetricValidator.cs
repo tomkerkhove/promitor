@@ -6,6 +6,8 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
     public class StorageQueueMetricValidator: IMetricValidator<StorageQueueMetricDefinition>
     {
+        private readonly ISet<string> _validMetricNames = new HashSet<string>(new[] {"MessageCount", "Duration"});
+        
         public List<string> Validate(StorageQueueMetricDefinition metricDefinition)
         {
             var errorMessages = new List<string>();
@@ -25,7 +27,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
                 errorMessages.Add("No Azure Storage SAS Token is configured");
             }
 
-            if (metricDefinition.AzureMetricConfiguration.MetricName != "MessageCount")
+            if (!_validMetricNames.Contains(metricDefinition.AzureMetricConfiguration.MetricName))
             {
                 errorMessages.Add($"Invalid metric name {metricDefinition.AzureMetricConfiguration.MetricName}");
             }

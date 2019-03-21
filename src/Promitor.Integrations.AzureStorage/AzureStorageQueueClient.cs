@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Promitor.Integrations.AzureStorage.Exceptions;
@@ -38,6 +39,20 @@ namespace Promitor.Integrations.AzureStorage
             var messageCount = queue.ApproximateMessageCount ?? 0;
             _logger.LogInformation("Current size of queue {0} is {1}", queueName, messageCount);
             return messageCount;
+        }
+
+        public async Task<double> GetQueueMessageDurationAsync(string accountName, string queueName, string sasToken)
+        {
+            var queue = GetQueueReference(accountName, queueName, sasToken);
+            var doesQueueExist = await queue.ExistsAsync();
+            if (doesQueueExist == false)
+            {
+                throw new QueueNotFoundException(queueName);
+            }
+
+            var msg = await queue.PeekMessageAsync();
+            var duration = msg.InsertionTime.HasValue ? DateTime.UtcNow - msg.InsertionTime.Value.UtcDateTime : TimeSpan.Zero;
+            return duration.TotalSeconds;
         }
 
         private CloudQueue GetQueueReference(string accountName, string queueName, string sasToken)

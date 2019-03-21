@@ -21,7 +21,15 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
         protected override async Task<double> ScrapeResourceAsync(StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+            switch (metricDefinition.AzureMetricConfiguration.MetricName)
+            {
+                case "Duration":
+                    return await _azureStorageQueueClient.GetQueueMessageDurationAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+                case "MessageCount":
+                    return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+                default:
+                    throw new InvalidMetricException(metricDefinition.AzureMetricConfiguration.MetricName);
+            }
         }
     }
 }
