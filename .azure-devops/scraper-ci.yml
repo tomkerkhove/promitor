@@ -11,7 +11,7 @@ pr:
     include:
     - src/*
 variables:
-  DotNet.SDK.Version: '2.2.103'
+  DotNet.SDK.Version: '2.2.105'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
 - job: Build_Job
