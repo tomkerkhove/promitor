@@ -36,7 +36,7 @@ jobs:
     inputs:
       command: test
       projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-      arguments: '--no-build'
+      arguments: '--configuration release --no-build'
 
   - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
     displayName: 'Automated code quality checks'
