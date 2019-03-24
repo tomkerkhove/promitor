@@ -13,6 +13,9 @@ The following fields need to be provided:
 
 Supported metrics:
 - MessageCount
+- TimeSpentInQueue
+
+TimeSpentInQueue - Time in seconds that the oldest message has been waiting in the queue to be processed.
 
 Example:
 ```yaml
