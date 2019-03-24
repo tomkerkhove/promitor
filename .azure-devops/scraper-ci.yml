@@ -3,6 +3,13 @@ resources:
 - repo: self
 trigger:
 - master
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - src/*
 variables:
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
