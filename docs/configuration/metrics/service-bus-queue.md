@@ -11,11 +11,11 @@ The following fields need to be provided:
 - `queueName` - The name of the queue
 
 Supported metrics:
-- IncomingMessages
-- IncomingRequests
-- ActiveMessages
-- Messages
-- Size
+- `IncomingMessages`
+- `IncomingRequests`
+- `ActiveMessages`
+- `Messages`
+- `Size`
 
 Example:
 ```yaml
