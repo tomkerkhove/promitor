@@ -23,7 +23,7 @@ jobs:
     displayName: 'Install .NET SDK'
     inputs:
       version: '$(DotNet.SDK.Version)'
-      
+
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
     inputs:
