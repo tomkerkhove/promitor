@@ -24,7 +24,8 @@ accountName: promitor
 queueName: orders
 azureMetricConfiguration:
   metricName: MessageCount
-  aggregation: Total
+  aggregation:
+    type: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

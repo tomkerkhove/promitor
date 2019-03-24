@@ -26,7 +26,8 @@ namespace: promitor-messaging
 queueName: orders
 azureMetricConfiguration:
   metricName: ActiveMessages
-  aggregation: Total
+  aggregation:
+    type: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />
