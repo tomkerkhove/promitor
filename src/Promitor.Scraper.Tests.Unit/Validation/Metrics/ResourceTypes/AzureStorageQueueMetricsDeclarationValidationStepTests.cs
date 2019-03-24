@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using Promitor.Integrations.AzureStorage;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders;
 using Promitor.Scraper.Tests.Unit.Stubs;
@@ -6,75 +8,25 @@ using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
-    [Category("Unit")]
+    [Category(category: "Unit")]
     public class AzureStorageQueueMetricsDeclarationValidationStepTests
-{
+    {
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithNotSupportedMetricName_Fails()
         {
             // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(azureMetricName: string.Empty)
+            var azureMetricName = Guid.NewGuid().ToString();
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(azureMetricName: azureMetricName)
                 .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
-        }
-
-        [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(metricDescription: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
-        }
-
-        [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(metricName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
-        }
-
-        [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutQueueName_Fails()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(queueName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation was successful");
         }
 
         [Fact]
@@ -91,7 +43,75 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(azureMetricName: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(metricDescription: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutQueueName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(queueName: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
         }
 
         [Fact]
@@ -108,11 +128,29 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithAzureMetricNameInDifferentCasing_Succeeds()
+        {
+            // Arrange
+            var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpper();
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(azureMetricName: azureMetricName)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithMessageCount_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -125,7 +163,24 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+        }
+
+        [Fact]
+        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithTimeSpentInQueue_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAzureStorageQueueMetric(azureMetricName: AzureStorageConstants.Queues.Metrics.TimeSpentInQueue)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
         }
     }
 }
