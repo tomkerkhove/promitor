@@ -8,7 +8,7 @@ trigger:
     - master
   paths:
     include:
-    - deploy/automation/scraper/ci/*
+    - deploy/automation/docker-hub/ci/*
 pr: none
 variables:
   LogicApp.Name: 'promitor-automation-github-ci-scraper'
@@ -21,7 +21,7 @@ steps:
 - task: qetza.replacetokens.replacetokens-task.replacetokens@3
   displayName: 'Replace tokens in tooling'
   inputs:
-    rootDirectory: 'deploy/automation/scraper/ci/'
+    rootDirectory: 'deploy/automation/docker-hub/ci/'
     targetFiles: azuredeploy.parameters.json
     verbosity: detailed
     actionOnMissing: fail
@@ -32,8 +32,8 @@ steps:
     azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
     resourceGroupName: promitor
     location: 'West Europe'
-    csmFile: 'deploy/automation/scraper/ci/azuredeploy.json'
-    csmParametersFile: 'deploy/automation/scraper/ci/azuredeploy.parameters.json'
+    csmFile: 'deploy/automation/docker-hub/ci/azuredeploy.json'
+    csmParametersFile: 'deploy/automation/docker-hub/ci/azuredeploy.parameters.json'
 
 
 
