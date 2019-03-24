@@ -6,7 +6,11 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
     public class StorageQueueMetricValidator: IMetricValidator<StorageQueueMetricDefinition>
     {
-        private readonly ISet<string> _validMetricNames = new HashSet<string>(new[] {"MessageCount", "Duration"});
+        private readonly ISet<string> _validMetricNames = new HashSet<string>(new[]
+        {
+            Core.Scraping.Constants.Defaults.MessageCountMetricName,
+            Core.Scraping.Constants.Defaults.TimeSpentInQueueMetricName
+        });
         
         public List<string> Validate(StorageQueueMetricDefinition metricDefinition)
         {

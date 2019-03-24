@@ -23,12 +23,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
             switch (metricDefinition.AzureMetricConfiguration.MetricName)
             {
-                case "Duration":
-                    return await _azureStorageQueueClient.GetQueueMessageDurationAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
-                case "MessageCount":
+                case Constants.Defaults.TimeSpentInQueueMetricName:
+                    return await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+                case Constants.Defaults.MessageCountMetricName:
                     return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
                 default:
-                    throw new InvalidMetricException(metricDefinition.AzureMetricConfiguration.MetricName);
+                    throw new InvalidMetricNameException(metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.ResourceType.ToString());
             }
         }
     }
