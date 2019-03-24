@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -21,11 +22,15 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
         protected override async Task<double> ScrapeResourceAsync(StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            switch (metricDefinition.AzureMetricConfiguration.MetricName)
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
+            Guard.NotNull(metricDefinition.AzureMetricConfiguration, nameof(metricDefinition.AzureMetricConfiguration));
+            Guard.NotNullOrEmpty(metricDefinition.AzureMetricConfiguration.MetricName, nameof(metricDefinition.AzureMetricConfiguration.MetricName));
+
+            switch (metricDefinition.AzureMetricConfiguration.MetricName.ToLowerInvariant())
             {
-                case Constants.Defaults.TimeSpentInQueueMetricName:
+                case AzureStorageConstants.Queues.Metrics.TimeSpentInQueue:
                     return await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
-                case Constants.Defaults.MessageCountMetricName:
+                case AzureStorageConstants.Queues.Metrics.MessageCount:
                     return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
                 default:
                     throw new InvalidMetricNameException(metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.ResourceType.ToString());

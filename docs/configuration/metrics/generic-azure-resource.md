@@ -23,7 +23,8 @@ resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
 filter: EntityName eq 'orders'
 azureMetricConfiguration:
   metricName: ActiveMessages
-  aggregation: Total
+  aggregation:
+    type: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

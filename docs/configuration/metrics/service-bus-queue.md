@@ -11,11 +11,11 @@ The following fields need to be provided:
 - `queueName` - The name of the queue
 
 Supported metrics:
-- IncomingMessages
-- IncomingRequests
-- ActiveMessages
-- Messages
-- Size
+- `IncomingMessages`
+- `IncomingRequests`
+- `ActiveMessages`
+- `Messages`
+- `Size`
 
 Example:
 ```yaml
@@ -26,7 +26,8 @@ namespace: promitor-messaging
 queueName: orders
 azureMetricConfiguration:
   metricName: ActiveMessages
-  aggregation: Total
+  aggregation:
+    type: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

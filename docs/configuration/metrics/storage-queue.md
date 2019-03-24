@@ -12,10 +12,8 @@ The following fields need to be provided:
 - `sasToken` - The SAS token used to access the queue/account
 
 Supported metrics:
-- MessageCount
-- TimeSpentInQueue
-
-TimeSpentInQueue - Time in seconds that the oldest message has been waiting in the queue to be processed.
+- `TimeSpentInQueue` - Time in seconds that the oldest message has been waiting in the queue to be processed.
+- `MessageCount`
 
 Example:
 ```yaml
@@ -26,7 +24,8 @@ accountName: promitor
 queueName: orders
 azureMetricConfiguration:
   metricName: MessageCount
-  aggregation: Total
+  aggregation:
+    type: Total
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />
