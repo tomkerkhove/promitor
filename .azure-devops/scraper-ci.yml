@@ -11,6 +11,7 @@ pr:
     include:
     - src/*
 variables:
+  DotNet.SDK.Version: '2.2.105'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
 - job: Build_Job
@@ -19,6 +20,11 @@ jobs:
   pool:
     vmImage: vs2017-win2016
   steps:
+  - task: DotNetCoreInstaller@0
+    displayName: 'Install .NET SDK'
+    inputs:
+      version: '$(DotNet.SDK.Version)'
+
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
     inputs:
@@ -30,6 +36,7 @@ jobs:
     inputs:
       command: test
       projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+      arguments: '--configuration release'
 
   - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
     displayName: 'Automated code quality checks'
