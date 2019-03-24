@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -21,9 +22,9 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
         protected override async Task<double> ScrapeResourceAsync(StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            GuardNet.Guard.NotNull(metricDefinition, nameof(metricDefinition));
-            GuardNet.Guard.NotNull(metricDefinition.AzureMetricConfiguration, nameof(metricDefinition.AzureMetricConfiguration));
-            GuardNet.Guard.NotNullOrEmpty(metricDefinition.AzureMetricConfiguration.MetricName, nameof(metricDefinition.AzureMetricConfiguration.MetricName));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
+            Guard.NotNull(metricDefinition.AzureMetricConfiguration, nameof(metricDefinition.AzureMetricConfiguration));
+            Guard.NotNullOrEmpty(metricDefinition.AzureMetricConfiguration.MetricName, nameof(metricDefinition.AzureMetricConfiguration.MetricName));
 
             switch (metricDefinition.AzureMetricConfiguration.MetricName.ToLowerInvariant())
             {
