@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-map-{{ template "promitor.fullname" . }}
+  labels:
+    app: {{ template "promitor.name" . }}
+    chart: {{ template "promitor.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  metrics-declaration.yaml: |-
+    azureMetadata:
+      tenantId: {{ .Values.metricsConfig.tenantId }}
+      subscriptionId: {{ .Values.metricsConfig.subscriptionId }}
+      resourceGroupName: {{ .Values.metricsConfig.resourceGroupName }}
+    metricDefaults:
+      aggregation:
+        interval: {{ .Values.metricsConfig.defaultInterval }}
+    metrics:
+      {{- range .Values.metricsConfig.metrics }}
+      - {{ . }}
+      {{- end }}
