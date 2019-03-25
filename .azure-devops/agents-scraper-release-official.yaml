@@ -36,6 +36,7 @@ steps:
   displayName: 'Build Docker image'
   inputs:
     dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+    arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
     imageName: '$(Image.TaggedName)'
     includeLatestTag: true
     useDefaultContext: false
