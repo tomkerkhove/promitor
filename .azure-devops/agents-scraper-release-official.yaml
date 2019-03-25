@@ -18,6 +18,14 @@ steps:
   inputs:
     version: '$(DotNet.SDK.Version)'
 
+- powershell: |
+   Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+   $index = "$(Image.Version)".IndexOf(".", 2);
+   $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+   Write-Host "Found version '$majorMinorVersion'"
+   Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+  displayName: 'Determine ''{major}.{minor}'' version'
+
 - task: DotNetCoreCLI@2
   displayName: 'Run Unit Tests'
   inputs:
@@ -54,7 +62,7 @@ steps:
                               --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
                               tomkerkhove/promitor-agent-scraper:$(Image.Version)
      ```
-          ### Docker Image information
+     ### Docker Image information
      New Docker image tags are available:
      - `latest`
      - `$(Image.Version)`
