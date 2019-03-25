@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: PROMITOR_HTTP_PORT
-            value: {{ .Values.promitorHttpPort }}
+            value: {{ .Values.service.targetPort }}
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:
