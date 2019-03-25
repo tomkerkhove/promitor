@@ -7,9 +7,6 @@ This guide walks you through the process of adding a new scraper type.
 
 -------------------------
 
-## Samples
-Provide a sample configuration in `samples\promitor-sample.yaml`.
-
 ## Configuration
 1. Add your new scraping type to `ResourceType`
 2. Describe what your configuration by creating `<New-Type>MetricDefinition`and inherit from `MetricDefinition`
