@@ -2,20 +2,22 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "promitor.fullname" . }}
+  labels:
+    app: {{ template "promitor.name" . }}
+    chart: {{ template "promitor.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 data:
   metrics-declaration.yaml: |-
     azureMetadata:
-      tenantId: {{ .Values.metrics.tenantId }}
-      subscriptionId: {{ .Values.metrics.subscriptionId }}
-      resourceGroupName: {{ .Values.metrics.resourceGroupName }}
+      tenantId: {{ .Values.metricsConfig.tenantId }}
+      subscriptionId: {{ .Values.metricsConfig.subscriptionId }}
+      resourceGroupName: {{ .Values.metricsConfig.resourceGroupName }}
+    metricDefaults:
+      aggregation:
+        interval: {{ .Values.metricsConfig.defaultInterval }}
     metrics:
-      - name: {{ .Values.metrics.name }}
-        description: {{ .Values.metrics.description }}
-        resourceType: {{ .Values.metrics.description }}
-        namespace: {{ .Values.metrics.namespace }}
-        queueName: {{ .Values.metrics.queueName }}
-        azureMetricConfiguration:
-          metricName: {{ .Values.metrics.metricName }}
-          aggregation: 
-            type: {{ .Values.metrics.type }}
-            interval: {{ .Values.metrics.interval }}
+{{- range $key, $value := .Values.metricsConfig.metrics }}
+      {{ $key }}: |-
+{{ $value | indent 8 }}
+{{- end }}
