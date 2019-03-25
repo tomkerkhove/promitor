@@ -13,7 +13,7 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithAzureStorageQueueYamlSerializationTests : YamlSerializationTests
+    public class MetricsDeclarationWithAzureStorageQueueYamlSerializationTests : YamlSerializationTests<StorageQueueMetricDefinition>
     {
         [Fact]
         public void YamlSerialization_SerializeAndDeserializeValidConfigForAzureStorageQueue_SucceedsWithIdenticalOutput()
@@ -46,20 +46,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, azureStorageQueueMetricDefinition);
             var deserializedAzureStorageQueueMetricDefinition = deserializedMetricDefinition as StorageQueueMetricDefinition;
-            AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition, deserializedMetricDefinition);
+            AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition);
         }
 
-        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition deserializedServiceBusMetricDefinition, StorageQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition storageQueueMetricDefinition, StorageQueueMetricDefinition serviceBusMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.AccountName, deserializedServiceBusMetricDefinition.AccountName);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
-            Assert.Equal(serviceBusMetricDefinition.SasToken, deserializedServiceBusMetricDefinition.SasToken);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
+            Assert.NotNull(storageQueueMetricDefinition);
+            Assert.Equal(serviceBusMetricDefinition.AccountName, storageQueueMetricDefinition.AccountName);
+            Assert.Equal(serviceBusMetricDefinition.QueueName, storageQueueMetricDefinition.QueueName);
+            Assert.Equal(serviceBusMetricDefinition.SasToken, storageQueueMetricDefinition.SasToken);
         }
         
         private StorageQueueMetricDefinition GenerateBogusAzureStorageQueueMetricDefinition()

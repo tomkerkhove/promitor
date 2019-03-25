@@ -1,31 +1,26 @@
 ﻿using System;
 using System.ComponentModel;
 using Bogus;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Xunit;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class YamlSerializationTests
+    public class YamlSerializationTests<TMetricDefinition> where TMetricDefinition : MetricDefinition
     {
-        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition)
+        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, TMetricDefinition metricDefinition)
         {
             Assert.NotNull(deserializedMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.Name, deserializedMetricDefinition.Name);
-            Assert.Equal(serviceBusMetricDefinition.Description, deserializedMetricDefinition.Description);
-            Assert.Equal(serviceBusMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
-        }
-
-        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, StorageQueueMetricDefinition storageQueueMetricDefinition)
-        {
-            Assert.NotNull(deserializedMetricDefinition);
-            Assert.Equal(storageQueueMetricDefinition.Name, deserializedMetricDefinition.Name);
-            Assert.Equal(storageQueueMetricDefinition.Description, deserializedMetricDefinition.Description);
-            Assert.Equal(storageQueueMetricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
+            Assert.Equal(metricDefinition.Name, deserializedMetricDefinition.Name);
+            Assert.Equal(metricDefinition.Description, deserializedMetricDefinition.Description);
+            Assert.Equal(metricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
+            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
+            Assert.Equal(metricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
+            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.Equal(metricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(metricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
         protected void AssertMetricDefaults(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaults metricDefaults)
@@ -48,7 +43,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
         {
             var bogusMetricAggregation = new Faker<MetricAggregation>()
                 .StrictMode(ensureRulesForAllProperties: true)
-                .RuleFor(aggregation => aggregation.Type, faker => faker.PickRandom<AggregationType>())
+                .RuleFor(aggregation => aggregation.Type, faker => faker.PickRandom<Microsoft.Azure.Management.Monitor.Fluent.Models.AggregationType>())
                 .RuleFor(aggregation => aggregation.Interval, faker => TimeSpan.FromMinutes(faker.Random.Int()))
                 .Generate();
 

@@ -31,6 +31,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 case ResourceType.StorageQueue:
                     metricDefinition = DeserializeAzureStorageQueue(node);
                     break;
+                case ResourceType.ContainerInstance:
+                    metricDefinition = DeserializeAzureContainerInstance(node);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(resourceType), resourceType, $"No deserialization was found for {resourceType}");
             }
@@ -63,6 +66,16 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             metricDefinition.QueueName = queueName?.ToString();
             metricDefinition.Namespace = namespaceName?.ToString();
+
+            return metricDefinition;
+        }
+
+        private MetricDefinition DeserializeAzureContainerInstance(YamlMappingNode metricNode)
+        {
+            var metricDefinition = DeserializeMetricDefinition<ContainerInstanceMetricDefinition>(metricNode);
+
+            var containerGroup = metricNode.Children[new YamlScalarNode("containerGroup")];
+            metricDefinition.ContainerGroup = containerGroup?.ToString();
 
             return metricDefinition;
         }
