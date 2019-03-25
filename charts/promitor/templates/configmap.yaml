@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: promitor-scraper-metrics-config
+  name: {{ template "promitor.fullname" . }}
 data:
   metrics-declaration.yaml: |-
     azureMetadata:
