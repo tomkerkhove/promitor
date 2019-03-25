@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "promitor.fullname" . }}
+  name: config-map-{{ template "promitor.fullname" . }}
   labels:
     app: {{ template "promitor.name" . }}
     chart: {{ template "promitor.chart" . }}
@@ -17,7 +17,6 @@ data:
       aggregation:
         interval: {{ .Values.metricsConfig.defaultInterval }}
     metrics:
-{{- range $key, $value := .Values.metricsConfig.metrics }}
-      {{ $key }}: |-
-{{ $value | indent 8 }}
-{{- end }}
+      {{- range .Values.metricsConfig.metrics }}
+      - {{ . }}
+      {{- end }}

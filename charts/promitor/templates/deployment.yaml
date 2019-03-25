@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: {{ template "promitor.fullname" . }}
@@ -9,6 +9,11 @@ metadata:
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: {{ template "promitor.name" . }}
@@ -25,7 +30,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: PROMITOR_HTTP_PORT
-            value: {{ .Values.service.targetPort }}
+            value: {{ .Values.service.targetPort | quote }}
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:
@@ -37,35 +42,13 @@ spec:
                   name: {{ template "promitor.fullname" . }}
                   key: azure-app-key
           volumeMounts:
-          - name: promitor-scraper-metrics-config-volume
+          - name: config-volume-{{ template "promitor.fullname" . }}
             mountPath: /config/
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- with .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-{{ toYaml . | indent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+              port: 
       volumes:
-        - name: promitor-scraper-metrics-config-volume
+        - name: config-volume-{{ template "promitor.fullname" . }}
           configMap:
-            name: promitor-scraper-metrics-config
+            name: config-map-{{ template "promitor.fullname" . }}
