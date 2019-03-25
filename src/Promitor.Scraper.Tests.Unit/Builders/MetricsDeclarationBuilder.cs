@@ -47,7 +47,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
-        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "foo", string metricDescription = "Description for a metric", string queueName = "foo-queue", string serviceBusNamespace = "foo-space", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ServiceBusQueueMetricDefinition
@@ -64,7 +64,24 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken="?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
+        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group",  string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new ContainerInstanceMetricDefinition
+            {
+                ResourceType = ResourceType.ContainerInstance,
+                Name = metricName,
+                Description = metricDescription,
+                ContainerGroup = containerGroup,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor-storage-queue", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken="?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new StorageQueueMetricDefinition
