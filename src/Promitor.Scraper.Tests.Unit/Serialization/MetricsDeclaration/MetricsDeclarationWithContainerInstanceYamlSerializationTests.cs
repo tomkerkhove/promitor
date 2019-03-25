@@ -48,12 +48,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             AssertContainerInstanceMetricDefinition(deserializedServiceBusMetricDefinition, containerInstanceMetricDefinition, deserializedMetricDefinition);
         }
 
-        private static void AssertAzureStorageQueueMetricDefinition(ContainerInstanceMetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinition containerInstanceMetricDefinition)
-        {
-            Assert.NotNull(deserializedContainerInstanceMetricDefinition);
-            Assert.Equal(containerInstanceMetricDefinition.ContainerGroup, deserializedContainerInstanceMetricDefinition.ContainerGroup);
-        }
-
         private static void AssertContainerInstanceMetricDefinition(ContainerInstanceMetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinition containerInstanceMetricDefinition, MetricDefinition deserializedMetricDefinition)
         {
             Assert.NotNull(deserializedContainerInstanceMetricDefinition);
