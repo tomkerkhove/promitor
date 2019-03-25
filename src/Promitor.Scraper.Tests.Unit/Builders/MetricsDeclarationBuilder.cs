@@ -52,7 +52,6 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ServiceBusQueueMetricDefinition
             {
-                ResourceType = ResourceType.ServiceBusQueue,
                 Name = metricName,
                 Description = metricDescription,
                 QueueName = queueName,
@@ -69,7 +68,6 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new StorageQueueMetricDefinition
             {
-                ResourceType = ResourceType.StorageQueue,
                 Name = metricName,
                 Description = metricDescription,
                 QueueName = queueName,
@@ -85,7 +83,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new GenericMetricDefinition
+            var metric = new GenericAzureMetricDefinition
             {
                 Name = metricName,
                 Description = metricDescription,
