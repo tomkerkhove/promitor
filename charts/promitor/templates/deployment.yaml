@@ -23,6 +23,22 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PROMITOR_HTTP_PORT
+            value: {{ .Values.promitorHttpPort }}
+          - name: PROMITOR_AUTH_APPID
+            valueFrom:
+              secretKeyRef:
+                  name: {{ template "promitor.fullname" . }}
+                  key: azure-client-secret
+          - name: PROMITOR_AUTH_APPKEY
+            valueFrom:
+              secretKeyRef:
+                  name: {{ template "promitor.fullname" . }}
+                  key: azure-client-secret
+          volumeMounts:
+          - name: promitor-scraper-metrics-config-volume
+            mountPath: /config/
           ports:
             - name: http
               containerPort: 80
@@ -49,3 +65,7 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      volumes:
+        - name: promitor-scraper-metrics-config-volume
+          configMap:
+            name: promitor-scraper-metrics-config

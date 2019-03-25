@@ -7,13 +7,15 @@ metadata:
     chart: {{ template "promitor.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+    type: {{ .Values.service.LabelType }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
       name: http
   selector:
     app: {{ template "promitor.name" . }}
     release: {{ .Release.Name }}
+    type: {{ .Values.service.selectorType }}
