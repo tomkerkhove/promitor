@@ -14,7 +14,6 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
-      name: http
   selector:
     app: {{ template "promitor.name" . }}
     release: {{ .Release.Name }}

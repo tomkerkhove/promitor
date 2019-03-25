@@ -30,7 +30,7 @@ spec:
             valueFrom:
               secretKeyRef:
                   name: {{ template "promitor.fullname" . }}
-                  key: azure-client-secret
+                  key: azure-client-id
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
