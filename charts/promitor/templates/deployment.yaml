@@ -30,12 +30,12 @@ spec:
             valueFrom:
               secretKeyRef:
                   name: {{ template "promitor.fullname" . }}
-                  key: azure-client-id
+                  key: azure-app-id
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
                   name: {{ template "promitor.fullname" . }}
-                  key: azure-client-secret
+                  key: azure-app-key
           volumeMounts:
           - name: promitor-scraper-metrics-config-volume
             mountPath: /config/

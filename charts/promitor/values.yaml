@@ -5,12 +5,16 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+  repository: tkherkove/promitor-agent-scraper
+  tag: latest
+  pullPolicy: Always
+
+azureAuthentication:
+  appId: ""
+  appKey: ""
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 80
 
 ingress:
@@ -43,4 +47,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
