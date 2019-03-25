@@ -1,0 +1,88 @@
+name: $(Image.Version)
+resources:
+- repo: self
+trigger: none
+pr: none
+pool:
+  name: Hosted Ubuntu 1604
+variables:
+  DotNet.SDK.Version: '2.2.105'
+  Image.Name: 'tomkerkhove/promitor-agent-scraper'
+  Image.TaggedName: '$(Image.Name):$(Image.Version)'
+  Release.TagName: '$(Build.BuildNumber)'
+  # Release.Title is configured in the build definition as settable at queue time
+  # Image.Version is configured in the build definition as settable at queue time
+steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .NET SDK'
+  inputs:
+    version: '$(DotNet.SDK.Version)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run Unit Tests'
+  inputs:
+    command: test
+    projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+
+- task: Docker@1
+  displayName: 'Build Docker image'
+  inputs:
+    dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+    imageName: '$(Image.TaggedName)'
+    includeLatestTag: true
+    useDefaultContext: false
+    buildContext: ./src/
+
+- task: GitHubRelease@0
+  displayName: 'Create GitHub Release'
+  inputs:
+    gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+    repositoryName: tomkerkhove/promitor
+    action: Create
+    tagSource: manual
+    tag: '$(Release.TagName)'
+    title: '$(Release.Title)'
+    releaseNotesSource: input
+    isDraft: true
+    releaseNotes: |
+     ### Getting started
+     Running Promitor Scraper is super easy:
+     ```
+     docker run -d -p 8999:80 --name promitor-scraper
+                              --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                              --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
+                              --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                              tomkerkhove/promitor-agent-scraper:$(Image.Version)
+     ```
+          ### Docker Image information
+     New Docker image tags are available:
+     - `latest`
+     - `$(Image.Version)`
+     - `$(Image.MajorMinorVersion)`
+     
+     Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
+     For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+
+- task: Docker@1
+  displayName: 'Push ''{major}.{minor}.{patch}'' to Docker Hub'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker Hub'
+    command: 'Push an image'
+    imageName: '$(Image.TaggedName)'
+
+- task: Docker@1
+  displayName: 'Push ''{major}.{minor}'' to Docker Hub'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker Hub'
+    command: 'Push an image'
+    imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+
+- task: Docker@1
+  displayName: 'Push ''latest'' to Docker Hub'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker Hub'
+    command: 'Push an image'
+    imageName: '$(Image.Name):latest'
