@@ -53,6 +53,7 @@ Every metric that is being declared needs to define the following fields:
 Every Azure service is supported and can be scraped by using the [Generic Azure Resource](generic-azure-resource).
 
 We also provide a simplified way to configure the following Azure resources:
+- [Azure Container Instances](container-instances)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
 
