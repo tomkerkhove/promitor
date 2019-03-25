@@ -18,6 +18,11 @@
         public string Name { get; set; }
 
         /// <summary>
+        ///     Override the Resource Group name at the metric level (to enable multiple RG)
+        /// </summary>
+        public string ResourceGroupName { get; set; }
+
+        /// <summary>
         ///     Type of resource that is configured
         /// </summary>
         public abstract ResourceType ResourceType { get; }

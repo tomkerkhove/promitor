@@ -18,9 +18,9 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<double> ScrapeResourceAsync(GenericAzureMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, GenericMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.ResourceUri);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, metricDefinition.ResourceUri);
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, metricDefinition.Filter);
 
