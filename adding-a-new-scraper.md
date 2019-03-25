@@ -8,10 +8,11 @@ This guide walks you through the process of adding a new scraper type.
 -------------------------
 
 ## Configuration
-1. Add your new scraping type to `ResourceType`
-2. Describe what your configuration by creating `<New-Type>MetricDefinition`and inherit from `MetricDefinition`
-3. Update the deserialization to support your new type in `MetricsDeserializer`
-4. Provide a unit test that tests the deserialization based on our sample
+1. Add your new scraping type to the  `Promitor.Core.Scraping.Configuration.Model.ResourceType`
+2. Describe the resource for which you're creating scraping metrics by creating `<New-Type>MetricDefinition`and inherit from `Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition` - this class should go in `.\src\Promitor.Core.Scraping\Configuration\Model\Metrics\ResourceTypes`
+3. Create a new Deserializer in `.\src\Promitor.Core.Scraping\Configuration\Serialization\Deserializers`. This must inherit from `AzureMetricDeserializer`.
+3. Update `Promitor.Core.Scraping.Factories.MetricDeserializerFactory` to handle your new resource type by returning a new instance of the Deserializer you created in the previous step.
+4. Provide a unit test in `.\src\Promitor.Scraper.Tests.Unit\Serialization\MetricsDeclaration\` that tests the deserialization based on our sample
 
 Going forward in this guide, `TMetricDefinition` will refer to your newly created configuration type.
 
