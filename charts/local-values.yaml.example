@@ -17,7 +17,7 @@ metrics:
     namespace: promitor-messaging
     queueName: myqueue
     azureMetricConfiguration:
-    metricName: ActiveMessages
-    aggregation:
-      type: Total
-      interval: 00:15:00
+      metricName: ActiveMessages
+      aggregation:
+        type: Total
+        interval: 00:15:00
