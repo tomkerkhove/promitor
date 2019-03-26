@@ -5,14 +5,14 @@ using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.Core;
 using Xunit;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests
+    public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
     {
         [Fact]
         public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput()
@@ -44,20 +44,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
-            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, containerRegistryMetricDefinition, deserializedMetricDefinition);
+            var deserializedContainerRegistryMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
+            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinition serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
-            Assert.Equal(serviceBusMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
+            Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
         }
 
         private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition()
