@@ -14,12 +14,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     [Category("Unit")]
     public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests<ServiceBusQueueMetricDefinition>
     {
-        [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForServiceBus_SucceedsWithIdenticalOutput()
+        [Theory]
+        [InlineData("promitor1")]
+        [InlineData(null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForServiceBus_SucceedsWithIdenticalOutput(string resourceGroupName)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var serviceBusMetricDefinition = GenerateBogusServiceBusMetricDefinition();
+            var serviceBusMetricDefinition = GenerateBogusServiceBusMetricDefinition(resourceGroupName);
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -55,7 +57,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
         }
 
-        private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition()
+        private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition(string resourceGroupName)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             var bogusGenerator = new Faker<ServiceBusQueueMetricDefinition>()
@@ -66,6 +68,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.Namespace, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
                 .Ignore(metricDefinition  => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();

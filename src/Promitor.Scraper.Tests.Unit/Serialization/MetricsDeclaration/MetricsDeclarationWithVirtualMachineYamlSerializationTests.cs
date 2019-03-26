@@ -14,12 +14,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     [Category("Unit")]
     public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
     {
-        [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput()
+        [Theory]
+        [InlineData("promitor1")]
+        [InlineData(null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput(string resourceGroupName)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition();
+            var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition(resourceGroupName);
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -53,7 +55,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.NotNull(deserializedVirtualMachineMetricDefinition);
             Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedVirtualMachineMetricDefinition.VirtualMachineName);
         }
-        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition()
+        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             var bogusGenerator = new Faker<VirtualMachineMetricDefinition>()

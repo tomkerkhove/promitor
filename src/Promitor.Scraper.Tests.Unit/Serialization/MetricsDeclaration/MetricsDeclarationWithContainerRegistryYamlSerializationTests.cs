@@ -14,12 +14,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     [Category("Unit")]
     public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
     {
-        [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput()
+        [Theory]
+        [InlineData("promitor1")]
+        [InlineData(null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition();
+            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition(resourceGroupName);
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -54,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
         }
 
-        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition()
+        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             var bogusGenerator = new Faker<ContainerRegistryMetricDefinition>()
@@ -63,7 +65,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ContainerRegistry)
                 .RuleFor(metricDefinition => metricDefinition.RegistryName, faker => faker.Name.LastName())
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration);
+                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
+                .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
         }
