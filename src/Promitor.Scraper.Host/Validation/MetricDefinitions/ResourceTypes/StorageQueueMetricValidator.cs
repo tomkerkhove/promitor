@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Integrations.AzureStorage;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class StorageQueueMetricValidator : IMetricValidator<StorageQueueMetricDefinition>
+    internal class StorageQueueMetricValidator : MetricValidator<StorageQueueMetricDefinition>
     {
         private readonly ISet<string> _validMetricNames = new HashSet<string>(new[]
         {
@@ -15,8 +15,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
             AzureStorageConstants.Queues.Metrics.TimeSpentInQueue
         });
 
-        public List<string> Validate(StorageQueueMetricDefinition metricDefinition)
+        protected override IEnumerable<string> Validate(StorageQueueMetricDefinition metricDefinition)
         {
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
+
             var errorMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(metricDefinition.AccountName))
