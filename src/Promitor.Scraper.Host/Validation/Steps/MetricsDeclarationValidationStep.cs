@@ -46,17 +46,16 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
         }
 
-        private static List<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
+        private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
             var duplicateMetricNames = metrics.GroupBy(metric => metric.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
-                .Select(groupedMetrics => groupedMetrics.Key)
-                .ToList();
+                .Select(groupedMetrics => groupedMetrics.Key);
 
             return duplicateMetricNames;
         }
 
-        private static List<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
+        private static IEnumerable<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
         {
             var errorMessages = new List<string>();
 
@@ -84,7 +83,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             return errorMessages;
         }
 
-        private static List<string> ValidateMetrics(List<MetricDefinition> metrics, MetricDefaults metricDefaults)
+        private static IEnumerable<string> ValidateMetrics(List<MetricDefinition> metrics, MetricDefaults metricDefaults)
         {
             var errorMessages = new List<string>();
 
@@ -99,11 +98,8 @@ namespace Promitor.Scraper.Host.Validation.Steps
             errorMessages.AddRange(metricErrorMessages);
 
             // Detect duplicate metric names
-            var duplicateMetricNames = DetectDuplicateMetrics(metrics);
-            foreach (var duplicateMetricName in duplicateMetricNames)
-            {
-                errorMessages.Add($"Metric name '{duplicateMetricName}' is declared multiple times");
-            }
+            var duplicateMetrics = DetectDuplicateMetrics(metrics);
+            errorMessages.AddRange(duplicateMetrics.Select(duplicateMetricName => $"Metric name '{duplicateMetricName}' is declared multiple times"));
 
             return errorMessages;
         }

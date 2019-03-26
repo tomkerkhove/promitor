@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class ServiceBusQueueMetricValidator : IMetricValidator<ServiceBusQueueMetricDefinition>
+    internal class ServiceBusQueueMetricValidator : MetricValidator<ServiceBusQueueMetricDefinition>
     {
-        public List<string> Validate(ServiceBusQueueMetricDefinition serviceBusQueueMetricDefinition)
+        protected override IEnumerable<string> Validate(ServiceBusQueueMetricDefinition serviceBusQueueMetricDefinition)
         {
+            Guard.NotNull(serviceBusQueueMetricDefinition, nameof(serviceBusQueueMetricDefinition));
+
             var errorMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.Namespace))

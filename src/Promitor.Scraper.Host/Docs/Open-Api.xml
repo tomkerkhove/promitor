@@ -43,7 +43,14 @@
             <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
             <param name="apiVersion">Version of the API</param>
         </member>
-        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces.IMetricValidator`1.Validate(`0)">
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <summary>
+                Validates a specific metric definition
+            </summary>
+            <param name="metricDefinition">Metric definition to validate</param>
+            <returns>List of validation errors</returns>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.MetricValidator`1.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <summary>
                 Validates a specific metric definition
             </summary>
