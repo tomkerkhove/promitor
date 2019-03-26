@@ -26,7 +26,7 @@ Some basic commands to get you up and running:
 
 Which will return back an Application Id, Application Password, and Tenant Id.
 
-You can then edit the values.yaml, or take a look at (this example yaml)[https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example] to base your own on and see which values are needed to minimally run the chart.
+You can then edit the values.yaml, or take a look at [this example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) to base your own on and see which values are needed to minimally run the chart.
 
 After filling out the required fields, you can then deploy the chart by running this command:
 ```
