@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 {
     internal class VirtualMachineScraper : Scraper<VirtualMachineMetricDefinition>
     {
-        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ServiceBus/namespaces/{2}";
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}";
 
         public VirtualMachineScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
             : base(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker)
@@ -22,9 +22,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.VirtualMachineName);
 
-            var filter = $"EntityName eq '{metricDefinition.VirtualMachineName}'";
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, filter);
+            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
 
             return foundMetricValue;
         }
