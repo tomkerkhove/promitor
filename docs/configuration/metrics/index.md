@@ -6,7 +6,7 @@ title: Metrics Declaration
 All the Azure Monitor metrics that needs to be scraped are consolidated in one YAML file.
 This configuration defines the Azure metadata and all the metrics.
 
-Here is an example of how you can scrape an Azure Service Bus queue:
+Here is an example of how you can scrape two Azure Service Bus queues in different resource groups, one in the `promitor` resource group and one on the `promitor-dev` resource group:
 
 ```yaml
 azureMetadata:
