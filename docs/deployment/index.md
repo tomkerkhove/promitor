@@ -31,7 +31,7 @@ You will need to provide the following values to minimally run the chart:
 
 After filling out the required fields, you can then deploy the chart by running this command:
 ```
-❯ helm install --name promitor .\charts\promitor --namespace promitor --values \charts\promitor\values.yaml
+❯ helm install --name promitor .\charts\promitor --values \charts\promitor\values.yaml
 ```
 
 
