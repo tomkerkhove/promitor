@@ -54,7 +54,7 @@ jobs:
     inputs:
       projects: src/Promitor.sln
       arguments: '--configuration release'
-      
+
   - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
     displayName: 'Automated code quality checks'
     inputs:
