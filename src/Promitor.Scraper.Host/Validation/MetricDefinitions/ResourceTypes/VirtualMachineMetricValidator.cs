@@ -1,13 +1,15 @@
 using System.Collections.Generic;
+using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class VirtualMachineMetricValidator : IMetricValidator<VirtualMachineMetricDefinition>
+    internal class VirtualMachineMetricValidator : MetricValidator<VirtualMachineMetricDefinition>
     {
-        public List<string> Validate(VirtualMachineMetricDefinition virtualMachineMetricDefinition)
+        protected override IEnumerable<string> Validate(VirtualMachineMetricDefinition virtualMachineMetricDefinition)
         {
+            Guard.NotNull(virtualMachineMetricDefinition, nameof(virtualMachineMetricDefinition));
+
             var errorMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(virtualMachineMetricDefinition.VirtualMachineName))

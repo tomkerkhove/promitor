@@ -19,6 +19,8 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new StorageQueueMetricValidator();
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceMetricValidator();
+                case ResourceType.VirtualMachine:
+                    return new VirtualMachineMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

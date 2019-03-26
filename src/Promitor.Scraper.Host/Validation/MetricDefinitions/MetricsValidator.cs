@@ -48,7 +48,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             {
                 errorMessages.Add("No metric name is configured");
             }
-            
+
             var metricDefinitionValidationErrors = MetricValidatorFactory
                 .GetValidatorFor(metric.ResourceType)
                 .Validate(metric);
