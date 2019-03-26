@@ -16,11 +16,18 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         internal override MetricDefinition Deserialize(YamlMappingNode node)
         {
             var rawResourceType = node.Children[new YamlScalarNode("resourceType")];
-            var resourceType = Enum.Parse<ResourceType>(rawResourceType.ToString());
-            return MetricDeserializerFactory
-                .GetDeserializerFor(resourceType)
-                .WithLogger(Logger)
-                .Deserialize(node);
+
+            if (Enum.TryParse<ResourceType>(rawResourceType.ToString(), out var resourceType))
+            {
+                return MetricDeserializerFactory
+                    .GetDeserializerFor(resourceType)
+                    .WithLogger(Logger)
+                    .Deserialize(node);
+            }
+            else
+            {
+                throw new ArgumentException($@"Unknown 'resourceType' value in metric configuration: {rawResourceType.ToString()}");
+            }
         }
     }
 }
