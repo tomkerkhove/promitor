@@ -19,12 +19,14 @@ _For more information about advanced configuration, read our documentation [here
 # Kubernetes
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts) which deploys all the required infrastructure on your Kubernetes cluster.
 
-Once downloaded, you can edit the values.yaml file or create your own. Make sure to fill out the following mandatory fields:
-- Application Id
-- Application Key
-- Tenant Id
-- Subscription Id
-- Metrics configuration
+Some basic commands to get you up and running:
+az group create -n promitor -l westus2
+az aks create -n promitor -g promitor -l westus2 --generate-ssh-keys
+az ad sp create-for-rbac --role='Contributor' --scope="/subscriptions/<subscriptionId>/resourceGroups/promitor"
+
+Which will return back an Application Id, Application Password, and Tenant.
+
+You can then edit the values.yaml, or take a look at charts/local-values.yaml.example to create your own and see which values are needed to minimally run the chart.
 
 After filling out the required fields, you can then deploy the chart by running this command:
 ```
