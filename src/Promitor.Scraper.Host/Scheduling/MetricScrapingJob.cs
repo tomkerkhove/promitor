@@ -64,6 +64,7 @@ namespace Promitor.Scraper.Host.Scheduling
             }
             catch (Exception exception)
             {
+                _logger.LogError($"Failed to scrape: {exception.Message}");
                 _exceptionTracker.Track(exception);
             }
         }
