@@ -29,8 +29,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: PROMITOR_HTTP_PORT
-            value: {{ .Values.service.targetPort | quote }}
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:
@@ -41,6 +39,21 @@ spec:
               secretKeyRef:
                   name: {{ template "promitor.fullname" . }}
                   key: azure-app-key
+          - name: PROMITOR_HTTP_PORT
+            value: {{ .Values.service.targetPort | quote }}
+          - name: PROMITOR_SCRAPE_BASEPATH
+            value: {{ .Values.scrapeConfig.path }}
+          - name: PROMITOR_SCRAPE_SCHEDULE
+            value: {{ .Values.scrapeConfig.schedule }}
+          - name: PROMITOR_FEATURE_METRICSTIMESTAMP
+            value: {{ .Values.scrapeConfig.timestamp }}
+        {{- if .Values.telemetry.appInsightsKey }}
+          - name: PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
+            valueFrom:
+              secretKeyRef:
+                  name: {{ template "promitor.fullname" . }}
+                  key: azure-appinsights-key
+        {{- end }}
           volumeMounts:
           - name: config-volume-{{ template "promitor.fullname" . }}
             mountPath: /config/
