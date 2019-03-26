@@ -1,4 +1,6 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics
+﻿using System;
+
+namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 {
     public abstract class MetricDefinition
     {
@@ -27,5 +29,10 @@
         ///     Type of resource that is configured
         /// </summary>
         public abstract ResourceType ResourceType { get; }
+
+        /// <summary>
+        /// Gets or sets the scraping interval.
+        /// </summary>
+        public TimeSpan? ScrapingInterval { get; set; }
     }
 }
