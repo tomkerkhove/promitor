@@ -6,6 +6,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
 {
     internal class ServiceBusQueueMetricDeserializer : GenericAzureMetricDeserializer
     {
+        /// <summary>Deserializes the specified Service Bus Queue metric node from the YAML configuration file.</summary>
+        /// <param name="metricNode">The metric node containing 'queueName' and 'namespace' parameters pointing to an instance of a Service Bus queue</param>
+        /// <returns>A new <see cref="MetricDefinition"/> object (strongly typed as a <see cref="ServiceBusQueueMetricDefinition"/>) </returns>
         internal override MetricDefinition Deserialize(YamlMappingNode metricNode)
         {
             var metricDefinition = base.Deserialize<ServiceBusQueueMetricDefinition>(metricNode);
