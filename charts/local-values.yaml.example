@@ -2,10 +2,6 @@ azureAuthentication:
   appId: ""
   appKey: ""
 
-telemetry:
-  # Optional
-  appInsightsKey: ""
-
 ## Follows the format of MetricDeclaration.YAML
 azureMetadata:
   tenantId: ""
@@ -23,5 +19,5 @@ metrics:
     azureMetricConfiguration:
     metricName: ActiveMessages
     aggregation:
-        type: Total
-        interval: 00:15:00
+      type: Total
+      interval: 00:15:00

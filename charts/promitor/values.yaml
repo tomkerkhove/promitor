@@ -16,7 +16,6 @@ azureAuthentication:
   appKey: ""
 
 telemetry:
-  # Optional
   # PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
   appInsightsKey: ""
 
