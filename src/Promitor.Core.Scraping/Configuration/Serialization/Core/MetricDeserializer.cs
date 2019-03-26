@@ -11,6 +11,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
 
         internal MetricDeserializer WithLogger(ILogger logger)
         {
+            Guard.NotNull(logger, nameof(logger));
+
             Logger = logger;
             return this;
         }
