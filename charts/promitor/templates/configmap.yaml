@@ -1,3 +1,4 @@
+{{- $metrics := toYaml .Values.metricsConfig.metrics -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,6 +18,4 @@ data:
       aggregation:
         interval: {{ .Values.metricsConfig.defaultInterval }}
     metrics:
-      {{- range .Values.metricsConfig.metrics }}
-      - {{ . }}
-      {{- end }}
+{{ tpl $metrics . | indent 6 }}
