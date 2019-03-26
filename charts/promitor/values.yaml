@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: tomkerkhove/promitor-agent-scraper
-  tag: 1.0.0-preview-1
+  tag: 1.0.0-preview-2
   pullPolicy: Always
 
 azureAuthentication:
@@ -22,7 +22,7 @@ telemetry:
 
 service:
   # PROMITOR_HTTP_PORT
-  targetPort: 88
+  targetPort: 80
   type: LoadBalancer
   port: 80
   labelType: infrastructure
@@ -30,7 +30,7 @@ service:
 
 scrapeConfig:
   # PROMITOR_SCRAPE_BASEPATH
-  path: "/prometheus/scrape"
+  path: /prometheus/scrape
   # PROMITOR_SCRAPE_SCHEDULE
   schedule: "*/5 * * * *"
   # PROMITOR_FEATURE_METRICSTIMESTAMP
