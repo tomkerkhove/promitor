@@ -17,14 +17,20 @@ _For more information about advanced configuration, read our documentation [here
 ```
 
 # Kubernetes
-We currently provide [a sample declaration](https://github.com/tomkerkhove/promitor/tree/master/deploy) which deploys all the required infrastructure on your Kubernetes cluster.
+We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts) which deploys all the required infrastructure on your Kubernetes cluster.
 
-Once downloaded, you can deploy it by running this command:
+Once downloaded, you can edit the values.yaml file or create your own. Make sure to fill out the following mandatory fields:
+- Application Id
+- Application Key
+- Tenant Id
+- Subscription Id
+- Metrics configuration
+
+After filling out the required fields, you can then deploy the chart by running this command:
 ```
-❯ kubectl apply --file .\deploy\kubernetes-spec.yaml --namespace promitor
+❯ helm install --name promitor .\charts\promitor --namespace promitor --values \charts\promitor\values.yaml
 ```
 
-Want to use Helm? Make sure to vote for [this feature](https://github.com/tomkerkhove/promitor/issues/17).
 
 # Image Tagging Strategy
 Depending on your scenario you might need a different update cadence for Docker dependencies.
