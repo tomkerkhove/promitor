@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: containo-orders-api
-          image: tomkerkhove/promitor-scraper:0.4
+          image: tomkerkhove/promitor-agent-scraper:1.0.0-preview-2
           env:
           - name:  PROMITOR_HTTP_PORT
             # Optional - Defines the port number on which HTTP traffic will be served.Provide the Azure AD App Id (default is 80)
@@ -34,6 +34,14 @@ spec:
           volumeMounts:
           - name: promitor-scraper-metrics-config-volume
             mountPath: /config/
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 88
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 88
       volumes:
         - name: promitor-scraper-metrics-config-volume
           configMap:
