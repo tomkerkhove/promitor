@@ -25,15 +25,17 @@ namespace Promitor.Core.Scraping
     private readonly IExceptionTracker _exceptionTracker;
     private readonly ILogger _logger;
 
-    /// <summary>
-    ///     Constructor
-    /// </summary>
-    /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
-    /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
-    /// <param name="metricDefaults">Default configuration for metrics</param>
-    /// <param name="logger">General logger</param>
-    /// <param name="exceptionTracker">Exception tracker</param>
-    protected Scraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient,
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
+        /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
+        /// <param name="metricDefaults">Default configuration for metrics</param>
+        /// <param name="subscriptionId">Subscription Id for this metric</param>
+        /// <param name="resourceGroupName">Specific Resource Group for this metric</param>
+        /// <param name="logger">General logger</param>
+        /// <param name="exceptionTracker">Exception tracker</param>
+        protected Scraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient,
         ILogger logger, IExceptionTracker exceptionTracker)
     {
       Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
