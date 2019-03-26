@@ -6,6 +6,7 @@
         ServiceBusQueue = 1,
         Generic = 2,
         StorageQueue = 3,
-        ContainerRegistry=5
+        ContainerInstance = 4,
+        ContainerRegistry = 5
     }
 }
