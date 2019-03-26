@@ -101,7 +101,6 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new VirtualMachineMetricDefinition
             {
-                ResourceType = ResourceType.VirtualMachine,
                 Name = metricName,
                 Description = metricDescription,
                 VirtualMachineName = virtualMachineName,

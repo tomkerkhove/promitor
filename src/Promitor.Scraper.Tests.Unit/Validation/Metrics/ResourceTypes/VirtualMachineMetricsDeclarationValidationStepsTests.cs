@@ -1,75 +1,97 @@
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using Bogus;
-using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Scraper.Host.Validation.Steps;
+using Promitor.Scraper.Tests.Unit.Builders;
+using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
+    public class VirtualMachineMetricsDeclarationValidationStepTests
     {
         [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput()
+        public void VirtualMachineMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
         {
             // Arrange
-            var azureMetadata = GenerateBogusAzureMetadata();
-            var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition();
-            var metricDefaults = GenerateBogusMetricDefaults();
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
-            {
-                AzureMetadata = azureMetadata,
-                MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>
-                {
-                    virtualMachineMetricDefinition
-                }
-            };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithVirtualMachineMetric(azureMetricName: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
-            var deserializedConfiguration = configurationSerializer.Deserialize(serializedConfiguration);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
-            Assert.NotNull(deserializedConfiguration.Metrics);
-            Assert.Single(deserializedConfiguration.Metrics);
-            var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, virtualMachineMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as VirtualMachineMetricDefinition;
-            AssertVirtualMachineMetricDefinition(deserializedServiceBusMetricDefinition, virtualMachineMetricDefinition, deserializedMetricDefinition);
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
-        private static void AssertVirtualMachineMetricDefinition(VirtualMachineMetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinition virtualMachineMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        [Fact]
+        public void VirtualMachineMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
-            Assert.NotNull(deserializedVirtualMachineMetricDefinition);
-            Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedVirtualMachineMetricDefinition.VirtualMachineName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
-            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
-            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
-            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
-        }
-        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition()
-        {
-            var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
-            var bogusGenerator = new Faker<VirtualMachineMetricDefinition>()
-                .StrictMode(ensureRulesForAllProperties: true)
-                .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.VirtualMachine)
-                .RuleFor(metricDefinition => metricDefinition.VirtualMachineName, faker => faker.Name.LastName())
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration);
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithVirtualMachineMetric(metricDescription: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
-            return bogusGenerator.Generate();
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+        }
+
+        [Fact]
+        public void VirtualMachineMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithVirtualMachineMetric(string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void VirtualMachineMetricsDeclaration_DeclarationWithoutVirtualMachineName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithVirtualMachineMetric(virtualMachineName: string.Empty)
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void VirtualMachineMetricsDeclaration_ValidDeclaration_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithVirtualMachineMetric()
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
     }
 }

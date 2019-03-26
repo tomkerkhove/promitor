@@ -14,7 +14,7 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 Example:
 ```yaml
 name: demo_virtualmachine_percentage_cpu
-description: "Average percentage cpu usage of our 'promitor-virtual-machine'"
+description: "Average percentage cpu usage of our 'promitor-virtual-machine' virtual machine"
 resourceType: VirtualMachine
 virtualMachineName: promitor-virtual-machine
 azureMetricConfiguration:

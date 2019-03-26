@@ -14,7 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
             var metricDefinition = base.DeserializeMetricDefinition<VirtualMachineMetricDefinition>(metricNode);
             var virtualMachineName = metricNode.Children[new YamlScalarNode("virtualMachineName")];
 
-            metricDefinition.virtualMachineName = virtualMachineName?.ToString();
+            metricDefinition.VirtualMachineName = virtualMachineName?.ToString();
 
             return metricDefinition;
         }
