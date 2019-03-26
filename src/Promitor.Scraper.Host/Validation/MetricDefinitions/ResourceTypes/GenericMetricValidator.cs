@@ -4,9 +4,9 @@ using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class GenericMetricValidator : IMetricValidator<GenericMetricDefinition>
+    public class GenericMetricValidator : IMetricValidator<GenericAzureMetricDefinition>
     {
-        public List<string> Validate(GenericMetricDefinition genericMetricDefinition)
+        public List<string> Validate(GenericAzureMetricDefinition genericMetricDefinition)
         {
             var errorMessages = new List<string>();
 
