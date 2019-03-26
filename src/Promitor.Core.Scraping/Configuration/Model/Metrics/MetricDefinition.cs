@@ -18,7 +18,8 @@
         public string Name { get; set; }
 
         /// <summary>
-        ///     Override the Resource Group name at the metric level (to enable multiple RG)
+        ///     Specify a resource group to scrape that defers from the default resource group.
+        ///     This enables you to do multi-resource group scraping with one configuration file.
         /// </summary>
         public string ResourceGroupName { get; set; }
 
