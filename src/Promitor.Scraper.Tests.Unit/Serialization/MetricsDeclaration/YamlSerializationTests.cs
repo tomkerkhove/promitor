@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             return bogusMetricConfiguration;
         }
 
-        protected MetricDefaults GenerateBogusMetricDefaults()
+        protected MetricDefaults GenerateBogusMetricDefaults(string defaultScrapingInterval)
         {
             var bogusAggregationGenerator = new Faker<Aggregation>()
                 .StrictMode(ensureRulesForAllProperties: true)
@@ -65,8 +65,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var generatedAggregation = bogusAggregationGenerator.Generate();
             var metricDefaults = new MetricDefaults
             {
-                Aggregation = generatedAggregation
+                Aggregation = generatedAggregation,
             };
+
+            if (!string.IsNullOrWhiteSpace(defaultScrapingInterval))
+            {
+                metricDefaults.ScrapingInterval = TimeSpan.Parse(defaultScrapingInterval);
+            }
 
             return metricDefaults;
         }

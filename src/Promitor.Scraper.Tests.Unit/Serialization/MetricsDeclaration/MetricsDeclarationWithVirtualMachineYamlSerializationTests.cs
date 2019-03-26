@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,14 +16,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
     {
         [Theory]
-        [InlineData("promitor1")]
-        [InlineData(data: null)]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput(string resourceGroupName)
+        [InlineData("promitor1", @"01:00", @"2:00")]
+        [InlineData(null, null, null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition(resourceGroupName);
-            var metricDefaults = GenerateBogusMetricDefaults();
+            var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition(resourceGroupName, metricScrapingInterval);
+            var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
@@ -54,9 +55,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
         {
             Assert.NotNull(deserializedVirtualMachineMetricDefinition);
             Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedVirtualMachineMetricDefinition.VirtualMachineName);
+            Assert.NotNull(deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration);
+            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.MetricName, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.MetricName);
+            Assert.NotNull(deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName)
+        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             Faker<VirtualMachineMetricDefinition> bogusGenerator = new Faker<VirtualMachineMetricDefinition>()
@@ -67,7 +73,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.VirtualMachineName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
+                .RuleFor(metricDefinition => metricDefinition.ScrapingInterval, faker =>
+                    string.IsNullOrWhiteSpace(metricScrapingInterval) ? (TimeSpan?)null : TimeSpan.Parse(metricScrapingInterval))
+                .Ignore(metricDefinition => metricDefinition.ResourceGroupName)
+                .Ignore(metricDefinition => metricDefinition.ScrapingInterval);
 
             return bogusGenerator.Generate();
         }
