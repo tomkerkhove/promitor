@@ -16,10 +16,10 @@ namespace Promitor.Core.Scraping
             if (string.IsNullOrWhiteSpace(scrapeEndpointPath))
             {
                 Console.WriteLine($"No scraping endpoint was specified, falling back to default '{DefaultScrapeEndpoint}'...");
-                return DefaultScrapeEndpoint;
+                scrapeEndpointPath = DefaultScrapeEndpoint;
             }
 
-            return scrapeEndpointPath.StartsWith("/") ? scrapeEndpointPath.Substring(1) : scrapeEndpointPath;
+            return scrapeEndpointPath;
         }
     }
 }
