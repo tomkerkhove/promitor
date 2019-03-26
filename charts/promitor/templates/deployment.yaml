@@ -63,6 +63,10 @@ spec:
             httpGet:
               path: /api/v1/health
               port: {{ .Values.service.targetPort }}
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: {{ .Values.service.targetPort }}
       volumes:
         - name: config-volume-{{ template "promitor.fullname" . }}
           configMap:
