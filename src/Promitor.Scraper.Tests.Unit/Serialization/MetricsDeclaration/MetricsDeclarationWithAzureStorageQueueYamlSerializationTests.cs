@@ -49,12 +49,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition);
         }
 
-        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition storageQueueMetricDefinition, StorageQueueMetricDefinition serviceBusMetricDefinition)
+        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition deserializedStorageQueueMetricDefinition, StorageQueueMetricDefinition storageQueueMetricDefinition)
         {
-            Assert.NotNull(storageQueueMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.AccountName, storageQueueMetricDefinition.AccountName);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, storageQueueMetricDefinition.QueueName);
-            Assert.Equal(serviceBusMetricDefinition.SasToken, storageQueueMetricDefinition.SasToken);
+            Assert.NotNull(deserializedStorageQueueMetricDefinition);
+            Assert.Equal(storageQueueMetricDefinition.AccountName, deserializedStorageQueueMetricDefinition.AccountName);
+            Assert.Equal(storageQueueMetricDefinition.QueueName, deserializedStorageQueueMetricDefinition.QueueName);
+            Assert.Equal(storageQueueMetricDefinition.SasToken, deserializedStorageQueueMetricDefinition.SasToken);
         }
         
         private StorageQueueMetricDefinition GenerateBogusAzureStorageQueueMetricDefinition()

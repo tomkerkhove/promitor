@@ -3,6 +3,6 @@
     public class ContainerInstanceMetricDefinition : MetricDefinition
     {
         public string ContainerGroup { get; set; }
-        public override ResourceType ResourceType { get; set; } = ResourceType.ContainerInstance;
+        public override ResourceType ResourceType { get; } = ResourceType.ContainerInstance;
     }
 }

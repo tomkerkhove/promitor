@@ -68,7 +68,6 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ContainerInstanceMetricDefinition
             {
-                ResourceType = ResourceType.ContainerInstance,
                 Name = metricName,
                 Description = metricDescription,
                 ContainerGroup = containerGroup,
