@@ -7,7 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
     internal class StorageQueueMetricDeserializer : GenericAzureMetricDeserializer
     {
         /// <summary>Deserializes the specified Storage Queue metric node from the YAML configuration file.</summary>
-        /// <param name="metricNode">The metric node containing 'accountName', 'queueName', and 'sasToken' parameters pointing to an instance of a Storage queue</param>
+        /// <param name="metricNode">The metric node to deserialize to Storage queue configuration</param>
         /// <returns>A new <see cref="MetricDefinition"/> object (strongly typed as a <see cref="StorageQueueMetricDefinition"/>) </returns>
         internal override MetricDefinition Deserialize(YamlMappingNode metricNode)
         {
