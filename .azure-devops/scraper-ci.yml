@@ -18,7 +18,7 @@ jobs:
   displayName: Build, Test & Scan Codebase
   condition: succeeded()
   pool:
-    vmImage: vs2017-win2016
+    vmImage: ubuntu-16.04
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NET SDK'
@@ -38,6 +38,12 @@ jobs:
       projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
       arguments: '--configuration release'
 
+- job: Run_Code_Quality
+  displayName: Run Code Quality
+  condition: succeeded()
+  pool:
+    vmImage: vs2017-win2016
+  steps:
   - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
     displayName: 'Automated code quality checks'
     inputs:
@@ -59,6 +65,7 @@ jobs:
       Write-Host "Build number is '$buildNumber'"
     displayName: 'Change Build Number to PR format'
     condition: eq(variables['Build.Reason'], 'PullRequest')
+
   - task: Docker@1
     displayName: 'Build an image'
     inputs:
@@ -93,5 +100,3 @@ jobs:
       command: 'Push an image'
       imageName: '$(Image.TaggedName)'
     condition: eq(variables['Build.Reason'], 'PullRequest')
-
-
