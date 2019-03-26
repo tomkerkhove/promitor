@@ -56,6 +56,7 @@ We also provide a simplified way to configure the following Azure resources:
 - [Azure Container Instances](container-instances)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
+- [Azure Virtual Machine](virtual-machine)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 

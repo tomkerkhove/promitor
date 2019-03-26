@@ -96,6 +96,22 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
+        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name",  string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new VirtualMachineMetricDefinition
+            {
+                Name = metricName,
+                Description = metricDescription,
+                VirtualMachineName = virtualMachineName,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
