@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
+using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    public class GenericMetricValidator : IMetricValidator<GenericAzureMetricDefinition>
+    internal class GenericAzureMetricValidator : MetricValidator<GenericAzureMetricDefinition>
     {
-        public List<string> Validate(GenericAzureMetricDefinition genericMetricDefinition)
+        protected  override IEnumerable<string> Validate(GenericAzureMetricDefinition genericMetricDefinition)
         {
+            Guard.NotNull(genericMetricDefinition, nameof(genericMetricDefinition));
+
             var errorMessages = new List<string>();
 
             if (string.IsNullOrWhiteSpace(genericMetricDefinition.ResourceUri))

@@ -3,8 +3,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces
 {
-    public interface IMetricValidator<in TMetricDefinition>
-        where TMetricDefinition : MetricDefinition
+    public interface IMetricValidator
     {
         /// <summary>
         ///     Validates a specific metric definition
@@ -12,6 +11,6 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces
         /// <param name="metricDefinition">Metric definition to validate</param>
         /// <returns>List of validation errors</returns>
         // ReSharper disable once UnusedMember.Global
-        List<string> Validate(TMetricDefinition metricDefinition);
+        IEnumerable<string> Validate(MetricDefinition metricDefinition);
     }
 }
