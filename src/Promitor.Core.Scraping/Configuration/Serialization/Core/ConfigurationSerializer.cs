@@ -8,7 +8,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization
+namespace Promitor.Core.Scraping.Configuration.Serialization.Core
 {
     public class ConfigurationSerializer
     {
