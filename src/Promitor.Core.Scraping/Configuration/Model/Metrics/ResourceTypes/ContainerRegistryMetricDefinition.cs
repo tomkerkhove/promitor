@@ -3,6 +3,6 @@
     public class ContainerRegistryMetricDefinition : MetricDefinition
     {
         public string RegistryName { get; set; }
-        public override ResourceType ResourceType { get; set; } = ResourceType.ContainerRegistry;
+        public override ResourceType ResourceType { get; } = ResourceType.ContainerRegistry;
     }
 }
