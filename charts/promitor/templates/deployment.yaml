@@ -28,6 +28,8 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
           env:
           - name: PROMITOR_AUTH_APPID
             valueFrom:
@@ -42,11 +44,11 @@ spec:
           - name: PROMITOR_HTTP_PORT
             value: {{ .Values.service.targetPort | quote }}
           - name: PROMITOR_SCRAPE_BASEPATH
-            value: {{ .Values.scrapeConfig.path }}
+            value: {{ .Values.scrapeConfig.path | quote }}
           - name: PROMITOR_SCRAPE_SCHEDULE
-            value: {{ .Values.scrapeConfig.schedule }}
+            value: {{ .Values.scrapeConfig.schedule | quote }}
           - name: PROMITOR_FEATURE_METRICSTIMESTAMP
-            value: {{ .Values.scrapeConfig.timestamp }}
+            value: {{ .Values.scrapeConfig.timestamp | quote }}
         {{- if .Values.telemetry.appInsightsKey }}
           - name: PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
             valueFrom:
