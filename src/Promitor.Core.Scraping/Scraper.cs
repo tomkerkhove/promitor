@@ -31,8 +31,6 @@ namespace Promitor.Core.Scraping
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
         /// <param name="metricDefaults">Default configuration for metrics</param>
-        /// <param name="subscriptionId">Subscription Id for this metric</param>
-        /// <param name="resourceGroupName">Specific Resource Group for this metric</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Exception tracker</param>
         protected Scraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient,
@@ -115,12 +113,15 @@ namespace Promitor.Core.Scraping
       return MetricDefaults.Aggregation.Interval.Value;
     }
 
-    /// <summary>
-    ///     Scrapes the configured resource
-    /// </summary>
-    /// <param name="metricDefinition">Definition of the metric to scrape</param>
-    /// <param name="aggregationType">Aggregation for the metric to use</param>
-    /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
-    protected abstract Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
+        /// <summary>
+        ///     Scrapes the configured resource
+        /// </summary>
+        /// <param name="subscriptionId">Metric subscription Id</param>
+        /// <param name="resourceGroupName">Metric Resource Group</param>
+        /// <param name="metricDefinition">Definition of the metric to scrape</param>
+        /// <param name="aggregationType">Aggregation for the metric to use</param>
+        /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
+        /// 
+        protected abstract Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
   }
 }
