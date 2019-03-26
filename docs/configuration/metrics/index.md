@@ -27,9 +27,21 @@ metrics:
       aggregation:
         type: Total
         interval: 00:15:00
+  - name: demo_queue_dev_size
+    description: "Amount of active messages of the 'myqueue-dev' queue"
+    resourceType: ServiceBusQueue
+    namespace: promitor-messaging-dev
+    queueName: orders
+    resourceGroupName: promitor-dev
+    azureMetricConfiguration:
+      metricName: ActiveMessages
+      aggregation:
+        type: Total
+        interval: 00:15:00
 ```
 
 # General Declaration
+
 ## Azure
 
 - `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
@@ -41,18 +53,23 @@ metrics:
 - `metricDefaults.aggregation.interval` - The default interval which defines over what period measurements of a metric should be aggregated.
 
 ## Metrics
+
 Every metric that is being declared needs to define the following fields:
+
 - `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus
 - `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus
 - `resourceType` - Defines what type of resource needs to be queried.
+- `resourceGroupName` - (Optional)  This field is used to override the resource group declared in `azureMetadata`. This allows Promitor to use multiple resource groups in one single yaml file. Provide one resource group per metric.
 - `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor to query
 - `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be used when querying Azure Monitor
 - `azureMetricConfiguration.aggregation.interval` - Overrides the default aggregation interval defined in `metricDefaults.aggregation.interval` with a new interval
 
 # Supported Azure Services
+
 Every Azure service is supported and can be scraped by using the [Generic Azure Resource](generic-azure-resource).
 
 We also provide a simplified way to configure the following Azure resources:
+
 - [Azure Container Instances](container-instances)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
