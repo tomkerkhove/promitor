@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<double> ScrapeResourceAsync(VirtualMachineMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, VirtualMachineMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.VirtualMachineName);
 
