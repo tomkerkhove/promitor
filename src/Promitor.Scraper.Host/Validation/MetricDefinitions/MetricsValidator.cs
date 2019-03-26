@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes;
+using Promitor.Scraper.Host.Validation.Factories;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions
 {
@@ -17,22 +16,18 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             _metricDefaults = metricDefaults;
         }
 
-        public List<string> Validate(List<MetricDefinition> metrics)
+        public IList<string> Validate(List<MetricDefinition> metrics)
         {
             Guard.NotNull(metrics, nameof(metrics));
 
-            var errorMessages = new List<string>();
+            var errorMessages = metrics
+                .SelectMany(metric => Validate(metric))
+                .AsParallel();
 
-            foreach (var metric in metrics)
-            {
-                var metricErrorMessages = Validate(metric);
-                errorMessages.AddRange(metricErrorMessages);
-            }
-
-            return errorMessages;
+            return errorMessages.ToList();
         }
 
-        public List<string> Validate(MetricDefinition metric)
+        private IList<string> Validate(MetricDefinition metric)
         {
             Guard.NotNull(metric, nameof(metric));
 
@@ -54,28 +49,9 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
                 errorMessages.Add("No metric name is configured");
             }
 
-            List<string> metricDefinitionValidationErrors;
-            switch (metric.ResourceType)
-            {
-                case ResourceType.ServiceBusQueue:
-                    var serviceBusQueueMetricValidator = new ServiceBusQueueMetricValidator();
-                    metricDefinitionValidationErrors = serviceBusQueueMetricValidator.Validate(metric as ServiceBusQueueMetricDefinition);
-                    break;
-                case ResourceType.Generic:
-                    var genericMetricDefinition = new GenericMetricValidator();
-                    metricDefinitionValidationErrors = genericMetricDefinition.Validate(metric as GenericAzureMetricDefinition);
-                    break;
-                case ResourceType.StorageQueue:
-                    var azureStorageQueueMetricValidator = new StorageQueueMetricValidator();
-                    metricDefinitionValidationErrors = azureStorageQueueMetricValidator.Validate(metric as StorageQueueMetricDefinition);
-                    break;
-                case ResourceType.ContainerInstance:
-                    var containerInstanceMetricValidator = new ContainerInstanceMetricValidator();
-                    metricDefinitionValidationErrors = containerInstanceMetricValidator.Validate(metric as ContainerInstanceMetricDefinition);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(metric), metric.ResourceType, $"No validation rules are defined for metric type '{metric.ResourceType}'");
-            }
+            var metricDefinitionValidationErrors = MetricValidatorFactory
+                .GetValidatorFor(metric.ResourceType)
+                .Validate(metric);
 
             errorMessages.AddRange(metricDefinitionValidationErrors);
 

@@ -20,9 +20,9 @@ Going forward in this guide, `TMetricDefinition` will refer to your newly create
 For every scraper type we provide validation for the configuration so that Promitor fails to start up.
 
 This requires the following steps:
-1. Create a new validator that implements `IMetricValidator<TMetricDefinition>`
-2. Hook your new validator in our validation pipeline in `MetricsValidator`
-3. Provide a unit test for every validation rule that was added
+1. Create a new validator that implements `MetricValidator<TMetricDefinition>` where `TMetricDefinition` is the definition you made in step #2 above. This validator should reside in `.\src\Promitor.Scraper.Host\Validation\MetricDefinitions\ResourceTypes`. You can look at the contents of `ServiceBusQueueMetricValidator` for an idea of the validation inputs, steps, and outputs typical of validator implementation.
+2. Add construction and usage of this validator to `.\src\Promitor.Scraper.Host\Validation\Factories\MetricValidatorFactory.cs` for the ResourceType you created in step #1 above.
+3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Scraper.Tests.Unit\Validation\Metrics\ResourceTypes`
 
 ## Scraping
 1. Implement a scraper that inherits from `Scraper<TMetricDefinition>`. This one will specify how to call Azure Monitor.
