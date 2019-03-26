@@ -5,7 +5,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization
+namespace Promitor.Core.Scraping.Configuration.Serialization.Core
 {
     internal class MetricsDeserializer : Deserializer<MetricDefinition>
     {
@@ -26,7 +26,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             }
             else
             {
-                throw new ArgumentException($@"Unknown 'resourceType' value in metric configuration: {rawResourceType.ToString()}");
+                throw new ArgumentException($@"Unknown 'resourceType' value in metric configuration: {rawResourceType}");
             }
         }
     }
