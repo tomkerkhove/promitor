@@ -4,6 +4,6 @@
     {
         public string Namespace { get; set; }
         public string QueueName { get; set; }
-        public override ResourceType ResourceType { get; set; } = ResourceType.ServiceBusQueue;
+        public override ResourceType ResourceType { get; } = ResourceType.ServiceBusQueue;
     }
 }
