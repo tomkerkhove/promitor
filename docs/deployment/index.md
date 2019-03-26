@@ -20,9 +20,9 @@ _For more information about advanced configuration, read our documentation [here
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts) which deploys all the required infrastructure on your Kubernetes cluster.
 
 Some basic commands to get you up and running:
-az group create -n promitor -l westus2
-az aks create -n promitor -g promitor -l westus2 --generate-ssh-keys
-az ad sp create-for-rbac --role='Contributor' --scope="/subscriptions/<subscriptionId>/resourceGroups/promitor"
+- az group create -n promitor -l westus2
+- az aks create -n promitor -g promitor -l westus2 --generate-ssh-keys
+- az ad sp create-for-rbac --role='Contributor' --scope="/subscriptions/<subscriptionId>/resourceGroups/promitor"
 
 Which will return back an Application Id, Application Password, and Tenant Id.
 
