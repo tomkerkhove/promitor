@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
         /// <returns>A new <see cref="MetricDefinition"/> object (strongly typed as a <see cref="ServiceBusQueueMetricDefinition"/>) </returns>
         internal override MetricDefinition Deserialize(YamlMappingNode metricNode)
         {
-            var metricDefinition = base.Deserialize<ServiceBusQueueMetricDefinition>(metricNode);
+            var metricDefinition = base.DeserializeMetricDefinition<ServiceBusQueueMetricDefinition>(metricNode);
 
             var queueName = metricNode.Children[new YamlScalarNode("queueName")];
             var namespaceName = metricNode.Children[new YamlScalarNode("namespace")];

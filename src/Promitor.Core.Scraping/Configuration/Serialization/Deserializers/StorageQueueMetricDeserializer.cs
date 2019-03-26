@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
         /// <returns>A new <see cref="MetricDefinition"/> object (strongly typed as a <see cref="StorageQueueMetricDefinition"/>) </returns>
         internal override MetricDefinition Deserialize(YamlMappingNode metricNode)
         {
-            var metricDefinition = base.Deserialize<StorageQueueMetricDefinition>(metricNode);
+            var metricDefinition = base.DeserializeMetricDefinition<StorageQueueMetricDefinition>(metricNode);
             var accountName = metricNode.Children[new YamlScalarNode("accountName")];
             var queueName = metricNode.Children[new YamlScalarNode("queueName")];
             var sasToken = metricNode.Children[new YamlScalarNode("sasToken")];

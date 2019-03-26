@@ -19,10 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
 
         internal abstract MetricDefinition Deserialize(YamlMappingNode metricNode);
 
-        protected virtual TMetricDefinition Deserialize<TMetricDefinition>(YamlMappingNode metricNode)
-            where TMetricDefinition : MetricDefinition, new() => DeserializeInternal<TMetricDefinition>(metricNode);
-
-        protected virtual TMetricDefinition DeserializeInternal<TMetricDefinition>(YamlMappingNode metricNode)
+        protected virtual TMetricDefinition DeserializeMetricDefinition<TMetricDefinition>(YamlMappingNode metricNode)
             where TMetricDefinition : MetricDefinition, new()
         {
             Guard.NotNull(metricNode, nameof(metricNode));

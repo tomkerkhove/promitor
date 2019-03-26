@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
         /// <returns>A new <see cref="MetricDefinition"/> object (strongly typed as a <see cref="GenericAzureMetricDefinition"/>) </returns>
         internal override MetricDefinition Deserialize(YamlMappingNode metricNode)
         {
-            var metricDefinition = base.Deserialize<GenericAzureMetricDefinition>(metricNode);
+            var metricDefinition = base.DeserializeMetricDefinition<GenericAzureMetricDefinition>(metricNode);
 
             if (metricNode.Children.TryGetValue(new YamlScalarNode("filter"), out var filterNode))
             {
