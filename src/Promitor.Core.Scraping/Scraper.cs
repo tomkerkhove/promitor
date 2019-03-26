@@ -16,7 +16,7 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Core.Scraping
 {
   /// <summary>
-  ///     Azure Monitor Scrape
+  ///     Azure Monitor Scraper
   /// </summary>
   /// <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
   public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition>
