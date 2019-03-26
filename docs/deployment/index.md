@@ -24,7 +24,7 @@ az group create -n promitor -l westus2
 az aks create -n promitor -g promitor -l westus2 --generate-ssh-keys
 az ad sp create-for-rbac --role='Contributor' --scope="/subscriptions/<subscriptionId>/resourceGroups/promitor"
 
-Which will return back an Application Id, Application Password, and Tenant.
+Which will return back an Application Id, Application Password, and Tenant Id.
 
 You can then edit the values.yaml, or take a look at charts/local-values.yaml.example to create your own and see which values are needed to minimally run the chart.
 
