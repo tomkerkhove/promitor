@@ -17,17 +17,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
         {
             var rawResourceType = node.Children[new YamlScalarNode("resourceType")];
 
-            if (Enum.TryParse<ResourceType>(rawResourceType.ToString(), out var resourceType))
-            {
-                return MetricDeserializerFactory
-                    .GetDeserializerFor(resourceType)
-                    .WithLogger(Logger)
-                    .Deserialize(node);
-            }
-            else
+            if (!Enum.TryParse<ResourceType>(rawResourceType.ToString(), out var resourceType))
             {
                 throw new ArgumentException($@"Unknown 'resourceType' value in metric configuration: {rawResourceType}");
             }
+
+            return MetricDeserializerFactory
+                .GetDeserializerFor(resourceType)
+                .WithLogger(Logger)
+                .Deserialize(node);
         }
     }
 }
