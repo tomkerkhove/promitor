@@ -9,7 +9,7 @@ using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    internal class GenericScraper : Scraper<GenericMetricDefinition>
+    internal class GenericScraper : Scraper<GenericAzureMetricDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/{2}";
 
@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<double> ScrapeResourceAsync(GenericMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<double> ScrapeResourceAsync(GenericAzureMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.ResourceUri);
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;

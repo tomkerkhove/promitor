@@ -63,7 +63,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
                     break;
                 case ResourceType.Generic:
                     var genericMetricDefinition = new GenericMetricValidator();
-                    metricDefinitionValidationErrors = genericMetricDefinition.Validate(metric as GenericMetricDefinition);
+                    metricDefinitionValidationErrors = genericMetricDefinition.Validate(metric as GenericAzureMetricDefinition);
                     break;
                 case ResourceType.StorageQueue:
                     var azureStorageQueueMetricValidator = new StorageQueueMetricValidator();
