@@ -18,11 +18,13 @@ spec:
     matchLabels:
       app: {{ template "promitor.name" . }}
       release: {{ .Release.Name }}
+      type: {{ .Values.service.selectorType }}
   template:
     metadata:
       labels:
         app: {{ template "promitor.name" . }}
         release: {{ .Release.Name }}
+        type: {{ .Values.service.selectorType }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

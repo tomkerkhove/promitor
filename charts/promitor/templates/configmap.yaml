@@ -1,4 +1,4 @@
-{{- $metrics := toYaml .Values.metricsConfig.metrics -}}
+{{- $metrics := toYaml .Values.metrics -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,11 +11,11 @@ metadata:
 data:
   metrics-declaration.yaml: |-
     azureMetadata:
-      tenantId: {{ .Values.metricsConfig.tenantId }}
-      subscriptionId: {{ .Values.metricsConfig.subscriptionId }}
-      resourceGroupName: {{ .Values.metricsConfig.resourceGroupName }}
+      tenantId: {{ .Values.azureMetadata.tenantId }}
+      subscriptionId: {{ .Values.azureMetadata.subscriptionId }}
+      resourceGroupName: {{ .Values.azureMetadata.resourceGroupName }}
     metricDefaults:
       aggregation:
-        interval: {{ .Values.metricsConfig.defaultInterval }}
+        interval: {{ .Values.metricDefaults.aggregation.interval }}
     metrics:
-{{ tpl $metrics . | indent 6 }}
+{{ tpl $metrics . | indent 4 }}
