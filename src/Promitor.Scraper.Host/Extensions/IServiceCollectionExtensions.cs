@@ -21,17 +21,18 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static void ScheduleMetricScraping(this IServiceCollection services)
         {
-            var metricsProvider = (services.Single(s => s.ServiceType == typeof(IMetricsDeclarationProvider))
-                .ImplementationInstance as IMetricsDeclarationProvider);
+            var spToCreateJobsWith = services.BuildServiceProvider();
+            var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(applyDefaults: true);
 
-            var logger = services.SingleOrDefault(s => s.ServiceType == typeof(ILogger)) as ILogger;
-            var exceptionTracker = services.SingleOrDefault(s => s.ServiceType == typeof(IExceptionTracker)) as IExceptionTracker;
             foreach (var metric in metrics.Metrics)
             {
                 services.AddScheduler(builder =>
                 {
-                    builder.AddJob(sp => new MetricScrapingJob(metric, metricsProvider/*, logger, exceptionTracker*/));
+                    builder.AddJob(sp => new MetricScrapingJob(metric,
+                        metricsProvider,
+                        sp.GetService<ILogger>(),
+                        sp.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
             }

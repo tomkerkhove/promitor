@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CronScheduler.AspNetCore;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -22,7 +21,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
         public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
-            ILogger logger = null, IExceptionTracker exceptionTracker = null)
+            ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
@@ -43,7 +42,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
         private void ConfigureJob()
         {
-            CronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
+            CronSchedule = _metric.Scraping.Schedule;
             RunImmediately = false;
         }
 
