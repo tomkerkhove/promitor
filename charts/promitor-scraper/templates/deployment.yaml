@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "promitor.fullname" . }}
+  name: {{ template "promitor-scraper.fullname" . }}
   labels:
-    app: {{ template "promitor.name" . }}
-    chart: {{ template "promitor.chart" . }}
+    app: {{ template "promitor-scraper.name" . }}
+    chart: {{ template "promitor-scraper.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -16,13 +16,13 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: {{ template "promitor.name" . }}
+      app: {{ template "promitor-scraper.name" . }}
       release: {{ .Release.Name }}
       type: {{ .Values.service.selectorType }}
   template:
     metadata:
       labels:
-        app: {{ template "promitor.name" . }}
+        app: {{ template "promitor-scraper.name" . }}
         release: {{ .Release.Name }}
         type: {{ .Values.service.selectorType }}
     spec:
@@ -36,12 +36,12 @@ spec:
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor.fullname" . }}
+                  name: {{ template "promitor-scraper.fullname" . }}
                   key: azure-app-id
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor.fullname" . }}
+                  name: {{ template "promitor-scraper.fullname" . }}
                   key: azure-app-key
           - name: PROMITOR_HTTP_PORT
             value: {{ .Values.service.targetPort | quote }}
@@ -55,11 +55,11 @@ spec:
           - name: PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor.fullname" . }}
+                  name: {{ template "promitor-scraper.fullname" . }}
                   key: azure-appinsights-key
         {{- end }}
           volumeMounts:
-          - name: config-volume-{{ template "promitor.fullname" . }}
+          - name: config-volume-{{ template "promitor-scraper.fullname" . }}
             mountPath: /config/
           livenessProbe:
             httpGet:
@@ -70,6 +70,6 @@ spec:
               path: /api/v1/health
               port: {{ .Values.service.targetPort }}
       volumes:
-        - name: config-volume-{{ template "promitor.fullname" . }}
+        - name: config-volume-{{ template "promitor-scraper.fullname" . }}
           configMap:
-            name: config-map-{{ template "promitor.fullname" . }}
+            name: config-map-{{ template "promitor-scraper.fullname" . }}
