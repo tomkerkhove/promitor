@@ -14,12 +14,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     [Category("Unit")]
     public class MetricsDeclarationWithContainerInstanceYamlSerializationTests : YamlSerializationTests<ContainerInstanceMetricDefinition>
     {
-        [Fact]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerInstance_SucceedsWithIdenticalOutput()
+        [Theory]
+        [InlineData("promitor1")]
+        [InlineData(null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerInstance_SucceedsWithIdenticalOutput(string resourceGroupName)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var containerInstanceMetricDefinition = GenerateBogusContainerInstanceMetricDefinition();
+            var containerInstanceMetricDefinition = GenerateBogusContainerInstanceMetricDefinition(resourceGroupName);
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -58,7 +60,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
             Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
-        private ContainerInstanceMetricDefinition GenerateBogusContainerInstanceMetricDefinition()
+        private ContainerInstanceMetricDefinition GenerateBogusContainerInstanceMetricDefinition(string resourceGroupName)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             var bogusGenerator = new Faker<ContainerInstanceMetricDefinition>()
@@ -68,6 +70,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ContainerInstance)
                 .RuleFor(metricDefinition => metricDefinition.ContainerGroup, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
                 .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();

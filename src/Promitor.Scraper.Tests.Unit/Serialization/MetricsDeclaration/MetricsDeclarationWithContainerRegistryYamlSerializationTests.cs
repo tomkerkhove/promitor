@@ -12,16 +12,16 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests<ServiceBusQueueMetricDefinition>
+    public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
     {
         [Theory]
         [InlineData("promitor1")]
         [InlineData(null)]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForServiceBus_SucceedsWithIdenticalOutput(string resourceGroupName)
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var serviceBusMetricDefinition = GenerateBogusServiceBusMetricDefinition(resourceGroupName);
+            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition(resourceGroupName);
             var metricDefaults = GenerateBogusMetricDefaults();
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 MetricDefaults = metricDefaults,
                 Metrics = new List<MetricDefinition>
                 {
-                    serviceBusMetricDefinition
+                    containerRegistryMetricDefinition
                 }
             };
             var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
@@ -45,31 +45,29 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
-            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition);
+            AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
+            var deserializedContainerRegistryMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
+            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition)
+        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinition serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
+            Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
         }
 
-        private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition(string resourceGroupName)
+        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName)
         {
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
-            var bogusGenerator = new Faker<ServiceBusQueueMetricDefinition>()
+            var bogusGenerator = new Faker<ContainerRegistryMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ServiceBusQueue)
-                .RuleFor(metricDefinition => metricDefinition.Namespace, faker => faker.Name.LastName())
-                .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
+                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ContainerRegistry)
+                .RuleFor(metricDefinition => metricDefinition.RegistryName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .Ignore(metricDefinition  => metricDefinition.ResourceGroupName);
+                .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
         }
