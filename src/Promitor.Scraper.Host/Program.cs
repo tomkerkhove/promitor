@@ -34,7 +34,7 @@ namespace Promitor.Scraper.Host
 
         private static void Welcome()
         {
-            Console.WriteLine(Constants.Texts.Welcome);
+            Console.WriteLine(Constants.Texts.Welcome + " Code owners should work now, block me bro!");
         }
 
         private static int DetermineHttpPort()
