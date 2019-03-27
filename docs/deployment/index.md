@@ -11,30 +11,44 @@ _For more information about advanced configuration, read our documentation [here
 
 ```
 ❯ docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                         -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
-                         -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-scraper
+                           -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
+                           -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
+                           tomkerkhove/promitor-scraper
 ```
 
 # Kubernetes
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
-To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). [Our example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) shows a sample configuration file. Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-scraper/values.yaml) to see all configurable values.
+To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). Included here are the values that correspond with the local environment variables. In addition
+to these, you will need a metric declaration file as described in [Metric Declaration](/configuration/metrics).
 
-You will need to provide the following values to minimally run the chart:
-- Application Id
-- Application Key
-- Tenant Id
-- Subscription Id
-- Resource Group
-- Metric Configuration
+```yaml
+azureAuthentication:
+  # PROMITOR_AUTH_APPID (Required)
+  appId: "<azure-ad-app-id>"
+  # PROMITOR_AUTH_APPKEY (Required)
+  appKey: "<azure-ad-app-key>"
 
-If using a values file modeled on the sample yaml, you can then deploy the chart by running this command:
+scrapeConfig:
+  # PROMITOR_SCRAPE_BASEPATH (Optional, default is shown)
+  path: /prometheus/scrape
+  # PROMITOR_SCRAPE_SCHEDULE (Optional, default - 5 minutes - is shown)
+  schedule: "*/5 * * * *"
+  # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
+  timestamp: True
+
+ports:
+  # PROMITOR_HTTP_PORT (Optional, default is shown)
+  externalPort: 80
+
+telemetry:
+  # PROMITOR_TELEMETRY_INSTRUMENTATIONKEY (Optional)
+  appInsightsKey: "<azure-app-insights-key>"
 ```
-❯ helm install --name promitor-scraper ./charts/promitor-scraper --values /charts/local-values.yaml
-```
 
-Or, if you already have a `metric-declaration.yaml` file, you can use this command:
+Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-scraper/values.yaml) to see all configurable values.
+
+If you have a `metric-declaration.yaml` file, you can create a basic deployment with this command:
 ```
 ❯ helm install --name promitor-scraper ./charts/promitor-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \

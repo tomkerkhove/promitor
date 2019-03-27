@@ -1,6 +1,5 @@
-# Default values for promitor.
+# Default values for promitor-scraper.
 # This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
 
 replicaCount: 1
 
@@ -10,25 +9,19 @@ image:
   pullPolicy: Always
 
 azureAuthentication:
-  # PROMITOR_AUTH_APPID
   appId: ""
-  # PROMITOR_AUTH_APPKEY
   appKey: ""
 
 scrapeConfig:
-  # PROMITOR_SCRAPE_BASEPATH
   path: /prometheus/scrape
-  # PROMITOR_SCRAPE_SCHEDULE
   schedule: "*/5 * * * *"
-  # PROMITOR_FEATURE_METRICSTIMESTAMP
   timestamp: True
 
 ports:
-  containerPort: 88
+  containerPort: 8080
   externalPort: 80
 
 telemetry:
-  # PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
   appInsightsKey: ""
 
 ## Metric Declaration YAML
