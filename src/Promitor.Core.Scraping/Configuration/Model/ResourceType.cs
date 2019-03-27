@@ -10,5 +10,6 @@
         VirtualMachine = 5,
         ContainerRegistry = 6,
         NetworkInterface = 7,
+		CosmosDb = 8
     }
 }
