@@ -16,7 +16,7 @@ Example:
   - name: demo_azuresnetworkinterface_bytesreceivedrate
     description: "Number of bytes the Network Interface sent"
     resourceType: NetworkInterface
-    networkInterfaceName: aks-nodepool1-60418106-nic-0
+    networkInterfaceName: promitor-network-interface
     azureMetricConfiguration:
       metricName: BytesReceivedRate
       aggregation:
