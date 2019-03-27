@@ -17,7 +17,7 @@ _For more information about advanced configuration, read our documentation [here
 ```
 
 # Kubernetes
-We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts) which deploys all the required infrastructure on your Kubernetes cluster.
+We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
 To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). [Our example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) shows a sample configuration file.
 
@@ -31,9 +31,16 @@ You will need to provide the following values to minimally run the chart:
 
 If using a values file modeled on the sample yaml, you can then deploy the chart by running this command:
 ```
-❯ helm install --name promitor .\charts\promitor --values \charts\local-values.yaml
+❯ helm install --name promitor-scraper ./charts/promitor-scraper --values /charts/local-values.yaml
 ```
 
+Or, if you already have a `metric-declaration.yaml` file, you can use this command:
+```
+❯ helm install --name promitor-scraper ./charts/promitor-scraper \
+               --set azureAuthentication.appId='<azure-ad-app-id>' \
+               --set azureAuthentication.appKey='<azure-ad-app-key>' \
+               --values /path/to/metric-declaration.yaml
+```
 
 # Image Tagging Strategy
 Depending on your scenario you might need a different update cadence for Docker dependencies.
