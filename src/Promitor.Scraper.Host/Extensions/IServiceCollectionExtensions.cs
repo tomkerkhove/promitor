@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Swashbuckle.AspNetCore.Swagger;
@@ -19,11 +21,20 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static void UseCronScheduler(this IServiceCollection services)
         {
-            services.AddScheduler(builder =>
+            var metricsProvider = (services.Single(s => s.ServiceType == typeof(IMetricsDeclarationProvider))
+                .ImplementationInstance as IMetricsDeclarationProvider);
+            var metrics = metricsProvider.Get(applyDefaults: true);
+
+            var logger = services.SingleOrDefault(s => s.ServiceType == typeof(ILogger)) as ILogger;
+            var exceptionTracker = services.SingleOrDefault(s => s.ServiceType == typeof(IExceptionTracker)) as IExceptionTracker;
+            foreach (var metric in metrics.Metrics)
             {
-                builder.AddJob<MetricScrapingJob>();
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
-            });
+                services.AddScheduler(builder =>
+                {
+                    builder.AddJob(sp => new MetricScrapingJob(metric, metricsProvider/*, logger, exceptionTracker*/));
+                    builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
+                });
+            }
         }
 
         /// <summary>

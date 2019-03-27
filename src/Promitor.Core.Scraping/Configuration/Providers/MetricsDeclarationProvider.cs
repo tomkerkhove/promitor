@@ -16,11 +16,29 @@ namespace Promitor.Core.Scraping.Configuration.Providers
             _configurationSerializer = new ConfigurationSerializer(logger);
         }
 
-        public virtual MetricsDeclaration Get()
+        public virtual MetricsDeclaration Get(bool applyDefaults = false)
         {
             var rawMetricsDeclaration = ReadRawDeclaration();
 
             var config = _configurationSerializer.Deserialize(rawMetricsDeclaration);
+
+            if (applyDefaults)
+            {
+                foreach (var metric in config.Metrics)
+                {
+                    // Apply AzureMetadata.ResourceGroupName to metrics with no other RG specified
+                    if (string.IsNullOrWhiteSpace(metric.ResourceGroupName))
+                    {
+                        metric.ResourceGroupName = config.AzureMetadata.ResourceGroupName;
+                    }
+
+                    // Apply the default scraping interval if none is specified
+                    if (metric.Scraping.Interval == null)
+                    {
+                        metric.Scraping.Interval = config.MetricDefaults.Scraping.Interval;
+                    }
+                }
+            }
             return config;
         }
 
