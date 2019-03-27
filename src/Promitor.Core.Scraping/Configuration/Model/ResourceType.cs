@@ -7,6 +7,7 @@
         Generic = 2,
         StorageQueue = 3,
         ContainerInstance = 4,
-        VirtualMachine = 5
+        VirtualMachine = 5,
+        ContainerRegistry = 6
     }
 }

@@ -1,4 +1,6 @@
-﻿using GuardNet;
+﻿using System;
+using System.Collections.Generic;
+using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using YamlDotNet.RepresentationModel;
@@ -37,6 +39,25 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
                 Description = description?.ToString(),
                 AzureMetricConfiguration = azureMetricConfiguration
             };
+
+            if (metricNode.Children.ContainsKey(@"scraping"))
+            {
+                var scrapingNode = (YamlMappingNode)metricNode.Children[new YamlScalarNode(@"scraping")];
+                try
+                {
+                    var scrapingIntervalNode = scrapingNode?.Children[new YamlScalarNode(@"interval")];
+
+                    if (scrapingIntervalNode != null)
+                    {
+                        metricDefinition.Scraping.Interval = TimeSpan.Parse(scrapingIntervalNode.ToString());
+                    }
+                }
+                catch (KeyNotFoundException)
+                {
+                    // happens when the YAML doesn't have the properties in it which is fine because the object
+                    // will get a default interval of 'null'
+                }
+            }
 
             return metricDefinition;
         }

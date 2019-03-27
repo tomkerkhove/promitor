@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Promitor.Scraper.Host</name>
+    </assembly>
+    <members>
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.Get">
+            <summary>
+                Get Metrics Declaration
+            </summary>
+            <remarks>Provides a list of all configured metrics to scrape</remarks>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.HealthController.Get">
+            <summary>
+                Get Health
+            </summary>
+            <remarks>Provides an indication about the health of the scraper</remarks>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Add support for Open API with API explorer
+            </summary>
+            <param name="app">Application Builder</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+            <summary>
+                Add support for exposing a prometheus scraping endpoint
+            </summary>
+            <param name="app">Application Builder</param>
+            <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseCronScheduler(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines to use the cron scheduler
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
+            <summary>
+                Use OpenAPI specification
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
+            <param name="apiVersion">Version of the API</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <summary>
+                Validates a specific metric definition
+            </summary>
+            <param name="metricDefinition">Metric definition to validate</param>
+            <returns>List of validation errors</returns>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.MetricValidator`1.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <summary>
+                Validates a specific metric definition
+            </summary>
+            <param name="metricDefinition">Metric definition to validate</param>
+            <returns>List of validation errors</returns>
+        </member>
+    </members>
+</doc>

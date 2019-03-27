@@ -296,3 +296,4 @@ __pycache__/
 # Local Jekyll output
 _site/*
 docs/_site/*
+*.orig

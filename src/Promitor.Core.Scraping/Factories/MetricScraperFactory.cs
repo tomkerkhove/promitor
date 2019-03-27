@@ -37,6 +37,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerInstanceScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                case ResourceType.ContainerRegistry:
+                    return new ContainerRegistryScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
