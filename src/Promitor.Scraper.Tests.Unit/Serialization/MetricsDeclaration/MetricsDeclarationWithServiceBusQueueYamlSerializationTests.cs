@@ -59,7 +59,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 
         private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
+            var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
+
             var bogusGenerator = new Faker<ServiceBusQueueMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
@@ -69,10 +71,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .RuleFor(metricDefinition => metricDefinition.ScrapingInterval, faker =>
-                    string.IsNullOrWhiteSpace(metricScrapingInterval) ? (TimeSpan?)null : TimeSpan.Parse(metricScrapingInterval))
-                .Ignore(metricDefinition  => metricDefinition.ResourceGroupName)
-                .Ignore(metricDefinition => metricDefinition.ScrapingInterval);
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
+                .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
         }
