@@ -42,8 +42,8 @@ namespace Promitor.Core.Scraping
             _logger = logger;
             _exceptionTracker = exceptionTracker;
 
-            AzureMetadata = azureMetadata;
-            AzureMonitorClient = azureMonitorClient;
+            this.AzureMetadata = azureMetadata;
+            this.AzureMonitorClient = azureMonitorClient;
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace Promitor.Core.Scraping
                     throw new ArgumentException($"Could not cast metric definition of type '{metricDefinition.ResourceType}' to {typeof(TMetricDefinition)}. Payload: {JsonConvert.SerializeObject(metricDefinition)}");
                 }
 
-                var aggregationInterval = DetermineMetricAggregationInterval(metricDefinition);
+                var aggregationInterval = metricDefinition.AzureMetricConfiguration.Aggregation.Interval;
                 var aggregationType = metricDefinition.AzureMetricConfiguration.Aggregation.Type;
                 var resourceGroupName = string.IsNullOrEmpty(metricDefinition.ResourceGroupName) ? AzureMetadata.ResourceGroupName : metricDefinition.ResourceGroupName;
-                var foundMetricValue = await ScrapeResourceAsync(AzureMetadata.SubscriptionId, resourceGroupName, castedMetricDefinition, aggregationType, aggregationInterval);
+                var foundMetricValue = await ScrapeResourceAsync(AzureMetadata.SubscriptionId, resourceGroupName, castedMetricDefinition, aggregationType, aggregationInterval.Value);
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", foundMetricValue, metricDefinition.Name, aggregationInterval);
 
@@ -91,23 +91,6 @@ namespace Promitor.Core.Scraping
             {
                 _exceptionTracker.Track(exception);
             }
-        }
-
-        private TimeSpan DetermineMetricAggregationInterval(MetricDefinition metricDefinition)
-        {
-            Guard.NotNull(metricDefinition, nameof(metricDefinition));
-
-            if (metricDefinition?.AzureMetricConfiguration?.Aggregation?.Interval != null)
-            {
-                return metricDefinition.AzureMetricConfiguration.Aggregation.Interval.Value;
-            }
-
-            if (MetricDefaults.Aggregation.Interval == null)
-            {
-                throw new Exception($"No default aggregation interval is configured nor on the metric configuration for '{metricDefinition?.Name}'");
-            }
-
-            return MetricDefaults.Aggregation.Interval.Value;
         }
 
         /// <summary>
