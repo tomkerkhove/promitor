@@ -10,6 +10,7 @@ pr:
   paths:
     include:
     - src/*
+    - .azure-devops/scraper-ci.yml
 variables:
   DotNet.SDK.Version: '2.2.105'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
