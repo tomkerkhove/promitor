@@ -39,9 +39,9 @@ namespace Promitor.Core.Scraping.Configuration.Providers
                     }
 
                     // Apply the default scraping interval if none is specified
-                    if (metric.Scraping.Interval == null)
+                    if (metric.Scraping.Schedule == null)
                     {
-                        metric.Scraping.Interval = config.MetricDefaults.Scraping.Interval;
+                        metric.Scraping.Schedule = config.MetricDefaults.Scraping.Schedule;
                     }
 					
                     // Apply the default scraping interval if none is specified
