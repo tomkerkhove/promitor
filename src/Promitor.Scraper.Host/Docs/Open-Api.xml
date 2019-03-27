@@ -29,7 +29,7 @@
             <param name="app">Application Builder</param>
             <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         </member>
-        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseCronScheduler(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.ScheduleMetricScraping(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines to use the cron scheduler
             </summary>

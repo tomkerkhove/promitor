@@ -15,7 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
     {
         [Theory]
-        [InlineData("promitor1", @"01:00", @"2:00")]
+        [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
         [InlineData(null, null, null)]
         public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {

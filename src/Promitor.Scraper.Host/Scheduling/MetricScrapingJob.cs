@@ -20,7 +20,7 @@ namespace Promitor.Scraper.Host.Scheduling
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
 
-        public MetricScrapingJob(MetricDefinition metric, 
+        public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
             ILogger logger = null, IExceptionTracker exceptionTracker = null)
         {

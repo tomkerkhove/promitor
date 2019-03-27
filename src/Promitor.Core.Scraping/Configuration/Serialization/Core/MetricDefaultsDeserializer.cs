@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -32,12 +31,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
                 var scrapingNode = (YamlMappingNode)node.Children[new YamlScalarNode(@"scraping")];
                 try
                 {
-                    var scrapingIntervalNode = scrapingNode.Children[new YamlScalarNode(@"interval")];
+                    var scrapingIntervalNode = scrapingNode.Children[new YamlScalarNode(@"schedule")];
 
                     if (scrapingIntervalNode != null)
                     {
-                        var scrapingIntervalTimeSpan = TimeSpan.Parse(scrapingIntervalNode.ToString());
-                        metricDefaults.Scraping.Interval = scrapingIntervalTimeSpan;
+                        metricDefaults.Scraping.Schedule = scrapingIntervalNode.ToString();
                     }
                 }
                 catch (KeyNotFoundException)
