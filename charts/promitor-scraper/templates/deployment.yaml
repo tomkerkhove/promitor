@@ -36,13 +36,13 @@ spec:
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor-scraper.fullname" . }}
-                  key: azure-app-id
+                  name: {{ template "promitor-scraper.secretname" . }}
+                  key: {{ .Values.secrets.appIdSecret }}
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor-scraper.fullname" . }}
-                  key: azure-app-key
+                  name: {{ template "promitor-scraper.secretname" . }}
+                  key: {{ .Values.secrets.appKeySecret }}
           - name: PROMITOR_HTTP_PORT
             value: {{ .Values.ports.containerPort | quote }}
           - name: PROMITOR_SCRAPE_BASEPATH
@@ -55,8 +55,8 @@ spec:
           - name: PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
             valueFrom:
               secretKeyRef:
-                  name: {{ template "promitor-scraper.fullname" . }}
-                  key: azure-appinsights-key
+                  name: {{ template "promitor-scraper.secretname" . }}
+                  key: {{ .Values.secrets.appInsightsSecret }}
         {{- end }}
           volumeMounts:
           - name: config-volume-{{ template "promitor-scraper.fullname" . }}

@@ -30,3 +30,14 @@ Create chart name and version as used by the chart label.
 {{- define "promitor-scraper.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Create secret name based on whether or not user defined it.
+*/}}
+{{- define "promitor-scraper.secretname" -}}
+{{- if .Values.secrets.createSecret -}}
+{{ template "promitor-scraper.fullname" . }}
+{{- else -}}
+{{- printf "%s" .Values.secrets.secretName -}}
+{{- end -}}
+{{- end -}}
