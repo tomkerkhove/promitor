@@ -42,7 +42,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders
                 AzureMetadata = _azureMetadata,
                 MetricDefaults = new MetricDefaults
                 {
-                    Scraping = new Scraping { Schedule = @"* */1 * * * *" }
+                    // default scraping interval: every minute
+                    Scraping = new Scraping { Schedule = @"0 * * ? * *" }
                 },
                 Metrics = _metrics
             };
