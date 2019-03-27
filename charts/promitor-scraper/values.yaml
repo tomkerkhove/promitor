@@ -17,10 +17,6 @@ scrapeConfig:
   schedule: "*/5 * * * *"
   timestamp: True
 
-ports:
-  containerPort: 8080
-  externalPort: 80
-
 telemetry:
   appInsightsKey: ""
 
@@ -54,6 +50,8 @@ secrets:
   appInsightsSecret: azure-appinsights-key
 
 service:
-  type: LoadBalancer
+  exposeExternally: False
+  port: 80
+  targetPort: 9090
   labelType: infrastructure
   selectorType: runtime

@@ -9,10 +9,15 @@ metadata:
     heritage: {{ .Release.Service }}
     type: {{ .Values.service.labelType }}
 spec:
-  type: {{ .Values.service.type }}
+{{- if .Values.service.exposeExternally }}
+  type: ExternalIP
+{{- else }}
+  type: ClusterIP
+{{- end }}
   ports:
-    - port: {{ .Values.ports.externalPort }}
-      targetPort: {{ .Values.ports.containerPort }}
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
   selector:
     app: {{ template "promitor-scraper.name" . }}

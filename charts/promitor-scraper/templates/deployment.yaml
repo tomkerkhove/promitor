@@ -31,7 +31,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.ports.containerPort }}
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
           env:
           - name: PROMITOR_AUTH_APPID
             valueFrom:
@@ -44,7 +46,7 @@ spec:
                   name: {{ template "promitor-scraper.secretname" . }}
                   key: {{ .Values.secrets.appKeySecret }}
           - name: PROMITOR_HTTP_PORT
-            value: {{ .Values.ports.containerPort | quote }}
+            value: {{ .Values.service.targetPort | quote }}
           - name: PROMITOR_SCRAPE_BASEPATH
             value: {{ .Values.scrapeConfig.path | quote }}
           - name: PROMITOR_SCRAPE_SCHEDULE
@@ -64,11 +66,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /api/v1/health
-              port: {{ .Values.ports.containerPort }}
+              port: http
           readinessProbe:
             httpGet:
               path: /api/v1/health
-              port: {{ .Values.ports.containerPort }}
+              port: http
       volumes:
         - name: config-volume-{{ template "promitor-scraper.fullname" . }}
           configMap:

@@ -37,10 +37,6 @@ scrapeConfig:
   # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
   timestamp: True
 
-ports:
-  # PROMITOR_HTTP_PORT (Optional, default is shown)
-  externalPort: 80
-
 telemetry:
   # PROMITOR_TELEMETRY_INSTRUMENTATIONKEY (Optional)
   appInsightsKey: "<azure-app-insights-key>"
