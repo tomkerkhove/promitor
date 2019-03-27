@@ -1,0 +1,8 @@
+1. Get the application URL by running these commands:
+     NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+           You can watch the status of by running 'kubectl get svc -w {{ include "promitor-scraper.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "promitor-scraper.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+  echo http://$SERVICE_IP:{{ .Values.ports.externalPort }}
+
+2. Check the scraping output for Prometheus using the URL from the previous step:
+  echo http://$SERVICE_IP:{{ .Values.ports.externalPort }}{{ .Values.scrapeConfig.path }}
