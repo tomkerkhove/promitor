@@ -19,7 +19,7 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Defines to use the cron scheduler
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static void UseCronScheduler(this IServiceCollection services)
+        public static void ScheduleMetricScraping(this IServiceCollection services)
         {
             var metricsProvider = (services.Single(s => s.ServiceType == typeof(IMetricsDeclarationProvider))
                 .ImplementationInstance as IMetricsDeclarationProvider);
@@ -85,7 +85,7 @@ namespace Promitor.Scraper.Host.Extensions
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
