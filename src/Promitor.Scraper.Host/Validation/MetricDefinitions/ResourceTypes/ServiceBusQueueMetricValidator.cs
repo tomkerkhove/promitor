@@ -10,19 +10,15 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(serviceBusQueueMetricDefinition, nameof(serviceBusQueueMetricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.Namespace))
             {
-                errorMessages.Add("No Service Bus Namespace is configured");
+                yield return "No Service Bus Namespace is configured";
             }
 
             if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.QueueName))
             {
-                errorMessages.Add("No queue name is configured");
+                yield return "No queue name is configured";
             }
-
-            return errorMessages;
         }
     }
 }

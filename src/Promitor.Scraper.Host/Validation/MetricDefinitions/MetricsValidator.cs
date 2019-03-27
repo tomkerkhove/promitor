@@ -27,7 +27,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             return errorMessages.ToList();
         }
 
-        private IList<string> Validate(MetricDefinition metric)
+        private IEnumerable<string> Validate(MetricDefinition metric)
         {
             Guard.NotNull(metric, nameof(metric));
 

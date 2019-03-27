@@ -12,17 +12,13 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             _metricDefaults = metricDefaults;
         }
 
-        public List<string> Validate(Scraping metricsScraping)
+        public IEnumerable<string> Validate(Scraping metricsScraping)
         {
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(metricsScraping?.Schedule)
                 && string.IsNullOrWhiteSpace(_metricDefaults?.Scraping?.Schedule))
             {
-                errorMessages.Add("No metrics scraping schedule is configured");
+                yield return "No metrics scraping schedule is configured";
             }
-
-            return errorMessages;
         }
     }
 }

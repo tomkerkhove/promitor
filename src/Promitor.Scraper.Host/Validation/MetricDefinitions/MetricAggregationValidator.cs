@@ -12,17 +12,13 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             _metricDefaults = metricDefaults;
         }
 
-        public List<string> Validate(MetricAggregation metricsAggregation)
+        public IEnumerable<string> Validate(MetricAggregation metricsAggregation)
         {
-            var errorMessages = new List<string>();
-
             if (metricsAggregation?.Interval.HasValue == false
                 && _metricDefaults?.Aggregation?.Interval.HasValue == false)
             {
-                errorMessages.Add("No metrics aggregation is configured");
+                yield return "No metrics aggregation is configured";
             }
-
-            return errorMessages;
         }
     }
 }
