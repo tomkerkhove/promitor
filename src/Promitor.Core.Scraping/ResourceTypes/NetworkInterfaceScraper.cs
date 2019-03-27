@@ -9,7 +9,7 @@ using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    internal class NetworkInterfaceScraper : Scraper<VirtualMachineMetricDefinition>
+    internal class NetworkInterfaceScraper : Scraper<NetworkInterfaceMetricDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/networkInterfaces/{2}";
 
@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<double> ScrapeResourceAsync(NetworkInterfaceMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, NetworkInterfaceMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.NetworkInterfaceName);
 
