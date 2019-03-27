@@ -19,7 +19,7 @@ _For more information about advanced configuration, read our documentation [here
 # Kubernetes
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
-To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). [Our example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) shows a sample configuration file.
+To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). [Our example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) shows a sample configuration file. Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-scraper/values.yaml) to see all configurable values.
 
 You will need to provide the following values to minimally run the chart:
 - Application Id
