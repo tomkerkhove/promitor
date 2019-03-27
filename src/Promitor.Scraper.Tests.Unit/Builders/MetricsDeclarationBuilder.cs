@@ -127,6 +127,22 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
+        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name",  string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new NetworkInterfaceMetricDefinition
+            {
+                Name = metricName,
+                Description = metricDescription,
+                NetworkInterfaceName = networkInterfaceName,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
