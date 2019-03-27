@@ -7,6 +7,7 @@ pr:
   paths:
     include:
     - deploy/automation/docker-hub/ci/*
+    - .azure-devops/docker-hub-bot-for-prs*
 jobs:
 - job: Tooling
   displayName: Verify Tooling
