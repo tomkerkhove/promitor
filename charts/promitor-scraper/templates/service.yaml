@@ -11,8 +11,8 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.ports.externalPort }}
+      targetPort: {{ .Values.ports.containerPort }}
       protocol: TCP
   selector:
     app: {{ template "promitor-scraper.name" . }}
