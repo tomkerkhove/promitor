@@ -19,6 +19,10 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerInstanceMetricDeserializer();
                 case Configuration.Model.ResourceType.VirtualMachine:
                     return new VirtualMachineMetricDeserializer();
+                case Configuration.Model.ResourceType.ContainerRegistry:
+                    return new ContainerRegistryMetricDeserializer();
+                case Configuration.Model.ResourceType.NetworkInterface:
+                    return new NetworkInterfaceMetricDeserializer();
             }
 
             throw new ArgumentOutOfRangeException($@"Resource Type {resource} not supported.");
