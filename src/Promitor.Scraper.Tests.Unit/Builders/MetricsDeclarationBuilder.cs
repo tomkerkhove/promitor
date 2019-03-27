@@ -40,6 +40,10 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var metricsDeclaration = new MetricsDeclaration
             {
                 AzureMetadata = _azureMetadata,
+                MetricDefaults = new MetricDefaults
+                {
+                    Scraping = new Scraping { Schedule = @"* */1 * * * *" }
+                },
                 Metrics = _metrics
             };
 
@@ -63,7 +67,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ContainerInstanceMetricDefinition
@@ -94,7 +98,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken="?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
+        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new StorageQueueMetricDefinition
@@ -111,7 +115,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new VirtualMachineMetricDefinition
