@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             return bogusMetricConfiguration;
         }
 
-        protected MetricDefaults GenerateBogusMetricDefaults()
+        protected MetricDefaults GenerateBogusMetricDefaults(string defaultScrapingInterval)
         {
             var bogusAggregationGenerator = new Faker<Aggregation>()
                 .StrictMode(ensureRulesForAllProperties: true)
@@ -65,8 +65,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var generatedAggregation = bogusAggregationGenerator.Generate();
             var metricDefaults = new MetricDefaults
             {
-                Aggregation = generatedAggregation
+                Aggregation = generatedAggregation,
             };
+
+            if (!string.IsNullOrWhiteSpace(defaultScrapingInterval))
+            {
+                metricDefaults.Scraping.Interval = TimeSpan.Parse(defaultScrapingInterval);
+            }
 
             return metricDefaults;
         }
@@ -78,6 +83,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metadata => metadata.TenantId, faker => faker.Finance.Account())
                 .RuleFor(metadata => metadata.ResourceGroupName, faker => faker.Name.FirstName())
                 .RuleFor(metadata => metadata.SubscriptionId, faker => faker.Finance.Account());
+
+            return bogusGenerator.Generate();
+        }
+
+        protected Scraping GenerateBogusScrapingInterval(string testInterval)
+        {
+            var bogusGenerator = new Faker<Scraping>()
+                .RuleFor(scraping => scraping.Interval, faker =>
+                    string.IsNullOrWhiteSpace(testInterval) ? (TimeSpan?)null : TimeSpan.Parse(testInterval));
 
             return bogusGenerator.Generate();
         }

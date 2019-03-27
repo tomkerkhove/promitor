@@ -15,14 +15,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
     {
         [Theory]
-        [InlineData("promitor1")]
-        [InlineData(null)]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName)
+        [InlineData("promitor1", @"01:00", @"2:00")]
+        [InlineData(null, null, null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition(resourceGroupName);
-            var metricDefaults = GenerateBogusMetricDefaults();
+            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition(resourceGroupName, metricScrapingInterval);
+            var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
@@ -56,9 +56,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
         }
 
-        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName)
+        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
+            var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
+
             var bogusGenerator = new Faker<ContainerRegistryMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
@@ -67,6 +69,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.RegistryName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
                 .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
