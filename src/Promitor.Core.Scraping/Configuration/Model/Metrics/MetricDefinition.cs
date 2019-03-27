@@ -27,5 +27,10 @@
         ///     Type of resource that is configured
         /// </summary>
         public abstract ResourceType ResourceType { get; }
+
+        /// <summary>
+        /// Gets or sets the scraping model.
+        /// </summary>
+        public Scraping Scraping { get; set; } = new Scraping();
     }
 }

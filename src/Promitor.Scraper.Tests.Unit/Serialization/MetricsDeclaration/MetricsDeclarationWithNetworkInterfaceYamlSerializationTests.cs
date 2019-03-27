@@ -15,14 +15,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     public class MetricsDeclarationWithNetworkInterfaceYamlSerializationTests : YamlSerializationTests<NetworkInterfaceMetricDefinition>
     {
         [Theory]
-        [InlineData("promitor1")]
-        [InlineData(data: null)]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForNetworkInterface_SucceedsWithIdenticalOutput(string resourceGroupName)
+        [InlineData("promitor1", @"01:00", @"2:00")]
+        [InlineData(null, null, null)]
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForNetworkInterface_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var networkInterfaceMetricDefinition = GenerateBogusNetworkInterfaceMetricDefinition(resourceGroupName);
-            var metricDefaults = GenerateBogusMetricDefaults();
+            var networkInterfaceMetricDefinition = GenerateBogusNetworkInterfaceMetricDefinition(resourceGroupName, metricScrapingInterval);
+            var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
                 AzureMetadata = azureMetadata,
@@ -56,8 +56,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedNetworkInterfaceMetricDefinition.NetworkInterfaceName);
         }
 
-        private NetworkInterfaceMetricDefinition GenerateBogusNetworkInterfaceMetricDefinition(string resourceGroupName)
+        private NetworkInterfaceMetricDefinition GenerateBogusNetworkInterfaceMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
+            var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
             Faker<NetworkInterfaceMetricDefinition> bogusGenerator = new Faker<NetworkInterfaceMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
@@ -67,6 +68,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.NetworkInterfaceName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
                 .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
