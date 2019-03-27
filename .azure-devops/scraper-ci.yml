@@ -11,6 +11,7 @@ pr:
     include:
     - src/*
     - .azure-devops/scraper-ci.yml
+    - charts/*
 variables:
   DotNet.SDK.Version: '2.2.203'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
@@ -112,3 +113,81 @@ jobs:
       command: 'Push an image'
       imageName: '$(Image.TaggedName)'
     condition: eq(variables['Build.Reason'], 'PullRequest')
+
+- job: Integration_Test
+  displayName: Integration with Helm deployment
+  dependsOn: Docker_Job
+  condition: succeeded()
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+
+  # Minikube can't use the most up to date version of Docker last I checked
+  - task: DockerInstaller@0
+    displayName: Docker Installer
+    inputs:
+      dockerVersion: 18.06.1-ce
+      releaseType: stable
+
+  - task: HelmInstaller@0
+    displayName: Helm Installer
+    inputs:
+      helmVersion: 2.12.3
+      checkLatestHelmVersion: true
+      installKubectl: true
+      kubectlVersion: 1.13.5
+      checkLatestKubectl: true
+
+  - bash: |
+      curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64
+      curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64.sha256
+      expected=$(cat minikube.sha256)
+      echo "$expected minikube" | sha256sum -c
+      chmod +x minikube
+      sudo mv minikube /usr/local/bin
+    displayName: Minikube Installer
+
+  - bash: |
+      sudo minikube start --vm-driver=none --bootstrapper=kubeadm --kubernetes-version=v1.13.5
+      sudo chown -R $USER $HOME/.kube
+      sudo chgrp -R $USER $HOME/.kube
+      sudo chown -R $USER $HOME/.minikube
+      sudo chgrp -R $USER $HOME/.minikube
+      minikube update-context
+    displayName: Start Minikube Cluster
+
+  - bash: check-cluster.sh
+    displayName: Wait for cluster to be up
+    workingDirectory: ./.azure-devops
+
+  - task: HelmDeploy@0
+    displayName: Helm init
+    inputs:
+      command: init
+      upgradetiller: true
+
+  - task: HelmDeploy@0
+    displayName: Helm install
+    inputs:
+      command: install
+      chartType: FilePath
+      chartPath: ./charts/promitor-scraper
+      releaseName: promitor-scraper
+      overrideValues: >
+        image.repository=tomkerkhove/promitor-agent-scraper-ci,
+        image.tag=$(Build.BuildNumber),
+        azureAuthentication.appId=$(Container.Env.AzureMonitor.Id),
+        azureAuthentication.appKey=$(Container.Env.AzureMonitor.Key),
+        scrapeConfig.schedule="* * * * *"
+      valueFile: ./.azure-devops/temp-metrics-declaration.yaml
+
+  - bash: |
+      echo "k get pods"
+      kubectl get pods
+      echo; echo "k get svc"
+      kubectl get svc
+      echo; echo "k logs deploy/promitor-scraper"
+      kubectl logs deploy/promitor-scraper
+      echo; echo "k describe deploy/promitor-scraper"
+      kubectl describe deploy/promitor-scraper
+    displayName: Output from deployment
