@@ -21,6 +21,8 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new ContainerInstanceMetricValidator();
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineMetricValidator();
+                case ResourceType.NetworkInterface:
+                    return new NetworkInterfaceMetricValidator();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryMetricValidator();
             }
