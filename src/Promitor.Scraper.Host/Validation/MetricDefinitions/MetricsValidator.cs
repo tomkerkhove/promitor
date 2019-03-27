@@ -59,6 +59,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
             errorMessages.AddRange(metricsConfigurationErrorMessages);
 
+            var metricScrapingScheduleValidator = new MetricScrapingValidator(_metricDefaults);
+            var metricScrapingErrorMessages = metricScrapingScheduleValidator.Validate(metric.Scraping);
+            errorMessages.AddRange(metricScrapingErrorMessages);
+
             return errorMessages;
         }
     }
