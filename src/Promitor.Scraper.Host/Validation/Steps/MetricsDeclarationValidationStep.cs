@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
-            var metricsDeclaration = _metricsDeclarationProvider.Get();
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
             if (metricsDeclaration == null)
             {
                 return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
