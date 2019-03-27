@@ -19,7 +19,7 @@ _For more information about advanced configuration, read our documentation [here
 # Kubernetes
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts) which deploys all the required infrastructure on your Kubernetes cluster.
 
-You can then edit the values.yaml, or take a look at [this example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) to base your own on.
+To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). [Our example yaml](https://github.com/tomkerkhove/promitor/blob/master/charts/local-values.yaml.example) shows a sample configuration file.
 
 You will need to provide the following values to minimally run the chart:
 - Application Id
@@ -29,9 +29,9 @@ You will need to provide the following values to minimally run the chart:
 - Resource Group
 - Metric Configuration
 
-After filling out the required fields, you can then deploy the chart by running this command:
+If using a values file modeled on the sample yaml, you can then deploy the chart by running this command:
 ```
-❯ helm install --name promitor .\charts\promitor --values \charts\promitor\values.yaml
+❯ helm install --name promitor .\charts\promitor --values \charts\local-values.yaml
 ```
 
 
