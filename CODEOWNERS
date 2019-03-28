@@ -1,11 +1,2 @@
-# Lines starting with '#' are comments.
-# Each line is a file pattern followed by one or more owners.
-
 # These owners will be the default owners for everything in the repo.
-*       @tomkerkhove
-
-# Hackaton Codeowners
-docs/  @brusmx
-deploy/  @brusmx @jsturtevant
-charts/  @brusmx @jsturtevant
-src/   @brandonh-msft @jsturtevant
+*       @tomkerkhove @brusmx @jsturtevant @brandonh-msft
