@@ -28,7 +28,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
         public ValidationResult Run()
         {
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
-            this.Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
+            Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
             MetricsDeclaration metricsDeclaration = null;
             try
@@ -42,7 +42,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
             if (metricsDeclaration == null)
             {
-                return ValidationResult.Failure(this.ComponentName, "Unable to deserialize configured metrics declaration");
+                return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
             }
 
             var validationErrors = new List<string>();
@@ -55,7 +55,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics, metricsDeclaration.MetricDefaults);
             validationErrors.AddRange(metricsErrorMessages);
 
-            return validationErrors.Any() ? ValidationResult.Failure(this.ComponentName, validationErrors) : ValidationResult.Successful(this.ComponentName);
+            return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
         }
 
         private static IEnumerable<string> ValidateMetricDefaults(MetricDefaults metricDefaults)

@@ -33,17 +33,25 @@ namespace Promitor.Core.Scraping.Configuration.Providers
                     }
 
                     // Apply the default aggregation interval if none is specified
-                    if (metric.AzureMetricConfiguration?.Aggregation?.Interval == null)
+                    if (metric.AzureMetricConfiguration == null)
+                    {
+                        metric.AzureMetricConfiguration = new AzureMetricConfiguration();
+                    }
+                    if (metric.AzureMetricConfiguration?.Aggregation == null)
+                    {
+                        metric.AzureMetricConfiguration.Aggregation = new MetricAggregation();
+                    }
+                    if (metric.AzureMetricConfiguration?.Aggregation.Interval == null)
                     {
                         metric.AzureMetricConfiguration.Aggregation.Interval = config.MetricDefaults.Aggregation.Interval;
                     }
 
                     // Apply the default scraping interval if none is specified
-                    if (metric.Scraping?.Schedule == null)
+                    if (metric.Scraping == null)
                     {
                         metric.Scraping = config.MetricDefaults.Scraping;
                     }
-					
+
                     // Apply the default scraping interval if none is specified
                     if (metric.Scraping.Schedule == null)
                     {

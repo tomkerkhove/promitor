@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GuardNet;
+﻿using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
@@ -21,7 +20,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             if (node.Children.ContainsKey("aggregation"))
             {
                 var metricDefaultsNode = (YamlMappingNode)node.Children[new YamlScalarNode("aggregation")];
-                var metricDefaultsSerializer = new AggregationDeserializer(this.Logger);
+                var metricDefaultsSerializer = new AggregationDeserializer(Logger);
                 var aggregation = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
                 metricDefaults.Aggregation = aggregation;
             }
@@ -29,7 +28,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             if (node.Children.ContainsKey(@"scraping"))
             {
                 var metricDefaultsNode = (YamlMappingNode)node.Children[new YamlScalarNode("scraping")];
-                var metricDefaultsSerializer = new ScrapingDeserializer(this.Logger);
+                var metricDefaultsSerializer = new ScrapingDeserializer(Logger);
                 var scraping = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
                 metricDefaults.Scraping = scraping;
             }

@@ -42,8 +42,8 @@ namespace Promitor.Core.Scraping
             _logger = logger;
             _exceptionTracker = exceptionTracker;
 
-            this.AzureMetadata = azureMetadata;
-            this.AzureMonitorClient = azureMonitorClient;
+            AzureMetadata = azureMetadata;
+            AzureMonitorClient = azureMonitorClient;
         }
 
         /// <summary>
