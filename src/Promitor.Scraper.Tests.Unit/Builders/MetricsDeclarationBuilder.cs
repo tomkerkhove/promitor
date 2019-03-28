@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
         private readonly List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>();
         private MetricDefaults _metricDefaults = new MetricDefaults
         {
-            Scraping = new Scraping { Schedule = @"* * * * *" }
+            Scraping = new Scraping { Schedule = @"0 * * ? * *" }
         };
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
@@ -51,11 +51,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             var metricsDeclaration = new MetricsDeclaration
             {
                 AzureMetadata = _azureMetadata,
-                MetricDefaults = _metricDefaults ?? new MetricDefaults
-                {
-                    // default scraping interval: every minute
-                    Scraping = new Scraping { Schedule = @"0 * * ? * *" }
-                },
+                MetricDefaults = _metricDefaults,
                 Metrics = _metrics
             };
 
@@ -143,7 +139,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new NetworkInterfaceMetricDefinition
