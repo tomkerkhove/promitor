@@ -12,7 +12,10 @@ namespace Promitor.Scraper.Tests.Unit.Builders
     {
         private readonly AzureMetadata _azureMetadata;
         private readonly List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>();
-        private MetricDefaults _metricDefaults = new MetricDefaults();
+        private MetricDefaults _metricDefaults = new MetricDefaults
+        {
+            Scraping = new Scraping { Schedule = @"* * * * *" }
+        };
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
