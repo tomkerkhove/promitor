@@ -5,7 +5,7 @@
 *       @tomkerkhove
 
 # Hackaton Codeowners
-docs/*  @brusmx
-deploy/*  @brusmx @jsturtevant
-charts/*  @brusmx @jsturtevant
-src/*   @brandonh-msft @jsturtevant
+docs/  @brusmx
+deploy/  @brusmx @jsturtevant
+charts/  @brusmx @jsturtevant
+src/   @brandonh-msft @jsturtevant
