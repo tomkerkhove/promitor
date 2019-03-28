@@ -1,4 +1,5 @@
-﻿using GuardNet;
+﻿using System.Collections.Generic;
+using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
@@ -27,10 +28,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
 
             if (node.Children.ContainsKey(@"scraping"))
             {
-                var scrapingNode = (YamlMappingNode)node.Children[new YamlScalarNode(@"scraping")];
-                var scrapingIntervalNode = scrapingNode.Children[new YamlScalarNode(@"schedule")];
-
-                metricDefaults.Scraping.Schedule = scrapingIntervalNode.ToString();
+                var metricDefaultsNode = (YamlMappingNode)node.Children[new YamlScalarNode("scraping")];
+                var metricDefaultsSerializer = new ScrapingDeserializer(this.Logger);
+                var scraping = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
+                metricDefaults.Scraping = scraping;
             }
 
             return metricDefaults;
