@@ -30,7 +30,6 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             this.Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
-
             MetricsDeclaration metricsDeclaration = null;
             try
             {
