@@ -30,15 +30,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
-            MetricsDeclaration metricsDeclaration = null;
-            try
-            {
-                metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
-            }
-            // Happens if deserilization asks for a node that doesn't exist in the YAML
-            catch (KeyNotFoundException)
-            {
-            }
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
 
             if (metricsDeclaration == null)
             {
