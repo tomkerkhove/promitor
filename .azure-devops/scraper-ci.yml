@@ -158,7 +158,7 @@ jobs:
 
   - bash: check-cluster.sh
     displayName: Wait for cluster to be up
-    workingDirectory: ./.azure-devops
+    workingDirectory: ./.azure-devops/scripts
 
   - task: HelmDeploy@0
     displayName: Helm init
