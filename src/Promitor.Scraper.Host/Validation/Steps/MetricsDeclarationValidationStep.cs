@@ -28,12 +28,22 @@ namespace Promitor.Scraper.Host.Validation.Steps
         public ValidationResult Run()
         {
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
-            Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
+            this.Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
-            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+
+            MetricsDeclaration metricsDeclaration = null;
+            try
+            {
+                metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            }
+            // Happens if deserilization asks for a node that doesn't exist in the YAML
+            catch (KeyNotFoundException)
+            {
+            }
+
             if (metricsDeclaration == null)
             {
-                return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
+                return ValidationResult.Failure(this.ComponentName, "Unable to deserialize configured metrics declaration");
             }
 
             var validationErrors = new List<string>();
@@ -43,7 +53,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics, metricsDeclaration.MetricDefaults);
             validationErrors.AddRange(metricsErrorMessages);
 
-            return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
+            return validationErrors.Any() ? ValidationResult.Failure(this.ComponentName, validationErrors) : ValidationResult.Successful(this.ComponentName);
         }
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)

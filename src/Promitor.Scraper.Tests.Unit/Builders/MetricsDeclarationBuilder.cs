@@ -12,6 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
     {
         private readonly AzureMetadata _azureMetadata;
         private readonly List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>();
+        private MetricDefaults _metricDefaults = new MetricDefaults();
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
@@ -35,12 +36,19 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return new MetricsDeclarationBuilder(azureMetadata: null);
         }
 
+        public MetricsDeclarationBuilder WithDefaults(MetricDefaults defaults)
+        {
+            _metricDefaults = defaults;
+
+            return this;
+        }
+
         public string Build()
         {
             var metricsDeclaration = new MetricsDeclaration
             {
                 AzureMetadata = _azureMetadata,
-                MetricDefaults = new MetricDefaults
+                MetricDefaults = _metricDefaults ?? new MetricDefaults
                 {
                     // default scraping interval: every minute
                     Scraping = new Scraping { Schedule = @"0 * * ? * *" }
