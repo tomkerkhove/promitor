@@ -50,10 +50,21 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
             validationErrors.AddRange(azureMetadataErrorMessages);
 
+            var metricDefaultErrorMessages = ValidateMetricDefaults(metricsDeclaration.MetricDefaults);
+            validationErrors.AddRange(metricDefaultErrorMessages);
+
             var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics, metricsDeclaration.MetricDefaults);
             validationErrors.AddRange(metricsErrorMessages);
 
             return validationErrors.Any() ? ValidationResult.Failure(this.ComponentName, validationErrors) : ValidationResult.Successful(this.ComponentName);
+        }
+
+        private static IEnumerable<string> ValidateMetricDefaults(MetricDefaults metricDefaults)
+        {
+            if (string.IsNullOrWhiteSpace(metricDefaults.Scraping?.Schedule))
+            {
+                yield return @"No default metric scraping schedule is defined.";
+            }
         }
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
