@@ -1,0 +1,4 @@
+1. Forward the application port by running these commands:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "promitor-scraper.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME 8080:{{ .Values.service.targetPort }}
+2. Check the scraping output at http://127.0.0.1:8080{{ .Values.scrapeConfig.path }}

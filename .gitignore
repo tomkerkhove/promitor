@@ -12,6 +12,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# User-specific files (Helm)
+local-values.yaml
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
