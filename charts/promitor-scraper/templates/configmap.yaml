@@ -17,5 +17,7 @@ data:
     metricDefaults:
       aggregation:
         interval: {{ .Values.metricDefaults.aggregation.interval }}
+      scraping:
+        schedule: {{ .Values.metricDefaults.scraping.schedule }}
     metrics:
 {{ tpl $metrics . | indent 4 }}

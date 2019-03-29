@@ -28,6 +28,8 @@ azureMetadata:
 metricDefaults:
   aggregation:
     interval: 00:05:00
+  scraping:
+    schedule: "*/5 * * * *"
 metrics: []
 # Sample metric configuration below
 #   - name: demo_queue_size
