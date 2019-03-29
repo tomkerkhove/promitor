@@ -17,7 +17,10 @@ namespace Promitor.Scraper.Host.Controllers.v1
         [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, Description = "Scraper is not healthy")]
         public IActionResult Get()
         {
-            return Ok();
+            return Ok( /*  add in int/object here  */);
         }
+
+        // TODO: Figure out how to expose subscription rate limit number to the health controller 
+
     }
 }

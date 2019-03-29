@@ -75,6 +75,8 @@ namespace Promitor.Scraper.Host.Scheduling
 
             var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, metricDefaults, _logger, _exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
+
+            // TODO: Add logic to update rate subscription limit here?
         }
     }
 }
