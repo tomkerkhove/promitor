@@ -52,8 +52,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 
         private static void AssertCosmosDbMetricDefinition(CosmosDbMetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinition cosmosDbMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.DbName, deserializedServiceBusMetricDefinition.DbName);
+            Assert.NotNull(deserializedCosmosDbMetricDefinition);
+            Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedCosmosDbMetricDefinition.DbName);
         }
 
         private CosmosDbMetricDefinition GenerateBogusCosmosDbMetricDefinition(string resourceGroupName, string metricScrapingInterval)
