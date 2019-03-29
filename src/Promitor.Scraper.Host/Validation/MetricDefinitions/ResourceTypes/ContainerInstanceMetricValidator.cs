@@ -10,14 +10,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(containerInstanceMetricDefinition, nameof(containerInstanceMetricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(containerInstanceMetricDefinition.ContainerGroup))
             {
-                errorMessages.Add("No container group is configured");
+                yield return "No container group is configured";
             }
-
-            return errorMessages;
         }
     }
 }

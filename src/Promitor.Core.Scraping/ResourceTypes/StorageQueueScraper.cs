@@ -14,8 +14,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     public class StorageQueueScraper : Scraper<StorageQueueMetricDefinition>
     {
         private readonly AzureStorageQueueClient _azureStorageQueueClient;
-        public StorageQueueScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker)
+        public StorageQueueScraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, azureMonitorClient, logger, exceptionTracker)
         {
             _azureStorageQueueClient = new AzureStorageQueueClient(logger);
         }

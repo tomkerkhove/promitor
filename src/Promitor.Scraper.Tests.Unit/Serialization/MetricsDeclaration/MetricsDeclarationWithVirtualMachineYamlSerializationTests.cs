@@ -15,7 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
     public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
     {
         [Theory]
-        [InlineData("promitor1", @"01:00", @"2:00")]
+        [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
         [InlineData(null, null, null)]
         public void YamlSerialization_SerializeAndDeserializeValidConfigForVirtualMachine_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {

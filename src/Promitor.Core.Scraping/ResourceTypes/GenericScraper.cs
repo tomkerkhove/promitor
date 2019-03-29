@@ -13,8 +13,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/{2}";
 
-        public GenericScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker)
+        public GenericScraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, azureMonitorClient, logger, exceptionTracker)
         {
         }
 

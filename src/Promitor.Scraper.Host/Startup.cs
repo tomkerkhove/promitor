@@ -40,11 +40,11 @@ namespace Promitor.Scraper.Host
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
             services.AddTransient<ILogger, RuntimeLogger>();
             var healthMonitor = new HealthMonitor();
             services.AddSingleton<HealthMonitor>(healthMonitor);
+            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
 
             services.AddMvc()
                     .AddJsonOptions(jsonOptions =>
@@ -53,8 +53,8 @@ namespace Promitor.Scraper.Host
                         jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
                     });
             
-            services.UseCronScheduler();
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
+            services.ScheduleMetricScraping();
         }
 
         private IConfiguration BuildConfiguration()

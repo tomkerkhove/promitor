@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Host.Controllers.v1
         [SwaggerResponse((int) HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
         public IEnumerable<MetricDefinition> Get()
         {
-            var scrapeConfiguration = _metricsDeclarationProvider.Get();
+            var scrapeConfiguration = _metricsDeclarationProvider.Get(applyDefaults: true);
             return scrapeConfiguration.Metrics;
         }
     }

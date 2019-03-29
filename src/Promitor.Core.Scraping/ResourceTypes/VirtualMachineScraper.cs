@@ -13,8 +13,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}";
 
-        public VirtualMachineScraper(AzureMetadata azureMetadata, MetricDefaults metricDefaults, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker)
+        public VirtualMachineScraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
+            : base(azureMetadata, azureMonitorClient, logger, exceptionTracker)
         {
         }
 

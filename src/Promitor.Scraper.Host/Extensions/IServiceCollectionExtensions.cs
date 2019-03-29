@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Swashbuckle.AspNetCore.Swagger;
@@ -17,13 +19,23 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Defines to use the cron scheduler
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static void UseCronScheduler(this IServiceCollection services)
+        public static void ScheduleMetricScraping(this IServiceCollection services)
         {
-            services.AddScheduler(builder =>
+            var spToCreateJobsWith = services.BuildServiceProvider();
+            var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
+            var metrics = metricsProvider.Get(applyDefaults: true);
+
+            foreach (var metric in metrics.Metrics)
             {
-                builder.AddJob<MetricScrapingJob>();
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
-            });
+                services.AddScheduler(builder =>
+                {
+                    builder.AddJob(sp => new MetricScrapingJob(metric,
+                        metricsProvider,
+                        sp.GetService<ILogger>(),
+                        sp.GetService<IExceptionTracker>()));
+                    builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
+                });
+            }
         }
 
         /// <summary>
@@ -74,7 +86,7 @@ namespace Promitor.Scraper.Host.Extensions
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;

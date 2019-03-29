@@ -32,8 +32,6 @@ azureAuthentication:
 scrapeConfig:
   # PROMITOR_SCRAPE_BASEPATH (Optional, default is shown)
   path: /prometheus/scrape
-  # PROMITOR_SCRAPE_SCHEDULE (Optional, default - 5 minutes - is shown)
-  schedule: "*/5 * * * *"
   # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
   timestamp: True
 
