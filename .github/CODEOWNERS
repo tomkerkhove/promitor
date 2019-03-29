@@ -1,8 +1,2 @@
 # General owners
-*       @tomkerkhove
-
-# Hackaton Codeowners
-docs/  @brusmx
-deploy/  @brusmx @jsturtevant
-charts/  @brusmx @jsturtevant
-src/   @brandonh-msft @jsturtevant 
+*       @tomkerkhove @brusmx @jsturtevant @brandonh-msft
