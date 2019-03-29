@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.AspNetCore;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -16,16 +14,20 @@ namespace Promitor.Scraper.Host.Scheduling
 {
     public class MetricScrapingJob : IScheduledJob
     {
+        private readonly MetricDefinition _metric;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
 
-        public MetricScrapingJob(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger, IExceptionTracker exceptionTracker)
+        public MetricScrapingJob(MetricDefinition metric,
+            IMetricsDeclarationProvider metricsDeclarationProvider,
+            ILogger logger, IExceptionTracker exceptionTracker)
         {
-            Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
+            Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
             Guard.NotNull(logger, nameof(logger));
 
+            _metric = metric;
             _metricsDeclarationProvider = metricsDeclarationProvider;
             _exceptionTracker = exceptionTracker;
             _logger = logger;
@@ -40,7 +42,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
         private void ConfigureJob()
         {
-            CronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
+            CronSchedule = _metric.Scraping.Schedule;
             RunImmediately = false;
         }
 
@@ -48,19 +50,10 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             _logger.LogInformation("Scraping Azure Monitor - {timestamp}", DateTimeOffset.Now);
 
+            var scrapeConfiguration = _metricsDeclarationProvider.Get();
             try
             {
-                var scrapeConfiguration = _metricsDeclarationProvider.Get();
-
-                var scrapingTasks = new List<Task>();
-
-                foreach (var metricDefinition in scrapeConfiguration.Metrics)
-                {
-                    var scrapingTask = ScrapeMetric(scrapeConfiguration.AzureMetadata, scrapeConfiguration.MetricDefaults, metricDefinition);
-                    scrapingTasks.Add(scrapingTask);
-                }
-
-                await Task.WhenAll(scrapingTasks);
+                await ScrapeMetric(scrapeConfiguration.AzureMetadata, _metric);
             }
             catch (Exception exception)
             {
@@ -69,11 +62,11 @@ namespace Promitor.Scraper.Host.Scheduling
             }
         }
 
-        private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefaults metricDefaults, MetricDefinition metricDefinitionDefinition)
+        private async Task ScrapeMetric(AzureMetadata azureMetadata, MetricDefinition metricDefinitionDefinition)
         {
             _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, metricDefaults, _logger, _exceptionTracker);
+            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _logger, _exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

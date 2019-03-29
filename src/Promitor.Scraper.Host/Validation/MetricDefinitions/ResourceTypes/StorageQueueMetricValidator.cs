@@ -19,29 +19,25 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(metricDefinition.AccountName))
             {
-                errorMessages.Add(item: "No Azure Storage Account Name is configured");
+                yield return "No Azure Storage Account Name is configured";
             }
 
             if (string.IsNullOrWhiteSpace(metricDefinition.QueueName))
             {
-                errorMessages.Add(item: "No Azure Storage Queue Name is configured");
+                yield return "No Azure Storage Queue Name is configured";
             }
 
             if (string.IsNullOrWhiteSpace(metricDefinition.SasToken))
             {
-                errorMessages.Add(item: "No Azure Storage SAS Token is configured");
+                yield return "No Azure Storage SAS Token is configured";
             }
 
             if (!_validMetricNames.Any(metricName => metricName.Equals(metricDefinition.AzureMetricConfiguration.MetricName, StringComparison.InvariantCultureIgnoreCase)))
             {
-                errorMessages.Add($"Invalid metric name {metricDefinition.AzureMetricConfiguration.MetricName}");
+                yield return $"Invalid metric name {metricDefinition.AzureMetricConfiguration.MetricName}";
             }
-
-            return errorMessages;
         }
     }
 }

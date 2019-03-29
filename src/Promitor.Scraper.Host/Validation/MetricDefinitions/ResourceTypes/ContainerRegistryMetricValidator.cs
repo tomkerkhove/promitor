@@ -10,14 +10,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(containerRegistryMetricDefinition, nameof(containerRegistryMetricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(containerRegistryMetricDefinition.RegistryName))
             {
-                errorMessages.Add("No registry name is configured");
+                yield return "No registry name is configured";
             }
-
-            return errorMessages;
         }
     }
 }
