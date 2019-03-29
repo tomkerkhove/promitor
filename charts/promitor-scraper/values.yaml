@@ -14,7 +14,6 @@ azureAuthentication:
 
 scrapeConfig:
   path: /prometheus/scrape
-  schedule: "*/5 * * * *"
   timestamp: True
 
 telemetry:
