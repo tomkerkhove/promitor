@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             _metricDefaults = metricDefaults;
         }
 
-        public List<string> Validate(AzureMetricConfiguration azureMetricConfiguration)
+        public IEnumerable<string> Validate(AzureMetricConfiguration azureMetricConfiguration)
         {
             var errorMessages = new List<string>();
 

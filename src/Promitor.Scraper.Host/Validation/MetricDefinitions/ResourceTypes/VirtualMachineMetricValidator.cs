@@ -10,14 +10,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(virtualMachineMetricDefinition, nameof(virtualMachineMetricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(virtualMachineMetricDefinition.VirtualMachineName))
             {
-                errorMessages.Add("No virtual machine name is configured");
+                yield return "No virtual machine name is configured";
             }
-
-            return errorMessages;
         }
     }
 }
