@@ -18,6 +18,6 @@ data:
       aggregation:
         interval: {{ .Values.metricDefaults.aggregation.interval }}
       scraping:
-        schedule: {{ .Values.metricDefaults.scraping.schedule }}
+        schedule: {{ .Values.metricDefaults.scraping.schedule | quote }}
     metrics:
 {{ tpl $metrics . | indent 4 }}
