@@ -9,7 +9,6 @@ using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Scraper.Host.Extensions;
-using Promitor.Scraper.Host.Models;
 
 namespace Promitor.Scraper.Host
 {
@@ -42,8 +41,6 @@ namespace Promitor.Scraper.Host
         {
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
             services.AddTransient<ILogger, RuntimeLogger>();
-            var healthMonitor = new HealthMonitor();
-            services.AddSingleton<HealthMonitor>(healthMonitor);
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
 
             services.AddMvc()

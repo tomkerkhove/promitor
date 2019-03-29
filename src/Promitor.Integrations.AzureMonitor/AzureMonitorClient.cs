@@ -22,35 +22,6 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
 
-        private class MyHandler : DelegatingHandlerBase
-        {
-            private readonly ILogger _logger;
-            MyHandler(ILogger logger)
-            {
-                _logger = logger;
-            }
-            protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-            {
-                var response = await base.SendAsync(request, cancellationToken);
-
-                if (response.Headers.Contains("x-ms-ratelimit-remaining-subscription-reads"))
-                {
-                    var remaining = response.Headers.GetValues("x-ms-ratelimit-remaining-subscription-reads").FirstOrDefault();
-
-                    // update singleton
-                    
-                    Console.WriteLine(remaining);
-                }
-
-                if ((int)response.StatusCode == 429)
-                {
-                    _logger.LogWarning("Azure subscription rate limit reached.");
-                }
-
-                return response;
-            }
-        }
-
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -70,7 +41,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             _authenticatedAzureSubscription = Azure
                 .Configure()
-                .WithDelegatingHandler(new MyHandler())
+                .WithDelegatingHandler(new AzureMonitorHandler(logger))
                 .Authenticate(credentials).WithSubscription(subscriptionId);
             _logger = logger;
         }

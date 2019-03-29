@@ -9,6 +9,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Scraper.Host.Models;
 
 namespace Promitor.Scraper.Host.Scheduling
 {
@@ -68,6 +69,8 @@ namespace Promitor.Scraper.Host.Scheduling
 
             var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _logger, _exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
+
+            // HealthMonitor.Instance.subscriptionLimitCount = // value from scrapeAsync's return
 
             // TODO: Add logic to update rate subscription limit here?
         }
