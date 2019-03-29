@@ -44,9 +44,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void
-
-            CosmosDbMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void CosmosDbMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()

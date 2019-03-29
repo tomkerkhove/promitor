@@ -30,7 +30,8 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var rawMetricsConfiguration = _metricsDeclarationProvider.ReadRawDeclaration();
             Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawMetricsConfiguration);
 
-            var metricsDeclaration = _metricsDeclarationProvider.Get();
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+
             if (metricsDeclaration == null)
             {
                 return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
@@ -40,10 +41,21 @@ namespace Promitor.Scraper.Host.Validation.Steps
             var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
             validationErrors.AddRange(azureMetadataErrorMessages);
 
+            var metricDefaultErrorMessages = ValidateMetricDefaults(metricsDeclaration.MetricDefaults);
+            validationErrors.AddRange(metricDefaultErrorMessages);
+
             var metricsErrorMessages = ValidateMetrics(metricsDeclaration.Metrics, metricsDeclaration.MetricDefaults);
             validationErrors.AddRange(metricsErrorMessages);
 
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
+        }
+
+        private static IEnumerable<string> ValidateMetricDefaults(MetricDefaults metricDefaults)
+        {
+            if (string.IsNullOrWhiteSpace(metricDefaults.Scraping?.Schedule))
+            {
+                yield return @"No default metric scraping schedule is defined.";
+            }
         }
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)

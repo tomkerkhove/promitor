@@ -16,11 +16,49 @@ namespace Promitor.Core.Scraping.Configuration.Providers
             _configurationSerializer = new ConfigurationSerializer(logger);
         }
 
-        public virtual MetricsDeclaration Get()
+        public virtual MetricsDeclaration Get(bool applyDefaults = false)
         {
             var rawMetricsDeclaration = ReadRawDeclaration();
 
             var config = _configurationSerializer.Deserialize(rawMetricsDeclaration);
+
+            if (applyDefaults)
+            {
+                foreach (var metric in config.Metrics)
+                {
+                    // Apply AzureMetadata.ResourceGroupName to metrics with no other RG specified
+                    if (string.IsNullOrWhiteSpace(metric.ResourceGroupName))
+                    {
+                        metric.ResourceGroupName = config.AzureMetadata.ResourceGroupName;
+                    }
+
+                    // Apply the default aggregation interval if none is specified
+                    if (metric.AzureMetricConfiguration == null)
+                    {
+                        metric.AzureMetricConfiguration = new AzureMetricConfiguration();
+                    }
+                    if (metric.AzureMetricConfiguration?.Aggregation == null)
+                    {
+                        metric.AzureMetricConfiguration.Aggregation = new MetricAggregation();
+                    }
+                    if (metric.AzureMetricConfiguration?.Aggregation.Interval == null)
+                    {
+                        metric.AzureMetricConfiguration.Aggregation.Interval = config.MetricDefaults.Aggregation.Interval;
+                    }
+
+                    // Apply the default scraping interval if none is specified
+                    if (metric.Scraping == null)
+                    {
+                        metric.Scraping = config.MetricDefaults.Scraping;
+                    }
+
+                    // Apply the default scraping interval if none is specified
+                    if (metric.Scraping.Schedule == null)
+                    {
+                        metric.Scraping.Schedule = config.MetricDefaults.Scraping.Schedule;
+                    }
+                }
+            }
             return config;
         }
 

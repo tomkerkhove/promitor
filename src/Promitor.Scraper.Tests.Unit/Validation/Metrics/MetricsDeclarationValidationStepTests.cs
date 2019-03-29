@@ -91,5 +91,22 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
             // Assert
             Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
+
+        [Fact]
+        public void MetricsDeclaration_WithoutDefaultScrapingSchedule_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDefaults(new Core.Scraping.Configuration.Model.MetricDefaults())
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
     }
 }

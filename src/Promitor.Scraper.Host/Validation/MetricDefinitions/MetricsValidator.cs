@@ -27,7 +27,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             return errorMessages.ToList();
         }
 
-        private IList<string> Validate(MetricDefinition metric)
+        private IEnumerable<string> Validate(MetricDefinition metric)
         {
             Guard.NotNull(metric, nameof(metric));
 
@@ -58,6 +58,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
             var metricAggregationValidator = new AzureMetricConfigurationValidator(_metricDefaults);
             var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
             errorMessages.AddRange(metricsConfigurationErrorMessages);
+
+            var metricScrapingScheduleValidator = new MetricScrapingValidator(_metricDefaults);
+            var metricScrapingErrorMessages = metricScrapingScheduleValidator.Validate(metric.Scraping);
+            errorMessages.AddRange(metricScrapingErrorMessages);
 
             return errorMessages;
         }

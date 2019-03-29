@@ -16,11 +16,10 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
-        /// <param name="metricDefaults">Default configuration for metrics</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Tracker used to log exceptions</param>
         public static IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            MetricDefaults metricDefaults, ILogger logger, IExceptionTracker exceptionTracker)
+            ILogger logger, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, logger);
@@ -28,21 +27,21 @@ namespace Promitor.Core.Scraping.Factories
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new ServiceBusQueueScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.Generic:
-                    return new GenericScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new GenericScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.StorageQueue:
-                    return new StorageQueueScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new StorageQueueScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.ContainerInstance:
-                    return new ContainerInstanceScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new ContainerInstanceScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.VirtualMachine:
-                    return new VirtualMachineScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new VirtualMachineScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.NetworkInterface:
-                    return new NetworkInterfaceScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new NetworkInterfaceScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.ContainerRegistry:
-                    return new ContainerRegistryScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new ContainerRegistryScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
 				case ResourceType.CosmosDb:
-                    return new CosmosDbScraper(azureMetadata, metricDefaults, azureMonitorClient, logger, exceptionTracker);
+                    return new CosmosDbScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

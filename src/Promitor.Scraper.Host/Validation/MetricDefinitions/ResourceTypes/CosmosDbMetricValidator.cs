@@ -10,14 +10,10 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(cosmosDbMetricDefinition, nameof(cosmosDbMetricDefinition));
 
-            var errorMessages = new List<string>();
-
             if (string.IsNullOrWhiteSpace(cosmosDbMetricDefinition.DbName))
             {
-                errorMessages.Add("No Cosmos db Name is configured");
+                yield return "No Cosmos db Name is configured";
             }
-
-            return errorMessages;
         }
     }
 }

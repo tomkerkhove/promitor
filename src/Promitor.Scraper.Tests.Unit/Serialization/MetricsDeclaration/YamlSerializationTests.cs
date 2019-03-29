@@ -70,7 +70,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 
             if (!string.IsNullOrWhiteSpace(defaultScrapingInterval))
             {
-                metricDefaults.Scraping.Interval = TimeSpan.Parse(defaultScrapingInterval);
+                metricDefaults.Scraping.Schedule = defaultScrapingInterval;
             }
 
             return metricDefaults;
@@ -90,8 +90,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
         protected Scraping GenerateBogusScrapingInterval(string testInterval)
         {
             var bogusGenerator = new Faker<Scraping>()
-                .RuleFor(scraping => scraping.Interval, faker =>
-                    string.IsNullOrWhiteSpace(testInterval) ? (TimeSpan?)null : TimeSpan.Parse(testInterval));
+                .RuleFor(scraping => scraping.Schedule, faker => testInterval);
 
             return bogusGenerator.Generate();
         }

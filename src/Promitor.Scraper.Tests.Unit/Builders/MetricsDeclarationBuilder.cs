@@ -12,6 +12,10 @@ namespace Promitor.Scraper.Tests.Unit.Builders
     {
         private readonly AzureMetadata _azureMetadata;
         private readonly List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition> _metrics = new List<Core.Scraping.Configuration.Model.Metrics.MetricDefinition>();
+        private MetricDefaults _metricDefaults = new MetricDefaults
+        {
+            Scraping = new Scraping { Schedule = @"0 * * ? * *" }
+        };
 
         public MetricsDeclarationBuilder(AzureMetadata azureMetadata)
         {
@@ -35,11 +39,19 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return new MetricsDeclarationBuilder(azureMetadata: null);
         }
 
+        public MetricsDeclarationBuilder WithDefaults(MetricDefaults defaults)
+        {
+            _metricDefaults = defaults;
+
+            return this;
+        }
+
         public string Build()
         {
             var metricsDeclaration = new MetricsDeclaration
             {
                 AzureMetadata = _azureMetadata,
+                MetricDefaults = _metricDefaults,
                 Metrics = _metrics
             };
 
@@ -63,7 +75,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ContainerInstanceMetricDefinition
@@ -109,7 +121,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken="?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
+        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new StorageQueueMetricDefinition
@@ -126,7 +138,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new VirtualMachineMetricDefinition
@@ -142,7 +154,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
             return this;
         }
 
-        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name",  string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new NetworkInterfaceMetricDefinition
