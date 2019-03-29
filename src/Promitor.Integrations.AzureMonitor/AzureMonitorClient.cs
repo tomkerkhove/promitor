@@ -21,6 +21,7 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly ILogger _logger;
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
+        private int _subscriptionReadLimit;
 
         /// <summary>
         ///     Constructor
@@ -41,9 +42,15 @@ namespace Promitor.Integrations.AzureMonitor
 
             _authenticatedAzureSubscription = Azure
                 .Configure()
-                .WithDelegatingHandler(new AzureMonitorHandler(logger))
+                .WithDelegatingHandler(new AzureMonitorHandler(logger, ref _subscriptionReadLimit))
                 .Authenticate(credentials).WithSubscription(subscriptionId);
             _logger = logger;
+        }
+
+        // TODO: add summary
+        public int getSubscriptionReadLimit()
+        {
+            return _subscriptionReadLimit;
         }
 
         /// <summary>

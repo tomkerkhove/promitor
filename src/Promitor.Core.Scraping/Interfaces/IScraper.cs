@@ -5,6 +5,6 @@ namespace Promitor.Core.Scraping.Interfaces
 {
     public interface IScraper<in TMetricDefinition> where TMetricDefinition : MetricDefinition
     {
-        Task ScrapeAsync(TMetricDefinition metricDefinition);
+        Task<int> ScrapeAsync(TMetricDefinition metricDefinition);
     }
 }

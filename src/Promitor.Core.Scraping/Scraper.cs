@@ -61,7 +61,7 @@ namespace Promitor.Core.Scraping
         /// </summary>
         protected AzureMonitorClient AzureMonitorClient { get; }
 
-        public async Task ScrapeAsync(MetricDefinition metricDefinition)
+        public async Task<int> ScrapeAsync(MetricDefinition metricDefinition)
         {
             try
             {
@@ -86,10 +86,13 @@ namespace Promitor.Core.Scraping
 
                 var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag);
                 gauge.Set(foundMetricValue);
+
+                return AzureMonitorClient.getSubscriptionReadLimit();
             }
             catch (Exception exception)
             {
                 _exceptionTracker.Track(exception);
+                return int.MinValue;
             }
         }
 
