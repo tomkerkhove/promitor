@@ -23,6 +23,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerRegistryMetricDeserializer();
                 case Configuration.Model.ResourceType.NetworkInterface:
                     return new NetworkInterfaceMetricDeserializer();
+				case Configuration.Model.ResourceType.CosmosDb:
+                    return new CosmosDbMetricDeserializer();
             }
 
             throw new ArgumentOutOfRangeException($@"Resource Type {resource} not supported.");
