@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Promitor.Scraper.Host.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Scraper.Host.Controllers.v1
@@ -13,14 +14,12 @@ namespace Promitor.Scraper.Host.Controllers.v1
         /// <remarks>Provides an indication about the health of the scraper</remarks>
         [HttpGet]
         [SwaggerOperation(OperationId = "Health_Get")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Scraper is healthy")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Scraper is healthy, with subscription read limit")]
         [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, Description = "Scraper is not healthy")]
         public IActionResult Get()
         {
-            return Ok( /*  add in int/object here  */);
+            int subscriptionReadLimit = HealthMonitor.Instance.subscriptionLimitCount;
+            return Ok(subscriptionReadLimit);
         }
-
-        // TODO: Figure out how to expose subscription rate limit number to the health controller 
-
     }
 }
