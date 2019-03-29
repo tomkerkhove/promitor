@@ -9,7 +9,7 @@ kubectl port-forward $POD_NAME 8080:{{ .Values.service.targetPort }}
 
 cat > promitor-scrape-config.yaml <<EOF
 extraScrapeConfigs: |
-  - job_name: {{ .Release.Name }}
+  - job_name: {{ template "promitor-agent-scraper.fullname" . }}
     metrics_path: {{ .Values.scrapeConfig.path }}
     static_configs:
       - targets:
