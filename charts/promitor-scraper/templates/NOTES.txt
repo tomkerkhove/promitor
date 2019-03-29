@@ -1,4 +1,18 @@
 1. Forward the application port by running these commands:
-  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "promitor-scraper.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 8080:{{ .Values.service.targetPort }}
+  
+export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app={{ include "promitor-scraper.name" . }},release={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward $POD_NAME 8080:{{ .Values.service.targetPort }}
+
 2. Check the scraping output at http://127.0.0.1:8080{{ .Values.scrapeConfig.path }}
+
+3. To set up Prometheus in your cluster & pull in metrics from Promitor's scraping output, run:
+
+cat > promitor-scrape-config.yaml <<EOF
+extraScrapeConfigs: |
+  - job_name: {{ .Release.Name }}
+    metrics_path: {{ .Values.scrapeConfig.path }}
+    static_configs:
+      - targets:
+        - http://{{ template "promitor-scraper.fullname" . }}:{{ .Values.service.port }}
+EOF
+helm install stable/prometheus -f promitor-scrape-config.yaml

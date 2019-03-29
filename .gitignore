@@ -12,8 +12,8 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
-# User-specific files (Helm)
-local-values.yaml
+# User-specific files created by instructions in NOTES.txt (Helm)
+promitor-scrape-config.yaml
 
 # Build results
 [Dd]ebug/
