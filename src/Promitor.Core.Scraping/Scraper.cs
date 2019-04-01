@@ -92,6 +92,7 @@ namespace Promitor.Core.Scraping
             catch (Exception exception)
             {
                 _exceptionTracker.Track(exception);
+
                 return int.MinValue;
             }
         }
