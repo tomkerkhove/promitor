@@ -20,8 +20,6 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(logger);
         }
 
-        // TODO: Add logic to grab rate limit header and update singleton
-
         protected override async Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));

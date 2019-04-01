@@ -14,11 +14,11 @@ namespace Promitor.Scraper.Host.Models
             return subscriptionLimitCount;
         }
 
-        public void setSubscriptionLimitCount(int newVal)
+        public void setSubscriptionLimitCount(int newSubscriptionLimit)
         {
-            if  (newVal != int.MinValue)
+            if  (newSubscriptionLimit != int.MinValue)
             {
-                subscriptionLimitCount = newVal;
+                subscriptionLimitCount = newSubscriptionLimit;
             }
         }
         private HealthMonitor()
