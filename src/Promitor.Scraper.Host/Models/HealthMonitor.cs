@@ -7,7 +7,20 @@ namespace Promitor.Scraper.Host.Models
 {
     public class HealthMonitor
     {
-        public int subscriptionLimitCount { get; set; }
+        private int subscriptionLimitCount;
+
+        public int getSubscriptionLimitCount()
+        {
+            return subscriptionLimitCount;
+        }
+
+        public void setSubscriptionLimitCount(int newVal)
+        {
+            if  (newVal != int.MinValue)
+            {
+                subscriptionLimitCount = newVal;
+            }
+        }
         private HealthMonitor()
         {
             subscriptionLimitCount = int.MinValue;

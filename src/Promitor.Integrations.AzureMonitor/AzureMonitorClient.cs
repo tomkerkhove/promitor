@@ -47,7 +47,10 @@ namespace Promitor.Integrations.AzureMonitor
             _logger = logger;
         }
 
-        // TODO: add summary
+        /// <summary>
+        ///  Returns the current remaining subscription read limit
+        /// </summary>
+        /// <returns>Current amount of subscription reads remaining</returns>
         public int getSubscriptionReadLimit()
         {
             return _subscriptionReadLimit;

@@ -70,10 +70,7 @@ namespace Promitor.Scraper.Host.Scheduling
             var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _logger, _exceptionTracker);
             int subscriptionReadLimit = await scraper.ScrapeAsync(metricDefinitionDefinition);
 
-            HealthMonitor.Instance.subscriptionLimitCount = subscriptionReadLimit;
-            // HealthMonitor.Instance.subscriptionLimitCount = // value from scrapeAsync's return
-
-            // TODO: Add logic to update rate subscription limit here?
+            HealthMonitor.Instance.setSubscriptionLimitCount(subscriptionReadLimit);
         }
     }
 }
