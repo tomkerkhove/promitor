@@ -10,6 +10,8 @@
 <a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
 <a href="https://app.netlify.com/sites/promitor-staging/deploys" rel="nofollow"><img src="https://api.netlify.com/api/v1/badges/07753d51-f4f8-4ffb-8e8d-d64c312c6636/deploy-status" alt="Netlify"></a>
 </p>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url" rel="nofollow"><img src="https://promitor.io/media/buttons/paypal.png" alt="Donate"></a>
+</p>
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
 
@@ -27,7 +29,7 @@ We'd like to thank all the services, tooling & NuGet packages that support us - 
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you do a small donation.
 
-[![Donate](https://promitor.io/media/donate-button.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
+[![Donate](https://promitor.io/media/buttons/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 ## License Information
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Tom Kerkhove is the original author of this web application.
