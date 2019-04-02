@@ -21,19 +21,13 @@ All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We w
 
 Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/metrics/)? You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
+## Thank you!
+We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](https://promitor.io/thank-you)!
+
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you do a small donation.
 
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick" />
-<input type="hidden" name="hosted_button_id" value="LYCEDSP3S5P9G" />
-<input type="image" src="https://raw.githubusercontent.com/tomkerkhove/promitor/master/docs/media/donate-button.png" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-<img alt="" border="0" src="https://www.paypal.com/en_BE/i/scr/pixel.gif" width="1" height="1" />
-</form>
-
-
-## Thank you!
-We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](https://promitor.io/thank-you)!
+[![Donate](https://promitor.io/media/donate-button.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 ## License Information
 This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Tom Kerkhove is the original author of this web application.
