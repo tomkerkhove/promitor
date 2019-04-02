@@ -13,6 +13,6 @@ extraScrapeConfigs: |
     metrics_path: {{ .Values.scrapeConfig.path }}
     static_configs:
       - targets:
-        - http://{{ template "promitor-scraper.fullname" . }}:{{ .Values.service.port }}
+        - {{ template "promitor-scraper.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
 EOF
 helm install stable/prometheus -f promitor-scrape-config.yaml

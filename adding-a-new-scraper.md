@@ -11,7 +11,7 @@ This guide walks you through the process of adding a new scraper type.
 1. Add your new scraping type to the  `Promitor.Core.Scraping.Configuration.Model.ResourceType`
 2. Describe the resource for which you're creating scraping metrics by creating `<New-Type>MetricDefinition`and inherit from `Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition` - this class should go in `.\src\Promitor.Core.Scraping\Configuration\Model\Metrics\ResourceTypes`
 2. Create an example entry for your scraper in `.\samples\promitor-sample.yaml`
-3. Create a new Deserializer in `.\src\Promitor.Core.Scraping\Configuration\Serialization\Deserializers`. This must inherit from `AzureMetricDeserializer`.
+3. Create a new Deserializer in `.\src\Promitor.Core.Scraping\Configuration\Serialization\Deserializers`. This must inherit from `GenericAzureMetricDeserializer`.
 3. Update `Promitor.Core.Scraping.Factories.MetricDeserializerFactory` to handle your new resource type by returning a new instance of the Deserializer you created in the previous step.
 4. Provide a unit test in `.\src\Promitor.Scraper.Tests.Unit\Serialization\MetricsDeclaration\` that tests the deserialization based on our sample
 

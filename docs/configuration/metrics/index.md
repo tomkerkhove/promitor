@@ -87,6 +87,7 @@ We also provide a simplified way to configure the following Azure resources:
 - [Azure Virtual Machine](virtual-machine)
 - [Azure Network Interface](network-interface)
 - [Azure Storage Queue](storage-queue)
+- [Cosmos DB](cosmosdb)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 

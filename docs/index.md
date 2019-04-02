@@ -4,7 +4,7 @@ title: Promitor - An Azure Monitor scraper for Prometheus
 ---
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/tomkerkhove/promitor/blob/master/LICENSE)[![Build Status](https://dev.azure.com/tomkerkhove/Promitor/_apis/build/status/Promitor%20CI%20-%20Scraper%20Agent?branchName=master)](https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master) [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)
-[![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)
+[![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-scraper/)[![Donate](https://promitor.io/media/buttons/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
 
@@ -52,8 +52,15 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
 - **Operations**
     - [Health](operations#health)
 
+# Support
+Promitor is actively maintained and developed with best-effort support.
+
+We do welcome PRs that implement features from our backlog and are always happy to help you incorporate Promitor in your infrastructure, but do not provide 24/7 support. Are you having issues or feature requests?
+
+Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
+
 # Thank you!
 We'd like to thank all the services, tooling & NuGet packages that support us - [Thank you](thank-you)!
 
 # License Information
-This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Codit is the original author of this web application.
+This is licensed under The MIT License (MIT). Which means that you can use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the web application. But you always need to state that Tom Kerkhove is the original author of this web application.
