@@ -1,11 +1,11 @@
-# Default values for promitor-scraper.
+# Default values for promitor-agent-scraper.
 # This is a YAML-formatted file.
 
 replicaCount: 1
 
 image:
   repository: tomkerkhove/promitor-agent-scraper
-  tag: 1.0.0-preview-2
+  tag: 1.0.0-preview-3
   pullPolicy: Always
 
 azureAuthentication:
