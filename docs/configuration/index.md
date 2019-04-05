@@ -14,7 +14,7 @@ Promitor automatically scrapes Azure Monitor and makes the information available
 
 The behavior of this can be configured with the following environment variables:
 - **PROMITOR_CONFIGURATION_PATH** - Defines the location of the YAML file that declares what Azure Monitor metrics to scrape. If nothing is specified, `/config/metrics-declaration.yaml` will be used.
-- **PROMITOR_SCRAPE_BASEPATH** - Controls the path where the scraping endpoint for Prometheus is being exposed. If nothing is specified, `/prometheus/scrape` will be used.
+- **PROMITOR_SCRAPE_BASEPATH** - Controls the path where the scraping endpoint for Prometheus is being exposed. If nothing is specified, `/metrics` will be used.
 
 We're also providing feature flags to opt-out of certain features:
 - **PROMITOR_FEATURE_METRICSTIMESTAMP** - Defines whether or not a timestamp should be included when the value was scraped on Azure Monitor. Supported values are `True` to opt-in & `False` to opt-out, if nothing is configured this will be turned on.

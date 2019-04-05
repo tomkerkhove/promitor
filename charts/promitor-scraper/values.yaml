@@ -13,7 +13,7 @@ azureAuthentication:
   appKey: ""
 
 scrapeConfig:
-  path: /prometheus/scrape
+  path: /metrics
   timestamp: True
 
 telemetry:
