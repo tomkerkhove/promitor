@@ -25,9 +25,9 @@ Want to see support for a scraper that is not [already supported](https://promit
 ## Support
 Promitor is actively maintained and developed with best-effort support.
 
-We do welcome PRs that implement features from our backlog and are always happy to help you incorporate Promitor in your infrastructure, but do not provide 24/7 support. Are you having issues or feature requests?
+We do welcome PRs that implement features from our backlog and are always happy to help you incorporate Promitor in your infrastructure, but do not provide 24/7 support.
 
-Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
+Are you having issues or feature requests? Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you can do a small donation.
