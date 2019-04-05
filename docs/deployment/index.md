@@ -31,7 +31,7 @@ azureAuthentication:
 
 scrapeConfig:
   # PROMITOR_SCRAPE_BASEPATH (Optional, default is shown)
-  path: /prometheus/scrape
+  path: /metrics
   # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
   timestamp: True
 
