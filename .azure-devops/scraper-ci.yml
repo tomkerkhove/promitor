@@ -43,7 +43,7 @@ jobs:
   displayName: Run Code Quality
   condition: succeeded()
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2019
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NET SDK'
