@@ -4,9 +4,9 @@
 
 <p align="center">
     <a href="./LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square" alt="License"></a>
-<a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
+<a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
 <a href="https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master" rel="nofollow"><img src="https://dev.azure.com/tomkerkhove/Promitor/_apis/build/status/Promitor%20CI%20-%20Scraper%20Agent?branchName=master" alt="Build Status"></a>
-<a href="https://hub.docker.com/r/tomkerkhove/promitor-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-scraper.svg?style=flat-square" alt="Docker Stars"></a>
+<a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Stars"></a>
 <a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
 <a href="https://app.netlify.com/sites/promitor-staging/deploys" rel="nofollow"><img src="https://api.netlify.com/api/v1/badges/07753d51-f4f8-4ffb-8e8d-d64c312c6636/deploy-status" alt="Netlify"></a>
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url" rel="nofollow"><img src="https://promitor.io/media/buttons/paypal.png" alt="Donate"></a>
