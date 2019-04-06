@@ -13,11 +13,11 @@ _For more information about advanced configuration, read our documentation [here
 ❯ docker run -d -p 8999:80 -e PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                            -e PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
                            -v C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                           tomkerkhove/promitor-scraper
+                           tomkerkhove/promitor-agent-scraper:1.0.0-preview-3
 ```
 
 # Kubernetes
-We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
+We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-agent-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
 To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). Included here are the values that correspond with the local environment variables. In addition
 to these, you will need a metric declaration file as described in [Metric Declaration](/configuration/metrics).
@@ -31,7 +31,7 @@ azureAuthentication:
 
 scrapeConfig:
   # PROMITOR_SCRAPE_BASEPATH (Optional, default is shown)
-  path: /prometheus/scrape
+  path: /metrics
   # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
   timestamp: True
 
@@ -40,11 +40,11 @@ telemetry:
   appInsightsKey: "<azure-app-insights-key>"
 ```
 
-Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-scraper/values.yaml) to see all configurable values.
+Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-agent-scraper/values.yaml) to see all configurable values.
 
 If you have a `metric-declaration.yaml` file, you can create a basic deployment with this command:
 ```
-❯ helm install --name promitor-scraper ./charts/promitor-scraper \
+❯ helm install --name promitor-agent-scraper ./charts/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
                --values /path/to/metric-declaration.yaml
