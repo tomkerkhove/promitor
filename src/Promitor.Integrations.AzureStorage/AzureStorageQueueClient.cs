@@ -49,8 +49,13 @@ namespace Promitor.Integrations.AzureStorage
         {
             var queue = await GetQueueReference(accountName, queueName, sasToken);
 
-            var msg = await queue.PeekMessageAsync();
-            var timeSpentInQueue = msg.InsertionTime.HasValue ? DateTime.UtcNow - msg.InsertionTime.Value.UtcDateTime : TimeSpan.Zero;
+            var message = await queue.PeekMessageAsync();
+
+            TimeSpan timeSpentInQueue = TimeSpan.Zero;
+            if (message?.InsertionTime.HasValue == true)
+            {
+                timeSpentInQueue = DateTime.UtcNow - message.InsertionTime.Value.UtcDateTime;
+            }
 
             return timeSpentInQueue.TotalSeconds;
         }
