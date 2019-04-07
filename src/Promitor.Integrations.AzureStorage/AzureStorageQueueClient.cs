@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Azure.Storage.Queue;
 using Microsoft.Extensions.Logging;
-using Microsoft.WindowsAzure.Storage.Queue;
 using Promitor.Integrations.AzureStorage.Exceptions;
 
 namespace Promitor.Integrations.AzureStorage

@@ -1,6 +1,6 @@
 ﻿using GuardNet;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Auth;
 
 namespace Promitor.Integrations.AzureStorage
 {
