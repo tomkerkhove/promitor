@@ -6,7 +6,7 @@ pr: none
 pool:
   name: Hosted Ubuntu 1604
 variables:
-  DotNet.SDK.Version: '2.2.105'
+  DotNet.SDK.Version: '2.2.202'
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'

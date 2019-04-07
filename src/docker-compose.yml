@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   promitor.scraper:
-    image: tomkerkhove/promitor-scraper
+    image: tomkerkhove/promitor-agent-scraper
     build:
       context: .
       dockerfile: Promitor.Scraper.Host/Dockerfile

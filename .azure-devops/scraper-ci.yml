@@ -12,7 +12,7 @@ pr:
     - src/*
     - .azure-devops/scraper-ci.yml
 variables:
-  DotNet.SDK.Version: '2.2.105'
+  DotNet.SDK.Version: '2.2.202'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
 - job: Build_Job
@@ -43,7 +43,7 @@ jobs:
   displayName: Run Code Quality
   condition: succeeded()
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2019
   steps:
   - task: DotNetCoreInstaller@0
     displayName: 'Install .NET SDK'
@@ -84,7 +84,7 @@ jobs:
       containerregistrytype: 'Container Registry'
       dockerRegistryEndpoint: 'Docker Hub'
       dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-      arguments: '--tag promitor-scraper-ci --no-cache'
+      arguments: '--tag promitor-agent-scraper-ci --no-cache'
       useDefaultContext: false
       buildContext: ./src/
       imageName: '$(Image.TaggedName)'
@@ -99,7 +99,7 @@ jobs:
       imageName: '$(Image.TaggedName)'
       containerName: 'promitor-ci'
       ports: '8999:80'
-      volumes: '/samples/promitor-sample.yaml:/config/metrics-declaration.yaml promitor-scraper-ci'
+      volumes: '/samples/promitor-sample.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
       envVars: |
        PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
        PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'

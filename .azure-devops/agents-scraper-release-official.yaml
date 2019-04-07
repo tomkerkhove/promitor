@@ -6,7 +6,7 @@ pr: none
 pool:
   name: Hosted Ubuntu 1604
 variables:
-  DotNet.SDK.Version: '2.2.105'
+  DotNet.SDK.Version: '2.2.202'
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'
@@ -57,7 +57,7 @@ steps:
      ### Getting started
      Running Promitor Scraper is super easy:
      ```
-     docker run -d -p 8999:80 --name promitor-scraper
+     docker run -d -p 8999:80 --name promitor-agent-scraper
                               --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                               --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
                               --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
