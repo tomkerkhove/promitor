@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 
             if (string.IsNullOrWhiteSpace(cosmosDbMetricDefinition.DbName))
             {
-                yield return "No Cosmos db Name is configured";
+                yield return "No Cosmos DB name is configured";
             }
         }
     }
