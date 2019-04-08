@@ -4,6 +4,9 @@ title: Azure Container Instances Declaration
 ---
 
 ## Azure Container Instances
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-blue.svg)
+
 You can declare to scrape an Azure Container Instances via the `ContainerInstance` resource type.
 
 The following fields need to be provided:
