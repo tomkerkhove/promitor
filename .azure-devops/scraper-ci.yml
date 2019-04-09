@@ -122,13 +122,6 @@ jobs:
     vmImage: ubuntu-16.04
   steps:
 
-  # Minikube can't use the most up to date version of Docker last I checked
-  - task: DockerInstaller@0
-    displayName: Docker Installer
-    inputs:
-      dockerVersion: '18.06.1-ce'
-      releaseType: stable
-
   - task: HelmInstaller@0
     displayName: Helm Installer
     inputs:
@@ -139,14 +132,14 @@ jobs:
       checkLatestKubectl: true
 
   - bash: |
-      docker version
       curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64
       curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64.sha256
       expected=$(cat minikube.sha256)
       echo "$expected minikube" | sha256sum -c
       chmod +x minikube
       sudo mv minikube /usr/local/bin
-    displayName: Minikube Installer
+      sudo apt-get install socat ebtables
+    displayName: Minikube & Dependencies Installer
 
   - bash: |
       sudo minikube start --vm-driver=none --bootstrapper=kubeadm --kubernetes-version=v1.13.5
