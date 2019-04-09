@@ -139,6 +139,7 @@ jobs:
       checkLatestKubectl: true
 
   - bash: |
+      docker version
       curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64
       curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64.sha256
       expected=$(cat minikube.sha256)
@@ -160,6 +161,7 @@ jobs:
     inputs:
       scriptPath: ./.azure-devops/scripts/check-cluster.sh
     displayName: Wait for cluster to be up
+    timeoutInMinutes: 5
 
   - task: HelmDeploy@0
     displayName: Helm init
@@ -208,6 +210,7 @@ jobs:
         then exit 1
       fi
     displayName: Port forward pod output & check values
+    timeoutInMinutes: 5
     failOnStderr: true
 
   - bash: |
