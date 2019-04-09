@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Guard.NET" Version="1.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.3" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.20.0" />
     <PackageReference Include="Microsoft.Azure.Management.Monitor.Fluent" Version="1.20.0" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.4" />
