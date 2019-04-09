@@ -132,6 +132,21 @@ jobs:
       checkLatestKubectl: true
 
   - bash: |
+      sudo apt-get remove --purge docker*
+      sudo apt-get autoremove --purge
+      sudo apt-get autoclean
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) \
+        stable"
+      sudo apt-get update
+      sudo apt-get install docker-ce=18.06.1~ce~3-0~ubuntu
+      sudo service docker restart
+    displayName: Docker Installer
+    continueOnError: true
+
+  - bash: |
       curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64
       curl -Lo minikube.sha256 https://storage.googleapis.com/minikube/releases/v0.35.0/minikube-linux-amd64.sha256
       expected=$(cat minikube.sha256)
