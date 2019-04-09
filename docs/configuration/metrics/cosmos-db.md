@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Cosmos Db Declaration
+title: Azure Cosmos Db Declaration
 ---
 
-## Cosmos Db
+## Azure Cosmos Db - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
 You can declare to scrape Cosmos Db via the `CosmosDb` resource type.
 
 The following fields need to be provided:
