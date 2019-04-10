@@ -141,7 +141,7 @@ jobs:
     displayName: Minikube Installer
 
   - bash: |
-      sudo minikube start --vm-driver=none
+      sudo minikube start --vm-driver=none -v=8
       sudo chown -R $USER $HOME/.kube $HOME/.minikube
       sudo chgrp -R $USER $HOME/.kube $HOME/.minikube
       minikube update-context
