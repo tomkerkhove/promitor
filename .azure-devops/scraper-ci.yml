@@ -12,7 +12,7 @@ pr:
     - src/*
     - .azure-devops/scraper-ci.yml
 variables:
-  DotNet.SDK.Version: '2.2.202'
+  DotNet.SDK.Version: '2.2.203'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
 - job: Build_Job
