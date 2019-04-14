@@ -35,9 +35,6 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 And there is more on the way - Check our [backlog](https://github.com/tomkerkhove/promitor/issues) and vote for features!
 
-# Known Limitations
-- Metrics interval does not take scraping cron schedule into account ([#60](https://github.com/tomkerkhove/promitor/issues/60))
-
 # Documentation
 - **Deployment**
     - [Running Promitor on Docker](deployment#docker)
