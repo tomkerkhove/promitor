@@ -46,6 +46,9 @@ steps:
     isDraft: true
     isPreRelease: true
     releaseNotes: |
+     ### Breaking Changes
+     Here are a list of breaking changes and how to mitigate them:
+     - TBW (#) - _Use new approach documented here_
      ### Getting started
      Running Promitor Scraper Agent is super easy:
      ```
