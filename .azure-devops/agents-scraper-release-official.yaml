@@ -54,6 +54,9 @@ steps:
     releaseNotesSource: input
     isDraft: true
     releaseNotes: |
+     ### Breaking Changes
+     Here are a list of breaking changes and how to mitigate them:
+     - TBW (#) - _Use new approach documented here_
      ### Getting started
      Running Promitor Scraper is super easy:
      ```
