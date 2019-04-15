@@ -1,6 +1,8 @@
 ---
 name: Security issue
 about: Report security issue affecting this project
+labels: security
+assignees: tomkerkhove
 ---
 
 A clear and concise description of how the security issue affects this project
