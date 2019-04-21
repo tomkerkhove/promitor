@@ -22,6 +22,7 @@ description: "Amount of messages in the 'orders' queue"
 resourceType: StorageQueue
 accountName: promitor
 queueName: orders
+sasToken: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-28T02:33:14Z&st=2019-03-24T18:33:14Z&spr=https&sig=OiwNEYueCWlOhveapM1K6cRgV%2Be21gNhoq%2FDZqJEMZE%3F"
 azureMetricConfiguration:
   metricName: MessageCount
   aggregation:
