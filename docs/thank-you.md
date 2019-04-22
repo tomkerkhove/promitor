@@ -14,6 +14,10 @@ Here is an overview of the services that are so kind to support us:
 
 ![Azure Pipelines](./media/logos/azure-pipelines.png)
 
+- **CloudFlare** serves our documentation super fast via their fast global Content Delivery Network.
+
+![CloudFlare](./media/logos/cloudflare.png)
+
 - **Snyk** continuously monitors our documentation, application & Docker image and lets you quickly respond when new vulnerabilities are disclosed.
 
 ![Snyk](./media/logos/snyk-dark.png)
