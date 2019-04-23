@@ -8,7 +8,7 @@ metricDefaults:
   scraping:
     schedule: "* * * * *"
 metrics:
-  - name: demo_servicebusqueue_queue_size
+  - name: integration_test_metric
     description: "Amount of active messages of the 'myqueue' queue (determined with ServiceBusQueue provider)"
     resourceType: ServiceBusQueue
     namespace: promitor-messaging

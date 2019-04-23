@@ -169,7 +169,7 @@ jobs:
   - bash: |
       POD_NAME=$(kubectl get pods -l "release=promitor-agent-scraper" -o jsonpath="{.items[0].metadata.name}")
       # wait for pod to be running before port forwarding
-      while [[ ! kubectl get pod $POD_NAME -o jsonpath='{@.status.phase}' = 'Running' ]]
+      while [[ ! $(kubectl get pod $POD_NAME -o jsonpath='{@.status.phase}') = 'Running' ]]
         do sleep 10
       done
       kubectl port-forward $POD_NAME 9090:9090 &
@@ -181,7 +181,7 @@ jobs:
       OUTPUT=$(curl localhost:9090/metrics | grep -v '#')
       METRIC_NAME=$($OUTPUT | cut -d' ' 1)
       METRIC_AMOUNT=$($OUTPUT | cut -d' ' 2)
-      if [[ ! $METRIC_NAME = "demo_servicebusqueue_queue_size" || ! $METRIC_AMOUNT = 1337 ]]
+      if [[ ! $METRIC_NAME = "integration_test_metric" || ! $METRIC_AMOUNT = 1337 ]]
         then exit 1
       fi
     displayName: Port forward pod output & check values
