@@ -157,20 +157,14 @@ jobs:
   - bash: helm init --wait
     displayName: Helm init
 
-  - task: HelmDeploy@0
-    displayName: Helm install
-    inputs:
-      command: install
-      chartType: FilePath
-      chartPath: ./charts/promitor-agent-scraper
-      releaseName: promitor-agent-scraper
-      overrideValues: >
-        image.repository=tomkerkhove/promitor-agent-scraper-ci,
-        image.tag=$(Build.BuildNumber),
-        azureAuthentication.appId=$(Container.Env.AzureMonitor.Id),
-        azureAuthentication.appKey=$(Container.Env.AzureMonitor.Key),
-        scrapeConfig.schedule="* * * * *"
-      valueFile: ./.azure-devops/resources/metrics-declaration.yaml
+  - bash: |
+      helm install --name promitor-agent-scraper ./charts/promitor-agent-scraper \
+        --set image.repository=tomkerkhove/promitor-agent-scraper-ci \
+        --set image.tag=$(Build.BuildNumber) \
+        --set azureAuthentication.appId=$(Container.Env.AzureMonitor.Id) \
+        --set azureAuthentication.appKey=$(Container.Env.AzureMonitor.Key) \
+        -f ./.azure-devops/resources/metric-declaration.yaml
+    displayName: Helm install 
 
   - bash: |
       POD_NAME=$(kubectl get pods -l "release=promitor-agent-scraper" -o jsonpath="{.items[0].metadata.name}")
