@@ -153,11 +153,8 @@ jobs:
     displayName: Wait for cluster to be up
     timeoutInMinutes: 5
 
-  - task: HelmDeploy@0
+  - bash: helm init --wait
     displayName: Helm init
-    inputs:
-      command: init
-      upgradetiller: true
 
   - task: HelmDeploy@0
     displayName: Helm install
