@@ -149,7 +149,7 @@ jobs:
 
   - task: ShellScript@2
     inputs:
-      scriptPath: ./.azure-devops/scripts/check-cluster.sh
+      scriptPath: ./.azure-devops/resources/check-cluster.sh
     displayName: Wait for cluster to be up
     timeoutInMinutes: 5
 
@@ -169,7 +169,7 @@ jobs:
         azureAuthentication.appId=$(Container.Env.AzureMonitor.Id),
         azureAuthentication.appKey=$(Container.Env.AzureMonitor.Key),
         scrapeConfig.schedule="* * * * *"
-      valueFile: ./.azure-devops/temp-metrics-declaration.yaml
+      valueFile: ./.azure-devops/resources/metrics-declaration.yaml
 
   - bash: |
       POD_NAME=$(kubectl get pods -l "release=promitor-agent-scraper" -o jsonpath="{.items[0].metadata.name}")
