@@ -150,7 +150,7 @@ jobs:
 
   - task: ShellScript@2
     inputs:
-      scriptPath: ./.azure-devops/resources/check-cluster.sh
+      scriptPath: ./.azure-devops/scripts/check-cluster.sh
     displayName: Wait for cluster to be up
     timeoutInMinutes: 5
 
@@ -163,7 +163,7 @@ jobs:
         --set image.tag=$(Build.BuildNumber) \
         --set azureAuthentication.appId=$(Container.Env.AzureMonitor.Id) \
         --set azureAuthentication.appKey=$(Container.Env.AzureMonitor.Key) \
-        -f ./.azure-devops/resources/metric-declaration.yaml
+        -f ./test/e2e-metrics-declaration.yaml
     displayName: Helm install
 
   - bash: |
@@ -181,7 +181,7 @@ jobs:
       OUTPUT=$(curl localhost:9090/metrics | grep -v '#')
       METRIC_NAME=$($OUTPUT | cut -d' ' 1)
       METRIC_AMOUNT=$($OUTPUT | cut -d' ' 2)
-      if [[ ! $METRIC_NAME = "integration_test_metric" || ! $METRIC_AMOUNT = 1337 ]]
+      if [[ ! $METRIC_NAME = "e2e_queue_size" || ! $METRIC_AMOUNT = 1337 ]]
         then exit 1
       fi
     displayName: Port forward pod output & check values
