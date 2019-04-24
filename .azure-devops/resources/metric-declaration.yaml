@@ -7,13 +7,13 @@ metricDefaults:
     interval: 00:05:00
   scraping:
     schedule: "* * * * *"
-metrics:
-  - name: integration_test_metric
-    description: "Amount of active messages of the 'myqueue' queue (determined with ServiceBusQueue provider)"
-    resourceType: ServiceBusQueue
-    namespace: promitor-messaging
-    queueName: orders
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Total
+metrics: []
+  # - name: integration_test_metric
+  #   description: "Amount of active messages of the 'myqueue' queue (determined with ServiceBusQueue provider)"
+  #   resourceType: ServiceBusQueue
+  #   namespace: promitor-messaging
+  #   queueName: orders
+  #   azureMetricConfiguration:
+  #     metricName: ActiveMessages
+  #     aggregation:
+  #       type: Total
