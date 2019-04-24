@@ -73,7 +73,7 @@ jobs:
       $buildNumber = '$(Build.BuildNumber)'
       Write-Host "Initial build number: '$buildNumber'"
       Write-Host "PR Number '$prNumber'"
-      $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+      $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
       Write-Host "##vso[build.updatebuildnumber]$buildNumber"
       Write-Host "Build number is '$buildNumber'"
     displayName: 'Change Build Number to PR format'
@@ -127,7 +127,7 @@ jobs:
       $buildNumber = '$(Build.BuildNumber)'
       Write-Host "Initial build number: '$buildNumber'"
       Write-Host "PR Number '$prNumber'"
-      $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+      $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
       Write-Host "##vso[build.updatebuildnumber]$buildNumber"
       Write-Host "Build number is '$buildNumber'"
     displayName: 'Change Build Number to PR format'
@@ -163,7 +163,7 @@ jobs:
     inputs:
       scriptPath: ./.azure-devops/scripts/check-cluster.sh
     displayName: Wait for cluster to be up
-    timeoutInMinutes: 5
+    timeoutInMinutes: 2
 
   - bash: helm init --wait
     displayName: Helm init
@@ -196,7 +196,7 @@ jobs:
         then exit 1
       fi
     displayName: Port forward pod output & check values
-    timeoutInMinutes: 5
+    timeoutInMinutes: 2
     failOnStderr: true
 
   - bash: |
