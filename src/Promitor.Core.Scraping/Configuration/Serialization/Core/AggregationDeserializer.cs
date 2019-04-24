@@ -19,7 +19,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             if (node.Children.ContainsKey("interval"))
             {
                 var rawIntervalNode = node.Children[new YamlScalarNode("interval")];
-                interval = TimeSpan.Parse(rawIntervalNode.ToString());
+                interval = TimeSpan.Parse(rawIntervalNode.ToString());                
+            }
+            else
+            {
                 Logger.LogWarning("No default aggregation was configured, falling back to {AggregationInterval}", interval.ToString("g"));
             }
 
