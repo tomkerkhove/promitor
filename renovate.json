@@ -1,4 +1,5 @@
 {
+  "masterIssue": true,
   "branchPrefix":"renovate-",
   "separateMajorMinor": false,
   "labels":["dependencies"],
