@@ -35,7 +35,7 @@
   <ItemGroup>
     <PackageReference Include="CronScheduler.AspNetCore" Version="1.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
-    <PackageReference Include="Prometheus.Client.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Prometheus.Client.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
