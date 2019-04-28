@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Host
 {
     public class Startup
     {
-        public Startup()
+        public BrokenStartup()
         {
             Configuration = BuildConfiguration();
             ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
