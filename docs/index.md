@@ -17,7 +17,7 @@ Running Promitor Scraper is super easy:
 ```
 docker run -d -p 8999:80 --name promitor-agent-scraper \
                          --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                         --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
+                         --env-file C:/Promitor/az-mon-auth.creds \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
                          tomkerkhove/promitor-agent-scraper:1.0.0-preview-3
 ```
