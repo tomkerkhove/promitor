@@ -29,10 +29,10 @@ namespace Promitor.Scraper.Host.Extensions
             {
                 services.AddScheduler(builder =>
                 {
-                    builder.AddJob(sp => new MetricScrapingJob(metric,
+                    builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
                         metricsProvider,
-                        sp.GetService<ILogger>(),
-                        sp.GetService<IExceptionTracker>()));
+                        serviceProvider.GetService<ILogger>(),
+                        serviceProvider.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
             }
