@@ -24,14 +24,17 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
             Guard.NotNull(metricDefinition.AzureMetricConfiguration, nameof(metricDefinition.AzureMetricConfiguration));
+            Guard.NotNull(metricDefinition.SasToken, nameof(metricDefinition.SasToken));
             Guard.NotNullOrEmpty(metricDefinition.AzureMetricConfiguration.MetricName, nameof(metricDefinition.AzureMetricConfiguration.MetricName));
+
+            var sasToken = metricDefinition.SasToken.GetSecretValue();
 
             switch (metricDefinition.AzureMetricConfiguration.MetricName.ToLowerInvariant())
             {
                 case AzureStorageConstants.Queues.Metrics.TimeSpentInQueue:
-                    return await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+                    return await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
                 case AzureStorageConstants.Queues.Metrics.MessageCount:
-                    return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, metricDefinition.SasToken);
+                    return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
                 default:
                     throw new InvalidMetricNameException(metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.ResourceType.ToString());
             }
