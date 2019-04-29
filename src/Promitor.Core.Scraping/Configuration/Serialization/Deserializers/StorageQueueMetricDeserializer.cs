@@ -1,5 +1,7 @@
-﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
+﻿using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
@@ -14,11 +16,21 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
             var metricDefinition = base.DeserializeMetricDefinition<StorageQueueMetricDefinition>(metricNode);
             var accountName = metricNode.Children[new YamlScalarNode("accountName")];
             var queueName = metricNode.Children[new YamlScalarNode("queueName")];
-            var sasToken = metricNode.Children[new YamlScalarNode("sasToken")];
-
+            
             metricDefinition.AccountName = accountName?.ToString();
             metricDefinition.QueueName = queueName?.ToString();
-            metricDefinition.SasToken = sasToken?.ToString();
+
+            var secretDeserializer = new SecretDeserializer(Logger);
+
+            if (metricNode.Children.ContainsKey("sasToken"))
+            {
+                var sasTokenNode = (YamlMappingNode)metricNode.Children["sasToken"];
+                metricDefinition.SasToken = secretDeserializer.Deserialize(sasTokenNode);
+            }
+            else
+            {
+                Logger.LogError($"No SAS token was configured for Azure Storage Account '{accountName}'");
+            }
 
             return metricDefinition;
         }
