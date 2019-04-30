@@ -19,7 +19,7 @@ docker run -d -p 8999:80 --name promitor-agent-scraper \
                          --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                          --env-file C:/Promitor/az-mon-auth.creds \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-agent-scraper:1.0.0-preview-4
+                         tomkerkhove/promitor-agent-scraper:1.0.0-preview-5
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).
