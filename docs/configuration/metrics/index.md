@@ -84,11 +84,11 @@ We also provide a simplified way to scrape the following Azure resources:
 
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
-- [Azure Service Bus Queue](service-bus-queue)
-- [Azure Network Interface](network-interface)
-- [Azure Virtual Machine](virtual-machine)
-- [Azure Storage Queue](storage-queue)
 - [Azure Cosmos DB](cosmos-db)
+- [Azure Network Interface](network-interface)
+- [Azure Service Bus Queue](service-bus-queue)
+- [Azure Storage Queue](storage-queue)
+- [Azure Virtual Machine](virtual-machine)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
