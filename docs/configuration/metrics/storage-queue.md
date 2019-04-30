@@ -10,6 +10,8 @@ The following fields need to be provided:
 - `accountName` - The name of the storage account
 - `queueName` - The name of the queue
 - `sasToken` - The SAS token used to access the queue/account
+  - `sasToken.environmentVariable` - Defines the environment variable which contains the SAS token to authenticate with
+  - `sasToken.rawValue` - Contains the raw hardcoded SAS token _(less secure)_
 
 Supported metrics:
 - `TimeSpentInQueue` - Time in seconds that the oldest message has been waiting in the queue to be processed.
@@ -22,7 +24,8 @@ description: "Amount of messages in the 'orders' queue"
 resourceType: StorageQueue
 accountName: promitor
 queueName: orders
-sasToken: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-28T02:33:14Z&st=2019-03-24T18:33:14Z&spr=https&sig=OiwNEYueCWlOhveapM1K6cRgV%2Be21gNhoq%2FDZqJEMZE%3F"
+sasToken:
+  environmentVariable: "SECRETS_STORAGEQUEUE_PROMITOR_SASTOKEN"
 azureMetricConfiguration:
   metricName: MessageCount
   aggregation:
