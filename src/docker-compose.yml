@@ -7,4 +7,4 @@ services:
       context: .
       dockerfile: Promitor.Scraper.Host/Dockerfile
     volumes:
-      - "./../samples/promitor-sample.yaml:/config/metrics-declaration.yaml"
+      - "./metric-config.yaml:/config/metrics-declaration.yaml"

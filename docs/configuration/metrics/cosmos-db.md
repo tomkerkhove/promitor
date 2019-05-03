@@ -1,15 +1,15 @@
 ---
 layout: default
-title: Cosmos Db Declaration
+title: Azure Cosmos Db Declaration
 ---
 
-## Cosmos Db
+## Azure Cosmos Db - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
 You can declare to scrape Cosmos Db via the `CosmosDb` resource type.
 
 The following fields need to be provided:
 - `dbName`- The name of the Cosmos Db to be scraped
 
-All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftcontainerinstancecontainergroups).
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftdocumentdbdatabaseaccounts).
 
 Example:
 ```yaml

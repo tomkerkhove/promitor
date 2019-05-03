@@ -29,7 +29,8 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
                 yield return "No Azure Storage Queue Name is configured";
             }
 
-            if (string.IsNullOrWhiteSpace(metricDefinition.SasToken))
+            var configuredSasToken = metricDefinition.SasToken?.GetSecretValue();
+            if (string.IsNullOrWhiteSpace(configuredSasToken))
             {
                 yield return "No Azure Storage SAS Token is configured";
             }

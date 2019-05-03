@@ -3,7 +3,7 @@ layout: default
 title: Azure Container Registry Declaration
 ---
 
-## Azure Container Registry
+## Azure Container Registry - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
 You can declare to scrape an Azure Container Registry via the `ContainerRegistry` resource type.
 
 The following fields need to be provided:

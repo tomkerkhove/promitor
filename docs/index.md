@@ -3,8 +3,8 @@ layout: default
 title: Promitor - An Azure Monitor scraper for Prometheus
 ---
 
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/tomkerkhove/promitor/blob/master/LICENSE)[![Build Status](https://dev.azure.com/tomkerkhove/Promitor/_apis/build/status/Promitor%20CI%20-%20Scraper%20Agent?branchName=master)](https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master) [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)
-[![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)[![Donate](https://promitor.io/media/buttons/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/tomkerkhove/promitor/blob/master/LICENSE)[![Build Status](https://img.shields.io/azure-devops/build/tomkerkhove/promitor/50/master.svg?label=Scraper%20Agent%20-%20CI&style=flat-square)](https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master) [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)
+[![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)[![Donate](https://img.shields.io/badge/Donate%20via-PayPal-blue.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
 
@@ -17,17 +17,17 @@ Running Promitor Scraper is super easy:
 ```
 docker run -d -p 8999:80 --name promitor-agent-scraper \
                          --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                         --env PROMITOR_AUTH_APPKEY='<azure-ad-app-key>' \
+                         --env-file C:/Promitor/az-mon-auth.creds \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \ 
-                         tomkerkhove/promitor-agent-scraper:1.0.0-preview-3
+                         tomkerkhove/promitor-agent-scraper:1.0.0-preview-5
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).
 
 # Features
 
-- Automatically scrapes Azure Monitor metrics
 - Provides scraping endpoint for Prometheus
+- Automatically scrapes Azure Monitor metrics
 - Built-in support for a variety of Azure services ([overview](configuration/metrics))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
@@ -35,19 +35,18 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 And there is more on the way - Check our [backlog](https://github.com/tomkerkhove/promitor/issues) and vote for features!
 
-# Known Limitations
-- Metrics interval does not take scraping cron schedule into account ([#60](https://github.com/tomkerkhove/promitor/issues/60))
-
 # Documentation
 - **Deployment**
     - [Running Promitor on Docker](deployment#docker)
     - [Running Promitor on Kubernetes](deployment#kubernetes)
     - [Image Tagging Strategy](deployment#image-tagging-strategy)
+- **Metrics**
+    - [General Declaration](configuration/metrics)
+    - [Supported Providers](configuration/metrics#supported-azure-services)
 - **Configuration**
     - [Runtime](configuration#runtime)
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
-    - [Metrics Declaration](configuration/metrics)
     - [Telemetry](configuration#telemetry)
 - **Operations**
     - [Health](operations#health)

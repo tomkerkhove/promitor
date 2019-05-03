@@ -2,6 +2,7 @@
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.Core;
 using Promitor.Integrations.AzureStorage;
@@ -124,13 +125,18 @@ namespace Promitor.Scraper.Tests.Unit.Builders
         public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var secret = new Secret
+            {
+                RawValue = sasToken
+            };
+
             var metric = new StorageQueueMetricDefinition
             {
                 Name = metricName,
                 Description = metricDescription,
                 QueueName = queueName,
                 AccountName = accountName,
-                SasToken = sasToken,
+                SasToken = secret,
                 AzureMetricConfiguration = azureMetricConfiguration
             };
             _metrics.Add(metric);

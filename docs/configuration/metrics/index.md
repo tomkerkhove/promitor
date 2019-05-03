@@ -6,6 +6,36 @@ title: Metrics Declaration
 All the Azure Monitor metrics that needs to be scraped are consolidated in one YAML file.
 This configuration defines the Azure metadata and all the metrics.
 
+# General Declaration
+
+## Azure
+
+- `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
+- `azureMetadata.subscriptionId` - The id of the default subscription to query.
+- `azureMetadata.resourceGroupName` - The name of the default resource group to query.
+
+## Metric Defaults
+
+- `metricDefaults.scraping.schedule` - **[REQUIRED]** A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. You can use [crontab-generator.org](https://crontab-generator.org/) to generate a cron that fits your needs.
+- `metricDefaults.aggregation.interval` - The default interval which defines over what period measurements of a metric should be aggregated.
+
+## Metrics
+
+Every metric that is being declared needs to define the following fields:
+
+- `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus
+- `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus
+- `resourceType` - Defines what type of resource needs to be queried.
+- `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor to query
+- `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be used when querying Azure Monitor
+- `azureMetricConfiguration.aggregation.interval` - Overrides the default aggregation interval defined in `metricDefaults.aggregation.interval` with a new interval
+
+Additionally, the following fields are optional:
+
+- `resourceGroupName` - The resource group to scrape for this metric. This allows you to specify a different resource group from the one configured in `azureMetadata`, enabling you to scrape multiple resource groups with one single configuration.
+- `scraping.schedule` - A scraping schedule for the individual metric; overrides the the one specified in `metricDefaults`
+
+## Example
 Here is an example of how you can scrape two Azure Service Bus queues in different resource groups, one in the `promitor` resource group and one on the `promitor-dev` resource group:
 
 ```yaml
@@ -46,48 +76,19 @@ metrics:
         interval: 00:15:00
 ```
 
-# General Declaration
-
-## Azure
-
-- `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
-- `azureMetadata.subscriptionId` - The id of the default subscription to query.
-- `azureMetadata.resourceGroupName` - The name of the default resource group to query.
-
-## Metric Defaults
-
-- `metricDefaults.scraping.schedule` - **[REQUIRED]** A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. You can use [crontab-generator.org](https://crontab-generator.org/) to generate a cron that fits your needs.
-- `metricDefaults.aggregation.interval` - The default interval which defines over what period measurements of a metric should be aggregated.
-
-## Metrics
-
-Every metric that is being declared needs to define the following fields:
-
-- `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus
-- `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus
-- `resourceType` - Defines what type of resource needs to be queried.
-- `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor to query
-- `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be used when querying Azure Monitor
-- `azureMetricConfiguration.aggregation.interval` - Overrides the default aggregation interval defined in `metricDefaults.aggregation.interval` with a new interval
-
-Additionally, the following fields are optional:
-
-- `resourceGroupName` - The resource group to scrape for this metric. This allows you to specify a different resource group from the one configured in `azureMetadata`, enabling you to scrape multiple resource groups with one single configuration.
-- `scraping.schedule` - A scraping schedule for the individual metric; overrides the the one specified in `metricDefaults`
-
 # Supported Azure Services
 
-Every Azure service is supported and can be scraped by using the [Generic Azure Resource](generic-azure-resource).
+[Generic Azure Resource](generic-azure-resource) allows you to scrape every Azure service supported by Azure Monitor.
 
-We also provide a simplified way to configure the following Azure resources:
+We also provide a simplified way to scrape the following Azure resources:
 
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
-- [Azure Service Bus Queue](service-bus-queue)
-- [Azure Virtual Machine](virtual-machine)
+- [Azure Cosmos DB](cosmos-db)
 - [Azure Network Interface](network-interface)
+- [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
-- [Cosmos DB](cosmosdb)
+- [Azure Virtual Machine](virtual-machine)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 

@@ -12,7 +12,7 @@ pr:
     - src/*
     - .azure-devops/scraper-ci.yml
 variables:
-  DotNet.SDK.Version: '2.2.202'
+  DotNet.SDK.Version: '2.2.203'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 jobs:
 - job: Build_Job
@@ -99,7 +99,7 @@ jobs:
       imageName: '$(Image.TaggedName)'
       containerName: 'promitor-ci'
       ports: '8999:80'
-      volumes: '/samples/promitor-sample.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+      volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
       envVars: |
        PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
        PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
