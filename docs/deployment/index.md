@@ -28,7 +28,7 @@ Install the Promitor Chart repository:
 ❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
 ```
 
-If all goes well you should be able to list all Promitor charts
+If all goes well you should be able to list all Promitor charts:
 ```shell
 ❯ helm search promitor/
 NAME                            CHART VERSION   APP VERSION      DESCRIPTION
