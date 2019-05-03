@@ -18,8 +18,26 @@ _For more information about advanced configuration, read our documentation [here
 ```
 
 # Kubernetes
+## Getting the Helm Chart
+
+### Latest Chart from GitHub
 We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-agent-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
+### Helm Chart from public repo
+Install the Promitor chart repository:
+
+```shell
+❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+```
+
+If all goes well you should be able to list all Promitor charts
+```shell
+❯ helm search promitor/
+NAME                            CHART VERSION   APP VERSION      DESCRIPTION
+promitor/promitor-agent-scraper 0.1.0           1.0.0-preview-5  A Helm chart to deploy Promitor, an Azure Monitor scraper...
+```
+
+## Using our Helm Chart
 To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). Included here are the values that correspond with the local environment variables. In addition
 to these, you will need a metric declaration file as described in [Metric Declaration](/configuration/metrics).
 
