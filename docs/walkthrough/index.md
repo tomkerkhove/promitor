@@ -180,9 +180,15 @@ Running these commands will create a Prometheus scraping configuration file in y
 
 ## Add load to the Queue
 
-- service bus queue explorer
+Now we'll add load to our Service Bus queue so there are meaningful metrics for Promitor to pick up. The easiest way to do this is via the [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer/releases). Download and unzip the latest release and run the executable inside.
 
-## See promitor scraping via port-forwarding
+In Service Bus Explorer, you can connect to your namespace & queue using a connection string. From there, right clicking on the queue in the side-bar should give you an option to 'Send Message' - from there, use the 'Sender' tab of that window to send bulk messages. Remember how many you send - you should see that number in the Promitor & Prometheus output.
+
+## See Promitor & Prometheus output via port-forwarding
+
+
+
+
 
 From there, run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 9090:80`. This will allow you to view the Prometheus server at http://localhost:9090. There, you should be able to query `demo_queue_size` and see a result (once all pods are up and Promitor has scraped metrics at least once - run `kubectl get pods` to see the status of your pods). 
 
