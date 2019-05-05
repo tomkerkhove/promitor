@@ -160,6 +160,8 @@ helm install ./charts/promitor-agent-scraper \
 
 ## Prometheus install
 
+**Note: If you're seeing errors installing Prometheus or Grafana from the Helm chart repository, make sure you run `helm repo update` before digging into the errors more. You might have an outdated copy of the chart.**
+
 Running the deployment command from the previous section should give you an output that includes a script similar to this one:
 
 ```bash
@@ -186,15 +188,36 @@ In Service Bus Explorer, you can connect to your namespace & queue using a conne
 
 ## See Promitor & Prometheus output via port-forwarding
 
+Going back to your cluster, you should be able to see all Promitor & Prometheus pods up and running with `kubectl get pods`. You can also see the services - these provide a stable endpoint at which to reach the pods - by running `kubectl get services`. This should give you a list with output similar to:
 
+| NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) |
+| ---- | ---- | ---------- | ----------- | ------- |
+| promitor-agent-scraper | ClusterIP | 10.0.#.# | \<none\> | 80/TCP |
+| \<prometheus-release-name\>-prometheus-server | ClusterIP | 10.0.#.# | \<none\> | 80/TCP |
 
+as well as listing the other services deployed by prometheus.
 
+Let's first look at the Promitor output. Run `kubectl port-forward svc/promitor-agent-scraper 8080:80`. Then check http://localhost:8080/metrics - you should see some information about your queue:
 
-From there, run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 9090:80`. This will allow you to view the Prometheus server at http://localhost:9090. There, you should be able to query `demo_queue_size` and see a result (once all pods are up and Promitor has scraped metrics at least once - run `kubectl get pods` to see the status of your pods). 
+```bash
+# TODO sample output
+```
+
+We can also look at the Prometheus server and check that it's pulling in metrics from Promitor. Cancel the previous port-forward command and run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 8080:80`. Now, if you check http://localhost:8080, you should be able to enter Prometheus queries. Query `demo_queue_size` - as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
 
 ## Prometheus alert?
 
-## Grafana install
+## Install Grafana
+
+Grafana's chart has a few default values you may not want long term - persistant storage is disabled and admin username/password is randomly generated - but for our sample the out-of-the-box install will work. Run `helm install stable/grafana --name grafana` and you should see output that includes this command:
+
+```
+kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+```
+
+Run this to get your Grafana password.
+
+Now you can use `kubectl port-forward` again to log in to your Grafana dashboard. `kubectl port-forward svc/grafana 8080:80` will make your dashboard available at http://localhost:8080, and you can log in with username 'admin' and the password you retrieved.
 
 ## Grafana dashboard
 
