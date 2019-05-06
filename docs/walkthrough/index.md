@@ -185,7 +185,7 @@ helm install ./charts/promitor-agent-scraper \
   --values your/path/to/metric-declaration.yaml
 ```
 
-## Prometheus install
+## Install Prometheus
 
 **Note: If you're seeing errors installing Prometheus or Grafana from the Helm chart repository, make sure you run `helm repo update` before digging into the errors more. You might have an outdated copy of the chart.**
 
@@ -207,7 +207,7 @@ helm install stable/prometheus -f promitor-scrape-config.yaml
 
 Running these commands will create a Prometheus scraping configuration file in your current directory and deploy Prometheus to your cluster with that scraping configuration in addition to the default.
 
-## Add load to the Queue
+## Add load to the queue
 
 Now we'll add load to our Service Bus queue so there are meaningful metrics for Promitor to pick up. The easiest way to do this is via the [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer/releases). Download and unzip the latest release and run the executable inside.
 
@@ -232,7 +232,9 @@ Let's first look at the Promitor output. Run `kubectl port-forward svc/promitor-
 
 We can also look at the Prometheus server and check that it's pulling in metrics from Promitor. Cancel the previous port-forward command and run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 8080:80`. Now, if you check http://localhost:8080, you should be able to enter Prometheus queries. Query `demo_queue_size` - as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
 
-## Prometheus alert?
+## Set up alerts with Prometheus
+
+**TODO**
 
 ## Install Grafana
 
@@ -246,6 +248,8 @@ Run this to get your Grafana password.
 
 Now you can use `kubectl port-forward` again to log in to your Grafana dashboard. `kubectl port-forward svc/grafana 8080:80` will make your dashboard available at http://localhost:8080, and you can log in with username 'admin' and the password you retrieved.
 
-## Grafana dashboard
+## Create a Grafana dashboard
+
+**TODO**
 
 [&larr; back](/)
