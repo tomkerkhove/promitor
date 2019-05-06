@@ -146,7 +146,7 @@ helm init --service-account tiller
 
 ## Deploy Promitor to your cluster using Helm
 
-In addition to the helm chart, you'll need a values file with secrets & a metric declaration file (these can also be the same file for ease of use). The yaml file below will scrape one metric, queue length, from the queue created above.
+Before deploying Promitor, you'll need a values file with secrets & a metric declaration file (these can also be the same file for ease of use). The yaml file below will scrape one metric, queue length, from the queue created above.
 
 ```yaml
 azureAuthentication:
@@ -174,12 +174,16 @@ metrics:
         type: Total
 ```
 
-With this file created, you should be able to deploy Promitor with `helm install`.
-
-First, we need to add a new Helm repo for Promitor:
+To deploy, we'll first add the Promitor chart repository to helm:
 
 ```bash
-helm install ./charts/promitor-agent-scraper \
+helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+```
+
+With this repository added, we can deploy Promitor:
+
+```bash
+helm install promitor/promitor-agent-scraper \
   --name promitor-agent-scraper \
   --values your/path/to/metric-declaration.yaml
 ```
