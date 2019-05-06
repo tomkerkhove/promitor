@@ -52,7 +52,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
     - [Health](operations#health)
 - **Walkthroughs**
-    - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough#helm)
+    - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough)
 
 # Support
 Promitor is actively maintained and developed with best-effort support.

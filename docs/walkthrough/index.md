@@ -1,11 +1,19 @@
 ---
 layout: default
-title: Walkthroughs & Tutorials
+title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
 ---
+
+In this walkthrough, we'll set up a basic monitoring solution with Promitor, Prometheus, and Grafana. In order to have a resource to monitor, we'll create a Service Bus queue and add load to the queue with Service Bus Explorer. We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Helm, and explain how each of these services connects and how to see output. We'll also walk through setting up a Prometheus alert and Grafana dashboard to show alerting and visualization.
+
+## Prerequisites
+
+- The [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes command-line tool. It can also be installed via the Azure CLI with `az aks install-cli`.
+- [Helm](https://helm.sh/docs/using_helm/#installing-the-helm-client), a Kubernetes deployment manager
+- [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer/releases)
 
 ## Create a Resource Group
 
-Install the [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) if you don't already have it.
 
 ```bash
 az group create --name PromitorRG --location eastus
@@ -45,10 +53,6 @@ Save this output - the app ID, tenant ID, and password will be used later.
 
 ## Create a Service Bus Namespace and Queue
 
-(From the [Service Bus Quickstart](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli))
-
-Before we install Promitor on AKS to start getting the metrics you want out of Azure Monitor, we need to set up the Azure Resource you want to monitor and have it ready to get metrics for (i.e Service Bus, Azure Functions, VM etc.). In this walkthrough we are going to set up a Service Bus queue as an example.
-
 First we'll need to create a namespace. Service Bus Namespaces need to be globally unique, so we won't use a default name in these commands.
 
 ```bash
@@ -80,7 +84,7 @@ az servicebus namespace authorization-rule keys list \
 
 ## Create an AKS Cluster
 
-(From the [AKS Cluster Quickstart](https://docs.microsoft.com/en-us/azure/aks/kubernetes-walkthrough#create-aks-cluster))
+Create a cluster with 
 
 ```bash
 az aks create \
@@ -89,12 +93,6 @@ az aks create \
   --node-count 1 \
   --generate-ssh-keys
 ```	
-
-If the Kubernetes command line tool `kubectl` isn't already installed, you can install it with 
-
-```bash
-az aks install-cli
-```
 
 Then get your cluster's credentials with
 
@@ -107,11 +105,10 @@ az aks get-credentials \
 Verify your credentials and check that your cluster is up and running with `kubectl get nodes`.
 
 
-## Install Helm and Tiller
+## Set up Helm and Tiller
 
-[Install Helm](https://helm.sh/docs/using_helm/#installing-helm) on your local machine if you don't already have it.
+You'll use Helm to install Tiller, the server-side component of Helm. For clusters with RBAC (Role-Based Access Control, which is enabled by default on AKS clusters), you'll need to set up a service account for Tiller:
 
-You'll use Helm to install Tiller, the server-side component of Helm. For clusters with RBAC (Role-Based Access Control), you'll need to set up a service account for Tiller:
 - Create a file called `helm-rbac.yaml` with the following:
 
 ```YAML
@@ -209,7 +206,7 @@ Running these commands will create a Prometheus scraping configuration file in y
 
 ## Add load to the queue
 
-Now we'll add load to our Service Bus queue so there are meaningful metrics for Promitor to pick up. The easiest way to do this is via the [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer/releases). Download and unzip the latest release and run the executable inside.
+Now we'll use Service Bus Explorer to add load to our Service Bus queue so there are meaningful metrics for Promitor to pick up.
 
 In Service Bus Explorer, you can connect to your namespace & queue using a connection string. From there, right clicking on the queue in the side-bar should give you an option to 'Send Message' - from there, use the 'Sender' tab of that window to send bulk messages. Remember how many you send - you should see that number in the Promitor & Prometheus output.
 
