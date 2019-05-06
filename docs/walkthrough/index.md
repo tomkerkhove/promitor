@@ -49,7 +49,7 @@ Which should output something similar to
 }
 ```
 
-Save this output - the app ID, tenant ID, and password will be used later.
+Save this output as we will use the app ID, tenant ID, and password later on.
 
 ## Create a Service Bus Namespace and Queue
 
@@ -174,7 +174,9 @@ metrics:
         type: Total
 ```
 
-With this file created, you should be able to deploy Promitor with `helm install`. You'll need to be in the top level directory of the Promitor repository for this command to run, or you'll need to edit the chart location.
+With this file created, you should be able to deploy Promitor with `helm install`.
+
+First, we need to add a new Helm repo for Promitor:
 
 ```bash
 helm install ./charts/promitor-agent-scraper \
@@ -200,7 +202,7 @@ EOF
 helm install stable/prometheus -f promitor-scrape-config.yaml
 ```
 
-(You can see this output again at any time by running `helm status promitor-agent-scraper`.)
+You can see this output again at any time by running `helm status promitor-agent-scraper`.
 
 Running these commands will create a Prometheus scraping configuration file in your current directory and deploy Prometheus to your cluster with that scraping configuration in addition to the default.
 
@@ -212,22 +214,34 @@ In Service Bus Explorer, you can connect to your namespace & queue using a conne
 
 ## See Promitor & Prometheus output via port-forwarding
 
-Going back to your cluster, you should be able to see all Promitor & Prometheus pods up and running with `kubectl get pods`. You can also see the services - these provide a stable endpoint at which to reach the pods - by running `kubectl get services`. This should give you a list with output similar to:
+Going back to your cluster, you should be able to see all Promitor & Prometheus pods up and running with `kubectl get pods`.
+
+You can also see the services which provide a stable endpoint at which to reach the pods by running `kubectl get services`.
+
+This should give you a list with output similar to:
 
 | NAME | TYPE | CLUSTER-IP | EXTERNAL-IP | PORT(S) |
 | ---- | ---- | ---------- | ----------- | ------- |
 | promitor-agent-scraper | ClusterIP | 10.0.#.# | \<none\> | 80/TCP |
 | \<prometheus-release-name\>-prometheus-server | ClusterIP | 10.0.#.# | \<none\> | 80/TCP |
 
-as well as listing the other services deployed by prometheus.
+Next to that, it should also list other services deployed by Prometheus.
 
-Let's first look at the Promitor output. Run `kubectl port-forward svc/promitor-agent-scraper 8080:80`. Then check http://localhost:8080/metrics - you should see some information about your queue:
+Let's first look at the Promitor output!
+
+Run `kubectl port-forward svc/promitor-agent-scraper 8080:80` and check http://localhost:8080/metrics. You should see some information about your queue:
 
 ```bash
 # TODO sample output
 ```
 
-We can also look at the Prometheus server and check that it's pulling in metrics from Promitor. Cancel the previous port-forward command and run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 8080:80`. Now, if you check http://localhost:8080, you should be able to enter Prometheus queries. Query `demo_queue_size` - as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
+We can also look at the Prometheus server and check that it's pulling in metrics from Promitor.
+
+Cancel the previous port-forward command and run `kubectl port-forward svc/<prometheus-release-name>-prometheus-server 8080:80`.
+
+Now, if you check http://localhost:8080, you should be able to enter Prometheus queries.
+
+Query `demo_queue_size` and as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
 
 ## Set up alerts with Prometheus
 
@@ -235,7 +249,9 @@ We can also look at the Prometheus server and check that it's pulling in metrics
 
 ## Install Grafana
 
-Grafana's chart has a few default values you may not want long term - persistant storage is disabled and admin username/password is randomly generated - but for our sample the out-of-the-box install will work. Run `helm install stable/grafana --name grafana` and you should see output that includes this command:
+Grafana's chart has a few default values you may not want long term - persistant storage is disabled and admin username/password is randomly generated - but for our sample the out-of-the-box install will work. 
+
+Run `helm install stable/grafana --name grafana` and you should see output that includes this command:
 
 ```
 kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
