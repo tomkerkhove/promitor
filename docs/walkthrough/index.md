@@ -12,10 +12,10 @@ az group create --name PromitorRG --location eastus
 ```
 
 Output: 
-```	json
+```json
 { 
   "id": "/subscriptions/<guid-subscription-id>/resourceGroups/PromitorRG",
-  ...
+  "...": "..."
 }
 ```
 
@@ -24,7 +24,8 @@ Output:
 Use the resource group creation output to add a scope to your service principal:
 
 ```bash
-az ad sp create-for-rbac --role="Monitoring Reader" \
+az ad sp create-for-rbac \
+  --role="Monitoring Reader" \
   --scopes="/subscriptions/<guid-subscription-id>/resourceGroups/PromitorRG"
 ```
 
@@ -44,12 +45,38 @@ Save this output - the app ID, tenant ID, and password will be used later.
 
 ## Create a Service Bus Namespace and Queue
 
-Before we install Promitor on AKS to start getting the metrics you want out of Azure Monitor, we need to set up the Azure Resource you want to monitor and have it ready to get metrics for (i.e Service Bus, Azure Functions, VM etc.). In this walkthrough we are going to set up a Service Bus as an example. (ref : https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-create-namespace-portal)
+(From the [Service Bus Quickstart](https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-quickstart-cli))
 
-1. Sign in to the Azure portal (https://portal.azure.com)
-2. In the left navigation pane of the portal, select + Create a resource, select Integration, and then select Service Bus.
+Before we install Promitor on AKS to start getting the metrics you want out of Azure Monitor, we need to set up the Azure Resource you want to monitor and have it ready to get metrics for (i.e Service Bus, Azure Functions, VM etc.). In this walkthrough we are going to set up a Service Bus queue as an example.
 
-![Alt text](https://docs.microsoft.com/en-us/azure/includes/media/service-bus-create-namespace-portal/create-resource-service-bus-menu.png "Service Bus via Portal")
+First we'll need to create a namespace. Service Bus Namespaces need to be globally unique, so we won't use a default name in these commands.
+
+```bash
+az servicebus namespace create \
+  --resource-group PromitorRG \
+  --name <service-bus-namespace> \
+  --location eastus
+```
+
+We'll then create a queue in that namespace:
+
+```bash
+az servicebus queue create \
+  --resource-group PromitorRG \
+  --namespace-name <service-bus-namespace> \
+  --name demo_queue
+```
+
+Finally, get the connection string for this Service Bus namespace for use later.
+
+```bash
+az servicebus namespace authorization-rule keys list \
+  --resource-group PromitorRG \
+  --namespace-name <service-bus-namespace> \
+  --name RootManageSharedAccessKey \
+  --query primaryConnectionString \
+  --output tsv
+```
 
 ## Create an AKS Cluster
 
