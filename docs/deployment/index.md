@@ -18,8 +18,24 @@ _For more information about advanced configuration, read our documentation [here
 ```
 
 # Kubernetes
-We currently provide [a helm chart](https://github.com/tomkerkhove/promitor/tree/master/charts/promitor-agent-scraper) which deploys all the required infrastructure on your Kubernetes cluster.
 
+We provide a Helm Chart which deploys all the required infrastructure on your Kubernetes cluster.
+
+## Getting the Helm Chart
+Install the Promitor Chart repository:
+
+```shell
+❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+```
+
+If all goes well you should be able to list all Promitor charts:
+```shell
+❯ helm search promitor/
+NAME                            CHART VERSION   APP VERSION      DESCRIPTION
+promitor/promitor-agent-scraper 0.1.0           1.0.0-preview-5  A Helm chart to deploy Promitor, an Azure Monitor scraper...
+```
+
+## Using our Helm Chart
 To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing). Included here are the values that correspond with the local environment variables. In addition
 to these, you will need a metric declaration file as described in [Metric Declaration](/configuration/metrics).
 
@@ -45,7 +61,7 @@ Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master
 
 If you have a `metric-declaration.yaml` file, you can create a basic deployment with this command:
 ```
-❯ helm install --name promitor-agent-scraper ./charts/promitor-agent-scraper \
+❯ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
                --values /path/to/metric-declaration.yaml
