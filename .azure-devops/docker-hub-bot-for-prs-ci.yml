@@ -7,7 +7,7 @@ pr:
   paths:
     include:
     - deploy/automation/docker-hub/ci/*
-    - .azure-devops/docker-hub-bot-for-prs*
+    - .azure-devops/docker-hub-bot-for-prs-ci.yml
 stages:
 - stage: Build
   displayName: Verify Tooling
