@@ -49,13 +49,6 @@ stages:
    - job: GitHub
      displayName: GitHub
      steps:
-     - task: Docker@1
-       displayName: 'Push preview to Docker Hub'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:
