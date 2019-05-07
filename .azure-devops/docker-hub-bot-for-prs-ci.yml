@@ -15,7 +15,7 @@ stages:
    - job: Tooling
      displayName: Verify ARM Template
      pool:
-       name: Hosted Ubuntu 1604
+       vmImage: ubuntu-16.04
      steps:
      - powershell: |
          $prNumber = '$(System.PullRequest.PullRequestNumber)'

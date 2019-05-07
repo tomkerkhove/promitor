@@ -14,101 +14,94 @@ pr:
 variables:
   DotNet.SDK.Version: '2.2.203'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
-jobs:
-- job: Build_Job
-  displayName: Build, Test & Scan Codebase
-  condition: succeeded()
-  pool:
-    vmImage: ubuntu-16.04
-  steps:
-  - task: DotNetCoreInstaller@0
-    displayName: 'Install .NET SDK'
-    inputs:
-      version: '$(DotNet.SDK.Version)'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet build'
-    inputs:
-      projects: src/Promitor.sln
-      arguments: '--configuration release'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet test'
-    inputs:
-      command: test
-      projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-      arguments: '--configuration release'
-
-- job: Run_Code_Quality
-  displayName: Run Code Quality
-  condition: succeeded()
-  pool:
-    vmImage: windows-2019
-  steps:
-  - task: DotNetCoreInstaller@0
-    displayName: 'Install .NET SDK'
-    inputs:
-      version: '$(DotNet.SDK.Version)'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'dotnet restore'
-    inputs:
-      projects: src/Promitor.sln
-      arguments: '--configuration release'
-
-  - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
-    displayName: 'Automated code quality checks'
-    inputs:
-      SolutionOrProjectPath: src/Promitor.sln
-
-- job: Docker_Job
-  displayName: Build Docker Image Tests
-  condition: succeeded()
-  pool:
-    vmImage: ubuntu-16.04
-  steps:
-  - powershell: |
-      $prNumber = '$(System.PullRequest.PullRequestNumber)'
-      $buildNumber = '$(Build.BuildNumber)'
-      Write-Host "Initial build number: '$buildNumber'"
-      Write-Host "PR Number '$prNumber'"
-      $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-      Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-      Write-Host "Build number is '$buildNumber'"
-    displayName: 'Change Build Number to PR format'
-    condition: eq(variables['Build.Reason'], 'PullRequest')
-
-  - task: Docker@1
-    displayName: 'Build an image'
-    inputs:
-      containerregistrytype: 'Container Registry'
-      dockerRegistryEndpoint: 'Docker Hub'
-      dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-      arguments: '--tag promitor-agent-scraper-ci --no-cache'
-      useDefaultContext: false
-      buildContext: ./src/
-      imageName: '$(Image.TaggedName)'
-      addDefaultLabels: false
-
-  - task: Docker@1
-    displayName: 'Run an image'
-    inputs:
-      containerregistrytype: 'Container Registry'
-      dockerRegistryEndpoint: 'Docker Hub'
-      command: 'Run an image'
-      imageName: '$(Image.TaggedName)'
-      containerName: 'promitor-ci'
-      ports: '8999:80'
-      volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
-      envVars: |
-       PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
-       PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
-
-  - task: Docker@1
-    displayName: 'Push ''tomkerkhove/promitor-agent-scraper-ci'' image to Docker Hub'
-    inputs:
-      containerregistrytype: 'Container Registry'
-      dockerRegistryEndpoint: 'Docker Hub'
-      command: 'Push an image'
-      imageName: '$(Image.TaggedName)'
-    condition: eq(variables['Build.Reason'], 'PullRequest')
+stages:
+- stage: CI
+  jobs:
+   - job: Build
+     displayName: Build, Test & Scan Codebase
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+         version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet build'
+       inputs:
+         projects: src/Promitor.sln
+         arguments: '--configuration release'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet test'
+       inputs:
+         command: test
+         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+         arguments: '--configuration release'
+   - job: RunCodeQuality
+     displayName: Run Code Quality
+     condition: succeeded()
+     pool:
+       vmImage: windows-2019
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+         version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet restore'
+       inputs:
+         projects: src/Promitor.sln
+         arguments: '--configuration release'
+     - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
+       displayName: 'Automated code quality checks'
+       inputs:
+         SolutionOrProjectPath: src/Promitor.sln
+   - job: Docker
+     displayName: Build Docker Image Tests
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - task: Docker@1
+       displayName: 'Build an image'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+         arguments: '--tag promitor-agent-scraper-ci --no-cache'
+         useDefaultContext: false
+         buildContext: ./src/
+         imageName: '$(Image.TaggedName)'
+         addDefaultLabels: false
+     - task: Docker@1
+       displayName: 'Run an image'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         command: 'Run an image'
+         imageName: '$(Image.TaggedName)'
+         containerName: 'promitor-ci'
+         ports: '8999:80'
+         volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+         envVars: |
+         PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
+         PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
+     - task: Docker@1
+       displayName: 'Push ''tomkerkhove/promitor-agent-scraper-ci'' image to Docker Hub'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         command: 'Push an image'
+         imageName: '$(Image.TaggedName)'
+       condition: eq(variables['Build.Reason'], 'PullRequest')

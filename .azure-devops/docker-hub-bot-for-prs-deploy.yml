@@ -21,7 +21,7 @@ stages:
    - job: DeployToAzure
      displayName: Deploy to Azure (ARM)
      pool:
-       name: Hosted Ubuntu 1604
+       vmImage: ubuntu-16.04
      steps:
      - task: qetza.replacetokens.replacetokens-task.replacetokens@3
        displayName: 'Replace tokens in tooling'

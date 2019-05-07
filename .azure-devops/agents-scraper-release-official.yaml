@@ -18,7 +18,7 @@ stages:
   jobs:
    - job: Build
      pool:
-       name: Hosted Ubuntu 1604
+       vmImage: ubuntu-16.04
      steps:
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
@@ -73,7 +73,7 @@ stages:
    - job: GitHub
      displayName: GitHub
      pool:
-       name: Hosted Ubuntu 1604
+       vmImage: ubuntu-16.04
      steps:
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
@@ -114,7 +114,7 @@ stages:
    - job: ReleaseHelm
      displayName: Release to Azure Container Registry
      pool:
-       name: Hosted Ubuntu 1604
+       vmImage: ubuntu-16.04
      steps:
      - task: HelmInstaller@0
        inputs:
