@@ -3,98 +3,132 @@ resources:
 - repo: self
 trigger: none
 pr: none
-pool:
-  name: Hosted Ubuntu 1604
 variables:
   DotNet.SDK.Version: '2.2.203'
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'
+  Helm.App.Version: '$(Image.Version)'
   # Release.Title is configured in the build definition as settable at queue time
   # Image.Version is configured in the build definition as settable at queue time
-steps:
-- task: DotNetCoreInstaller@0
-  displayName: 'Install .NET SDK'
-  inputs:
-    version: '$(DotNet.SDK.Version)'
-
-- powershell: |
-   Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-   $index = "$(Image.Version)".IndexOf(".", 2);
-   $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-   Write-Host "Found version '$majorMinorVersion'"
-   Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-  displayName: 'Determine ''{major}.{minor}'' version'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Run Unit Tests'
-  inputs:
-    command: test
-    projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-
-- task: Docker@1
-  displayName: 'Build Docker image'
-  inputs:
-    dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-    arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
-    imageName: '$(Image.TaggedName)'
-    includeLatestTag: true
-    useDefaultContext: false
-    buildContext: ./src/
-
-- task: GitHubRelease@0
-  displayName: 'Create GitHub Release'
-  inputs:
-    gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
-    repositoryName: tomkerkhove/promitor
-    action: Create
-    tagSource: manual
-    tag: '$(Release.TagName)'
-    title: '$(Release.Title)'
-    releaseNotesSource: input
-    isDraft: true
-    releaseNotes: |
-     ### Breaking Changes
-     Here are a list of breaking changes and how to mitigate them:
-     - TBW (#) - _Use new approach documented here_
-     ### Getting started
-     Running Promitor Scraper is super easy:
-     ```
-     docker run -d -p 8999:80 --name promitor-agent-scraper
-                              --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                              --env-file C:/Promitor/az-mon-auth.creds \
-                              --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                              tomkerkhove/promitor-agent-scraper:$(Image.Version)
-     ```
-     ### Docker Image information
-     New Docker image tags are available:
-     - `latest`
-     - `$(Image.Version)`
-     - `$(Image.MajorMinorVersion)`
-     
-     Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
-     For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
-
-- task: Docker@1
-  displayName: 'Push ''{major}.{minor}.{patch}'' to Docker Hub'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker Hub'
-    command: 'Push an image'
-    imageName: '$(Image.TaggedName)'
-
-- task: Docker@1
-  displayName: 'Push ''{major}.{minor}'' to Docker Hub'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker Hub'
-    command: 'Push an image'
-    imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-
-- task: Docker@1
-  displayName: 'Push ''latest'' to Docker Hub'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker Hub'
-    command: 'Push an image'
-    imageName: '$(Image.Name):latest'
+  # Helm.Chart.Version is configured in the build definition as settable at queue time
+stages:
+- stage: Build
+  displayName: Build and Push Docker image
+  jobs:
+   - job: Build
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+        version: '$(DotNet.SDK.Version)'
+     - powershell: |
+        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+        $index = "$(Image.Version)".IndexOf(".", 2);
+        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+        Write-Host "Found version '$majorMinorVersion'"
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+       displayName: 'Determine ''{major}.{minor}'' version'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+     - task: Docker@1
+       displayName: 'Build Docker image'
+       inputs:
+        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+        arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
+        imageName: '$(Image.TaggedName)'
+        includeLatestTag: true
+        useDefaultContext: false
+        buildContext: ./src/
+     - task: Docker@1
+       displayName: 'Push ''{major}.{minor}.{patch}'' to Docker Hub'
+       inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: '$(Image.TaggedName)'
+     - task: Docker@1
+       displayName: 'Push ''{major}.{minor}'' to Docker Hub'
+       inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+     - task: Docker@1
+       displayName: 'Push ''latest'' to Docker Hub'
+       inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'Docker Hub'
+        command: 'Push an image'
+        imageName: '$(Image.Name):latest'
+- stage: ReleaseGitHub
+  displayName: Release on GitHub
+  dependsOn: Build
+  jobs:
+   - job: CreateRelease
+     displayName: Create Release
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: GitHubRelease@0
+       displayName: 'Create GitHub Release'
+       inputs:
+         gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+         repositoryName: tomkerkhove/promitor
+         action: Create
+         tagSource: manual
+         tag: '$(Release.TagName)'
+         title: '$(Release.Title)'
+         releaseNotesSource: input
+         isDraft: true
+         releaseNotes: |
+          ### Breaking Changes
+          Here are a list of breaking changes and how to mitigate them:
+          - TBW (#) - _Use new approach documented here_
+          ### Getting started
+          Running Promitor Scraper is super easy:
+          ```
+          docker run -d -p 8999:80 --name promitor-agent-scraper
+                            --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                            --env-file C:/Promitor/az-mon-auth.creds \
+                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                            tomkerkhove/promitor-agent-scraper:$(Image.Version)
+          ```
+          ### Docker Image information
+          New Docker image tags are available:
+          - `latest`
+          - `$(Image.Version)`
+          - `$(Image.MajorMinorVersion)`
+          
+          Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
+          For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  dependsOn: Build
+  jobs:
+   - job: PushHelmChart
+     displayName: Push Helm Chart to ACR
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       inputs:
+        helmVersion: '2.9.1'
+     - powershell: |
+        mkdir output/
+        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
+       workingDirectory: charts
+       displayName: 'Package Helm Chart'
+     - task: AzureCLI@1
+       displayName: 'Push Helm Chart to Azure Container Registry'
+       inputs:
+        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
+        scriptLocation: inlineScript
+        inlineScript: |
+         az configure --defaults acr=promitor
+         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
