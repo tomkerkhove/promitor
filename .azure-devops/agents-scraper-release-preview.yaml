@@ -17,31 +17,31 @@ stages:
   displayName: Build and Push Docker image
   jobs:
    - job: Build
-    steps:
-    - task: DotNetCoreInstaller@0
-      displayName: 'Install .NET SDK'
-      inputs:
-        version: '$(DotNet.SDK.Version)'
-    - task: DotNetCoreCLI@2
-      displayName: 'Run Unit Tests'
-      inputs:
-        command: test
-        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-    - task: Docker@1
-      displayName: 'Build Docker image'
-      inputs:
-        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-        imageName: '$(Image.TaggedName)'
-        includeLatestTag: true
-        useDefaultContext: false
-        buildContext: ./src/
-    - task: Docker@1
-      displayName: 'Push preview to Docker Hub'
-      inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(Image.TaggedName)'
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+         version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+         command: test
+         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+     - task: Docker@1
+       displayName: 'Build Docker image'
+       inputs:
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+         imageName: '$(Image.TaggedName)'
+         includeLatestTag: true
+         useDefaultContext: false
+         buildContext: ./src/
+     - task: Docker@1
+       displayName: 'Push preview to Docker Hub'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         command: 'Push an image'
+       imageName: '$(Image.TaggedName)'
 - stage: Release
   displayName: Build and Push Docker image
   dependsOn: BuildAndPushDockerImage
@@ -69,18 +69,18 @@ stages:
          isDraft: true
          isPreRelease: true
          releaseNotes: |
-         ### Breaking Changes
-         Here are a list of breaking changes and how to mitigate them:
-         - TBW (#) - _Use new approach documented here_
-         ### Getting started
-         Running Promitor Scraper Agent is super easy:
-         ```
-         docker run -d -p 8999:80 --name promitor-agent-scraper
-                                   --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                                   --env-file C:/Promitor/az-mon-auth.creds \
-                                   --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                                   tomkerkhove/promitor-agent-scraper:$(Image.Version)
-         ```
-         ### Docker Image information
-         New Docker image tag is available: `$(Image.Version)` on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper).<br/>
-         For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+          ### Breaking Changes
+          Here are a list of breaking changes and how to mitigate them:
+          - TBW (#) - _Use new approach documented here_
+          ### Getting started
+          Running Promitor Scraper Agent is super easy:
+          ```
+          docker run -d -p 8999:80 --name promitor-agent-scraper
+                                    --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                                    --env-file C:/Promitor/az-mon-auth.creds \
+                                    --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                                    tomkerkhove/promitor-agent-scraper:$(Image.Version)
+          ```
+          ### Docker Image information
+          New Docker image tag is available: `$(Image.Version)` on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper).<br/>
+          For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
