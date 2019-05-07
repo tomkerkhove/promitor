@@ -42,12 +42,12 @@ stages:
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
        imageName: '$(Image.TaggedName)'
-- stage: Release
-  displayName: Build and Push Docker image
+- stage: ReleaseGitHub
+  displayName: Release on GitHub
   dependsOn: BuildAndPushDockerImage
   jobs:
-   - job: ReleaseGitHub
-     displayName: Release to GitHub
+   - job: GitHub
+     displayName: GitHub
      steps:
      - task: Docker@1
        displayName: 'Push preview to Docker Hub'
@@ -84,8 +84,12 @@ stages:
           ### Docker Image information
           New Docker image tag is available: `$(Image.Version)` on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper).<br/>
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  dependsOn: BuildAndPushDockerImage
+  jobs:
    - job: ReleaseHelm
-     displayName: Release Helm chart to Azure Container Registry
+     displayName: Release to Azure Container Registry
      steps:
      - task: HelmInstaller@0
        inputs:
