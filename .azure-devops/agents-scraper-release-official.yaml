@@ -25,12 +25,12 @@ stages:
        inputs:
         version: '$(DotNet.SDK.Version)'
      - powershell: |
-          Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-          $index = "$(Image.Version)".IndexOf(".", 2);
-          $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-          Write-Host "Found version '$majorMinorVersion'"
-          Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-         displayName: 'Determine ''{major}.{minor}'' version'
+        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+        $index = "$(Image.Version)".IndexOf(".", 2);
+        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+        Write-Host "Found version '$majorMinorVersion'"
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+       displayName: 'Determine ''{major}.{minor}'' version'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
@@ -78,35 +78,35 @@ stages:
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:
-       gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
-       repositoryName: tomkerkhove/promitor
-       action: Create
-       tagSource: manual
-       tag: '$(Release.TagName)'
-       title: '$(Release.Title)'
-       releaseNotesSource: input
-       isDraft: true
-       releaseNotes: |
-        ### Breaking Changes
-        Here are a list of breaking changes and how to mitigate them:
-        - TBW (#) - _Use new approach documented here_
-        ### Getting started
-        Running Promitor Scraper is super easy:
-        ```
-        docker run -d -p 8999:80 --name promitor-agent-scraper
-                          --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                          --env-file C:/Promitor/az-mon-auth.creds \
-                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                          tomkerkhove/promitor-agent-scraper:$(Image.Version)
-        ```
-        ### Docker Image information
-        New Docker image tags are available:
-        - `latest`
-        - `$(Image.Version)`
-        - `$(Image.MajorMinorVersion)`
-        
-        Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
-        For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+         gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+         repositoryName: tomkerkhove/promitor
+         action: Create
+         tagSource: manual
+         tag: '$(Release.TagName)'
+         title: '$(Release.Title)'
+         releaseNotesSource: input
+         isDraft: true
+         releaseNotes: |
+          ### Breaking Changes
+          Here are a list of breaking changes and how to mitigate them:
+          - TBW (#) - _Use new approach documented here_
+          ### Getting started
+          Running Promitor Scraper is super easy:
+          ```
+          docker run -d -p 8999:80 --name promitor-agent-scraper
+                            --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                            --env-file C:/Promitor/az-mon-auth.creds \
+                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                            tomkerkhove/promitor-agent-scraper:$(Image.Version)
+          ```
+          ### Docker Image information
+          New Docker image tags are available:
+          - `latest`
+          - `$(Image.Version)`
+          - `$(Image.MajorMinorVersion)`
+          
+          Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
+          For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
 - stage: ReleaseHelm
   displayName: Release Helm Chart
   dependsOn: BuildAndPushDockerImage
@@ -120,8 +120,8 @@ stages:
        inputs:
         helmVersion: '2.9.1'
      - powershell: |
-       mkdir output/
-       helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
+        mkdir output/
+        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
        workingDirectory: charts
        displayName: 'Package Helm Chart'
      - task: AzureCLI@1
