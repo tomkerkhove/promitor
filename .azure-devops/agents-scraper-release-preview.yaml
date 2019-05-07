@@ -11,7 +11,7 @@ variables:
   # Release.Title is configured in the build definition as settable at queue time
   # Image.Version is configured in the build definition as settable at queue time
 stages:
-- stage: BuildAndPushDockerImage
+- stage: Build
   displayName: Build and Push Docker image
   jobs:
    - job: Build
@@ -42,9 +42,9 @@ stages:
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
-- stage: ReleaseGitHub
+- stage: ShipIt
   displayName: Release on GitHub
-  dependsOn: BuildAndPushDockerImage
+  dependsOn: Build
   jobs:
    - job: GitHub
      displayName: GitHub
