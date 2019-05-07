@@ -3,8 +3,6 @@ resources:
 - repo: self
 trigger: none
 pr: none
-pool:
-  name: Hosted Ubuntu 1604
 variables:
   DotNet.SDK.Version: '2.2.203'
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
@@ -17,6 +15,8 @@ stages:
   displayName: Build and Push Docker image
   jobs:
    - job: Build
+     pool:
+       name: Hosted Ubuntu 1604
      steps:
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
@@ -41,13 +41,15 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
-       imageName: '$(Image.TaggedName)'
+         imageName: '$(Image.TaggedName)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: BuildAndPushDockerImage
   jobs:
    - job: GitHub
      displayName: GitHub
+     pool:
+       name: Hosted Ubuntu 1604
      steps:
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
@@ -83,6 +85,8 @@ stages:
   jobs:
    - job: ReleaseHelm
      displayName: Release to Azure Container Registry
+     pool:
+       name: Hosted Ubuntu 1604
      steps:
      - task: HelmInstaller@0
        inputs:
