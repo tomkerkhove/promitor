@@ -66,12 +66,12 @@ stages:
         dockerRegistryEndpoint: 'Docker Hub'
         command: 'Push an image'
         imageName: '$(Image.Name):latest'
-- stage: ShipIt
+- stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
   jobs:
-   - job: GitHub
-     displayName: GitHub
+   - job: CreateRelease
+     displayName: Create Release
      pool:
        vmImage: ubuntu-16.04
      steps:
@@ -109,10 +109,10 @@ stages:
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
 - stage: ReleaseHelm
   displayName: Release Helm Chart
-  dependsOn: BuildAndPushDockerImage
+  dependsOn: Build
   jobs:
-   - job: ReleaseHelm
-     displayName: Release to Azure Container Registry
+   - job: PushHelmChart
+     displayName: Push Helm Chart ACR
      pool:
        vmImage: ubuntu-16.04
      steps:

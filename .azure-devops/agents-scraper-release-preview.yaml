@@ -42,12 +42,12 @@ stages:
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
-- stage: ShipIt
+- stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
   jobs:
-   - job: GitHub
-     displayName: GitHub
+   - job: CreateRelease
+     displayName: Create Preview Release
      pool:
        vmImage: ubuntu-16.04
      steps:
