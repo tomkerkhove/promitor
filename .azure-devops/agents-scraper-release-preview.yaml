@@ -8,10 +8,8 @@ variables:
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'
-  Helm.App.Version: '$(Image.Version)'
   # Release.Title is configured in the build definition as settable at queue time
   # Image.Version is configured in the build definition as settable at queue time
-  # Helm.Chart.Version is configured in the build definition as settable at queue time
 stages:
 - stage: BuildAndPushDockerImage
   displayName: Build and Push Docker image
@@ -81,28 +79,3 @@ stages:
           ### Docker Image information
           New Docker image tag is available: `$(Image.Version)` on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper).<br/>
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
-- stage: ReleaseHelm
-  displayName: Release Helm Chart
-  dependsOn: BuildAndPushDockerImage
-  jobs:
-   - job: ReleaseHelm
-     displayName: Release to Azure Container Registry
-     pool:
-       name: Hosted Ubuntu 1604
-     steps:
-     - task: HelmInstaller@0
-       inputs:
-         helmVersion: '2.9.1'
-     - powershell: |
-        mkdir output/
-        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
-       displayName: 'Package Helm Chart'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-         azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-         scriptLocation: inlineScript
-         inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
