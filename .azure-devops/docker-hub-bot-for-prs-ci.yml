@@ -9,7 +9,7 @@ pr:
     - deploy/automation/docker-hub/ci/*
     - .azure-devops/docker-hub-bot-for-prs*
 stages:
-- stage: Verification
+- stage: Build
   displayName: Verify Tooling
   jobs:
    - job: Tooling
