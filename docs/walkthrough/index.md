@@ -5,7 +5,13 @@ title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
 
 # Introduction
 
-In this walkthrough, we'll set up a basic monitoring solution with Promitor, Prometheus, and Grafana. In order to have a resource to monitor, we'll create a Service Bus queue and add load to the queue with Service Bus Explorer. We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Helm, and explain how each of these services connects and how to see output. We'll also walk through setting up a Prometheus alert and Grafana dashboard to show alerting and visualization.
+In this walkthrough, we'll set up a basic monitoring solution with Promitor, Prometheus, and Grafana.
+
+In order to have a resource to monitor, we'll create a Service Bus queue and add load to the queue with Service Bus Explorer.
+
+We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Helm, and explain how each of these services connects and how to see output.
+
+We'll also walk through setting up a Prometheus alert and Grafana dashboard to show alerting and visualization.
 
 ## Prerequisites
 
