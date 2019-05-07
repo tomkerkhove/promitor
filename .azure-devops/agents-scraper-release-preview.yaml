@@ -41,7 +41,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
-       imageName: '$(Image.TaggedName)'
+         imageName: '$(Image.TaggedName)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: BuildAndPushDockerImage
