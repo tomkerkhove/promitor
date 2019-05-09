@@ -16,7 +16,7 @@ namespace Promitor.Core.Telemetry.Metrics
         /// <param name="labels">Labels that are applicable for this measurement</param>
         public void SetGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
         {
-            var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
+            var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp);
 
             var gauge = Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
