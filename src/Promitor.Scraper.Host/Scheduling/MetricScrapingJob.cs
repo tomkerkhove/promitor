@@ -9,6 +9,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Metrics.Interfaces;
 
 namespace Promitor.Scraper.Host.Scheduling
 {
@@ -16,11 +17,13 @@ namespace Promitor.Scraper.Host.Scheduling
     {
         private readonly MetricDefinition _metric;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
+        private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
 
         public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
+            IRuntimeMetricsCollector runtimeMetricsCollector,
             ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
@@ -29,6 +32,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
             _metric = metric;
             _metricsDeclarationProvider = metricsDeclarationProvider;
+            _runtimeMetricsCollector = runtimeMetricsCollector;
             _exceptionTracker = exceptionTracker;
             _logger = logger;
 
@@ -66,7 +70,7 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _logger, _exceptionTracker);
+            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _runtimeMetricsCollector, _logger, _exceptionTracker);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

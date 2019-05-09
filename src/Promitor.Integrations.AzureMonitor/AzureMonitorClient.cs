@@ -9,7 +9,9 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using GuardNet;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor.Exceptions;
+using Promitor.Integrations.AzureMonitor.RequestHandlers;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -26,8 +28,9 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
+        /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
         /// <param name="logger">Logger to use during interaction with Azure Monitor</param>
-        public AzureMonitorClient(string tenantId, string subscriptionId, string applicationId, string applicationSecret, ILogger logger)
+        public AzureMonitorClient(string tenantId, string subscriptionId, string applicationId, string applicationSecret, IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -36,7 +39,8 @@ namespace Promitor.Integrations.AzureMonitor
 
             var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, AzureEnvironment.AzureGlobalCloud);
 
-            _authenticatedAzureSubscription = Azure.Authenticate(credentials).WithSubscription(subscriptionId);
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, applicationId, runtimeMetricsCollector, logger);
+            _authenticatedAzureSubscription = Azure.Configure().WithDelegatingHandler(monitorHandler).Authenticate(credentials).WithSubscription(subscriptionId);
             _logger = logger;
         }
 

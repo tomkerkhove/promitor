@@ -8,6 +8,8 @@ using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Metrics;
+using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Extensions;
 
 namespace Promitor.Scraper.Host
@@ -42,6 +44,7 @@ namespace Promitor.Scraper.Host
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
             services.AddTransient<ILogger, RuntimeLogger>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
+            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
 
             services.AddMvc()
                     .AddJsonOptions(jsonOptions =>
