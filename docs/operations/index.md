@@ -25,7 +25,7 @@ In the future, the endpoint will be more advanced by giving detailed status on d
 # Azure Resource Manager API - Consumption & Throttling
 Promitor exposes runtime metrics to provide insights on the API consumption of Azure Resource Manager API:
 
-- `promitor_ratelimit_arm_subscription` - Indication how many calls are still available before Azure Resource Manager is going to throttle us.
+- `promitor_ratelimit_arm` - Indication how many calls are still available before Azure Resource Manager is going to throttle us.
 Metric provides following labels:
     - `tenant_id` - _Id of the tenant that is being interacted with_
     - `subscription_id` - _Id of the subscription that is being interacted with_
