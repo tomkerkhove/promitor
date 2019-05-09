@@ -3,16 +3,7 @@ layout: default
 title: Operating Promitor
 ---
 
-Here is an overview of how you can operate Promitor. 
-
-# Azure Resource Manager API Consumption & Throttling
-Promitor exposes runtime metrics to provide insights on the API consumption of Azure Resource Manager API:
-
-- `promitor_ratelimit_arm_subscription` - Indication how many calls are still available before Azure Resource Manager is going to throttle us.
-Metric provides following labels:
-    - `tenant_id` - _Id of the tenant that is being interacted with_
-    - `subscription_id` - _Id of the subscription that is being interacted with_
-    - `app_id` - _Id of the application that is being used to interact with API_
+Here is an overview of how you can operate Promitor.
 
 # Health
 Promitor provides a basic health endpoint that indicates the state of the scraper.
@@ -30,5 +21,14 @@ Health is currently indicated via the HTTP response status:
 - `503 Service Unavailable` - The scraper is unhealthy
 
 In the future, the endpoint will be more advanced by giving detailed status on dependencies as well.
+
+# Azure Resource Manager API - Consumption & Throttling
+Promitor exposes runtime metrics to provide insights on the API consumption of Azure Resource Manager API:
+
+- `promitor_ratelimit_arm_subscription` - Indication how many calls are still available before Azure Resource Manager is going to throttle us.
+Metric provides following labels:
+    - `tenant_id` - _Id of the tenant that is being interacted with_
+    - `subscription_id` - _Id of the subscription that is being interacted with_
+    - `app_id` - _Id of the application that is being used to interact with API_
 
 [&larr; back](/)
