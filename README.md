@@ -31,7 +31,7 @@ Are you having issues or feature requests? Feel free to [let us know](https://gi
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you can do a small donation.
 
-[![Donate](https://promitor.io/media/buttons/paypal.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
+[![Donate](https://img.shields.io/badge/Donate%20via-PayPal-blue.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 ## Get in touch
 Do you have a security issue to report or just want to privately contact me? Feel free to [write me an email](mailto:kerkhove.tom@gmail.com)
