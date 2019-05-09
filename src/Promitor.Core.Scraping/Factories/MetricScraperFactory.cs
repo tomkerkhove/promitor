@@ -5,6 +5,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.Factories
@@ -16,13 +17,14 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Tracker used to log exceptions</param>
         public static IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            ILogger logger, IExceptionTracker exceptionTracker)
+            IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger, IExceptionTracker exceptionTracker)
         {
             var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, logger);
+            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, runtimeMetricsCollector, logger);
 
             switch (metricDefinitionResourceType)
             {
@@ -40,16 +42,16 @@ namespace Promitor.Core.Scraping.Factories
                     return new NetworkInterfaceScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
-				case ResourceType.CosmosDb:
+                case ResourceType.CosmosDb:
                     return new CosmosDbScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials, ILogger logger)
+        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger)
         {
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, logger);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, logger);
             return azureMonitorClient;
         }
 

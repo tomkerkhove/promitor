@@ -82,7 +82,7 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", foundMetricValue, metricDefinition.Name, aggregationInterval);
 
-                var metricsTimestampFeatureFlag = FeatureFlag.IsActive("METRICSTIMESTAMP", defaultFlagState: true);
+                var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
 
                 var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag);
                 gauge.Set(foundMetricValue);

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -31,6 +32,7 @@ namespace Promitor.Scraper.Host.Extensions
                 {
                     builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
                         metricsProvider,
+                        serviceProvider.GetService<IRuntimeMetricsCollector>(),
                         serviceProvider.GetService<ILogger>(),
                         serviceProvider.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);

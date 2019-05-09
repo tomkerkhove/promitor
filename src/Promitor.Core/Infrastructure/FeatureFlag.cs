@@ -21,5 +21,10 @@ namespace Promitor.Core.Infrastructure
 
             return defaultFlagState;
         }
+
+        public static class Names
+        {
+            public static string MetricsTimestamp { get; } = "METRICSTIMESTAMP";
+        }
     }
 }
