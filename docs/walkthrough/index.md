@@ -3,6 +3,8 @@ layout: default
 title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
 ---
 
+# Introduction
+
 In this walkthrough, we'll set up a basic monitoring solution with Promitor, Prometheus, and Grafana. In order to have a resource to monitor, we'll create a Service Bus queue and add load to the queue with Service Bus Explorer. We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Helm, and explain how each of these services connects and how to see output. We'll also walk through setting up a Prometheus alert and Grafana dashboard to show alerting and visualization.
 
 ## Prerequisites
@@ -12,8 +14,9 @@ In this walkthrough, we'll set up a basic monitoring solution with Promitor, Pro
 - [Helm](https://helm.sh/docs/using_helm/#installing-the-helm-client), a Kubernetes deployment manager
 - [Service Bus Explorer](https://github.com/paolosalvatori/ServiceBusExplorer/releases)
 
-## Create a Resource Group
+# Deploy Azure Infrastructure
 
+## Create a Resource Group
 
 ```bash
 az group create --name PromitorRG --location eastus
@@ -92,9 +95,13 @@ az aks create \
   --resource-group PromitorRG \
   --node-count 1 \
   --generate-ssh-keys
-```	
+```
 
-Then get your cluster's credentials with
+# Cluster Setup
+
+## Get credentials
+
+You can get your cluster's credentials with
 
 ```bash
 az aks get-credentials \
@@ -102,14 +109,15 @@ az aks get-credentials \
   --resource-group PromitorRG
 ```
 
-Verify your credentials and check that your cluster is up and running with `kubectl get nodes`.
+This will save these credentials to your kubeconfig file and set your new cluster as your current context for all `kubectl` commands.
 
+Verify your credentials and check that your cluster is up and running with `kubectl get nodes`.
 
 ## Set up Helm and Tiller
 
-You'll use Helm to install Tiller, the server-side component of Helm. For clusters with RBAC (Role-Based Access Control, which is enabled by default on AKS clusters), you'll need to set up a service account for Tiller:
+You'll use Helm to install Tiller, the server-side component of Helm. For clusters with RBAC (Role-Based Access Control, which is enabled by default on AKS clusters), you'll need to set up a service account for Tiller.
 
-- Create a file called `helm-rbac.yaml` with the following:
+Create a file called `helm-rbac.yaml` with the following:
 
 ```YAML
 apiVersion: v1
@@ -132,21 +140,22 @@ subjects:
     namespace: kube-system
 ```
 
-- Create the service account and role binding specified in the above file with the `kubectl apply` command:
+Create the service account and role binding specified in the above file with the `kubectl apply` command:
 
 ```bash
 kubectl apply -f helm-rbac.yaml
 ```
 
-- To deploy Tiller into your AKS cluster, use the `helm init` command:
+Then deploy Tiller into your AKS cluster using the `helm init` command:
 
 ```bash
 helm init --service-account tiller
 ```
+# Deploy Promitor and Prometheus
 
-## Deploy Promitor to your cluster using Helm
+## Create a metrics declaration for Promitor
 
-Before deploying Promitor, you'll need a values file with secrets & a metric declaration file (these can also be the same file for ease of use). The yaml file below will scrape one metric, queue length, from the queue created above.
+Before deploying Promitor, you'll need a values file with secrets & a metric declaration file (these can also be the same file for ease of use). The yaml below will scrape one metric, queue length, from the queue created above.
 
 ```yaml
 azureAuthentication:
@@ -173,6 +182,8 @@ metrics:
       aggregation:
         type: Total
 ```
+
+## Deploy Promitor to your cluster using Helm
 
 To deploy, we'll first add the Promitor chart repository to helm:
 
@@ -209,6 +220,8 @@ helm install stable/prometheus -f promitor-scrape-config.yaml
 You can see this output again at any time by running `helm status promitor-agent-scraper`.
 
 Running these commands will create a Prometheus scraping configuration file in your current directory and deploy Prometheus to your cluster with that scraping configuration in addition to the default.
+
+# Test and check output
 
 ## Add load to the queue
 
@@ -247,9 +260,7 @@ Now, if you check http://localhost:8080, you should be able to enter Prometheus 
 
 Query `demo_queue_size` and as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
 
-## Set up alerts with Prometheus
-
-**TODO**
+# Visualization and alerting
 
 ## Install Grafana
 
@@ -266,6 +277,10 @@ Run this to get your Grafana password.
 Now you can use `kubectl port-forward` again to log in to your Grafana dashboard. `kubectl port-forward svc/grafana 8080:80` will make your dashboard available at http://localhost:8080, and you can log in with username 'admin' and the password you retrieved.
 
 ## Create a Grafana dashboard
+
+**TODO**
+
+## Set up alerts with Prometheus
 
 **TODO**
 
