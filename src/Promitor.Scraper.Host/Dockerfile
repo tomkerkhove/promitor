@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2.203 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2.204 AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
