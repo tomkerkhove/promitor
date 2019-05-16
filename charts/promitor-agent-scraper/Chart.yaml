@@ -2,6 +2,6 @@ apiVersion: v1
 appVersion: "1.0"
 description: A Helm chart to deploy Promitor, an Azure Monitor scraper for Prometheus
 name: promitor-agent-scraper
-icon: https://github.com/tomkerkhove/promitor/blob/master/docs/media/logos/promitor.png
+icon: https://raw.githubusercontent.com/tomkerkhove/promitor/master/docs/media/logos/promitor.png
 home: https://github.com/tomkerkhove/promitor
 version: 0.1.0
