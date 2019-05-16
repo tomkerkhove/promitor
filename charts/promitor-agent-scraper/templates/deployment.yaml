@@ -54,8 +54,6 @@ spec:
             value: {{ .Values.service.targetPort | quote }}
           - name: PROMITOR_SCRAPE_BASEPATH
             value: {{ .Values.scrapeConfig.path | quote }}
-          - name: PROMITOR_SCRAPE_SCHEDULE
-            value: {{ .Values.scrapeConfig.schedule | quote }}
           - name: PROMITOR_FEATURE_METRICSTIMESTAMP
             value: {{ .Values.scrapeConfig.timestamp | quote }}
         {{- if .Values.telemetry.appInsightsKey }}

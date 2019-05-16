@@ -24,5 +24,6 @@ stages:
        inputs:
         helmVersion: '2.9.1'
      - powershell: |
-        mkdir output/
-        helm lint charts/promitor-agent-scraper/
+        helm lint promitor-agent-scraper/ --strict
+       workingDirectory: charts
+       displayName: 'Lint Helm Chart'
