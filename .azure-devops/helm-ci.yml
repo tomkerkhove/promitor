@@ -10,7 +10,7 @@ pr:
   paths:
     include:
     - charts/*
-    - .azure-devops/scraper-ci.yml
+    - .azure-devops/helm-ci.yml
 stages:
 - stage: Helm
   jobs:
