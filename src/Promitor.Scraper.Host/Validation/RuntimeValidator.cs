@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using Promitor.Core.Scraping.Configuration.Providers;
+using Promitor.Core.Telemetry.Loggers;
 using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
 using Promitor.Scraper.Host.Validation.Steps;
@@ -17,7 +17,7 @@ namespace Promitor.Scraper.Host.Validation
 
         public RuntimeValidator()
         {
-            _validationLogger = new ConsoleLogger("Validation", (message, logLevel) => true, includeScopes: true);
+            _validationLogger = new ValidationLogger();
 
             var scrapeConfigurationProvider = new MetricsDeclarationProvider(_validationLogger);
             _validationSteps = new List<IValidationStep>
@@ -31,7 +31,7 @@ namespace Promitor.Scraper.Host.Validation
 
         public void Run()
         {
-            var validationLogger = new ConsoleLogger("Validation", (message, logLevel) => true, includeScopes: true);
+            var validationLogger = new ValidationLogger();
             validationLogger.LogInformation("Starting validation of Promitor setup");
 
             var validationResults = RunValidationSteps();

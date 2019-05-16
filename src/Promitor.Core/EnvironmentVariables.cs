@@ -28,5 +28,10 @@
         {
             public const string InstrumentationKey = "PROMITOR_TELEMETRY_INSTRUMENTATIONKEY";
         }
+
+        public class Logging
+        {
+            public const string MinimumLogLevel = "PROMITOR_LOGGING_MINIMUMLEVEL";
+        }
     }
 }

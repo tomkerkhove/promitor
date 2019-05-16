@@ -8,6 +8,7 @@ using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Loggers;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Extensions;
