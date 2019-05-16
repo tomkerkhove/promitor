@@ -5,3 +5,6 @@ name: promitor-agent-scraper
 icon: https://raw.githubusercontent.com/tomkerkhove/promitor/master/docs/media/logos/promitor.png
 home: https://github.com/tomkerkhove/promitor
 version: 0.2.0
+maintainers:
+  - name: Tom Kerkhove
+    url: https://github.com/tomkerkhove
