@@ -47,7 +47,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Runtime](configuration#runtime)
     - [Scraping](configuration#scraping)
     - [Authentication with Azure Monitor](configuration#authentication-with-azure-monitor)
-    - [Telemetry](configuration#telemetry)
+    - [Logging & Telemetry](configuration#logging-&-telemetry)
 - **Operations**
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
     - [Health](operations#health)
