@@ -34,7 +34,7 @@ The entity in the Azure AD needs to have `Monitoring Reader` permission on the r
 We provide insights in how our runtime is doing and is written to `stdout`.
 
 This can be controlled via the following environment variables:
-- **PROMITOR_LOGGING_MINIMUMLOGLEVEL** - Defines the minimum log level that should be logged. If none is configured, `Warning` will be used. Allowed values are `Trace`, `Debug`, `Information`, `Warning`, `Error`, `Critical`, `None` ordered from most to least verbose.
+- **PROMITOR_LOGGING_MINIMUMLEVEL** - Defines the minimum log level that should be logged. If none is configured, `Warning` will be used. Allowed values are `Trace`, `Debug`, `Information`, `Warning`, `Error`, `Critical`, `None` ordered from most to least verbose.
 
 ## External Telemetry
 Promitor can send telemetry to Azure Application Insights when there is a need to.

@@ -31,7 +31,7 @@
 
         public class Logging
         {
-            public const string MinimumLogLevel = "PROMITOR_LOGGING_MINIMUMLOGLEVEL";
+            public const string MinimumLogLevel = "PROMITOR_LOGGING_MINIMUMLEVEL";
         }
     }
 }
