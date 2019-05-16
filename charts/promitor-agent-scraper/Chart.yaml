@@ -4,4 +4,4 @@ description: A Helm chart to deploy Promitor, an Azure Monitor scraper for Prome
 name: promitor-agent-scraper
 icon: https://raw.githubusercontent.com/tomkerkhove/promitor/master/docs/media/logos/promitor.png
 home: https://github.com/tomkerkhove/promitor
-version: 0.1.0
+version: 0.2.0
