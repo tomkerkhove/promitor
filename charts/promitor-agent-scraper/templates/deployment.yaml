@@ -65,6 +65,10 @@ spec:
                   name: {{ template "promitor-agent-scraper.secretname" . }}
                   key: {{ .Values.secrets.appInsightsSecret }}
         {{- end }}
+        {{- if .Values.logging.minimalLogLevel }}
+          - name: PROMITOR_LOGGING_MINIMUMLEVEL
+            value: {{ .Values.logging.minimalLogLevel }}
+        {{- end }}
           volumeMounts:
           - name: config-volume-{{ template "promitor-agent-scraper.fullname" . }}
             mountPath: /config/
