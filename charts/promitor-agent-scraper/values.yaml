@@ -19,6 +19,9 @@ scrapeConfig:
 telemetry:
   appInsightsKey: ""
 
+logging:
+  minimalLogLevel: "Warning"
+
 ## Metric Declaration YAML
 azureMetadata:
   tenantId: ""
