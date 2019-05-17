@@ -255,8 +255,15 @@ Let's first look at the Promitor output!
 Run `kubectl port-forward svc/promitor-agent-scraper 8080:80` and check http://localhost:8080/metrics. You should see some information about your queue:
 
 ```bash
-# TODO sample output
+# HELP promitor_ratelimit_arm Indication how many calls are still available before Azure Resource Manager is going to throttle us.
+# TYPE promitor_ratelimit_arm gauge
+promitor_ratelimit_arm{tenant_id=<guid-tenant-id>,subscription_id=<guid-subscription-id>,app_id=<guid-sp-app-id>} 11998 1558116465529
+# HELP demo_queue_size Amount of active messages of the 'demo_queue' queue
+# TYPE demo_queue_size gauge
+demo_queue_size 200 1558116465677
 ```
+
+where 200 is the number of messages sent.
 
 We can also look at the Prometheus server and check that it's pulling in metrics from Promitor.
 
@@ -282,12 +289,40 @@ Run this to get your Grafana password.
 
 Now you can use `kubectl port-forward` again to log in to your Grafana dashboard. `kubectl port-forward svc/grafana 8080:80` will make your dashboard available at http://localhost:8080, and you can log in with username 'admin' and the password you retrieved.
 
-## Create a Grafana dashboard
+## Add Prometheus as a data source
 
-**TODO**
+After logging in, you should see an option to "Add a Data Source." Click that, and choose the Prometheus source type (if it's not immediately visible, search for it).
 
-## Set up alerts with Prometheus
+The only setting you should need to edit here is the URL, under the HTTP section. Within your cluster, `http://<prometheus-release-name>-prometheus-server.default.svc.cluster.local` should resolve to the Prometheus server service. (Default in that URL refers to the namespace - if you installed in a namespace other than default, change that.)
 
-**TODO**
+Set your service's name as the Prometheus URL in Grafana, and save the data source. It should tell you that the data source is working.
+
+## Create a Grafana dashboard for queue metrics
+
+First, we'll make a basic dashboard with the metric we set up in Promitor. Then you can use a pre-built dashboard to show Prometheus' default Kubernetes metrics.
+
+Go to the + button on the sidebar, and choose "Dashboard". To make a simple graph showing your queue size, you can write `demo_queue_size` in the query field. Click out of that input field and the graph should update.
+
+To see more, you can go back to Service Bus Explorer and send or receive messages. Your Grafana graph won't update immediately, but you should see results in a few minutes. 
+
+In order to see results without manually refreshing, find the dropdown menu in the top right corner that sets the time range of the graph. Here you can edit time range and refresh rate.
+
+Make sure to save your new dashboard before exiting the page.
+
+## Import an existing Grafana dashboard
+
+Now we'll import a pre-created dashboard that shows Kubernetes metrics. There are multiple available on Grafana Lab's dashboard site - try [6417](https://grafana.com/dashboards/6417).
+
+To import a dashboard, click the + button on the sidebar and choose "Import." From there, you can either load a JSON file or enter the dashbord ID: 6417.
+
+Click "Load" and you will be given some configuration options. The only one that needs to be set is the Prometheus data source. From there, you should be able to create the dashboard and view metrics about your AKS cluster.
+
+## Set up a Prometheus alert
+
+This section will be created soon.
+
+# Delete resources
+
+To delete all the resources used in this tutorial, run `az group delete --name PromitorRG`.
 
 [&larr; back](/)
