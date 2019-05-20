@@ -9,16 +9,16 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-  - name: demo_generic_queue_size
-    description: "Amount of active messages of the 'myqueue' queue (determined with Generic provider)"
+  - name: promitor_demo_generic_queue_size
+    description: "Amount of active messages of the 'orders' queue (determined with Generic provider)"
     resourceType: Generic
     resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
     filter: EntityName eq 'orders'
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
-        type: Total
-  - name: demo_generic_namespace_size
+        type: Average
+  - name: promitor_demo_generic_namespace_size
     description: "Size of all queues in our Azure Service Bus namespace (determined with Generic provider)"
     resourceType: Generic
     resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
@@ -29,19 +29,19 @@ metrics:
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
-        type: Total
-  - name: demo_servicebusqueue_queue_size
-    description: "Amount of active messages of the 'myqueue' queue (determined with ServiceBusQueue provider)"
+        type: Average
+  - name: promitor_demo_servicebusqueue_queue_size
+    description: "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)"
     resourceType: ServiceBusQueue
     namespace: promitor-messaging
     queueName: orders
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
-        type: Total
+        type: Average
         # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
         interval: 00:15:00
-  - name: demo_azurestoragequeue_queue_size
+  - name: promitor_demo_azurestoragequeue_queue_size
     description: "Approximate amount of messages in 'orders' queue (determined with StorageQueue provider)"
     resourceType: StorageQueue
     accountName: promitor
@@ -55,7 +55,7 @@ metrics:
       metricName: MessageCount
       aggregation:
         type: Total
-  - name: demo_azurestoragequeue_queue_timespentinqueue
+  - name: promitor_demo_azurestoragequeue_queue_timespentinqueue
     description: "Approximate amount of time that the oldest message has been in 'orders' queue (determined with StorageQueue provider)"
     resourceType: StorageQueue
     accountName: promitor
