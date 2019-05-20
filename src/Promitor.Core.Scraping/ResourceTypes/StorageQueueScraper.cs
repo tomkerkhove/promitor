@@ -13,6 +13,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 {
     public class StorageQueueScraper : Scraper<StorageQueueMetricDefinition>
     {
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/queueServices";
         private readonly AzureStorageQueueClient _azureStorageQueueClient;
         public StorageQueueScraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
             : base(azureMetadata, azureMonitorClient, logger, exceptionTracker)
@@ -20,24 +21,30 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(logger);
         }
 
-        protected override async Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
             Guard.NotNull(metricDefinition.AzureMetricConfiguration, nameof(metricDefinition.AzureMetricConfiguration));
             Guard.NotNull(metricDefinition.SasToken, nameof(metricDefinition.SasToken));
             Guard.NotNullOrEmpty(metricDefinition.AzureMetricConfiguration.MetricName, nameof(metricDefinition.AzureMetricConfiguration.MetricName));
 
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, metricDefinition.AccountName);
             var sasToken = metricDefinition.SasToken.GetSecretValue();
+            double foundMetricValue;
 
             switch (metricDefinition.AzureMetricConfiguration.MetricName.ToLowerInvariant())
             {
                 case AzureStorageConstants.Queues.Metrics.TimeSpentInQueue:
-                    return await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
+                    foundMetricValue = await _azureStorageQueueClient.GetQueueMessageTimeSpentInQueueAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
+                    break;
                 case AzureStorageConstants.Queues.Metrics.MessageCount:
-                    return await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
+                    foundMetricValue = await _azureStorageQueueClient.GetQueueMessageCountAsync(metricDefinition.AccountName, metricDefinition.QueueName, sasToken);
+                    break;
                 default:
                     throw new InvalidMetricNameException(metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.ResourceType.ToString());
             }
+
+            return new ScrapeResult(resourceUri, foundMetricValue);
         }
     }
 }

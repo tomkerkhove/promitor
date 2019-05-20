@@ -78,14 +78,14 @@ namespace Promitor.Core.Scraping
                 var aggregationInterval = metricDefinition.AzureMetricConfiguration.Aggregation.Interval;
                 var aggregationType = metricDefinition.AzureMetricConfiguration.Aggregation.Type;
                 var resourceGroupName = string.IsNullOrEmpty(metricDefinition.ResourceGroupName) ? AzureMetadata.ResourceGroupName : metricDefinition.ResourceGroupName;
-                var foundMetricValue = await ScrapeResourceAsync(AzureMetadata.SubscriptionId, resourceGroupName, castedMetricDefinition, aggregationType, aggregationInterval.Value);
+                var scrapedMetricResult = await ScrapeResourceAsync(AzureMetadata.SubscriptionId, resourceGroupName, castedMetricDefinition, aggregationType, aggregationInterval.Value);
 
-                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", foundMetricValue, metricDefinition.Name, aggregationInterval);
+                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, metricDefinition.Name, aggregationInterval);
 
                 var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag);
-                gauge.Set(foundMetricValue);
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames:"resource_uri");
+                gauge.WithLabels(scrapedMetricResult.ResourceUri).Set(scrapedMetricResult.MetricValue);
             }
             catch (Exception exception)
             {
@@ -102,6 +102,6 @@ namespace Promitor.Core.Scraping
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         /// 
-        protected abstract Task<double> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
+        protected abstract Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
     }
 }
