@@ -134,6 +134,7 @@ stages:
      - powershell: |
         mkdir output/
         cp promitor-agent-scraper/ promitor-agent-scraper-ci/ -r
+        ((Get-Content -path promitor-agent-scraper-ci/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: promitor-agent-scraper-ci') | Set-Content -Path promitor-agent-scraper-ci/Chart.yaml
         helm package promitor-agent-scraper-ci/ --app-version $(Build.BuildNumber) --version $(Build.BuildNumber) --destination output/
        workingDirectory: charts
        displayName: 'Package Helm Chart'
