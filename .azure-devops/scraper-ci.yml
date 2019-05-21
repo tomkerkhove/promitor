@@ -148,19 +148,19 @@ stages:
      - powershell: |
         echo 'Creating output folder'
         mkdir output/
-        
+
         echo 'Copying Chart folder'
         cp promitor-agent-scraper/ $(Helm.Chart.Name)/ -r
 
         echo 'Changing name of chart'
         ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
-        
+
         echo 'Changing image tag'
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-6','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-        
+
         echo 'Changing repo name'
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-        
+
         echo 'Packaging chart'
         helm package $(Helm.Chart.Name)/ --app-version $(Helm.Chart.Version) --version $(Helm.Chart.Version) --destination output/
        workingDirectory: charts
