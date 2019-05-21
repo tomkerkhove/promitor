@@ -11,6 +11,7 @@ pr:
     include:
     - src/*
     - .azure-devops/scraper-ci.yml
+    - charts/promitor-agent-scraper/*
 variables:
   DotNet.SDK.Version: '2.2.203'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
