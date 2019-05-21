@@ -38,8 +38,6 @@ stages:
          command: test
          projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
          arguments: '--configuration release'
-- stage: CodeQuality
-  jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
      condition: succeeded()
@@ -59,9 +57,6 @@ stages:
        displayName: 'Automated code quality checks'
        inputs:
          SolutionOrProjectPath: src/Promitor.sln
-- stage: Docker
-  displayName: Docker Image
-  jobs:
    - job: DockerBuild
      displayName: Build Docker Image Tests
      condition: succeeded()
@@ -111,8 +106,8 @@ stages:
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: Helm
-  displayName: Release on GitHub
-  dependsOn: Docker
+  displayName: Helm
+  dependsOn: Codebase
   jobs:
    - job: LintHelmChart
      displayName: Lint promitor-agent-scraper chart
