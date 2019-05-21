@@ -122,6 +122,9 @@ stages:
    - job: LintHelmChart
      displayName: Lint, Package & Push Chart
      condition: succeeded()
+     variables:
+       Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+       Helm.Chart.Name: 'promitor-agent-scraper-ci'
      pool:
        vmImage: ubuntu-16.04
      steps:
@@ -147,19 +150,27 @@ stages:
         mkdir output/
         
         echo 'Copying Chart folder'
-        cp promitor-agent-scraper/ promitor-agent-scraper-ci/ -r
+        cp promitor-agent-scraper/ $(Helm.Chart.Name)/ -r
 
         echo 'Changing name of chart'
-        ((Get-Content -path promitor-agent-scraper-ci/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: promitor-agent-scraper-ci') | Set-Content -Path promitor-agent-scraper-ci/Chart.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
         
         echo 'Changing image tag'
-        ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  tag: 1.0.0-preview-6','  tag: $(Build.BuildNumber)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-6','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
         
         echo 'Changing repo name'
-        ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
         
         echo 'Packaging chart'
-        helm package promitor-agent-scraper-ci/ --app-version 0.0.0-$(Build.BuildNumber) --version 0.0.0-$(Build.BuildNumber) --destination output/
+        helm package $(Helm.Chart.Name)/ --app-version $(Helm.Chart.Version) --version $(Helm.Chart.Version) --destination output/
        workingDirectory: charts
        displayName: 'Package Helm Chart'
+     - task: AzureCLI@1
+       displayName: 'Push Helm Chart to Azure Container Registry'
+       inputs:
+        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
+        scriptLocation: inlineScript
+        inlineScript: |
+         az configure --defaults acr=promitor
+         az acr helm push --name promitor charts/output/$(Helm.Chart.Name)-$(Helm.Chart.Version).tgz --force
        condition: eq(variables['Build.Reason'], 'PullRequest')
