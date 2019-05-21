@@ -15,7 +15,7 @@ variables:
   DotNet.SDK.Version: '2.2.203'
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 stages:
-- stage: CI
+- stage: Codebase
   jobs:
    - job: Build
      displayName: Build, Test & Scan Codebase
@@ -38,6 +38,8 @@ stages:
          command: test
          projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
          arguments: '--configuration release'
+- stage: CodeQuality
+  jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
      condition: succeeded()
@@ -57,7 +59,10 @@ stages:
        displayName: 'Automated code quality checks'
        inputs:
          SolutionOrProjectPath: src/Promitor.sln
-   - job: Docker
+- stage: Docker
+  displayName: Docker Image
+  jobs:
+   - job: DockerBuild
      displayName: Build Docker Image Tests
      condition: succeeded()
      pool:
@@ -104,4 +109,28 @@ stages:
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+- stage: Helm
+  displayName: Release on GitHub
+  dependsOn: Docker
+  jobs:
+   - job: LintHelmChart
+     displayName: Lint promitor-agent-scraper chart
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       inputs:
+        helmVersion: '2.9.1'
+     - powershell: |
+        helm lint promitor-agent-scraper/ --strict
+       workingDirectory: charts
+       displayName: 'Lint Helm Chart'
+     - powershell: |
+        mkdir output/
+        copy promitor-agent-scraper/ promitor-agent-scraper-ci/
+        helm package promitor-agent-scraper/ --app-version $(Build.BuildNumber) --version $(Build.BuildNumber) --destination output/
+       workingDirectory: charts
+       displayName: 'Package Helm Chart'
        condition: eq(variables['Build.Reason'], 'PullRequest')
