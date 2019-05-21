@@ -119,7 +119,7 @@ stages:
   displayName: Helm Chart
   dependsOn: Docker
   jobs:
-   - job: LintHelmChart
+   - job: HelmChart
      displayName: Lint, Package & Push Chart
      condition: succeeded()
      variables:
