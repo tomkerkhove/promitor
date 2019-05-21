@@ -16,6 +16,7 @@ variables:
   Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
 stages:
 - stage: Codebase
+  dependsOn: []
   jobs:
    - job: Build
      displayName: Build, Test & Scan Codebase
@@ -38,6 +39,9 @@ stages:
          command: test
          projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
          arguments: '--configuration release'
+- stage: CodeQuality
+  dependsOn: []
+  jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
      condition: succeeded()
@@ -57,6 +61,10 @@ stages:
        displayName: 'Automated code quality checks'
        inputs:
          SolutionOrProjectPath: src/Promitor.sln
+- stage: Docker
+  displayName: Docker Image
+  dependsOn: []
+  jobs:
    - job: DockerBuild
      displayName: Build Docker Image Tests
      condition: succeeded()
@@ -107,10 +115,10 @@ stages:
        condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: Helm
   displayName: Helm
-  dependsOn: Codebase
+  dependsOn: Docker
   jobs:
-   - job: HelmChart
-     displayName: Lint, Package & Push chart
+   - job: LintHelmChart
+     displayName: Lint, Package & Push Chart
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
