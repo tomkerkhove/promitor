@@ -40,6 +40,7 @@ stages:
          projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
          arguments: '--configuration release'
 - stage: CodeQuality
+  displayName: Code Quality
   dependsOn: []
   jobs:
    - job: RunCodeQuality
@@ -114,7 +115,7 @@ stages:
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: Helm
-  displayName: Helm
+  displayName: Helm Chart
   dependsOn: Docker
   jobs:
    - job: LintHelmChart
