@@ -143,12 +143,23 @@ stages:
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
      - powershell: |
+        echo 'Creating output folder'
         mkdir output/
+        
+        echo 'Copying Chart folder'
         cp promitor-agent-scraper/ promitor-agent-scraper-ci/ -r
+
+        echo 'Changing name of chart'
         ((Get-Content -path promitor-agent-scraper-ci/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: promitor-agent-scraper-ci') | Set-Content -Path promitor-agent-scraper-ci/Chart.yaml
+        
+        echo 'Changing image tag'
         ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  tag: 1.0.0-preview-6','  tag: $(Build.BuildNumber)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
+        
+        echo 'Changing repo name'
         ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
-        helm package promitor-agent-scraper-ci/ --app-version $(Build.BuildNumber) --version $(Build.BuildNumber) --destination output/
+        
+        echo 'Packaging chart'
+        helm package promitor-agent-scraper-ci/ --app-version 0.0.0-$(Build.BuildNumber) --version 0.0.0-$(Build.BuildNumber) --destination output/
        workingDirectory: charts
        displayName: 'Package Helm Chart'
        condition: eq(variables['Build.Reason'], 'PullRequest')
