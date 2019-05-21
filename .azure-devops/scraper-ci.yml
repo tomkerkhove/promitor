@@ -13,7 +13,8 @@ pr:
     - .azure-devops/scraper-ci.yml
 variables:
   DotNet.SDK.Version: '2.2.203'
-  Image.TaggedName: 'tomkerkhove/promitor-agent-scraper-ci:$(Build.BuildNumber)'
+  Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
+  Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
 - stage: Codebase
   dependsOn: []
@@ -128,6 +129,16 @@ stages:
        inputs:
         helmVersion: '2.9.1'
      - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - powershell: |
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
@@ -135,6 +146,8 @@ stages:
         mkdir output/
         cp promitor-agent-scraper/ promitor-agent-scraper-ci/ -r
         ((Get-Content -path promitor-agent-scraper-ci/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: promitor-agent-scraper-ci') | Set-Content -Path promitor-agent-scraper-ci/Chart.yaml
+        ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  tag: 1.0.0-preview-6','  tag: $(Build.BuildNumber)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
+        ((Get-Content -path promitor-agent-scraper-ci/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path promitor-agent-scraper-ci/values.yaml
         helm package promitor-agent-scraper-ci/ --app-version $(Build.BuildNumber) --version $(Build.BuildNumber) --destination output/
        workingDirectory: charts
        displayName: 'Package Helm Chart'
