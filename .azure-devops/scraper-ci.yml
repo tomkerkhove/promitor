@@ -174,3 +174,9 @@ stages:
          az configure --defaults acr=promitor
          az acr helm push --name promitor charts/output/$(Helm.Chart.Name)-$(Helm.Chart.Version).tgz --force
        condition: eq(variables['Build.Reason'], 'PullRequest')
+     - task: PublishBuildArtifacts@1
+       displayName: 'Publish Helm Chart'
+       inputs:
+        PathtoPublish: charts/output/$(Helm.Chart.Name)-$(Helm.Chart.Version).tgz
+        ArtifactName: helm
+       condition: eq(variables['Build.Reason'], 'PullRequest')
