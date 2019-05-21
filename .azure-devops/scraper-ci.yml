@@ -109,8 +109,8 @@ stages:
   displayName: Helm
   dependsOn: Codebase
   jobs:
-   - job: LintHelmChart
-     displayName: Lint promitor-agent-scraper chart
+   - job: HelmChart
+     displayName: Lint, Package & Push chart
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
