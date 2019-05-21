@@ -13,9 +13,12 @@ $ helm install promitor/promitor-agent-scraper
 
 This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cluster using the Helm package manager.
 
+It will provide the scraper agent with a Kubernetes Service so that other Pods can consume it.
+
 ## Prerequisites
 
-None.
+- Azure Subscription
+- Azure AD Application to authenticate with ([docs](https://promitor.io/configuration/#authentication-with-azure-monitor))
 
 ## Installing the Chart
 
