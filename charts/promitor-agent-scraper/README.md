@@ -11,9 +11,7 @@ $ helm install promitor/promitor-agent-scraper
 
 ## Introduction
 
-This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cluster using the Helm package manager.
-
-It will provide the scraper agent with a Kubernetes Service so that other Pods can consume it.
+This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cluster using the Helm package manager. It will provide the scraper agent with a Kubernetes Service so that other Pods can consume it.
 
 ## Prerequisites
 
