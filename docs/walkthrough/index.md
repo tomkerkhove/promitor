@@ -11,7 +11,7 @@ In order to have a resource to monitor, we'll create a Service Bus queue and add
 
 We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Helm, and explain how each of these services connects and how to see output.
 
-We'll also walk through setting up a Prometheus alert and Grafana dashboard to show alerting and visualization.
+We'll also walk through setting up basic Grafana dashboard to visualize the metrics we're monitoring.
 
 ## Prerequisites
 
@@ -316,10 +316,6 @@ Now we'll import a pre-created dashboard that shows Kubernetes metrics. There ar
 To import a dashboard, click the + button on the sidebar and choose "Import." From there, you can either load a JSON file or enter the dashbord ID: 6417.
 
 Click "Load" and you will be given some configuration options. The only one that needs to be set is the Prometheus data source. From there, you should be able to create the dashboard and view metrics about your AKS cluster.
-
-## Set up a Prometheus alert
-
-This section will be created soon.
 
 # Delete resources
 
