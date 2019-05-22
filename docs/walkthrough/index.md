@@ -16,26 +16,26 @@ We'll also walk through setting up basic Grafana dashboard to visualize the metr
 # Table of Contents
 
 - **[Deploy Azure Infrastructure](#Deploy-Azure-Infrastructure)**
-  - [Create a Resource Group](#Create-a-Resource-Group)
-  - [Create a Service Principal](#Create-a-Service-Principal)
-  - [Create a Service Bus Namespace and Queue](#Create-a-Service-Bus-Namespace-and-Queue)
-  - [Create an AKS Cluster](#Create-an-AKS-Cluster)
-- **[Cluster Setup](#Cluster-Setup)**
-  - [Get credentials](#Get-credentials)
-  - [Set up Helm and Tiller](#Set-up-Helm-and-Tiller)
-- **[Deploy Promitor and Prometheus](#Deploy-Promitor-and-Prometheus)**
-  - [Create a metrics declaration for Promitor](#Create-a-metrics-declaration-for-Promitor)
-  - [Deploy Promitor to your cluster using Helm](#Deploy-Promitor-to-your-cluster-using-Helm)
-  - [Install Prometheus](#Install-Prometheus)
-- **[Test and check output](#Test-and-check-output)**
-  - [Add load to the queue](#Add-load-to-the-queue)
-  - [See Promitor & Prometheus output via port-forwarding](#See-Promitor-&-Prometheus-output-via-port-forwarding)
-- **[Visualization](#Visualization)**
-  - [Install Grafana](#Install-Grafana)
-  - [Add Prometheus as a data source](#Add-Prometheus-as-a-data-source)
-  - [Create a Grafana dashboard for queue metrics](#Create-a-Grafana-dashboard-for-queue-metrics)
-  - [Creating a Kubernetes dashboard](#Creating-a-Kubernetes-dashboard)
-- **[Delete resources](#Delete-resources)**
+  - [Create a Resource Group](#create-a-resource-group)
+  - [Create a Service Principal](#create-a-service-principal)
+  - [Create a Service Bus Namespace and Queue](#create-a-service-bus-namespace-and-queue)
+  - [Create an AKS Cluster](#create-an-aks-cluster)
+- **[Cluster Setup](#cluster-setup)**
+  - [Get credentials](#get-credentials)
+  - [Set up Helm and Tiller](#set-up-helm-and-tiller)
+- **[Deploy Promitor and Prometheus](#deploy-promitor-and-prometheus)**
+  - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
+  - [Deploy Promitor to your cluster using Helm](#deploy-promitor-to-your-cluster-using-helm)
+  - [Install Prometheus](#install-prometheus)
+- **[Test and check output](#test-and-check-output)**
+  - [Add load to the queue](#add-load-to-the-queue)
+  - [See Promitor & Prometheus output via port-forwarding](#see-promitor-&-prometheus-output-via-port-forwarding)
+- **[Visualization](#visualization)**
+  - [Install Grafana](#install-grafana)
+  - [Add Prometheus as a data source](#add-prometheus-as-a-data-source)
+  - [Create a Grafana dashboard for queue metrics](#create-a-grafana-dashboard-for-queue-metrics)
+  - [Creating a Kubernetes dashboard](#creating-a-kubernetes-dashboard)
+- **[Delete resources](#delete-resources)**
 
 # Prerequisites
 
