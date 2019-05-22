@@ -15,7 +15,7 @@ We'll also walk through setting up basic Grafana dashboard to visualize the metr
 
 # Table of Contents
 
-- **[Deploy Azure Infrastructure](#Deploy-Azure-Infrastructure)**
+- **[Deploy Azure Infrastructure](#deploy-azure-infrastructure)**
   - [Create a Resource Group](#create-a-resource-group)
   - [Create a Service Principal](#create-a-service-principal)
   - [Create a Service Bus Namespace and Queue](#create-a-service-bus-namespace-and-queue)
