@@ -4,7 +4,7 @@ resources:
 trigger: none
 pr: none
 variables:
-  DotNet.SDK.Version: '2.2.203'
+  DotNet.SDK.Version: '2.2.300'
   Image.Name: 'tomkerkhove/promitor-agent-scraper'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'
