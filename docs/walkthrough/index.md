@@ -13,7 +13,31 @@ We'll deploy Promitor, Prometheus, and Grafana to a Kubernetes cluster using Hel
 
 We'll also walk through setting up basic Grafana dashboard to visualize the metrics we're monitoring.
 
-## Prerequisites
+# Table of Contents
+
+- **[Deploy Azure Infrastructure](#deploy-azure-infrastructure)**
+  - [Create a Resource Group](#create-a-resource-group)
+  - [Create a Service Principal](#create-a-service-principal)
+  - [Create a Service Bus Namespace and Queue](#create-a-service-bus-namespace-and-queue)
+  - [Create an AKS Cluster](#create-an-aks-cluster)
+- **[Cluster Setup](#cluster-setup)**
+  - [Get credentials](#get-credentials)
+  - [Set up Helm and Tiller](#set-up-helm-and-tiller)
+- **[Deploy Promitor and Prometheus](#deploy-promitor-and-prometheus)**
+  - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
+  - [Deploy Promitor to your cluster using Helm](#deploy-promitor-to-your-cluster-using-helm)
+  - [Install Prometheus](#install-prometheus)
+- **[Test and check output](#test-and-check-output)**
+  - [Add load to the queue](#add-load-to-the-queue)
+  - [See Promitor & Prometheus output via port-forwarding](#see-promitor-&-prometheus-output-via-port-forwarding)
+- **[Visualization](#visualization)**
+  - [Install Grafana](#install-grafana)
+  - [Add Prometheus as a data source](#add-prometheus-as-a-data-source)
+  - [Create a Grafana dashboard for queue metrics](#create-a-grafana-dashboard-for-queue-metrics)
+  - [Creating a Kubernetes dashboard](#creating-a-kubernetes-dashboard)
+- **[Delete resources](#delete-resources)**
+
+# Prerequisites
 
 - The [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes command-line tool. It can also be installed via the Azure CLI with `az aks install-cli`.
@@ -273,7 +297,7 @@ Now, if you check http://localhost:8080, you should be able to enter Prometheus 
 
 Query `demo_queue_size` and as long as all your pods are up and running and both Promitor and Prometheus have scraped metrics at least once, you should see a value that matches the number of messages in your queue.
 
-# Visualization and alerting
+# Visualization
 
 ## Install Grafana
 
@@ -309,7 +333,7 @@ In order to see results without manually refreshing, find the dropdown menu in t
 
 Make sure to save your new dashboard before exiting the page.
 
-## Import an existing Grafana dashboard
+## Creating a Kubernetes dashboard
 
 Now we'll import a pre-created dashboard that shows Kubernetes metrics. There are multiple available on Grafana Lab's dashboard site - try [6417](https://grafana.com/dashboards/6417).
 
