@@ -58,7 +58,7 @@ secrets:
 
 service:
   exposeExternally: False
-  port: 80
-  targetPort: 9090
+  port: 8888
+  targetPort: 88
   labelType: infrastructure
   selectorType: runtime

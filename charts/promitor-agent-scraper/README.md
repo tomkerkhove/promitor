@@ -67,8 +67,8 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
 | `secrets.appInsightsSecret`  | Name of the secret for Application Insights instrumentation key | `azure-appinsights-key`            |
 | `service.exposeExternally`  | Indication wheter or not to expose service externally | `false`            |
-| `service.port`  | Port on service for other pods to talk to | `80`            |
-| `service.targetPort`  | Port on container to serve traffic | `9090`            |
+| `service.port`  | Port on service for other pods to talk to | `8888`            |
+| `service.targetPort`  | Port on container to serve traffic | `88`            |
 | `service.labelType`  | Label to assign to your service | `infrastructure`            |
 | `service.selectorType`  | Selector type to use for the service | `runtime`            |
 
