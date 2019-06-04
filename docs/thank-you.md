@@ -31,14 +31,18 @@ Here is an overview of the services that are so kind to support us:
 ![Codefactor](./media/logos/codefactor.png)
 
 # GitHub Apps
+
 We are using the following GitHub Apps:
-- [WIP](https://github.com/apps/wip) - Do Not Merge – as a service
-- [Reminders](https://github.com/apps/reminders) - Set reminders on Issues and Pull Requests
-- [Request Info](https://github.com/apps/request-info) - Requests more info from newly opened Pull Requests and Issues
+
+- [Task list completed](https://github.com/marketplace/task-list-completed) - Ensures all task lists in our PRs are completed.
+- [Triage New Issues](https://github.com/apps/triage-new-issues) - Automatically tag new issues & PRs with `triage` label.
+- [kubevalidator](https://github.com/apps/kubevalidator) - For validating our Kubernetes YAML specifications.
+- [Request Info](https://github.com/apps/request-info) - Requests more info from newly opened Pull Requests and Issues.
+- [YAMBURGER](https://github.com/apps/yamburger) - Finds YAML syntax errors.
+- [Reminders](https://github.com/apps/reminders) - Set reminders on Issues and Pull Requests.
+- [ImgBot](https://github.com/marketplace/imgbot) - Optimizing images across our repo.
 - [Stale](https://github.com/apps/Stale) - Closes abandoned issues after a period of inactivity.
-- [YAMBURGER](https://github.com/apps/yamburger) - Finds YAML syntax errors
-- [kubevalidator](https://github.com/apps/kubevalidator) - For validating our Kubernetes YAML specifications
-- [ImgBot](https://github.com/marketplace/imgbot) - Optimizing images across our repo
+- [WIP](https://github.com/apps/wip) - Do Not Merge – as a service.
 
 
 # NuGet Packages
