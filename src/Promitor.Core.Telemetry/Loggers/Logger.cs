@@ -12,6 +12,12 @@ namespace Promitor.Core.Telemetry.Loggers
         {
         }
 
+        public override void WriteMessage(LogLevel logLevel, string logName, int eventId, string message, Exception exception)
+        {
+            message = $"[{DateTimeOffset.UtcNow.ToString("u")}] {message}";
+            base.WriteMessage(logLevel, logName, eventId, message, exception);
+        }
+
         private static bool IsFilteringRequired(LogLevel usedLogLevel)
         {
             var rawMinimalLogLevel = Environment.GetEnvironmentVariable(EnvironmentVariables.Logging.MinimumLogLevel);
