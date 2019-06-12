@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 image:
   repository: tomkerkhove/promitor-agent-scraper
-  tag: 1.0.0-preview-6
+  tag: 1.0.0-preview-7
   pullPolicy: Always
 
 azureAuthentication:
