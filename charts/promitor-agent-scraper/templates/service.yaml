@@ -10,7 +10,7 @@ metadata:
     type: {{ .Values.service.labelType }}
 spec:
 {{- if .Values.service.exposeExternally }}
-  type: ExternalIP
+  type: LoadBalancer
 {{- else }}
   type: ClusterIP
 {{- end }}
