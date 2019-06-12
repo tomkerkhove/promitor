@@ -79,3 +79,5 @@ stages:
           ### Docker Image information
           New Docker image tag is available: `$(Image.Version)` on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper).<br/>
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+          ## Features
+          - TBW (#)
