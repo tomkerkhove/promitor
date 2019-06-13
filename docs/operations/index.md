@@ -31,4 +31,6 @@ Metric provides following labels:
     - `subscription_id` - _Id of the subscription that is being interacted with_
     - `app_id` - _Id of the application that is being used to interact with API_
 
+You can read more about the Azure Resource Manager limitations on [docs.microsoft.com](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-request-limits).
+
 [&larr; back](/)
