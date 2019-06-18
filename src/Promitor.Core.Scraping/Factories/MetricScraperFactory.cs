@@ -44,6 +44,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerRegistryScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.CosmosDb:
                     return new CosmosDbScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                case ResourceType.CacheForRedis:
+                    return new CacheForRedisScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
