@@ -7,7 +7,7 @@ title: Azure Container Registry Declaration
 You can declare to scrape an Azure Container Registry via the `ContainerRegistry` resource type.
 
 The following fields need to be provided:
-- `containerGroup` - The name of the container group
+- `registryName` - The name of the registry
 
 All supported metrics are not documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported) documentation yet, but it's being added via [this PR](https://github.com/MicrosoftDocs/azure-docs/pull/27991).
 
