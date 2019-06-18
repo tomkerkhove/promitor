@@ -45,14 +45,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as RedisCacheMetricDefinition;
-            AssertRedisCacheMetricDefinition(deserializedServiceBusMetricDefinition, redisCacheMetricDefinition);
+            var deserializedRedisCacheMetricDefinition = deserializedMetricDefinition as RedisCacheMetricDefinition;
+            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition);
         }
 
-        private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedServiceBusMetricDefinition, RedisCacheMetricDefinition redisCacheMetricDefinition)
+        private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinition redisCacheMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedServiceBusMetricDefinition.CacheName);
+            Assert.NotNull(deserializedRedisCacheMetricDefinition);
+            Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedRedisCacheMetricDefinition.CacheName);
         }
 
         private RedisCacheMetricDefinition GenerateBogusRedisCacheMetricDefinition(string resourceGroupName, string metricScrapingInterval)
