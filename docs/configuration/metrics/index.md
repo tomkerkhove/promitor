@@ -89,6 +89,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
+- [Azure Cache for Redis](redis-cache)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
