@@ -11,6 +11,6 @@
         ContainerRegistry = 6,
         NetworkInterface = 7,
         CosmosDb = 8,
-        CacheForRedis = 9,
+        RedisCache = 9,
     }
 }

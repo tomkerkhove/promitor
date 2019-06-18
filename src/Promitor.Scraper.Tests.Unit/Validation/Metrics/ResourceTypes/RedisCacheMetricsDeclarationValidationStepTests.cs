@@ -7,14 +7,14 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class CacheForRedisMetricsDeclarationValidationStepTests
+    public class RedisCacheMetricsDeclarationValidationStepTests
     {
         [Fact]
-        public void CacheForRedisMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void RedisCacheMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCacheForRedisMetric(azureMetricName: string.Empty)
+                .WithRedisCacheMetric(azureMetricName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -27,11 +27,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CacheForRedisMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
+        public void RedisCacheMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCacheForRedisMetric(metricDescription: string.Empty)
+                .WithRedisCacheMetric(metricDescription: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -44,11 +44,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CacheForRedisMetricsDeclaration_DeclarationWithoutCacheName_Fails()
+        public void RedisCacheMetricsDeclaration_DeclarationWithoutCacheName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCacheForRedisMetric(cacheName: string.Empty)
+                .WithRedisCacheMetric(cacheName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
