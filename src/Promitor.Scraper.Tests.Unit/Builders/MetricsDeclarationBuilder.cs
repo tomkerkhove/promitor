@@ -203,5 +203,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders
                 }
             };
         }
+
+        public MetricsDeclarationBuilder WithCacheForRedisMetric(string metricName = "promitor-redis", string metricDescription = "Description for a metric", string cacheName = "promitor-redis", string azureMetricName = "CacheHits")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new CacheForRedisMetricDefinition
+            {
+                Name = metricName,
+                Description = metricDescription,
+                CacheName = cacheName,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }
