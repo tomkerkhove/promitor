@@ -82,6 +82,7 @@ metrics:
 
 We also provide a simplified way to scrape the following Azure resources:
 
+- [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
