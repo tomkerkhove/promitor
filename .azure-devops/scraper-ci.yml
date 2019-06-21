@@ -157,7 +157,7 @@ stages:
         ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
 
         echo 'Changing image tag'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-7','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
 
         echo 'Changing repo name'
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
