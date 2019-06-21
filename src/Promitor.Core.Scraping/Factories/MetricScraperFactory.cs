@@ -46,6 +46,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new CosmosDbScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 case ResourceType.RedisCache:
                     return new RedisCacheScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                case ResourceType.PostgreSql:
+                    return new PostgreSqlScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
