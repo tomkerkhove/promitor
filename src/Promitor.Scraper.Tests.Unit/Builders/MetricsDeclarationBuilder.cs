@@ -218,5 +218,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithPostgreSqlMetric(string metricName = "promitor-postgresql", string metricDescription = "Description for a metric", string serverName = "promitor-postgresql", string azureMetricName = "cpu_percent")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new PostgreSqlMetricDefinition
+            {
+                Name = metricName,
+                Description = metricDescription,
+                ServerName = serverName,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }

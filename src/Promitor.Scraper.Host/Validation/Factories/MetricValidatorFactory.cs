@@ -29,6 +29,8 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new CosmosDbMetricValidator();
                 case ResourceType.RedisCache:
                     return new RedisCacheMetricValidator();
+                case ResourceType.PostgreSql:
+                    return new PostgreSqlMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");
