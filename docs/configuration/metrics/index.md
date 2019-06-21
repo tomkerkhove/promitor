@@ -86,6 +86,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
+- [Azure Database for PostgreSQL](postgresql)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure Storage Queue](storage-queue)
