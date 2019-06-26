@@ -25,7 +25,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
 
-            return new ScrapeResult(resourceUri, foundMetricValue);
+            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.CacheName, resourceUri, foundMetricValue);
         }
     }
 }

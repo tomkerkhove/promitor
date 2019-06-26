@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
@@ -26,7 +27,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, filter);
 
-            return new ScrapeResult(resourceUri, foundMetricValue);
+            var labels = new Dictionary<string, string>
+            {
+                {"entity_name", metricDefinition.QueueName}
+            };
+
+            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.Namespace, resourceUri, foundMetricValue, labels);
         }
     }
 }
