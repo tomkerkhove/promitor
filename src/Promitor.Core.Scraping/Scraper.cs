@@ -84,8 +84,45 @@ namespace Promitor.Core.Scraping
 
                 var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames:"resource_uri");
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: "resource_uri");
                 gauge.WithLabels(scrapedMetricResult.ResourceUri).Set(scrapedMetricResult.MetricValue);
+            }
+            catch (ErrorResponseException errorResponseException)
+            {
+                string reason = string.Empty;
+
+                if (!string.IsNullOrEmpty(errorResponseException.Message))
+                {
+                    reason = errorResponseException.Message;
+                }
+
+                if (errorResponseException.Response != null && !string.IsNullOrEmpty(errorResponseException.Response.Content))
+                {
+                    try
+                    {
+                        var definition = new { error = new { code = "", message = "" } };
+                        var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
+
+                        if (jsonError != null && jsonError.error != null)
+                        {
+                            if (!string.IsNullOrEmpty(jsonError.error.message))
+                            {
+                                reason = $"{jsonError.error.code}: {jsonError.error.message}";
+                            }
+                            else if (!string.IsNullOrEmpty(jsonError.error.code))
+                            {
+                                reason = $"{jsonError.error.code}";
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
+                        _exceptionTracker.Track(errorResponseException);
+                    }
+                }
+
+                _exceptionTracker.Track(new Exception(reason));
             }
             catch (Exception exception)
             {
