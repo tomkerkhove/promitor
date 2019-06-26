@@ -87,7 +87,7 @@ namespace Promitor.Core.Scraping
                 var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: "resource_uri");
                 gauge.WithLabels(scrapedMetricResult.ResourceUri).Set(scrapedMetricResult.MetricValue);
             }
-            catch (ErrorResponseException erex)
+            catch (ErrorResponseException errorResponseException)
             {
                 string reason = string.Empty;
 
