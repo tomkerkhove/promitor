@@ -119,7 +119,6 @@ namespace Promitor.Core.Scraping
                     {
                         // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
                         _exceptionTracker.Track(errorResponseException);
-
                     }
                 }
 
