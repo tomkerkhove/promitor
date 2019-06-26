@@ -91,17 +91,17 @@ namespace Promitor.Core.Scraping
             {
                 string reason = string.Empty;
 
-                if (!string.IsNullOrEmpty(erex.Message))
+                if (!string.IsNullOrEmpty(errorResponseException.Message))
                 {
-                    reason = erex.Message;
+                    reason = errorResponseException.Message;
                 }
 
-                if (erex.Response != null && !string.IsNullOrEmpty(erex.Response.Content))
+                if (errorResponseException.Response != null && !string.IsNullOrEmpty(errorResponseException.Response.Content))
                 {
                     try
                     {
                         var definition = new { error = new { code = "", message = "" } };
-                        var jsonError = JsonConvert.DeserializeAnonymousType(erex.Response.Content, definition);
+                        var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
 
                         if (jsonError != null && jsonError.error != null)
                         {
