@@ -1,4 +1,6 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics
+﻿using System.Collections.Generic;
+
+namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 {
     public abstract class MetricDefinition
     {
@@ -27,6 +29,11 @@
         ///     Type of resource that is configured
         /// </summary>
         public abstract ResourceType ResourceType { get; }
+
+        /// <summary>
+        ///     Collection of custom labels to add to every metric
+        /// </summary>
+        public Dictionary<string, string> Labels { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Gets or sets the scraping model.

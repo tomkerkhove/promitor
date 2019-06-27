@@ -26,6 +26,7 @@ Every metric that is being declared needs to define the following fields:
 - `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus
 - `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus
 - `resourceType` - Defines what type of resource needs to be queried.
+- `labels` - Defines a set of custom labels to included for a given metric.
 - `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor to query
 - `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be used when querying Azure Monitor
 - `azureMetricConfiguration.aggregation.interval` - Overrides the default aggregation interval defined in `metricDefaults.aggregation.interval` with a new interval
@@ -69,6 +70,9 @@ metrics:
     namespace: promitor-messaging-dev
     queueName: orders
     resourceGroupName: promitor-dev
+    labels:
+      app: promitor
+      stage: dev
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:

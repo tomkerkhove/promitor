@@ -16,6 +16,16 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(metricDefinition.Name, deserializedMetricDefinition.Name);
             Assert.Equal(metricDefinition.Description, deserializedMetricDefinition.Description);
             Assert.Equal(metricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
+            Assert.NotNull(deserializedMetricDefinition.Labels);
+            Assert.Equal(deserializedMetricDefinition.Labels, metricDefinition.Labels);
+
+            foreach (var label in metricDefinition.Labels)
+            {
+                var deserializedLabel = deserializedMetricDefinition.Labels[label.Key];
+                Assert.NotNull(deserializedLabel);
+                Assert.Equal(label.Value, deserializedLabel);
+            }
+
             Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
             Assert.Equal(metricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
             Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);

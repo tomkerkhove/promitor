@@ -14,6 +14,8 @@ metrics:
     resourceType: Generic
     resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
     filter: EntityName eq 'orders'
+    labels:
+      app: promitor
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
