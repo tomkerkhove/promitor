@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -44,7 +45,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
                     throw new InvalidMetricNameException(metricDefinition.AzureMetricConfiguration.MetricName, metricDefinition.ResourceType.ToString());
             }
 
-            return new ScrapeResult(resourceUri, foundMetricValue);
+            var labels = new Dictionary<string, string>
+            {
+                {"queue_name", metricDefinition.QueueName}
+            };
+
+            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.AccountName, resourceUri, foundMetricValue, labels);
         }
     }
 }

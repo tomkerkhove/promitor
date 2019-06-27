@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -84,8 +85,8 @@ namespace Promitor.Core.Scraping
 
                 var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: "resource_uri");
-                gauge.WithLabels(scrapedMetricResult.ResourceUri).Set(scrapedMetricResult.MetricValue);
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: scrapedMetricResult.Labels.Keys.ToArray());
+                gauge.WithLabels(scrapedMetricResult.Labels.Values.ToArray()).Set(scrapedMetricResult.MetricValue);
             }
             catch (ErrorResponseException errorResponseException)
             {
