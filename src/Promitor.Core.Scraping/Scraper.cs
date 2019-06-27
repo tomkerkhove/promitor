@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
+using Microsoft.Azure.Management.Monitor.Fluent;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -85,50 +87,78 @@ namespace Promitor.Core.Scraping
 
                 var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
 
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: scrapedMetricResult.Labels.Keys.ToArray());
-                gauge.WithLabels(scrapedMetricResult.Labels.Values.ToArray()).Set(scrapedMetricResult.MetricValue);
+                var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
+
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
+                gauge.WithLabels(labels.Values).Set(scrapedMetricResult.MetricValue);
             }
             catch (ErrorResponseException errorResponseException)
             {
-                string reason = string.Empty;
-
-                if (!string.IsNullOrEmpty(errorResponseException.Message))
-                {
-                    reason = errorResponseException.Message;
-                }
-
-                if (errorResponseException.Response != null && !string.IsNullOrEmpty(errorResponseException.Response.Content))
-                {
-                    try
-                    {
-                        var definition = new { error = new { code = "", message = "" } };
-                        var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
-
-                        if (jsonError != null && jsonError.error != null)
-                        {
-                            if (!string.IsNullOrEmpty(jsonError.error.message))
-                            {
-                                reason = $"{jsonError.error.code}: {jsonError.error.message}";
-                            }
-                            else if (!string.IsNullOrEmpty(jsonError.error.code))
-                            {
-                                reason = $"{jsonError.error.code}";
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
-                        _exceptionTracker.Track(errorResponseException);
-                    }
-                }
-
-                _exceptionTracker.Track(new Exception(reason));
+                HandleErrorResponseException(errorResponseException);
             }
             catch (Exception exception)
             {
                 _exceptionTracker.Track(exception);
             }
+        }
+
+        private void HandleErrorResponseException(ErrorResponseException errorResponseException)
+        {
+            string reason = string.Empty;
+
+            if (!string.IsNullOrEmpty(errorResponseException.Message))
+            {
+                reason = errorResponseException.Message;
+            }
+
+            if (errorResponseException.Response != null && !string.IsNullOrEmpty(errorResponseException.Response.Content))
+            {
+                try
+                {
+                    var definition = new {error = new {code = "", message = ""}};
+                    var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
+
+                    if (jsonError != null && jsonError.error != null)
+                    {
+                        if (!string.IsNullOrEmpty(jsonError.error.message))
+                        {
+                            reason = $"{jsonError.error.code}: {jsonError.error.message}";
+                        }
+                        else if (!string.IsNullOrEmpty(jsonError.error.code))
+                        {
+                            reason = $"{jsonError.error.code}";
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
+                    _exceptionTracker.Track(errorResponseException);
+                }
+            }
+
+            _exceptionTracker.Track(new Exception(reason));
+        }
+
+        private (string[] Names, string[] Values) DetermineLabels(MetricDefinition metricDefinition, ScrapeResult scrapeResult)
+        {
+            var labels = new Dictionary<string, string>(scrapeResult.Labels);
+
+            if (metricDefinition?.Labels?.Any() == true)
+            {
+                foreach (var customLabel in metricDefinition.Labels)
+                {
+                    if (labels.ContainsKey(customLabel.Key))
+                    {
+                        _logger.LogWarning("Custom label '{CustomLabelName}' was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabel.Key], customLabel.Value);
+                        continue;
+                    }
+
+                    labels.Add(customLabel.Key, customLabel.Value);
+                }
+            }
+
+            return (labels.Keys.ToArray(), labels.Values.ToArray());
         }
 
         /// <summary>

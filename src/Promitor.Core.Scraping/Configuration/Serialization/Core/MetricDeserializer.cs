@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using GuardNet;
 using Microsoft.Extensions.Logging;
@@ -39,26 +40,63 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
                 AzureMetricConfiguration = azureMetricConfiguration
             };
 
-            if (metricNode.Children.ContainsKey(@"scraping"))
-            {
-                var scrapingNode = (YamlMappingNode)metricNode.Children[new YamlScalarNode(@"scraping")];
-                try
-                {
-                    var scrapingIntervalNode = scrapingNode?.Children[new YamlScalarNode(@"schedule")];
+            DeserializeScraping(metricNode, metricDefinition);
+            DeserializeCustomLabels(metricNode, metricDefinition);
 
-                    if (scrapingIntervalNode != null)
-                    {
-                        metricDefinition.Scraping.Schedule = scrapingIntervalNode.ToString();
-                    }
-                }
-                catch (KeyNotFoundException)
-                {
-                    // happens when the YAML doesn't have the properties in it which is fine because the object
-                    // will get a default interval of 'null'
-                }
-            }
+
 
             return metricDefinition;
+        }
+
+        private static void DeserializeScraping<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinition, new()
+        {
+            if (metricNode.Children.ContainsKey(@"scraping") == false)
+            {
+                return;
+            }
+
+            var scrapingNode = (YamlMappingNode)metricNode.Children[new YamlScalarNode(@"scraping")];
+            try
+            {
+                var scrapingIntervalNode = scrapingNode?.Children[new YamlScalarNode(@"schedule")];
+
+                if (scrapingIntervalNode != null)
+                {
+                    metricDefinition.Scraping.Schedule = scrapingIntervalNode.ToString();
+                }
+            }
+            catch (KeyNotFoundException)
+            {
+                // happens when the YAML doesn't have the properties in it which is fine because the object
+                // will get a default interval of 'null'
+            }
+        }
+
+        private static void DeserializeCustomLabels<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinition, new()
+        {
+            if (metricNode.Children.ContainsKey(@"labels") == false)
+            {
+                return;
+            }
+
+            var labelNode = (YamlMappingNode)metricNode.Children[new YamlScalarNode(@"labels")];
+            foreach (KeyValuePair<YamlNode, YamlNode> customLabel in labelNode.Children)
+            {
+                var labelName = customLabel.Key.ToString();
+                var labelValue = customLabel.Value.ToString();
+
+                if (metricDefinition.Labels.ContainsKey(labelName))
+                {
+                    if (metricDefinition.Labels[labelName] == labelValue)
+                    {
+                        continue;
+                    }
+
+                    throw new Exception($"Label '{labelName}' is already defined with value '{metricDefinition.Labels[labelName]}' instead of '{labelValue}'");
+                }
+
+                metricDefinition.Labels.Add(labelName, labelValue);
+            }
         }
     }
 }

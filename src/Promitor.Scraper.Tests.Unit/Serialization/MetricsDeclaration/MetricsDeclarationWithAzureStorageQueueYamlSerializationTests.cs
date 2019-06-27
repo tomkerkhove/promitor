@@ -78,17 +78,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.StorageQueue)
                 .RuleFor(metricDefinition => metricDefinition.AccountName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.SasToken, faker =>
+                .RuleFor(metricDefinition => metricDefinition.SasToken, faker => new Secret
                 {
-                    return new Secret
-                    {
-                        RawValue = sasTokenRawValue,
-                        EnvironmentVariable = sasTokenEnvironmentVariable
-                    };
+                    RawValue = sasTokenRawValue,
+                    EnvironmentVariable = sasTokenEnvironmentVariable
                 })
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
                 .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
+                .RuleFor(metricDefinition => metricDefinition.Labels, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } })
                 .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
 
             return bogusGenerator.Generate();
