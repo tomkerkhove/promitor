@@ -43,8 +43,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             DeserializeScraping(metricNode, metricDefinition);
             DeserializeCustomLabels(metricNode, metricDefinition);
 
-
-
             return metricDefinition;
         }
 

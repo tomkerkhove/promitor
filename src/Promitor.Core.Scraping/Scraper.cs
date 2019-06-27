@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
-using Microsoft.Azure.Management.Monitor.Fluent;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
