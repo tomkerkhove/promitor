@@ -22,8 +22,8 @@ namespace Promitor.Scraper.Host
                 .ConfigureAppConfiguration(configurationBuilder =>
                 {
                     configurationBuilder.Sources.Clear();
-                    configurationBuilder.AddEnvironmentVariables();
                     configurationBuilder.AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true);
+                    configurationBuilder.AddEnvironmentVariables();
                 })
                 .UseUrls(endpointUrl)
                 .UseStartup<Startup>()
