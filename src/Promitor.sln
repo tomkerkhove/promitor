@@ -39,6 +39,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}"
 	ProjectSection(SolutionItems) = preProject
 		metric-config.yaml = metric-config.yaml
+		runtime-config.yaml = runtime-config.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Telemetry.Metrics", "Promitor.Core.Telemetry.Metrics\Promitor.Core.Telemetry.Metrics.csproj", "{3AB59144-8090-4AF3-9322-E357B2CAF11F}"
