@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
+using Promitor.Core.Configuration.Prometheus;
 
 namespace Promitor.Core.Scraping
 {
@@ -10,16 +11,17 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Determines the base path under which the scrape endpoint is configured to be exposed
         /// </summary>
-        public static string GetBasePath(IConfiguration configuration)
+        public static string DetermineBaseUri(IConfiguration configuration)
         {
-            var scrapeEndpointPath = configuration.GetValue<string>(EnvironmentVariables.Scraping.Path);
-            if (string.IsNullOrWhiteSpace(scrapeEndpointPath))
+            var runtimeConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
+
+            if (!string.IsNullOrWhiteSpace(runtimeConfiguration?.BaseUriPath))
             {
-                Console.WriteLine($"No scraping endpoint was specified, falling back to default '{DefaultScrapeEndpoint}'...");
-                scrapeEndpointPath = DefaultScrapeEndpoint;
+                return runtimeConfiguration.BaseUriPath;
             }
 
-            return scrapeEndpointPath;
+            Console.WriteLine($"No scraping endpoint was specified, falling back to default '{DefaultScrapeEndpoint}'...");
+            return DefaultScrapeEndpoint;
         }
     }
 }

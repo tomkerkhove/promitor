@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.AspNetCore;
 using GuardNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -21,13 +22,17 @@ namespace Promitor.Scraper.Host.Scheduling
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
 
+        private readonly MetricScraperFactory _metricScraperFactory;
+
         public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
             IRuntimeMetricsCollector runtimeMetricsCollector,
+            IConfiguration configuration,
             ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
+            Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(logger, nameof(logger));
 
             _metric = metric;
@@ -35,6 +40,8 @@ namespace Promitor.Scraper.Host.Scheduling
             _runtimeMetricsCollector = runtimeMetricsCollector;
             _exceptionTracker = exceptionTracker;
             _logger = logger;
+
+            _metricScraperFactory = new MetricScraperFactory(configuration, logger, exceptionTracker);
 
             ConfigureJob();
         }
@@ -70,7 +77,7 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = MetricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _runtimeMetricsCollector, _logger, _exceptionTracker);
+            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _runtimeMetricsCollector);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

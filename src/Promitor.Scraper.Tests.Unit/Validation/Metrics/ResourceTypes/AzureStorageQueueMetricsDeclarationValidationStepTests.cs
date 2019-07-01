@@ -9,7 +9,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category(category: "Unit")]
-    public class AzureStorageQueueMetricsDeclarationValidationStepTests
+    public class AzureStorageQueueMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepTests
     {
         [Fact]
         public void AzureStorageQueuesMetricsDeclaration_DeclarationWithNotSupportedMetricName_Fails()
@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -39,7 +39,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -73,7 +73,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -90,7 +90,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -107,7 +107,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -124,7 +124,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -142,7 +142,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -159,7 +159,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -176,7 +176,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert

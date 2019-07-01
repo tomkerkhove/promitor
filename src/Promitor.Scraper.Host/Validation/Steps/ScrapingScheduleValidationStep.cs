@@ -1,5 +1,6 @@
 ﻿using System;
 using Cronos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
@@ -11,11 +12,11 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         private const string DefaultCronSchedule = "*/5 * * * *";
 
-        public ScrapingScheduleValidationStep() : base(NullLogger.Instance)
+        public ScrapingScheduleValidationStep(IConfiguration configuration) : base(configuration, NullLogger.Instance)
         {
         }
 
-        public ScrapingScheduleValidationStep(ILogger logger) : base(logger)
+        public ScrapingScheduleValidationStep(IConfiguration configuration, ILogger logger) : base(configuration, logger)
         {
         }
 
@@ -23,12 +24,12 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public ValidationResult Run()
         {
-            var scrapingCronSchedule = Environment.GetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule);
+            var scrapingCronSchedule = Configuration.GetValue<string>(EnvironmentVariables.Scraping.CronSchedule);
             if (string.IsNullOrWhiteSpace(scrapingCronSchedule))
             {
                 Logger.LogWarning("No scraping schedule was specified, falling back to default '{ScrapeSchedule}' cron schedule...", DefaultCronSchedule);
                 scrapingCronSchedule = DefaultCronSchedule;
-                Environment.SetEnvironmentVariable(EnvironmentVariables.Scraping.CronSchedule, scrapingCronSchedule);
+                Configuration[EnvironmentVariables.Authentication.ApplicationId] = scrapingCronSchedule;
             }
 
             try

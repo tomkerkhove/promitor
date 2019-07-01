@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using Microsoft.Extensions.Configuration;
 using Promitor.Core;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
@@ -16,8 +18,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
             const string validConfigurationPath = "Invalid";
             Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, validConfigurationPath);
 
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    {EnvironmentVariables.Configuration.Path, validConfigurationPath}
+                })
+                .Build();
+
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep();
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(config);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -29,10 +38,16 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string invalidConfigurationPath = "Files/valid-sample.yaml";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, invalidConfigurationPath);
+
+            var config = new ConfigurationBuilder()
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    {EnvironmentVariables.Configuration.Path, invalidConfigurationPath}
+                })
+                .Build();
 
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep();
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(config);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
