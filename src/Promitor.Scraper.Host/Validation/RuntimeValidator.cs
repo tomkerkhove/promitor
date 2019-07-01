@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Telemetry.Loggers;
 using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
 using Promitor.Scraper.Host.Validation.Steps;
+
 #pragma warning disable 618
 
 namespace Promitor.Scraper.Host.Validation
@@ -15,24 +17,23 @@ namespace Promitor.Scraper.Host.Validation
         private readonly ILogger _validationLogger;
         private readonly List<IValidationStep> _validationSteps;
 
-        public RuntimeValidator()
+        public RuntimeValidator(IConfiguration configuration)
         {
-            _validationLogger = new ValidationLogger();
+            _validationLogger = new ValidationLogger(configuration);
 
             var scrapeConfigurationProvider = new MetricsDeclarationProvider(_validationLogger);
             _validationSteps = new List<IValidationStep>
             {
-                new ConfigurationPathValidationStep(_validationLogger),
-                new ScrapingScheduleValidationStep(_validationLogger),
-                new AzureAuthenticationValidationStep(_validationLogger),
-                new MetricsDeclarationValidationStep(scrapeConfigurationProvider,_validationLogger)
+                new ConfigurationPathValidationStep(configuration, _validationLogger),
+                new ScrapingScheduleValidationStep(configuration, _validationLogger),
+                new AzureAuthenticationValidationStep(configuration, _validationLogger),
+                new MetricsDeclarationValidationStep(scrapeConfigurationProvider, configuration, _validationLogger)
             };
         }
 
         public void Run()
         {
-            var validationLogger = new ValidationLogger();
-            validationLogger.LogInformation("Starting validation of Promitor setup");
+            _validationLogger.LogInformation("Starting validation of Promitor setup");
 
             var validationResults = RunValidationSteps();
             ProcessValidationResults(validationResults);

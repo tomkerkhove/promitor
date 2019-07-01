@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
@@ -11,22 +12,22 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         public string ComponentName { get; } = "Metrics Declaration Path";
 
-        public ConfigurationPathValidationStep() : base(NullLogger.Instance)
+        public ConfigurationPathValidationStep(IConfiguration configuration) : base(configuration, NullLogger.Instance)
         {
         }
 
-        public ConfigurationPathValidationStep(ILogger logger) : base(logger)
+        public ConfigurationPathValidationStep(IConfiguration configuration, ILogger logger) : base(configuration, logger)
         {
         }
 
         public ValidationResult Run()
         {
-            var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
+            var configurationPath = Configuration.GetValue<string>(EnvironmentVariables.Configuration.Path);
             if (string.IsNullOrWhiteSpace(configurationPath))
             {
                 Logger.LogWarning("No scrape configuration path configured, falling back to default one on '{configurationPath}'.", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
                 configurationPath = Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
-                Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, configurationPath);
+                Configuration[EnvironmentVariables.Configuration.Path] = configurationPath;
             }
 
             if (File.Exists(configurationPath) == false)

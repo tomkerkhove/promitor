@@ -2,7 +2,9 @@
 using GuardNet;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.Telemetry.Sinks;
 using Promitor.Core.Telemetry.Interfaces;
 
 namespace Promitor.Core.Telemetry
@@ -12,19 +14,19 @@ namespace Promitor.Core.Telemetry
         private readonly ILogger _logger;
         private readonly TelemetryClient _telemetryClient;
 
-        public ApplicationInsightsTelemetry(ILogger logger)
+        public ApplicationInsightsTelemetry(IConfiguration configuration, ILogger logger)
         {
             Guard.NotNull(logger, nameof(logger));
 
-            var instrumentationKey = Environment.GetEnvironmentVariable(EnvironmentVariables.Telemetry.InstrumentationKey);
+            var applicationInsightsConfiguration = configuration.GetSection("telemetry:applicationInsights").Get<ApplicationInsightsConfiguration>();
             var telemetryConfiguration = new TelemetryConfiguration
             {
-                DisableTelemetry = false
+                DisableTelemetry = applicationInsightsConfiguration.IsEnabled
             };
 
-            if (string.IsNullOrWhiteSpace(instrumentationKey) == false)
+            if (string.IsNullOrWhiteSpace(applicationInsightsConfiguration.InstrumentationKey) == false)
             {
-                telemetryConfiguration.InstrumentationKey = instrumentationKey;
+                telemetryConfiguration.InstrumentationKey = applicationInsightsConfiguration.InstrumentationKey;
             }
 
             _logger = logger;

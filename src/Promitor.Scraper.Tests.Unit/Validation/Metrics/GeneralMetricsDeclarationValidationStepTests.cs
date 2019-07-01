@@ -4,17 +4,19 @@ using Promitor.Scraper.Tests.Unit.Builders;
 using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;
 
-namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
+namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
 {
     [Category("Unit")]
-    public class ContainerInstanceMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepTests
+    public class GeneralMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepTests
     {
         [Fact]
-        public void ContainerInstanceMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
+        public void MetricsDeclaration_DeclarationWithDuplicateMetricNames_Fails()
         {
             // Arrange
+            const string metricName = "my_metric";
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithContainerInstanceMetric(azureMetricName: string.Empty)
+                .WithServiceBusMetric(metricName)
+                .WithServiceBusMetric(metricName)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -27,28 +29,10 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ContainerInstanceMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveResourceGroupName_Fails()
         {
             // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithContainerInstanceMetric(metricDescription: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
-        }
-
-        [Fact]
-        public void ContainerInstanceMetricsDeclaration_DeclarationWithoutMetricName_Fails()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithContainerInstanceMetric(string.Empty)
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(resourceGroupName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -61,11 +45,10 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ContainerInstanceMetricsDeclaration_DeclarationWithoutContainerGroup_Fails()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveSubscriptionId_Fails()
         {
             // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithContainerInstanceMetric(containerGroup: string.Empty)
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(subscriptionId: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -78,20 +61,52 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ContainerInstanceMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void MetricsDeclaration_DeclarationWithMetadataThatDoesNotHaveTenantId_Fails()
         {
             // Arrange
-            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithContainerInstanceMetric()
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(string.Empty)
                 .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void MetricsDeclaration_DeclarationWithoutMetadata_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithoutMetadata()
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void MetricsDeclaration_WithoutDefaultScrapingSchedule_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDefaults(new Core.Scraping.Configuration.Model.MetricDefaults())
+                .Build();
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
@@ -10,23 +11,24 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         public string ComponentName { get; } = "Azure Authentication";
 
-        public AzureAuthenticationValidationStep() : base(NullLogger.Instance)
+        public AzureAuthenticationValidationStep(IConfiguration configuration) : base(configuration, NullLogger.Instance)
         {
         }
 
-        public AzureAuthenticationValidationStep(ILogger logger) : base(logger)
+        public AzureAuthenticationValidationStep(IConfiguration configuration, ILogger logger) : base(configuration, logger)
         {
         }
 
         public ValidationResult Run()
         {
-            var applicationId = Environment.GetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId);
+            
+            var applicationId = Configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             if (string.IsNullOrWhiteSpace(applicationId))
             {
                 return ValidationResult.Failure(ComponentName, "No application id was specified for Azure authentication");
             }
 
-            var applicationKey = Environment.GetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey);
+            var applicationKey = Configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
             if (string.IsNullOrWhiteSpace(applicationKey))
             {
                 return ValidationResult.Failure(ComponentName, "No application key was specified for Azure authentication");
