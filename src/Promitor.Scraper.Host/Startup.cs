@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +18,11 @@ namespace Promitor.Scraper.Host
 {
     public class Startup
     {
-        public Startup()
+        public Startup(IConfiguration configuration)
         {
-            Configuration = BuildConfiguration();
-            ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
+            ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(configuration);
         }
 
-        public IConfiguration Configuration { get; }
         public string ScrapeEndpointBasePath { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,14 +55,6 @@ namespace Promitor.Scraper.Host
             
             services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
             services.ScheduleMetricScraping();
-        }
-
-        private IConfiguration BuildConfiguration()
-        {
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddEnvironmentVariables();
-
-            return configurationBuilder.Build();
         }
     }
 }

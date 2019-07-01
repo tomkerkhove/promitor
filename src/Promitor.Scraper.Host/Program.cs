@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Promitor.Core;
 using Promitor.Scraper.Host.Extensions;
 
@@ -17,6 +18,12 @@ namespace Promitor.Scraper.Host
                 .UseKestrel(kestrelServerOptions =>
                 {
                     kestrelServerOptions.AddServerHeader = false;
+                })
+                .ConfigureAppConfiguration(configurationBuilder =>
+                {
+                    configurationBuilder.Sources.Clear();
+                    configurationBuilder.AddEnvironmentVariables();
+                    configurationBuilder.AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true);
                 })
                 .UseUrls(endpointUrl)
                 .UseStartup<Startup>()
