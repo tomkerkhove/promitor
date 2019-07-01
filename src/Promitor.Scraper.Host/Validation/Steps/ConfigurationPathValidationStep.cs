@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
+using Promitor.Core.Configuration.Metrics;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
@@ -22,21 +23,20 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public ValidationResult Run()
         {
-            var configurationPath = Configuration.GetValue<string>(EnvironmentVariables.Configuration.Path);
-            if (string.IsNullOrWhiteSpace(configurationPath))
+            var metricsConfiguration = Configuration.GetSection("metricsConfiguration").Get<MetricsConfiguration>();
+            if (string.IsNullOrWhiteSpace(metricsConfiguration?.AbsolutePath))
             {
-                Logger.LogWarning("No scrape configuration path configured, falling back to default one on '{configurationPath}'.", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
-                configurationPath = Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
-                Configuration[EnvironmentVariables.Configuration.Path] = configurationPath;
-            }
-
-            if (File.Exists(configurationPath) == false)
-            {
-                var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
+                var errorMessage = "No scrape configuration path configured";
                 return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
+            if (File.Exists(metricsConfiguration?.AbsolutePath) == false)
+            {
+                var errorMessage = $"Scrape configuration at '{metricsConfiguration}' does not exist";
+                return ValidationResult.Failure(ComponentName, errorMessage);
+            }
+
+            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", metricsConfiguration?.AbsolutePath);
             return ValidationResult.Successful(ComponentName);
         }
     }

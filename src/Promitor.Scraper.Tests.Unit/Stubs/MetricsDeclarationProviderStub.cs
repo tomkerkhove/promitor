@@ -7,7 +7,7 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
     {
         private readonly string _rawMetricsDeclaration;
 
-        public MetricsDeclarationProviderStub(string rawMetricsDeclaration) : base(NullLogger.Instance)
+        public MetricsDeclarationProviderStub(string rawMetricsDeclaration) : base(configuration: null, logger: NullLogger.Instance)
         {
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }
