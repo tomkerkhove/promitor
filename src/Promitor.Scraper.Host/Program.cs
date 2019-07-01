@@ -24,6 +24,7 @@ namespace Promitor.Scraper.Host
                     configurationBuilder.Sources.Clear();
                     configurationBuilder.AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true);
                     configurationBuilder.AddEnvironmentVariables();
+                    configurationBuilder.AddEnvironmentVariables(prefix: "PROMITOR:");
                 })
                 .UseUrls(endpointUrl)
                 .UseStartup<Startup>()
