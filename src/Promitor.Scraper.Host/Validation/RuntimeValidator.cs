@@ -21,11 +21,10 @@ namespace Promitor.Scraper.Host.Validation
         {
             _validationLogger = new ValidationLogger(configuration);
 
-            var scrapeConfigurationProvider = new MetricsDeclarationProvider(_validationLogger);
+            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger);
             _validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(configuration, _validationLogger),
-                new ScrapingScheduleValidationStep(configuration, _validationLogger),
                 new AzureAuthenticationValidationStep(configuration, _validationLogger),
                 new MetricsDeclarationValidationStep(scrapeConfigurationProvider, configuration, _validationLogger)
             };

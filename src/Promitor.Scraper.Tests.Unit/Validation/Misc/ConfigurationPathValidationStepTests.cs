@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 using Promitor.Core;
+using Promitor.Core.Configuration.Metrics;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
 
@@ -16,12 +17,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string validConfigurationPath = "Invalid";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, validConfigurationPath);
 
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    {EnvironmentVariables.Configuration.Path, validConfigurationPath}
+                    {"metricsConfiguration", new MetricsConfiguration{AbsolutePath = validConfigurationPath}.ToString()}
                 })
                 .Build();
 
@@ -42,7 +42,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
             var config = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
-                    {EnvironmentVariables.Configuration.Path, invalidConfigurationPath}
+                    {"metricsConfiguration", new MetricsConfiguration{AbsolutePath = invalidConfigurationPath}.ToString()}
                 })
                 .Build();
 

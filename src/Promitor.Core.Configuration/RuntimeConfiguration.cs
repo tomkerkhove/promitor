@@ -11,7 +11,7 @@ namespace Promitor.Core.Configuration
         public ServerConfiguration Server { get; set; }
         public PrometheusConfiguration Prometheus { get; set; }
         public MetricsConfiguration MetricsConfiguration { get; set; }
-        public virtual TelemetryConfiguration Telemetry { get; set; }
+        public TelemetryConfiguration Telemetry { get; set; }
         public FeatureFlagsConfiguration FeatureFlags { get; set; }
     }
 }
