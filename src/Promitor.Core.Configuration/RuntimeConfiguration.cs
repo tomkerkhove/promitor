@@ -8,10 +8,10 @@ namespace Promitor.Core.Configuration
 {
     public class RuntimeConfiguration
     {
-        public ServerConfiguration Server { get; set; }
-        public PrometheusConfiguration Prometheus { get; set; }
-        public MetricsConfiguration MetricsConfiguration { get; set; }
-        public TelemetryConfiguration Telemetry { get; set; }
-        public FeatureFlagsConfiguration FeatureFlags { get; set; }
+        public ServerConfiguration Server { get; set; } = new ServerConfiguration();
+        public PrometheusConfiguration Prometheus { get; set; } = new PrometheusConfiguration();
+        public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
+        public TelemetryConfiguration Telemetry { get; set; } = new TelemetryConfiguration();
+        public FeatureFlagsConfiguration FeatureFlags { get; set; } = new FeatureFlagsConfiguration();
     }
 }

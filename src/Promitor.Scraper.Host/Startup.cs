@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping;
+using Promitor.Core.Configuration.Prometheus;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry;
@@ -22,7 +22,8 @@ namespace Promitor.Scraper.Host
         {
             _configuration = configuration;
 
-            _prometheusBaseUriPath = ScrapeEndpoint.DetermineBaseUri(configuration);
+            var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
+            _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
         }
 
         private readonly IConfiguration _configuration;
