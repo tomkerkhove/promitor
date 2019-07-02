@@ -1,10 +1,10 @@
-﻿using Promitor.Core.Configuration.Prometheus;
-using Promitor.Core.Configuration.Server;
-using Promitor.Core.Configuration.FeatureFlags;
-using Promitor.Core.Configuration.Metrics;
-using Promitor.Core.Configuration.Telemetry;
+﻿using Promitor.Core.Configuration.Model.FeatureFlags;
+using Promitor.Core.Configuration.Model.Metrics;
+using Promitor.Core.Configuration.Model.Prometheus;
+using Promitor.Core.Configuration.Model.Server;
+using Promitor.Core.Configuration.Model.Telemetry;
 
-namespace Promitor.Core.Configuration
+namespace Promitor.Core.Configuration.Model
 {
     public class RuntimeConfiguration
     {

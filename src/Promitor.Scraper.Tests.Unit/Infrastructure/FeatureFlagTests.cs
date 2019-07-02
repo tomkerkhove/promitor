@@ -1,6 +1,8 @@
 using System;
 using System.ComponentModel;
-using Promitor.Core.Infrastructure;
+using Promitor.Core.Configuration.FeatureFlags;
+using Promitor.Core.Configuration.Model.FeatureFlags;
+using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Infrastructure
@@ -13,10 +15,17 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         {
             // Arrange
             const bool flagState = true;
-            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", flagState.ToString());
+            var configStub = new OptionsMonitorStub<FeatureFlagsConfiguration>
+            {
+                CurrentValue = new FeatureFlagsConfiguration
+                {
+                    DisableMetricTimestamps = flagState
+                }
+            };
+            var featureToggleClient = new FeatureToggleClient(configStub);
 
             // Act
-            var flagStatus = FeatureFlag.IsActive("TestFlag");
+            var flagStatus = featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps);
 
             // Assert
             Assert.True(flagStatus);
@@ -27,10 +36,17 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         {
             // Arrange
             const bool flagState = false;
-            Environment.SetEnvironmentVariable("PROMITOR_FEATURE_TestFlag", flagState.ToString());
+            var configStub = new OptionsMonitorStub<FeatureFlagsConfiguration>
+            {
+                CurrentValue = new FeatureFlagsConfiguration
+                {
+                    DisableMetricTimestamps = flagState
+                }
+            };
+            var featureToggleClient = new FeatureToggleClient(configStub);
 
             // Act
-            var flagStatus = FeatureFlag.IsActive("TestFlag");
+            var flagStatus = featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps);
 
             // Assert
             Assert.False(flagStatus);
@@ -39,8 +55,12 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         [Fact]
         public void FeatureFlag_FeatureIsNotConfigured_ReturnsOnByDefault()
         {
+            //Arrange
+            var configStub = new OptionsMonitorStub<FeatureFlagsConfiguration>();
+            var featureToggleClient = new FeatureToggleClient(configStub);
+
             // Act
-            var flagStatus = FeatureFlag.IsActive("TestFlag");
+            var flagStatus = featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps);
 
             // Assert
             Assert.True(flagStatus);
@@ -51,9 +71,11 @@ namespace Promitor.Scraper.Tests.Unit.Infrastructure
         {
             // Arrange
             const bool defaultFlagState = false;
+            var configStub = new OptionsMonitorStub<FeatureFlagsConfiguration>();
+            var featureToggleClient = new FeatureToggleClient(configStub);
 
             // Act
-            var flagStatus = FeatureFlag.IsActive("TestFlag", defaultFlagState: defaultFlagState);
+            var flagStatus = featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps, defaultFlagState: defaultFlagState);
 
             // Assert
             Assert.False(flagStatus);

@@ -4,7 +4,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Telemetry.Sinks;
+using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 using Promitor.Core.Telemetry.Interfaces;
 
 namespace Promitor.Core.Telemetry

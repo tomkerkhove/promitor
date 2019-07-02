@@ -40,6 +40,11 @@
                 Inject configuration
             </summary>
         </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.InjectDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Inject dependencies
+            </summary>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
             <summary>
                 Use OpenAPI specification

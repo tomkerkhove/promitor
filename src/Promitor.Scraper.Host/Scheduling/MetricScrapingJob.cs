@@ -27,6 +27,7 @@ namespace Promitor.Scraper.Host.Scheduling
         public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
             IRuntimeMetricsCollector runtimeMetricsCollector,
+            MetricScraperFactory metricScraperFactory,
             IConfiguration configuration,
             ILogger logger, IExceptionTracker exceptionTracker)
         {
@@ -41,7 +42,7 @@ namespace Promitor.Scraper.Host.Scheduling
             _exceptionTracker = exceptionTracker;
             _logger = logger;
 
-            _metricScraperFactory = new MetricScraperFactory(configuration, logger, exceptionTracker);
+            _metricScraperFactory = metricScraperFactory;
 
             ConfigureJob();
         }

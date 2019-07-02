@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Promitor.Core.Configuration.Server
+﻿namespace Promitor.Core.Configuration.Model.Server
 {
     public class ServerConfiguration
     {
