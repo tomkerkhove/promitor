@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Telemetry;
 
 #pragma warning disable 618
@@ -10,7 +11,7 @@ namespace Promitor.Core.Telemetry.Loggers
 {
     public class Logger : ConsoleLogger
     {
-        public Logger(string name, IConfiguration configuration) : base(name, (loggerName, logLevel) => IsFilteringRequired(logLevel, configuration), includeScopes: true)
+        public Logger(string name, IOptionsMonitor<TelemetryConfiguration> configuration) : base(name, (loggerName, logLevel) => IsFilteringRequired(logLevel, configuration), includeScopes: true)
         {
         }
 
@@ -20,9 +21,9 @@ namespace Promitor.Core.Telemetry.Loggers
             base.WriteMessage(logLevel, logName, eventId, message, exception);
         }
 
-        private static bool IsFilteringRequired(LogLevel usedLogLevel, IConfiguration configuration)
+        private static bool IsFilteringRequired(LogLevel usedLogLevel, IOptionsMonitor<TelemetryConfiguration> configuration)
         {
-            var telemetryConfiguration = configuration.GetSection("telemetry").Get<TelemetryConfiguration>();
+            var telemetryConfiguration = configuration.CurrentValue;
             if (telemetryConfiguration?.ContainerLogs == null || telemetryConfiguration.ContainerLogs.IsEnabled == false)
             {
                 return true;

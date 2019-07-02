@@ -7,7 +7,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class PostgreSqlMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepTests
+    public class PostgreSqlMetricsDeclarationValidationStepTests
     {
         [Fact]
         public void PostgreSqlMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
@@ -19,7 +19,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -36,7 +36,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -53,7 +53,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
             // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, Configuration);
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert

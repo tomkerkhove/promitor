@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Microsoft.Extensions.Configuration;
-using Promitor.Core;
+﻿using System.ComponentModel;
+using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Metrics;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
@@ -17,16 +14,9 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string validConfigurationPath = "Invalid";
-
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    {"metricsConfiguration", new MetricsConfiguration{AbsolutePath = validConfigurationPath}.ToString()}
-                })
-                .Build();
-
+            var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = validConfigurationPath});
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(config);
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -38,16 +28,10 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string invalidConfigurationPath = "Files/valid-sample.yaml";
-
-            var config = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
-                    {"metricsConfiguration", new MetricsConfiguration{AbsolutePath = invalidConfigurationPath}.ToString()}
-                })
-                .Build();
+            var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = invalidConfigurationPath});
 
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(config);
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
