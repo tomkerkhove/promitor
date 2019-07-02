@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Telemetry;
+﻿using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.Telemetry;
 
 #pragma warning disable 618
 

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Metrics;
+using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps

@@ -2,17 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Prometheus;
-using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Core.Telemetry;
-using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Core.Telemetry.Loggers;
-using Promitor.Core.Telemetry.Metrics;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Scraper.Host.Extensions;
-using Promitor.Scraper.Host.Validation;
 
 namespace Promitor.Scraper.Host
 {
@@ -24,6 +15,8 @@ namespace Promitor.Scraper.Host
 
             var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
             _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
+
+            ValidateRuntimeConfiguration();
         }
 
         private readonly IConfiguration _configuration;
@@ -45,12 +38,8 @@ namespace Promitor.Scraper.Host
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            ValidateRuntimeConfiguration();
-
-            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
-            services.AddTransient<ILogger, RuntimeLogger>();
-            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+            services.InjectConfiguration(_configuration);
+            services.InjectDependencies();
 
             services.AddMvc()
                     .AddJsonOptions(jsonOptions =>
@@ -65,8 +54,8 @@ namespace Promitor.Scraper.Host
 
         private void ValidateRuntimeConfiguration()
         {
-            var runtimeValidator = new RuntimeValidator(_configuration);
-            runtimeValidator.Run();
+            //var runtimeValidator = new RuntimeValidator(_configuration);
+            //runtimeValidator.Run();
         }
     }
 }

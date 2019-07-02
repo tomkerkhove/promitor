@@ -2,6 +2,7 @@
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -14,18 +15,21 @@ namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
         private readonly IExceptionTracker _exceptionTracker;
+        private readonly IConfiguration _configuration;
+        private readonly FeatureToggleClient _featureToggleClient;
+        private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, ILogger logger, IExceptionTracker exceptionTracker)
+        public MetricScraperFactory(IConfiguration configuration, FeatureToggleClient featureToggleClient, ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
-            _configuration = configuration;
             _logger = logger;
+            _featureToggleClient = featureToggleClient;
+            _configuration = configuration;
             _exceptionTracker = exceptionTracker;
         }
 
@@ -41,29 +45,30 @@ namespace Promitor.Core.Scraping.Factories
             IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, _featureToggleClient, _logger, _exceptionTracker);
 
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new ServiceBusQueueScraper(scraperConfiguration);
                 case ResourceType.Generic:
-                    return new GenericScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new GenericScraper(scraperConfiguration);
                 case ResourceType.StorageQueue:
-                    return new StorageQueueScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new StorageQueueScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:
-                    return new ContainerInstanceScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new ContainerInstanceScraper(scraperConfiguration);
                 case ResourceType.VirtualMachine:
-                    return new VirtualMachineScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
-                    return new NetworkInterfaceScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.ContainerRegistry:
-                    return new ContainerRegistryScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
-                    return new CosmosDbScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new CosmosDbScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
-                    return new RedisCacheScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
-                    return new PostgreSqlScraper(azureMetadata, azureMonitorClient, _logger, _exceptionTracker);
+                    return new PostgreSqlScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

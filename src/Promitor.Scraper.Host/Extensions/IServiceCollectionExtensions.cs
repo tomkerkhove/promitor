@@ -6,13 +6,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.FeatureFlags;
-using Promitor.Core.Configuration.Metrics;
-using Promitor.Core.Configuration.Prometheus;
-using Promitor.Core.Configuration.Server;
-using Promitor.Core.Configuration.Telemetry;
-using Promitor.Core.Configuration.Telemetry.Sinks;
+using Promitor.Core.Configuration.Model.FeatureFlags;
+using Promitor.Core.Configuration.Model.Metrics;
+using Promitor.Core.Configuration.Model.Prometheus;
+using Promitor.Core.Configuration.Model.Server;
+using Promitor.Core.Configuration.Model.Telemetry;
+using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Factories;
+using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Loggers;
+using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Swashbuckle.AspNetCore.Swagger;
@@ -40,6 +46,7 @@ namespace Promitor.Scraper.Host.Extensions
                     builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
                         metricsProvider,
                         serviceProvider.GetService<IRuntimeMetricsCollector>(),
+                        serviceProvider.GetService<MetricScraperFactory>(),
                         serviceProvider.GetService<IConfiguration>(),
                         serviceProvider.GetService<ILogger>(),
                         serviceProvider.GetService<IExceptionTracker>()));
@@ -61,6 +68,19 @@ namespace Promitor.Scraper.Host.Extensions
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+        }
+
+        /// <summary>
+        ///     Inject dependencies
+        /// </summary>
+        public static void InjectDependencies(this IServiceCollection services)
+        {
+            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
+            services.AddTransient<ILogger, RuntimeLogger>();
+            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
+            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+            services.AddTransient<FeatureToggleClient>();
+            services.AddTransient<MetricScraperFactory>();
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Configuration.Prometheus
+﻿namespace Promitor.Core.Configuration.Model.Prometheus
 {
     public class PrometheusConfiguration
     {
