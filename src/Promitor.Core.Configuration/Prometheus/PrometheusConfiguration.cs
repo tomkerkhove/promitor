@@ -2,6 +2,6 @@
 {
     public class PrometheusConfiguration
     {
-        public ScrapeEndpointConfiguration ScrapeEndpoint { get; set; }
+        public ScrapeEndpointConfiguration ScrapeEndpoint { get; set; } = new ScrapeEndpointConfiguration();
     }
 }
