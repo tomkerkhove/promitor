@@ -1,5 +1,5 @@
 server:
-  httpPort: 80
+  httpPort: 88
 prometheus:
   scrapeEndpoint:
     baseUriPath: /scrape

@@ -17,11 +17,11 @@ namespace Promitor.Scraper.Host.Validation.Steps
     {
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
 
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, IConfiguration configuration) : this(metricsDeclarationProvider, configuration, NullLogger.Instance)
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider) : this(metricsDeclarationProvider, NullLogger.Instance)
         {
         }
 
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, IConfiguration configuration, ILogger logger) : base(configuration, logger)
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base( logger)
         {
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }

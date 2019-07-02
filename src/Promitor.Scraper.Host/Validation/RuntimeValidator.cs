@@ -2,6 +2,9 @@
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Metrics;
+using Promitor.Core.Configuration.Telemetry;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Telemetry.Loggers;
 using Promitor.Scraper.Host.Validation.Exceptions;
@@ -17,16 +20,16 @@ namespace Promitor.Scraper.Host.Validation
         private readonly ILogger _validationLogger;
         private readonly List<IValidationStep> _validationSteps;
 
-        public RuntimeValidator(IConfiguration configuration)
+        public RuntimeValidator(IOptions<MetricsConfiguration> metricsConfiguration, IOptionsMonitor<TelemetryConfiguration> telemetryConfiguration, IConfiguration configuration)
         {
-            _validationLogger = new ValidationLogger(configuration);
+            _validationLogger = new ValidationLogger(telemetryConfiguration);
 
             var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger);
             _validationSteps = new List<IValidationStep>
             {
-                new ConfigurationPathValidationStep(configuration, _validationLogger),
+                new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),
                 new AzureAuthenticationValidationStep(configuration, _validationLogger),
-                new MetricsDeclarationValidationStep(scrapeConfigurationProvider, configuration, _validationLogger)
+                new MetricsDeclarationValidationStep(scrapeConfigurationProvider,  _validationLogger)
             };
         }
 

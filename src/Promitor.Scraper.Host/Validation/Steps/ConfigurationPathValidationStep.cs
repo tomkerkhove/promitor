@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.Configuration;
+﻿using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core;
+using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Metrics;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
@@ -11,32 +9,35 @@ namespace Promitor.Scraper.Host.Validation.Steps
 {
     public class ConfigurationPathValidationStep : ValidationStep, IValidationStep
     {
+        private readonly IOptions<MetricsConfiguration> _metricsConfiguration;
         public string ComponentName { get; } = "Metrics Declaration Path";
 
-        public ConfigurationPathValidationStep(IConfiguration configuration) : base(configuration, NullLogger.Instance)
+        public ConfigurationPathValidationStep(IOptions<MetricsConfiguration> metricsConfiguration) : this(metricsConfiguration, NullLogger.Instance)
         {
+            _metricsConfiguration = metricsConfiguration;
         }
 
-        public ConfigurationPathValidationStep(IConfiguration configuration, ILogger logger) : base(configuration, logger)
+        public ConfigurationPathValidationStep(IOptions<MetricsConfiguration> metricsConfiguration, ILogger logger) : base(logger)
         {
+            _metricsConfiguration = metricsConfiguration;
         }
 
         public ValidationResult Run()
         {
-            var metricsConfiguration = Configuration.GetSection("metricsConfiguration").Get<MetricsConfiguration>();
-            if (string.IsNullOrWhiteSpace(metricsConfiguration?.AbsolutePath))
+            var absolutePath = _metricsConfiguration.Value?.AbsolutePath;
+            if (string.IsNullOrWhiteSpace(absolutePath))
             {
                 var errorMessage = "No scrape configuration path configured";
                 return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            if (File.Exists(metricsConfiguration?.AbsolutePath) == false)
+            if (File.Exists(absolutePath) == false)
             {
-                var errorMessage = $"Scrape configuration at '{metricsConfiguration}' does not exist";
+                var errorMessage = $"Scrape configuration at '{absolutePath}' does not exist";
                 return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", metricsConfiguration?.AbsolutePath);
+            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", absolutePath);
             return ValidationResult.Successful(ComponentName);
         }
     }

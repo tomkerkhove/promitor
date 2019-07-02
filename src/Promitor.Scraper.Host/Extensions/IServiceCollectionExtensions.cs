@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.FeatureFlags;
+using Promitor.Core.Configuration.Metrics;
+using Promitor.Core.Configuration.Prometheus;
+using Promitor.Core.Configuration.Server;
+using Promitor.Core.Configuration.Telemetry;
+using Promitor.Core.Configuration.Telemetry.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
@@ -40,6 +46,21 @@ namespace Promitor.Scraper.Host.Extensions
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
             }
+        }
+
+        /// <summary>
+        ///     Inject configuration
+        /// </summary>
+        public static void InjectConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<FeatureFlagsConfiguration>(configuration.GetSection("featureFlags"));
+            services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
+            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetryConfiguration"));
+            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetryConfiguration:applicationInsights"));
+            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetryConfiguration:containerLogs"));
+            services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
         }
 
         /// <summary>
