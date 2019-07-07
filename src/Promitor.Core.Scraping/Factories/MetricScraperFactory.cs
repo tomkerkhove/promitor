@@ -39,8 +39,6 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
-        /// <param name="logger">General logger</param>
-        /// <param name="exceptionTracker">Tracker used to log exceptions</param>
         public IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
             IRuntimeMetricsCollector runtimeMetricsCollector)
         {

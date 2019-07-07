@@ -28,7 +28,6 @@ namespace Promitor.Scraper.Host.Scheduling
             IMetricsDeclarationProvider metricsDeclarationProvider,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
-            IConfiguration configuration,
             ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
