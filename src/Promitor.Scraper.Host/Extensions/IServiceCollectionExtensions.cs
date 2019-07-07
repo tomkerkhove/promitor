@@ -21,6 +21,7 @@ using Promitor.Core.Telemetry.Loggers;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
+using Promitor.Scraper.Host.Validation;
 using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
@@ -47,12 +48,24 @@ namespace Promitor.Scraper.Host.Extensions
                         metricsProvider,
                         serviceProvider.GetService<IRuntimeMetricsCollector>(),
                         serviceProvider.GetService<MetricScraperFactory>(),
-                        serviceProvider.GetService<IConfiguration>(),
                         serviceProvider.GetService<ILogger>(),
                         serviceProvider.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
             }
+        }
+
+        /// <summary>
+        ///     Expose services as Web API
+        /// </summary>
+        public static void UseWebApi(this IServiceCollection services)
+        {
+            services.AddMvc()
+                    .AddJsonOptions(jsonOptions =>
+                    {
+                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                    });
         }
 
         /// <summary>
@@ -81,6 +94,7 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<FeatureToggleClient>();
             services.AddTransient<MetricScraperFactory>();
+            services.AddTransient<RuntimeValidator>();
         }
 
         /// <summary>

@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
+using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Scraper.Host.Extensions;
+using Promitor.Scraper.Host.Validation;
 
 namespace Promitor.Scraper.Host
 {
@@ -15,8 +19,6 @@ namespace Promitor.Scraper.Host
 
             var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
             _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
-
-            ValidateRuntimeConfiguration();
         }
 
         private readonly IConfiguration _configuration;
@@ -30,6 +32,8 @@ namespace Promitor.Scraper.Host
                 app.UseDeveloperExceptionPage();
             }
 
+            ValidateRuntimeConfiguration(app);
+
             app.UseMvc();
             app.UsePrometheusScraper(_prometheusBaseUriPath);
             app.UseOpenApiUi();
@@ -41,21 +45,15 @@ namespace Promitor.Scraper.Host
             services.InjectConfiguration(_configuration);
             services.InjectDependencies();
 
-            services.AddMvc()
-                    .AddJsonOptions(jsonOptions =>
-                    {
-                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                    });
-
+            services.UseWebApi();
             services.UseOpenApiSpecifications(_prometheusBaseUriPath, apiVersion: 1);
             services.ScheduleMetricScraping();
         }
 
-        private void ValidateRuntimeConfiguration()
+        private void ValidateRuntimeConfiguration(IApplicationBuilder app)
         {
-            //var runtimeValidator = new RuntimeValidator(_configuration);
-            //runtimeValidator.Run();
+            var runtimeValidator = app.ApplicationServices.GetService<RuntimeValidator>();
+            runtimeValidator.Run();
         }
     }
 }
