@@ -1,5 +1,4 @@
-﻿
-namespace Promitor.Core.Configuration.Model.FeatureFlags
+﻿namespace Promitor.Core.Configuration.Model.FeatureFlags
 {
     public class FeatureFlagsConfiguration
     {

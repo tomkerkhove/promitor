@@ -1,5 +1,4 @@
-﻿
-namespace Promitor.Core.Configuration.Model.Metrics
+﻿namespace Promitor.Core.Configuration.Model.Metrics
 {
     public class MetricsConfiguration
     {
