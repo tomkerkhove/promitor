@@ -25,7 +25,6 @@ namespace Promitor.Scraper.Host
         public static IWebHost BuildWebHost(string[] args)
         {
             var configuration = CreateConfiguration();
-            var t = Environment.GetEnvironmentVariables();
             var httpPort = DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
