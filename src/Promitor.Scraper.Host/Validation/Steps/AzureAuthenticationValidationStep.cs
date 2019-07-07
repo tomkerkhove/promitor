@@ -23,7 +23,6 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public ValidationResult Run()
         {
-
             var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             if (string.IsNullOrWhiteSpace(applicationId))
             {
