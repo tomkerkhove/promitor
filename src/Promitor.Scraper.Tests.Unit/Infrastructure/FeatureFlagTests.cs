@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Configuration.Model.FeatureFlags;
