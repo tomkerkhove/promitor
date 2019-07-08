@@ -95,6 +95,7 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<FeatureToggleClient>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
+            services.AddTransient<ValidationLogger>();
         }
 
         /// <summary>

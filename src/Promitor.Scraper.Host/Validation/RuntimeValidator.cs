@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Telemetry.Loggers;
 using Promitor.Scraper.Host.Validation.Exceptions;
@@ -20,9 +19,9 @@ namespace Promitor.Scraper.Host.Validation
         private readonly ILogger _validationLogger;
         private readonly List<IValidationStep> _validationSteps;
 
-        public RuntimeValidator(IOptions<MetricsConfiguration> metricsConfiguration, IOptionsMonitor<TelemetryConfiguration> telemetryConfiguration, IConfiguration configuration)
+        public RuntimeValidator(IOptions<MetricsConfiguration> metricsConfiguration, ValidationLogger validatorLogger, IConfiguration configuration)
         {
-            _validationLogger = new ValidationLogger(telemetryConfiguration);
+            _validationLogger = validatorLogger;
 
             var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger);
             _validationSteps = new List<IValidationStep>
