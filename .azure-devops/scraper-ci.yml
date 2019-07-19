@@ -158,7 +158,7 @@ stages:
 
         echo 'Changing repo name'
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  repository: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-        
+
         echo 'Change name of chart in documentation samples'
         ((Get-Content -path $(Helm.Chart.Name)/README.md -Raw) -replace 'promitor/promitor-agent-scraper','promitor/promitor-agent-scraper-ci') | Set-Content -Path $(Helm.Chart.Name)/README.md
        workingDirectory: charts
