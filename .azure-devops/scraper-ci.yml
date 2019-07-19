@@ -17,11 +17,11 @@ variables:
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
-- stage: Codebase
+- stage: Build
   dependsOn: []
   jobs:
    - job: Build
-     displayName: Build, Test & Scan Codebase
+     displayName: Build Codebase
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
@@ -35,15 +35,19 @@ stages:
        inputs:
          projects: src/Promitor.sln
          arguments: '--configuration release'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet test'
+     - task: CopyFiles@2
+       displayName: 'Copy Build Files'
        inputs:
-         command: test
-         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-         arguments: '--configuration release'
+         contents: 'src/**'
+         targetFolder: '$(Pipeline.Workspace)/build'
+     - task: PublishPipelineArtifact@0
+       displayName: 'Publish Build Pipeline Artifact'
+       inputs:
+         targetPath: '$(Pipeline.Workspace)/build'
+         artifactName: Build
 - stage: CodeQuality
   displayName: Code Quality
-  dependsOn: []
+  dependsOn: [Build]
   jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
@@ -51,19 +55,47 @@ stages:
      pool:
        vmImage: windows-2019
      steps:
+     - task: DownloadPipelineArtifact@2
+       displayName: 'Download Build Artifact'
+       inputs:
+         artifact: 'Build'
+         path: '$(Build.SourcesDirectory)'
      - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
+       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
        inputs:
-         version: '$(DotNet.SDK.Version)'
+         version: '$(DotNet.Sdk.Version)'
      - task: DotNetCoreCLI@2
-       displayName: 'dotnet restore'
+       displayName: 'Restore NuGet Packages'
        inputs:
-         projects: src/Promitor.sln
-         arguments: '--configuration release'
+         command: restore
+         projects: 'src/Promitor.sln'
      - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
-       displayName: 'Automated code quality checks'
        inputs:
-         SolutionOrProjectPath: src/Promitor.sln
+         SolutionOrProjectPath: 'src/Promitor.sln'
+         AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
+       env:
+         MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
+- stage: Test
+  displayName: Run Tests
+  dependsOn: [Build]
+  jobs:
+   - job: RunUnitTests
+     displayName: Run Unit Tests
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DownloadPipelineArtifact@2
+       displayName: 'Download Build Artifact'
+       inputs:
+         artifact: 'Build'
+         path: '$(Build.SourcesDirectory)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet test'
+       inputs:
+         command: test
+         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+         arguments: '--configuration release --no-build'
 - stage: Docker
   displayName: Docker Image
   dependsOn: []
@@ -109,7 +141,7 @@ stages:
           PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
           PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
      - task: Docker@1
-       displayName: 'Push ''tomkerkhove/promitor-agent-scraper-ci'' image to Docker Hub'
+       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
@@ -146,26 +178,20 @@ stages:
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
-     - powershell: |
-        echo 'Creating output folder'
-        mkdir output/
-
-        echo 'Copying Chart folder'
-        cp promitor-agent-scraper/ $(Helm.Chart.Name)/ -r
-
-        echo 'Changing name of chart'
-        ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
-
-        echo 'Changing image tag'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-
-        echo 'Changing repo name'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-
-        echo 'Packaging chart'
-        helm package $(Helm.Chart.Name)/ --app-version $(Helm.Chart.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
+     - task: PowerShell@2
+       displayName: 'Transform Helm Chart in CI Chart'
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/CI/Transform-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(Build.BuildNumber)"'
+        workingDirectory: 'charts'
+     - task: PowerShell@2
        displayName: 'Package Helm Chart'
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/CI/Package-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.Name)" -chartVersion "$(Helm.Chart.Version)"'
+        workingDirectory: 'charts'
      - task: AzureCLI@1
        displayName: 'Push Helm Chart to Azure Container Registry'
        inputs:

@@ -67,6 +67,8 @@ spec:
           - name: PROMITOR_LOGGING_MINIMUMLEVEL
             value: {{ .Values.logging.minimalLogLevel }}
         {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
           - name: config-volume-{{ template "promitor-agent-scraper.fullname" . }}
             mountPath: /config/
