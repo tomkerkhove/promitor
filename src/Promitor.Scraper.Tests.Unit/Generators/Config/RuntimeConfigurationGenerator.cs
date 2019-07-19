@@ -11,11 +11,11 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
 {
     internal class RuntimeConfigurationGenerator
     {
-        private readonly RuntimeConfiguration runtimeConfiguration = new RuntimeConfiguration();
+        private readonly RuntimeConfiguration _runtimeConfiguration = new RuntimeConfiguration();
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
-            runtimeConfiguration.Server = serverConfiguration;
+            _runtimeConfiguration.Server = serverConfiguration;
         }
 
         public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 88)
@@ -42,7 +42,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                     }
                 };
 
-            runtimeConfiguration.Prometheus = prometheusConfiguration;
+            _runtimeConfiguration.Prometheus = prometheusConfiguration;
 
             return this;
         }
@@ -51,54 +51,54 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
         {
             var configurationBuilder = new StringBuilder();
 
-            if (runtimeConfiguration?.Server != null)
+            if (_runtimeConfiguration?.Server != null)
             {
                 configurationBuilder.AppendLine("server:");
-                configurationBuilder.AppendLine($"  httpPort: {runtimeConfiguration?.Server.HttpPort}");
+                configurationBuilder.AppendLine($"  httpPort: {_runtimeConfiguration?.Server.HttpPort}");
             }
 
-            if (runtimeConfiguration?.Prometheus != null)
+            if (_runtimeConfiguration?.Prometheus != null)
             {
                 configurationBuilder.AppendLine("prometheus:");
-                if (runtimeConfiguration?.Prometheus.ScrapeEndpoint != null)
+                if (_runtimeConfiguration?.Prometheus.ScrapeEndpoint != null)
                 {
                     configurationBuilder.AppendLine("  scrapeEndpoint:");
-                    configurationBuilder.AppendLine($"    baseUriPath: {runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
+                    configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
                 }
             }
 
-            if (runtimeConfiguration?.MetricsConfiguration != null)
+            if (_runtimeConfiguration?.MetricsConfiguration != null)
             {
                 configurationBuilder.AppendLine("metricsConfiguration:");
-                configurationBuilder.AppendLine($"  absolutePath: {runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
+                configurationBuilder.AppendLine($"  absolutePath: {_runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
             }
 
-            if (runtimeConfiguration?.Telemetry != null)
+            if (_runtimeConfiguration?.Telemetry != null)
             {
                 configurationBuilder.AppendLine("telemetry:");
 
-                if (runtimeConfiguration?.Telemetry?.ApplicationInsights != null)
+                if (_runtimeConfiguration?.Telemetry?.ApplicationInsights != null)
                 {
                     configurationBuilder.AppendLine("  applicationInsights:");
-                    configurationBuilder.AppendLine($"    instrumentationKey: {runtimeConfiguration?.Telemetry.ApplicationInsights.InstrumentationKey}");
-                    configurationBuilder.AppendLine($"    isEnabled: {runtimeConfiguration?.Telemetry.ApplicationInsights.IsEnabled}");
+                    configurationBuilder.AppendLine($"    instrumentationKey: {_runtimeConfiguration?.Telemetry.ApplicationInsights.InstrumentationKey}");
+                    configurationBuilder.AppendLine($"    isEnabled: {_runtimeConfiguration?.Telemetry.ApplicationInsights.IsEnabled}");
                 }
 
-                if (runtimeConfiguration?.Telemetry.ContainerLogs != null)
+                if (_runtimeConfiguration?.Telemetry.ContainerLogs != null)
                 {
                     configurationBuilder.AppendLine("  containerLogs:");
-                    configurationBuilder.AppendLine($"    isEnabled: {runtimeConfiguration?.Telemetry.ContainerLogs.IsEnabled}");
-                    configurationBuilder.AppendLine($"    verbosity: {runtimeConfiguration?.Telemetry.ContainerLogs.Verbosity}");
+                    configurationBuilder.AppendLine($"    isEnabled: {_runtimeConfiguration?.Telemetry.ContainerLogs.IsEnabled}");
+                    configurationBuilder.AppendLine($"    verbosity: {_runtimeConfiguration?.Telemetry.ContainerLogs.Verbosity}");
                 }
 
-                if (runtimeConfiguration?.Telemetry.DefaultVerbosity != null)
-                    configurationBuilder.AppendLine($"  defaultVerbosity: {runtimeConfiguration?.Telemetry.DefaultVerbosity}");
+                if (_runtimeConfiguration?.Telemetry.DefaultVerbosity != null)
+                    configurationBuilder.AppendLine($"  defaultVerbosity: {_runtimeConfiguration?.Telemetry.DefaultVerbosity}");
             }
 
-            if (runtimeConfiguration?.FeatureFlags != null)
+            if (_runtimeConfiguration?.FeatureFlags != null)
             {
                 configurationBuilder.AppendLine("featureFlags:");
-                configurationBuilder.AppendLine($"  disableMetricTimestamps: {runtimeConfiguration?.FeatureFlags.DisableMetricTimestamps} # false by default");
+                configurationBuilder.AppendLine($"  disableMetricTimestamps: {_runtimeConfiguration?.FeatureFlags.DisableMetricTimestamps} # false by default");
             }
 
             var rawYaml = configurationBuilder.ToString();

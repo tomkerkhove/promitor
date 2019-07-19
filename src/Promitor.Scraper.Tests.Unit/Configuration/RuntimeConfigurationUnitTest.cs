@@ -1,16 +1,8 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
-using Bogus;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.FeatureFlags;
-using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Core.Configuration.Model.Prometheus;
-using Promitor.Core.Configuration.Model.Server;
-using Promitor.Core.Configuration.Model.Telemetry;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 using Promitor.Scraper.Tests.Unit.Generators.Config;
 using Xunit;
 

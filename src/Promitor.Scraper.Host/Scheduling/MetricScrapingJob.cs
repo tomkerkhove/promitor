@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.AspNetCore;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;

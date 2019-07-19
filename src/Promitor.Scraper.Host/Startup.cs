@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
-using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Scraper.Host.Extensions;
 using Promitor.Scraper.Host.Validation;
 
