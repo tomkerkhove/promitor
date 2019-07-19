@@ -17,11 +17,11 @@ variables:
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
-- stage: Codebase
+- stage: Build
   dependsOn: []
   jobs:
    - job: Build
-     displayName: Build, Test & Scan Codebase
+     displayName: Build Codebase
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
@@ -35,15 +35,19 @@ stages:
        inputs:
          projects: src/Promitor.sln
          arguments: '--configuration release'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet test'
+     - task: CopyFiles@2
+       displayName: 'Copy Build Files'
        inputs:
-         command: test
-         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-         arguments: '--configuration release'
+         contents: 'src/**'
+         targetFolder: '$(Pipeline.Workspace)/build'
+     - task: PublishPipelineArtifact@0
+       displayName: 'Publish Build Pipeline Artifact'
+       inputs:
+         targetPath: '$(Pipeline.Workspace)/build'
+         artifactName: Build
 - stage: CodeQuality
   displayName: Code Quality
-  dependsOn: []
+  dependsOn: [Build]
   jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
@@ -51,19 +55,36 @@ stages:
      pool:
        vmImage: windows-2019
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
+     - task: DownloadPipelineArtifact@2
+       displayName: 'Download Build Artifact'
        inputs:
-         version: '$(DotNet.SDK.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet restore'
-       inputs:
-         projects: src/Promitor.sln
-         arguments: '--configuration release'
+         artifact: 'Build'
+         path: '$(Build.SourcesDirectory)'
      - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
        displayName: 'Automated code quality checks'
        inputs:
          SolutionOrProjectPath: src/Promitor.sln
+- stage: Test
+  displayName: Run Tests
+  dependsOn: [Build]
+  jobs:
+   - job: RunCodeQuality
+     displayName: Run Code Quality
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DownloadPipelineArtifact@2
+       displayName: 'Download Build Artifact'
+       inputs:
+         artifact: 'Build'
+         path: '$(Build.SourcesDirectory)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet test'
+       inputs:
+         command: test
+         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+         arguments: '--configuration release'
 - stage: Docker
   displayName: Docker Image
   dependsOn: []
