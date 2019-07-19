@@ -21,3 +21,7 @@ echo 'Changing repo name'
 
 echo 'Change name of chart in documentation samples'
 ((Get-Content -path $chartName/README.md -Raw) -replace 'promitor-agent-scraper', 'promitor-agent-scraper-ci') | Set-Content -Path $chartName/README.md
+
+echo 'Outputting transformed content'
+Get-Content -path $chartName/values.yaml -Raw
+Get-Content -path $chartName/README.md -Raw
