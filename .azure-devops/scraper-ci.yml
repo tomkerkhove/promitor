@@ -68,8 +68,8 @@ stages:
   displayName: Run Tests
   dependsOn: [Build]
   jobs:
-   - job: RunCodeQuality
-     displayName: Run Code Quality
+   - job: RunUnitTests
+     displayName: Run Unit Tests
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
@@ -84,7 +84,7 @@ stages:
        inputs:
          command: test
          projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-         arguments: '--configuration release'
+         arguments: '--configuration release --no-build'
 - stage: Docker
   displayName: Docker Image
   dependsOn: []
