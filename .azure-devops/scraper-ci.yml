@@ -152,12 +152,13 @@ stages:
 
         echo 'Determining image version'
         $imageVersion = "$(Build.BuildNumber)".ToLower()
+        echo 'Image version is $(imageVersion)'
 
         echo 'Changing name of chart'
         ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper','name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
 
         echo 'Changing image tag'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8','  tag: $imageVersion') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8','  tag:  $(imageVersion)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
 
         echo 'Changing repo name'
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  repository: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
