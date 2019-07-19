@@ -178,36 +178,20 @@ stages:
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
-     - powershell: |
-        echo 'Copying Chart folder'
-        cp promitor-agent-scraper/ $(Helm.Chart.Name)/ -r
-
-        echo 'Determining image version'
-        $imageVersion = "$(Build.BuildNumber)".ToLower()
-        $replacedTagSection = "  tag:  $imageVersion"
-        echo 'Image version is $imageVersion'
-
-        echo 'Changing name of chart'
-        ((Get-Content -path $(Helm.Chart.Name)/Chart.yaml -Raw) -replace 'name: promitor-agent-scraper', 'name: $(Helm.Chart.Name)') | Set-Content -Path $(Helm.Chart.Name)/Chart.yaml
-
-        echo 'Changing image tag'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8', $replacedTagSection) | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-
-        echo 'Changing repo name'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper', '  repository: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
-
-        echo 'Change name of chart in documentation samples'
-        ((Get-Content -path $(Helm.Chart.Name)/README.md -Raw) -replace 'promitor-agent-scraper','promitor-agent-scraper-ci') | Set-Content -Path $(Helm.Chart.Name)/README.md
-       workingDirectory: charts
+     - task: PowerShell@2
        displayName: 'Transform Helm Chart in CI Chart'
-     - powershell: |
-        echo 'Creating output folder'
-        mkdir output/
-
-        echo 'Packaging chart'
-        helm package $(Helm.Chart.Name)/ --app-version $(Helm.Chart.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/CI/Transform-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(Build.BuildNumber)"'
+        workingDirectory: 'charts'
+     - task: PowerShell@2
        displayName: 'Package Helm Chart'
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/CI/Package-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.Name)" -chartVersion "$(Helm.Chart.Version)"'
+        workingDirectory: 'charts'
      - task: AzureCLI@1
        displayName: 'Push Helm Chart to Azure Container Registry'
        inputs:
