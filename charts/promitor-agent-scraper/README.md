@@ -62,6 +62,7 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `metricDefaults.aggregation.interval`  | Default interval which defines over what period measurements of a metric should be aggregated | `00:05:00`            |
 | `metricDefaults.scraping.schedule`  | Cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor | `*/5 * * * *`            |
 | `metrics`  | List of metrics to scrape configured following the [metric declaration docs](https://promitor.io/configuration/metrics/) |        |
+| `resources`  | Pod resource requests & limits |    `{}`    |
 | `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |
 | `secrets.appIdSecret`  | Name of the secret for Azure AD identity id | `azure-app-id`            |
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
