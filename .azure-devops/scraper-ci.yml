@@ -60,10 +60,21 @@ stages:
        inputs:
          artifact: 'Build'
          path: '$(Build.SourcesDirectory)'
-     - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
-       displayName: 'Automated code quality checks'
+     - task: DotNetCoreInstaller@0
+       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
        inputs:
-         SolutionOrProjectPath: src/Promitor.sln
+         version: '$(DotNet.Sdk.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Restore NuGet Packages'
+       inputs:
+         command: restore
+         projects: 'src/Promitor.sln'
+     - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
+       inputs:
+         SolutionOrProjectPath: 'src/Promitor.sln'
+         AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
+       env:
+         MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
 - stage: Test
   displayName: Run Tests
   dependsOn: [Build]
