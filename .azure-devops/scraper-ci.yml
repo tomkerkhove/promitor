@@ -109,7 +109,7 @@ stages:
           PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
           PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
      - task: Docker@1
-       displayName: 'Push ''tomkerkhove/promitor-agent-scraper-ci'' image to Docker Hub'
+       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
@@ -147,9 +147,6 @@ stages:
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
      - powershell: |
-        echo 'Creating output folder'
-        mkdir output/
-
         echo 'Copying Chart folder'
         cp promitor-agent-scraper/ $(Helm.Chart.Name)/ -r
 
@@ -160,7 +157,15 @@ stages:
         ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  tag: 1.0.0-preview-8','  tag: $(Build.BuildNumber)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
 
         echo 'Changing repo name'
-        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  tag: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
+        ((Get-Content -path $(Helm.Chart.Name)/values.yaml -Raw) -replace '  repository: tomkerkhove/promitor-agent-scraper','  repository: $(Image.Name)') | Set-Content -Path $(Helm.Chart.Name)/values.yaml
+
+        echo 'Change name of chart in documentation samples'
+        ((Get-Content -path $(Helm.Chart.Name)/README.md -Raw) -replace 'promitor-agent-scraper','promitor-agent-scraper-ci') | Set-Content -Path $(Helm.Chart.Name)/README.md
+       workingDirectory: charts
+       displayName: 'Transform Helm Chart in CI Chart'
+     - powershell: |
+        echo 'Creating output folder'
+        mkdir output/
 
         echo 'Packaging chart'
         helm package $(Helm.Chart.Name)/ --app-version $(Helm.Chart.Version) --version $(Helm.Chart.Version) --destination output/
