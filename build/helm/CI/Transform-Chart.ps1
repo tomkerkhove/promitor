@@ -11,7 +11,7 @@ echo 'Copying Chart folder'
 cp promitor-agent-scraper/ $chartName/ -r
 
 echo 'Determining image version'
-$imageVersion = "$(Build.BuildNumber)".ToLower()
+$imageVersion = "$imageTag".ToLower()
 echo 'Image version is $imageVersion'
 
 echo 'Changing name of chart'
