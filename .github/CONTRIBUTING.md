@@ -1,10 +1,24 @@
 # Contributing to Promitor
 
-:+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
+First off, thank you for taking the time to contribute!
+
+In this guide you can find some guidance on where you can help:
+
+- [Where Can I Help?](#where-can-i-help)
+- [Reporting Bugs](#reporting-bugs)
+   - [How Do I Submit A (Good) Bug Report or Feature Request?](#how-do-i-submit-a-good-bug-report-or-feature-request)
+- [Pull Requests](#pull-requests)
+
+## Where Can I Help?
+
+Unsure where to begin contributing to Promitor? You can start by looking through these `beginner` and `help-wanted` issues:
+
+- [Beginner issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Abeginner) - issues are very small and good to learn how Promitor works.
+- [Help wanted issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Ahelp-wanted) - issues which should be a bit more involved than `beginner` issues.
 
 ## Reporting Bugs
 
-This section guides you through submitting a bug report for Promitor. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
+This section guides you through submitting a bug report for Promitor. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
 Before creating bug reports, please check issue tracker as you might find out that you don't need to create one.
 
@@ -17,29 +31,24 @@ Before creating bug reports, please check issue tracker as you might find out th
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
-* **Use a clear and descriptive title** for the issue to identify the problem.
-* **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you started Promitor, e.g. which command exactly you used to start the Docker image. When listing steps, **don't just say what you did, but explain what information the logs provided**.
-* **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
-* **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
-* **Explain which behavior you expected to see instead and why.**
-* **If you're reporting that Promitor crashed**, include a crash report with a stack trace from logs. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines) or put it in a [gist](https://gist.github.com/) and provide link to that gist.
+- **Use a clear and descriptive title** for the issue to identify the problem.
+- **Describe the exact steps which reproduce the problem** in as many details as possible. For example, start by explaining how you started Promitor, e.g. which command exactly you used to start the Docker image. When listing steps, **don't just say what you did, but explain what information the logs provided**.
+- **Provide specific examples to demonstrate the steps**. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. If you're providing snippets in the issue, use [Markdown code blocks](https://help.github.com/articles/markdown-basics/#multiple-lines).
+- **Describe the behavior you observed after following the steps** and point out what exactly is the problem with that behavior.
+- **Explain which behavior you expected to see instead and why.**
+- **If you're reporting that Promitor crashed**, include a crash report with a stack trace from logs. Include the crash report in the issue in a [code block](https://help.github.com/articles/markdown-basics/#multiple-lines) or put it in a [gist](https://gist.github.com/) and provide link to that gist.
 
 Include details about your configuration and environment:
 
-* **Which version of Promitor are you using?**
-* **What's the name and version of the container host that you're using**? Is it Docker, Kubernetes,...?
-* **What configuration is it using and how does your scraping declaration look like?**
-
-## Your First Code Contribution
-
-Unsure where to begin contributing to Atom? You can start by looking through these `beginner` and `help-wanted` issues:
-
-* [Beginner issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Abeginner) - issues which should only require a few lines of code, and a test or two.
-* [Help wanted issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Ahelp-wanted) - issues which should be a bit more involved than `beginner` issues.
+- **Which version of Promitor are you using?**
+- **What's the name and version of the container host that you're using**? Is it Docker, Kubernetes,...?
+- **What configuration is it using and how does your scraping declaration look like?**
 
 ## Pull Requests
 
-* Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
-* Always create an issue and discuss changes before sending PRs. This is to avoid wasting your time because it's not part of the roadmap or not as how we would approach it.
-* Do not include issue numbers in the PR title
-* Include thoughtfully-worded, well-structured OpenAPI specs when appropriate.
+- Always **create an issue and discuss changes before sending PRs**
+  - Allow us to assign the issue to you and avoid multiple people working on the same thing.
+  - This is to avoid wasting your time because it's not part of the roadmap or not as how we would approach it.
+- Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
+- Do not include issue numbers in the PR title
+- Include thoughtfully-worded, well-structured OpenAPI specs when appropriate.
