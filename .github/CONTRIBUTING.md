@@ -5,9 +5,9 @@ First off, thank you for taking the time to contribute!
 In this guide you can find some guidance on where you can help:
 
 - [Where Can I Help?](#where-can-i-help)
-- [Reporting Bugs](#reporting-bugs)
-   - [How Do I Submit A (Good) Bug Report or Feature Request?](#how-do-i-submit-a-good-bug-report-or-feature-request)
 - [Pull Requests](#pull-requests)
+- [Requesting Features & Reporting Bugs](#requesting-features-reporting-bugs)
+   - [How Do I Submit A (Good) Bug Report or Feature Request?](#how-do-i-submit-a-good-bug-report-or-feature-request)
 
 ## Where Can I Help?
 
@@ -16,7 +16,16 @@ Unsure where to begin contributing to Promitor? You can start by looking through
 - [Beginner issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Abeginner) - issues are very small and good to learn how Promitor works.
 - [Help wanted issues](https://github.com/tomkerkhove/promitor/issues?q=is%3Aopen+is%3Aissue+label%3Ahelp-wanted) - issues which should be a bit more involved than `beginner` issues.
 
-## Reporting Bugs
+## Pull Requests
+
+- Always **create an issue and discuss changes before sending PRs**
+  - Allow us to assign the issue to you and avoid multiple people working on the same thing.
+  - This is to avoid wasting your time because it's not part of the roadmap or not as how we would approach it.
+- Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
+- Do not include issue numbers in the PR title
+- Include thoughtfully-worded, well-structured OpenAPI specs when appropriate.
+
+## Requesting Features & Reporting Bugs
 
 This section guides you through submitting a bug report for Promitor. Following these guidelines helps maintainers and the community understand your report, reproduce the behavior, and find related reports.
 
@@ -43,12 +52,3 @@ Include details about your configuration and environment:
 - **Which version of Promitor are you using?**
 - **What's the name and version of the container host that you're using**? Is it Docker, Kubernetes,...?
 - **What configuration is it using and how does your scraping declaration look like?**
-
-## Pull Requests
-
-- Always **create an issue and discuss changes before sending PRs**
-  - Allow us to assign the issue to you and avoid multiple people working on the same thing.
-  - This is to avoid wasting your time because it's not part of the roadmap or not as how we would approach it.
-- Fill in [the required template](PULL_REQUEST_TEMPLATE.md)
-- Do not include issue numbers in the PR title
-- Include thoughtfully-worded, well-structured OpenAPI specs when appropriate.
