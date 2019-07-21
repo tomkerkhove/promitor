@@ -7,6 +7,7 @@ This guide provides guidelines on how to contribute, get involved or report feat
 In this guide you can find some guidance on where you can help:
 
 - [Where Can I Help?](#where-can-i-help)
+- [Where Can I Help?](#where-can-i-help)
 - [Pull Requests](#pull-requests)
 - [Requesting A Feature](#requesting-a-feature)
    - [How Do I Create A (Good) Feature Request?](#how-do-i-create-a-good-feature-request)
@@ -14,6 +15,14 @@ In this guide you can find some guidance on where you can help:
    - [How Do I Submit A (Good) Bug Report?](#how-do-i-submit-a-good-bug-report)
    
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new issue and include a link to the original issue in the body of your new one.
+
+## Where Can I Help?
+
+Promitor uses a [Contribution License Agreement (CLA)](https://gist.github.com/tomkerkhove/49506ad58e30076518609511619dc026) which needs to be signed for all contributions and is handled by [CLA Assistant](https://cla-assistant.io).
+
+The Contribution License Agreement (CLA) is required for all parties to align on the expectations of the contributions in order to avoid disputes in the future.
+
+The CLA Assistant will walk you through the process during your first pull request.
 
 ## Where Can I Help?
 
