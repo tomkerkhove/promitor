@@ -28,7 +28,7 @@ namespace Promitor.Core.Telemetry.Loggers
                 return true;
             }
 
-            LogLevel minimalLogLevel = telemetryConfiguration.DefaultVerbosity ?? telemetryConfiguration.ContainerLogs?.Verbosity ?? LogLevel.Warning;
+            LogLevel minimalLogLevel = telemetryConfiguration.ContainerLogs?.Verbosity ?? telemetryConfiguration.DefaultVerbosity ?? LogLevel.Warning;
 
             return minimalLogLevel <= usedLogLevel;
         }
