@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
@@ -47,7 +48,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return this;
         }
 
-        public async Task<string> GenerateAsync()
+        public async Task<IConfiguration> GenerateAsync()
         {
             var configurationBuilder = new StringBuilder();
 
@@ -104,7 +105,11 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             var rawYaml = configurationBuilder.ToString();
 
             var filePath = await PersistConfigurationAsync(rawYaml);
-            return filePath;
+            
+            return new ConfigurationBuilder()
+                .SetBasePath(Path.GetDirectoryName(filePath))
+                .AddYamlFile(Path.GetFileName(filePath))
+                .Build();
         }
 
         private async Task<string> PersistConfigurationAsync(string rawYaml)
