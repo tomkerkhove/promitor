@@ -14,6 +14,10 @@ Here is an overview of the services that are so kind to support us:
 
 ![Azure Pipelines](./media/logos/azure-pipelines.png)
 
+- **CLA Assistant** automates the process of signing our Contribution License Agreement (CLA).
+
+![CLA Assistant](./media/logos/cla-assistant.png)
+
 - **CloudFlare** serves our documentation super fast via their fast global Content Delivery Network.
 
 ![CloudFlare](./media/logos/cloudflare.png)

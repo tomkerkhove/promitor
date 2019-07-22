@@ -104,7 +104,7 @@ stages:
           - `latest`
           - `$(Image.Version)`
           - `$(Image.MajorMinorVersion)`
-          
+
           Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
 - stage: ReleaseHelm

@@ -41,7 +41,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="YamlDotNet" Version="6.1.1" />
+    <PackageReference Include="YamlDotNet" Version="6.1.2" />
   </ItemGroup>
 
   <ItemGroup>
