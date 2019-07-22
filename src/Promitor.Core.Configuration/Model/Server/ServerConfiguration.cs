@@ -2,6 +2,6 @@
 {
     public class ServerConfiguration
     {
-        public int HttpPort { get; set; } = 80;
+        public int HttpPort { get; set; } = Defaults.Server.HttpPort;
     }
 }

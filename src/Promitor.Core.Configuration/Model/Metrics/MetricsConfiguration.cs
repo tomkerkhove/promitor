@@ -2,6 +2,6 @@
 {
     public class MetricsConfiguration
     {
-        public string AbsolutePath { get; set; } = "/config/metrics-declaration.yaml";
+        public string AbsolutePath { get; set; } = Defaults.MetricsConfiguration.AbsolutePath;
     }
 }

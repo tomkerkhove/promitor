@@ -5,8 +5,8 @@ namespace Promitor.Core.Configuration.Model.Telemetry.Sinks
 {
     public class ApplicationInsightsConfiguration : ISinkConfiguration
     {
-        public LogLevel? Verbosity { get; set; }
-        public bool IsEnabled { get; set; } = false;
+        public LogLevel? Verbosity { get; set; } = Defaults.Telemetry.ApplicationInsights.Verbosity;
+        public bool IsEnabled { get; set; } = Defaults.Telemetry.ApplicationInsights.IsEnabled;
         public string InstrumentationKey { get; set; }
     }
 }

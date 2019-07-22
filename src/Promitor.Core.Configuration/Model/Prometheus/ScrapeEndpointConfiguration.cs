@@ -2,6 +2,6 @@
 {
     public class ScrapeEndpointConfiguration
     {
-        public string BaseUriPath { get; set; } = "/metrics";
+        public string BaseUriPath { get; set; } = Defaults.Prometheus.ScrapeEndpointBaseUri;
     }
 }

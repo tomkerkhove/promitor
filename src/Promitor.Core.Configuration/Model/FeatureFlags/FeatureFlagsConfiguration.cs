@@ -2,6 +2,6 @@
 {
     public class FeatureFlagsConfiguration
     {
-        public bool DisableMetricTimestamps { get; set; }
+        public bool DisableMetricTimestamps { get; set; } = Defaults.FeatureFlags.DisableMetricTimestamps;
     }
 }
