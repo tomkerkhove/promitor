@@ -2,8 +2,8 @@
 using GuardNet;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 using Promitor.Core.Telemetry.Interfaces;
 
@@ -12,30 +12,38 @@ namespace Promitor.Core.Telemetry
     public class ApplicationInsightsTelemetry : IExceptionTracker
     {
         private readonly ILogger _logger;
+        private readonly IOptionsMonitor<ApplicationInsightsConfiguration> _applicationInsightsConfiguration;
         private readonly TelemetryClient _telemetryClient;
 
-        public ApplicationInsightsTelemetry(IConfiguration configuration, ILogger logger)
+        public ApplicationInsightsTelemetry(IOptionsMonitor<ApplicationInsightsConfiguration> applicationInsightsConfiguration, ILogger logger)
         {
+            Guard.NotNull(applicationInsightsConfiguration, nameof(applicationInsightsConfiguration));
             Guard.NotNull(logger, nameof(logger));
 
-            var applicationInsightsConfiguration = configuration.GetSection("telemetry:applicationInsights").Get<ApplicationInsightsConfiguration>();
+            _logger = logger;
+            _applicationInsightsConfiguration = applicationInsightsConfiguration;
+            _telemetryClient = ConfigureTelemetryClient(applicationInsightsConfiguration);
+        }
+
+        private TelemetryClient ConfigureTelemetryClient(IOptionsMonitor<ApplicationInsightsConfiguration> configuration)
+        {
             var telemetryConfiguration = new TelemetryConfiguration
             {
-                DisableTelemetry = applicationInsightsConfiguration.IsEnabled
+                DisableTelemetry = configuration.CurrentValue.IsEnabled
             };
 
-            if (string.IsNullOrWhiteSpace(applicationInsightsConfiguration.InstrumentationKey) == false)
+            var instrumentationKey = configuration.CurrentValue.InstrumentationKey;
+            if (string.IsNullOrWhiteSpace(instrumentationKey) == false)
             {
-                telemetryConfiguration.InstrumentationKey = applicationInsightsConfiguration.InstrumentationKey;
+                telemetryConfiguration.InstrumentationKey = instrumentationKey;
             }
 
-            _logger = logger;
-            _telemetryClient = new TelemetryClient(telemetryConfiguration);
+            return new TelemetryClient(telemetryConfiguration);
         }
 
         public void Track(Exception exception)
         {
-            if (exception == null)
+            if (exception == null || _applicationInsightsConfiguration.CurrentValue.Verbosity == LogLevel.None)
             {
                 return;
             }

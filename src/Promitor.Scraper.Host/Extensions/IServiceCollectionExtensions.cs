@@ -75,9 +75,9 @@ namespace Promitor.Scraper.Host.Extensions
         {
             services.Configure<FeatureFlagsConfiguration>(configuration.GetSection("featureFlags"));
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
-            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetryConfiguration"));
-            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetryConfiguration:applicationInsights"));
-            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetryConfiguration:containerLogs"));
+            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
+            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
+            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
