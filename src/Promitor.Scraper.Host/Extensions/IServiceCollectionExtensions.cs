@@ -15,8 +15,6 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
-using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
@@ -154,7 +152,9 @@ namespace Promitor.Scraper.Host.Extensions
                 swaggerGenerationOptions.DescribeAllEnumsAsStrings();
 
                 if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
+                {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
+                }
             });
 
             return services;
@@ -164,7 +164,9 @@ namespace Promitor.Scraper.Host.Extensions
         {
             var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IHostingEnvironment));
             if (hostingEnvironment == null)
+            {
                 return string.Empty;
+            }
 
             var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
