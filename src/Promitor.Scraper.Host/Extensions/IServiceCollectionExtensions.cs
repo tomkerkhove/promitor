@@ -4,7 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Providers;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Configuration.Model.FeatureFlags;
 using Promitor.Core.Configuration.Model.Metrics;
@@ -12,8 +15,6 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
-using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
@@ -34,14 +35,13 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Defines to use the cron scheduler
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static void ScheduleMetricScraping(this IServiceCollection services)
+        public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
         {
             var spToCreateJobsWith = services.BuildServiceProvider();
             var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
-            var metrics = metricsProvider.Get(applyDefaults: true);
+            var metrics = metricsProvider.Get(true);
 
             foreach (var metric in metrics.Metrics)
-            {
                 services.AddScheduler(builder =>
                 {
                     builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
@@ -52,41 +52,15 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
-            }
+
+            return services;
         }
 
         /// <summary>
-        ///     Expose services as Web API
+        ///     Defines the dependencies that Promitor requires
         /// </summary>
-        public static void UseWebApi(this IServiceCollection services)
-        {
-            services.AddMvc()
-                    .AddJsonOptions(jsonOptions =>
-                    {
-                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                    });
-        }
-
-        /// <summary>
-        ///     Inject configuration
-        /// </summary>
-        public static void InjectConfiguration(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<FeatureFlagsConfiguration>(configuration.GetSection("featureFlags"));
-            services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
-            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
-            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
-            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
-            services.Configure<ServerConfiguration>(configuration.GetSection("server"));
-            services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
-            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
-        }
-
-        /// <summary>
-        ///     Inject dependencies
-        /// </summary>
-        public static void InjectDependencies(this IServiceCollection services)
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
             services.AddTransient<ILogger, RuntimeLogger>();
@@ -96,6 +70,52 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<ValidationLogger>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Use health checks
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection UseHealthChecks(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy());
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Expose services as Web API
+        /// </summary>
+        public static IServiceCollection UseWebApi(this IServiceCollection services)
+        {
+            services.AddMvc()
+                    .AddJsonOptions(jsonOptions =>
+                    {
+                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                    });
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Inject configuration
+        /// </summary>
+        public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<FeatureFlagsConfiguration>(configuration.GetSection("featureFlags"));
+            services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
+            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
+            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
+            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
+            services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+
+            return services;
         }
 
         /// <summary>
@@ -104,7 +124,7 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         /// <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
         /// <param name="apiVersion">Version of the API</param>
-        public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
+        public static IServiceCollection UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
             {
@@ -136,6 +156,8 @@ namespace Promitor.Scraper.Host.Extensions
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
                 }
             });
+
+            return services;
         }
 
         private static string GetXmlDocumentationPath(IServiceCollection services)

@@ -35,19 +35,26 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines the dependencies that Promitor requires
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseHealthChecks(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Use health checks
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Expose services as Web API
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.InjectConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Inject configuration
-            </summary>
-        </member>
-        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.InjectDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-                Inject dependencies
             </summary>
         </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">

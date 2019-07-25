@@ -10,6 +10,9 @@ namespace Promitor.Scraper.Host
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+        private readonly string _prometheusBaseUriPath;
+
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -18,16 +21,11 @@ namespace Promitor.Scraper.Host
             _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
         }
 
-        private readonly IConfiguration _configuration;
-        private readonly string _prometheusBaseUriPath;
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             ValidateRuntimeConfiguration(app);
 
@@ -39,12 +37,12 @@ namespace Promitor.Scraper.Host
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.InjectConfiguration(_configuration);
-            services.InjectDependencies();
-
-            services.UseWebApi();
-            services.UseOpenApiSpecifications(_prometheusBaseUriPath, apiVersion: 1);
-            services.ScheduleMetricScraping();
+            services.DefineDependencies()
+                .ConfigureYamlConfiguration(_configuration)
+                .UseWebApi()
+                .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
+                .UseHealthChecks()
+                .ScheduleMetricScraping();
         }
 
         private void ValidateRuntimeConfiguration(IApplicationBuilder app)
