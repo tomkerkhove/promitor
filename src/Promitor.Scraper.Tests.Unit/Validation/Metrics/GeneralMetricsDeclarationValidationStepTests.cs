@@ -7,7 +7,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
 {
     [Category("Unit")]
-    public class MetricsDeclarationValidationStepTests
+    public class GeneralMetricsDeclarationValidationStepTests
     {
         [Fact]
         public void MetricsDeclaration_DeclarationWithDuplicateMetricNames_Fails()

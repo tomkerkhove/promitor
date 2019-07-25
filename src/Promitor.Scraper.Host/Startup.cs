@@ -2,23 +2,24 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Promitor.Core.Scraping;
+using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Scraper.Host.Extensions;
+using Promitor.Scraper.Host.Validation;
 
 namespace Promitor.Scraper.Host
 {
     public class Startup
     {
-        public Startup()
-        {
-            Configuration = BuildConfiguration();
-            ScrapeEndpointBasePath = ScrapeEndpoint.GetBasePath(Configuration);
-        }
+        private readonly IConfiguration _configuration;
+        private readonly string _prometheusBaseUriPath;
 
-        public IConfiguration Configuration { get; }
-        public string ScrapeEndpointBasePath { get; }
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+
+            var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
+            _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -26,8 +27,10 @@ namespace Promitor.Scraper.Host
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
+            ValidateRuntimeConfiguration(app);
+
             app.UseMvc();
-            app.UsePrometheusScraper(ScrapeEndpointBasePath);
+            app.UsePrometheusScraper(_prometheusBaseUriPath);
             app.UseOpenApiUi();
         }
 
@@ -35,24 +38,17 @@ namespace Promitor.Scraper.Host
         public void ConfigureServices(IServiceCollection services)
         {
             services.DefineDependencies()
-                .AddMvc()
-                .AddJsonOptions(jsonOptions =>
-                {
-                    jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    jsonOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
-
-            services.UseOpenApiSpecifications(ScrapeEndpointBasePath, 1)
+                .ConfigureYamlConfiguration(_configuration)
+                .UseWebApi()
+                .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
                 .UseHealthChecks()
                 .ScheduleMetricScraping();
         }
 
-        private IConfiguration BuildConfiguration()
+        private void ValidateRuntimeConfiguration(IApplicationBuilder app)
         {
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddEnvironmentVariables();
-
-            return configurationBuilder.Build();
+            var runtimeValidator = app.ApplicationServices.GetService<RuntimeValidator>();
+            runtimeValidator.Run();
         }
     }
 }

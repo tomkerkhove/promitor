@@ -47,6 +47,16 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Expose services as Web API
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Inject configuration
+            </summary>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
             <summary>
                 Use OpenAPI specification

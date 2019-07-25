@@ -44,8 +44,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void 
-            
+        public void
+
             ContainerRegistryMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange

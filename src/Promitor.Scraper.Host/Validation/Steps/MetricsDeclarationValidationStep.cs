@@ -20,7 +20,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
         {
         }
 
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base(logger)
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base( logger)
         {
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }

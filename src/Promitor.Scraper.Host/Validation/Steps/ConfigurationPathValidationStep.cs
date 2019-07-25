@@ -1,41 +1,43 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Validation.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.Steps
 {
     public class ConfigurationPathValidationStep : ValidationStep, IValidationStep
     {
+        private readonly IOptions<MetricsConfiguration> _metricsConfiguration;
         public string ComponentName { get; } = "Metrics Declaration Path";
 
-        public ConfigurationPathValidationStep() : base(NullLogger.Instance)
+        public ConfigurationPathValidationStep(IOptions<MetricsConfiguration> metricsConfiguration) : this(metricsConfiguration, NullLogger.Instance)
         {
+            _metricsConfiguration = metricsConfiguration;
         }
 
-        public ConfigurationPathValidationStep(ILogger logger) : base(logger)
+        public ConfigurationPathValidationStep(IOptions<MetricsConfiguration> metricsConfiguration, ILogger logger) : base(logger)
         {
+            _metricsConfiguration = metricsConfiguration;
         }
 
         public ValidationResult Run()
         {
-            var configurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
-            if (string.IsNullOrWhiteSpace(configurationPath))
+            var absolutePath = _metricsConfiguration.Value?.AbsolutePath;
+            if (string.IsNullOrWhiteSpace(absolutePath))
             {
-                Logger.LogWarning("No scrape configuration path configured, falling back to default one on '{configurationPath}'.", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
-                configurationPath = Core.Scraping.Constants.Defaults.MetricsDeclarationPath;
-                Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, configurationPath);
-            }
-
-            if (File.Exists(configurationPath) == false)
-            {
-                var errorMessage = $"Scrape configuration at '{configurationPath}' does not exist";
+                var errorMessage = "No scrape configuration path configured";
                 return ValidationResult.Failure(ComponentName, errorMessage);
             }
 
-            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", Core.Scraping.Constants.Defaults.MetricsDeclarationPath);
+            if (File.Exists(absolutePath) == false)
+            {
+                var errorMessage = $"Scrape configuration at '{absolutePath}' does not exist";
+                return ValidationResult.Failure(ComponentName, errorMessage);
+            }
+
+            Logger.LogInformation("Scrape configuration found at '{configurationPath}'", absolutePath);
             return ValidationResult.Successful(ComponentName);
         }
     }

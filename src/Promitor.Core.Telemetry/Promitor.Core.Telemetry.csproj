@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Promitor.Core.Configuration\Promitor.Core.Configuration.csproj" />
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
   </ItemGroup>
 

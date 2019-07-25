@@ -1,34 +1,19 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Promitor.Core;
-using Promitor.Scraper.Host.Extensions;
+using Microsoft.Extensions.Configuration;
+using Promitor.Core.Configuration.Model.Server;
 
 namespace Promitor.Scraper.Host
 {
     public class Program
     {
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            var httpPort = DetermineHttpPort();
-            var endpointUrl = $"http://+:{httpPort}";
-
-            return WebHost.CreateDefaultBuilder(args)
-                .UseKestrel(kestrelServerOptions =>
-                {
-                    kestrelServerOptions.AddServerHeader = false;
-                })
-                .UseUrls(endpointUrl)
-                .UseStartup<Startup>()
-                .Build();
-        }
-
         public static void Main(string[] args)
         {
             Welcome();
 
             BuildWebHost(args)
-                .ValidateSetup()
                 .Run();
         }
 
@@ -37,15 +22,40 @@ namespace Promitor.Scraper.Host
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        private static int DetermineHttpPort()
+        public static IWebHost BuildWebHost(string[] args)
         {
-            var rawConfiguredHttpPort = Environment.GetEnvironmentVariable(EnvironmentVariables.Runtime.HttpPort);
-            if (int.TryParse(rawConfiguredHttpPort, out int configuredHttpPort))
-            {
-                return configuredHttpPort;
-            }
+            var configuration = CreateConfiguration();
+            var httpPort = DetermineHttpPort(configuration);
+            var endpointUrl = $"http://+:{httpPort}";
 
-            return 80;
+            return WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(kestrelServerOptions =>
+                {
+                    kestrelServerOptions.AddServerHeader = false;
+                })
+                .UseConfiguration(configuration)
+                .UseUrls(endpointUrl)
+                .UseStartup<Startup>()
+                .Build();
+        }
+
+        private static IConfigurationRoot CreateConfiguration()
+        {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddEnvironmentVariables(prefix: "PROMITOR:")
+                .Build();
+
+            return configuration;
+        }
+
+        private static int DetermineHttpPort(IConfiguration configuration)
+        {
+            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
+
+            return serverConfiguration?.HttpPort ?? 80;
         }
     }
 }

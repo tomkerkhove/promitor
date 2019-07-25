@@ -3,11 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResourceTypes
@@ -16,10 +12,10 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/queueServices";
         private readonly AzureStorageQueueClient _azureStorageQueueClient;
-        public StorageQueueScraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger, IExceptionTracker exceptionTracker)
-            : base(azureMetadata, azureMonitorClient, logger, exceptionTracker)
+        public StorageQueueScraper(ScraperConfiguration scraperConfiguration)
+            : base(scraperConfiguration)
         {
-            _azureStorageQueueClient = new AzureStorageQueueClient(logger);
+            _azureStorageQueueClient = new AzureStorageQueueClient(scraperConfiguration.Logger);
         }
 
         protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, StorageQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)

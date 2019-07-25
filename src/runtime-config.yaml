@@ -1,0 +1,17 @@
+server:
+  httpPort: 88
+prometheus:
+  scrapeEndpoint:
+    baseUriPath: /scrape
+metricsConfiguration:
+  absolutePath: /config/metrics-declaration.yaml
+telemetry:
+  applicationInsights:
+    instrumentationKey: ABC
+    isEnabled: true
+  containerLogs:
+    isEnabled: true
+    verbosity: trace
+  defaultVerbosity: warning
+featureFlags:
+  disableMetricTimestamps: true # false by default
