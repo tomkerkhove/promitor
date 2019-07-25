@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization.Core;
@@ -10,10 +12,12 @@ namespace Promitor.Core.Scraping.Configuration.Providers
     public class MetricsDeclarationProvider : IMetricsDeclarationProvider
     {
         private readonly ConfigurationSerializer _configurationSerializer;
+        private readonly IConfiguration _configuration;
 
-        public MetricsDeclarationProvider(ILogger logger)
+        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger)
         {
             _configurationSerializer = new ConfigurationSerializer(logger);
+            _configuration = configuration;
         }
 
         public virtual MetricsDeclaration Get(bool applyDefaults = false)
@@ -64,11 +68,12 @@ namespace Promitor.Core.Scraping.Configuration.Providers
 
         public virtual string ReadRawDeclaration()
         {
-            var scrapingConfigurationPath = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Path);
+            var metricConfiguration = _configuration.GetSection("metricsConfiguration").Get<MetricsConfiguration>();
+            var scrapingConfigurationPath = metricConfiguration?.AbsolutePath;
+
             if (string.IsNullOrWhiteSpace(scrapingConfigurationPath))
             {
-                Console.WriteLine($"No scraping configuration path was specified, falling back to default '{Constants.Defaults.MetricsDeclarationPath}'...");
-                scrapingConfigurationPath = Constants.Defaults.MetricsDeclarationPath;
+                throw new Exception("No scraping configuration path was specified.");
             }
 
             var rawMetricsDeclaration = File.ReadAllText(scrapingConfigurationPath);

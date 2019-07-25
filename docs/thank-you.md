@@ -51,6 +51,7 @@ We are using the following GitHub Apps:
 
 # NuGet Packages
 Here is an overview of the NuGet packages that we rely on:
+- [NetEscapades.Configuration.Yaml](https://www.nuget.org/packages/NetEscapades.Configuration.Yaml) - YAML configuration provider for .NET Core
 - [CronScheduler.AspNetCore](https://github.com/kdcllc/CronScheduler.AspNetCore) - Asp.Net Core 2.x Hosted or .Net Core 2.x Self-hosted Cron Scheduler
 - [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore) - Swagger tools for documenting API's built on ASP.NET Core
 - [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client) - .NET client for prometheus.io

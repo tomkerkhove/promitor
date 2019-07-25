@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using Microsoft.Extensions.Configuration;
 using Promitor.Core;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
@@ -15,11 +17,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             var invalidApplicationId = string.Empty;
             var validApplicationKey = Guid.NewGuid().ToString();
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -32,11 +38,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             var validApplicationId = Guid.NewGuid().ToString();
             var validApplicationKey = Guid.NewGuid().ToString();
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, validApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, validApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -49,11 +59,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             const string invalidApplicationId = " ";
             var validApplicationKey = Guid.NewGuid().ToString();
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -66,11 +80,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
             var invalidApplicationKey = string.Empty;
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -83,11 +101,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
             const string invalidApplicationKey = " ";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -100,15 +122,27 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Authentication
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
             var invalidApplicationKey = Guid.NewGuid().ToString();
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId);
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
+                {EnvironmentVariables.Authentication.ApplicationKey, invalidApplicationKey},
+            };
+
+            var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep();
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
             Assert.True(validationResult.IsSuccessful);
+        }
+
+        private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)
+        {
+            return new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemoryConfiguration)
+                .Build();
         }
     }
 }

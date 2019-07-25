@@ -7,7 +7,7 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Prometheus.Client;
-using Promitor.Core.Infrastructure;
+using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
@@ -24,28 +24,25 @@ namespace Promitor.Core.Scraping
     public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition>
       where TMetricDefinition : MetricDefinition, new()
     {
+        private readonly ScraperConfiguration _scraperConfiguration;
         private readonly IExceptionTracker _exceptionTracker;
+        private readonly FeatureToggleClient _featureToggleClient;
         private readonly ILogger _logger;
 
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
-        /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
-        /// <param name="logger">General logger</param>
-        /// <param name="exceptionTracker">Exception tracker</param>
-        protected Scraper(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, ILogger logger,
-            IExceptionTracker exceptionTracker)
+        protected Scraper(ScraperConfiguration scraperConfiguration)
         {
-            Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
-            Guard.NotNull(azureMetadata, nameof(azureMetadata));
-            Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
+            Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
-            _logger = logger;
-            _exceptionTracker = exceptionTracker;
+            _logger = scraperConfiguration.Logger;
+            _featureToggleClient = scraperConfiguration.FeatureToggleClient;
+            _exceptionTracker = scraperConfiguration.ExceptionTracker;
+            _scraperConfiguration = scraperConfiguration;
 
-            AzureMetadata = azureMetadata;
-            AzureMonitorClient = azureMonitorClient;
+            AzureMetadata = scraperConfiguration.AzureMetadata;
+            AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
         }
 
         /// <summary>
@@ -84,12 +81,7 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, metricDefinition.Name, aggregationInterval);
 
-                var metricsTimestampFeatureFlag = FeatureFlag.IsActive(FeatureFlag.Names.MetricsTimestamp, defaultFlagState: true);
-
-                var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
-
-                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
-                gauge.WithLabels(labels.Values).Set(scrapedMetricResult.MetricValue);
+                ReportMetric(metricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)
             {
@@ -99,6 +91,16 @@ namespace Promitor.Core.Scraping
             {
                 _exceptionTracker.Track(exception);
             }
+        }
+
+        private void ReportMetric(MetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
+        {
+            var metricsTimestampFeatureFlag = _featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps, defaultFlagState: true);
+
+            var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
+
+            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
+            gauge.WithLabels(labels.Values).Set(scrapedMetricResult.MetricValue);
         }
 
         private void HandleErrorResponseException(ErrorResponseException errorResponseException)

@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel;
-using Promitor.Core;
+﻿using System.ComponentModel;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Scraper.Host.Validation.Steps;
 using Xunit;
 
@@ -14,10 +14,9 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string validConfigurationPath = "Invalid";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, validConfigurationPath);
-
+            var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = validConfigurationPath});
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep();
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -29,10 +28,10 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Misc
         {
             // Arrange
             const string invalidConfigurationPath = "Files/valid-sample.yaml";
-            Environment.SetEnvironmentVariable(EnvironmentVariables.Configuration.Path, invalidConfigurationPath);
+            var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = invalidConfigurationPath});
 
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep();
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert

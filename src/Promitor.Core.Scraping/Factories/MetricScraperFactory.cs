@@ -1,5 +1,8 @@
 ﻿using System;
+using GuardNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -12,57 +15,74 @@ namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
+        private readonly IExceptionTracker _exceptionTracker;
+        private readonly IConfiguration _configuration;
+        private readonly FeatureToggleClient _featureToggleClient;
+        private readonly ILogger _logger;
+
+        public MetricScraperFactory(IConfiguration configuration, FeatureToggleClient featureToggleClient, ILogger logger, IExceptionTracker exceptionTracker)
+        {
+            Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
+            Guard.NotNull(logger, nameof(logger));
+            Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
+
+            _logger = logger;
+            _featureToggleClient = featureToggleClient;
+            _configuration = configuration;
+            _exceptionTracker = exceptionTracker;
+        }
+
         /// <summary>
         ///     Creates a scraper that is capable of scraping a specific resource type
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
-        /// <param name="logger">General logger</param>
-        /// <param name="exceptionTracker">Tracker used to log exceptions</param>
-        public static IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger, IExceptionTracker exceptionTracker)
+        public IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
+            IRuntimeMetricsCollector runtimeMetricsCollector)
         {
-            var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, azureCredentials, runtimeMetricsCollector, logger);
+            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, _featureToggleClient, _logger, _exceptionTracker);
 
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new ServiceBusQueueScraper(scraperConfiguration);
                 case ResourceType.Generic:
-                    return new GenericScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new GenericScraper(scraperConfiguration);
                 case ResourceType.StorageQueue:
-                    return new StorageQueueScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new StorageQueueScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:
-                    return new ContainerInstanceScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new ContainerInstanceScraper(scraperConfiguration);
                 case ResourceType.VirtualMachine:
-                    return new VirtualMachineScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
-                    return new NetworkInterfaceScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.ContainerRegistry:
-                    return new ContainerRegistryScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
-                    return new CosmosDbScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new CosmosDbScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
-                    return new RedisCacheScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
-                    return new PostgreSqlScraper(azureMetadata, azureMonitorClient, logger, exceptionTracker);
+                    return new PostgreSqlScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, AzureCredentials azureCredentials, IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger)
+        private AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, logger);
+            var azureCredentials = DetermineAzureCredentials();
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, _logger);
             return azureMonitorClient;
         }
 
-        private static AzureCredentials DetermineAzureCredentials()
+        private AzureCredentials DetermineAzureCredentials()
         {
-            var applicationId = Environment.GetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationId);
-            var applicationKey = Environment.GetEnvironmentVariable(EnvironmentVariables.Authentication.ApplicationKey);
+            var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
+            var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
 
             return new AzureCredentials
             {
