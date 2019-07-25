@@ -29,7 +29,7 @@ namespace Promitor.Core.Telemetry
         {
             var telemetryConfiguration = new TelemetryConfiguration
             {
-                DisableTelemetry = configuration.CurrentValue.IsEnabled
+                DisableTelemetry = !configuration.CurrentValue.IsEnabled
             };
 
             var instrumentationKey = configuration.CurrentValue.InstrumentationKey;
