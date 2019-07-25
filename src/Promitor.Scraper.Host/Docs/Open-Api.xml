@@ -35,6 +35,18 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines the dependencies that Promitor requires
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseHealthChecks(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Use health checks
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
             <summary>
                 Use OpenAPI specification

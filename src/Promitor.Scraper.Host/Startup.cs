@@ -2,15 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Promitor.Core.Scraping;
-using Promitor.Core.Scraping.Configuration.Providers;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Core.Telemetry;
-using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Core.Telemetry.Loggers;
-using Promitor.Core.Telemetry.Metrics;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Extensions;
 
 namespace Promitor.Scraper.Host
@@ -30,9 +24,7 @@ namespace Promitor.Scraper.Host
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
 
             app.UseMvc();
             app.UsePrometheusScraper(ScrapeEndpointBasePath);
@@ -42,20 +34,17 @@ namespace Promitor.Scraper.Host
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
-            services.AddTransient<ILogger, RuntimeLogger>();
-            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+            services.DefineDependencies()
+                .AddMvc()
+                .AddJsonOptions(jsonOptions =>
+                {
+                    jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    jsonOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
 
-            services.AddMvc()
-                    .AddJsonOptions(jsonOptions =>
-                    {
-                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-                    });
-            
-            services.UseOpenApiSpecifications(ScrapeEndpointBasePath, apiVersion: 1);
-            services.ScheduleMetricScraping();
+            services.UseOpenApiSpecifications(ScrapeEndpointBasePath, 1)
+                .UseHealthChecks()
+                .ScheduleMetricScraping();
         }
 
         private IConfiguration BuildConfiguration()

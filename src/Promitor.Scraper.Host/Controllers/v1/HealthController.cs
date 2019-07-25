@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Scraper.Host.Controllers.v1
@@ -7,17 +9,26 @@ namespace Promitor.Scraper.Host.Controllers.v1
     [Route("api/v1/health")]
     public class HealthController : Controller
     {
+        private readonly HealthCheckService _healthCheckService;
+
+        public HealthController(HealthCheckService healthCheckService)
+        {
+            _healthCheckService = healthCheckService;
+        }
+
         /// <summary>
         ///     Get Health
         /// </summary>
         /// <remarks>Provides an indication about the health of the scraper</remarks>
         [HttpGet]
         [SwaggerOperation(OperationId = "Health_Get")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Scraper is healthy")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Scraper is healthy", Type = typeof(HealthReport))]
         [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, Description = "Scraper is not healthy")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return Ok();
+            var report = await _healthCheckService.CheckHealthAsync();
+
+            return report.Status == HealthStatus.Healthy ? Ok(report) : StatusCode((int)HttpStatusCode.ServiceUnavailable, report);
         }
     }
 }

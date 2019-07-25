@@ -3,9 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
+using Promitor.Core.Telemetry.Loggers;
+using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Swashbuckle.AspNetCore.Swagger;
@@ -20,14 +25,13 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Defines to use the cron scheduler
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static void ScheduleMetricScraping(this IServiceCollection services)
+        public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
         {
             var spToCreateJobsWith = services.BuildServiceProvider();
             var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
-            var metrics = metricsProvider.Get(applyDefaults: true);
+            var metrics = metricsProvider.Get(true);
 
             foreach (var metric in metrics.Metrics)
-            {
                 services.AddScheduler(builder =>
                 {
                     builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
@@ -37,7 +41,34 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IExceptionTracker>()));
                     builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                 });
-            }
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Defines the dependencies that Promitor requires
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection DefineDependencies(this IServiceCollection services)
+        {
+            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
+            services.AddTransient<ILogger, RuntimeLogger>();
+            services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
+            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Use health checks
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection UseHealthChecks(this IServiceCollection services)
+        {
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy());
+
+            return services;
         }
 
         /// <summary>
@@ -46,7 +77,7 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         /// <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
         /// <param name="apiVersion">Version of the API</param>
-        public static void UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
+        public static IServiceCollection UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
             var openApiInformation = new Info
             {
@@ -74,21 +105,19 @@ namespace Promitor.Scraper.Host.Extensions
                 swaggerGenerationOptions.DescribeAllEnumsAsStrings();
 
                 if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
-                {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
-                }
             });
+
+            return services;
         }
 
         private static string GetXmlDocumentationPath(IServiceCollection services)
         {
             var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IHostingEnvironment));
             if (hostingEnvironment == null)
-            {
                 return string.Empty;
-            }
 
-            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IHostingEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
@@ -98,7 +127,7 @@ namespace Promitor.Scraper.Host.Extensions
         private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
         {
             var exceptionTrackerService = services.FirstOrDefault(service => service.ServiceType == typeof(IExceptionTracker));
-            var exceptionTracker = (IExceptionTracker)exceptionTrackerService?.ImplementationInstance;
+            var exceptionTracker = (IExceptionTracker) exceptionTrackerService?.ImplementationInstance;
             exceptionTracker?.Track(e.Exception);
 
             e.SetObserved();
