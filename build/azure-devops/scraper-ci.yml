@@ -13,7 +13,7 @@ pr:
     - .azure-devops/scraper-ci.yml
     - charts/promitor-agent-scraper/*
 variables:
-  DotNet.SDK.Version: '2.2.301'
+  DotNet.SDK.Version: '2.2.401'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
