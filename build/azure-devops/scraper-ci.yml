@@ -14,6 +14,7 @@ pr:
     - charts/promitor-agent-scraper/*
 variables:
   DotNet.SDK.Version: '2.2.401'
+  DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
@@ -34,7 +35,7 @@ stages:
        displayName: 'dotnet build'
        inputs:
          projects: src/Promitor.sln
-         arguments: '--configuration release'
+         arguments: '--configuration $(DotNet.Configuration)'
      - task: CopyFiles@2
        displayName: 'Copy Build Files'
        inputs:
@@ -77,7 +78,7 @@ stages:
          MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
 - stage: Test
   displayName: Run Tests
-  dependsOn: [Build]
+  dependsOn: []
   jobs:
    - job: RunUnitTests
      displayName: Run Unit Tests
@@ -85,17 +86,12 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DownloadPipelineArtifact@2
-       displayName: 'Download Build Artifact'
-       inputs:
-         artifact: 'Build'
-         path: '$(Build.SourcesDirectory)'
      - task: DotNetCoreCLI@2
        displayName: 'dotnet test'
        inputs:
          command: test
-         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-         arguments: '--configuration release --no-build'
+         projects: 'src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj'
+         arguments: '--configuration $(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
   dependsOn: []
