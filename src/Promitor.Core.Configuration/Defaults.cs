@@ -21,7 +21,7 @@ namespace Promitor.Core.Configuration
         
         public class Telemetry
         {
-            public static LogLevel? DefaultVerbosity { get; set; } = null;
+            public static LogLevel? DefaultVerbosity { get; set; } = LogLevel.Error;
 
             public class ContainerLogs
             {
@@ -32,7 +32,7 @@ namespace Promitor.Core.Configuration
             public class ApplicationInsights
             {
                 public static LogLevel? Verbosity { get; set; } = null;
-                public static bool IsEnabled { get; set; } = true;
+                public static bool IsEnabled { get; set; } = false;
             }
         }
 
