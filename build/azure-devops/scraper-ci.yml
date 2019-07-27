@@ -12,6 +12,7 @@ pr:
     - src/*
     - .azure-devops/scraper-ci.yml
     - charts/promitor-agent-scraper/*
+    - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
 variables:
   DotNet.SDK.Version: '2.2.401'
   DotNet.Configuration: 'release'
