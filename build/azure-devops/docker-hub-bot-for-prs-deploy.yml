@@ -38,3 +38,4 @@ stages:
          location: 'West Europe'
          csmFile: 'deploy/automation/docker-hub/ci/azuredeploy.json'
          csmParametersFile: 'deploy/automation/docker-hub/ci/azuredeploy.parameters.json'
+         deploymentName: 'Release-$(Build.BuildNumber)-Bots-Docker-Hub'
