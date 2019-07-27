@@ -5,30 +5,38 @@ title: Runtime Configuration
 
 Here is an overview of how you can configure Promitor runtime.
 
-Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`
+Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
+
+_Note: Still using Promitor v0.x? [Use environment variables](#runtime-configuration-in-v0x) to configure the runtime._
+
+# Defining runtime configuration via YAML
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 ```yaml
 server:
-  httpPort: 88 # Optional. Default: 80
+  httpPort: 80 # Optional. Default: 80
 prometheus:
   scrapeEndpoint:
-    baseUriPath: /scrape # Optional. Default: /metrics
+    baseUriPath: /metrics # Optional. Default: /metrics
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml # Optional. Default: /config/metrics-declaration.yaml
 telemetry:
   applicationInsights:
     instrumentationKey: ABC # Optional. Note: Required to be specified when turned on
-    isEnabled: true # Optional. Default: false
+    isEnabled: false # Optional. Default: false
     verbosity: trace # Optional. Default: N/A
   containerLogs:
     isEnabled: true # Optional. Default: true
     verbosity: trace # Optional. Default: N/A
-  defaultVerbosity: warning
+  defaultVerbosity: error # Optional. Default: error
 featureFlags:
   disableMetricTimestamps: true # Optional. Default: false
 ```
 
-# Legacy (v0.x)
+# Runtime configuration in v0.x
+
+Promitor v0.x requires you to configure the runtime via environment variables.
+
 ## Runtime
 The Promitor runtime is flexible and allows you to configure it to meet your needs:
 - **PROMITOR_HTTP_PORT** - Defines the port to serve HTTP traffic _(default 80)_
