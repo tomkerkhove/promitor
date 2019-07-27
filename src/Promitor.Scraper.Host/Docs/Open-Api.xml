@@ -4,11 +4,17 @@
         <name>Promitor.Scraper.Host</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.Get">
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.GetMetricDeclaration">
             <summary>
                 Get Metrics Declaration
             </summary>
             <remarks>Provides a list of all configured metrics to scrape</remarks>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.GetRuntime">
+            <summary>
+                Get Runtime Configuration
+            </summary>
+            <remarks>Provides the runtime configuration</remarks>
         </member>
         <member name="M:Promitor.Scraper.Host.Controllers.v1.HealthController.Get">
             <summary>
