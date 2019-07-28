@@ -27,14 +27,18 @@ namespace Promitor.Core.Telemetry
 
         private TelemetryClient ConfigureTelemetryClient(IOptionsMonitor<ApplicationInsightsConfiguration> configuration)
         {
-            var telemetryConfiguration = new TelemetryConfiguration
-            {
-                DisableTelemetry = !configuration.CurrentValue.IsEnabled
-            };
+            var telemetryConfiguration = new TelemetryConfiguration();
 
-            var instrumentationKey = configuration.CurrentValue.InstrumentationKey;
-            if (string.IsNullOrWhiteSpace(instrumentationKey) == false)
+            if (configuration.CurrentValue.IsEnabled == true)
             {
+                telemetryConfiguration.DisableTelemetry = false;
+
+                var instrumentationKey = configuration.CurrentValue.InstrumentationKey;
+                if (string.IsNullOrWhiteSpace(instrumentationKey))
+                {
+                    throw new Exception("Application Insights instrumentation key is required when it is enabled.");
+                }
+
                 telemetryConfiguration.InstrumentationKey = instrumentationKey;
             }
 
