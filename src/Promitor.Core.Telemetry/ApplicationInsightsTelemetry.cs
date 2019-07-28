@@ -29,7 +29,7 @@ namespace Promitor.Core.Telemetry
         {
             var telemetryConfiguration = new TelemetryConfiguration();
 
-            if (configuration.CurrentValue.IsEnabled == true)
+            if (configuration.CurrentValue.IsEnabled)
             {
                 telemetryConfiguration.DisableTelemetry = false;
 
