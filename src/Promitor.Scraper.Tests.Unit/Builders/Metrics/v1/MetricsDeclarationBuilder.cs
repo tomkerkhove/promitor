@@ -4,10 +4,11 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization.Core;
+using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Integrations.AzureStorage;
 
-namespace Promitor.Scraper.Tests.Unit.Builders
+namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 {
     public class MetricsDeclarationBuilder
     {
@@ -51,6 +52,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders
         {
             var metricsDeclaration = new MetricsDeclaration
             {
+                Version = SpecVersion.v1.ToString(),
                 AzureMetadata = _azureMetadata,
                 MetricDefaults = _metricDefaults,
                 Metrics = _metrics

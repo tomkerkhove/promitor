@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     internal abstract class MetricDeserializer
     {

@@ -2,7 +2,7 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
     internal class CosmosDbMetricDeserializer : GenericAzureMetricDeserializer
     {

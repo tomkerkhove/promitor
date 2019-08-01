@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     internal class ScrapingDeserializer : Deserializer<Model.Scraping>
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Promitor.Core.Scraping.Configuration.Serialization.Deserializers;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
 
 namespace Promitor.Core.Scraping.Factories
 {
