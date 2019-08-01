@@ -4,7 +4,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     internal abstract class Deserializer<TObject>
     {

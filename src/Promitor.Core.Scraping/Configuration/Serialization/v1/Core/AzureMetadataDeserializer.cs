@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     internal class AzureMetadataDeserializer : Deserializer<AzureMetadata>
     {

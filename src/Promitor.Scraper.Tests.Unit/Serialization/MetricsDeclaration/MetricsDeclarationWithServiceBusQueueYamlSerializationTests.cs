@@ -5,7 +5,8 @@ using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization.Core;
+using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Xunit;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
@@ -25,6 +26,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
+                Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
                 Metrics = new List<MetricDefinition>

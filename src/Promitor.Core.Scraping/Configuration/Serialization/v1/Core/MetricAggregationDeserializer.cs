@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     internal class MetricAggregationDeserializer : Deserializer<MetricAggregation>
     {
@@ -28,7 +28,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             if (node.Children.ContainsKey(_typeNode.Value))
             {
                 var rawTypeNode = node.Children[_typeNode];
-                if (Enum.TryParse(rawTypeNode?.ToString(), out AggregationType aggregationType))
+                if (System.Enum.TryParse(rawTypeNode?.ToString(), out AggregationType aggregationType))
                 {
                     aggregation.Type = aggregationType;
                 }

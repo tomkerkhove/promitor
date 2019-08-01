@@ -10,6 +10,7 @@ metadata:
     heritage: {{ .Release.Service }}
 data:
   metrics-declaration.yaml: |-
+    version: v1
     azureMetadata:
       tenantId: {{ .Values.azureMetadata.tenantId }}
       subscriptionId: {{ .Values.azureMetadata.subscriptionId }}

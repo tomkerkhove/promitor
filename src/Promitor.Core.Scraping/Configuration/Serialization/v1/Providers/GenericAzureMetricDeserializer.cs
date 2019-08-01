@@ -1,9 +1,9 @@
 ﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Deserializers
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
     internal class GenericAzureMetricDeserializer : MetricDeserializer
     {
