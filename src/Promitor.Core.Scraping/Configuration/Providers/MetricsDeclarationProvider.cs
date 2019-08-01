@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Core.Scraping.Configuration.Serialization.Core;
+using Promitor.Core.Scraping.Configuration.Serialization;
 
 namespace Promitor.Core.Scraping.Configuration.Providers
 {

@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
-namespace Promitor.Core.Scraping.Configuration.Serialization.Core
+namespace Promitor.Core.Scraping.Configuration.Serialization
 {
     public class ConfigurationSerializer
     {
         private readonly ILogger _logger;
+
         public ConfigurationSerializer(ILogger logger)
         {
             _logger = logger;
@@ -45,38 +45,34 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.Core
             var document = metricsDeclarationYamlStream.Documents.First();
             var rootNode = (YamlMappingNode)document.RootNode;
 
-            AzureMetadata azureMetadata = null;
-            if (rootNode.Children.ContainsKey("azureMetadata"))
+            var specVersion = DetermineDeclarationSpecVersion(rootNode);
+            _logger.LogInformation("Metrics declaration is using spec version {SpecVersion}", specVersion);
+
+            switch (specVersion)
             {
-                var azureMetadataNode = (YamlMappingNode)rootNode.Children[new YamlScalarNode("azureMetadata")];
-                var azureMetadataSerializer = new AzureMetadataDeserializer(_logger);
-                azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
+                case SpecVersion.v1:
+                    var v1Serializer = new v1.Core.ConfigurationSerializer(_logger);
+                    return v1Serializer.InterpretYamlStream(rootNode);
+                default:
+                    throw new Exception($"Unable to interpret YAML stream for spec version '{specVersion}'");
+            }
+        }
+
+        private SpecVersion DetermineDeclarationSpecVersion(YamlMappingNode mappingNode)
+        {
+            if (mappingNode.Children.ContainsKey("version") == false)
+            {
+                throw new Exception("No version was specified in the metric declaration");
             }
 
-            MetricDefaults metricDefaults = null;
-            if (rootNode.Children.ContainsKey("metricDefaults"))
+            var rawSpecVersion = mappingNode.Children[new YamlScalarNode("version")]?.ToString();
+
+            if (System.Enum.TryParse(typeof(SpecVersion), rawSpecVersion, true, out var specVersion) == false)
             {
-                var metricDefaultsNode = (YamlMappingNode)rootNode.Children[new YamlScalarNode("metricDefaults")];
-                var metricDefaultsSerializer = new MetricDefaultsDeserializer(_logger);
-                metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
+                throw new Exception($"Unable to determine version '{rawSpecVersion}' that was specified in the metric declaration");
             }
 
-            List<MetricDefinition> metrics = null;
-            if (rootNode.Children.ContainsKey("metrics"))
-            {
-                var metricsNode = (YamlSequenceNode)rootNode.Children[new YamlScalarNode("metrics")];
-                var metricsDeserializer = new MetricsDeserializer(_logger);
-                metrics = metricsDeserializer.Deserialize(metricsNode);
-            }
-
-            var metricsDeclaration = new MetricsDeclaration
-            {
-                AzureMetadata = azureMetadata,
-                MetricDefaults = metricDefaults,
-                Metrics = metrics
-            };
-
-            return metricsDeclaration;
+            return (SpecVersion)specVersion;
         }
 
         public string Serialize(MetricsDeclaration metricsDeclaration)

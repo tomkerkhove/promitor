@@ -8,6 +8,10 @@ This configuration defines the Azure metadata and all the metrics.
 
 # General Declaration
 
+As Promitor evolves we need to change the structure of our metrics declaration.
+
+`version: {version}` - **[REQUIRED]** Version of declaration that is used. Allowed values are `v1`.
+
 ## Azure
 
 - `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
@@ -40,6 +44,7 @@ Additionally, the following fields are optional:
 Here is an example of how you can scrape two Azure Service Bus queues in different resource groups, one in the `promitor` resource group and one on the `promitor-dev` resource group:
 
 ```yaml
+version: v1
 azureMetadata:
   tenantId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   subscriptionId: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
