@@ -14,7 +14,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(azureMetricName: string.Empty)
+                .WithServiceBusQueueMetric(azureMetricName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -31,7 +31,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(metricDescription: string.Empty)
+                .WithServiceBusQueueMetric(metricDescription: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -50,7 +50,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(string.Empty)
+                .WithServiceBusQueueMetric(string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -67,7 +67,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(queueName: string.Empty)
+                .WithServiceBusQueueMetric(queueName: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -84,7 +84,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(serviceBusNamespace: string.Empty)
+                .WithServiceBusQueueMetric(serviceBusNamespace: string.Empty)
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
 
@@ -101,7 +101,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric()
+                .WithServiceBusQueueMetric()
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 

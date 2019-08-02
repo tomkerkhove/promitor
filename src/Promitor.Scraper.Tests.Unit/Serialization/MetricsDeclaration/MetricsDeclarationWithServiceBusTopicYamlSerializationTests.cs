@@ -13,7 +13,7 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 {
     [Category("Unit")]
-    public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests<ServiceBusQueueMetricDefinition>
+    public class MetricsDeclarationWithServiceBusTopicYamlSerializationTests : YamlSerializationTests<ServiceBusTopicMetricDefinition>
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var serviceBusMetricDefinition = GenerateBogusServiceBusQueueMetricDefinition(resourceGroupName, metricScrapingInterval);
+            var serviceBusMetricDefinition = GenerateBogusServiceBusTopicMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
             var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
             {
@@ -48,29 +48,31 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
+            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusTopicMetricDefinition;
             AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition)
+        private static void AssertServiceBusQueueMetricDefinition(ServiceBusTopicMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusTopicMetricDefinition serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
+            Assert.Equal(serviceBusMetricDefinition.TopicName, deserializedServiceBusMetricDefinition.TopicName);
+            Assert.Equal(serviceBusMetricDefinition.SubscriptionName, deserializedServiceBusMetricDefinition.SubscriptionName);
         }
 
-        private ServiceBusQueueMetricDefinition GenerateBogusServiceBusQueueMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private ServiceBusTopicMetricDefinition GenerateBogusServiceBusTopicMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<ServiceBusQueueMetricDefinition>()
+            var bogusGenerator = new Faker<ServiceBusTopicMetricDefinition>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ServiceBusQueue)
                 .RuleFor(metricDefinition => metricDefinition.Namespace, faker => faker.Name.LastName())
-                .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
+                .RuleFor(metricDefinition => metricDefinition.TopicName, faker => faker.Name.FirstName())
+                .RuleFor(metricDefinition => metricDefinition.SubscriptionName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
                 .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)

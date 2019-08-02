@@ -6,24 +6,25 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class ServiceBusQueueScraper : ServiceBusScraper<ServiceBusQueueMetricDefinition>
+    public class ServiceBusTopicScraper : ServiceBusScraper<ServiceBusTopicMetricDefinition>
     {
-        public ServiceBusQueueScraper(ScraperConfiguration scraperConfiguration)
+        public ServiceBusTopicScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ServiceBusQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ServiceBusTopicMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = GetResourceUri(subscriptionId, resourceGroupName, metricDefinition.Namespace);
 
-            var filter = $"EntityName eq '{metricDefinition.QueueName}'";
+            var filter = $"EntityName eq '{metricDefinition.TopicName}'";
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, filter);
 
             var labels = new Dictionary<string, string>
             {
-                {"entity_name", metricDefinition.QueueName}
+                {"entity_name", metricDefinition.TopicName},
+                {"subscription_name", metricDefinition.SubscriptionName}
             };
 
             return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.Namespace, resourceUri, foundMetricValue, labels);

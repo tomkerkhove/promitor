@@ -98,6 +98,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Database for PostgreSQL](postgresql)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
+- [Azure Service Bus Topic](service-bus-topic)
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
 

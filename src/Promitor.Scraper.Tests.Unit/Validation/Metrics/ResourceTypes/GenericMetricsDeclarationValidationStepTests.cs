@@ -116,7 +116,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric()
+                .WithServiceBusQueueMetric()
                 .Build();
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
 

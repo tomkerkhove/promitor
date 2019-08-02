@@ -29,6 +29,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new RedisCacheMetricDeserializer();
                 case Configuration.Model.ResourceType.PostgreSql:
                     return new PostgreSqlMetricDeserializer();
+                case Configuration.Model.ResourceType.ServiceBusTopic:
+                    return new ServiceBusTopicMetricDeserializer();
             }
 
             throw new ArgumentOutOfRangeException($@"Resource Type {resource} not supported.");

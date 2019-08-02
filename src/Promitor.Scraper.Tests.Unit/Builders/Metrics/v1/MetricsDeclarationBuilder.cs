@@ -62,7 +62,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
-        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithServiceBusQueueMetric(string metricName = "promitor-service-bus-queue", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var metric = new ServiceBusQueueMetricDefinition
@@ -70,6 +70,23 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 QueueName = queueName,
+                Namespace = serviceBusNamespace,
+                AzureMetricConfiguration = azureMetricConfiguration
+            };
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithServiceBusTopicMetric(string metricName = "promitor-service-bus-topic", string metricDescription = "Description for a metric", string topicName = "promitor-topic", string subscriptionName = "promitor-topic-subscription", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var metric = new ServiceBusTopicMetricDefinition()
+            {
+                Name = metricName,
+                Description = metricDescription,
+                TopicName = topicName,
+                SubscriptionName = subscriptionName,
                 Namespace = serviceBusNamespace,
                 AzureMetricConfiguration = azureMetricConfiguration
             };

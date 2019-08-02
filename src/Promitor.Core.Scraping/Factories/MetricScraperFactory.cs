@@ -67,6 +67,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlScraper(scraperConfiguration);
+                case ResourceType.ServiceBusTopic:
+                    return new ServiceBusTopicScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
