@@ -167,7 +167,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             // Arrange
             var metricsDeclarationBasePath = _faker.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithMetricsConfiguration(metricsDeclarationBasePath)
+                .WithMetricsConfiguration(absolutePath: metricsDeclarationBasePath)
                 .GenerateAsync();
 
             // Act
@@ -178,6 +178,25 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Prometheus);
             Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.Equal(metricsDeclarationBasePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredMetricUnavailableValue_UsesConfigured()
+        {
+            // Arrange
+            var metricUnavailableValue = _faker.Random.Double(min: 1);
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithMetricsConfiguration(metricUnavailableValue: metricUnavailableValue)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.Equal(metricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
         }
 
         [Fact]
@@ -293,7 +312,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithMetricsConfiguration(null)
+                .WithMetricsConfiguration(absolutePath: null)
                 .GenerateAsync();
 
             // Act
@@ -301,9 +320,45 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.Prometheus);
-            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
+            Assert.NotEqual(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
             Assert.Equal(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoMetricUnavailableValuePathConfigured_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithMetricsConfiguration(metricUnavailableValue: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
+            Assert.NotEqual(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+            Assert.Equal(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoMetricConfigurationConfigured_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithMetricsConfiguration(metricUnavailableValue: null, absolutePath:null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
+            Assert.Equal(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+            Assert.Equal(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
         }
 
         [Fact]

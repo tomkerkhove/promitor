@@ -63,14 +63,28 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithMetricsConfiguration(string absolutePath = "/metrics-declaration.yaml")
+        public RuntimeConfigurationGenerator WithMetricsConfiguration(double? metricUnavailableValue = -1, string absolutePath = "/metrics-declaration.yaml")
         {
-            var metricsConfiguration = absolutePath == null
-                ? null
-                : new MetricsConfiguration
+            MetricsConfiguration metricsConfiguration;
+            if (absolutePath == null && metricUnavailableValue == null)
+            {
+                metricsConfiguration = null;
+            }
+            else
+            {
+                metricsConfiguration = new MetricsConfiguration();
+
+                if (absolutePath != null)
                 {
-                    AbsolutePath = absolutePath
-                };
+                    metricsConfiguration.AbsolutePath = absolutePath;
+                }
+
+                if (metricUnavailableValue != null)
+                {
+                    metricsConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
+                }
+
+            }
 
             _runtimeConfiguration.MetricsConfiguration = metricsConfiguration;
 
@@ -169,7 +183,15 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             if (_runtimeConfiguration?.MetricsConfiguration != null)
             {
                 configurationBuilder.AppendLine("metricsConfiguration:");
-                configurationBuilder.AppendLine($"  absolutePath: {_runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
+                if (_runtimeConfiguration?.MetricsConfiguration.AbsolutePath != null)
+                {
+                    configurationBuilder.AppendLine($"  absolutePath: {_runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
+                }
+
+                if (_runtimeConfiguration?.MetricsConfiguration.MetricUnavailableValue != null)
+                {
+                    configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.MetricsConfiguration.MetricUnavailableValue}");
+                }
             }
 
             if (_runtimeConfiguration?.Telemetry != null)

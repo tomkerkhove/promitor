@@ -1,4 +1,6 @@
-﻿using Bogus;
+﻿using System;
+using Bogus;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.FeatureFlags;
@@ -25,6 +27,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             var metricsConfiguration = new Faker<MetricsConfiguration>()
                 .StrictMode(true)
                 .RuleFor(metricConfiguration => metricConfiguration.AbsolutePath, faker => faker.System.DirectoryPath())
+                .RuleFor(metricConfiguration => metricConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
                 .Generate();
             var scrapeEndpointConfiguration = new Faker<ScrapeEndpointConfiguration>()
                 .StrictMode(true)
