@@ -100,7 +100,13 @@ namespace Promitor.Core.Scraping
             var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
 
             var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
-            gauge.WithLabels(labels.Values).Set(scrapedMetricResult.MetricValue);
+            var metricValue = DetermineMetricMeasurement(scrapedMetricResult);
+            gauge.WithLabels(labels.Values).Set(metricValue);
+        }
+
+        private static double DetermineMetricMeasurement(ScrapeResult scrapedMetricResult)
+        {
+            return scrapedMetricResult.MetricValue ?? double.NaN;
         }
 
         private void HandleErrorResponseException(ErrorResponseException errorResponseException)
@@ -116,7 +122,7 @@ namespace Promitor.Core.Scraping
             {
                 try
                 {
-                    var definition = new {error = new {code = "", message = ""}};
+                    var definition = new { error = new { code = "", message = "" } };
                     var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
 
                     if (jsonError != null && jsonError.error != null)
