@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using YamlDotNet.Serialization;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
 {
-    public abstract class MetricDefinition
+    public abstract class MetricDefinitionBuilder
     {
         /// <summary>
         ///     Configuration about the Azure Monitor metric to scrape
         /// </summary>
-        public AzureMetricConfiguration AzureMetricConfiguration { get; set; }
+        [YamlMember(Alias = "azureMetricConfiguration")]
+        public AzureMetricConfigurationBuilder AzureMetricConfigurationBuilder { get; set; } = new AzureMetricConfigurationBuilder();
 
         /// <summary>
         ///     Description concerning metric that will be made available in the scraping endpoint
@@ -38,6 +42,20 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
         /// <summary>
         /// Gets or sets the scraping model.
         /// </summary>
-        public Scraping Scraping { get; set; } = new Scraping();
+        [YamlMember(Alias = "scraping")]
+        public ScrapingBuilder ScrapingBuilder { get; set; } = new ScrapingBuilder();
+
+        public abstract MetricDefinition Build();
+        
+        /// <summary>
+        /// Provided as a convenience to cast the result of <see cref="Build"/>
+        /// to the correct type.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="MetricDefinition"/> to be returned.</typeparam>
+        /// <returns>The definition.</returns>
+        public T Build<T>() where T: MetricDefinition
+        {
+            return Build() as T;
+        }
     }
 }

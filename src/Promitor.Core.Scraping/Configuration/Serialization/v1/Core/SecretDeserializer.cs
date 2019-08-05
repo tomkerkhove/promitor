@@ -1,18 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class SecretDeserializer : Deserializer<Secret>
+    internal class SecretDeserializer : Deserializer<SecretBuilder>
     {
         internal SecretDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override Secret Deserialize(YamlMappingNode node)
+        internal override SecretBuilder Deserialize(YamlMappingNode node)
         {
-            var secret = new Secret();
+            var secret = new SecretBuilder();
 
             if (node.Children.ContainsKey("rawValue"))
             {

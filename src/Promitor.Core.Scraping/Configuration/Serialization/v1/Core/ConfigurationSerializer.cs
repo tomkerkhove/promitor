@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.Interfaces;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
@@ -18,7 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public MetricsDeclaration InterpretYamlStream(YamlMappingNode rootNode)
         {
-            AzureMetadata azureMetadata = null;
+            AzureMetadataBuilder azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
                 var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
@@ -26,7 +27,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
             }
 
-            MetricDefaults metricDefaults = null;
+            MetricDefaultsBuilder metricDefaults = null;
             if (rootNode.Children.ContainsKey("metricDefaults"))
             {
                 var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
@@ -34,7 +35,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
-            List<MetricDefinition> metrics = null;
+            List<MetricDefinitionBuilder> metrics = null;
             if (rootNode.Children.ContainsKey("metrics"))
             {
                 var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
@@ -42,14 +43,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
 
-            var metricsDeclaration = new MetricsDeclaration
+            var metricsDeclaration = new MetricsDeclarationBuilder
             {
-                AzureMetadata = azureMetadata,
-                MetricDefaults = metricDefaults,
+                AzureMetadataBuilder = azureMetadata,
+                MetricDefaultsBuilder = metricDefaults,
                 Metrics = metrics
             };
 
-            return metricsDeclaration;
+            return metricsDeclaration.Build();
         }
     }
 }

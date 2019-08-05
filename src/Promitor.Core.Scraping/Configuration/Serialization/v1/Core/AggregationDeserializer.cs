@@ -1,19 +1,19 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AggregationDeserializer : Deserializer<Aggregation>
+    internal class AggregationDeserializer : Deserializer<AggregationBuilder>
     {
         internal AggregationDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override Aggregation Deserialize(YamlMappingNode node)
+        internal override AggregationBuilder Deserialize(YamlMappingNode node)
         {
-            var aggregation = new Aggregation();
+            var aggregation = new AggregationBuilder();
 
             var interval = TimeSpan.FromMinutes(5);
             if (node.Children.ContainsKey("interval"))

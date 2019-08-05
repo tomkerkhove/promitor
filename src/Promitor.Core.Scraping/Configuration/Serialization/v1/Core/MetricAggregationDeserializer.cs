@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class MetricAggregationDeserializer : Deserializer<MetricAggregation>
+    internal class MetricAggregationDeserializer : Deserializer<MetricAggregationBuilder>
     {
         private readonly YamlScalarNode _typeNode = new YamlScalarNode("type");
         private readonly YamlScalarNode _intervalNode = new YamlScalarNode("interval");
@@ -15,9 +15,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override MetricAggregation Deserialize(YamlMappingNode node)
+        internal override MetricAggregationBuilder Deserialize(YamlMappingNode node)
         {
-            var aggregation = new MetricAggregation();
+            var aggregation = new MetricAggregationBuilder();
 
             if (node.Children.ContainsKey(_intervalNode.Value))
             {
