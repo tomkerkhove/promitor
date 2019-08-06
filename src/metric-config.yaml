@@ -50,7 +50,7 @@ metrics:
     accountName: promitor
     queueName: orders
     sasToken:
-      rawValue: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwdlacup&se=2019-07-28T02:33:14Z&st=2019-03-24T18:33:14Z&spr=https&sig=OiwNEYueCWlOhveapM1K6cRgV%2Be21gNhoq%2FDZqJEMZE%3D"
+      rawValue: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwla&se=2022-08-07T00:16:01Z&st=2019-08-06T16:16:01Z&spr=https&sig=Ik4jprS89kGIFRM0qaQpXrv0ttP3pnlhmGQuYVQ7cbA%3D"
     scraping:
       # Every 2 minutes
       schedule: "0 */2 * ? * *"
