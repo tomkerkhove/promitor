@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertNetworkInterfaceMetricDefinition(MetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinitionV1 networkInterfaceMetricDefinition)
         {
-            var deserializedResource = deserializedNetworkInterfaceMetricDefinition.Resources.Single() as NetworkInterfaceMetricDefinition;
+            var deserializedResource = deserializedNetworkInterfaceMetricDefinition.Resources.Single() as NetworkInterfaceResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedResource.NetworkInterfaceName);

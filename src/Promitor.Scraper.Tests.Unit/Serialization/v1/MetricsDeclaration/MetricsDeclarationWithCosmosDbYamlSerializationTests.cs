@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertCosmosDbMetricDefinition(MetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinitionV1 cosmosDbMetricDefinition)
         {
-            var deserializedResource = deserializedCosmosDbMetricDefinition.Resources.Single() as CosmosDbMetricDefinition;
+            var deserializedResource = deserializedCosmosDbMetricDefinition.Resources.Single() as CosmosDbResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedResource.DbName);

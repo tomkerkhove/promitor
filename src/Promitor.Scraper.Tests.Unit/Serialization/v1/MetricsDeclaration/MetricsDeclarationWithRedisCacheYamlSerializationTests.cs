@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertRedisCacheMetricDefinition(MetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinitionV1 redisCacheMetricDefinition)
         {
-            var deserializedResource = deserializedRedisCacheMetricDefinition.Resources.Single() as RedisCacheMetricDefinition;
+            var deserializedResource = deserializedRedisCacheMetricDefinition.Resources.Single() as RedisCacheResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedResource.CacheName);

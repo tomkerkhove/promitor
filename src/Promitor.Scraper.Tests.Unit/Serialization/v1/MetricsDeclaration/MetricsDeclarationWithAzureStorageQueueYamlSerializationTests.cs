@@ -55,7 +55,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertAzureStorageQueueMetricDefinition(MetricDefinition deserializedStorageQueueMetricDefinition, StorageQueueMetricDefinitionV1 storageQueueMetricDefinition)
         {
-            var deserializedResource = deserializedStorageQueueMetricDefinition.Resources.Single() as StorageQueueMetricDefinition;
+            var deserializedResource = deserializedStorageQueueMetricDefinition.Resources.Single() as StorageQueueResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(storageQueueMetricDefinition.AccountName, deserializedResource.AccountName);

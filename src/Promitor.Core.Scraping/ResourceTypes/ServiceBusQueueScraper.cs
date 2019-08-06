@@ -7,7 +7,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class ServiceBusQueueScraper : Scraper<ServiceBusQueueMetricDefinition>
+    public class ServiceBusQueueScraper : Scraper<ServiceBusQueueResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ServiceBus/namespaces/{2}";
 
@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueMetricDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.Namespace);
 

@@ -1,12 +1,12 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class ContainerRegistryMetricDefinition : AzureResourceDefinition
+    public class ContainerRegistryResourceDefinition : AzureResourceDefinition
     {
-        public ContainerRegistryMetricDefinition() : base(ResourceType.ContainerRegistry)
+        public ContainerRegistryResourceDefinition() : base(ResourceType.ContainerRegistry)
         {
         }
 
-        public ContainerRegistryMetricDefinition(string resourceGroupName, string registryName)
+        public ContainerRegistryResourceDefinition(string resourceGroupName, string registryName)
             : base(ResourceType.ContainerRegistry, resourceGroupName)
         {
             RegistryName = registryName;

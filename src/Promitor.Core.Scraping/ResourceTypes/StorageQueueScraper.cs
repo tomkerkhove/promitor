@@ -9,7 +9,7 @@ using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class StorageQueueScraper : Scraper<StorageQueueMetricDefinition>
+    public class StorageQueueScraper : Scraper<StorageQueueResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/queueServices";
         private readonly AzureStorageQueueClient _azureStorageQueueClient;
@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(scraperConfiguration.Logger);
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueMetricDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));

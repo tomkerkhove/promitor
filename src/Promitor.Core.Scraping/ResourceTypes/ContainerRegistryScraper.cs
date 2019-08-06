@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class ContainerRegistryScraper : Scraper<ContainerRegistryMetricDefinition>
+    public class ContainerRegistryScraper : Scraper<ContainerRegistryResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ContainerRegistry/registries/{2}";
 
@@ -15,7 +15,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ContainerRegistryMetricDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ContainerRegistryResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.RegistryName);
 

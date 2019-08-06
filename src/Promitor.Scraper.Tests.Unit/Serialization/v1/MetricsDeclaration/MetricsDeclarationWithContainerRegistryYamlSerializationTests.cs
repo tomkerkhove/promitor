@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertContainerRegistryMetricDefinition(MetricDefinition deserializedContainerRegistryMetricDefinition, ContainerRegistryMetricDefinitionV1 containerRegistryMetricDefinition)
         {
-            var deserializedResource = deserializedContainerRegistryMetricDefinition.Resources.Single() as ContainerRegistryMetricDefinition;
+            var deserializedResource = deserializedContainerRegistryMetricDefinition.Resources.Single() as ContainerRegistryResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(containerRegistryMetricDefinition.RegistryName, deserializedResource.RegistryName);

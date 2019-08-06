@@ -15,7 +15,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 
             var errorMessages = new List<string>();
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<NetworkInterfaceMetricDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<NetworkInterfaceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.NetworkInterfaceName))
                 {

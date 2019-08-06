@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertVirtualMachineMetricDefinition(MetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinitionV1 virtualMachineMetricDefinition)
         {
-            var deserializedResource = deserializedVirtualMachineMetricDefinition.Resources.Single() as VirtualMachineMetricDefinition;
+            var deserializedResource = deserializedVirtualMachineMetricDefinition.Resources.Single() as VirtualMachineResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedResource.VirtualMachineName);

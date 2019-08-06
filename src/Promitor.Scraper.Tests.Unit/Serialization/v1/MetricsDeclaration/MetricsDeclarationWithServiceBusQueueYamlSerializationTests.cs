@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertServiceBusQueueMetricDefinition(MetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinitionV1 serviceBusMetricDefinition)
         {
-            var deserializedResource = deserializedServiceBusMetricDefinition.Resources.Single() as ServiceBusQueueMetricDefinition;
+            var deserializedResource = deserializedServiceBusMetricDefinition.Resources.Single() as ServiceBusQueueResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedResource.Namespace);

@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
         private static void AssertPostgreSqlMetricDefinition(MetricDefinition deserializedPostgreSqlMetricDefinition, PostgreSqlMetricDefinitionV1 postgreSqlMetricDefinition)
         {
-            var deserializedResource = deserializedPostgreSqlMetricDefinition.Resources.Single() as PostgreSqlMetricDefinition;
+            var deserializedResource = deserializedPostgreSqlMetricDefinition.Resources.Single() as PostgreSqlResourceDefinition;
 
             Assert.NotNull(deserializedResource);
             Assert.Equal(postgreSqlMetricDefinition.ServerName, deserializedResource.ServerName);

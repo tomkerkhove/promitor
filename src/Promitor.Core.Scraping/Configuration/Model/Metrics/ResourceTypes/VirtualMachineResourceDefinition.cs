@@ -1,12 +1,12 @@
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class VirtualMachineMetricDefinition : AzureResourceDefinition
+    public class VirtualMachineResourceDefinition : AzureResourceDefinition
     {
-        public VirtualMachineMetricDefinition() : base(ResourceType.VirtualMachine)
+        public VirtualMachineResourceDefinition() : base(ResourceType.VirtualMachine)
         {
         }
 
-        public VirtualMachineMetricDefinition(string resourceGroupName, string virtualMachineName)
+        public VirtualMachineResourceDefinition(string resourceGroupName, string virtualMachineName)
             : base(ResourceType.VirtualMachine, resourceGroupName)
         {
             VirtualMachineName = virtualMachineName;

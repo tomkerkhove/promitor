@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class CosmosDbScraper : Scraper<CosmosDbMetricDefinition>
+    public class CosmosDbScraper : Scraper<CosmosDbResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DocumentDB/databaseAccounts/{2}";
 
@@ -15,7 +15,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, CosmosDbMetricDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, CosmosDbResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.DbName);
 

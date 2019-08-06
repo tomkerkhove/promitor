@@ -1,12 +1,12 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class GenericAzureMetricDefinition : AzureResourceDefinition
+    public class GenericAzureResourceDefinition : AzureResourceDefinition
     {
-        public GenericAzureMetricDefinition() : base(ResourceType.Generic)
+        public GenericAzureResourceDefinition() : base(ResourceType.Generic)
         {
         }
 
-        public GenericAzureMetricDefinition(string resourceGroupName, string filter, string resourceUri)
+        public GenericAzureResourceDefinition(string resourceGroupName, string filter, string resourceUri)
             : base(ResourceType.Generic, resourceGroupName)
         {
             Filter = filter;

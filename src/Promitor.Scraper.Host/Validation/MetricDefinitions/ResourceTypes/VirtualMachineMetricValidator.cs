@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<VirtualMachineMetricDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<VirtualMachineResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.VirtualMachineName))
                 {

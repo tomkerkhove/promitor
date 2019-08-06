@@ -1,12 +1,12 @@
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class NetworkInterfaceMetricDefinition : AzureResourceDefinition
+    public class NetworkInterfaceResourceDefinition : AzureResourceDefinition
     {
-        public NetworkInterfaceMetricDefinition() : base(ResourceType.NetworkInterface)
+        public NetworkInterfaceResourceDefinition() : base(ResourceType.NetworkInterface)
         {
         }
 
-        public NetworkInterfaceMetricDefinition(string resourceGroupName, string networkInterfaceName)
+        public NetworkInterfaceResourceDefinition(string resourceGroupName, string networkInterfaceName)
             : base(ResourceType.NetworkInterface, resourceGroupName)
         {
             NetworkInterfaceName = networkInterfaceName;

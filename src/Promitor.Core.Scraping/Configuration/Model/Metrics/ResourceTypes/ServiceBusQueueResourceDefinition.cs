@@ -1,12 +1,12 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class ServiceBusQueueMetricDefinition : AzureResourceDefinition
+    public class ServiceBusQueueResourceDefinition : AzureResourceDefinition
     {
-        public ServiceBusQueueMetricDefinition() : base(ResourceType.ServiceBusQueue)
+        public ServiceBusQueueResourceDefinition() : base(ResourceType.ServiceBusQueue)
         {
         }
 
-        public ServiceBusQueueMetricDefinition(string resourceGroupName, string ns, string queueName)
+        public ServiceBusQueueResourceDefinition(string resourceGroupName, string ns, string queueName)
             : base(ResourceType.ServiceBusQueue, resourceGroupName)
         {
             Namespace = ns;

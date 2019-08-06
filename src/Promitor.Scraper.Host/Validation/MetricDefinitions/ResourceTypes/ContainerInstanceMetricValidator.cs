@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var definition in metricDefinition.Resources.Cast<ContainerInstanceMetricDefinition>())
+            foreach (var definition in metricDefinition.Resources.Cast<ContainerInstanceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(definition.ContainerGroup))
                 {

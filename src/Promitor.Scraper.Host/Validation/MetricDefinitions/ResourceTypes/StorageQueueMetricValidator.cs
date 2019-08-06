@@ -21,7 +21,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<StorageQueueMetricDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<StorageQueueResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.AccountName))
                 {

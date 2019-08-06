@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<RedisCacheMetricDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<RedisCacheResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.CacheName))
                 {
