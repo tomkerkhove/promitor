@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
@@ -32,7 +33,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<StorageQueueMetricDefinitionV1, StorageQueueMetricDefinition>();
             CreateMap<VirtualMachineMetricDefinitionV1, VirtualMachineMetricDefinition>();
 
+            CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
+            
+            // MetricDefinitionV1 gets expanded into several properties on MetricDefinition
             CreateMap<MetricDefinitionV1, MetricDefinition>()
+                .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1))
+                .ForMember(m => m.ResourceType, o => o.MapFrom(v1 => v1.ResourceType))
+                .ForMember(m => m.Resources, o => o.MapFrom(v1 => new List<MetricDefinitionV1> {v1}));
+            
+            CreateMap<MetricDefinitionV1, AzureResourceDefinition>()
                 .Include<ContainerInstanceMetricDefinitionV1, ContainerInstanceMetricDefinition>()
                 .Include<ContainerRegistryMetricDefinitionV1, ContainerRegistryMetricDefinition>()
                 .Include<CosmosDbMetricDefinitionV1, CosmosDbMetricDefinition>()
