@@ -1,18 +1,24 @@
 ﻿using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System.Collections.Generic;
+using System.Linq;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class PostgreSqlMetricValidator : MetricValidator<PostgreSqlMetricDefinition>
+    internal class PostgreSqlMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(PostgreSqlMetricDefinition postgreSqlMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(postgreSqlMetricDefinition, nameof(postgreSqlMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(postgreSqlMetricDefinition.ServerName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<PostgreSqlMetricDefinition>())
             {
-                yield return "No server name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.ServerName))
+                {
+                    yield return "No server name is configured";
+                }
             }
         }
     }

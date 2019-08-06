@@ -44,7 +44,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions
                 errorMessages.Add($"{metric.ResourceType} '{nameof(ResourceType.NotSpecified)}' is not supported");
             }
 
-            if (string.IsNullOrWhiteSpace(metric.Name))
+            if (string.IsNullOrWhiteSpace(metric.PrometheusMetricDefinition.Name))
             {
                 errorMessages.Add("No metric name is configured");
             }

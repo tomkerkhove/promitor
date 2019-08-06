@@ -1,18 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class ContainerInstanceMetricValidator : MetricValidator<ContainerInstanceMetricDefinition>
+    internal class ContainerInstanceMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(ContainerInstanceMetricDefinition containerInstanceMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(containerInstanceMetricDefinition, nameof(containerInstanceMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(containerInstanceMetricDefinition.ContainerGroup))
+            foreach (var definition in metricDefinition.Resources.Cast<ContainerInstanceMetricDefinition>())
             {
-                yield return "No container group is configured";
+                if (string.IsNullOrWhiteSpace(definition.ContainerGroup))
+                {
+                    yield return "No container group is configured";
+                }
             }
         }
     }

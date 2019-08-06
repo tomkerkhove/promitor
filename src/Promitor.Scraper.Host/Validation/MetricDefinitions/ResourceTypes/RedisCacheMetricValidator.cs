@@ -1,18 +1,24 @@
 ﻿using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System.Collections.Generic;
+using System.Linq;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class RedisCacheMetricValidator : MetricValidator<RedisCacheMetricDefinition>
+    internal class RedisCacheMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(RedisCacheMetricDefinition redisCacheMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(redisCacheMetricDefinition, nameof(redisCacheMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(redisCacheMetricDefinition.CacheName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<RedisCacheMetricDefinition>())
             {
-                yield return "No cache name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.CacheName))
+                {
+                    yield return "No cache name is configured";
+                }
             }
         }
     }

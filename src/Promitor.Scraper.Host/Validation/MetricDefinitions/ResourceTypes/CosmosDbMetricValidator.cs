@@ -1,18 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class CosmosDbMetricValidator : MetricValidator<CosmosDbMetricDefinition>
+    internal class CosmosDbMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(CosmosDbMetricDefinition cosmosDbMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(cosmosDbMetricDefinition, nameof(cosmosDbMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(cosmosDbMetricDefinition.DbName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<CosmosDbMetricDefinition>())
             {
-                yield return "No Cosmos DB name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.DbName))
+                {
+                    yield return "No Cosmos DB name is configured";
+                }
             }
         }
     }

@@ -1,18 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class GenericAzureMetricValidator : MetricValidator<GenericAzureMetricDefinition>
+    internal class GenericAzureMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(GenericAzureMetricDefinition genericMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(genericMetricDefinition, nameof(genericMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(genericMetricDefinition.ResourceUri))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<GenericAzureMetricDefinition>())
             {
-                yield return "No resource uri is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.ResourceUri))
+                {
+                    yield return "No resource uri is configured";
+                }
             }
         }
     }

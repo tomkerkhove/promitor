@@ -1,18 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class ContainerRegistryMetricValidator : MetricValidator<ContainerRegistryMetricDefinition>
+    internal class ContainerRegistryMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(ContainerRegistryMetricDefinition containerRegistryMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(containerRegistryMetricDefinition, nameof(containerRegistryMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(containerRegistryMetricDefinition.RegistryName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ContainerRegistryMetricDefinition>())
             {
-                yield return "No registry name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.RegistryName))
+                {
+                    yield return "No registry name is configured";
+                }
             }
         }
     }

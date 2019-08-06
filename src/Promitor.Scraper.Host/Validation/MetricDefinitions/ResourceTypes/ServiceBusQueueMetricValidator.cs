@@ -1,23 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class ServiceBusQueueMetricValidator : MetricValidator<ServiceBusQueueMetricDefinition>
+    internal class ServiceBusQueueMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(ServiceBusQueueMetricDefinition serviceBusQueueMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(serviceBusQueueMetricDefinition, nameof(serviceBusQueueMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.Namespace))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusQueueMetricDefinition>())
             {
-                yield return "No Service Bus Namespace is configured";
-            }
+                if (string.IsNullOrWhiteSpace(resourceDefinition.Namespace))
+                {
+                    yield return "No Service Bus Namespace is configured";
+                }
 
-            if (string.IsNullOrWhiteSpace(serviceBusQueueMetricDefinition.QueueName))
-            {
-                yield return "No queue name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.QueueName))
+                {
+                    yield return "No queue name is configured";
+                }
             }
         }
     }
