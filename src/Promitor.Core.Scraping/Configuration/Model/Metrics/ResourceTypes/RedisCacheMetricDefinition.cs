@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
+﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class RedisCacheMetricDefinition : MetricDefinition
+    public class RedisCacheMetricDefinition : AzureResourceDefinition
     {
-        public RedisCacheMetricDefinition()
+        public RedisCacheMetricDefinition() : base(ResourceType.RedisCache)
         {
         }
 
-        public RedisCacheMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string cacheName, Dictionary<string, string> labels, Scraping scraping)
-            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
+        public RedisCacheMetricDefinition(string resourceGroupName, string cacheName)
+            : base(ResourceType.RedisCache, resourceGroupName)
         {
             CacheName = cacheName;
         }
 
         public string CacheName { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.RedisCache;
     }
 }

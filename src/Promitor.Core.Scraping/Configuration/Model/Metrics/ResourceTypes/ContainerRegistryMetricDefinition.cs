@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
+﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class ContainerRegistryMetricDefinition : MetricDefinition
+    public class ContainerRegistryMetricDefinition : AzureResourceDefinition
     {
-        public ContainerRegistryMetricDefinition()
+        public ContainerRegistryMetricDefinition() : base(ResourceType.ContainerRegistry)
         {
         }
 
-        public ContainerRegistryMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string registryName, Dictionary<string, string> labels, Scraping scraping)
-            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
+        public ContainerRegistryMetricDefinition(string resourceGroupName, string registryName)
+            : base(ResourceType.ContainerRegistry, resourceGroupName)
         {
             RegistryName = registryName;
         }
 
         public string RegistryName { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.ContainerRegistry;
     }
 }

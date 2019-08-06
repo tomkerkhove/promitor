@@ -1,15 +1,13 @@
-using System.Collections.Generic;
-
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class StorageQueueMetricDefinition : MetricDefinition
+    public class StorageQueueMetricDefinition : AzureResourceDefinition
     {
-        public StorageQueueMetricDefinition()
+        public StorageQueueMetricDefinition() : base(ResourceType.StorageQueue)
         {
         }
 
-        public StorageQueueMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string accountName, string queueName, Secret sasToken, Dictionary<string, string> labels, Scraping scraping)
-            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
+        public StorageQueueMetricDefinition(string resourceGroupName, string accountName, string queueName, Secret sasToken)
+            : base(ResourceType.StorageQueue, resourceGroupName)
         {
             AccountName = accountName;
             QueueName = queueName;
@@ -19,6 +17,5 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         public string AccountName { get; set; }
         public string QueueName { get; set; }
         public Secret SasToken { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.StorageQueue;
     }
 }

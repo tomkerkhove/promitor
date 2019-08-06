@@ -1,21 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
+﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class CosmosDbMetricDefinition : MetricDefinition
+    public class CosmosDbMetricDefinition : AzureResourceDefinition
     {
-        public CosmosDbMetricDefinition()
+        public CosmosDbMetricDefinition() : base(ResourceType.CosmosDb)
         {
         }
 
-        public CosmosDbMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string dbName, Dictionary<string, string> labels, Scraping scraping)
-            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
+        public CosmosDbMetricDefinition(string resourceGroupName, string dbName)
+            : base(ResourceType.CosmosDb, resourceGroupName)
         {
             DbName = dbName;
         }
 
         public string DbName { get; set; }
-
-        public override ResourceType ResourceType { get; } = ResourceType.CosmosDb;
     }
 }

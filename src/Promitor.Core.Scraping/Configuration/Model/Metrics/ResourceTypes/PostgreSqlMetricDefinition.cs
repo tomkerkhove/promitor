@@ -1,20 +1,17 @@
-﻿using System.Collections.Generic;
-
-namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
+﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class PostgreSqlMetricDefinition : MetricDefinition
+    public class PostgreSqlMetricDefinition : AzureResourceDefinition
     {
-        public PostgreSqlMetricDefinition()
+        public PostgreSqlMetricDefinition() : base(ResourceType.PostgreSql)
         {
         }
 
-        public PostgreSqlMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string serverName, Dictionary<string, string> labels, Scraping scraping)
-            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
+        public PostgreSqlMetricDefinition(string resourceGroupName, string serverName)
+            : base(ResourceType.PostgreSql, resourceGroupName)
         {
             ServerName = serverName;
         }
 
         public string ServerName { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.PostgreSql;
     }
 }
