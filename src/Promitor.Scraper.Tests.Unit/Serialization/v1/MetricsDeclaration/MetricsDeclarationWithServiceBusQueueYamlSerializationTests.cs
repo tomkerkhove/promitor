@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,15 +51,16 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
-            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition);
+            AssertServiceBusQueueMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinitionV1 serviceBusMetricDefinition)
+        private static void AssertServiceBusQueueMetricDefinition(MetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinitionV1 serviceBusMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
-            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
+            var deserializedResource = deserializedServiceBusMetricDefinition.Resources.Single() as ServiceBusQueueMetricDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedResource.Namespace);
+            Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedResource.QueueName);
         }
 
         private ServiceBusQueueMetricDefinitionV1 GenerateBogusServiceBusMetricDefinition(string resourceGroupName, string metricScrapingInterval)

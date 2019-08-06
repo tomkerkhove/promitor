@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,14 +51,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, networkInterfaceMetricDefinition);
-            var deserializedNetworkInterfaceMetricDefinition = deserializedMetricDefinition as NetworkInterfaceMetricDefinition;
-            AssertNetworkInterfaceMetricDefinition(deserializedNetworkInterfaceMetricDefinition, networkInterfaceMetricDefinition);
+            AssertNetworkInterfaceMetricDefinition(deserializedMetricDefinition, networkInterfaceMetricDefinition);
         }
 
-        private static void AssertNetworkInterfaceMetricDefinition(NetworkInterfaceMetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinitionV1 networkInterfaceMetricDefinition)
+        private static void AssertNetworkInterfaceMetricDefinition(MetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinitionV1 networkInterfaceMetricDefinition)
         {
-            Assert.NotNull(deserializedNetworkInterfaceMetricDefinition);
-            Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedNetworkInterfaceMetricDefinition.NetworkInterfaceName);
+            var deserializedResource = deserializedNetworkInterfaceMetricDefinition.Resources.Single() as NetworkInterfaceMetricDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedResource.NetworkInterfaceName);
         }
 
         private NetworkInterfaceMetricDefinitionV1 GenerateBogusNetworkInterfaceMetricDefinition(string resourceGroupName, string metricScrapingInterval)
