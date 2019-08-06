@@ -42,17 +42,22 @@ namespace Promitor.Scraper.Host.Extensions
             var metrics = metricsProvider.Get(true);
 
             foreach (var metric in metrics.Metrics)
-                services.AddScheduler(builder =>
+            {
+                foreach (var resource in metric.Resources)
                 {
-                    builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
-                        metricsProvider,
+                    services.AddScheduler(builder =>
+                    {
+                        builder.AddJob(serviceProvider => new MetricScrapingJob(metric.CreateScrapeDefinition(resource),
+                            metricsProvider,
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
-                        serviceProvider.GetService<IRuntimeMetricsCollector>(),
-                        serviceProvider.GetService<MetricScraperFactory>(),
-                        serviceProvider.GetService<ILogger>(),
-                        serviceProvider.GetService<IExceptionTracker>()));
-                    builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
-                });
+                            serviceProvider.GetService<IRuntimeMetricsCollector>(),
+                            serviceProvider.GetService<MetricScraperFactory>(),
+                            serviceProvider.GetService<ILogger>(),
+                            serviceProvider.GetService<IExceptionTracker>()));
+                        builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
+                    });
+                }
+            }
 
             return services;
         }
