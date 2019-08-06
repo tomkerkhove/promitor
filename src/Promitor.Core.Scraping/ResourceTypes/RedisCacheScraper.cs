@@ -2,6 +2,7 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System;
 using System.Threading.Tasks;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
@@ -9,8 +10,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Cache/Redis/{2}";
 
-        public RedisCacheScraper(ScraperConfiguration scraperConfiguration)
-           : base(scraperConfiguration)
+        public RedisCacheScraper(ScraperConfiguration scraperConfiguration, IPrometheusMetricWriter prometheusMetricWriter)
+           : base(scraperConfiguration, prometheusMetricWriter)
         {
         }
 

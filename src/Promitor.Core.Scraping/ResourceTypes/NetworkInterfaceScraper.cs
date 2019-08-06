@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
@@ -9,8 +10,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/networkInterfaces/{2}";
 
-        public NetworkInterfaceScraper(ScraperConfiguration scraperConfiguration)
-            : base(scraperConfiguration)
+        public NetworkInterfaceScraper(ScraperConfiguration scraperConfiguration, IPrometheusMetricWriter prometheusMetricWriter)
+            : base(scraperConfiguration, prometheusMetricWriter)
         {
         }
 

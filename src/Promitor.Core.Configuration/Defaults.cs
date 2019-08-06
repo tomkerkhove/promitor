@@ -12,12 +12,12 @@ namespace Promitor.Core.Configuration
         public static class Prometheus
         {
             public static string ScrapeEndpointBaseUri { get; } = "/metrics";
+            public static double MetricUnavailableValue { get; } = double.NaN;
         }
 
         public static class MetricsConfiguration
         {
             public static string AbsolutePath { get; } = "/config/metrics-declaration.yaml";
-            public static double MetricUnavailableValue { get; } = double.NaN;
         }
         
         public class Telemetry

@@ -27,7 +27,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             var metricsConfiguration = new Faker<MetricsConfiguration>()
                 .StrictMode(true)
                 .RuleFor(metricConfiguration => metricConfiguration.AbsolutePath, faker => faker.System.DirectoryPath())
-                .RuleFor(metricConfiguration => metricConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
                 .Generate();
             var scrapeEndpointConfiguration = new Faker<ScrapeEndpointConfiguration>()
                 .StrictMode(true)
@@ -35,7 +34,8 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 .Generate();
             var prometheusConfiguration = new Faker<PrometheusConfiguration>()
                 .StrictMode(true)
-                .RuleFor(flagsConfiguration => flagsConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
+                .RuleFor(promConfiguration => promConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
+                .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
                 .Generate();
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()

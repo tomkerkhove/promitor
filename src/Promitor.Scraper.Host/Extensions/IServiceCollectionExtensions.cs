@@ -15,7 +15,10 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Core.Scraping;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Core.Scraping.Prometheus;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Loggers;
@@ -46,6 +49,7 @@ namespace Promitor.Scraper.Host.Extensions
                 {
                     builder.AddJob(serviceProvider => new MetricScrapingJob(metric,
                         metricsProvider,
+                        serviceProvider.GetService<IPrometheusMetricWriter>(),
                         serviceProvider.GetService<IRuntimeMetricsCollector>(),
                         serviceProvider.GetService<MetricScraperFactory>(),
                         serviceProvider.GetService<ILogger>(),
@@ -70,6 +74,7 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<ValidationLogger>();
+            services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
 
             return services;
         }

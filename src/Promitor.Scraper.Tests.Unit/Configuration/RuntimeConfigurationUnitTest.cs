@@ -186,7 +186,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             // Arrange
             var metricUnavailableValue = _faker.Random.Double(min: 1);
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithMetricsConfiguration(metricUnavailableValue: metricUnavailableValue)
+                .WithPrometheusConfiguration(metricUnavailableValue: metricUnavailableValue)
                 .GenerateAsync();
 
             // Act
@@ -195,8 +195,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.Prometheus);
-            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
-            Assert.Equal(metricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
+            Assert.Equal(metricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
@@ -205,7 +204,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             // Arrange
             var scrapeEndpointBaseUri = _faker.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(scrapeEndpointBaseUri)
+                .WithPrometheusConfiguration(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
                 .GenerateAsync();
 
             // Act
@@ -321,7 +320,6 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
-            Assert.NotEqual(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
             Assert.Equal(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
         }
 
@@ -330,7 +328,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithMetricsConfiguration(metricUnavailableValue: null)
+                .WithPrometheusConfiguration(metricUnavailableValue: null)
                 .GenerateAsync();
 
             // Act
@@ -338,35 +336,18 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
-            Assert.NotEqual(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
-            Assert.Equal(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.NotEqual(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
-        public async Task RuntimeConfiguration_HasNoMetricConfigurationConfigured_UsesDefault()
+        public async Task RuntimeConfiguration_HasNoPrometheusConfigurationConfigured_UsesDefault()
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithMetricsConfiguration(metricUnavailableValue: null, absolutePath:null)
-                .GenerateAsync();
-
-            // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
-
-            // Assert
-            Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
-            Assert.Equal(Defaults.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
-            Assert.Equal(Defaults.MetricsConfiguration.MetricUnavailableValue, runtimeConfiguration.MetricsConfiguration.MetricUnavailableValue);
-        }
-
-        [Fact]
-        public async Task RuntimeConfiguration_HasNoPrometheusScrapeEndpointConfigured_UsesDefault()
-        {
-            // Arrange
-            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(null)
+                .WithPrometheusConfiguration(metricUnavailableValue: null, scrapeEndpointBaseUri: null)
                 .GenerateAsync();
 
             // Act
@@ -377,6 +358,26 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Prometheus);
             Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoPrometheusScrapeEndpointConfigured_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithPrometheusConfiguration(scrapeEndpointBaseUri:null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.NotEqual(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
