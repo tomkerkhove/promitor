@@ -25,7 +25,7 @@ namespace Promitor.Core.Scraping.Prometheus
             _logger = logger;
         }
 
-        public void ReportMetric(MetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
+        public void ReportMetric(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
             var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
@@ -41,7 +41,7 @@ namespace Promitor.Core.Scraping.Prometheus
             return scrapedMetricResult.MetricValue ?? metricUnavailableValue;
         }
 
-        private (string[] Names, string[] Values) DetermineLabels(MetricDefinition metricDefinition, ScrapeResult scrapeResult)
+        private (string[] Names, string[] Values) DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult)
         {
             var labels = new Dictionary<string, string>(scrapeResult.Labels);
 

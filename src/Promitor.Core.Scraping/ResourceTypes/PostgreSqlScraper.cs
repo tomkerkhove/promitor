@@ -2,6 +2,7 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System;
 using System.Threading.Tasks;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
@@ -14,14 +15,14 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, PostgreSqlMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, PostgreSqlMetricDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, metricDefinition.ServerName);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.ServerName);
 
-            var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
+            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.ServerName, resourceUri, foundMetricValue);
+            return new ScrapeResult(subscriptionId, resourceGroupName, resource.ServerName, resourceUri, foundMetricValue);
         }
     }
 }

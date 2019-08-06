@@ -5,11 +5,11 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
 // ReSharper disable All
 
@@ -18,9 +18,9 @@ namespace Promitor.Core.Scraping
     /// <summary>
     ///     Azure Monitor Scraper
     /// </summary>
-    /// <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
-    public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition>
-        where TMetricDefinition : MetricDefinition, new()
+    /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
+    public abstract class Scraper<TResourceDefinition> : IScraper<AzureResourceDefinition>
+      where TResourceDefinition : AzureResourceDefinition, new()
     {
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
@@ -58,28 +58,35 @@ namespace Promitor.Core.Scraping
         /// </summary>
         protected AzureMonitorClient AzureMonitorClient { get; }
 
-        public async Task ScrapeAsync(MetricDefinition metricDefinition)
+        public async Task ScrapeAsync(ScrapeDefinition<AzureResourceDefinition> scrapeDefinition)
         {
             try
             {
-                if (metricDefinition == null)
+                if (scrapeDefinition == null)
                 {
-                    throw new ArgumentNullException(nameof(metricDefinition));
+                    throw new ArgumentNullException(nameof(scrapeDefinition));
+                }
+                
+                var castedMetricDefinition = scrapeDefinition.Resource as TResourceDefinition;
+                if (castedMetricDefinition == null)
+                {
+                    throw new ArgumentException($"Could not cast metric definition of type '{scrapeDefinition.Resource.ResourceType}' to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
                 }
 
-                if (!(metricDefinition is TMetricDefinition castedMetricDefinition))
-                {
-                    throw new ArgumentException($"Could not cast metric definition of type '{metricDefinition.ResourceType}' to {typeof(TMetricDefinition)}. Payload: {JsonConvert.SerializeObject(metricDefinition)}");
-                }
+                var aggregationInterval = scrapeDefinition.AzureMetricConfiguration.Aggregation.Interval;
+                var aggregationType = scrapeDefinition.AzureMetricConfiguration.Aggregation.Type;
+                var resourceGroupName = string.IsNullOrEmpty(scrapeDefinition.Resource.ResourceGroupName) ? AzureMetadata.ResourceGroupName : scrapeDefinition.Resource.ResourceGroupName;
+                var scrapedMetricResult = await ScrapeResourceAsync(
+                    AzureMetadata.SubscriptionId,
+                    resourceGroupName,
+                    scrapeDefinition,
+                    castedMetricDefinition,
+                    aggregationType,
+                    aggregationInterval.Value);
 
-                var aggregationInterval = metricDefinition.AzureMetricConfiguration.Aggregation.Interval;
-                var aggregationType = metricDefinition.AzureMetricConfiguration.Aggregation.Type;
-                var resourceGroupName = string.IsNullOrEmpty(metricDefinition.ResourceGroupName) ? AzureMetadata.ResourceGroupName : metricDefinition.ResourceGroupName;
-                var scrapedMetricResult = await ScrapeResourceAsync(AzureMetadata.SubscriptionId, resourceGroupName, castedMetricDefinition, aggregationType, aggregationInterval.Value);
+                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
 
-                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, metricDefinition.Name, aggregationInterval);
-
-                _prometheusMetricWriter.ReportMetric(metricDefinition, scrapedMetricResult);
+                _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)
             {
@@ -134,9 +141,16 @@ namespace Promitor.Core.Scraping
         /// </summary>
         /// <param name="subscriptionId">Metric subscription Id</param>
         /// <param name="resourceGroupName">Metric Resource Group</param>
-        /// <param name="metricDefinition">Definition of the metric to scrape</param>
+        /// <param name="scrapeDefinition">Contains all the information needed to scrape the resource.</param>
+        /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
-        protected abstract Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
+        protected abstract Task<ScrapeResult> ScrapeResourceAsync(
+            string subscriptionId,
+            string resourceGroupName,
+            ScrapeDefinition<AzureResourceDefinition> scrapeDefinition,
+            TResourceDefinition resourceDefinition,
+            AggregationType aggregationType,
+            TimeSpan aggregationInterval);
     }
 }

@@ -4,6 +4,6 @@ namespace Promitor.Core.Scraping.Prometheus.Interfaces
 {
     public interface IPrometheusMetricWriter
     {
-        void ReportMetric(MetricDefinition metricDefinition, ScrapeResult scrapedMetricResult);
+        void ReportMetric(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapedMetricResult);
     }
 }
