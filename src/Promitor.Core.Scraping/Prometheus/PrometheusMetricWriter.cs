@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GuardNet;
 using Microsoft.Extensions.Logging;
 using Prometheus.Client;
 using Promitor.Core.Configuration.FeatureFlags;
@@ -15,6 +16,9 @@ namespace Promitor.Core.Scraping.Prometheus
 
         public PrometheusMetricWriter(FeatureToggleClient featureToggleClient, ILogger<PrometheusMetricWriter> logger)
         {
+            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
+            Guard.NotNull(logger, nameof(logger));
+
             _featureToggleClient = featureToggleClient;
             _logger = logger;
         }
