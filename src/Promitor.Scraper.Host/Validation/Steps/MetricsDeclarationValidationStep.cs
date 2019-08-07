@@ -61,8 +61,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         private void SanitizeStorageQueueDeclaration(MetricDefinition metricDefinition)
         {
-            var storageQueueDeclaration = metricDefinition as StorageQueueMetricDefinition;
-            if (storageQueueDeclaration != null && string.IsNullOrWhiteSpace(storageQueueDeclaration.SasToken.RawValue) == false)
+            if (metricDefinition is StorageQueueMetricDefinition storageQueueDeclaration && string.IsNullOrWhiteSpace(storageQueueDeclaration.SasToken.RawValue) == false)
             {
                 storageQueueDeclaration.SasToken.RawValue = "***";
             }

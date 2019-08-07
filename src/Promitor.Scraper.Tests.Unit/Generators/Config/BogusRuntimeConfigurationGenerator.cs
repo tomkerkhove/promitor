@@ -1,6 +1,4 @@
-﻿using System;
-using Bogus;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+﻿using Bogus;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.FeatureFlags;
