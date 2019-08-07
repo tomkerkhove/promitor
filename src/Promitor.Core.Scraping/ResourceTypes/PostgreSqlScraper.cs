@@ -2,7 +2,6 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System;
 using System.Threading.Tasks;
-using Promitor.Core.Scraping.Prometheus.Interfaces;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
@@ -10,8 +9,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.DBforPostgreSQL/servers/{2}";
 
-        public PostgreSqlScraper(ScraperConfiguration scraperConfiguration, IPrometheusMetricWriter prometheusMetricWriter)
-           : base(scraperConfiguration, prometheusMetricWriter)
+        public PostgreSqlScraper(ScraperConfiguration scraperConfiguration)
+           : base(scraperConfiguration)
         {
         }
 

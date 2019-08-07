@@ -30,15 +30,14 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Constructor
         /// </summary>
-        protected Scraper(ScraperConfiguration scraperConfiguration, IPrometheusMetricWriter prometheusMetricWriter)
+        protected Scraper(ScraperConfiguration scraperConfiguration)
         {
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
-            Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
 
             _logger = scraperConfiguration.Logger;
             _exceptionTracker = scraperConfiguration.ExceptionTracker;
             _scraperConfiguration = scraperConfiguration;
-            _prometheusMetricWriter = prometheusMetricWriter;
+            _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
             AzureMetadata = scraperConfiguration.AzureMetadata;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;

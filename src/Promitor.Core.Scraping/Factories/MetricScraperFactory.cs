@@ -45,30 +45,30 @@ namespace Promitor.Core.Scraping.Factories
             IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
-            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, _featureToggleClient, _logger, _exceptionTracker);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _featureToggleClient, _logger, _exceptionTracker);
 
             switch (metricDefinitionResourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new ServiceBusQueueScraper(scraperConfiguration);
                 case ResourceType.Generic:
-                    return new GenericScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new GenericScraper(scraperConfiguration);
                 case ResourceType.StorageQueue:
-                    return new StorageQueueScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new StorageQueueScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:
-                    return new ContainerInstanceScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new ContainerInstanceScraper(scraperConfiguration);
                 case ResourceType.VirtualMachine:
-                    return new VirtualMachineScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
-                    return new NetworkInterfaceScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.ContainerRegistry:
-                    return new ContainerRegistryScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
-                    return new CosmosDbScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new CosmosDbScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
-                    return new RedisCacheScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
-                    return new PostgreSqlScraper(scraperConfiguration, prometheusMetricWriter);
+                    return new PostgreSqlScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
