@@ -6,6 +6,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
@@ -76,6 +77,20 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         }
 
         public string Serialize(MetricsDeclaration metricsDeclaration)
+        {
+            Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
+
+            var serializer = YamlSerialization.CreateSerializer();
+            var rawMetricsDeclaration = serializer.Serialize(metricsDeclaration);
+            return rawMetricsDeclaration;
+        }
+
+        /// <summary>
+        /// Allows a v1 version of the config to be serialized.
+        /// </summary>
+        /// <param name="metricsDeclaration">A v1 version of the config.</param>
+        /// <returns>The serialized yaml.</returns>
+        public string Serialize(MetricsDeclarationBuilder metricsDeclaration)
         {
             Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
 

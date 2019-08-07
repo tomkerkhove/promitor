@@ -1,15 +1,18 @@
-﻿using Bogus;
-using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Bogus;
+using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Xunit;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
     public class MetricsDeclarationWithRedisCacheYamlSerializationTests : YamlSerializationTests<RedisCacheMetricDefinition>
@@ -23,12 +26,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var redisCacheMetricDefinition = GenerateBogusRedisCacheMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration()
+            var scrapingConfiguration = new MetricsDeclarationBuilder
             {
                 Version = SpecVersion.v1.ToString(),
-                AzureMetadata = azureMetadata,
-                MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>()
+                AzureMetadataBuilder = azureMetadata,
+                MetricDefaultsBuilder = metricDefaults,
+                Metrics = new List<MetricDefinitionBuilder>
                 {
                     redisCacheMetricDefinition
                 }
@@ -41,14 +44,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition);
+            AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition.Build<RedisCacheMetricDefinition>());
             var deserializedRedisCacheMetricDefinition = deserializedMetricDefinition as RedisCacheMetricDefinition;
-            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition);
+            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition.Build<RedisCacheMetricDefinition>());
         }
 
         private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinition redisCacheMetricDefinition)
@@ -57,20 +60,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedRedisCacheMetricDefinition.CacheName);
         }
 
-        private RedisCacheMetricDefinition GenerateBogusRedisCacheMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private RedisCacheMetricDefinitionBuilder GenerateBogusRedisCacheMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<RedisCacheMetricDefinition>()
+            var bogusGenerator = new Faker<RedisCacheMetricDefinitionBuilder>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Lorem.Word())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => Core.Scraping.Configuration.Model.ResourceType.RedisCache)
+                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.RedisCache)
                 .RuleFor(metricDefinition => metricDefinition.CacheName, faker => faker.Lorem.Word())
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfigurationBuilder, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
+                .RuleFor(metricDefinition => metricDefinition.ScrapingBuilder, faker => bogusScrapingInterval)
                 .RuleFor(metricDefinition => metricDefinition.Labels, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } });
 
             return bogusGenerator.Generate();
