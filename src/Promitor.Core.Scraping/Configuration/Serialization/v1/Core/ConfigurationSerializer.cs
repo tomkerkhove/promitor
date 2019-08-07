@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using YamlDotNet.RepresentationModel;
@@ -43,6 +44,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
             var metricsDeclaration = new MetricsDeclarationV1
             {
+                Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
                 Metrics = metrics
