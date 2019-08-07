@@ -69,7 +69,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 {
                     prometheusConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
                 }
-
             }
 
             _runtimeConfiguration.Prometheus = prometheusConfiguration;
