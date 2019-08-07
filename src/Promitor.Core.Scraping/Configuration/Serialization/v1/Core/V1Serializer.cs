@@ -6,9 +6,9 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    public class ConfigurationSerializer
+    public class V1Serializer
     {
-        public ConfigurationSerializer(ILogger logger)
+        public V1Serializer(ILogger logger)
         {
             Logger = logger;
         }

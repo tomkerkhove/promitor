@@ -1,8 +1,10 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Serialization.Enum
 {
-    // ReSharper disable once InconsistentNaming
     public enum SpecVersion
     {
-        v1
+        // ReSharper disable InconsistentNaming
+        v1,
+        v2
+        // ReSharper restore InconsistentNaming
     }
 }

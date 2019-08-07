@@ -55,7 +55,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var v1Serializer = new v1.Core.ConfigurationSerializer(_logger);
+                    var v1Serializer = new v1.Core.V1Serializer(_logger);
                     var v1Config = v1Serializer.InterpretYamlStream(rootNode);
 
                     return _mapper.Map<MetricsDeclaration>(v1Config);
