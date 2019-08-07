@@ -2,8 +2,11 @@
 using System.Linq;
 using GuardNet;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Prometheus.Client;
+using Promitor.Core.Configuration;
 using Promitor.Core.Configuration.FeatureFlags;
+using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 
@@ -12,14 +15,17 @@ namespace Promitor.Core.Scraping.Prometheus
     public class PrometheusMetricWriter : IPrometheusMetricWriter
     {
         private readonly FeatureToggleClient _featureToggleClient;
+        private readonly IOptionsMonitor<PrometheusConfiguration> _prometheusConfiguration;
         private readonly ILogger<PrometheusMetricWriter> _logger;
 
-        public PrometheusMetricWriter(FeatureToggleClient featureToggleClient, ILogger<PrometheusMetricWriter> logger)
+        public PrometheusMetricWriter(FeatureToggleClient featureToggleClient, IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration, ILogger<PrometheusMetricWriter> logger)
         {
             Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
+            Guard.NotNull(prometheusConfiguration, nameof(prometheusConfiguration));
             Guard.NotNull(logger, nameof(logger));
 
             _featureToggleClient = featureToggleClient;
+            _prometheusConfiguration = prometheusConfiguration;
             _logger = logger;
         }
 
@@ -34,9 +40,10 @@ namespace Promitor.Core.Scraping.Prometheus
             gauge.WithLabels(labels.Values).Set(metricValue);
         }
 
-        private static double DetermineMetricMeasurement(ScrapeResult scrapedMetricResult)
+        private double DetermineMetricMeasurement(ScrapeResult scrapedMetricResult)
         {
-            return scrapedMetricResult.MetricValue ?? double.NaN;
+            var metricUnavailableValue = _prometheusConfiguration.CurrentValue?.MetricUnavailableValue ?? Defaults.Prometheus.MetricUnavailableValue;
+            return scrapedMetricResult.MetricValue ?? metricUnavailableValue;
         }
 
         private (string[] Names, string[] Values) DetermineLabels(MetricDefinition metricDefinition, ScrapeResult scrapeResult)
