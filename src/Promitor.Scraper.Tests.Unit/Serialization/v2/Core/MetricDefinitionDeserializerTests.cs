@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -37,7 +36,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_NameSupplied_SetsName()
         {
-            AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
                 "name: promitor_test_metric",
                 "promitor_test_metric",
                 d => d.Name);
@@ -46,13 +46,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_NameNotSupplied_Null()
         {
-            AssertPropertyNull("description: 'Test metric'", d => d.Name);
+            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "description: 'Test metric'", d => d.Name);
         }
 
         [Fact]
         public void Deserialize_DescriptionSupplied_SetsDescription()
         {
-            AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
                 "description: 'This is a test metric'",
                 "This is a test metric",
                 d => d.Description);
@@ -61,13 +62,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_DescriptionNotSupplied_Null()
         {
-            AssertPropertyNull("name: metric", d => d.Description);
+            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "name: metric", d => d.Description);
         }
 
         [Fact]
         public void Deserialize_ResourceTypeSupplied_SetsResourceType()
         {
-            AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
                 "resourceType: ServiceBusQueue",
                 ResourceType.ServiceBusQueue,
                 d => d.ResourceType);
@@ -76,7 +78,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_ResourceTypeNotSupplied_Defaults()
         {
-            AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
                 "name: promitor_test_metric",
                 ResourceType.NotSpecified,
                 d => d.ResourceType);
@@ -90,7 +93,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
     app: promitor
     env: test";
 
-            AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
                 yamlText,
                 new Dictionary<string, string>{{"app", "promitor"}, {"env", "test"}},
                 d => d.Labels);
@@ -99,7 +103,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_LabelsNotSupplied_Null()
         {
-            AssertPropertyNull("name: promitor_test_metric", d => d.Labels);
+            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "name: promitor_test_metric", d => d.Labels);
         }
 
         [Fact]
@@ -224,30 +228,6 @@ metrics:
 
             // Assert
             Assert.Null(definition.Resources);
-        }
-
-        private void AssertPropertySet<T>(string yamlText, T expected, Func<MetricDefinitionV2, T> propertyAccessor)
-        {
-            // Arrange
-            var node = YamlUtils.CreateYamlNode(yamlText);
-
-            // Act
-            var definition = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Equal(expected, propertyAccessor(definition));
-        }
-
-        private void AssertPropertyNull<T>(string yamlText, Func<MetricDefinitionV2, T> propertyAccessor)
-        {
-            // Arrange
-            var node = YamlUtils.CreateYamlNode(yamlText);
-
-            // Act
-            var definition = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Null(propertyAccessor(definition));
         }
     }
 }

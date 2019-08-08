@@ -27,13 +27,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             const string yamlText =
 @"aggregation:
     interval: 00:07:00";
-            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["aggregation"];
-
-            // Act
-            var aggregation = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Equal(TimeSpan.FromMinutes(7), aggregation.Interval);
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
+                yamlText,
+                "aggregation",
+                TimeSpan.FromMinutes(7),
+                a => a.Interval);
         }
 
         [Fact]
@@ -42,13 +41,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             const string yamlText =
 @"aggregation:
     someProperty: someValue";
-            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["aggregation"];
-
-            // Act
-            var aggregation = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Equal(TimeSpan.FromMinutes(5), aggregation.Interval);
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
+                yamlText,
+                "aggregation",
+                TimeSpan.FromMinutes(5),
+                a => a.Interval);
         }
     }
 }

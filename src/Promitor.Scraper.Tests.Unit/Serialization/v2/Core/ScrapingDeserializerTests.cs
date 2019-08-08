@@ -20,33 +20,30 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         [Fact]
         public void Deserialize_ScheduleSupplied_SetsSchedule()
         {
-            // Arrange
             const string yamlText =
 @"scraping:
     schedule: '0 * * ? * *'";
-            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["scraping"];
 
-            // Act
-            var scraping = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Equal("0 * * ? * *", scraping.Schedule);
+            DeserializerTestHelpers.AssertPropertySet(
+                _deserializer,
+                yamlText,
+                "scraping",
+                "0 * * ? * *",
+                s => s.Schedule);
         }
 
         [Fact]
         public void Deserialize_ScheduleNotSupplied_SetsScheduleNull()
         {
-            // Arrange
             const string yamlText =
 @"scraping:
     otherProperty: otherValue";
-            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["scraping"];
 
-            // Act
-            var scraping = _deserializer.Deserialize(node);
-
-            // Assert
-            Assert.Null(scraping.Schedule);
+            DeserializerTestHelpers.AssertPropertyNull(
+                _deserializer,
+                yamlText,
+                "scraping",
+                s => s.Schedule);
         }
     }
 }
