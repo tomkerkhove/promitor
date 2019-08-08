@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using YamlDotNet.RepresentationModel;
@@ -72,47 +71,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType);
                 metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode);
             }
-        }
-
-        private static string GetString(YamlMappingNode node, string propertyName)
-        {
-            if (node.Children.TryGetValue(propertyName, out var propertyNode))
-            {
-                return propertyNode.ToString();
-            }
-
-            return null;
-        }
-
-        private static T GetEnum<T>(YamlMappingNode node, string propertyName)
-            where T : struct
-        {
-            if (node.Children.TryGetValue(propertyName, out var propertyNode))
-            {
-                if (System.Enum.TryParse<T>(propertyNode.ToString(), out var enumResult))
-                {
-                    return enumResult;
-                }
-            }
-
-            return default(T);
-        }
-
-        private static Dictionary<string, string> GetDictionary(YamlMappingNode node, string propertyName)
-        {
-            if (node.Children.TryGetValue(propertyName, out var propertyNode))
-            {
-                var result = new Dictionary<string, string>();
-
-                foreach (var (key, value) in ((YamlMappingNode)propertyNode).Children)
-                {
-                    result[key.ToString()] = value.ToString();
-                }
-
-                return result;
-            }
-
-            return null;
         }
     }
 }

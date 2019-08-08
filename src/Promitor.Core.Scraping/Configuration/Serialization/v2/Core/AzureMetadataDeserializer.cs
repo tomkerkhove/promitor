@@ -1,6 +1,4 @@
-﻿using System;
-using GuardNet;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using YamlDotNet.RepresentationModel;
 
@@ -20,20 +18,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             var metadata = new AzureMetadataV2();
 
-            if (node.Children.TryGetValue(TenantIdTag, out var tenantIdNode))
-            {
-                metadata.TenantId = tenantIdNode.ToString();
-            }
-
-            if (node.Children.TryGetValue(SubscriptionIdTag, out var subscriptionIdNode))
-            {
-                metadata.SubscriptionId = subscriptionIdNode.ToString();
-            }
-
-            if (node.Children.TryGetValue(ResourceGroupNameTag, out var resourceGroupNameNode))
-            {
-                metadata.ResourceGroupName = resourceGroupNameNode.ToString();
-            }
+            metadata.TenantId = GetString(node, TenantIdTag);
+            metadata.SubscriptionId = GetString(node, SubscriptionIdTag);
+            metadata.ResourceGroupName = GetString(node, ResourceGroupNameTag);
             
             return metadata;
         }

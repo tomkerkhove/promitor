@@ -16,12 +16,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             var scraping = new ScrapingV2();
 
-            if (node.Children.TryGetValue(ScheduleTag, out var scrapingNode))
+            scraping.Schedule = GetString(node, ScheduleTag);
+
+            if (scraping.Schedule == null)
             {
-                scraping.Schedule = scrapingNode.ToString();
-            }
-            else
-            {
+                // TODO: this will log an error if this deserializer is reused to deserialize the scraping settings for a metric instead of the global scraping settings. Need to fix that!
                 Logger.LogError("No default metric scraping schedule was configured!");
             }
 
