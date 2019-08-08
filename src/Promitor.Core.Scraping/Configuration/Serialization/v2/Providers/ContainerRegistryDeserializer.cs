@@ -5,19 +5,19 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Providers
 {
-    public class ContainerInstanceDeserializer : ResourceDeserializer
+    public class ContainerRegistryDeserializer : ResourceDeserializer
     {
-        private const string ContainerGroupTag = "containerGroup";
+        private const string RegistryNameTag = "registryName";
 
-        public ContainerInstanceDeserializer(ILogger logger) : base(logger)
+        public ContainerRegistryDeserializer(ILogger logger) : base(logger)
         {
         }
 
         protected override AzureResourceDefinitionV2 DeserializeResource(YamlMappingNode node)
         {
-            return new ContainerInstanceResourceV2
+            return new ContainerRegistryResourceV2
             {
-                ContainerGroup = GetString(node, ContainerGroupTag)
+                RegistryName = GetString(node, RegistryNameTag)
             };
         }
     }
