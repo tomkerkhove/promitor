@@ -15,7 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override MetricAggregationV1 Deserialize(YamlMappingNode node)
+        public override MetricAggregationV1 Deserialize(YamlMappingNode node)
         {
             var aggregation = new MetricAggregationV1();
 

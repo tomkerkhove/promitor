@@ -6,20 +6,20 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
 {
-    internal abstract class Deserializer<TObject>
+    public abstract class Deserializer<TObject> : IDeserializer<TObject>
     {
         protected ILogger Logger { get; }
 
-        internal Deserializer(ILogger logger)
+        protected Deserializer(ILogger logger)
         {
             Guard.NotNull(logger, nameof(logger));
 
             Logger = logger;
         }
 
-        internal abstract TObject Deserialize(YamlMappingNode node);
+        public abstract TObject Deserialize(YamlMappingNode node);
 
-        internal List<TObject> Deserialize(YamlSequenceNode nodes)
+        public List<TObject> Deserialize(YamlSequenceNode nodes)
         {
             Guard.NotNull(nodes, nameof(nodes));
 

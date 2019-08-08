@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override AggregationV1 Deserialize(YamlMappingNode node)
+        public override AggregationV1 Deserialize(YamlMappingNode node)
         {
             var aggregation = new AggregationV1();
 

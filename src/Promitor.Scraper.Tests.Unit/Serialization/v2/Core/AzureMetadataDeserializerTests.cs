@@ -1,7 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Core;
 using Xunit;
+using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
 {
@@ -12,24 +14,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
 
         public AzureMetadataDeserializerTests()
         {
-            _deserializer = new AzureMetadataDeserializer();
-        }
-
-        [Fact]
-        public void Deserialize_NodeNull_ThrowsException()
-        {
-            // Assert
-            Assert.Throws<ArgumentNullException>(() => _deserializer.Deserialize(null));
-        }
-
-        [Fact]
-        public void Deserialize_NodeWrongType_ThrowsException()
-        {
-            // Arrange
-            var node = YamlUtils.CreateYamlNode("version: v1").Children["version"];
-
-            // Act / Assert
-            Assert.Throws<ArgumentException>(() => _deserializer.Deserialize(node));
+            _deserializer = new AzureMetadataDeserializer(new Mock<ILogger>().Object);
         }
 
         [Fact]
@@ -45,7 +30,7 @@ $@"azureMetadata:
     tenantId: '{tenantId}'
     subscriptionId: '{subscriptionId}'
     resourceGroupName: '{resourceGroupName}'";
-            var node = YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
+            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
 
             // Act
             var metadata = _deserializer.Deserialize(node);

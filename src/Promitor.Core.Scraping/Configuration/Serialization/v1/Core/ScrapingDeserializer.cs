@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override Model.ScrapingV1 Deserialize(YamlMappingNode node)
+        public override Model.ScrapingV1 Deserialize(YamlMappingNode node)
         {
             var scraping = new Model.ScrapingV1();
 

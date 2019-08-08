@@ -1,26 +1,28 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
 {
-    public class V2Serializer
+    public class V2Serializer : Deserializer<MetricsDeclarationV2>
     {
         private readonly IDeserializer<AzureMetadataV2> _azureMetadataDeserializer;
         private readonly IDeserializer<MetricDefaultsV2> _defaultsDeserializer;
-        private readonly IDeserializer<List<MetricDefinitionV2>> _metricsDeserializer;
+        private readonly IDeserializer<MetricDefinitionV2> _metricsDeserializer;
 
         public V2Serializer(IDeserializer<AzureMetadataV2> azureMetadataDeserializer,
             IDeserializer<MetricDefaultsV2> defaultsDeserializer,
-            IDeserializer<List<MetricDefinitionV2>> metricsDeserializer)
+            IDeserializer<MetricDefinitionV2> metricsDeserializer,
+            ILogger logger) : base(logger)
         {
             _azureMetadataDeserializer = azureMetadataDeserializer;
             _defaultsDeserializer = defaultsDeserializer;
             _metricsDeserializer = metricsDeserializer;
         }
 
-        public MetricsDeclarationV2 InterpretYamlStream(YamlMappingNode rootNode)
+        public override MetricsDeclarationV2 Deserialize(YamlMappingNode rootNode)
         {
             ValidateVersion(rootNode);
 
@@ -55,7 +57,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             if (rootNode.Children.TryGetValue("azureMetadata", out var azureMetadataNode))
             {
-                return _azureMetadataDeserializer.Deserialize(azureMetadataNode);
+                return _azureMetadataDeserializer.Deserialize((YamlMappingNode)azureMetadataNode);
             }
 
             return null;
@@ -65,7 +67,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             if (rootNode.Children.TryGetValue("metricDefaults", out var defaultsNode))
             {
-                return _defaultsDeserializer.Deserialize(defaultsNode);
+                return _defaultsDeserializer.Deserialize((YamlMappingNode)defaultsNode);
             }
 
             return null;
@@ -75,7 +77,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             if (rootNode.Children.TryGetValue("metrics", out var metricsNode))
             {
-                return _metricsDeserializer.Deserialize(metricsNode);
+                return _metricsDeserializer.Deserialize((YamlSequenceNode)metricsNode);
             }
 
             return null;

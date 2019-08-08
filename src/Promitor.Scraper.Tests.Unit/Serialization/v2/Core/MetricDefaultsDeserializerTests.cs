@@ -1,6 +1,7 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Microsoft.Extensions.Logging;
 using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using Xunit;
@@ -20,24 +21,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             _aggregationDeserializer = new Mock<IDeserializer<AggregationV2>>();
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV2>>();
 
-            _deserializer = new MetricDefaultsDeserializer(_aggregationDeserializer.Object, _scrapingDeserializer.Object);
-        }
-
-        [Fact]
-        public void Deserialize_NodeNull_ThrowsException()
-        {
-            // Act / Assert
-            Assert.Throws<ArgumentNullException>(() => _deserializer.Deserialize(null));
-        }
-
-        [Fact]
-        public void Deserialize_NodeWrongType_ThrowsException()
-        {
-            // Arrange
-            var node = YamlUtils.CreateYamlNode("version: v1").Children["version"];
-
-            // Act / Assert
-            Assert.Throws<ArgumentException>(() => _deserializer.Deserialize(node));
+            _deserializer = new MetricDefaultsDeserializer(
+                _aggregationDeserializer.Object, _scrapingDeserializer.Object, new Mock<ILogger>().Object);
         }
 
         [Fact]
@@ -50,7 +35,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         interval: 00:05:00";
             var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
-            var aggregationNode = node.Children["aggregation"];
+            var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
             var aggregation = new AggregationV2();
             _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode)).Returns(aggregation);
 
@@ -69,13 +54,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
 @"metricDefaults:
     scraping:
         schedule: '0 * * ? * *'";
-            var node = YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
+            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
             // Act
             _deserializer.Deserialize(node);
 
             // Assert
-            _aggregationDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlNode>()), Times.Never);
+            _aggregationDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlMappingNode>()), Times.Never);
         }
 
         [Fact]
@@ -88,7 +73,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         schedule: '0 * * ? * *'";
             var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
-            var scrapingNode = node.Children["scraping"];
+            var scrapingNode = (YamlMappingNode)node.Children["scraping"];
             var scraping = new ScrapingV2();
             _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode)).Returns(scraping);
 
@@ -107,13 +92,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
 @"metricDefaults:
     aggregation:
         interval: '00:05:00'";
-            var node = YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
+            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
             // Act
             _deserializer.Deserialize(node);
 
             // Assert
-            _scrapingDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlNode>()), Times.Never);
+            _scrapingDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlMappingNode>()), Times.Never);
         }
     }
 }

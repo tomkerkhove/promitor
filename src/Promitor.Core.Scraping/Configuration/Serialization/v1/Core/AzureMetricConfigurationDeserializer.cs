@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _metricAggregationDeserializer = new MetricAggregationDeserializer(logger);
         }
 
-        internal override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node)
+        public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));
 

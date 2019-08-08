@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override MetricDefinitionV1 Deserialize(YamlMappingNode node)
+        public override MetricDefinitionV1 Deserialize(YamlMappingNode node)
         {
             var rawResourceType = node.Children[new YamlScalarNode("resourceType")];
 

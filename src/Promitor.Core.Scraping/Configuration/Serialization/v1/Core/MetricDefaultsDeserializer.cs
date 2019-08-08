@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override MetricDefaultsV1 Deserialize(YamlMappingNode node)
+        public override MetricDefaultsV1 Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));
 

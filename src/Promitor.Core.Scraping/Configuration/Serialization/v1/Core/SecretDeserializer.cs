@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override SecretV1 Deserialize(YamlMappingNode node)
+        public override SecretV1 Deserialize(YamlMappingNode node)
         {
             var secret = new SecretV1();
 
