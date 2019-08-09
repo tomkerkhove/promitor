@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             return new MetricAggregationV2
             {
-                Type = GetNullableEnum<AggregationType>(node, TypeTag),
+                Type = GetEnum<AggregationType>(node, TypeTag),
                 Interval = GetTimespan(node, IntervalTag)
             };
         }

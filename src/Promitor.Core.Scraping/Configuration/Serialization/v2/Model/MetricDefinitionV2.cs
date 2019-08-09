@@ -22,7 +22,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Model
         /// <summary>
         /// The type of resources that are scraped to populate this metric.
         /// </summary>
-        public ResourceType ResourceType { get; set; }
+        public ResourceType? ResourceType { get; set; }
 
         /// <summary>
         /// Any prometheus labels that should be added to the metric.

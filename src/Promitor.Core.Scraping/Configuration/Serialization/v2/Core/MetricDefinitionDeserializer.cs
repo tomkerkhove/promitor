@@ -65,10 +65,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
 
         private void DeserializeMetrics(YamlMappingNode node, MetricDefinitionV2 metricDefinition)
         {
-            if (metricDefinition.ResourceType != ResourceType.NotSpecified &&
+            if (metricDefinition.ResourceType != null &&
+                metricDefinition.ResourceType != ResourceType.NotSpecified &&
                 node.Children.TryGetValue(MetricsTag, out var metricsNode))
             {
-                var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType);
+                var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
                 metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode);
             }
         }

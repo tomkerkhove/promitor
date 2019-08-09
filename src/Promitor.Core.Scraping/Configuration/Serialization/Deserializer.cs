@@ -61,29 +61,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// <typeparam name="T">The type of enum to return.</typeparam>
         /// <param name="node">The node containing the property.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>The enum value, or default(T) if the property doesn't exist.</returns>
-        protected static T GetEnum<T>(YamlMappingNode node, string propertyName)
-            where T : struct
-        {
-            if (node.Children.TryGetValue(propertyName, out var propertyNode))
-            {
-                if (System.Enum.TryParse<T>(propertyNode.ToString(), out var enumResult))
-                {
-                    return enumResult;
-                }
-            }
-
-            return default(T);
-        }
-
-        /// <summary>
-        /// Gets the value of the specified yaml property converted to an enum.
-        /// </summary>
-        /// <typeparam name="T">The type of enum to return.</typeparam>
-        /// <param name="node">The node containing the property.</param>
-        /// <param name="propertyName">The property name.</param>
         /// <returns>The enum value, or null if the property doesn't exist.</returns>
-        protected static T? GetNullableEnum<T>(YamlMappingNode node, string propertyName)
+        protected static T? GetEnum<T>(YamlMappingNode node, string propertyName)
             where T : struct
         {
             if (node.Children.TryGetValue(propertyName, out var propertyNode))

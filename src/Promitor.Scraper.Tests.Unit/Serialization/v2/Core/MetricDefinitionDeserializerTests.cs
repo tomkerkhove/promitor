@@ -76,12 +76,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         }
 
         [Fact]
-        public void Deserialize_ResourceTypeNotSupplied_Defaults()
+        public void Deserialize_ResourceTypeNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            DeserializerTestHelpers.AssertPropertyNull(
                 _deserializer,
                 "name: promitor_test_metric",
-                ResourceType.NotSpecified,
                 d => d.ResourceType);
         }
 
