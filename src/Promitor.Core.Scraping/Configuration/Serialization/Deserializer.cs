@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using GuardNet;
 using Microsoft.Extensions.Logging;
@@ -76,6 +77,27 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         }
 
         /// <summary>
+        /// Gets the value of the specified yaml property converted to an enum.
+        /// </summary>
+        /// <typeparam name="T">The type of enum to return.</typeparam>
+        /// <param name="node">The node containing the property.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>The enum value, or null if the property doesn't exist.</returns>
+        protected static T? GetNullableEnum<T>(YamlMappingNode node, string propertyName)
+            where T : struct
+        {
+            if (node.Children.TryGetValue(propertyName, out var propertyNode))
+            {
+                if (System.Enum.TryParse<T>(propertyNode.ToString(), out var enumResult))
+                {
+                    return enumResult;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Gets the contents of the specified property as a dictionary.
         /// </summary>
         /// <param name="node">The node containing the property.</param>
@@ -93,6 +115,22 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 }
 
                 return result;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the value of the specified yaml property converted to a <see cref="TimeSpan"/>.
+        /// </summary>
+        /// <param name="node">The node containing the property.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>The value converted to a timespan, or null if the property doesn't exist.</returns>
+        protected static TimeSpan? GetTimespan(YamlMappingNode node, string propertyName)
+        {
+            if (node.Children.TryGetValue(propertyName, out var propertyNode))
+            {
+                return TimeSpan.Parse(propertyNode.ToString());
             }
 
             return null;

@@ -17,27 +17,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
 
         public override AggregationV2 Deserialize(YamlMappingNode node)
         {
-            var aggregation = new AggregationV2();
+            var aggregation = new AggregationV2 {Interval = GetTimespan(node, IntervalTag)};
 
-            aggregation.Interval = GetAggregationInterval(node);
+            if (aggregation.Interval == null)
+            {
+                aggregation.Interval = _defaultAggregationInterval;
+                Logger.LogWarning(
+                    "No default aggregation was configured, falling back to {AggregationInterval}",
+                    aggregation.Interval?.ToString("g"));
+            }
 
             return aggregation;
-        }
-
-        private TimeSpan GetAggregationInterval(YamlMappingNode node)
-        {
-            var interval = _defaultAggregationInterval;
-            if (node.Children.TryGetValue(IntervalTag, out var intervalNode))
-            {
-                interval = TimeSpan.Parse(intervalNode.ToString());
-            }
-            else
-            {
-                Logger.LogWarning(
-                    "No default aggregation was configured, falling back to {AggregationInterval}", interval.ToString("g"));
-            }
-
-            return interval;
         }
     }
 }
