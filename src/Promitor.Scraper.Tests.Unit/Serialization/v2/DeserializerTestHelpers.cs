@@ -83,12 +83,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
         /// Deserializes the yaml and verifies that the specified property is null.
         /// </summary>
         /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
-        /// <typeparam name="TResult">The type of the property.</typeparam>
         /// <param name="deserializer">The deserializer.</param>
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertyNull<TObject, TResult>(
-            IDeserializer<TObject> deserializer, string yamlText, Func<TObject, TResult> propertyAccessor)
+        public static void AssertPropertyNull<TObject>(
+            IDeserializer<TObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode(yamlText);
@@ -104,13 +103,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
         /// Deserializes the yaml and verifies that the specified property is null.
         /// </summary>
         /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
-        /// <typeparam name="TResult">The type of the property.</typeparam>
         /// <typeparam name="TBaseObject">The type that the deserializer returns.</typeparam>
         /// <param name="deserializer">The deserializer.</param>
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertyNull<TObject, TBaseObject, TResult>(
-            IDeserializer<TBaseObject> deserializer, string yamlText, Func<TObject, TResult> propertyAccessor)
+        public static void AssertPropertyNull<TObject, TBaseObject>(
+            IDeserializer<TBaseObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
             where TObject: TBaseObject
         {
             // Arrange
@@ -128,13 +126,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
         /// under the specified yaml element is null.
         /// </summary>
         /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
-        /// <typeparam name="TResult">The type of the property.</typeparam>
         /// <param name="deserializer">The deserializer.</param>
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
         /// <param name="yamlElement">The element to look for the property under.</param>
-        public static void AssertPropertyNull<TObject, TResult>(
-            IDeserializer<TObject> deserializer, string yamlText, string yamlElement, Func<TObject, TResult> propertyAccessor)
+        public static void AssertPropertyNull<TObject>(
+            IDeserializer<TObject> deserializer, string yamlText, string yamlElement, Func<TObject, object> propertyAccessor)
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode(yamlText).Children[yamlElement];

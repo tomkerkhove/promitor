@@ -32,7 +32,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_DbNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<CosmosDbResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<CosmosDbResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 c => c.DbName);

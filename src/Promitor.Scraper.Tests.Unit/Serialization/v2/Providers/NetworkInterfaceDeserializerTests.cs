@@ -32,7 +32,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_NetworkInterfaceNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<NetworkInterfaceResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<NetworkInterfaceResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.NetworkInterfaceName);

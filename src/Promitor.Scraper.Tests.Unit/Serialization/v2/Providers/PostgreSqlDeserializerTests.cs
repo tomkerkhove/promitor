@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_ServerNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<PostgreSqlResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<PostgreSqlResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.ServerName);

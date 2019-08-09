@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_FilterNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.Filter);
@@ -49,7 +49,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_ResourceUriNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.ResourceUri);

@@ -35,7 +35,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_AccountNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.AccountName);
@@ -54,7 +54,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_QueueNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2, string>(
+            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.QueueName);
@@ -83,7 +83,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Providers
         [Fact]
         public void Deserialize_SasTokenNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2, SecretV2>(
+            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV2, AzureResourceDefinitionV2>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.SasToken);
