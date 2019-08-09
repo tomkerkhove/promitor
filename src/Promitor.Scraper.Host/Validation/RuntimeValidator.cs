@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -19,11 +20,15 @@ namespace Promitor.Scraper.Host.Validation
         private readonly ILogger _validationLogger;
         private readonly List<IValidationStep> _validationSteps;
 
-        public RuntimeValidator(IOptions<MetricsConfiguration> metricsConfiguration, ValidationLogger validatorLogger, IConfiguration configuration)
+        public RuntimeValidator(
+            IOptions<MetricsConfiguration> metricsConfiguration,
+            ValidationLogger validatorLogger,
+            IConfiguration configuration,
+            IMapper mapper)
         {
             _validationLogger = validatorLogger;
 
-            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger);
+            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger, mapper);
             _validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),

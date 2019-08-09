@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using AutoMapper;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -15,10 +16,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     public class ConfigurationSerializer
     {
         private readonly ILogger _logger;
+        private readonly IMapper _mapper;
 
-        public ConfigurationSerializer(ILogger logger)
+        public ConfigurationSerializer(ILogger logger, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
         }
 
         public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
@@ -53,7 +56,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             {
                 case SpecVersion.v1:
                     var v1Serializer = new v1.Core.ConfigurationSerializer(_logger);
-                    return v1Serializer.InterpretYamlStream(rootNode);
+                    var v1Config = v1Serializer.InterpretYamlStream(rootNode);
+
+                    return _mapper.Map<MetricsDeclaration>(v1Config);
                 default:
                     throw new Exception($"Unable to interpret YAML stream for spec version '{specVersion}'");
             }

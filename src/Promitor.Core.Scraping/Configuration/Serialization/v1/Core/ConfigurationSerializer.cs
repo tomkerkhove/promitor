@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    public class ConfigurationSerializer : IVersionedConfigurationSerializer
+    public class ConfigurationSerializer
     {
         public ConfigurationSerializer(ILogger logger)
         {
@@ -17,7 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public ILogger Logger { get; }
 
-        public MetricsDeclaration InterpretYamlStream(YamlMappingNode rootNode)
+        public MetricsDeclarationV1 InterpretYamlStream(YamlMappingNode rootNode)
         {
             AzureMetadataV1 azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))
@@ -50,7 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 Metrics = metrics
             };
 
-            return metricsDeclaration.Build();
+            return metricsDeclaration;
         }
     }
 }
