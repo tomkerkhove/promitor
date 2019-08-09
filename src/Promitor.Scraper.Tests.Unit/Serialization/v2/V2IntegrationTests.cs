@@ -22,10 +22,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
         public void CanDeserializeSerializedModel()
         {
             // This test creates a v2 model, serializes it to yaml, and then verifies that
-            // the V2Serializer can deserialize it.
+            // the V2Deserializer can deserialize it.
             var logger = new Mock<ILogger>();
             var configurationSerializer = new ConfigurationSerializer(logger.Object);
-            var v2Serializer = new V2Serializer(
+            var v2Serializer = new V2Deserializer(
                 new AzureMetadataDeserializer(logger.Object),
                 new MetricDefaultsDeserializer(
                     new AggregationDeserializer(logger.Object),

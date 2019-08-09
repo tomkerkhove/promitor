@@ -6,16 +6,16 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    public class V1Serializer
+    public class V1Deserializer
     {
-        public V1Serializer(ILogger logger)
+        public V1Deserializer(ILogger logger)
         {
             Logger = logger;
         }
 
         public ILogger Logger { get; }
 
-        public MetricsDeclarationV1 InterpretYamlStream(YamlMappingNode rootNode)
+        public MetricsDeclarationV1 Deserialize(YamlMappingNode rootNode)
         {
             AzureMetadataV1 azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))

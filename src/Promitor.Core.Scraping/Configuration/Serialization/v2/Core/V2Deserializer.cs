@@ -6,13 +6,13 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
 {
-    public class V2Serializer : Deserializer<MetricsDeclarationV2>
+    public class V2Deserializer : Deserializer<MetricsDeclarationV2>
     {
         private readonly IDeserializer<AzureMetadataV2> _azureMetadataDeserializer;
         private readonly IDeserializer<MetricDefaultsV2> _defaultsDeserializer;
         private readonly IDeserializer<MetricDefinitionV2> _metricsDeserializer;
 
-        public V2Serializer(IDeserializer<AzureMetadataV2> azureMetadataDeserializer,
+        public V2Deserializer(IDeserializer<AzureMetadataV2> azureMetadataDeserializer,
             IDeserializer<MetricDefaultsV2> defaultsDeserializer,
             IDeserializer<MetricDefinitionV2> metricsDeserializer,
             ILogger logger) : base(logger)

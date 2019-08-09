@@ -12,20 +12,20 @@ using YamlDotNet.RepresentationModel;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
 {
     [Category("Unit")]
-    public class V2SerializerTests
+    public class V2DeserializerTests
     {
         private readonly Mock<IDeserializer<AzureMetadataV2>> _metadataDeserializer;
         private readonly Mock<IDeserializer<MetricDefaultsV2>> _defaultsDeserializer;
         private readonly Mock<IDeserializer<MetricDefinitionV2>> _metricsDeserializer;
-        private readonly V2Serializer _serializer;
+        private readonly V2Deserializer _deserializer;
 
-        public V2SerializerTests()
+        public V2DeserializerTests()
         {
             _metadataDeserializer = new Mock<IDeserializer<AzureMetadataV2>>();
             _defaultsDeserializer = new Mock<IDeserializer<MetricDefaultsV2>>();
             _metricsDeserializer = new Mock<IDeserializer<MetricDefinitionV2>>();
 
-            _serializer = new V2Serializer(
+            _deserializer = new V2Deserializer(
                 _metadataDeserializer.Object,
                 _defaultsDeserializer.Object,
                 _metricsDeserializer.Object,
@@ -39,7 +39,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             var yamlNode = YamlUtils.CreateYamlNode("azureMetadata:");
             
             // Act
-            var exception = Assert.Throws<Exception>(() => _serializer.Deserialize(yamlNode));
+            var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode));
 
             // Assert
             Assert.Equal("No 'version' element was found in the metrics config", exception.Message);
@@ -52,7 +52,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             var yamlNode = YamlUtils.CreateYamlNode("version: v2");
 
             // Act
-            var builder = _serializer.Deserialize(yamlNode);
+            var builder = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Equal("v2", builder.Version);
@@ -65,7 +65,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             var yamlNode = YamlUtils.CreateYamlNode("version: v1");
 
             // Act
-            var exception = Assert.Throws<Exception>(() => _serializer.Deserialize(yamlNode));
+            var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode));
 
             // Assert
             Assert.Equal("A 'version' element with a value of 'v2' was expected but the value 'v1' was found", exception.Message);
@@ -84,7 +84,7 @@ azureMetadata:
             _metadataDeserializer.Setup(d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(azureMetadata);
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Same(azureMetadata, declaration.AzureMetadata);
@@ -99,7 +99,7 @@ azureMetadata:
                 d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new AzureMetadataV2());
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Null(declaration.AzureMetadata);
@@ -119,7 +119,7 @@ metricDefaults:
             _defaultsDeserializer.Setup(d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(metricDefaults);
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Same(metricDefaults, declaration.MetricDefaults);
@@ -136,7 +136,7 @@ metricDefaults:
                 d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new MetricDefaultsV2());
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Null(declaration.MetricDefaults);
@@ -155,7 +155,7 @@ metrics:
             _metricsDeserializer.Setup(d => d.Deserialize(It.IsAny<YamlSequenceNode>())).Returns(metrics);
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Same(metrics, declaration.Metrics);
@@ -172,7 +172,7 @@ metrics:
                 d => d.Deserialize(It.IsAny<YamlSequenceNode>())).Returns(new List<MetricDefinitionV2>());
 
             // Act
-            var declaration = _serializer.Deserialize(yamlNode);
+            var declaration = _deserializer.Deserialize(yamlNode);
 
             // Assert
             Assert.Null(declaration.Metrics);
