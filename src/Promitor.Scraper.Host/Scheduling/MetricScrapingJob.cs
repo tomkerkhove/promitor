@@ -8,6 +8,7 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 
@@ -17,6 +18,7 @@ namespace Promitor.Scraper.Host.Scheduling
     {
         private readonly MetricDefinition _metric;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
+        private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
@@ -25,17 +27,22 @@ namespace Promitor.Scraper.Host.Scheduling
 
         public MetricScrapingJob(MetricDefinition metric,
             IMetricsDeclarationProvider metricsDeclarationProvider,
+            IPrometheusMetricWriter prometheusMetricWriter,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
             ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
+            Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
+            Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
+            Guard.NotNull(runtimeMetricsCollector, nameof(runtimeMetricsCollector));
+            Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
+            Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
-            Guard.NotNull(logger, nameof(logger));
-            Guard.NotNull(logger, nameof(logger));
 
             _metric = metric;
             _metricsDeclarationProvider = metricsDeclarationProvider;
+            _prometheusMetricWriter = prometheusMetricWriter;
             _runtimeMetricsCollector = runtimeMetricsCollector;
             _exceptionTracker = exceptionTracker;
             _logger = logger;
@@ -76,7 +83,7 @@ namespace Promitor.Scraper.Host.Scheduling
         {
             _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.Name, metricDefinitionDefinition.ResourceType);
 
-            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _runtimeMetricsCollector);
+            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.ResourceType, azureMetadata, _prometheusMetricWriter, _runtimeMetricsCollector);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

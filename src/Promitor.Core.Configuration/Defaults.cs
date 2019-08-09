@@ -12,6 +12,7 @@ namespace Promitor.Core.Configuration
         public static class Prometheus
         {
             public static string ScrapeEndpointBaseUri { get; } = "/metrics";
+            public static double MetricUnavailableValue { get; } = double.NaN;
         }
 
         public static class MetricsConfiguration

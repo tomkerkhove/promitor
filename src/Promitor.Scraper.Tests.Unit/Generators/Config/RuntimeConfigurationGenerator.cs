@@ -46,17 +46,30 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return new RuntimeConfigurationGenerator(runtimeConfiguration);
         }
 
-        public RuntimeConfigurationGenerator WithPrometheusConfiguration(string scrapeEndpointBaseUri = "/scrape-endpoint")
+        public RuntimeConfigurationGenerator WithPrometheusConfiguration(double? metricUnavailableValue = -1, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
-            var prometheusConfiguration = scrapeEndpointBaseUri == null
-                ? null
-                : new PrometheusConfiguration
+            PrometheusConfiguration prometheusConfiguration;
+            if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
+            {
+                prometheusConfiguration = null;
+            }
+            else
+            {
+                prometheusConfiguration = new PrometheusConfiguration();
+
+                if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) == false)
                 {
-                    ScrapeEndpoint = new ScrapeEndpointConfiguration
+                    prometheusConfiguration.ScrapeEndpoint = new ScrapeEndpointConfiguration
                     {
                         BaseUriPath = scrapeEndpointBaseUri
-                    }
-                };
+                    };
+                }
+
+                if (metricUnavailableValue != null)
+                {
+                    prometheusConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
+                }
+            }
 
             _runtimeConfiguration.Prometheus = prometheusConfiguration;
 
@@ -164,12 +177,20 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine("  scrapeEndpoint:");
                     configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
                 }
+
+                if (_runtimeConfiguration?.Prometheus.MetricUnavailableValue != null)
+                {
+                    configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.Prometheus.MetricUnavailableValue}");
+                }
             }
 
             if (_runtimeConfiguration?.MetricsConfiguration != null)
             {
                 configurationBuilder.AppendLine("metricsConfiguration:");
-                configurationBuilder.AppendLine($"  absolutePath: {_runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
+                if (_runtimeConfiguration?.MetricsConfiguration.AbsolutePath != null)
+                {
+                    configurationBuilder.AppendLine($"  absolutePath: {_runtimeConfiguration?.MetricsConfiguration.AbsolutePath}");
+                }
             }
 
             if (_runtimeConfiguration?.Telemetry != null)

@@ -6,6 +6,7 @@ using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
@@ -38,12 +39,13 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
         public IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            IRuntimeMetricsCollector runtimeMetricsCollector)
+            IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
-            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, _featureToggleClient, _logger, _exceptionTracker);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _featureToggleClient, _logger, _exceptionTracker);
 
             switch (metricDefinitionResourceType)
             {
