@@ -52,6 +52,8 @@ In order to enable this feature, the following environment variables need to be 
 server:
   httpPort: 80 # Optional. Default: 80
 prometheus:
+  metricUnavailableValue: NaN # Optional. Default: NaN
+  enableMetricTimestamps: false # Optional. Default: true
   scrapeEndpoint:
     baseUriPath: /metrics # Optional. Default: /metrics
 metricsConfiguration:
@@ -65,8 +67,6 @@ telemetry:
     isEnabled: true # Optional. Default: true
     verbosity: trace # Optional. Default: N/A
   defaultVerbosity: error # Optional. Default: error
-featureFlags:
-  disableMetricTimestamps: true # Optional. Default: false
 ```
 
 # Runtime configuration in v0.x
