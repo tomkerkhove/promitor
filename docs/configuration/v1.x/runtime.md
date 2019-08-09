@@ -7,7 +7,7 @@ Here is an overview of how you can configure Promitor runtime.
 
 Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
 
-_Note: Still using Promitor v0.x? [Use environment variables](./../v0.x/) to configure the runtime._
+_Note: Using Promitor v0.x? [Use environment variables](./../v0.x/) to configure the runtime._
 
 # Defining runtime configuration via YAML
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
