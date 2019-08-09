@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         private const string LabelsTag = "labels";
         private const string AzureMetricConfigurationTag = "azureMetricConfiguration";
         private const string ScrapingTag = "scraping";
-        private const string MetricsTag = "metrics";
+        private const string ResourcesTag = "resources";
 
         private readonly IDeserializer<AzureMetricConfigurationV2> _azureMetricConfigurationDeserializer;
         private readonly IDeserializer<ScrapingV2> _scrapingDeserializer;
@@ -67,7 +67,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
         {
             if (metricDefinition.ResourceType != null &&
                 metricDefinition.ResourceType != ResourceType.NotSpecified &&
-                node.Children.TryGetValue(MetricsTag, out var metricsNode))
+                node.Children.TryGetValue(ResourcesTag, out var metricsNode))
             {
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
                 metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode);

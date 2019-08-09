@@ -184,7 +184,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
             // Arrange
             const string yamlText =
 @"resourceType: Generic
-metrics:
+resources:
 - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
 - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
             var node = YamlUtils.CreateYamlNode(yamlText);
@@ -195,7 +195,7 @@ metrics:
 
             var resources = new List<AzureResourceDefinitionV2>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode) node.Children["metrics"])).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode) node.Children["resources"])).Returns(resources);
 
             // Act
             var definition = _deserializer.Deserialize(node);
@@ -209,7 +209,7 @@ metrics:
         {
             // Arrange
             const string yamlText =
-@"metrics:
+@"resources:
 - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
 - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
             var node = YamlUtils.CreateYamlNode(yamlText);
@@ -220,7 +220,7 @@ metrics:
 
             var resources = new List<AzureResourceDefinitionV2>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode)node.Children["metrics"])).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode)node.Children["resources"])).Returns(resources);
 
             // Act
             var definition = _deserializer.Deserialize(node);
