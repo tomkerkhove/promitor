@@ -4,17 +4,17 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes
 {
-    public class StorageQueueMetricDefinitionBuilder : MetricDefinitionBuilder
+    public class StorageQueueMetricDefinitionV1 : MetricDefinitionV1
     {
         public string AccountName { get; set; }
         public string QueueName { get; set; }
-        public SecretBuilder SasToken { get; set; }
+        public SecretV1 SasToken { get; set; }
         public override ResourceType ResourceType { get; } = ResourceType.StorageQueue;
 
         public override MetricDefinition Build()
         {
             return new StorageQueueMetricDefinition(
-                AzureMetricConfigurationBuilder.Build(),
+                AzureMetricConfiguration.Build(),
                 Description,
                 Name,
                 ResourceGroupName,
@@ -22,7 +22,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.Re
                 QueueName,
                 SasToken.Build(),
                 Labels,
-                ScrapingBuilder.Build());
+                Scraping.Build());
         }
     }
 }

@@ -9,10 +9,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         /// <summary>Deserializes the specified Generic Azure metric node from the YAML configuration file.</summary>
         /// <param name="metricNode">The metric node to deserialize to query an arbitrary Azure resource</param>
-        /// <returns>A new <see cref="MetricDefinitionBuilder" /> object (strongly typed as a <see cref="GenericAzureMetricDefinitionBuilder" />) </returns>
-        internal override MetricDefinitionBuilder Deserialize(YamlMappingNode metricNode)
+        /// <returns>A new <see cref="MetricDefinitionV1" /> object (strongly typed as a <see cref="GenericAzureMetricDefinitionV1" />) </returns>
+        internal override MetricDefinitionV1 Deserialize(YamlMappingNode metricNode)
         {
-            var metricDefinition = base.DeserializeMetricDefinition<GenericAzureMetricDefinitionBuilder>(metricNode);
+            var metricDefinition = base.DeserializeMetricDefinition<GenericAzureMetricDefinitionV1>(metricNode);
 
             if (metricNode.Children.TryGetValue(new YamlScalarNode(value: "filter"), out var filterNode))
             {

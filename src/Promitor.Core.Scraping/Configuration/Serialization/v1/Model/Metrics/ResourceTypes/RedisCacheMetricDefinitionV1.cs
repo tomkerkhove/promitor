@@ -4,21 +4,21 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes
 {
-    public class PostgreSqlMetricDefinitionBuilder : MetricDefinitionBuilder
+    public class RedisCacheMetricDefinitionV1 : MetricDefinitionV1
     {
-        public string ServerName { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.PostgreSql;
+        public string CacheName { get; set; }
+        public override ResourceType ResourceType { get; } = ResourceType.RedisCache;
 
         public override MetricDefinition Build()
         {
-            return new PostgreSqlMetricDefinition(
-                AzureMetricConfigurationBuilder.Build(),
+            return new RedisCacheMetricDefinition(
+                AzureMetricConfiguration.Build(),
                 Description,
                 Name,
                 ResourceGroupName,
-                ServerName,
+                CacheName,
                 Labels,
-                ScrapingBuilder.Build());
+                Scraping.Build());
         }
     }
 }

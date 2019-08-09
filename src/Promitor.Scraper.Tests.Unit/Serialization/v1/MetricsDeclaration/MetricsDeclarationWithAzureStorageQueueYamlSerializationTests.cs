@@ -26,12 +26,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var azureStorageQueueMetricDefinition = GenerateBogusAzureStorageQueueMetricDefinition(resourceGroupName, metricScrapingInterval, sasTokenRawValue, sasTokenEnvironmentVariable);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationBuilder
+            var scrapingConfiguration = new Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
-                AzureMetadataBuilder = azureMetadata,
-                MetricDefaultsBuilder = metricDefaults,
-                Metrics = new List<MetricDefinitionBuilder>
+                AzureMetadata = azureMetadata,
+                MetricDefaults = metricDefaults,
+                Metrics = new List<MetricDefinitionV1>
                 {
                     azureStorageQueueMetricDefinition
                 }
@@ -69,26 +69,26 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        private StorageQueueMetricDefinitionBuilder GenerateBogusAzureStorageQueueMetricDefinition(string resourceGroupName, string metricScrapingInterval, string sasTokenRawValue, string sasTokenEnvironmentVariable)
+        private StorageQueueMetricDefinitionV1 GenerateBogusAzureStorageQueueMetricDefinition(string resourceGroupName, string metricScrapingInterval, string sasTokenRawValue, string sasTokenEnvironmentVariable)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<StorageQueueMetricDefinitionBuilder>()
+            var bogusGenerator = new Faker<StorageQueueMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.StorageQueue)
                 .RuleFor(metricDefinition => metricDefinition.AccountName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.QueueName, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.SasToken, faker => new SecretBuilder
+                .RuleFor(metricDefinition => metricDefinition.SasToken, faker => new SecretV1
                 {
                     RawValue = sasTokenRawValue,
                     EnvironmentVariable = sasTokenEnvironmentVariable
                 })
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfigurationBuilder, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .RuleFor(metricDefinition => metricDefinition.ScrapingBuilder, faker => bogusScrapingInterval)
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
                 .RuleFor(metricDefinition => metricDefinition.Labels, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } });
 
             return bogusGenerator.Generate();

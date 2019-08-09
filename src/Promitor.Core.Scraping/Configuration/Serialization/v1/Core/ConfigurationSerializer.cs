@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public MetricsDeclaration InterpretYamlStream(YamlMappingNode rootNode)
         {
-            AzureMetadataBuilder azureMetadata = null;
+            AzureMetadataV1 azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
                 var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
@@ -27,7 +27,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
             }
 
-            MetricDefaultsBuilder metricDefaults = null;
+            MetricDefaultsV1 metricDefaults = null;
             if (rootNode.Children.ContainsKey("metricDefaults"))
             {
                 var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
@@ -35,7 +35,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
-            List<MetricDefinitionBuilder> metrics = null;
+            List<MetricDefinitionV1> metrics = null;
             if (rootNode.Children.ContainsKey("metrics"))
             {
                 var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
@@ -43,10 +43,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
 
-            var metricsDeclaration = new MetricsDeclarationBuilder
+            var metricsDeclaration = new MetricsDeclarationV1
             {
-                AzureMetadataBuilder = azureMetadata,
-                MetricDefaultsBuilder = metricDefaults,
+                AzureMetadata = azureMetadata,
+                MetricDefaults = metricDefaults,
                 Metrics = metrics
             };
 

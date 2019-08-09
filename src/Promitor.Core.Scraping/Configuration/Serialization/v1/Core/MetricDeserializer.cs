@@ -19,10 +19,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             return this;
         }
 
-        internal abstract MetricDefinitionBuilder Deserialize(YamlMappingNode metricNode);
+        internal abstract MetricDefinitionV1 Deserialize(YamlMappingNode metricNode);
 
         protected virtual TMetricDefinition DeserializeMetricDefinition<TMetricDefinition>(YamlMappingNode metricNode)
-            where TMetricDefinition : MetricDefinitionBuilder, new()
+            where TMetricDefinition : MetricDefinitionV1, new()
         {
             Guard.NotNull(metricNode, nameof(metricNode));
 
@@ -37,7 +37,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             {
                 Name = name?.ToString(),
                 Description = description?.ToString(),
-                AzureMetricConfigurationBuilder = azureMetricConfiguration,
+                AzureMetricConfiguration = azureMetricConfiguration,
                 ResourceGroupName = GetResourceGroupName(metricNode)
             };
 
@@ -57,7 +57,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             return null;
         }
 
-        private static void DeserializeScraping<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinitionBuilder, new()
+        private static void DeserializeScraping<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinitionV1, new()
         {
             if (metricNode.Children.ContainsKey(@"scraping") == false)
             {
@@ -71,7 +71,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
                 if (scrapingIntervalNode != null)
                 {
-                    metricDefinition.ScrapingBuilder.Schedule = scrapingIntervalNode.ToString();
+                    metricDefinition.Scraping.Schedule = scrapingIntervalNode.ToString();
                 }
             }
             catch (KeyNotFoundException)
@@ -81,7 +81,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             }
         }
 
-        private static void DeserializeCustomLabels<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinitionBuilder, new()
+        private static void DeserializeCustomLabels<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinitionV1, new()
         {
             if (metricNode.Children.ContainsKey(@"labels") == false)
             {

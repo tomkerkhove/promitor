@@ -14,10 +14,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// Deserializes the specified Redis Cache metric node from the YAML configuration file.
         /// </summary>
         /// <param name="metricNode">The metric node to deserialize to Redis Cache configuration</param>
-        /// <returns>A new <see cref="MetricDefinitionBuilder"/> object (strongly typed as a <see cref="RedisCacheMetricDefinitionBuilder"/>) </returns>
-        internal override MetricDefinitionBuilder Deserialize(YamlMappingNode metricNode)
+        /// <returns>A new <see cref="MetricDefinitionV1"/> object (strongly typed as a <see cref="RedisCacheMetricDefinitionV1"/>) </returns>
+        internal override MetricDefinitionV1 Deserialize(YamlMappingNode metricNode)
         {
-            var metricDefinition = base.DeserializeMetricDefinition<RedisCacheMetricDefinitionBuilder>(metricNode);
+            var metricDefinition = base.DeserializeMetricDefinition<RedisCacheMetricDefinitionV1>(metricNode);
 
             var cacheName = metricNode.Children[new YamlScalarNode("cacheName")];
             metricDefinition.CacheName = cacheName?.ToString();

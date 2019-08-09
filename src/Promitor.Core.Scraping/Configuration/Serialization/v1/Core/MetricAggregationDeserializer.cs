@@ -6,7 +6,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class MetricAggregationDeserializer : Deserializer<MetricAggregationBuilder>
+    internal class MetricAggregationDeserializer : Deserializer<MetricAggregationV1>
     {
         private readonly YamlScalarNode _typeNode = new YamlScalarNode("type");
         private readonly YamlScalarNode _intervalNode = new YamlScalarNode("interval");
@@ -15,9 +15,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        internal override MetricAggregationBuilder Deserialize(YamlMappingNode node)
+        internal override MetricAggregationV1 Deserialize(YamlMappingNode node)
         {
-            var aggregation = new MetricAggregationBuilder();
+            var aggregation = new MetricAggregationV1();
 
             if (node.Children.ContainsKey(_intervalNode.Value))
             {

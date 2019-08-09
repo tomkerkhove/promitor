@@ -3,7 +3,7 @@ using Promitor.Core.Scraping.Configuration.Model;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
-    public class AggregationBuilder
+    public class AggregationV1
     {
         /// <summary>
         /// The time period the metric should be aggregated over.

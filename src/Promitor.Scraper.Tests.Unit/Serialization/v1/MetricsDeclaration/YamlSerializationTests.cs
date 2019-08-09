@@ -51,46 +51,46 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(azureMetadata.SubscriptionId, deserializedConfiguration.AzureMetadata.SubscriptionId);
         }
 
-        protected AzureMetricConfigurationBuilder GenerateBogusAzureMetricConfiguration()
+        protected AzureMetricConfigurationV1 GenerateBogusAzureMetricConfiguration()
         {
-            var bogusMetricAggregation = new Faker<MetricAggregationBuilder>()
+            var bogusMetricAggregation = new Faker<MetricAggregationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(aggregation => aggregation.Type, faker => faker.PickRandom<Microsoft.Azure.Management.Monitor.Fluent.Models.AggregationType>())
                 .RuleFor(aggregation => aggregation.Interval, faker => TimeSpan.FromMinutes(faker.Random.Int()))
                 .Generate();
 
-            var bogusMetricConfiguration = new Faker<AzureMetricConfigurationBuilder>()
+            var bogusMetricConfiguration = new Faker<AzureMetricConfigurationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.MetricName, faker => faker.Name.FirstName())
-                .RuleFor(metricDefinition => metricDefinition.AggregationBuilder, faker => bogusMetricAggregation)
+                .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => bogusMetricAggregation)
                 .Generate();
 
             return bogusMetricConfiguration;
         }
 
-        protected MetricDefaultsBuilder GenerateBogusMetricDefaults(string defaultScrapingInterval)
+        protected MetricDefaultsV1 GenerateBogusMetricDefaults(string defaultScrapingInterval)
         {
-            var bogusAggregationGenerator = new Faker<AggregationBuilder>()
+            var bogusAggregationGenerator = new Faker<AggregationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(aggregation => aggregation.Interval, faker => TimeSpan.FromMinutes(faker.Random.Int()));
 
             var generatedAggregation = bogusAggregationGenerator.Generate();
-            var metricDefaults = new MetricDefaultsBuilder
+            var metricDefaults = new MetricDefaultsV1
             {
-                AggregationBuilder = generatedAggregation,
+                Aggregation = generatedAggregation,
             };
 
             if (!string.IsNullOrWhiteSpace(defaultScrapingInterval))
             {
-                metricDefaults.ScrapingBuilder.Schedule = defaultScrapingInterval;
+                metricDefaults.Scraping.Schedule = defaultScrapingInterval;
             }
 
             return metricDefaults;
         }
 
-        protected AzureMetadataBuilder GenerateBogusAzureMetadata()
+        protected AzureMetadataV1 GenerateBogusAzureMetadata()
         {
-            var bogusGenerator = new Faker<AzureMetadataBuilder>()
+            var bogusGenerator = new Faker<AzureMetadataV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metadata => metadata.TenantId, faker => faker.Finance.Account())
                 .RuleFor(metadata => metadata.ResourceGroupName, faker => faker.Name.FirstName())
@@ -99,9 +99,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             return bogusGenerator.Generate();
         }
 
-        protected ScrapingBuilder GenerateBogusScrapingInterval(string testInterval)
+        protected ScrapingV1 GenerateBogusScrapingInterval(string testInterval)
         {
-            var bogusGenerator = new Faker<ScrapingBuilder>()
+            var bogusGenerator = new Faker<ScrapingV1>()
                 .RuleFor(scraping => scraping.Schedule, faker => testInterval);
 
             return bogusGenerator.Generate();

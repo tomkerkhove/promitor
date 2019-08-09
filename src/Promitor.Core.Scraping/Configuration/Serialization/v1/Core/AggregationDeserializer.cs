@@ -5,15 +5,15 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AggregationDeserializer : Deserializer<AggregationBuilder>
+    internal class AggregationDeserializer : Deserializer<AggregationV1>
     {
         internal AggregationDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override AggregationBuilder Deserialize(YamlMappingNode node)
+        internal override AggregationV1 Deserialize(YamlMappingNode node)
         {
-            var aggregation = new AggregationBuilder();
+            var aggregation = new AggregationV1();
 
             var interval = TimeSpan.FromMinutes(5);
             if (node.Children.ContainsKey("interval"))

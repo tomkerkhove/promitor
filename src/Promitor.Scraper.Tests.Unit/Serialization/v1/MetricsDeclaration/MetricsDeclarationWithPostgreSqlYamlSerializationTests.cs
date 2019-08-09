@@ -26,12 +26,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var postgreSqlMetricDefinition = GenerateBogusPostgreSqlMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new MetricsDeclarationBuilder
+            var scrapingConfiguration = new MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
-                AzureMetadataBuilder = azureMetadata,
-                MetricDefaultsBuilder = metricDefaults,
-                Metrics = new List<MetricDefinitionBuilder>
+                AzureMetadata = azureMetadata,
+                MetricDefaults = metricDefaults,
+                Metrics = new List<MetricDefinitionV1>
                 {
                     postgreSqlMetricDefinition
                 }
@@ -60,20 +60,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(postgreSqlMetricDefinition.ServerName, deserializedPostgreSqlMetricDefinition.ServerName);
         }
 
-        private PostgreSqlMetricDefinitionBuilder GenerateBogusPostgreSqlMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private PostgreSqlMetricDefinitionV1 GenerateBogusPostgreSqlMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<PostgreSqlMetricDefinitionBuilder>()
+            var bogusGenerator = new Faker<PostgreSqlMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Lorem.Word())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.PostgreSql)
                 .RuleFor(metricDefinition => metricDefinition.ServerName, faker => faker.Lorem.Word())
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfigurationBuilder, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .RuleFor(metricDefinition => metricDefinition.ScrapingBuilder, faker => bogusScrapingInterval)
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
                 .RuleFor(metricDefinition => metricDefinition.Labels, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } });
 
             return bogusGenerator.Generate();

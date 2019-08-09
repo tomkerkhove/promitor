@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using YamlDotNet.Serialization;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
 {
-    public abstract class MetricDefinitionBuilder
+    public abstract class MetricDefinitionV1
     {
         /// <summary>
         ///     Configuration about the Azure Monitor metric to scrape
         /// </summary>
-        [YamlMember(Alias = "azureMetricConfiguration")]
-        public AzureMetricConfigurationBuilder AzureMetricConfigurationBuilder { get; set; } = new AzureMetricConfigurationBuilder();
+        public AzureMetricConfigurationV1 AzureMetricConfiguration { get; set; } = new AzureMetricConfigurationV1();
 
         /// <summary>
         ///     Description concerning metric that will be made available in the scraping endpoint
@@ -42,8 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
         /// <summary>
         /// Gets or sets the scraping model.
         /// </summary>
-        [YamlMember(Alias = "scraping")]
-        public ScrapingBuilder ScrapingBuilder { get; set; } = new ScrapingBuilder();
+        public ScrapingV1 Scraping { get; set; } = new ScrapingV1();
 
         public abstract MetricDefinition Build();
         

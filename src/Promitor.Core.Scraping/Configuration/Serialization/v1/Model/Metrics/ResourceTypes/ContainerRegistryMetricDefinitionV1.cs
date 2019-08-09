@@ -4,22 +4,21 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes
 {
-    public class CosmosDbMetricDefinitionBuilder : MetricDefinitionBuilder
+    public class ContainerRegistryMetricDefinitionV1 : MetricDefinitionV1
     {
-        public string DbName { get; set; }
-
-        public override ResourceType ResourceType { get; } = ResourceType.CosmosDb;
+        public string RegistryName { get; set; }
+        public override ResourceType ResourceType { get; } = ResourceType.ContainerRegistry;
 
         public override MetricDefinition Build()
         {
-            return new CosmosDbMetricDefinition(
-                AzureMetricConfigurationBuilder.Build(),
+            return new ContainerRegistryMetricDefinition(
+                AzureMetricConfiguration.Build(),
                 Description,
                 Name,
                 ResourceGroupName,
-                DbName,
+                RegistryName,
                 Labels,
-                ScrapingBuilder.Build());
+                Scraping.Build());
         }
     }
 }

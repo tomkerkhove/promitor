@@ -4,21 +4,21 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes
 {
-    public class VirtualMachineMetricDefinitionBuilder : MetricDefinitionBuilder
+    public class NetworkInterfaceMetricDefinitionV1 : MetricDefinitionV1
     {
-        public string VirtualMachineName { get; set; }
-        public override ResourceType ResourceType { get; } = ResourceType.VirtualMachine;
+        public string NetworkInterfaceName { get; set; }
+        public override ResourceType ResourceType { get; } = ResourceType.NetworkInterface;
 
         public override MetricDefinition Build()
         {
-            return new VirtualMachineMetricDefinition(
-                AzureMetricConfigurationBuilder.Build(),
+            return new NetworkInterfaceMetricDefinition(
+                AzureMetricConfiguration.Build(),
                 Description,
                 Name,
                 ResourceGroupName,
-                VirtualMachineName,
+                NetworkInterfaceName,
                 Labels,
-                ScrapingBuilder.Build());
+                Scraping.Build());
         }
     }
 }

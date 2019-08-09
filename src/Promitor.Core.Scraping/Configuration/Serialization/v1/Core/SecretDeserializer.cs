@@ -4,15 +4,15 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class SecretDeserializer : Deserializer<SecretBuilder>
+    internal class SecretDeserializer : Deserializer<SecretV1>
     {
         internal SecretDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override SecretBuilder Deserialize(YamlMappingNode node)
+        internal override SecretV1 Deserialize(YamlMappingNode node)
         {
-            var secret = new SecretBuilder();
+            var secret = new SecretV1();
 
             if (node.Children.ContainsKey("rawValue"))
             {

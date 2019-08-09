@@ -5,13 +5,13 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AzureMetadataDeserializer : Deserializer<AzureMetadataBuilder>
+    internal class AzureMetadataDeserializer : Deserializer<AzureMetadataV1>
     {
         internal AzureMetadataDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override AzureMetadataBuilder Deserialize(YamlMappingNode node)
+        internal override AzureMetadataV1 Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));
 
@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             var subscriptionId = node.Children[new YamlScalarNode("subscriptionId")];
             var resourceGroupName = node.Children[new YamlScalarNode("resourceGroupName")];
 
-            var azureMetadata = new AzureMetadataBuilder
+            var azureMetadata = new AzureMetadataV1
             {
                 TenantId = tenantId?.ToString(),
                 SubscriptionId = subscriptionId?.ToString(),

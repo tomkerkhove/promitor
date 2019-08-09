@@ -5,24 +5,24 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class MetricDefaultsDeserializer : Deserializer<MetricDefaultsBuilder>
+    internal class MetricDefaultsDeserializer : Deserializer<MetricDefaultsV1>
     {
         internal MetricDefaultsDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override MetricDefaultsBuilder Deserialize(YamlMappingNode node)
+        internal override MetricDefaultsV1 Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));
 
-            var metricDefaults = new MetricDefaultsBuilder();
+            var metricDefaults = new MetricDefaultsV1();
 
             if (node.Children.ContainsKey("aggregation"))
             {
                 var metricDefaultsNode = (YamlMappingNode)node.Children[new YamlScalarNode("aggregation")];
                 var metricDefaultsSerializer = new AggregationDeserializer(Logger);
                 var aggregationBuilder = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
-                metricDefaults.AggregationBuilder = aggregationBuilder;
+                metricDefaults.Aggregation = aggregationBuilder;
             }
 
             if (node.Children.ContainsKey(@"scraping"))
@@ -30,7 +30,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 var scrapingNode = (YamlMappingNode)node.Children[new YamlScalarNode("scraping")];
                 var scrapingDeserializer = new ScrapingDeserializer(Logger);
                 var scrapingBuilder = scrapingDeserializer.Deserialize(scrapingNode);
-                metricDefaults.ScrapingBuilder = scrapingBuilder;
+                metricDefaults.Scraping = scrapingBuilder;
             }
 
             return metricDefaults;

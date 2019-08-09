@@ -26,12 +26,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new MetricsDeclarationBuilder
+            var scrapingConfiguration = new MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
-                AzureMetadataBuilder = azureMetadata,
-                MetricDefaultsBuilder = metricDefaults,
-                Metrics = new List<MetricDefinitionBuilder>
+                AzureMetadata = azureMetadata,
+                MetricDefaults = metricDefaults,
+                Metrics = new List<MetricDefinitionV1>
                 {
                     virtualMachineMetricDefinition
                 }
@@ -65,20 +65,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        private VirtualMachineMetricDefinitionBuilder GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private VirtualMachineMetricDefinitionV1 GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<VirtualMachineMetricDefinitionBuilder>()
+            var bogusGenerator = new Faker<VirtualMachineMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
                 .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.VirtualMachine)
                 .RuleFor(metricDefinition => metricDefinition.VirtualMachineName, faker => faker.Name.LastName())
-                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfigurationBuilder, faker => bogusAzureMetricConfiguration)
+                .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
-                .RuleFor(metricDefinition => metricDefinition.ScrapingBuilder, faker => bogusScrapingInterval)
+                .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)
                 .RuleFor(metricDefinition => metricDefinition.Labels, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } });
 
             return bogusGenerator.Generate();

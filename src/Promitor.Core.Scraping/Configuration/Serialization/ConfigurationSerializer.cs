@@ -90,7 +90,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// </summary>
         /// <param name="metricsDeclaration">A v1 version of the config.</param>
         /// <returns>The serialized yaml.</returns>
-        public string Serialize(MetricsDeclarationBuilder metricsDeclaration)
+        public string Serialize(MetricsDeclarationV1 metricsDeclaration)
         {
             Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
 
