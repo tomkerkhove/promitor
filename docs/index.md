@@ -45,10 +45,10 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [General Declaration](configuration/metrics)
     - [Supported Providers](configuration/metrics#supported-azure-services)
 - **Configuration**
-    - [Runtime](configuration#runtime)
-    - [Scraping](configuration#scraping)
-    - [Authentication with Azure Monitor](configuration/azure-monitor)
-    - [Logging & External Providers](configuration#logging)
+    - [Runtime](configuration/v1.x/runtime/#runtime)
+    - [Scraping](configuration/v1.x/runtime/#scraping)
+    - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
+    - [Logging & External Providers](configuration/v1.x/runtime/#logging)
 - **Operations**
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
     - [Health](operations#health)
