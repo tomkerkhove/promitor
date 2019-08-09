@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
 {
@@ -41,18 +40,5 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics
         /// Gets or sets the scraping model.
         /// </summary>
         public ScrapingV1 Scraping { get; set; } = new ScrapingV1();
-
-        public abstract MetricDefinition Build();
-        
-        /// <summary>
-        /// Provided as a convenience to cast the result of <see cref="Build"/>
-        /// to the correct type.
-        /// </summary>
-        /// <typeparam name="T">The type of <see cref="MetricDefinition"/> to be returned.</typeparam>
-        /// <returns>The definition.</returns>
-        public T Build<T>() where T: MetricDefinition
-        {
-            return Build() as T;
-        }
     }
 }

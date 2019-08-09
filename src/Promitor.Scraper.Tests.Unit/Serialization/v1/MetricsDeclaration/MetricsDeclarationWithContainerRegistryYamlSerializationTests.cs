@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition.Build<ContainerRegistryMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
             var deserializedContainerRegistryMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
-            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition.Build<ContainerRegistryMetricDefinition>());
+            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition);
         }
 
-        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinition serviceBusMetricDefinition)
+        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinitionV1 serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);

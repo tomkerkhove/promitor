@@ -3,13 +3,5 @@
     public class ScrapingV1
     {
         public string Schedule { get; set; }
-
-        public Configuration.Model.Scraping Build()
-        {
-            return new Configuration.Model.Scraping
-            {
-                Schedule = Schedule
-            };
-        }
     }
 }

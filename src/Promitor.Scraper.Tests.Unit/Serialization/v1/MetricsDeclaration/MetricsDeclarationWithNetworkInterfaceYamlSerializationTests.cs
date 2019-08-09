@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, networkInterfaceMetricDefinition.Build<NetworkInterfaceMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, networkInterfaceMetricDefinition);
             var deserializedNetworkInterfaceMetricDefinition = deserializedMetricDefinition as NetworkInterfaceMetricDefinition;
-            AssertNetworkInterfaceMetricDefinition(deserializedNetworkInterfaceMetricDefinition, networkInterfaceMetricDefinition.Build<NetworkInterfaceMetricDefinition>());
+            AssertNetworkInterfaceMetricDefinition(deserializedNetworkInterfaceMetricDefinition, networkInterfaceMetricDefinition);
         }
 
-        private static void AssertNetworkInterfaceMetricDefinition(NetworkInterfaceMetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinition networkInterfaceMetricDefinition)
+        private static void AssertNetworkInterfaceMetricDefinition(NetworkInterfaceMetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinitionV1 networkInterfaceMetricDefinition)
         {
             Assert.NotNull(deserializedNetworkInterfaceMetricDefinition);
             Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedNetworkInterfaceMetricDefinition.NetworkInterfaceName);

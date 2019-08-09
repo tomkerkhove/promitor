@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition.Build<ServiceBusQueueMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, serviceBusMetricDefinition);
             var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ServiceBusQueueMetricDefinition;
-            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition.Build<ServiceBusQueueMetricDefinition>());
+            AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition)
+        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinitionV1 serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);

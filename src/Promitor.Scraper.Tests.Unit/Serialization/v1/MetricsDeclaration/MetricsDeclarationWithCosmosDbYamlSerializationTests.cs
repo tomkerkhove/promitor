@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, cosmosDbMetricDefinition.Build<CosmosDbMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, cosmosDbMetricDefinition);
             var deserializedCosmosDbMetricDefinition = deserializedMetricDefinition as CosmosDbMetricDefinition;
-            AssertCosmosDbMetricDefinition(deserializedCosmosDbMetricDefinition, cosmosDbMetricDefinition.Build<CosmosDbMetricDefinition>());
+            AssertCosmosDbMetricDefinition(deserializedCosmosDbMetricDefinition, cosmosDbMetricDefinition);
         }
 
-        private static void AssertCosmosDbMetricDefinition(CosmosDbMetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinition cosmosDbMetricDefinition)
+        private static void AssertCosmosDbMetricDefinition(CosmosDbMetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinitionV1 cosmosDbMetricDefinition)
         {
             Assert.NotNull(deserializedCosmosDbMetricDefinition);
             Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedCosmosDbMetricDefinition.DbName);

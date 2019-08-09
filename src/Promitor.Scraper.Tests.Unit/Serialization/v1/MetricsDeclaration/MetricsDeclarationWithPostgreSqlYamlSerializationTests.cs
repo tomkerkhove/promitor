@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, postgreSqlMetricDefinition.Build<PostgreSqlMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, postgreSqlMetricDefinition);
             var deserializedPostgreSqlMetricDefinition = deserializedMetricDefinition as PostgreSqlMetricDefinition;
-            AssertPostgreSqlMetricDefinition(deserializedPostgreSqlMetricDefinition, postgreSqlMetricDefinition.Build<PostgreSqlMetricDefinition>());
+            AssertPostgreSqlMetricDefinition(deserializedPostgreSqlMetricDefinition, postgreSqlMetricDefinition);
         }
 
-        private static void AssertPostgreSqlMetricDefinition(PostgreSqlMetricDefinition deserializedPostgreSqlMetricDefinition, PostgreSqlMetricDefinition postgreSqlMetricDefinition)
+        private static void AssertPostgreSqlMetricDefinition(PostgreSqlMetricDefinition deserializedPostgreSqlMetricDefinition, PostgreSqlMetricDefinitionV1 postgreSqlMetricDefinition)
         {
             Assert.NotNull(deserializedPostgreSqlMetricDefinition);
             Assert.Equal(postgreSqlMetricDefinition.ServerName, deserializedPostgreSqlMetricDefinition.ServerName);

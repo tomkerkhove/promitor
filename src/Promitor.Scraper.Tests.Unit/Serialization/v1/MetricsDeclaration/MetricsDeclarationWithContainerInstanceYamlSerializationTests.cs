@@ -45,17 +45,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, containerInstanceMetricDefinition.Build<ContainerInstanceMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, containerInstanceMetricDefinition);
             var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ContainerInstanceMetricDefinition;
-            AssertContainerInstanceMetricDefinition(deserializedServiceBusMetricDefinition, containerInstanceMetricDefinition.Build<ContainerInstanceMetricDefinition>(), deserializedMetricDefinition);
+            AssertContainerInstanceMetricDefinition(deserializedServiceBusMetricDefinition, containerInstanceMetricDefinition, deserializedMetricDefinition);
         }
 
-        private static void AssertContainerInstanceMetricDefinition(ContainerInstanceMetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinition containerInstanceMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertContainerInstanceMetricDefinition(ContainerInstanceMetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinitionV1 containerInstanceMetricDefinition, MetricDefinition deserializedMetricDefinition)
         {
             Assert.NotNull(deserializedContainerInstanceMetricDefinition);
             Assert.Equal(containerInstanceMetricDefinition.ContainerGroup, deserializedContainerInstanceMetricDefinition.ContainerGroup);

@@ -44,17 +44,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 
             // Assert
             Assert.NotNull(deserializedConfiguration);
-            AssertAzureMetadata(deserializedConfiguration, azureMetadata.Build());
-            AssertMetricDefaults(deserializedConfiguration, metricDefaults.Build());
+            AssertAzureMetadata(deserializedConfiguration, azureMetadata);
+            AssertMetricDefaults(deserializedConfiguration, metricDefaults);
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition.Build<RedisCacheMetricDefinition>());
+            AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition);
             var deserializedRedisCacheMetricDefinition = deserializedMetricDefinition as RedisCacheMetricDefinition;
-            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition.Build<RedisCacheMetricDefinition>());
+            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition);
         }
 
-        private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinition redisCacheMetricDefinition)
+        private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinitionV1 redisCacheMetricDefinition)
         {
             Assert.NotNull(deserializedRedisCacheMetricDefinition);
             Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedRedisCacheMetricDefinition.CacheName);
