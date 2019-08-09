@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Providers;
 
 namespace Promitor.Scraper.Tests.Unit.Stubs
@@ -7,7 +8,7 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
     {
         private readonly string _rawMetricsDeclaration;
 
-        public MetricsDeclarationProviderStub(string rawMetricsDeclaration) : base(configuration: null, logger: NullLogger.Instance)
+        public MetricsDeclarationProviderStub(string rawMetricsDeclaration, IMapper mapper) : base(configuration: null, logger: NullLogger.Instance, mapper: mapper)
         {
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }

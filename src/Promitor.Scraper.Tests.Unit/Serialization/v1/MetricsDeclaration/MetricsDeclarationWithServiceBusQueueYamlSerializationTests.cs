@@ -36,7 +36,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
                     serviceBusMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);

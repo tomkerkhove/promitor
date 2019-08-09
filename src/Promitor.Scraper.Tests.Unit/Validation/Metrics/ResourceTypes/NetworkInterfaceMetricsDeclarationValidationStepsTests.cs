@@ -1,4 +1,6 @@
 using System.ComponentModel;
+using AutoMapper;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Scraper.Tests.Unit.Stubs;
@@ -9,14 +11,22 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
     [Category("Unit")]
     public class NetworkInterfaceMetricsDeclarationValidationStepTests
     {
+        private readonly IMapper _mapper;
+
+        public NetworkInterfaceMetricsDeclarationValidationStepTests()
+        {
+            var mapperConfig = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            _mapper = mapperConfig.CreateMapper();
+        }
+
         [Fact]
         public void NetworkInterfaceMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithNetworkInterfaceMetric(azureMetricName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -32,8 +42,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithNetworkInterfaceMetric(metricDescription: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -49,8 +59,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithNetworkInterfaceMetric(string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -66,8 +76,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithNetworkInterfaceMetric(networkInterfaceName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -83,8 +93,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithNetworkInterfaceMetric()
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using AutoMapper;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Scraper.Tests.Unit.Stubs;
@@ -9,6 +11,14 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
     [Category("Unit")]
     public class GeneralMetricsDeclarationValidationStepTests
     {
+        private readonly IMapper _mapper;
+
+        public GeneralMetricsDeclarationValidationStepTests()
+        {
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            _mapper = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public void MetricsDeclaration_DeclarationWithDuplicateMetricNames_Fails()
         {
@@ -17,8 +27,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(metricName)
                 .WithServiceBusMetric(metricName)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -33,8 +43,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(resourceGroupName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -49,8 +59,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(subscriptionId: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -65,8 +75,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata(string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -81,8 +91,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithoutMetadata()
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -98,8 +108,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithDefaults(new Core.Scraping.Configuration.Model.MetricDefaults())
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using AutoMapper;
 using Bogus;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
 
@@ -11,6 +13,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
     [Category("Unit")]
     public class YamlSerializationTests<TMetricDefinition> where TMetricDefinition : MetricDefinition
     {
+        protected readonly IMapper Mapper;
+
+        public YamlSerializationTests()
+        {
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            Mapper = mapperConfiguration.CreateMapper();
+        }
+
         protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, TMetricDefinition metricDefinition)
         {
             Assert.NotNull(deserializedMetricDefinition);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -48,7 +49,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public string Build()
+        public string Build(IMapper mapper)
         {
             var metricsDeclaration = new MetricsDeclaration
             {
@@ -58,7 +59,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Metrics = _metrics
             };
 
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper);
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
