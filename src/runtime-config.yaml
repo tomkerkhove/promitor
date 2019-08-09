@@ -1,6 +1,7 @@
 server:
   httpPort: 88
 prometheus:
+  metricUnavailableValue: NaN
   scrapeEndpoint:
     baseUriPath: /scrape
 metricsConfiguration:

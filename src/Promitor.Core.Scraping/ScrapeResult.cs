@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceGroupName">Resource group name that contains the resource that was scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
         /// <param name="metricValue">Value of the metric that was found</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string resourceUri, double metricValue) : this(subscriptionId, resourceGroupName, string.Empty, resourceUri, metricValue, new Dictionary<string, string>())
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, string.Empty, resourceUri, metricValue, new Dictionary<string, string>())
         {
         }
 
@@ -25,7 +25,7 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
         /// <param name="metricValue">Value of the metric that was found</param>
         /// <param name="customLabels">A collection of custom labels to add to the scraping result</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double metricValue, Dictionary<string, string> customLabels)
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue, Dictionary<string, string> customLabels)
         {
             Guard.NotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Guard.NotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
@@ -61,7 +61,7 @@ namespace Promitor.Core.Scraping
         /// <param name="instanceName">Name of the resource that is being scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
         /// <param name="metricValue">Value of the metric that was found</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double metricValue) : this(subscriptionId, resourceGroupName, instanceName,resourceUri,metricValue, new Dictionary<string, string>())
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, instanceName,resourceUri,metricValue, new Dictionary<string, string>())
         {
         }
 
@@ -88,7 +88,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Value of the metric that was found
         /// </summary>
-        public double MetricValue { get; }
+        public double? MetricValue { get; }
 
         public Dictionary<string, string> Labels { get; } = new Dictionary<string, string>();
     }

@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Prometheus.Client;
-using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Interfaces;
+using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
+
 // ReSharper disable All
 
 namespace Promitor.Core.Scraping
@@ -22,12 +20,12 @@ namespace Promitor.Core.Scraping
     /// </summary>
     /// <typeparam name="TMetricDefinition">Type of metric definition that is being used</typeparam>
     public abstract class Scraper<TMetricDefinition> : IScraper<MetricDefinition>
-      where TMetricDefinition : MetricDefinition, new()
+        where TMetricDefinition : MetricDefinition, new()
     {
-        private readonly ScraperConfiguration _scraperConfiguration;
         private readonly IExceptionTracker _exceptionTracker;
-        private readonly FeatureToggleClient _featureToggleClient;
         private readonly ILogger _logger;
+        private readonly IPrometheusMetricWriter _prometheusMetricWriter;
+        private readonly ScraperConfiguration _scraperConfiguration;
 
         /// <summary>
         ///     Constructor
@@ -37,9 +35,9 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
             _logger = scraperConfiguration.Logger;
-            _featureToggleClient = scraperConfiguration.FeatureToggleClient;
             _exceptionTracker = scraperConfiguration.ExceptionTracker;
             _scraperConfiguration = scraperConfiguration;
+            _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
             AzureMetadata = scraperConfiguration.AzureMetadata;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
@@ -81,7 +79,7 @@ namespace Promitor.Core.Scraping
 
                 _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, metricDefinition.Name, aggregationInterval);
 
-                ReportMetric(metricDefinition, scrapedMetricResult);
+                _prometheusMetricWriter.ReportMetric(metricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)
             {
@@ -91,16 +89,6 @@ namespace Promitor.Core.Scraping
             {
                 _exceptionTracker.Track(exception);
             }
-        }
-
-        private void ReportMetric(MetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
-        {
-            var metricsTimestampFeatureFlag = _featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps, defaultFlagState: true);
-
-            var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
-
-            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
-            gauge.WithLabels(labels.Values).Set(scrapedMetricResult.MetricValue);
         }
 
         private void HandleErrorResponseException(ErrorResponseException errorResponseException)
@@ -141,27 +129,6 @@ namespace Promitor.Core.Scraping
             _exceptionTracker.Track(new Exception(reason));
         }
 
-        private (string[] Names, string[] Values) DetermineLabels(MetricDefinition metricDefinition, ScrapeResult scrapeResult)
-        {
-            var labels = new Dictionary<string, string>(scrapeResult.Labels);
-
-            if (metricDefinition?.Labels?.Any() == true)
-            {
-                foreach (var customLabel in metricDefinition.Labels)
-                {
-                    if (labels.ContainsKey(customLabel.Key))
-                    {
-                        _logger.LogWarning("Custom label '{CustomLabelName}' was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabel.Key], customLabel.Value);
-                        continue;
-                    }
-
-                    labels.Add(customLabel.Key, customLabel.Value);
-                }
-            }
-
-            return (labels.Keys.ToArray(), labels.Values.ToArray());
-        }
-
         /// <summary>
         ///     Scrapes the configured resource
         /// </summary>
@@ -170,7 +137,6 @@ namespace Promitor.Core.Scraping
         /// <param name="metricDefinition">Definition of the metric to scrape</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
-        /// 
         protected abstract Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, TMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval);
     }
 }

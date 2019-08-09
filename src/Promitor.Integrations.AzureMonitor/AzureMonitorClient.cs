@@ -53,7 +53,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="resourceId">Id of the resource to query</param>
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<double> QueryMetricAsync(string metricName, AggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<double?> QueryMetricAsync(string metricName, AggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -159,20 +159,20 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetricValue;
         }
 
-        private static double InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
+        private static double? InterpretMetricValue(AggregationType metricAggregation, MetricValue relevantMetricValue)
         {
             switch (metricAggregation)
             {
                 case AggregationType.Average:
-                    return relevantMetricValue.Average ?? -1;
+                    return relevantMetricValue.Average;
                 case AggregationType.Count:
-                    return relevantMetricValue.Count ?? -1;
+                    return relevantMetricValue.Count;
                 case AggregationType.Maximum:
-                    return relevantMetricValue.Maximum ?? -1;
+                    return relevantMetricValue.Maximum;
                 case AggregationType.Minimum:
-                    return relevantMetricValue.Minimum ?? -1;
+                    return relevantMetricValue.Minimum;
                 case AggregationType.Total:
-                    return relevantMetricValue.Total ?? -1;
+                    return relevantMetricValue.Total;
                 case AggregationType.None:
                     return 0;
                 default:
