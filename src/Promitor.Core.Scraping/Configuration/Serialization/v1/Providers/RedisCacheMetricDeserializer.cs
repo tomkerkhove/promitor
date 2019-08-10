@@ -1,5 +1,6 @@
 ﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
@@ -7,7 +8,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     /// <summary>
     /// Defines a deserializer for the Redis Cache resource type
     /// </summary>
-    internal class RedisCacheMetricDeserializer : GenericAzureMetricDeserializer
+    internal class RedisCacheMetricDeserializer : MetricDeserializer
     {
         /// <summary>
         /// Deserializes the specified Redis Cache metric node from the YAML configuration file.

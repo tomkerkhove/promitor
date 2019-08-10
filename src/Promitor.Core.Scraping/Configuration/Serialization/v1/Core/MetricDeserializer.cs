@@ -28,6 +28,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
             var name = metricNode.Children[new YamlScalarNode("name")];
             var description = metricNode.Children[new YamlScalarNode("description")];
+            
             var azureMetricConfigurationNode = (YamlMappingNode)metricNode.Children[new YamlScalarNode("azureMetricConfiguration")];
 
             var azureMetricConfigurationDeserializer = new AzureMetricConfigurationDeserializer(Logger);
@@ -37,13 +38,24 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             {
                 Name = name?.ToString(),
                 Description = description?.ToString(),
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                ResourceGroupName = GetResourceGroupName(metricNode)
             };
 
             DeserializeScraping(metricNode, metricDefinition);
             DeserializeCustomLabels(metricNode, metricDefinition);
 
             return metricDefinition;
+        }
+
+        private static string GetResourceGroupName(YamlMappingNode metricNode)
+        {
+            if (metricNode.Children.TryGetValue("resourceGroupName", out var resourceGroupNode))
+            {
+                return resourceGroupNode.ToString();
+            }
+
+            return null;
         }
 
         private static void DeserializeScraping<TMetricDefinition>(YamlMappingNode metricNode, TMetricDefinition metricDefinition) where TMetricDefinition : MetricDefinition, new()
