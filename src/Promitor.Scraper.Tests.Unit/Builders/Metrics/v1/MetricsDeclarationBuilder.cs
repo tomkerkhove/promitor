@@ -59,7 +59,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Metrics = _metrics
             };
 
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper);
+            // TODO: pass in deserializer
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, null);
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 

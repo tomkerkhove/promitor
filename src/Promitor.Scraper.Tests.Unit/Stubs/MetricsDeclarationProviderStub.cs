@@ -8,7 +8,8 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
     {
         private readonly string _rawMetricsDeclaration;
 
-        public MetricsDeclarationProviderStub(string rawMetricsDeclaration, IMapper mapper) : base(configuration: null, logger: NullLogger.Instance, mapper: mapper)
+        // TODO: Pass in actual deserializer
+        public MetricsDeclarationProviderStub(string rawMetricsDeclaration, IMapper mapper) : base(configuration: null, logger: NullLogger.Instance, mapper: mapper, v2Deserializer: null)
         {
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }

@@ -7,6 +7,7 @@ using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 
 namespace Promitor.Core.Scraping.Configuration.Providers
 {
@@ -15,9 +16,9 @@ namespace Promitor.Core.Scraping.Configuration.Providers
         private readonly ConfigurationSerializer _configurationSerializer;
         private readonly IConfiguration _configuration;
 
-        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger, IMapper mapper)
+        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV2> v2Deserializer)
         {
-            _configurationSerializer = new ConfigurationSerializer(logger, mapper);
+            _configurationSerializer = new ConfigurationSerializer(logger, mapper, v2Deserializer);
             _configuration = configuration;
         }
 

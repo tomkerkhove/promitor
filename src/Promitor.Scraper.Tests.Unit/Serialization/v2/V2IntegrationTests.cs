@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Microsoft.Azure.Management.Cdn.Fluent.Models;
+using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model.ResourceTypes;
 using Xunit;
@@ -18,14 +20,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
     [Category("Unit")]
     public class V2IntegrationTests
     {
-        [Fact]
-        public void CanDeserializeSerializedModel()
+        private readonly V2Deserializer _v2Deserializer;
+        private readonly ConfigurationSerializer _configurationSerializer;
+        private readonly MetricsDeclarationV2 _metricsDeclaration;
+
+        public V2IntegrationTests()
         {
-            // This test creates a v2 model, serializes it to yaml, and then verifies that
-            // the V2Deserializer can deserialize it.
             var logger = new Mock<ILogger>();
-            var configurationSerializer = new ConfigurationSerializer(logger.Object);
-            var v2Serializer = new V2Deserializer(
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V2MappingProfile>());
+            var mapper = mapperConfiguration.CreateMapper();
+
+            _v2Deserializer = new V2Deserializer(
                 new AzureMetadataDeserializer(logger.Object),
                 new MetricDefaultsDeserializer(
                     new AggregationDeserializer(logger.Object),
@@ -39,8 +44,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
                     new AzureResourceDeserializerFactory(new SecretDeserializer(logger.Object), logger.Object),
                     logger.Object),
                 logger.Object);
+            _configurationSerializer = new ConfigurationSerializer(logger.Object, mapper, _v2Deserializer);
 
-            var declaration = new MetricsDeclarationV2
+            _metricsDeclaration = new MetricsDeclarationV2
             {
                 AzureMetadata = new AzureMetadataV2
                 {
@@ -122,10 +128,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
                     }
                 }
             };
+        }
+
+        [Fact]
+        public void CanDeserializeSerializedModel()
+        {
+            // This test creates a v2 model, serializes it to yaml, and then verifies that
+            // the V2Deserializer can deserialize it.
+
+            // Arrange
+            var yaml = _configurationSerializer.Serialize(_metricsDeclaration);
 
             // Act
-            var yaml = configurationSerializer.Serialize(declaration);
-            var deserializedModel = v2Serializer.Deserialize(YamlUtils.CreateYamlNode(yaml));
+            var deserializedModel = _v2Deserializer.Deserialize(YamlUtils.CreateYamlNode(yaml));
 
             // Assert
             Assert.NotNull(deserializedModel);
@@ -165,6 +180,50 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2
             Assert.Equal("promitor-messaging", serviceBusQueueResource.Namespace);
             Assert.Equal("orders", serviceBusQueueResource.QueueName);
             Assert.Equal("promitor-demo-group", serviceBusQueueResource.ResourceGroupName);
+        }
+
+        [Fact]
+        public void CanDeserializeToRuntimeModel()
+        {
+            // Arrange
+            var yaml = _configurationSerializer.Serialize(_metricsDeclaration);
+
+            // Act
+            var runtimeModel = _configurationSerializer.Deserialize(yaml);
+
+            // Assert
+            Assert.NotNull(runtimeModel);
+
+            var firstMetric = runtimeModel.Metrics.ElementAt(0);
+            Assert.Equal(ResourceType.Generic, firstMetric.ResourceType);
+            Assert.Equal("promitor_demo_generic_queue_size", firstMetric.PrometheusMetricDefinition.Name);
+            Assert.Equal("Amount of active messages of the 'orders' queue (determined with Generic provider)", firstMetric.PrometheusMetricDefinition.Description);
+            Assert.Collection(firstMetric.Resources, 
+                r =>
+                {
+                    var definition = Assert.IsType<GenericAzureResourceDefinition>(r);
+                    Assert.Equal("EntityName eq 'orders'", definition.Filter);
+                    Assert.Equal("Microsoft.ServiceBus/namespaces/promitor-messaging", definition.ResourceUri);
+                },
+                r =>
+                {
+                    var definition = Assert.IsType<GenericAzureResourceDefinition>(r);
+                    Assert.Equal("EntityName eq 'accounts'", definition.Filter);
+                    Assert.Equal("Microsoft.ServiceBus/namespaces/promitor-messaging", definition.ResourceUri);
+                });
+
+            var secondMetric = runtimeModel.Metrics.ElementAt(1);
+            Assert.Equal(ResourceType.ServiceBusQueue, secondMetric.ResourceType);
+            Assert.Equal("promitor_demo_servicebusqueue_queue_size", secondMetric.PrometheusMetricDefinition.Name);
+            Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)", secondMetric.PrometheusMetricDefinition.Description);
+            Assert.Collection(secondMetric.Resources, 
+                r =>
+                {
+                    var definition = Assert.IsType<ServiceBusQueueResourceDefinition>(r);
+                    Assert.Equal("promitor-messaging", definition.Namespace);
+                    Assert.Equal("orders", definition.QueueName);
+                    Assert.Equal("promitor-demo-group", definition.ResourceGroupName);
+                });
         }
     }
 }

@@ -3,10 +3,13 @@ using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
 using Bogus;
+using Moq;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
@@ -15,11 +18,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
     public class YamlSerializationTests
     {
         protected readonly IMapper Mapper;
+        protected readonly Mock<IDeserializer<MetricsDeclarationV2>> V2Deserializer;
 
         public YamlSerializationTests()
         {
             var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             Mapper = mapperConfiguration.CreateMapper();
+
+            V2Deserializer = new Mock<IDeserializer<MetricsDeclarationV2>>();
         }
 
         protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, MetricDefinitionV1 metricDefinition)

@@ -37,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
                     containerRegistryMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper, V2Deserializer.Object);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);

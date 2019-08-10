@@ -7,7 +7,6 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
@@ -18,11 +17,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IDeserializer<MetricsDeclarationV2> _v2Deserializer;
 
-        public ConfigurationSerializer(ILogger logger, IMapper mapper)
+        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV2> v2Deserializer)
         {
             _logger = logger;
             _mapper = mapper;
+            _v2Deserializer = v2Deserializer;
         }
 
         public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
@@ -60,6 +61,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                     var v1Config = v1Serializer.Deserialize(rootNode);
 
                     return _mapper.Map<MetricsDeclaration>(v1Config);
+                case SpecVersion.v2:
+                    var v2Config = _v2Deserializer.Deserialize(rootNode);
+
+                    return _mapper.Map<MetricsDeclaration>(v2Config);
                 default:
                     throw new Exception($"Unable to interpret YAML stream for spec version '{specVersion}'");
             }
