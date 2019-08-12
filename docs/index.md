@@ -42,8 +42,8 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Running Promitor on Kubernetes](deployment#kubernetes)
     - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Metrics**
-    - [General Declaration](configuration/metrics)
-    - [Supported Providers](configuration/metrics#supported-azure-services)
+    - [General Declaration](configuration/v0.x/metrics)
+    - [Supported Providers](configuration/v0.x/metrics#supported-azure-services)
 - **Configuration**
     - [Runtime](configuration/v0.x/#runtime)
     - [Scraping](configuration/v0.x/#scraping)
