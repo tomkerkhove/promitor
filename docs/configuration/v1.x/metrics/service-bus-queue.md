@@ -10,12 +10,10 @@ The following fields need to be provided:
 - `namespace` - The name of the Service Bus namespace
 - `queueName` - The name of the queue
 
-Supported metrics:
-- `IncomingMessages`
-- `IncomingRequests`
-- `ActiveMessages`
-- `Messages`
-- `Size`
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftservicebusnamespaces).
+
+The following scraper-specific metric label(s) will be added:
+- `entity_name` - Name of the queue
 
 Example:
 ```yaml
