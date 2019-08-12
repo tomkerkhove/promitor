@@ -27,6 +27,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
         private RuntimeConfigurationGenerator(RuntimeConfiguration runtimeConfiguration)
         {
             _runtimeConfiguration = runtimeConfiguration;
+            _isEnableMetricTimestampsInPrometheusSpecified = true;
         }
 
         public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888)
