@@ -3,9 +3,9 @@ layout: default
 title: Runtime Configuration
 ---
 
-Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
+This article covers an overview of all the knobs that you can tweak to align the runtime with your needs.
 
-This article covers an overview of all the knobs that you can tweak to fit your needs.
+Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
 
 Here is a complete example:
 
@@ -98,7 +98,7 @@ Promitor provides the telemetry, but it's up to you to choose where you want to 
 
 We currently support the following sinks:
 - [**Container Logs** (stdout/stderr)](#container-logs)
-- [**Azure Application Insights**](#container-logs)
+- [**Azure Application Insights**](#azure-application-insights)
 
 ### Container Logs
 Promitor can send telemetry to `stdout`/`stderr`.
