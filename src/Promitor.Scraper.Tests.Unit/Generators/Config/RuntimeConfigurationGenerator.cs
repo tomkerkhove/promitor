@@ -17,7 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
     internal class RuntimeConfigurationGenerator
     {
         private readonly RuntimeConfiguration _runtimeConfiguration = new RuntimeConfiguration();
-        private bool? _enableMetricTimestampsInPrometheus;
+        private bool _isEnableMetricTimestampsInPrometheusSpecified = false;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
@@ -72,7 +72,8 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
 
                 if (enableMetricsTimestamp != null)
                 {
-                    _enableMetricTimestampsInPrometheus = (bool)enableMetricsTimestamp;
+                    prometheusConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
+                    _isEnableMetricTimestampsInPrometheusSpecified = true;
                 }
             }
 
@@ -169,9 +170,9 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
                 }
 
-                if (_enableMetricTimestampsInPrometheus != null)
+                if (_isEnableMetricTimestampsInPrometheusSpecified)
                 {
-                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_enableMetricTimestampsInPrometheus}");
+                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_runtimeConfiguration.Prometheus.EnableMetricTimestamps}");
                 }
 
                 if (_runtimeConfiguration?.Prometheus.MetricUnavailableValue != null)
