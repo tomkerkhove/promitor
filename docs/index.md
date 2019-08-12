@@ -44,6 +44,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
 - **Metrics**
     - [General Declaration](configuration/v0.x/metrics)
     - [Supported Providers](configuration/v0.x/metrics#supported-azure-services)
+    - [What labels do we provide?](metrics/labels)
 - **Configuration**
     - [Runtime](configuration/v0.x/#runtime)
     - [Scraping](configuration/v0.x/#scraping)

@@ -17,6 +17,9 @@ Supported metrics:
 - `TimeSpentInQueue` - Time in seconds that the oldest message has been waiting in the queue to be processed.
 - `MessageCount`
 
+The following scraper-specific metric label(s) will be added:
+- `queue_name` - Name of the queue
+
 Example:
 ```yaml
 name: demo_queue_size
