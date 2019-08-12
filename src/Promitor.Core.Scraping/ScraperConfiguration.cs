@@ -1,6 +1,5 @@
 ﻿using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Interfaces;
@@ -26,11 +25,6 @@ namespace Promitor.Core.Scraping
         public IPrometheusMetricWriter PrometheusMetricWriter { get; }
 
         /// <summary>
-        ///     Interaction with feature flags
-        /// </summary>
-        public FeatureToggleClient FeatureToggleClient { get; }
-
-        /// <summary>
         ///     Logger used for telemetry
         /// </summary>
         public ILogger Logger { get; }
@@ -46,22 +40,19 @@ namespace Promitor.Core.Scraping
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
-        /// <param name="featureToggleClient">Interaction with feature flags</param>
         /// <param name="logger">General logger</param>
         /// <param name="exceptionTracker">Exception tracker</param>
-        public ScraperConfiguration(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, IPrometheusMetricWriter prometheusMetricWriter, FeatureToggleClient featureToggleClient, ILogger logger, IExceptionTracker exceptionTracker)
+        public ScraperConfiguration(AzureMetadata azureMetadata, AzureMonitorClient azureMonitorClient, IPrometheusMetricWriter prometheusMetricWriter, ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(azureMetadata, nameof(azureMetadata));
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
             Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
-            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
             AzureMetadata = azureMetadata;
             AzureMonitorClient = azureMonitorClient;
             PrometheusMetricWriter = prometheusMetricWriter;
-            FeatureToggleClient = featureToggleClient;
             Logger = logger;
             ExceptionTracker = exceptionTracker;
         }
