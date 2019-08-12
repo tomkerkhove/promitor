@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.FeatureFlags;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
@@ -18,6 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
     internal class RuntimeConfigurationGenerator
     {
         private readonly RuntimeConfiguration _runtimeConfiguration = new RuntimeConfiguration();
+        private bool? _enableMetricTimestampsInPrometheus = null;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
@@ -46,7 +46,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return new RuntimeConfigurationGenerator(runtimeConfiguration);
         }
 
-        public RuntimeConfigurationGenerator WithPrometheusConfiguration(double? metricUnavailableValue = -1, string scrapeEndpointBaseUri = "/scrape-endpoint")
+        public RuntimeConfigurationGenerator WithPrometheusConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
             PrometheusConfiguration prometheusConfiguration;
             if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
@@ -69,6 +69,11 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 {
                     prometheusConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
                 }
+
+                if (enableMetricsTimestamp != null)
+                {
+                    _enableMetricTimestampsInPrometheus = (bool)enableMetricsTimestamp;
+                }
             }
 
             _runtimeConfiguration.Prometheus = prometheusConfiguration;
@@ -86,20 +91,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 };
 
             _runtimeConfiguration.MetricsConfiguration = metricsConfiguration;
-
-            return this;
-        }
-
-        public RuntimeConfigurationGenerator WithFeatureFlags(bool? disableMetricTimestamps = true)
-        {
-            var featureFlags = disableMetricTimestamps == null
-                ? null
-                : new FeatureFlagsConfiguration()
-                {
-                    DisableMetricTimestamps = disableMetricTimestamps.GetValueOrDefault()
-                };
-
-            _runtimeConfiguration.FeatureFlags = featureFlags;
 
             return this;
         }
@@ -178,6 +169,11 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
                 }
 
+                if (_enableMetricTimestampsInPrometheus != null)
+                {
+                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_enableMetricTimestampsInPrometheus}");
+                }
+
                 if (_runtimeConfiguration?.Prometheus.MetricUnavailableValue != null)
                 {
                     configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.Prometheus.MetricUnavailableValue}");
@@ -216,12 +212,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 {
                     configurationBuilder.AppendLine($"  defaultVerbosity: {_runtimeConfiguration?.Telemetry.DefaultVerbosity}");
                 }
-            }
-
-            if (_runtimeConfiguration?.FeatureFlags != null)
-            {
-                configurationBuilder.AppendLine("featureFlags:");
-                configurationBuilder.AppendLine($"  disableMetricTimestamps: {_runtimeConfiguration?.FeatureFlags.DisableMetricTimestamps} # false by default");
             }
 
             var rawYaml = configurationBuilder.ToString();

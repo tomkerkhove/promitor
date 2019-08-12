@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Prometheus.Client;
 using Promitor.Core.Configuration;
-using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
@@ -14,28 +13,24 @@ namespace Promitor.Core.Scraping.Prometheus
 {
     public class PrometheusMetricWriter : IPrometheusMetricWriter
     {
-        private readonly FeatureToggleClient _featureToggleClient;
         private readonly IOptionsMonitor<PrometheusConfiguration> _prometheusConfiguration;
         private readonly ILogger<PrometheusMetricWriter> _logger;
 
-        public PrometheusMetricWriter(FeatureToggleClient featureToggleClient, IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration, ILogger<PrometheusMetricWriter> logger)
+        public PrometheusMetricWriter(IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration, ILogger<PrometheusMetricWriter> logger)
         {
-            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
             Guard.NotNull(prometheusConfiguration, nameof(prometheusConfiguration));
             Guard.NotNull(logger, nameof(logger));
 
-            _featureToggleClient = featureToggleClient;
             _prometheusConfiguration = prometheusConfiguration;
             _logger = logger;
         }
 
         public void ReportMetric(MetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
         {
-            var metricsTimestampFeatureFlag = _featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps, defaultFlagState: true);
-
+            var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
             var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
 
-            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Names);
+            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Names);
             var metricValue = DetermineMetricMeasurement(scrapedMetricResult);
             gauge.WithLabels(labels.Values).Set(metricValue);
         }

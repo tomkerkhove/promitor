@@ -11,8 +11,9 @@ namespace Promitor.Core.Configuration
 
         public static class Prometheus
         {
-            public static string ScrapeEndpointBaseUri { get; } = "/metrics";
+            public static bool EnableMetricTimestamps { get; set; } = false;
             public static double MetricUnavailableValue { get; } = double.NaN;
+            public static string ScrapeEndpointBaseUri { get; } = "/metrics";
         }
 
         public static class MetricsConfiguration
@@ -35,11 +36,6 @@ namespace Promitor.Core.Configuration
                 public static LogLevel? Verbosity { get; set; } = null;
                 public static bool IsEnabled { get; set; } = false;
             }
-        }
-
-        public static class FeatureFlags
-        {
-            public static bool DisableMetricTimestamps { get; set; } = false;
         }
     }
 }

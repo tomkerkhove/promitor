@@ -8,8 +8,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Core.Configuration.FeatureFlags;
-using Promitor.Core.Configuration.Model.FeatureFlags;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
@@ -69,7 +67,6 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<ILogger, RuntimeLogger>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
-            services.AddTransient<FeatureToggleClient>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<ValidationLogger>();
@@ -110,7 +107,6 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<FeatureFlagsConfiguration>(configuration.GetSection("featureFlags"));
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));

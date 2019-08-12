@@ -2,6 +2,7 @@ server:
   httpPort: 88
 prometheus:
   metricUnavailableValue: NaN
+  enableMetricTimestamps: true # true by default
   scrapeEndpoint:
     baseUriPath: /scrape
 metricsConfiguration:
@@ -14,5 +15,3 @@ telemetry:
     isEnabled: true
     verbosity: trace
   defaultVerbosity: warning
-featureFlags:
-  disableMetricTimestamps: true # false by default

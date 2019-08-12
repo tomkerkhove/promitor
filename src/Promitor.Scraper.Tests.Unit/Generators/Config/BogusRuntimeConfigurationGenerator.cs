@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.FeatureFlags;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
@@ -18,10 +17,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(srvConfig => srvConfig.HttpPort, faker => faker.Random.Int())
                 .Generate();
-            var featureFlagsConfiguration = new Faker<FeatureFlagsConfiguration>()
-                .StrictMode(true)
-                .RuleFor(flagsConfiguration => flagsConfiguration.DisableMetricTimestamps, faker => faker.Random.Bool())
-                .Generate();
             var metricsConfiguration = new Faker<MetricsConfiguration>()
                 .StrictMode(true)
                 .RuleFor(metricConfiguration => metricConfiguration.AbsolutePath, faker => faker.System.DirectoryPath())
@@ -34,6 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
                 .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
+                .RuleFor(promConfiguration => promConfiguration.EnableMetricTimestamps, faker => faker.Random.Bool())
                 .Generate();
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
@@ -59,7 +55,6 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             var runtimeConfiguration = new RuntimeConfiguration
             {
                 Server = serverConfiguration,
-                FeatureFlags = featureFlagsConfiguration,
                 MetricsConfiguration = metricsConfiguration,
                 Prometheus = prometheusConfiguration,
                 Telemetry = telemetryConfiguration

@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Promitor.Core.Configuration.FeatureFlags;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 
 namespace Promitor.Core.Telemetry.Metrics
 {
     public class RuntimeMetricsCollector : IRuntimeMetricsCollector
     {
-        private readonly FeatureToggleClient _featureToggleClient;
+        private readonly IOptionsMonitor<PrometheusConfiguration> _prometheusConfiguration;
 
-        public RuntimeMetricsCollector(FeatureToggleClient featureToggleClient)
+        public RuntimeMetricsCollector(IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration)
         {
-            _featureToggleClient = featureToggleClient;
+            _prometheusConfiguration = prometheusConfiguration;
         }
 
         /// <summary>
@@ -23,9 +24,9 @@ namespace Promitor.Core.Telemetry.Metrics
         /// <param name="labels">Labels that are applicable for this measurement</param>
         public void SetGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
         {
-            var metricsTimestampFeatureFlag = _featureToggleClient.IsActive(ToggleNames.DisableMetricTimestamps);
+            var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
-            var gauge = Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: metricsTimestampFeatureFlag, labelNames: labels.Keys.ToArray());
+            var gauge = Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
         }
     }

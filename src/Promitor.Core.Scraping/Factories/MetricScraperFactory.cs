@@ -2,7 +2,6 @@
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.FeatureFlags;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -18,18 +17,15 @@ namespace Promitor.Core.Scraping.Factories
     {
         private readonly IExceptionTracker _exceptionTracker;
         private readonly IConfiguration _configuration;
-        private readonly FeatureToggleClient _featureToggleClient;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, FeatureToggleClient featureToggleClient, ILogger logger, IExceptionTracker exceptionTracker)
+        public MetricScraperFactory(IConfiguration configuration, ILogger logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(configuration, nameof(configuration));
-            Guard.NotNull(featureToggleClient, nameof(featureToggleClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
             _logger = logger;
-            _featureToggleClient = featureToggleClient;
             _configuration = configuration;
             _exceptionTracker = exceptionTracker;
         }
@@ -45,7 +41,7 @@ namespace Promitor.Core.Scraping.Factories
             IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
-            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _featureToggleClient, _logger, _exceptionTracker);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _logger, _exceptionTracker);
 
             switch (metricDefinitionResourceType)
             {
