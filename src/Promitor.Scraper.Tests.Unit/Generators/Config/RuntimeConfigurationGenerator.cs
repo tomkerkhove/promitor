@@ -17,7 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
     internal class RuntimeConfigurationGenerator
     {
         private readonly RuntimeConfiguration _runtimeConfiguration = new RuntimeConfiguration();
-        private bool? _enableMetricTimestampsInPrometheus = null;
+        private bool? _enableMetricTimestampsInPrometheus;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
