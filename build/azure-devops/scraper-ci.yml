@@ -96,7 +96,7 @@ stages:
          projects: 'src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj'
          arguments: '--configuration $(DotNet.Configuration)'
 - stage: DockerHub
-  displayName: Docker Image
+  displayName: Docker Image (Docker Hub)
   dependsOn: []
   jobs:
    - job: DockerHubBuild
@@ -148,7 +148,7 @@ stages:
          imageName: '$(Image.DockerHub.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: GitHubRegistry
-  displayName: Docker Image
+  displayName: Docker Image (GitHub Package Registry)
   dependsOn: []
   jobs:
    - job: GitHubRegistryBuild
