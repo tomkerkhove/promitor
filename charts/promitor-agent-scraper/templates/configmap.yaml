@@ -2,13 +2,38 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: metric-declaration-config-map-{{ template "promitor-agent-scraper.fullname" . }}
+  name: config-map-{{ template "promitor-agent-scraper.fullname" . }}
   labels:
     app: {{ template "promitor-agent-scraper.name" . }}
     chart: {{ template "promitor-agent-scraper.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
+  runtime-declaration.yaml: |-
+      server:
+        httpPort: {{ .Values.service.targetPort | quote }}
+      prometheus:
+        metricUnavailableValue: {{ .Values.runtime.prometheus.metricUnavailableValue | quote }}
+        enableMetricTimestamps: {{ .Values.runtime.prometheus.enableMetricTimestamps | quote }}
+        scrapeEndpoint:
+          baseUriPath: {{ .Values.runtime.prometheus.scrapeEndpointPath | quote }}
+      metricsConfiguration:
+        absolutePath: /config/metrics-declaration.yaml
+      telemetry:
+        applicationInsights:
+  {{- if .Values.runtime.telemetry.applicationInsights.instrumentationKey }}
+          instrumentationKey: {{ .Values.runtime.telemetry.applicationInsights.instrumentationKey | quote }}
+  {{- end }}
+          isEnabled: {{ .Values.runtime.telemetry.applicationInsights.enabled | quote }}
+  {{- if .Values.runtime.telemetry.applicationInsights.logLevel | quote  }}
+          verbosity: trace # Optional. Default: N/A
+  {{- end }}
+        containerLogs:
+          isEnabled: {{ .Values.runtime.telemetry.containerLogs.enabled | quote }}
+  {{- if .Values.runtime.telemetry.containerLogs.logLevel | quote  }}
+          verbosity: trace # Optional. Default: N/A
+  {{- end }}
+        defaultVerbosity: {{ .Values.runtime.telemetry.defaultLogLevel | quote  }} # Optional. Default: error
   metrics-declaration.yaml: |-
     version: v1
     azureMetadata:
@@ -22,41 +47,4 @@ data:
         schedule: {{ .Values.metricDefaults.scraping.schedule | quote }}
     metrics:
 {{ tpl $metrics . | indent 4 }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: runtime-config-map-{{ template "promitor-agent-scraper.fullname" . }}
-  labels:
-    app: {{ template "promitor-agent-scraper.name" . }}
-    chart: {{ template "promitor-agent-scraper.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-data:
-  runtime-declaration.yaml: |-
-    server:
-      httpPort: {{ .Values.service.targetPort | quote }}
-    prometheus:
-      metricUnavailableValue: {{ .Values.runtime.prometheus.metricUnavailableValue | quote }}
-      enableMetricTimestamps: {{ .Values.runtime.prometheus.enableMetricTimestamps | quote }}
-      scrapeEndpoint:
-        baseUriPath: {{ .Values.runtime.prometheus.scrapeEndpointPath | quote }}
-    metricsConfiguration:
-      absolutePath: /config/metrics-declaration.yaml
-    telemetry:
-      applicationInsights:
-{{- if .Values.runtime.telemetry.applicationInsights.instrumentationKey }}
-        instrumentationKey: {{ .Values.runtime.telemetry.applicationInsights.instrumentationKey | quote }}
-{{- end }}
-        isEnabled: {{ .Values.runtime.telemetry.applicationInsights.enabled | quote }}
-{{- if .Values.runtime.telemetry.applicationInsights.logLevel }}
-        verbosity: trace # Optional. Default: N/A
-{{- end }}
-      containerLogs:
-        isEnabled: {{ .Values.runtime.telemetry.containerLogs.enabled | quote }}
-{{- if .Values.runtime.telemetry.containerLogs.logLevel }}
-        verbosity: trace # Optional. Default: N/A
-{{- end }}
-      defaultVerbosity: {{ .Values.runtime.telemetry.defaultLogLevel }} # Optional. Default: error
-{{- if .Values.runtime.telemetry.applicationInsights.instrumentationKey }}
-  {{ .Values.secrets.applicationInsights.instrumentationKey }}: {{ .Values.runtime.telemetry.applicationInsights.instrumentationKey | b64enc | quote }}
-{{- end }}
+  

@@ -64,9 +64,6 @@ spec:
               path: /api/v1/health
               port: http
       volumes:
-        - name: metric-declaration-volume-{{ template "promitor-agent-scraper.fullname" . }}
+        - name: config-volume-{{ template "promitor-agent-scraper.fullname" . }}
           configMap:
-            name: metric-declaration-config-map-{{ template "promitor-agent-scraper.fullname" . }}
-        - name: runtime-volume-{{ template "promitor-agent-scraper.fullname" . }}
-          configMap:
-            name: runtime-config-map-{{ template "promitor-agent-scraper.fullname" . }}
+            name: config-map-{{ template "promitor-agent-scraper.fullname" . }}
