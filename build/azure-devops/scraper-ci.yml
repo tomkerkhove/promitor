@@ -16,8 +16,10 @@ pr:
 variables:
   DotNet.SDK.Version: '2.2.401'
   DotNet.Configuration: 'release'
-  Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
-  Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
+  Image.DockerHub.Name: 'tomkerkhove/promitor-agent-scraper-ci'
+  Image.DockerHub.TaggedName: '$(Image.DockerHub.Name):$(Build.BuildNumber)'
+  Image.GitHubPackageRegistry.Name: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci'
+  Image.GitHubPackageRegistry.TaggedName: '$(Image.GitHubPackageRegistry.Name):$(Build.BuildNumber)'
 stages:
 - stage: Build
   dependsOn: []
@@ -93,11 +95,11 @@ stages:
          command: test
          projects: 'src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj'
          arguments: '--configuration $(DotNet.Configuration)'
-- stage: Docker
+- stage: DockerHub
   displayName: Docker Image
   dependsOn: []
   jobs:
-   - job: DockerBuild
+   - job: DockerHubBuild
      displayName: Build Docker Image Tests
      condition: succeeded()
      pool:
@@ -122,7 +124,7 @@ stages:
          arguments: '--tag promitor-agent-scraper-ci --no-cache'
          useDefaultContext: false
          buildContext: ./src/
-         imageName: '$(Image.TaggedName)'
+         imageName: '$(Image.DockerHub.TaggedName)'
          addDefaultLabels: false
      - task: Docker@1
        displayName: 'Run an image'
@@ -130,7 +132,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Run an image'
-         imageName: '$(Image.TaggedName)'
+         imageName: '$(Image.DockerHub.TaggedName)'
          containerName: 'promitor-ci'
          ports: '8999:80'
          volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
@@ -138,16 +140,55 @@ stages:
           PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
           PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
      - task: Docker@1
-       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
+       displayName: 'Push ''$(Image.DockerHub.Name)'' image to Docker Hub'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
+         imageName: '$(Image.DockerHub.TaggedName)'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+- stage: GitHubRegistry
+  displayName: Docker Image
+  dependsOn: []
+  jobs:
+   - job: GitHubRegistryBuild
+     displayName: Build Docker Image for GitHub Package Registry
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - task: Docker@1
+       displayName: 'Build an image'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+         arguments: '--tag promitor-agent-scraper-ci --no-cache'
+         useDefaultContext: false
+         buildContext: ./src/
+         imageName: '$(Image.GitHubPackageRegistry.TaggedName)'
+         addDefaultLabels: false
+     - task: Docker@1
+       displayName: 'Push ''$(Image.GitHubPackageRegistry.Name)'' image to GitHub Package Registry'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+         command: 'Push an image'
+         imageName: '$(Image.GitHubPackageRegistry.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: Helm
   displayName: Helm Chart
-  dependsOn: Docker
+  dependsOn: DockerHub
   jobs:
    - job: HelmChart
      displayName: Lint, Package & Push Chart
@@ -180,7 +221,7 @@ stages:
        inputs:
         targetType: filePath
         filePath: ./build/helm/CI/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(Build.BuildNumber)"'
+        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.DockerHub.Name)" -imageTag "$(Build.BuildNumber)"'
         workingDirectory: 'charts'
      - task: PowerShell@2
        displayName: 'Package Helm Chart'
