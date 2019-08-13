@@ -8,13 +8,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         {
         }
 
-        protected MetricDefinition(
-            AzureMetricConfiguration azureMetricConfiguration,
+        protected MetricDefinition(string name,
             string description,
-            string name,
             string resourceGroupName,
             Dictionary<string, string> labels,
-            Scraping scraping)
+            Scraping scraping, AzureMetricConfiguration azureMetricConfiguration)
         {
             AzureMetricConfiguration = azureMetricConfiguration;
             Description = description;

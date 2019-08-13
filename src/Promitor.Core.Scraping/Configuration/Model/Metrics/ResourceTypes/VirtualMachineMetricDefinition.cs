@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         }
 
         public VirtualMachineMetricDefinition(AzureMetricConfiguration azureMetricConfiguration, string description, string name, string resourceGroupName, string virtualMachineName, Dictionary<string, string> labels, Scraping scraping)
-            : base(azureMetricConfiguration, description, name, resourceGroupName, labels, scraping)
+            : base(name, description, resourceGroupName, labels, scraping, azureMetricConfiguration)
         {
             VirtualMachineName = virtualMachineName;
         }
