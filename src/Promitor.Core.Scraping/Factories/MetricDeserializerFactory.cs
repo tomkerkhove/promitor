@@ -1,11 +1,12 @@
 ﻿using System;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
 
 namespace Promitor.Core.Scraping.Factories
 {
     internal static class MetricDeserializerFactory
     {
-        internal static GenericAzureMetricDeserializer GetDeserializerFor(Configuration.Model.ResourceType resource)
+        internal static MetricDeserializer GetDeserializerFor(Configuration.Model.ResourceType resource)
         {
             switch (resource)
             {

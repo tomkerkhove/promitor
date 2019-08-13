@@ -18,6 +18,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(metricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
             Assert.NotNull(deserializedMetricDefinition.Labels);
             Assert.Equal(deserializedMetricDefinition.Labels, metricDefinition.Labels);
+            Assert.Equal(deserializedMetricDefinition.ResourceGroupName, metricDefinition.ResourceGroupName);
 
             foreach (var label in metricDefinition.Labels)
             {

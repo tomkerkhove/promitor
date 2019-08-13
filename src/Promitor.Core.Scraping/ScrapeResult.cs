@@ -61,7 +61,7 @@ namespace Promitor.Core.Scraping
         /// <param name="instanceName">Name of the resource that is being scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
         /// <param name="metricValue">Value of the metric that was found</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, instanceName,resourceUri,metricValue, new Dictionary<string, string>())
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, instanceName, resourceUri, metricValue, new Dictionary<string, string>())
         {
         }
 
@@ -90,6 +90,14 @@ namespace Promitor.Core.Scraping
         /// </summary>
         public double? MetricValue { get; }
 
+        /// <summary>
+        /// Labels that are related to the metric
+        /// </summary>
         public Dictionary<string, string> Labels { get; } = new Dictionary<string, string>();
+
+        public override string ToString()
+        {
+            return MetricValue == null ? "No value found" : MetricValue.ToString();
+        }
     }
 }

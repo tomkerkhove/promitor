@@ -78,8 +78,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
                 {
                     { faker.Name.FirstName(), faker.Random.Guid().ToString() },
                     { faker.Name.FirstName(), faker.Random.Guid().ToString() }
-                })
-                .Ignore(metricDefinition => metricDefinition.ResourceGroupName);
+                });
 
             return bogusGenerator.Generate();
         }

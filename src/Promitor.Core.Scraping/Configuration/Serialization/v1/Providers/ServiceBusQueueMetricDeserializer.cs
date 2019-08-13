@@ -1,10 +1,11 @@
 ﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    internal class ServiceBusQueueMetricDeserializer : GenericAzureMetricDeserializer
+    internal class ServiceBusQueueMetricDeserializer : MetricDeserializer
     {
         /// <summary>Deserializes the specified Service Bus Queue metric node from the YAML configuration file.</summary>
         /// <param name="metricNode">The metric node to deserialize to Service Bus queue</param>
