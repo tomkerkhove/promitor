@@ -1,10 +1,11 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    internal class VirtualMachineMetricDeserializer : GenericAzureMetricDeserializer
+    internal class VirtualMachineMetricDeserializer : MetricDeserializer
     {
         /// <summary>Deserializes the specified Virtual Machine metric node from the YAML configuration file.</summary>
         /// <param name="metricNode">The metric node containing 'virtualMachineName' parameter pointing to an instance of a Virtual Machine</param>

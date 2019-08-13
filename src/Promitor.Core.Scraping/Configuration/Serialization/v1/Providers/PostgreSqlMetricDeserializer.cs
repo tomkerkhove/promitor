@@ -1,5 +1,6 @@
 ﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
@@ -7,7 +8,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     /// <summary>
     /// Defines a deserializer for the PostgreSQL Server resource type
     /// </summary>
-    internal class PostgreSqlMetricDeserializer : GenericAzureMetricDeserializer
+    internal class PostgreSqlMetricDeserializer : MetricDeserializer
     {
         /// <summary>
         /// Deserializes the specified PostgreSQL Server metric node from the YAML configuration file.

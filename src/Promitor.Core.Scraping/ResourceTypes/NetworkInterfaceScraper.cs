@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
         protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, NetworkInterfaceMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, AzureMetadata.ResourceGroupName, metricDefinition.NetworkInterfaceName);
+            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, resourceGroupName, metricDefinition.NetworkInterfaceName);
 
             var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);

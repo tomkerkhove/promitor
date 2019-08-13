@@ -18,10 +18,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
             {
                 metricDefinition.Filter = filterNode?.ToString();
             }
-            if (metricNode.Children.TryGetValue(new YamlScalarNode("resourceGroupName"), out var resourceGroupName))
-            {
-                metricDefinition.ResourceGroupName = resourceGroupName?.ToString();
-            }
 
             var resourceUri = metricNode.Children[new YamlScalarNode(value: "resourceUri")];
 
