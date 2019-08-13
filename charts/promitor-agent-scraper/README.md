@@ -52,10 +52,15 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |
-| `scrapeConfig.path`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
-| `scrapeConfig.timestamp`  | Indication wheter or not to include timestamp | `true`            |
-| `telemetry.appInsightsKey`  | Application Insights telemetry key |             |
-| `logging.minimalLogLevel`  | Minimum level of logging | `Warning`            |
+| `runtime.prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
+| `runtime.prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
+| `runtime.prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
+| `runtime.telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
+| `runtime.telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
+| `runtime.telemetry.applicationInsights.instrumentationKey`  | Application Insights telemetry key |             |
+| `runtime.telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
+| `runtime.telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  | 
+| `runtime.telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
 | `azureMetadata.tenantId`  | Id of Azure tenant |             |
 | `azureMetadata.subscriptionId`  | Id of Azure subscription |             |
 | `azureMetadata.resourceGroupName`  | Name of resource group | `promitor`            |
@@ -66,7 +71,6 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |
 | `secrets.appIdSecret`  | Name of the secret for Azure AD identity id | `azure-app-id`            |
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
-| `secrets.appInsightsSecret`  | Name of the secret for Application Insights instrumentation key | `azure-appinsights-key`            |
 | `service.exposeExternally`  | Indication wheter or not to expose service externally | `false`            |
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
