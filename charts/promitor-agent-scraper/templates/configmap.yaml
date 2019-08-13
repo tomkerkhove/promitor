@@ -47,4 +47,3 @@ data:
         schedule: {{ .Values.metricDefaults.scraping.schedule | quote }}
     metrics:
 {{ tpl $metrics . | indent 4 }}
-  
