@@ -15,7 +15,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithRedisCacheYamlSerializationTests : YamlSerializationTests<RedisCacheMetricDefinition>
+    public class MetricsDeclarationWithRedisCacheYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]

@@ -15,7 +15,7 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithAzureStorageQueueYamlSerializationTests : YamlSerializationTests<StorageQueueMetricDefinition>
+    public class MetricsDeclarationWithAzureStorageQueueYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *", "XYZ", null)]

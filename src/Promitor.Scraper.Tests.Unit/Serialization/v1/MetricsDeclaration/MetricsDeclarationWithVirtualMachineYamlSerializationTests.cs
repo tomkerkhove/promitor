@@ -15,7 +15,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category(category: "Unit")]
-    public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
+    public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]

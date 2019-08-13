@@ -15,7 +15,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithPostgreSqlYamlSerializationTests : YamlSerializationTests<PostgreSqlMetricDefinition>
+    public class MetricsDeclarationWithPostgreSqlYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]

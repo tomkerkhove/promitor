@@ -16,7 +16,7 @@ using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.Metr
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithContainerInstanceYamlSerializationTests : YamlSerializationTests<ContainerInstanceMetricDefinition>
+    public class MetricsDeclarationWithContainerInstanceYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]

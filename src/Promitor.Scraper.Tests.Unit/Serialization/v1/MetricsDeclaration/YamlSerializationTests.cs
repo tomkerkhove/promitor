@@ -11,7 +11,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class YamlSerializationTests<TMetricDefinition> where TMetricDefinition : MetricDefinition
+    public class YamlSerializationTests
     {
         protected readonly IMapper Mapper;
 

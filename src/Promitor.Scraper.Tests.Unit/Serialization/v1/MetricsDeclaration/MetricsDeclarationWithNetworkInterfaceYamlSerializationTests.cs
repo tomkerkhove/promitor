@@ -15,7 +15,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category(category: "Unit")]
-    public class MetricsDeclarationWithNetworkInterfaceYamlSerializationTests : YamlSerializationTests<NetworkInterfaceMetricDefinition>
+    public class MetricsDeclarationWithNetworkInterfaceYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"01:00", @"2:00")]
