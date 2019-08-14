@@ -1,16 +1,27 @@
 ﻿using System;
 using System.ComponentModel;
+using AutoMapper;
 using Bogus;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using Xunit;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class YamlSerializationTests<TMetricDefinition> where TMetricDefinition : MetricDefinition
+    public class YamlSerializationTests
     {
-        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, TMetricDefinition metricDefinition)
+        protected readonly IMapper Mapper;
+
+        public YamlSerializationTests()
+        {
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            Mapper = mapperConfiguration.CreateMapper();
+        }
+
+        protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, MetricDefinitionV1 metricDefinition)
         {
             Assert.NotNull(deserializedMetricDefinition);
             Assert.Equal(metricDefinition.Name, deserializedMetricDefinition.Name);
@@ -34,7 +45,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(metricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        protected void AssertMetricDefaults(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaults metricDefaults)
+        protected void AssertMetricDefaults(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaultsV1 metricDefaults)
         {
             var deserializedMetricDefaults = deserializedConfiguration.MetricDefaults;
             Assert.NotNull(deserializedMetricDefaults);
@@ -42,7 +53,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(metricDefaults.Aggregation.Interval, deserializedMetricDefaults.Aggregation.Interval);
         }
 
-        protected void AssertAzureMetadata(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, AzureMetadata azureMetadata)
+        protected void AssertAzureMetadata(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, AzureMetadataV1 azureMetadata)
         {
             Assert.NotNull(deserializedConfiguration.AzureMetadata);
             Assert.Equal(azureMetadata.TenantId, deserializedConfiguration.AzureMetadata.TenantId);
@@ -50,15 +61,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(azureMetadata.SubscriptionId, deserializedConfiguration.AzureMetadata.SubscriptionId);
         }
 
-        protected AzureMetricConfiguration GenerateBogusAzureMetricConfiguration()
+        protected AzureMetricConfigurationV1 GenerateBogusAzureMetricConfiguration()
         {
-            var bogusMetricAggregation = new Faker<MetricAggregation>()
+            var bogusMetricAggregation = new Faker<MetricAggregationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(aggregation => aggregation.Type, faker => faker.PickRandom<Microsoft.Azure.Management.Monitor.Fluent.Models.AggregationType>())
                 .RuleFor(aggregation => aggregation.Interval, faker => TimeSpan.FromMinutes(faker.Random.Int()))
                 .Generate();
 
-            var bogusMetricConfiguration = new Faker<AzureMetricConfiguration>()
+            var bogusMetricConfiguration = new Faker<AzureMetricConfigurationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.MetricName, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Aggregation, faker => bogusMetricAggregation)
@@ -67,14 +78,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             return bogusMetricConfiguration;
         }
 
-        protected MetricDefaults GenerateBogusMetricDefaults(string defaultScrapingInterval)
+        protected MetricDefaultsV1 GenerateBogusMetricDefaults(string defaultScrapingInterval)
         {
-            var bogusAggregationGenerator = new Faker<Aggregation>()
+            var bogusAggregationGenerator = new Faker<AggregationV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(aggregation => aggregation.Interval, faker => TimeSpan.FromMinutes(faker.Random.Int()));
 
             var generatedAggregation = bogusAggregationGenerator.Generate();
-            var metricDefaults = new MetricDefaults
+            var metricDefaults = new MetricDefaultsV1
             {
                 Aggregation = generatedAggregation,
             };
@@ -87,9 +98,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             return metricDefaults;
         }
 
-        protected AzureMetadata GenerateBogusAzureMetadata()
+        protected AzureMetadataV1 GenerateBogusAzureMetadata()
         {
-            var bogusGenerator = new Faker<AzureMetadata>()
+            var bogusGenerator = new Faker<AzureMetadataV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metadata => metadata.TenantId, faker => faker.Finance.Account())
                 .RuleFor(metadata => metadata.ResourceGroupName, faker => faker.Name.FirstName())
@@ -98,9 +109,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             return bogusGenerator.Generate();
         }
 
-        protected Scraping GenerateBogusScrapingInterval(string testInterval)
+        protected ScrapingV1 GenerateBogusScrapingInterval(string testInterval)
         {
-            var bogusGenerator = new Faker<Scraping>()
+            var bogusGenerator = new Faker<ScrapingV1>()
                 .RuleFor(scraping => scraping.Schedule, faker => testInterval);
 
             return bogusGenerator.Generate();

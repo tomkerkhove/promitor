@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using AutoMapper;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Scraper.Tests.Unit.Stubs;
@@ -9,14 +11,22 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
     [Category("Unit")]
     public class ServiceBusQueueMetricsDeclarationValidationStepTests
     {
+        private readonly IMapper _mapper;
+
+        public ServiceBusQueueMetricsDeclarationValidationStepTests()
+        {
+            var config = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            _mapper = config.CreateMapper();
+        }
+
         [Fact]
         public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(azureMetricName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -32,8 +42,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(metricDescription: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -51,8 +61,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -68,8 +78,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(queueName: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -85,8 +95,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric(serviceBusNamespace: string.Empty)
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -102,8 +112,8 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithServiceBusMetric()
-                .Build();
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration);
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);

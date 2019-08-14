@@ -4,16 +4,18 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Xunit;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category(category: "Unit")]
-    public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests<VirtualMachineMetricDefinition>
+    public class MetricsDeclarationWithVirtualMachineYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
@@ -24,17 +26,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var virtualMachineMetricDefinition = GenerateBogusVirtualMachineMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
+            var scrapingConfiguration = new MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>
+                Metrics = new List<MetricDefinitionV1>
                 {
                     virtualMachineMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
@@ -52,7 +54,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             AssertVirtualMachineMetricDefinition(deserializedVirtualMachineMetricDefinition, virtualMachineMetricDefinition);
         }
 
-        private static void AssertVirtualMachineMetricDefinition(VirtualMachineMetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinition virtualMachineMetricDefinition)
+        private static void AssertVirtualMachineMetricDefinition(VirtualMachineMetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinitionV1 virtualMachineMetricDefinition)
         {
             Assert.NotNull(deserializedVirtualMachineMetricDefinition);
             Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedVirtualMachineMetricDefinition.VirtualMachineName);
@@ -63,12 +65,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        private VirtualMachineMetricDefinition GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private VirtualMachineMetricDefinitionV1 GenerateBogusVirtualMachineMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<VirtualMachineMetricDefinition>()
+            var bogusGenerator = new Faker<VirtualMachineMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))

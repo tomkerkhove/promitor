@@ -7,34 +7,36 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Xunit;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class MetricsDeclarationWithContainerRegistryYamlSerializationTests : YamlSerializationTests<ContainerRegistryMetricDefinition>
+    public class MetricsDeclarationWithCosmosDbYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
         [InlineData(null, null, null)]
-        public void YamlSerialization_SerializeAndDeserializeValidConfigForContainerRegistry_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
+        public void YamlSerialization_SerializeAndDeserializeValidConfigForCosmosDb_SucceedsWithIdenticalOutput(string resourceGroupName, string defaultScrapingInterval, string metricScrapingInterval)
         {
             // Arrange
             var azureMetadata = GenerateBogusAzureMetadata();
-            var containerRegistryMetricDefinition = GenerateBogusContainerRegistryMetricDefinition(resourceGroupName, metricScrapingInterval);
+            var cosmosDbMetricDefinition = GenerateBogusCosmosDbMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
+            var scrapingConfiguration = new MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>
+                Metrics = new List<MetricDefinitionV1>
                 {
-                    containerRegistryMetricDefinition
+                    cosmosDbMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
@@ -47,28 +49,28 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             Assert.NotNull(deserializedConfiguration.Metrics);
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
-            AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
-            var deserializedContainerRegistryMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
-            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition);
+            AssertMetricDefinition(deserializedMetricDefinition, cosmosDbMetricDefinition);
+            var deserializedCosmosDbMetricDefinition = deserializedMetricDefinition as CosmosDbMetricDefinition;
+            AssertCosmosDbMetricDefinition(deserializedCosmosDbMetricDefinition, cosmosDbMetricDefinition);
         }
 
-        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinition serviceBusMetricDefinition)
+        private static void AssertCosmosDbMetricDefinition(CosmosDbMetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinitionV1 cosmosDbMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
+            Assert.NotNull(deserializedCosmosDbMetricDefinition);
+            Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedCosmosDbMetricDefinition.DbName);
         }
 
-        private ContainerRegistryMetricDefinition GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private CosmosDbMetricDefinitionV1 GenerateBogusCosmosDbMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<ContainerRegistryMetricDefinition>()
+            var bogusGenerator = new Faker<CosmosDbMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))
-                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.ContainerRegistry)
-                .RuleFor(metricDefinition => metricDefinition.RegistryName, faker => faker.Name.LastName())
+                .RuleFor(metricDefinition => metricDefinition.ResourceType, faker => ResourceType.CosmosDb)
+                .RuleFor(metricDefinition => metricDefinition.DbName, faker => faker.Name.LastName())
                 .RuleFor(metricDefinition => metricDefinition.AzureMetricConfiguration, faker => bogusAzureMetricConfiguration)
                 .RuleFor(metricDefinition => metricDefinition.ResourceGroupName, faker => resourceGroupName)
                 .RuleFor(metricDefinition => metricDefinition.Scraping, faker => bogusScrapingInterval)

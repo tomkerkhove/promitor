@@ -7,13 +7,15 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Xunit;
-using MetricDefinition = Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category("Unit")]
-    public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests<ServiceBusQueueMetricDefinition>
+    public class ServiceBusQueueYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"* */1 * * * *", @"* */2 * * * *")]
@@ -24,17 +26,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var serviceBusMetricDefinition = GenerateBogusServiceBusMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
+            var scrapingConfiguration = new MetricsDeclarationV1()
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>
+                Metrics = new List<MetricDefinitionV1>
                 {
                     serviceBusMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
@@ -52,19 +54,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             AssertServiceBusQueueMetricDefinition(deserializedServiceBusMetricDefinition, serviceBusMetricDefinition);
         }
 
-        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinition serviceBusMetricDefinition)
+        private static void AssertServiceBusQueueMetricDefinition(ServiceBusQueueMetricDefinition deserializedServiceBusMetricDefinition, ServiceBusQueueMetricDefinitionV1 serviceBusMetricDefinition)
         {
             Assert.NotNull(deserializedServiceBusMetricDefinition);
             Assert.Equal(serviceBusMetricDefinition.Namespace, deserializedServiceBusMetricDefinition.Namespace);
             Assert.Equal(serviceBusMetricDefinition.QueueName, deserializedServiceBusMetricDefinition.QueueName);
         }
 
-        private ServiceBusQueueMetricDefinition GenerateBogusServiceBusMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private ServiceBusQueueMetricDefinitionV1 GenerateBogusServiceBusMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
 
-            var bogusGenerator = new Faker<ServiceBusQueueMetricDefinition>()
+            var bogusGenerator = new Faker<ServiceBusQueueMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))

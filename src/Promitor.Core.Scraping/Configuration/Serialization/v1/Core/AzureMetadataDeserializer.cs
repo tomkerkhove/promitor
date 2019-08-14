@@ -1,17 +1,17 @@
 ﻿using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AzureMetadataDeserializer : Deserializer<AzureMetadata>
+    internal class AzureMetadataDeserializer : Deserializer<AzureMetadataV1>
     {
         internal AzureMetadataDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override AzureMetadata Deserialize(YamlMappingNode node)
+        internal override AzureMetadataV1 Deserialize(YamlMappingNode node)
         {
             Guard.NotNull(node, nameof(node));
 
@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             var subscriptionId = node.Children[new YamlScalarNode("subscriptionId")];
             var resourceGroupName = node.Children[new YamlScalarNode("resourceGroupName")];
 
-            var azureMetadata = new AzureMetadata
+            var azureMetadata = new AzureMetadataV1
             {
                 TenantId = tenantId?.ToString(),
                 SubscriptionId = subscriptionId?.ToString(),
