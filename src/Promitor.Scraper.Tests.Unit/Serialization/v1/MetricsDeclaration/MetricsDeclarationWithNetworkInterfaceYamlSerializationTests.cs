@@ -4,16 +4,18 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Xunit;
 
-namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
+namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
 {
     [Category(category: "Unit")]
-    public class MetricsDeclarationWithNetworkInterfaceYamlSerializationTests : YamlSerializationTests<NetworkInterfaceMetricDefinition>
+    public class MetricsDeclarationWithNetworkInterfaceYamlSerializationTests : YamlSerializationTests
     {
         [Theory]
         [InlineData("promitor1", @"01:00", @"2:00")]
@@ -24,17 +26,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var networkInterfaceMetricDefinition = GenerateBogusNetworkInterfaceMetricDefinition(resourceGroupName, metricScrapingInterval);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Model.MetricsDeclaration
+            var scrapingConfiguration = new MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
-                Metrics = new List<MetricDefinition>
+                Metrics = new List<MetricDefinitionV1>
                 {
                     networkInterfaceMetricDefinition
                 }
             };
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, Mapper);
 
             // Act
             var serializedConfiguration = configurationSerializer.Serialize(scrapingConfiguration);
@@ -52,17 +54,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.MetricsDeclaration
             AssertNetworkInterfaceMetricDefinition(deserializedNetworkInterfaceMetricDefinition, networkInterfaceMetricDefinition);
         }
 
-        private static void AssertNetworkInterfaceMetricDefinition(NetworkInterfaceMetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinition networkInterfaceMetricDefinition)
+        private static void AssertNetworkInterfaceMetricDefinition(NetworkInterfaceMetricDefinition deserializedNetworkInterfaceMetricDefinition, NetworkInterfaceMetricDefinitionV1 networkInterfaceMetricDefinition)
         {
             Assert.NotNull(deserializedNetworkInterfaceMetricDefinition);
             Assert.Equal(networkInterfaceMetricDefinition.NetworkInterfaceName, deserializedNetworkInterfaceMetricDefinition.NetworkInterfaceName);
         }
 
-        private NetworkInterfaceMetricDefinition GenerateBogusNetworkInterfaceMetricDefinition(string resourceGroupName, string metricScrapingInterval)
+        private NetworkInterfaceMetricDefinitionV1 GenerateBogusNetworkInterfaceMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {
             var bogusScrapingInterval = GenerateBogusScrapingInterval(metricScrapingInterval);
             var bogusAzureMetricConfiguration = GenerateBogusAzureMetricConfiguration();
-            Faker<NetworkInterfaceMetricDefinition> bogusGenerator = new Faker<NetworkInterfaceMetricDefinition>()
+            var bogusGenerator = new Faker<NetworkInterfaceMetricDefinitionV1>()
                 .StrictMode(ensureRulesForAllProperties: true)
                 .RuleFor(metricDefinition => metricDefinition.Name, faker => faker.Name.FirstName())
                 .RuleFor(metricDefinition => metricDefinition.Description, faker => faker.Lorem.Sentence(wordCount: 6))

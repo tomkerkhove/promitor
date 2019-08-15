@@ -4,6 +4,24 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 {
     public abstract class MetricDefinition
     {
+        protected MetricDefinition()
+        {
+        }
+
+        protected MetricDefinition(string name,
+            string description,
+            string resourceGroupName,
+            Dictionary<string, string> labels,
+            Scraping scraping, AzureMetricConfiguration azureMetricConfiguration)
+        {
+            AzureMetricConfiguration = azureMetricConfiguration;
+            Description = description;
+            Name = name;
+            ResourceGroupName = resourceGroupName;
+            Labels = labels;
+            Scraping = scraping;
+        }
+
         /// <summary>
         ///     Configuration about the Azure Monitor metric to scrape
         /// </summary>

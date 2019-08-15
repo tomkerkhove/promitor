@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Serialization.Interfaces;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    public class ConfigurationSerializer : IVersionedConfigurationSerializer
+    public class ConfigurationSerializer
     {
         public ConfigurationSerializer(ILogger logger)
         {
@@ -16,9 +15,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public ILogger Logger { get; }
 
-        public MetricsDeclaration InterpretYamlStream(YamlMappingNode rootNode)
+        public MetricsDeclarationV1 InterpretYamlStream(YamlMappingNode rootNode)
         {
-            AzureMetadata azureMetadata = null;
+            AzureMetadataV1 azureMetadata = null;
             if (rootNode.Children.ContainsKey("azureMetadata"))
             {
                 var azureMetadataNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("azureMetadata")];
@@ -26,7 +25,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 azureMetadata = azureMetadataSerializer.Deserialize(azureMetadataNode);
             }
 
-            MetricDefaults metricDefaults = null;
+            MetricDefaultsV1 metricDefaults = null;
             if (rootNode.Children.ContainsKey("metricDefaults"))
             {
                 var metricDefaultsNode = (YamlMappingNode) rootNode.Children[new YamlScalarNode("metricDefaults")];
@@ -34,7 +33,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metricDefaults = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
             }
 
-            List<MetricDefinition> metrics = null;
+            List<MetricDefinitionV1> metrics = null;
             if (rootNode.Children.ContainsKey("metrics"))
             {
                 var metricsNode = (YamlSequenceNode) rootNode.Children[new YamlScalarNode("metrics")];
@@ -42,7 +41,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 metrics = metricsDeserializer.Deserialize(metricsNode);
             }
 
-            var metricsDeclaration = new MetricsDeclaration
+            var metricsDeclaration = new MetricsDeclarationV1
             {
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,

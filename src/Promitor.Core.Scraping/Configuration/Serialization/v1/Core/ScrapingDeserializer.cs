@@ -3,15 +3,15 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class ScrapingDeserializer : Deserializer<Model.Scraping>
+    internal class ScrapingDeserializer : Deserializer<Model.ScrapingV1>
     {
         internal ScrapingDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override Model.Scraping Deserialize(YamlMappingNode node)
+        internal override Model.ScrapingV1 Deserialize(YamlMappingNode node)
         {
-            var scraping = new Model.Scraping();
+            var scraping = new Model.ScrapingV1();
 
             if (node.Children.ContainsKey("schedule"))
             {

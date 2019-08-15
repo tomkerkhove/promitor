@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model.Metrics;
@@ -14,9 +15,9 @@ namespace Promitor.Core.Scraping.Configuration.Providers
         private readonly ConfigurationSerializer _configurationSerializer;
         private readonly IConfiguration _configuration;
 
-        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger)
+        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger, IMapper mapper)
         {
-            _configurationSerializer = new ConfigurationSerializer(logger);
+            _configurationSerializer = new ConfigurationSerializer(logger, mapper);
             _configuration = configuration;
         }
 
