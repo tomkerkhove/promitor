@@ -15,14 +15,14 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, NetworkInterfaceResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, NetworkInterfaceResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, resourceGroupName, resource.NetworkInterfaceName);
+            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.NetworkInterfaceName);
 
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, resource.NetworkInterfaceName, resourceUri, foundMetricValue);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.NetworkInterfaceName, resourceUri, foundMetricValue);
         }
     }
 }

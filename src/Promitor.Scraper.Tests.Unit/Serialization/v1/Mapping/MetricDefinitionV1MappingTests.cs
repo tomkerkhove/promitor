@@ -30,6 +30,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Mapping
             var definition = _mapper.Map<MetricDefinition>(resource);
 
             // Assert
+            Assert.NotNull(definition.PrometheusMetricDefinition);
             Assert.Equal(resource.Name, definition.PrometheusMetricDefinition.Name);
         }
 

@@ -25,6 +25,6 @@
         ///     Specify a resource group to scrape that defers from the default resource group.
         ///     This enables you to do multi-resource group scraping with one configuration file.
         /// </summary>
-        public string ResourceGroupName { get; set; }
+        public string ResourceGroupName { get; }
     }
 }

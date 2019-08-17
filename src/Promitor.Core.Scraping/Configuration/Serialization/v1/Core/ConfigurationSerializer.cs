@@ -44,7 +44,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
             var metricsDeclaration = new MetricsDeclarationV1
             {
-                Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
                 Metrics = metrics

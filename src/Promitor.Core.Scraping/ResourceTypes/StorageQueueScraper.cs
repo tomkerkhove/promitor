@@ -19,14 +19,14 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(scraperConfiguration.Logger);
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));
             Guard.NotNull(resource.SasToken, nameof(resource.SasToken));
             Guard.NotNullOrEmpty(scrapeDefinition.AzureMetricConfiguration.MetricName, nameof(scrapeDefinition.AzureMetricConfiguration.MetricName));
 
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.AccountName);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
             var sasToken = resource.SasToken.GetSecretValue();
             double foundMetricValue;
 
@@ -47,7 +47,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 {"queue_name", resource.QueueName}
             };
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, resource.AccountName, resourceUri, foundMetricValue, labels);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, foundMetricValue, labels);
         }
     }
 }

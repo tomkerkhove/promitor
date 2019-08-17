@@ -26,6 +26,9 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         public AzureMetricConfiguration AzureMetricConfiguration { get; set; }
 
+        /// <summary>
+        /// The details of the prometheus metric that will be created.
+        /// </summary>
         public PrometheusMetricDefinition PrometheusMetricDefinition { get; set; }
 
         /// <summary>
@@ -47,14 +50,16 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// Creates a <see cref="ScrapeDefinition{TResourceDefinition}"/> object for the specified resource.
         /// </summary>
         /// <param name="resource">The resource to scrape.</param>
+        /// <param name="azureMetadata">The Azure global metadata.</param>
         /// <returns>The scrape definition.</returns>
-        public ScrapeDefinition<AzureResourceDefinition> CreateScrapeDefinition(AzureResourceDefinition resource)
+        public ScrapeDefinition<AzureResourceDefinition> CreateScrapeDefinition(AzureResourceDefinition resource, AzureMetadata azureMetadata)
         {
             return new ScrapeDefinition<AzureResourceDefinition>(
                 AzureMetricConfiguration,
                 PrometheusMetricDefinition,
                 Scraping,
-                resource);
+                resource,
+                string.IsNullOrEmpty(resource.ResourceGroupName) ? azureMetadata.ResourceGroupName : resource.ResourceGroupName);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var azureStorageQueueMetricDefinition = GenerateBogusAzureStorageQueueMetricDefinition(resourceGroupName, metricScrapingInterval, sasTokenRawValue, sasTokenEnvironmentVariable);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationV1
+            var scrapingConfiguration = new Promitor.Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,

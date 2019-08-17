@@ -20,7 +20,7 @@ namespace Promitor.Core.Scraping
     /// </summary>
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class Scraper<TResourceDefinition> : IScraper<AzureResourceDefinition>
-      where TResourceDefinition : AzureResourceDefinition, new()
+      where TResourceDefinition : AzureResourceDefinition
     {
         private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
@@ -75,10 +75,8 @@ namespace Promitor.Core.Scraping
 
                 var aggregationInterval = scrapeDefinition.AzureMetricConfiguration.Aggregation.Interval;
                 var aggregationType = scrapeDefinition.AzureMetricConfiguration.Aggregation.Type;
-                var resourceGroupName = string.IsNullOrEmpty(scrapeDefinition.Resource.ResourceGroupName) ? AzureMetadata.ResourceGroupName : scrapeDefinition.Resource.ResourceGroupName;
                 var scrapedMetricResult = await ScrapeResourceAsync(
                     AzureMetadata.SubscriptionId,
-                    resourceGroupName,
                     scrapeDefinition,
                     castedMetricDefinition,
                     aggregationType,
@@ -140,14 +138,12 @@ namespace Promitor.Core.Scraping
         ///     Scrapes the configured resource
         /// </summary>
         /// <param name="subscriptionId">Metric subscription Id</param>
-        /// <param name="resourceGroupName">Metric Resource Group</param>
         /// <param name="scrapeDefinition">Contains all the information needed to scrape the resource.</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         protected abstract Task<ScrapeResult> ScrapeResourceAsync(
             string subscriptionId,
-            string resourceGroupName,
             ScrapeDefinition<AzureResourceDefinition> scrapeDefinition,
             TResourceDefinition resourceDefinition,
             AggregationType aggregationType,

@@ -80,7 +80,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
-            var duplicateMetricNames = metrics.GroupBy(metric => metric.PrometheusMetricDefinition.Name)
+            var duplicateMetricNames = metrics.GroupBy(metric => metric.PrometheusMetricDefinition?.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
                 .Select(groupedMetrics => groupedMetrics.Key);
 

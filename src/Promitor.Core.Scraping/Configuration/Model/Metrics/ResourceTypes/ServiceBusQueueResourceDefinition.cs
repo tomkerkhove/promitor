@@ -2,10 +2,6 @@
 {
     public class ServiceBusQueueResourceDefinition : AzureResourceDefinition
     {
-        public ServiceBusQueueResourceDefinition() : base(ResourceType.ServiceBusQueue)
-        {
-        }
-
         public ServiceBusQueueResourceDefinition(string resourceGroupName, string ns, string queueName)
             : base(ResourceType.ServiceBusQueue, resourceGroupName)
         {
@@ -13,7 +9,7 @@
             QueueName = queueName;
         }
 
-        public string Namespace { get; set; }
-        public string QueueName { get; set; }
+        public string Namespace { get; }
+        public string QueueName { get; }
     }
 }

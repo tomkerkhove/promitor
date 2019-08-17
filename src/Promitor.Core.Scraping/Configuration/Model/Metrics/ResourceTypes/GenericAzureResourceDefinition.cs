@@ -2,10 +2,6 @@
 {
     public class GenericAzureResourceDefinition : AzureResourceDefinition
     {
-        public GenericAzureResourceDefinition() : base(ResourceType.Generic)
-        {
-        }
-
         public GenericAzureResourceDefinition(string resourceGroupName, string filter, string resourceUri)
             : base(ResourceType.Generic, resourceGroupName)
         {
@@ -13,7 +9,7 @@
             ResourceUri = resourceUri;
         }
 
-        public string Filter { get; set; }
-        public string ResourceUri { get; set; }
+        public string Filter { get; }
+        public string ResourceUri { get; }
     }
 }

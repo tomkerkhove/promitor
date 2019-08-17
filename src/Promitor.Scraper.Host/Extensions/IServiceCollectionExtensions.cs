@@ -47,7 +47,7 @@ namespace Promitor.Scraper.Host.Extensions
                 {
                     services.AddScheduler(builder =>
                     {
-                        builder.AddJob(serviceProvider => new MetricScrapingJob(metric.CreateScrapeDefinition(resource),
+                        builder.AddJob(serviceProvider => new MetricScrapingJob(metric.CreateScrapeDefinition(resource, metrics.AzureMetadata),
                             metricsProvider,
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),

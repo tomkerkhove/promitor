@@ -25,11 +25,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
         protected void AssertMetricDefinition(MetricDefinition deserializedMetricDefinition, MetricDefinitionV1 metricDefinition)
         {
             Assert.NotNull(deserializedMetricDefinition);
+            Assert.NotNull(deserializedMetricDefinition.PrometheusMetricDefinition);
             Assert.Equal(metricDefinition.Name, deserializedMetricDefinition.PrometheusMetricDefinition.Name);
             Assert.Equal(metricDefinition.Description, deserializedMetricDefinition.PrometheusMetricDefinition.Description);
             Assert.Equal(metricDefinition.ResourceType, deserializedMetricDefinition.ResourceType);
             Assert.NotNull(deserializedMetricDefinition.PrometheusMetricDefinition.Labels);
             Assert.Equal(metricDefinition.Labels, deserializedMetricDefinition.PrometheusMetricDefinition.Labels);
+            Assert.NotEmpty(deserializedMetricDefinition.Resources);
             Assert.Equal(deserializedMetricDefinition.Resources.Single().ResourceGroupName, metricDefinition.ResourceGroupName);
 
             foreach (var label in metricDefinition.Labels)
@@ -46,7 +48,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(metricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
-        protected void AssertMetricDefaults(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaultsV1 metricDefaults)
+        protected void AssertMetricDefaults(Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, MetricDefaultsV1 metricDefaults)
         {
             var deserializedMetricDefaults = deserializedConfiguration.MetricDefaults;
             Assert.NotNull(deserializedMetricDefaults);
@@ -54,7 +56,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Equal(metricDefaults.Aggregation.Interval, deserializedMetricDefaults.Aggregation.Interval);
         }
 
-        protected void AssertAzureMetadata(Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, AzureMetadataV1 azureMetadata)
+        protected void AssertAzureMetadata(Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration deserializedConfiguration, AzureMetadataV1 azureMetadata)
         {
             Assert.NotNull(deserializedConfiguration.AzureMetadata);
             Assert.Equal(azureMetadata.TenantId, deserializedConfiguration.AzureMetadata.TenantId);

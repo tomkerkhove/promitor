@@ -2,16 +2,12 @@
 {
     public class RedisCacheResourceDefinition : AzureResourceDefinition
     {
-        public RedisCacheResourceDefinition() : base(ResourceType.RedisCache)
-        {
-        }
-
         public RedisCacheResourceDefinition(string resourceGroupName, string cacheName)
             : base(ResourceType.RedisCache, resourceGroupName)
         {
             CacheName = cacheName;
         }
 
-        public string CacheName { get; set; }
+        public string CacheName { get; }
     }
 }

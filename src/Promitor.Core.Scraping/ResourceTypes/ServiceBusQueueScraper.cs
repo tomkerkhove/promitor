@@ -16,9 +16,9 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, resource.Namespace);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.Namespace);
 
             var filter = $"EntityName eq '{resource.QueueName}'";
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
@@ -29,7 +29,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 {"entity_name", resource.QueueName}
             };
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, resource.Namespace, resourceUri, foundMetricValue, labels);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.Namespace, resourceUri, foundMetricValue, labels);
         }
     }
 }

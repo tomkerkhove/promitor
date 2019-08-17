@@ -31,15 +31,6 @@ namespace Promitor.Core.Scraping.Configuration.Providers
             {
                 foreach (var metric in config.Metrics)
                 {
-                    // Apply AzureMetadata.ResourceGroupName to metrics with no other RG specified
-                    foreach (var resource in metric.Resources)
-                    {
-                        if (string.IsNullOrWhiteSpace(resource.ResourceGroupName))
-                        {
-                            resource.ResourceGroupName = config.AzureMetadata.ResourceGroupName;
-                        }
-                    }
-
                     // Apply the default aggregation interval if none is specified
                     if (metric.AzureMetricConfiguration == null)
                     {
