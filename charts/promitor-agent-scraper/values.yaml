@@ -24,7 +24,7 @@ runtime:
     defaultLogLevel: "Error"
     applicationInsights:
       enabled: False
-      instrumentationKey: ""
+      key: ""
       logLevel: ""
     containerLogs:
       enabled: True

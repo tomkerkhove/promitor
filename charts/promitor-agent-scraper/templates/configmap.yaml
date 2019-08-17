@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  runtime-declaration.yaml: |-
+  runtime.yaml: |-
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
       prometheus:
@@ -21,19 +21,19 @@ data:
         absolutePath: /config/metrics-declaration.yaml
       telemetry:
         applicationInsights:
-  {{- if .Values.runtime.telemetry.applicationInsights.instrumentationKey }}
-          instrumentationKey: {{ .Values.runtime.telemetry.applicationInsights.instrumentationKey | quote }}
+  {{- if .Values.runtime.telemetry.applicationInsights.key }}
+          instrumentationKey: {{ .Values.runtime.telemetry.applicationInsights.key | quote }}
   {{- end }}
           isEnabled: {{ .Values.runtime.telemetry.applicationInsights.enabled | quote }}
   {{- if .Values.runtime.telemetry.applicationInsights.logLevel | quote  }}
-          verbosity: trace # Optional. Default: N/A
+          verbosity: {{ .Values.runtime.telemetry.applicationInsights.logLevel | quote }}
   {{- end }}
         containerLogs:
           isEnabled: {{ .Values.runtime.telemetry.containerLogs.enabled | quote }}
   {{- if .Values.runtime.telemetry.containerLogs.logLevel | quote  }}
-          verbosity: trace # Optional. Default: N/A
+          verbosity: {{ .Values.runtime.telemetry.containerLogs.logLevel | quote }}
   {{- end }}
-        defaultVerbosity: {{ .Values.runtime.telemetry.defaultLogLevel | quote  }} # Optional. Default: error
+        defaultVerbosity: {{ .Values.runtime.telemetry.defaultLogLevel | quote  }}
   metrics-declaration.yaml: |-
     version: v1
     azureMetadata:

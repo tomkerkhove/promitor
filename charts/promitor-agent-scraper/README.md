@@ -57,7 +57,7 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `runtime.prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
 | `runtime.telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
 | `runtime.telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
-| `runtime.telemetry.applicationInsights.instrumentationKey`  | Application Insights telemetry key |             |
+| `runtime.telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
 | `runtime.telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
 | `runtime.telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  | 
 | `runtime.telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
