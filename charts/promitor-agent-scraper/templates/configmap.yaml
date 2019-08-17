@@ -25,12 +25,12 @@ data:
           instrumentationKey: {{ .Values.runtime.telemetry.applicationInsights.key | quote }}
   {{- end }}
           isEnabled: {{ .Values.runtime.telemetry.applicationInsights.enabled | quote }}
-  {{- if .Values.runtime.telemetry.applicationInsights.logLevel | quote  }}
+  {{- if .Values.runtime.telemetry.applicationInsights.logLevel }}
           verbosity: {{ .Values.runtime.telemetry.applicationInsights.logLevel | quote }}
   {{- end }}
         containerLogs:
           isEnabled: {{ .Values.runtime.telemetry.containerLogs.enabled | quote }}
-  {{- if .Values.runtime.telemetry.containerLogs.logLevel | quote  }}
+  {{- if .Values.runtime.telemetry.containerLogs.logLevel  }}
           verbosity: {{ .Values.runtime.telemetry.containerLogs.logLevel | quote }}
   {{- end }}
         defaultVerbosity: {{ .Values.runtime.telemetry.defaultLogLevel | quote  }}
