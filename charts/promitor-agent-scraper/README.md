@@ -82,7 +82,10 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 ```console
 $ helm install promitor/promitor-agent-scraper --name promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
-               --set azureAuthentication.appKey='<azure-ad-app-key>'
+               --set azureAuthentication.appKey='<azure-ad-app-key>' \
+               --set azureMetadata.tenantId='<azure-tenant-id>' \
+               --set azureMetadata.subscriptionId='<azure-subscription-id>' \
+               --values C:\Promitor\metric-declaration.yaml
 ```
 
 Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
