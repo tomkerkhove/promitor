@@ -50,23 +50,6 @@ spec:
               secretKeyRef:
                   name: {{ template "promitor-agent-scraper.secretname" . }}
                   key: {{ .Values.secrets.appKeySecret }}
-          - name: PROMITOR_HTTP_PORT
-            value: {{ .Values.service.targetPort | quote }}
-          - name: PROMITOR_SCRAPE_BASEPATH
-            value: {{ .Values.scrapeConfig.path | quote }}
-          - name: PROMITOR_FEATURE_METRICSTIMESTAMP
-            value: {{ .Values.scrapeConfig.timestamp | quote }}
-        {{- if .Values.telemetry.appInsightsKey }}
-          - name: PROMITOR_TELEMETRY_INSTRUMENTATIONKEY
-            valueFrom:
-              secretKeyRef:
-                  name: {{ template "promitor-agent-scraper.secretname" . }}
-                  key: {{ .Values.secrets.appInsightsSecret }}
-        {{- end }}
-        {{- if .Values.logging.minimalLogLevel }}
-          - name: PROMITOR_LOGGING_MINIMUMLEVEL
-            value: {{ .Values.logging.minimalLogLevel }}
-        {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:

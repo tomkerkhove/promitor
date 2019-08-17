@@ -46,15 +46,29 @@ azureAuthentication:
   # PROMITOR_AUTH_APPKEY (Required)
   appKey: "<azure-ad-app-key>"
 
-scrapeConfig:
-  # PROMITOR_SCRAPE_BASEPATH (Optional, default is shown)
-  path: /metrics
-  # PROMITOR_FEATURE_METRICSTIMESTAMP (Optional, default is shown)
-  timestamp: True
+azureMetadata:
+  tenantId: "<azure-tenant-id>"
+  subscriptionId: "<azure-subscription-id>"
 
-telemetry:
-  # PROMITOR_TELEMETRY_INSTRUMENTATIONKEY (Optional)
-  appInsightsKey: "<azure-app-insights-key>"
+runtime:
+  prometheus:
+    scrapeEndpointPath: /metrics
+    enableMetricTimestamps: True
+  telemetry:
+    applicationInsights:
+      enabled: True
+      key: "<azure-app-insights-key>"
+
+metrics:
+  - name: promitor_demo_servicebusqueue_queue_size
+    description: "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)"
+    resourceType: ServiceBusQueue
+    namespace: promitor-messaging
+    queueName: orders
+    azureMetricConfiguration:
+      metricName: ActiveMessages
+      aggregation:
+        type: Average
 ```
 
 Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-agent-scraper/values.yaml) to see all configurable values.
@@ -64,7 +78,7 @@ If you have a `metric-declaration.yaml` file, you can create a basic deployment 
 ❯ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
-               --values /path/to/metric-declaration.yaml
+               --values /path/to/helm-configuration.yaml
 ```
 
 # Image Tagging Strategy
