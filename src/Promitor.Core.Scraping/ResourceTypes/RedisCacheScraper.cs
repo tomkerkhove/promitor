@@ -2,10 +2,11 @@
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using System;
 using System.Threading.Tasks;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class RedisCacheScraper : Scraper<RedisCacheMetricDefinition>
+    public class RedisCacheScraper : Scraper<RedisCacheResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Cache/Redis/{2}";
 
@@ -14,14 +15,14 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, RedisCacheMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, RedisCacheResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, metricDefinition.CacheName);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.CacheName);
 
-            var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
+            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.CacheName, resourceUri, foundMetricValue);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.CacheName, resourceUri, foundMetricValue);
         }
     }
 }

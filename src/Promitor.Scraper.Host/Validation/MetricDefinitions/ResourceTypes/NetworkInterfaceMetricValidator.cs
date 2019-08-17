@@ -1,20 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class NetworkInterfaceMetricValidator : MetricValidator<NetworkInterfaceMetricDefinition>
+    internal class NetworkInterfaceMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(NetworkInterfaceMetricDefinition networkInterfaceMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(networkInterfaceMetricDefinition, nameof(networkInterfaceMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
             var errorMessages = new List<string>();
 
-            if (string.IsNullOrWhiteSpace(networkInterfaceMetricDefinition.NetworkInterfaceName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<NetworkInterfaceResourceDefinition>())
             {
-                errorMessages.Add("No network interface name is configured");
+                if (string.IsNullOrWhiteSpace(resourceDefinition.NetworkInterfaceName))
+                {
+                    errorMessages.Add("No network interface name is configured");
+                }
             }
 
             return errorMessages;

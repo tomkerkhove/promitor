@@ -51,19 +51,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, containerInstanceMetricDefinition);
-            var deserializedServiceBusMetricDefinition = deserializedMetricDefinition as ContainerInstanceMetricDefinition;
-            AssertContainerInstanceMetricDefinition(deserializedServiceBusMetricDefinition, containerInstanceMetricDefinition, deserializedMetricDefinition);
+            AssertContainerInstanceMetricDefinition(deserializedMetricDefinition, containerInstanceMetricDefinition);
         }
 
-        private static void AssertContainerInstanceMetricDefinition(ContainerInstanceMetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinitionV1 containerInstanceMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertContainerInstanceMetricDefinition(MetricDefinition deserializedContainerInstanceMetricDefinition, ContainerInstanceMetricDefinitionV1 containerInstanceMetricDefinition)
         {
-            Assert.NotNull(deserializedContainerInstanceMetricDefinition);
-            Assert.Equal(containerInstanceMetricDefinition.ContainerGroup, deserializedContainerInstanceMetricDefinition.ContainerGroup);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
-            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
-            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
-            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
+            var deserializedResource = deserializedContainerInstanceMetricDefinition.Resources.Single() as ContainerInstanceResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(containerInstanceMetricDefinition.ContainerGroup, deserializedResource.ContainerGroup);
+            Assert.NotNull(deserializedContainerInstanceMetricDefinition.AzureMetricConfiguration);
+            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.MetricName, deserializedContainerInstanceMetricDefinition.AzureMetricConfiguration.MetricName);
+            Assert.NotNull(deserializedContainerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedContainerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(containerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedContainerInstanceMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
         private ContainerInstanceMetricDefinitionV1 GenerateBogusContainerInstanceMetricDefinition(string resourceGroupName, string metricScrapingInterval)
         {

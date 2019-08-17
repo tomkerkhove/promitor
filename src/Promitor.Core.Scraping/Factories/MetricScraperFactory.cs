@@ -37,7 +37,7 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
-        public IScraper<MetricDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
+        public IScraper<AzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
             IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);

@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,14 +51,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
-            var deserializedContainerRegistryMetricDefinition = deserializedMetricDefinition as ContainerRegistryMetricDefinition;
-            AssertContainerRegistryMetricDefinition(deserializedContainerRegistryMetricDefinition, containerRegistryMetricDefinition);
+            AssertContainerRegistryMetricDefinition(deserializedMetricDefinition, containerRegistryMetricDefinition);
         }
 
-        private static void AssertContainerRegistryMetricDefinition(ContainerRegistryMetricDefinition deserializedServiceBusMetricDefinition, ContainerRegistryMetricDefinitionV1 serviceBusMetricDefinition)
+        private static void AssertContainerRegistryMetricDefinition(MetricDefinition deserializedContainerRegistryMetricDefinition, ContainerRegistryMetricDefinitionV1 containerRegistryMetricDefinition)
         {
-            Assert.NotNull(deserializedServiceBusMetricDefinition);
-            Assert.Equal(serviceBusMetricDefinition.RegistryName, deserializedServiceBusMetricDefinition.RegistryName);
+            var deserializedResource = deserializedContainerRegistryMetricDefinition.Resources.Single() as ContainerRegistryResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(containerRegistryMetricDefinition.RegistryName, deserializedResource.RegistryName);
         }
 
         private ContainerRegistryMetricDefinitionV1 GenerateBogusContainerRegistryMetricDefinition(string resourceGroupName, string metricScrapingInterval)

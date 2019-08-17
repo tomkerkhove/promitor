@@ -26,7 +26,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             var azureMetadata = GenerateBogusAzureMetadata();
             var azureStorageQueueMetricDefinition = GenerateBogusAzureStorageQueueMetricDefinition(resourceGroupName, metricScrapingInterval, sasTokenRawValue, sasTokenEnvironmentVariable);
             var metricDefaults = GenerateBogusMetricDefaults(defaultScrapingInterval);
-            var scrapingConfiguration = new Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationV1
+            var scrapingConfiguration = new Promitor.Core.Scraping.Configuration.Serialization.v1.Model.MetricsDeclarationV1
             {
                 Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
@@ -50,23 +50,24 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, azureStorageQueueMetricDefinition);
-            var deserializedAzureStorageQueueMetricDefinition = deserializedMetricDefinition as StorageQueueMetricDefinition;
-            AssertAzureStorageQueueMetricDefinition(deserializedAzureStorageQueueMetricDefinition, azureStorageQueueMetricDefinition, deserializedMetricDefinition);
+            AssertAzureStorageQueueMetricDefinition(deserializedMetricDefinition, azureStorageQueueMetricDefinition);
         }
 
-        private static void AssertAzureStorageQueueMetricDefinition(StorageQueueMetricDefinition deserializedStorageQueueMetricDefinition, StorageQueueMetricDefinitionV1 storageQueueMetricDefinition, MetricDefinition deserializedMetricDefinition)
+        private static void AssertAzureStorageQueueMetricDefinition(MetricDefinition deserializedStorageQueueMetricDefinition, StorageQueueMetricDefinitionV1 storageQueueMetricDefinition)
         {
-            Assert.NotNull(deserializedStorageQueueMetricDefinition);
-            Assert.Equal(storageQueueMetricDefinition.AccountName, deserializedStorageQueueMetricDefinition.AccountName);
-            Assert.Equal(storageQueueMetricDefinition.QueueName, deserializedStorageQueueMetricDefinition.QueueName);
-            Assert.NotNull(deserializedStorageQueueMetricDefinition.SasToken);
-            Assert.Equal(storageQueueMetricDefinition.SasToken.RawValue, deserializedStorageQueueMetricDefinition.SasToken.RawValue);
-            Assert.Equal(storageQueueMetricDefinition.SasToken.EnvironmentVariable, deserializedStorageQueueMetricDefinition.SasToken.EnvironmentVariable);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration);
-            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.MetricName, deserializedMetricDefinition.AzureMetricConfiguration.MetricName);
-            Assert.NotNull(deserializedMetricDefinition.AzureMetricConfiguration.Aggregation);
-            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
-            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
+            var deserializedResource = deserializedStorageQueueMetricDefinition.Resources.Single() as StorageQueueResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(storageQueueMetricDefinition.AccountName, deserializedResource.AccountName);
+            Assert.Equal(storageQueueMetricDefinition.QueueName, deserializedResource.QueueName);
+            Assert.NotNull(deserializedResource.SasToken);
+            Assert.Equal(storageQueueMetricDefinition.SasToken.RawValue, deserializedResource.SasToken.RawValue);
+            Assert.Equal(storageQueueMetricDefinition.SasToken.EnvironmentVariable, deserializedResource.SasToken.EnvironmentVariable);
+            Assert.NotNull(deserializedStorageQueueMetricDefinition.AzureMetricConfiguration);
+            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.MetricName, deserializedStorageQueueMetricDefinition.AzureMetricConfiguration.MetricName);
+            Assert.NotNull(deserializedStorageQueueMetricDefinition.AzureMetricConfiguration.Aggregation);
+            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Type, deserializedStorageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(storageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Interval, deserializedStorageQueueMetricDefinition.AzureMetricConfiguration.Aggregation.Interval);
         }
 
         private StorageQueueMetricDefinitionV1 GenerateBogusAzureStorageQueueMetricDefinition(string resourceGroupName, string metricScrapingInterval, string sasTokenRawValue, string sasTokenEnvironmentVariable)

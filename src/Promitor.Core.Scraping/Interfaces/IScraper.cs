@@ -3,8 +3,8 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.Interfaces
 {
-    public interface IScraper<in TMetricDefinition> where TMetricDefinition : MetricDefinition
+    public interface IScraper<TResourceDefinition> where TResourceDefinition : AzureResourceDefinition
     {
-        Task ScrapeAsync(TMetricDefinition metricDefinition);
+        Task ScrapeAsync(ScrapeDefinition<TResourceDefinition> scrapeDefinition);
     }
 }

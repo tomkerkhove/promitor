@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,14 +51,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, cosmosDbMetricDefinition);
-            var deserializedCosmosDbMetricDefinition = deserializedMetricDefinition as CosmosDbMetricDefinition;
-            AssertCosmosDbMetricDefinition(deserializedCosmosDbMetricDefinition, cosmosDbMetricDefinition);
+            AssertCosmosDbMetricDefinition(deserializedMetricDefinition, cosmosDbMetricDefinition);
         }
 
-        private static void AssertCosmosDbMetricDefinition(CosmosDbMetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinitionV1 cosmosDbMetricDefinition)
+        private static void AssertCosmosDbMetricDefinition(MetricDefinition deserializedCosmosDbMetricDefinition, CosmosDbMetricDefinitionV1 cosmosDbMetricDefinition)
         {
-            Assert.NotNull(deserializedCosmosDbMetricDefinition);
-            Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedCosmosDbMetricDefinition.DbName);
+            var deserializedResource = deserializedCosmosDbMetricDefinition.Resources.Single() as CosmosDbResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(cosmosDbMetricDefinition.DbName, deserializedResource.DbName);
         }
 
         private CosmosDbMetricDefinitionV1 GenerateBogusCosmosDbMetricDefinition(string resourceGroupName, string metricScrapingInterval)

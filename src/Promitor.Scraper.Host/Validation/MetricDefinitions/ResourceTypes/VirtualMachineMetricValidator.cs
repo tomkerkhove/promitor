@@ -1,18 +1,24 @@
 using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class VirtualMachineMetricValidator : MetricValidator<VirtualMachineMetricDefinition>
+    internal class VirtualMachineMetricValidator : IMetricValidator
     {
-        protected override IEnumerable<string> Validate(VirtualMachineMetricDefinition virtualMachineMetricDefinition)
+        public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
-            Guard.NotNull(virtualMachineMetricDefinition, nameof(virtualMachineMetricDefinition));
+            Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            if (string.IsNullOrWhiteSpace(virtualMachineMetricDefinition.VirtualMachineName))
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<VirtualMachineResourceDefinition>())
             {
-                yield return "No virtual machine name is configured";
+                if (string.IsNullOrWhiteSpace(resourceDefinition.VirtualMachineName))
+                {
+                    yield return "No virtual machine name is configured";
+                }
             }
         }
     }

@@ -61,9 +61,12 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         private void SanitizeStorageQueueDeclaration(MetricDefinition metricDefinition)
         {
-            if (metricDefinition is StorageQueueMetricDefinition storageQueueDeclaration && string.IsNullOrWhiteSpace(storageQueueDeclaration.SasToken.RawValue) == false)
+            foreach (var storageQueueDeclaration in metricDefinition.Resources.OfType<StorageQueueResourceDefinition>())
             {
-                storageQueueDeclaration.SasToken.RawValue = "***";
+                if (string.IsNullOrWhiteSpace(storageQueueDeclaration.SasToken.RawValue) == false)
+                {
+                    storageQueueDeclaration.SasToken.RawValue = "***";
+                }
             }
         }
 
@@ -77,7 +80,7 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
         {
-            var duplicateMetricNames = metrics.GroupBy(metric => metric.Name)
+            var duplicateMetricNames = metrics.GroupBy(metric => metric.PrometheusMetricDefinition?.Name)
                 .Where(groupedMetrics => groupedMetrics.Count() > 1)
                 .Select(groupedMetrics => groupedMetrics.Key);
 

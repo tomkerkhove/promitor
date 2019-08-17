@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class ServiceBusQueueScraper : Scraper<ServiceBusQueueMetricDefinition>
+    public class ServiceBusQueueScraper : Scraper<ServiceBusQueueResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.ServiceBus/namespaces/{2}";
 
@@ -15,20 +16,20 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, string resourceGroupName, ServiceBusQueueMetricDefinition metricDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, resourceGroupName, metricDefinition.Namespace);
+            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.Namespace);
 
-            var filter = $"EntityName eq '{metricDefinition.QueueName}'";
-            var metricName = metricDefinition.AzureMetricConfiguration.MetricName;
+            var filter = $"EntityName eq '{resource.QueueName}'";
+            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, filter);
 
             var labels = new Dictionary<string, string>
             {
-                {"entity_name", metricDefinition.QueueName}
+                {"entity_name", resource.QueueName}
             };
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, metricDefinition.Namespace, resourceUri, foundMetricValue, labels);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.Namespace, resourceUri, foundMetricValue, labels);
         }
     }
 }

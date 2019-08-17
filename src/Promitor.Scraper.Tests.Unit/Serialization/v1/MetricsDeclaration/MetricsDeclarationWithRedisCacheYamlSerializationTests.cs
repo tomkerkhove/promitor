@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,14 +51,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition);
-            var deserializedRedisCacheMetricDefinition = deserializedMetricDefinition as RedisCacheMetricDefinition;
-            AssertRedisCacheMetricDefinition(deserializedRedisCacheMetricDefinition, redisCacheMetricDefinition);
+            AssertRedisCacheMetricDefinition(deserializedMetricDefinition, redisCacheMetricDefinition);
         }
 
-        private static void AssertRedisCacheMetricDefinition(RedisCacheMetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinitionV1 redisCacheMetricDefinition)
+        private static void AssertRedisCacheMetricDefinition(MetricDefinition deserializedRedisCacheMetricDefinition, RedisCacheMetricDefinitionV1 redisCacheMetricDefinition)
         {
-            Assert.NotNull(deserializedRedisCacheMetricDefinition);
-            Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedRedisCacheMetricDefinition.CacheName);
+            var deserializedResource = deserializedRedisCacheMetricDefinition.Resources.Single() as RedisCacheResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(redisCacheMetricDefinition.CacheName, deserializedResource.CacheName);
         }
 
         private RedisCacheMetricDefinitionV1 GenerateBogusRedisCacheMetricDefinition(string resourceGroupName, string metricScrapingInterval)

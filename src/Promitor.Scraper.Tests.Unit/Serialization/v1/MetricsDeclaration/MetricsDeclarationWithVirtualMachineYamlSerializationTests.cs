@@ -4,6 +4,7 @@ using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -50,14 +51,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.MetricsDeclaration
             Assert.Single(deserializedConfiguration.Metrics);
             var deserializedMetricDefinition = deserializedConfiguration.Metrics.FirstOrDefault();
             AssertMetricDefinition(deserializedMetricDefinition, virtualMachineMetricDefinition);
-            var deserializedVirtualMachineMetricDefinition = deserializedMetricDefinition as VirtualMachineMetricDefinition;
-            AssertVirtualMachineMetricDefinition(deserializedVirtualMachineMetricDefinition, virtualMachineMetricDefinition);
+            AssertVirtualMachineMetricDefinition(deserializedMetricDefinition, virtualMachineMetricDefinition);
         }
 
-        private static void AssertVirtualMachineMetricDefinition(VirtualMachineMetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinitionV1 virtualMachineMetricDefinition)
+        private static void AssertVirtualMachineMetricDefinition(MetricDefinition deserializedVirtualMachineMetricDefinition, VirtualMachineMetricDefinitionV1 virtualMachineMetricDefinition)
         {
-            Assert.NotNull(deserializedVirtualMachineMetricDefinition);
-            Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedVirtualMachineMetricDefinition.VirtualMachineName);
+            var deserializedResource = deserializedVirtualMachineMetricDefinition.Resources.Single() as VirtualMachineResourceDefinition;
+
+            Assert.NotNull(deserializedResource);
+            Assert.Equal(virtualMachineMetricDefinition.VirtualMachineName, deserializedResource.VirtualMachineName);
             Assert.NotNull(deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration);
             Assert.Equal(virtualMachineMetricDefinition.AzureMetricConfiguration.MetricName, deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.MetricName);
             Assert.NotNull(deserializedVirtualMachineMetricDefinition.AzureMetricConfiguration.Aggregation);

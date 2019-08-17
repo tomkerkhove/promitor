@@ -2,24 +2,23 @@
 
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 {
-    public abstract class MetricDefinition
+    public class MetricDefinition
     {
-        protected MetricDefinition()
+        public MetricDefinition()
         {
         }
 
-        protected MetricDefinition(string name,
-            string description,
-            string resourceGroupName,
-            Dictionary<string, string> labels,
-            Scraping scraping, AzureMetricConfiguration azureMetricConfiguration)
+        public MetricDefinition(PrometheusMetricDefinition prometheusMetricDefinition,
+            Scraping scraping,
+            AzureMetricConfiguration azureMetricConfiguration,
+            ResourceType resourceType,
+            List<AzureResourceDefinition> resources)
         {
             AzureMetricConfiguration = azureMetricConfiguration;
-            Description = description;
-            Name = name;
-            ResourceGroupName = resourceGroupName;
-            Labels = labels;
+            PrometheusMetricDefinition = prometheusMetricDefinition;
             Scraping = scraping;
+            ResourceType = resourceType;
+            Resources = resources;
         }
 
         /// <summary>
@@ -28,34 +27,39 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public AzureMetricConfiguration AzureMetricConfiguration { get; set; }
 
         /// <summary>
-        ///     Description concerning metric that will be made available in the scraping endpoint
+        /// The details of the prometheus metric that will be created.
         /// </summary>
-        public string Description { get; set; }
-
-        /// <summary>
-        ///     Name of the metric to use when exposing in the scraping endpoint
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        ///     Specify a resource group to scrape that defers from the default resource group.
-        ///     This enables you to do multi-resource group scraping with one configuration file.
-        /// </summary>
-        public string ResourceGroupName { get; set; }
-
-        /// <summary>
-        ///     Type of resource that is configured
-        /// </summary>
-        public abstract ResourceType ResourceType { get; }
-
-        /// <summary>
-        ///     Collection of custom labels to add to every metric
-        /// </summary>
-        public Dictionary<string, string> Labels { get; set; } = new Dictionary<string, string>();
+        public PrometheusMetricDefinition PrometheusMetricDefinition { get; set; }
 
         /// <summary>
         /// Gets or sets the scraping model.
         /// </summary>
         public Scraping Scraping { get; set; } = new Scraping();
+
+        /// <summary>
+        /// Type of resource that is configured
+        /// </summary>
+        public ResourceType ResourceType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the list of resources to scrape.
+        /// </summary>
+        public List<AzureResourceDefinition> Resources { get; set; }
+
+        /// <summary>
+        /// Creates a <see cref="ScrapeDefinition{TResourceDefinition}"/> object for the specified resource.
+        /// </summary>
+        /// <param name="resource">The resource to scrape.</param>
+        /// <param name="azureMetadata">The Azure global metadata.</param>
+        /// <returns>The scrape definition.</returns>
+        public ScrapeDefinition<AzureResourceDefinition> CreateScrapeDefinition(AzureResourceDefinition resource, AzureMetadata azureMetadata)
+        {
+            return new ScrapeDefinition<AzureResourceDefinition>(
+                AzureMetricConfiguration,
+                PrometheusMetricDefinition,
+                Scraping,
+                resource,
+                string.IsNullOrEmpty(resource.ResourceGroupName) ? azureMetadata.ResourceGroupName : resource.ResourceGroupName);
+        }
     }
 }
