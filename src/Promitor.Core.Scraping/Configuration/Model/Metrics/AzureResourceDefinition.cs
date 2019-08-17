@@ -6,10 +6,6 @@
     /// </summary>
     public abstract class AzureResourceDefinition
     {
-        protected AzureResourceDefinition(ResourceType resourceType)
-        {
-        }
-
         protected AzureResourceDefinition(ResourceType resourceType, string resourceGroupName)
         {
             ResourceType = resourceType;
