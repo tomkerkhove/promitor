@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Configuration.Model.Metrics;
@@ -112,6 +113,7 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<RuntimeConfiguration>(configuration);
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
