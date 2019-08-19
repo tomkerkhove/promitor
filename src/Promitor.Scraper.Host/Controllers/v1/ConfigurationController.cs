@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Scraper.Host.Extensions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Scraper.Host.Controllers.v1
@@ -12,8 +13,8 @@ namespace Promitor.Scraper.Host.Controllers.v1
     [Route("api/v1/configuration")]
     public class ConfigurationController : Controller
     {
-        private readonly IOptionsMonitor<RuntimeConfiguration> _runtimeConfiguration;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
+        private readonly IOptionsMonitor<RuntimeConfiguration> _runtimeConfiguration;
 
         public ConfigurationController(IOptionsMonitor<RuntimeConfiguration> runtimeConfiguration, IMetricsDeclarationProvider metricsDeclarationProvider)
         {
@@ -33,7 +34,7 @@ namespace Promitor.Scraper.Host.Controllers.v1
         [SwaggerResponse((int)HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
         public IActionResult GetMetricDeclaration()
         {
-            var scrapeConfiguration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            var scrapeConfiguration = _metricsDeclarationProvider.Get(true);
             return Ok(scrapeConfiguration.Metrics);
         }
 
@@ -48,7 +49,14 @@ namespace Promitor.Scraper.Host.Controllers.v1
             Type = typeof(RuntimeConfiguration))]
         public IActionResult GetRuntime()
         {
-            return Ok(_runtimeConfiguration.CurrentValue);
+            var runtimeConfig = _runtimeConfiguration.CurrentValue.Clone();
+
+            if (string.IsNullOrWhiteSpace(runtimeConfig?.Telemetry?.ApplicationInsights?.InstrumentationKey) == false)
+            {
+                runtimeConfig.Telemetry.ApplicationInsights.InstrumentationKey = "***";
+            }
+
+            return Ok(runtimeConfig);
         }
     }
 }
