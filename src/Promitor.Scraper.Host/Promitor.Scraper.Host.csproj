@@ -35,7 +35,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="CronScheduler.AspNetCore" Version="1.1.0" />
+    <PackageReference Include="CronScheduler.AspNetCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="1.6.0" />
