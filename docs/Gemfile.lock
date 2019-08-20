@@ -248,6 +248,7 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages (>= 192)
+  nokogiri (>= 1.10.4)
 
 BUNDLED WITH
    1.17.3
