@@ -28,6 +28,10 @@ We do welcome PRs that implement features from our backlog and are always happy 
 
 Are you having issues or feature requests? Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
+## Security
+
+Learn more about our security policy [here](https://github.com/tomkerkhove/promitor/security/policy).
+
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you can do a small donation.
 
