@@ -29,7 +29,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 - Provides scraping endpoint for Prometheus
 - Automatically scrapes Azure Monitor metrics
-- Built-in support for a variety of Azure services ([overview](configuration/metrics))
+- Built-in support for a variety of Azure services ([overview](configuration/v0.x/metrics#supported-azure-services))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to Azure Application Insights
