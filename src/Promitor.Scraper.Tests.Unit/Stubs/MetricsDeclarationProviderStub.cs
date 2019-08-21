@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Serialization;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Core;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 
 namespace Promitor.Scraper.Tests.Unit.Stubs
 {
@@ -18,11 +18,11 @@ namespace Promitor.Scraper.Tests.Unit.Stubs
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }
 
-        private static IDeserializer<MetricsDeclarationV2> CreateDeserializer()
+        private static IDeserializer<MetricsDeclarationV1> CreateDeserializer()
         {
             var logger = new Mock<ILogger>();
 
-            return new V2Deserializer(
+            return new V1Deserializer(
                 new AzureMetadataDeserializer(logger.Object),
                 new MetricDefaultsDeserializer(
                     new AggregationDeserializer(logger.Object),

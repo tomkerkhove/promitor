@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Serialization;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Telemetry.Loggers;
 using Promitor.Scraper.Host.Validation.Exceptions;
 using Promitor.Scraper.Host.Validation.Interfaces;
@@ -27,7 +27,7 @@ namespace Promitor.Scraper.Host.Validation
             ValidationLogger validatorLogger,
             IConfiguration configuration,
             IMapper mapper,
-            IDeserializer<MetricsDeclarationV2> v2Deserializer)
+            IDeserializer<MetricsDeclarationV1> v2Deserializer)
         {
             _validationLogger = validatorLogger;
 

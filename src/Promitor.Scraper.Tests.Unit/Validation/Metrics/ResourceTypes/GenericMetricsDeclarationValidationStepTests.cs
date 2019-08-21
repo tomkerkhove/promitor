@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Scraper.Tests.Unit.Stubs;
@@ -15,7 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 
         public GenericMetricsDeclarationValidationStepTests()
         {
-            var config = new MapperConfiguration(c => c.AddProfile<V2MappingProfile>());
+            var config = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             _mapper = config.CreateMapper();
         }
 

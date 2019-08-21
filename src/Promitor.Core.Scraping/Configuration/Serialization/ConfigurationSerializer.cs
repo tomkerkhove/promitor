@@ -7,7 +7,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
@@ -17,9 +17,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
-        private readonly IDeserializer<MetricsDeclarationV2> _v2Deserializer;
+        private readonly IDeserializer<MetricsDeclarationV1> _v2Deserializer;
 
-        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV2> v2Deserializer)
+        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v2Deserializer)
         {
             _logger = logger;
             _mapper = mapper;

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;
@@ -16,7 +16,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
 
         public GeneralMetricsDeclarationValidationStepTests()
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V2MappingProfile>());
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             _mapper = mapperConfiguration.CreateMapper();
         }
 
@@ -108,7 +108,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithDefaults(new MetricDefaultsV2())
+                .WithDefaults(new MetricDefaultsV1())
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 

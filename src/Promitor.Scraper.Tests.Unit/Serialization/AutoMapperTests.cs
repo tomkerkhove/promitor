@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization
@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
         public void VerifyConfigurationsAreValid()
         {
             // Arrange
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V2MappingProfile>());
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
 
             // Act / Assert
             mapperConfiguration.AssertConfigurationIsValid();
