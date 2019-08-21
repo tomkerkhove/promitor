@@ -3,8 +3,7 @@
     public enum SpecVersion
     {
         // ReSharper disable InconsistentNaming
-        v1,
-        v2
+        v1
         // ReSharper restore InconsistentNaming
     }
 }

@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v2.Model;
 using Xunit;

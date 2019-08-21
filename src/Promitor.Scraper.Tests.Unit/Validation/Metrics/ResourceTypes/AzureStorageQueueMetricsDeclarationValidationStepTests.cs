@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v2.Mapping;
 using Promitor.Integrations.AzureStorage;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
@@ -17,7 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 
         public AzureStorageQueueMetricsDeclarationValidationStepTests()
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
+            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V2MappingProfile>());
             _mapper = mapperConfiguration.CreateMapper();
         }
 

@@ -57,11 +57,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var v1Serializer = new v1.Core.V1Deserializer(_logger);
-                    var v1Config = v1Serializer.Deserialize(rootNode);
-
-                    return _mapper.Map<MetricsDeclaration>(v1Config);
-                case SpecVersion.v2:
                     var v2Config = _v2Deserializer.Deserialize(rootNode);
 
                     return _mapper.Map<MetricsDeclaration>(v2Config);

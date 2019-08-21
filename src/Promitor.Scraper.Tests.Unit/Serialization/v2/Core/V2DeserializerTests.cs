@@ -49,26 +49,26 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         public void Deserialize_VersionSpecified_SetsCorrectVersion()
         {
             // Arrange
-            var yamlNode = YamlUtils.CreateYamlNode("version: v2");
+            var yamlNode = YamlUtils.CreateYamlNode("version: v1");
 
             // Act
             var builder = _deserializer.Deserialize(yamlNode);
 
             // Assert
-            Assert.Equal("v2", builder.Version);
+            Assert.Equal("v1", builder.Version);
         }
 
         [Fact]
         public void Deserialize_WrongVersionSpecified_ThrowsException()
         {
             // Arrange
-            var yamlNode = YamlUtils.CreateYamlNode("version: v1");
+            var yamlNode = YamlUtils.CreateYamlNode("version: v2");
 
             // Act
             var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode));
 
             // Assert
-            Assert.Equal("A 'version' element with a value of 'v2' was expected but the value 'v1' was found", exception.Message);
+            Assert.Equal("A 'version' element with a value of 'v1' was expected but the value 'v2' was found", exception.Message);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v2.Core
         {
             // Arrange
             const string config =
-@"version: v2
+@"version: v1
 azureMetadata:
   tenantId: 'abc-123'";
             var yamlNode = YamlUtils.CreateYamlNode(config);
@@ -94,7 +94,7 @@ azureMetadata:
         public void Deserialize_AzureMetadataNotSupplied_SetsMetadataNull()
         {
             // Arrange
-            var yamlNode = YamlUtils.CreateYamlNode("version: v2");
+            var yamlNode = YamlUtils.CreateYamlNode("version: v1");
             _metadataDeserializer.Setup(
                 d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new AzureMetadataV2());
 
@@ -110,7 +110,7 @@ azureMetadata:
         {
             // Arrange
             const string config =
-                @"version: v2
+                @"version: v1
 metricDefaults:
   aggregation:
     interval: '00:05:00'";
@@ -130,7 +130,7 @@ metricDefaults:
         {
             // Arrange
             const string config =
-                @"version: v2";
+                @"version: v1";
             var yamlNode = YamlUtils.CreateYamlNode(config);
             _defaultsDeserializer.Setup(
                 d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new MetricDefaultsV2());
@@ -147,7 +147,7 @@ metricDefaults:
         {
             // Arrange
             const string config =
-                @"version: v2
+                @"version: v1
 metrics:
 - name: promitor_metrics_total";
             var yamlNode = YamlUtils.CreateYamlNode(config);
@@ -166,7 +166,7 @@ metrics:
         {
             // Arrange
             const string config =
-                @"version: v2";
+                @"version: v1";
             var yamlNode = YamlUtils.CreateYamlNode(config);
             _metricsDeserializer.Setup(
                 d => d.Deserialize(It.IsAny<YamlSequenceNode>())).Returns(new List<MetricDefinitionV2>());

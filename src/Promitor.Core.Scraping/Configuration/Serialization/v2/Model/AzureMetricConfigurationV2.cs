@@ -10,6 +10,6 @@
         /// <summary>
         /// The settings for how the metric should be aggregated before being returned from Azure.
         /// </summary>
-        public MetricAggregationV2 Aggregation { get; set; }
+        public MetricAggregationV2 Aggregation { get; set; } = new MetricAggregationV2();
     }
 }

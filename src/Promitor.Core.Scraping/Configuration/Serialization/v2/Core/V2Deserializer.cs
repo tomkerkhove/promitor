@@ -32,7 +32,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
 
             return new MetricsDeclarationV2
             {
-                Version = SpecVersion.v2.ToString(),
+                Version = SpecVersion.v1.ToString(),
                 AzureMetadata = azureMetadata,
                 MetricDefaults = metricDefaults,
                 Metrics = metrics
@@ -47,9 +47,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v2.Core
                 throw new System.Exception("No 'version' element was found in the metrics config");
             }
 
-            if (versionNode.ToString() != SpecVersion.v2.ToString())
+            if (versionNode.ToString() != SpecVersion.v1.ToString())
             {
-                throw new System.Exception($"A 'version' element with a value of '{SpecVersion.v2}' was expected but the value '{versionNode}' was found");
+                throw new System.Exception($"A 'version' element with a value of '{SpecVersion.v1}' was expected but the value '{versionNode}' was found");
             }
         }
 
