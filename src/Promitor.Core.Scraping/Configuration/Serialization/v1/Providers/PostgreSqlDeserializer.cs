@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var serverName = node.GetString(ServerNameTag);
+
             return new PostgreSqlResourceV1
             {
-                ServerName = GetString(node, ServerNameTag)
+                ServerName = serverName
             };
         }
     }

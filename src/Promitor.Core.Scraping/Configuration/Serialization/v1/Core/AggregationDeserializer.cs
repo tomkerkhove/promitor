@@ -17,7 +17,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public override AggregationV1 Deserialize(YamlMappingNode node)
         {
-            var aggregation = new AggregationV1 {Interval = GetTimespan(node, IntervalTag)};
+            var interval = node.GetTimeSpan(IntervalTag);
+
+            var aggregation = new AggregationV1 {Interval = interval};
 
             if (aggregation.Interval == null)
             {

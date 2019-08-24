@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var cacheName = node.GetString(CacheNameTag);
+
             return new RedisCacheResourceV1
             {
-                CacheName = GetString(node, CacheNameTag)
+                CacheName = cacheName
             };
         }
     }

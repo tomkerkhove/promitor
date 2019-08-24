@@ -16,10 +16,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var queueName = node.GetString(QueueNameTag);
+            var @namespace = node.GetString(NamespaceTag);
+
             return new ServiceBusQueueResourceV1
             {
-                QueueName = GetString(node, QueueNameTag),
-                Namespace = GetString(node, NamespaceTag)
+                QueueName = queueName,
+                Namespace = @namespace
             };
         }
     }

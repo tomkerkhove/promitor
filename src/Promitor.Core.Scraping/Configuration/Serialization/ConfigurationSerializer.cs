@@ -17,13 +17,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
-        private readonly IDeserializer<MetricsDeclarationV1> _v2Deserializer;
+        private readonly IDeserializer<MetricsDeclarationV1> _v1Deserializer;
 
-        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v2Deserializer)
+        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v1Deserializer)
         {
             _logger = logger;
             _mapper = mapper;
-            _v2Deserializer = v2Deserializer;
+            _v1Deserializer = v1Deserializer;
         }
 
         public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
@@ -57,9 +57,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var v2Config = _v2Deserializer.Deserialize(rootNode);
+                    var v1Config = _v1Deserializer.Deserialize(rootNode);
 
-                    return _mapper.Map<MetricsDeclaration>(v2Config);
+                    return _mapper.Map<MetricsDeclaration>(v1Config);
                 default:
                     throw new Exception($"Unable to interpret YAML stream for spec version '{specVersion}'");
             }

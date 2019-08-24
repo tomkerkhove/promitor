@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var databaseName = node.GetString(DatabaseNameTag);
+
             return new CosmosDbResourceV1
             {
-                DbName = GetString(node, DatabaseNameTag)
+                DbName = databaseName
             };
         }
     }

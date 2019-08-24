@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -10,19 +9,19 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class RedisCacheDeserializerTests : ResourceDeserializerTestBase
+    public class RedisCacheDeserializerTests : ResourceDeserializerTest
     {
         private readonly RedisCacheDeserializer _deserializer;
 
         public RedisCacheDeserializerTests()
         {
-            _deserializer = new RedisCacheDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new RedisCacheDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_CacheNameSupplied_SetsCacheName()
         {
-            DeserializerTestHelpers.AssertPropertySet<RedisCacheResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<RedisCacheResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "cacheName: promitor-cache",
                 "promitor-cache",
@@ -32,7 +31,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_CacheNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<RedisCacheResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<RedisCacheResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.CacheName);
@@ -40,7 +39,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new RedisCacheDeserializer(new Mock<ILogger>().Object);
+            return new RedisCacheDeserializer(NullLogger.Instance);
         }
     }
 }

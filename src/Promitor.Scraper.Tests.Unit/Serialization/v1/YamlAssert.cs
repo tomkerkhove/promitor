@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1
 {
-    public static class DeserializerTestHelpers
+    public static class YamlAssert
     {
         /// <summary>
         /// Deserializes the yaml using the deserializer, and asserts that the
@@ -17,7 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="expected">The expected result.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertySet<TObject, TResult>(
+        public static void PropertySet<TObject, TResult>(
             IDeserializer<TObject> deserializer, string yamlText, TResult expected, Func<TObject, TResult> propertyAccessor)
         {
             // Arrange
@@ -41,7 +41,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="yamlText"></param>
         /// <param name="expected"></param>
         /// <param name="propertyAccessor"></param>
-        public static void AssertPropertySet<TObject, TBaseObject, TResult>(
+        public static void PropertySet<TObject, TBaseObject, TResult>(
             IDeserializer<TBaseObject> deserializer, string yamlText, TResult expected, Func<TObject, TResult> propertyAccessor)
             where TObject: TBaseObject
         {
@@ -66,7 +66,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="yamlElement">The element to find the properties under.</param>
         /// <param name="expected">The expected result.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertySet<TObject, TResult>(
+        public static void PropertySet<TObject, TResult>(
             IDeserializer<TObject> deserializer, string yamlText, string yamlElement, TResult expected, Func<TObject, TResult> propertyAccessor)
         {
             // Arrange
@@ -86,7 +86,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="deserializer">The deserializer.</param>
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertyNull<TObject>(
+        public static void PropertyNull<TObject>(
             IDeserializer<TObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
         {
             // Arrange
@@ -107,7 +107,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="deserializer">The deserializer.</param>
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
-        public static void AssertPropertyNull<TObject, TBaseObject>(
+        public static void PropertyNull<TObject, TBaseObject>(
             IDeserializer<TBaseObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
             where TObject: TBaseObject
         {
@@ -130,7 +130,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="yamlText">The yaml to deserialize.</param>
         /// <param name="propertyAccessor">The property to check.</param>
         /// <param name="yamlElement">The element to look for the property under.</param>
-        public static void AssertPropertyNull<TObject>(
+        public static void PropertyNull<TObject>(
             IDeserializer<TObject> deserializer, string yamlText, string yamlElement, Func<TObject, object> propertyAccessor)
         {
             // Arrange

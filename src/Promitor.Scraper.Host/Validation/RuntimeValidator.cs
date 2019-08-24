@@ -27,11 +27,11 @@ namespace Promitor.Scraper.Host.Validation
             ValidationLogger validatorLogger,
             IConfiguration configuration,
             IMapper mapper,
-            IDeserializer<MetricsDeclarationV1> v2Deserializer)
+            IDeserializer<MetricsDeclarationV1> v1Deserializer)
         {
             _validationLogger = validatorLogger;
 
-            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger, mapper, v2Deserializer);
+            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger, mapper, v1Deserializer);
             _validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),

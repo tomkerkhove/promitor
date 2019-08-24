@@ -1,5 +1,8 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes
 {
+    /// <summary>
+    /// Contains the configuration required to scrape a service bus queue.
+    /// </summary>
     public class ServiceBusQueueResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>

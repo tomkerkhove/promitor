@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var networkInterfaceName = node.GetString(NetworkInterfaceNameTag);
+
             return new NetworkInterfaceResourceV1
             {
-                NetworkInterfaceName = GetString(node, NetworkInterfaceNameTag)
+                NetworkInterfaceName = networkInterfaceName
             };
         }
     }

@@ -25,15 +25,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             var defaults = new MetricDefaultsV1();
 
-            if (node.Children.TryGetValue(AggregationTag, out var aggregationNode))
-            {
-                defaults.Aggregation = _aggregationDeserializer.Deserialize((YamlMappingNode)aggregationNode);
-            }
-
-            if (node.Children.TryGetValue(ScrapingTag, out var scrapingNode))
-            {
-                defaults.Scraping = _scrapingDeserializer.Deserialize((YamlMappingNode)scrapingNode);
-            }
+            defaults.Aggregation = node.DeserializeChild(AggregationTag, _aggregationDeserializer);
+            defaults.Scraping = node.DeserializeChild(ScrapingTag, _scrapingDeserializer);
 
             return defaults;
         }

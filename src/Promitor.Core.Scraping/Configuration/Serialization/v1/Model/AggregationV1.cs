@@ -8,7 +8,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
     public class AggregationV1
     {
         /// <summary>
-        /// The aggregation interval to use when querying Azure metrics.
+        /// The interval to use for aggregating the metric data when querying Azure metrics.
         /// </summary>
         public TimeSpan? Interval { get; set; }
     }

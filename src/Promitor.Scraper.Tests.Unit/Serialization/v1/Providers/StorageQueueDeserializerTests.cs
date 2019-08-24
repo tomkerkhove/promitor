@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -9,7 +9,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public class StorageQueueDeserializerTests : ResourceDeserializerTestBase
+    public class StorageQueueDeserializerTests : ResourceDeserializerTest
     {
         private readonly Mock<IDeserializer<SecretV1>> _secretDeserializer;
 
@@ -19,13 +19,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         {
             _secretDeserializer = new Mock<IDeserializer<SecretV1>>();
 
-            _deserializer = new StorageQueueDeserializer(_secretDeserializer.Object, new Mock<ILogger>().Object);
+            _deserializer = new StorageQueueDeserializer(_secretDeserializer.Object, NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_AccountNameSupplied_SetsAccountName()
         {
-            DeserializerTestHelpers.AssertPropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "accountName: promitor-acct",
                 "promitor-acct",
@@ -35,7 +35,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_AccountNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.AccountName);
@@ -44,7 +44,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_QueueNameSupplied_SetsQueueName()
         {
-            DeserializerTestHelpers.AssertPropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "queueName: orders",
                 "orders",
@@ -54,7 +54,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_QueueNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.QueueName);
@@ -83,7 +83,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_SasTokenNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<StorageQueueResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.SasToken);
@@ -91,7 +91,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new StorageQueueDeserializer(new Mock<IDeserializer<SecretV1>>().Object, new Mock<ILogger>().Object);
+            return new StorageQueueDeserializer(new Mock<IDeserializer<SecretV1>>().Object, NullLogger.Instance);
         }
     }
 }

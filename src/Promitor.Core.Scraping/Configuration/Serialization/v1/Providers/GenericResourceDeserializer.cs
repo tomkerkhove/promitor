@@ -16,10 +16,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var filter = node.GetString(FilterTag);
+            var resourceUri = node.GetString(ResourceUriTag);
+
             return new GenericResourceV1
             {
-                Filter = GetString(node, FilterTag),
-                ResourceUri = GetString(node, ResourceUriTag)
+                Filter = filter,
+                ResourceUri = resourceUri
             };
         }
     }

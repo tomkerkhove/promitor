@@ -20,22 +20,16 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var accountName = node.GetString(AccountNameTag);
+            var queueName = node.GetString(QueueNameTag);
+            var sasToken = node.DeserializeChild(SasTokenTag, _secretDeserializer);
+
             return new StorageQueueResourceV1
             {
-                AccountName = GetString(node, AccountNameTag),
-                QueueName = GetString(node, QueueNameTag),
-                SasToken = DeserializeSasToken(node)
+                AccountName = accountName,
+                QueueName = queueName,
+                SasToken = sasToken
             };
-        }
-
-        private SecretV1 DeserializeSasToken(YamlMappingNode node)
-        {
-            if (node.Children.TryGetValue(SasTokenTag, out var sasTokenNode))
-            {
-                return _secretDeserializer.Deserialize((YamlMappingNode) sasTokenNode);
-            }
-
-            return null;
         }
     }
 }

@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var virtualMachineName = node.GetString(VirtualMachineNameTag);
+
             return new VirtualMachineResourceV1
             {
-                VirtualMachineName = GetString(node, VirtualMachineNameTag)
+                VirtualMachineName = virtualMachineName
             };
         }
     }

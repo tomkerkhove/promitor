@@ -20,7 +20,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
             var resource = DeserializeResource(node);
 
-            resource.ResourceGroupName = GetString(node, ResourceGroupNameTag);
+            resource.ResourceGroupName = node.GetString(ResourceGroupNameTag);
 
             return resource;
         }

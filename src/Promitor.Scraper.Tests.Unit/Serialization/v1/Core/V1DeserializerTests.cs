@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _metadataDeserializer.Object,
                 _defaultsDeserializer.Object,
                 _metricsDeserializer.Object,
-                new Mock<ILogger>().Object);
+                NullLogger.Instance);
         }
 
         [Fact]

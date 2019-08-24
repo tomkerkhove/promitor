@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             var scraping = new ScrapingV1();
 
-            scraping.Schedule = GetString(node, ScheduleTag);
+            scraping.Schedule = node.GetString(ScheduleTag);
 
             if (scraping.Schedule == null)
             {

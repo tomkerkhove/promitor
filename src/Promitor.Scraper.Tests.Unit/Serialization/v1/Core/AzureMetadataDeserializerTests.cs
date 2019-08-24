@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public AzureMetadataDeserializerTests()
         {
-            _deserializer = new AzureMetadataDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new AzureMetadataDeserializer(NullLogger.Instance);
         }
 
         [Fact]
@@ -25,7 +24,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 $@"azureMetadata:
     tenantId: '{tenantId}'";
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "azureMetadata",
@@ -40,7 +39,7 @@ $@"azureMetadata:
 @"azureMetadata:
     subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'";
 
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 yamlText,
                 "azureMetadata",
@@ -56,7 +55,7 @@ $@"azureMetadata:
 $@"azureMetadata:
     subscriptionId: '{subscriptionId}'";
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "azureMetadata",
@@ -71,7 +70,7 @@ $@"azureMetadata:
 @"azureMetadata:
     tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'";
 
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 yamlText,
                 "azureMetadata",
@@ -87,7 +86,7 @@ $@"azureMetadata:
 $@"azureMetadata:
     resourceGroupName: '{resourceGroupName}'";
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "azureMetadata",
@@ -102,7 +101,7 @@ $@"azureMetadata:
 @"azureMetadata:
     tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'";
 
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 yamlText,
                 "azureMetadata",

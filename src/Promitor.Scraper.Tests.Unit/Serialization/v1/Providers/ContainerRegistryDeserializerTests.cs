@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -10,19 +9,19 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ContainerRegistryDeserializerTests : ResourceDeserializerTestBase
+    public class ContainerRegistryDeserializerTests : ResourceDeserializerTest
     {
         private readonly ContainerRegistryDeserializer _deserializer;
 
         public ContainerRegistryDeserializerTests()
         {
-            _deserializer = new ContainerRegistryDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new ContainerRegistryDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_RegistryNameSupplied_SetsRegistryName()
         {
-            DeserializerTestHelpers.AssertPropertySet<ContainerRegistryResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<ContainerRegistryResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "registryName: promitor-registry",
                 "promitor-registry",
@@ -32,7 +31,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_RegistryNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<ContainerRegistryResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<ContainerRegistryResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 c => c.RegistryName);
@@ -40,7 +39,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ContainerRegistryDeserializer(new Mock<ILogger>().Object);
+            return new ContainerRegistryDeserializer(NullLogger.Instance);
         }
     }
 }

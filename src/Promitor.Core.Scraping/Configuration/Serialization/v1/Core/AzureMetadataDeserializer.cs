@@ -18,9 +18,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             var metadata = new AzureMetadataV1();
 
-            metadata.TenantId = GetString(node, TenantIdTag);
-            metadata.SubscriptionId = GetString(node, SubscriptionIdTag);
-            metadata.ResourceGroupName = GetString(node, ResourceGroupNameTag);
+            metadata.TenantId = node.GetString(TenantIdTag);
+            metadata.SubscriptionId = node.GetString(SubscriptionIdTag);
+            metadata.ResourceGroupName = node.GetString(ResourceGroupNameTag);
             
             return metadata;
         }

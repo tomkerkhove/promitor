@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
 
             _deserializer = new MetricDefaultsDeserializer(
-                _aggregationDeserializer.Object, _scrapingDeserializer.Object, new Mock<ILogger>().Object);
+                _aggregationDeserializer.Object, _scrapingDeserializer.Object, NullLogger.Instance);
         }
 
         [Fact]

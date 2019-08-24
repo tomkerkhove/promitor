@@ -31,12 +31,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public override MetricDefinitionV1 Deserialize(YamlMappingNode node)
         {
+            var name = node.GetString(NameTag);
+            var description = node.GetString(DescriptionTag);
+            var resourceType = node.GetEnum<ResourceType>(ResourceTypeTag);
+            var labels = node.GetDictionary(LabelsTag);
+
             var metricDefinition = new MetricDefinitionV1
             {
-                Name = GetString(node, NameTag),
-                Description = GetString(node, DescriptionTag),
-                ResourceType = GetEnum<ResourceType>(node, ResourceTypeTag),
-                Labels = GetDictionary(node, LabelsTag)
+                Name = name,
+                Description = description,
+                ResourceType = resourceType,
+                Labels = labels
             };
 
             DeserializeAzureMetricConfiguration(node, metricDefinition);

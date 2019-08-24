@@ -16,10 +16,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public override MetricAggregationV1 Deserialize(YamlMappingNode node)
         {
+            var aggregationType = node.GetEnum<AggregationType>(TypeTag);
+
+            var interval = node.GetTimeSpan(IntervalTag);
+
             return new MetricAggregationV1
             {
-                Type = GetEnum<AggregationType>(node, TypeTag),
-                Interval = GetTimespan(node, IntervalTag)
+                Type = aggregationType,
+                Interval = interval
             };
         }
     }

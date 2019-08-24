@@ -20,7 +20,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             return new AzureMetricConfigurationV1
             {
-                MetricName = GetString(node, MetricNameTag),
+                MetricName = node.GetString(MetricNameTag),
                 Aggregation = DeserializeAggregation(node)
             };
         }

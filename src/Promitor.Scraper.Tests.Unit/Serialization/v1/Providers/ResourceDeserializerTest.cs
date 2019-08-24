@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public abstract class ResourceDeserializerTestBase
+    public abstract class ResourceDeserializerTest
     {
         protected abstract IDeserializer<AzureResourceDefinitionV1> CreateDeserializer();
 
@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         {
             var deserializer = CreateDeserializer();
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 deserializer,
                 "resourceGroupName: promitor-resource-group",
                 "promitor-resource-group",
@@ -25,7 +25,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         {
             var deserializer = CreateDeserializer();
 
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 deserializer,
                 "someProperty: someValue",
                 c => c.ResourceGroupName);

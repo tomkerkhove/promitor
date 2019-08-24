@@ -15,10 +15,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public override SecretV1 Deserialize(YamlMappingNode node)
         {
+            var rawValue = node.GetString(RawValueTag);
+            var environmentVariable = node.GetString(EnvironmentVariableTag);
+
             var secret = new SecretV1
             {
-                RawValue = GetString(node, RawValueTag),
-                EnvironmentVariable = GetString(node, EnvironmentVariableTag)
+                RawValue = rawValue,
+                EnvironmentVariable = environmentVariable
             };
 
             if (!string.IsNullOrEmpty(secret.RawValue) && !string.IsNullOrEmpty(secret.EnvironmentVariable))

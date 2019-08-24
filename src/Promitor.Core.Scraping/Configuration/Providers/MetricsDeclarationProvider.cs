@@ -16,9 +16,9 @@ namespace Promitor.Core.Scraping.Configuration.Providers
         private readonly ConfigurationSerializer _configurationSerializer;
         private readonly IConfiguration _configuration;
 
-        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v2Deserializer)
+        public MetricsDeclarationProvider(IConfiguration configuration, ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v1Deserializer)
         {
-            _configurationSerializer = new ConfigurationSerializer(logger, mapper, v2Deserializer);
+            _configurationSerializer = new ConfigurationSerializer(logger, mapper, v1Deserializer);
             _configuration = configuration;
         }
 

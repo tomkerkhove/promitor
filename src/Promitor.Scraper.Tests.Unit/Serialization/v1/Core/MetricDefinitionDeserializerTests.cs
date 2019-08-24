@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -30,13 +30,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _azureMetricConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
                 _resourceDeserializerFactory.Object,
-                new Mock<ILogger>().Object);
+                NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_NameSupplied_SetsName()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "name: promitor_test_metric",
                 "promitor_test_metric",
@@ -46,13 +46,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_NameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "description: 'Test metric'", d => d.Name);
+            YamlAssert.PropertyNull(_deserializer, "description: 'Test metric'", d => d.Name);
         }
 
         [Fact]
         public void Deserialize_DescriptionSupplied_SetsDescription()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "description: 'This is a test metric'",
                 "This is a test metric",
@@ -62,13 +62,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_DescriptionNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "name: metric", d => d.Description);
+            YamlAssert.PropertyNull(_deserializer, "name: metric", d => d.Description);
         }
 
         [Fact]
         public void Deserialize_ResourceTypeSupplied_SetsResourceType()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "resourceType: ServiceBusQueue",
                 ResourceType.ServiceBusQueue,
@@ -78,7 +78,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_ResourceTypeNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "name: promitor_test_metric",
                 d => d.ResourceType);
@@ -92,7 +92,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
     app: promitor
     env: test";
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 new Dictionary<string, string>{{"app", "promitor"}, {"env", "test"}},
@@ -102,7 +102,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_LabelsNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(_deserializer, "name: promitor_test_metric", d => d.Labels);
+            YamlAssert.PropertyNull(_deserializer, "name: promitor_test_metric", d => d.Labels);
         }
 
         [Fact]

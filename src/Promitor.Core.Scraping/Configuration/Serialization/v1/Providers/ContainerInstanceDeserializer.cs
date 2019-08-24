@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var containerGroup = node.GetString(ContainerGroupTag);
+
             return new ContainerInstanceResourceV1
             {
-                ContainerGroup = GetString(node, ContainerGroupTag)
+                ContainerGroup = containerGroup
             };
         }
     }

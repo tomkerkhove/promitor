@@ -1,8 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -15,13 +14,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         
         public MetricAggregationDeserializerTests()
         {
-            _deserializer = new MetricAggregationDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new MetricAggregationDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_TypeSupplied_SetsType()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "type: Maximum",
                 AggregationType.Maximum,
@@ -31,7 +30,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_TypeNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "interval: 00:05:00",
                 a => a.Type);
@@ -40,7 +39,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_IntervalSupplied_SetsInterval()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "interval: 00:07:00",
                 TimeSpan.FromMinutes(7),
@@ -50,7 +49,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_IntervalNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "type: Average",
                 a => a.Interval);

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -10,24 +10,24 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ContainerInstanceDeserializerTests : ResourceDeserializerTestBase
+    public class ContainerInstanceDeserializerTests : ResourceDeserializerTest
     {
         private readonly ContainerInstanceDeserializer _deserializer;
 
         public ContainerInstanceDeserializerTests()
         {
-            _deserializer = new ContainerInstanceDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new ContainerInstanceDeserializer(NullLogger.Instance);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ContainerInstanceDeserializer(new Mock<ILogger>().Object);
+            return new ContainerInstanceDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_ContainerGroupSupplied_SetsContainerGroup()
         {
-            DeserializerTestHelpers.AssertPropertySet<ContainerInstanceResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<ContainerInstanceResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "containerGroup: promitor-group",
                 "promitor-group",
@@ -37,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_ContainerGroupNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<ContainerInstanceResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<ContainerInstanceResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-resource-group",
                 c => c.ContainerGroup);

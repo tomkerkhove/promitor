@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
@@ -11,6 +9,7 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Integrations.AzureStorage;
+using Promitor.Scraper.Tests.Unit.Serialization.v1;
 
 namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 {
@@ -64,22 +63,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Metrics = _metrics
             };
 
-            var logger = new Mock<ILogger>();
-
-            _v1Deserializer = new V1Deserializer(
-                new AzureMetadataDeserializer(logger.Object),
-                new MetricDefaultsDeserializer(
-                    new AggregationDeserializer(logger.Object),
-                    new ScrapingDeserializer(logger.Object),
-                    logger.Object),
-                new MetricDefinitionDeserializer(
-                    new AzureMetricConfigurationDeserializer(
-                        new MetricAggregationDeserializer(logger.Object),
-                        logger.Object),
-                    new ScrapingDeserializer(logger.Object),
-                    new AzureResourceDeserializerFactory(new SecretDeserializer(logger.Object), logger.Object),
-                    logger.Object),
-                logger.Object);
+            _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
 
             var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, _v1Deserializer);
             return configurationSerializer.Serialize(metricsDeclaration);

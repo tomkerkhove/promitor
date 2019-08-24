@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -13,7 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public ScrapingDeserializerTests()
         {
-            _deserializer = new ScrapingDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new ScrapingDeserializer(NullLogger.Instance);
         }
 
         [Fact]
@@ -23,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 @"scraping:
     schedule: '0 * * ? * *'";
 
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "scraping",
@@ -38,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 @"scraping:
     otherProperty: otherValue";
 
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 yamlText,
                 "scraping",

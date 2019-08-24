@@ -15,9 +15,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
+            var registryName = node.GetString(RegistryNameTag);
+
             return new ContainerRegistryResourceV1
             {
-                RegistryName = GetString(node, RegistryNameTag)
+                RegistryName = registryName
             };
         }
     }

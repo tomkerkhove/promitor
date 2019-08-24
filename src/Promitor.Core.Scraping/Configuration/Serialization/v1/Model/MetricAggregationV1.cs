@@ -8,11 +8,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
     /// </summary>
     public class MetricAggregationV1
     {
-        public AggregationType? Type { get; set; }
-
         /// <summary>
-        /// The aggregation interval to use when querying Azure metrics.
+        /// The time period the metric should be aggregated over.
         /// </summary>
         public TimeSpan? Interval { get; set; }
+
+        /// <summary>
+        /// Type of aggregation to query the Azure Monitor metric.
+        /// </summary>
+        public AggregationType? Type { get; set; }
     }
 }

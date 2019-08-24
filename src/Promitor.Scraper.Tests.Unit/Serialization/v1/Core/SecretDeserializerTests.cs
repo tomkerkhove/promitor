@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -13,13 +12,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public SecretDeserializerTests()
         {
-            _deserializer = new SecretDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new SecretDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_RawValueSupplied_SetsRawValue()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "rawValue: abc123",
                 "abc123",
@@ -29,7 +28,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_RawValueNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "environmentVariable: MY_VARIABLE",
                 s => s.RawValue);
@@ -38,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_EnvironmentVariableSupplied_SetsEnvironmentVariable()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "environmentVariable: PROMITOR_SECRET",
                 "PROMITOR_SECRET",
@@ -48,7 +47,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_EnvironmentVariableNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "rawValue: abc123",
                 s => s.EnvironmentVariable);

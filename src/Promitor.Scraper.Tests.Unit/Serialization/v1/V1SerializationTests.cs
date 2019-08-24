@@ -4,8 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
@@ -17,34 +16,25 @@ using ResourceType = Promitor.Core.Scraping.Configuration.Model.ResourceType;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1
 {
+    /// <summary>
+    /// This class contains tests that run the full end-to-end serialization and deserialization
+    /// process to try to catch anything that the individual unit tests for the deserializers haven't
+    /// caught.
+    /// </summary>
     [Category("Unit")]
-    public class V1IntegrationTests
+    public class V1SerializationTests
     {
         private readonly V1Deserializer _v1Deserializer;
         private readonly ConfigurationSerializer _configurationSerializer;
         private readonly MetricsDeclarationV1 _metricsDeclaration;
 
-        public V1IntegrationTests()
+        public V1SerializationTests()
         {
-            var logger = new Mock<ILogger>();
             var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             var mapper = mapperConfiguration.CreateMapper();
 
-            _v1Deserializer = new V1Deserializer(
-                new AzureMetadataDeserializer(logger.Object),
-                new MetricDefaultsDeserializer(
-                    new AggregationDeserializer(logger.Object),
-                    new ScrapingDeserializer(logger.Object),
-                    logger.Object),
-                new MetricDefinitionDeserializer(
-                    new AzureMetricConfigurationDeserializer(
-                        new MetricAggregationDeserializer(logger.Object),
-                        logger.Object),
-                    new ScrapingDeserializer(logger.Object),
-                    new AzureResourceDeserializerFactory(new SecretDeserializer(logger.Object), logger.Object),
-                    logger.Object),
-                logger.Object);
-            _configurationSerializer = new ConfigurationSerializer(logger.Object, mapper, _v1Deserializer);
+            _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
+            _configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, _v1Deserializer);
 
             _metricsDeclaration = new MetricsDeclarationV1
             {
@@ -131,9 +121,9 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         }
 
         [Fact]
-        public void CanDeserializeSerializedModel()
+        public void Deserialize_SerializedModel_CanDeserialize()
         {
-            // This test creates a v2 model, serializes it to yaml, and then verifies that
+            // This test creates a v1 model, serializes it to yaml, and then verifies that
             // the V1Deserializer can deserialize it.
 
             // Arrange
@@ -183,7 +173,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         }
 
         [Fact]
-        public void CanDeserializeToRuntimeModel()
+        public void Deserialize_SerializedYaml_CanDeserializeToRuntimeModel()
         {
             // Arrange
             var yaml = _configurationSerializer.Serialize(_metricsDeclaration);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Moq;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -14,9 +13,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public AggregationDeserializerTests()
         {
-            var logger = new Mock<ILogger>();
-
-            _deserializer = new AggregationDeserializer(logger.Object);
+            _deserializer = new AggregationDeserializer(NullLogger.Instance);
         }
 
         [Fact]
@@ -26,7 +23,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             const string yamlText =
 @"aggregation:
     interval: 00:07:00";
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "aggregation",
@@ -40,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             const string yamlText =
 @"aggregation:
     someProperty: someValue";
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
                 "aggregation",

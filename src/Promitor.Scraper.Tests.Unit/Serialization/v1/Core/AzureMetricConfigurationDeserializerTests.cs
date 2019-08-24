@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
@@ -19,13 +19,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         {
             _aggregationDeserializer = new Mock<IDeserializer<MetricAggregationV1>>();
 
-            _deserializer = new AzureMetricConfigurationDeserializer(_aggregationDeserializer.Object, new Mock<ILogger>().Object);
+            _deserializer = new AzureMetricConfigurationDeserializer(_aggregationDeserializer.Object, NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_MetricNameSupplied_SetsMetricName()
         {
-            DeserializerTestHelpers.AssertPropertySet(
+            YamlAssert.PropertySet(
                 _deserializer,
                 "metricName: ActiveMessages",
                 "ActiveMessages",
@@ -35,7 +35,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_MetricNameNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 a => a.MetricName);
@@ -64,7 +64,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_AggregationNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull(
+            YamlAssert.PropertyNull(
                 _deserializer,
                 "metricName: ActiveMessages",
                 c => c.Aggregation);

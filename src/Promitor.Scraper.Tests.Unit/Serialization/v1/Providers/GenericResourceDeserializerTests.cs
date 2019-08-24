@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -8,19 +9,19 @@ using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public class GenericResourceDeserializerTests : ResourceDeserializerTestBase
+    public class GenericResourceDeserializerTests : ResourceDeserializerTest
     {
         private readonly GenericResourceDeserializer _deserializer;
 
         public GenericResourceDeserializerTests()
         {
-            _deserializer = new GenericResourceDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new GenericResourceDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_FilterSupplied_SetsFilter()
         {
-            DeserializerTestHelpers.AssertPropertySet<GenericResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<GenericResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "filter: EntityName eq 'orders'",
                 "EntityName eq 'orders'",
@@ -30,7 +31,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_FilterNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<GenericResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.Filter);
@@ -39,7 +40,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_ResourceUriSupplied_SetsResourceUri()
         {
-            DeserializerTestHelpers.AssertPropertySet<GenericResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<GenericResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging",
                 "Microsoft.ServiceBus/namespaces/promitor-messaging",
@@ -49,7 +50,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_ResourceUriNotSupplied_Null()
         {
-            DeserializerTestHelpers.AssertPropertyNull<GenericResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<GenericResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.ResourceUri);
@@ -57,7 +58,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new GenericResourceDeserializer(new Mock<ILogger>().Object);
+            return new GenericResourceDeserializer(NullLogger.Instance);
         }
     }
 }
