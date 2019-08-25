@@ -3,7 +3,7 @@ layout: default
 title: Metrics Declaration
 ---
 
-All the Azure Monitor metrics that needs to be scraped are consolidated in one YAML file.
+All the Azure Monitor metrics that need to be scraped are consolidated in one YAML file.
 This configuration defines the Azure metadata and all the metrics.
 
 # General Declaration
@@ -20,24 +20,26 @@ As Promitor evolves we need to change the structure of our metrics declaration.
 
 ## Metric Defaults
 
-- `metricDefaults.scraping.schedule` - **[REQUIRED]** A cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor. You can use [crontab-generator.org](https://crontab-generator.org/) to generate a cron that fits your needs.
+- `metricDefaults.scraping.schedule` - **[REQUIRED]** A cron expression that controls the frequency of which all the configured metrics will be scraped from Azure Monitor. You can use [crontab-generator.org](https://crontab-generator.org/) to generate a cron that fits your needs.
 - `metricDefaults.aggregation.interval` - The default interval which defines over what period measurements of a metric should be aggregated.
 
 ## Metrics
 
 Every metric that is being declared needs to define the following fields:
 
-- `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus
-- `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus
+- `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus.
+- `description` - Description for the metric that will be exposed in the scrape endpoint for Prometheus.
 - `resourceType` - Defines what type of resource needs to be queried.
-- `labels` - Defines a set of custom labels to included for a given metric.
+- `labels` - Defines a set of custom labels to include for a given metric.
 - `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor to query
 - `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be used when querying Azure Monitor
 - `azureMetricConfiguration.aggregation.interval` - Overrides the default aggregation interval defined in `metricDefaults.aggregation.interval` with a new interval
+- `resources` - An array of one or more resources to get metrics for. The fields required vary
+  depending on the `resourceType` being created, and are documented for each resource. All resources
+  support an optional `resourceGroupName` to allow the global resource group to be overridden.
 
 Additionally, the following fields are optional:
 
-- `resourceGroupName` - The resource group to scrape for this metric. This allows you to specify a different resource group from the one configured in `azureMetadata`, enabling you to scrape multiple resource groups with one single configuration.
 - `scraping.schedule` - A scraping schedule for the individual metric; overrides the the one specified in `metricDefaults`
 
 ## Example
@@ -56,11 +58,12 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-  - name: demo_queue_size
-    description: "Amount of active messages of the 'myqueue' queue"
+  - name: azure_service_bus_active_messages
+    description: "The number of active messages on a service bus queue."
     resourceType: ServiceBusQueue
-    namespace: promitor-messaging
-    queueName: orders
+    labels:
+      app: promitor
+      tier: messaging
     scraping:
       # Every 2 minutes
       schedule: "0 */2 * ? * *"
@@ -69,20 +72,12 @@ metrics:
       aggregation:
         type: Total
         interval: 00:15:00
-  - name: demo_queue_dev_size
-    description: "Amount of active messages of the 'myqueue-dev' queue"
-    resourceType: ServiceBusQueue
-    namespace: promitor-messaging-dev
-    queueName: orders
-    resourceGroupName: promitor-dev
-    labels:
-      app: promitor
-      stage: dev
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Total
-        interval: 00:15:00
+    resources:
+      - namespace: promitor-messaging
+        queueName: orders
+      - namespace: promitor-messaging-dev
+        queueName: orders
+        resourceGroupName: promitor-dev
 ```
 
 # Supported Azure Services

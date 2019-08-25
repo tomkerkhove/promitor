@@ -14,17 +14,20 @@ Promitor simplifies defining resource uris by using the subscription & resource 
 
 Example:
 ```yaml
-name: demo_generic_queue_size
+name: azure_service_bus_active_messages
 description: "Amount of active messages of the 'myqueue' queue (determined with Generic provider)"
 resourceType: Generic
-# Will scrape subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.ServiceBus/namespaces/promitor-messaging
-# Where 'sub' & 'rg' are coming from azureMetadata
-resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
-filter: EntityName eq 'orders'
 azureMetricConfiguration:
   metricName: ActiveMessages
   aggregation:
     type: Total
+resources:
+# Will scrape subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.ServiceBus/namespaces/promitor-messaging
+# Where 'sub' & 'rg' are coming from azureMetadata
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+  filter: EntityName eq 'orders'
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+  filter: EntityName eq 'items'
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

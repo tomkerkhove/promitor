@@ -14,14 +14,16 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 
 Example:
 ```yaml
-name: demo_containerinstances_cpu
+name: azure_container_instance_cpu_usage
 description: "Average cpu usage of our 'promitor-container-instance' container instance"
 resourceType: ContainerInstance
-containerGroup: promitor-container-instance
 azureMetricConfiguration:
   metricName: CpuUsage
   aggregation:
     type: Average
+resources:
+- containerGroup: promitor-container-instance-1
+- containerGroup: promitor-container-instance-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

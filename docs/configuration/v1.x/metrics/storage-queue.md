@@ -22,17 +22,22 @@ The following scraper-specific metric label(s) will be added:
 
 Example:
 ```yaml
-name: demo_queue_size
-description: "Amount of messages in the 'orders' queue"
+name: azure_storage_queue_message_count
+description: "The number of messages on an Azure storage queue"
 resourceType: StorageQueue
-accountName: promitor
-queueName: orders
-sasToken:
-  environmentVariable: "SECRETS_STORAGEQUEUE_PROMITOR_SASTOKEN"
 azureMetricConfiguration:
   metricName: MessageCount
   aggregation:
     type: Total
+resources:
+- accountName: promitor
+  queueName: orders
+  sasToken:
+    environmentVariable: "SECRETS_STORAGEQUEUE_PROMITOR_SASTOKEN"
+- accountName: promitor
+  queueName: items
+  sasToken:
+    environmentVariable: "SECRETS_STORAGEQUEUE_PROMITOR_SASTOKEN"
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

@@ -13,14 +13,16 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 
 Example:
 ```yaml
-    name: demo_cosmos_totalrequests
-    description: "Demo cosmos query"
-    resourceType: CosmosDb
-    dbName: cognitiveanalytics
-    azureMetricConfiguration:
-      metricName: TotalRequests
-      aggregation:
-        type: Count
+name: azure_cosmos_db_total_requests
+description: "Demo cosmos query"
+resourceType: CosmosDb
+azureMetricConfiguration:
+  metricName: TotalRequests
+  aggregation:
+    type: Count
+resources:
+- dbName: cognitiveanalytics-1
+- dbName: cognitiveanalytics-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)
