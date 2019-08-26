@@ -7,7 +7,9 @@ This article covers an overview of all the knobs that you can tweak to align the
 
 Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
 
-Here is a complete example:
+We provide the capability to override te runtime YAML via [environment variables](#overriding-configuration-with-environment-variables), if you have the need for it.
+
+Here is a complete example of the runtime YAML:
 
 ```yaml
 server:
@@ -142,5 +144,25 @@ telemetry:
     verbosity: trace # Optional. Default: N/A
   defaultVerbosity: error # Optional. Default: error
 ```
+
+# Overriding configuration with environment variables
+
+In certain scenarios you'd like to override what was configured in the runtime YAML. Therefor we provide the capability to override them via environment variables.
+
+Every environment variable should be prefixed with `PROMITOR_YAML_OVERRIDE_` followed by the YAML hierarchy where every level is replaced with `__` rather than a tab. Environment variables are not case sensitive.
+
+Our runtime configuration API endpoint allows you to verify if it was overriden and returns what will be used to run Promitor.
+
+> :warning: Depending on the configuration that is changed it may be required to restart Promitor, for example changing the HTTP port.
+
+## Example
+
+Let's say we want to override the following HTTP port:
+```yaml
+server:
+  httpPort: 80
+```
+
+An environment variable called `PROMITOR_YAML_OVERRIDE_server__httpPort` can be provided which specifies the new port.
 
 [&larr; back](/)

@@ -52,6 +52,7 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Logging & External Providers](configuration/v0.x/#logging)
 - **Operations**
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
+    - [Configuration REST APIs](operations#configuration-rest-apis)
     - [Health](operations#health)
 - **Walkthroughs**
     - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough)
