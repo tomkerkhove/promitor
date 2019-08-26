@@ -4,8 +4,8 @@
     {
         public class Authentication
         {
-            public const string ApplicationId = "PROMITOR_AUTH_APPID";
-            public const string ApplicationKey = "PROMITOR_AUTH_APPKEY";
+            public const string ApplicationId = "AUTH_APPID";
+            public const string ApplicationKey = "AUTH_APPKEY";
         }
     }
 }
