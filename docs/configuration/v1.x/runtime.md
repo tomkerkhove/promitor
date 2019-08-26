@@ -153,7 +153,7 @@ Every environment variable should be prefixed with `PROMITOR_YAML_OVERRIDE_` fol
 
 Our runtime configuration API endpoint allows you to verify if it was overriden and returns what will be used to run Promitor.
 
-:warning: Depending on the configuration that is changed it may be required to restart Promitor, for example changing the HTTP port.
+> :warning: Depending on the configuration that is changed it may be required to restart Promitor, for example changing the HTTP port.
 
 ## Example
 
