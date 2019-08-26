@@ -46,6 +46,7 @@ namespace Promitor.Scraper.Host
                 .AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
+                .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
                 .Build();
 
             return configuration;
