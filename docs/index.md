@@ -46,10 +46,10 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Supported Providers](configuration/v1.x/metrics#supported-azure-services)
     - [What labels do we provide?](metrics/labels)
 - **Configuration**
-    - [Runtime](configuration/v1.x/runtime)
-    - [Scraping](configuration/v1.x/runtime#scraping-prometheus)
     - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
+    - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
     - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
+    - [Runtime](configuration/v1.x/runtime)
 - **Operations**
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
     - [Configuration REST APIs](operations#configuration-rest-apis)
