@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;

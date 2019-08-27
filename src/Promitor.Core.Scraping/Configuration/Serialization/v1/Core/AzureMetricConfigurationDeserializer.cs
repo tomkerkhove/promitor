@@ -1,41 +1,38 @@
-﻿using GuardNet;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfigurationV1>
+    public class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfigurationV1>
     {
-        private readonly MetricAggregationDeserializer _metricAggregationDeserializer;
-        private readonly YamlScalarNode _metricNode = new YamlScalarNode("metricName");
-        private readonly YamlScalarNode _aggregationNode = new YamlScalarNode("aggregation");
+        private const string MetricNameTag = "metricName";
+        private const string AggregationTag = "aggregation";
+        private readonly IDeserializer<MetricAggregationV1> _aggregationDeserializer;
 
-        internal AzureMetricConfigurationDeserializer(ILogger logger) : base(logger)
+        public AzureMetricConfigurationDeserializer(IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger logger)
+            : base(logger)
         {
-            _metricAggregationDeserializer = new MetricAggregationDeserializer(logger);
+            _aggregationDeserializer = aggregationDeserializer;
         }
 
-        internal override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node)
+        public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node)
         {
-            Guard.NotNull(node, nameof(node));
-
-            var metricName = node.Children[_metricNode];
-
-            MetricAggregationV1 metricAggregation = null;
-            if (node.Children.ContainsKey(_aggregationNode))
+            return new AzureMetricConfigurationV1
             {
-                var aggregationNode = (YamlMappingNode) node.Children[_aggregationNode];
-                metricAggregation = _metricAggregationDeserializer.Deserialize(aggregationNode);
+                MetricName = node.GetString(MetricNameTag),
+                Aggregation = DeserializeAggregation(node)
+            };
+        }
+
+        private MetricAggregationV1 DeserializeAggregation(YamlMappingNode node)
+        {
+            if (node.Children.TryGetValue(AggregationTag, out var aggregationNode))
+            {
+                return _aggregationDeserializer.Deserialize((YamlMappingNode) aggregationNode);
             }
 
-            var azureMetricConfiguration = new AzureMetricConfigurationV1
-            {
-                MetricName = metricName?.ToString(),
-                Aggregation = metricAggregation
-            };
-
-            return azureMetricConfiguration;
+            return null;
         }
     }
 }

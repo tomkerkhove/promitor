@@ -1,39 +1,34 @@
-﻿using GuardNet;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class MetricDefaultsDeserializer : Deserializer<MetricDefaultsV1>
+    public class MetricDefaultsDeserializer : Deserializer<MetricDefaultsV1>
     {
-        internal MetricDefaultsDeserializer(ILogger logger) : base(logger)
+        private const string AggregationTag = "aggregation";
+        private const string ScrapingTag = "scraping";
+
+        private readonly IDeserializer<AggregationV1> _aggregationDeserializer;
+        private readonly IDeserializer<ScrapingV1> _scrapingDeserializer;
+
+        public MetricDefaultsDeserializer(
+            IDeserializer<AggregationV1> aggregationDeserializer,
+            IDeserializer<ScrapingV1> scrapingDeserializer,
+            ILogger logger) : base(logger)
         {
+            _aggregationDeserializer = aggregationDeserializer;
+            _scrapingDeserializer = scrapingDeserializer;
         }
 
-        internal override MetricDefaultsV1 Deserialize(YamlMappingNode node)
+        public override MetricDefaultsV1 Deserialize(YamlMappingNode node)
         {
-            Guard.NotNull(node, nameof(node));
+            var defaults = new MetricDefaultsV1();
 
-            var metricDefaults = new MetricDefaultsV1();
+            defaults.Aggregation = node.DeserializeChild(AggregationTag, _aggregationDeserializer);
+            defaults.Scraping = node.DeserializeChild(ScrapingTag, _scrapingDeserializer);
 
-            if (node.Children.ContainsKey("aggregation"))
-            {
-                var metricDefaultsNode = (YamlMappingNode)node.Children[new YamlScalarNode("aggregation")];
-                var metricDefaultsSerializer = new AggregationDeserializer(Logger);
-                var aggregationBuilder = metricDefaultsSerializer.Deserialize(metricDefaultsNode);
-                metricDefaults.Aggregation = aggregationBuilder;
-            }
-
-            if (node.Children.ContainsKey(@"scraping"))
-            {
-                var scrapingNode = (YamlMappingNode)node.Children[new YamlScalarNode("scraping")];
-                var scrapingDeserializer = new ScrapingDeserializer(Logger);
-                var scrapingBuilder = scrapingDeserializer.Deserialize(scrapingNode);
-                metricDefaults.Scraping = scrapingBuilder;
-            }
-
-            return metricDefaults;
+            return defaults;
         }
     }
 }

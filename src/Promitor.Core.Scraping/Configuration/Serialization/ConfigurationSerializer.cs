@@ -17,11 +17,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     {
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
+        private readonly IDeserializer<MetricsDeclarationV1> _v1Deserializer;
 
-        public ConfigurationSerializer(ILogger logger, IMapper mapper)
+        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v1Deserializer)
         {
             _logger = logger;
             _mapper = mapper;
+            _v1Deserializer = v1Deserializer;
         }
 
         public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
@@ -55,8 +57,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var v1Serializer = new v1.Core.ConfigurationSerializer(_logger);
-                    var v1Config = v1Serializer.InterpretYamlStream(rootNode);
+                    var v1Config = _v1Deserializer.Deserialize(rootNode);
 
                     return _mapper.Map<MetricsDeclaration>(v1Config);
                 default:
@@ -81,21 +82,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return (SpecVersion)specVersion;
         }
 
-        public string Serialize(MetricsDeclaration metricsDeclaration)
-        {
-            Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
-
-            var serializer = YamlSerialization.CreateSerializer();
-            var rawMetricsDeclaration = serializer.Serialize(metricsDeclaration);
-            return rawMetricsDeclaration;
-        }
-
-        /// <summary>
-        /// Allows a v1 version of the config to be serialized.
-        /// </summary>
-        /// <param name="metricsDeclaration">A v1 version of the config.</param>
-        /// <returns>The serialized yaml.</returns>
-        public string Serialize(MetricsDeclarationV1 metricsDeclaration)
+        public string Serialize(object metricsDeclaration)
         {
             Guard.NotNull(metricsDeclaration, nameof(metricsDeclaration));
 

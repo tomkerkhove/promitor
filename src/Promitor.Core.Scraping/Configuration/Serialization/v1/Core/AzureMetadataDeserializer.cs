@@ -1,32 +1,28 @@
-﻿using GuardNet;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class AzureMetadataDeserializer : Deserializer<AzureMetadataV1>
+    public class AzureMetadataDeserializer : Deserializer<AzureMetadataV1>
     {
-        internal AzureMetadataDeserializer(ILogger logger) : base(logger)
+        private const string TenantIdTag = "tenantId";
+        private const string SubscriptionIdTag = "subscriptionId";
+        private const string ResourceGroupNameTag = "resourceGroupName";
+
+        public AzureMetadataDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override AzureMetadataV1 Deserialize(YamlMappingNode node)
+        public override AzureMetadataV1 Deserialize(YamlMappingNode node)
         {
-            Guard.NotNull(node, nameof(node));
+            var metadata = new AzureMetadataV1();
 
-            var tenantId = node.Children[new YamlScalarNode("tenantId")];
-            var subscriptionId = node.Children[new YamlScalarNode("subscriptionId")];
-            var resourceGroupName = node.Children[new YamlScalarNode("resourceGroupName")];
-
-            var azureMetadata = new AzureMetadataV1
-            {
-                TenantId = tenantId?.ToString(),
-                SubscriptionId = subscriptionId?.ToString(),
-                ResourceGroupName = resourceGroupName?.ToString()
-            };
-
-            return azureMetadata;
+            metadata.TenantId = node.GetString(TenantIdTag);
+            metadata.SubscriptionId = node.GetString(SubscriptionIdTag);
+            metadata.ResourceGroupName = node.GetString(ResourceGroupNameTag);
+            
+            return metadata;
         }
     }
 }
