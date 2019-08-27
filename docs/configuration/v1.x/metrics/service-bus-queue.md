@@ -17,15 +17,18 @@ The following scraper-specific metric label(s) will be added:
 
 Example:
 ```yaml
-name: demo_queue_size
-description: "Amount of active messages of the 'myqueue' queue"
+name: azure_service_bus_queue_active_messages
+description: "The number of active messages on a service bus queue"
 resourceType: ServiceBusQueue
-namespace: promitor-messaging
-queueName: orders
 azureMetricConfiguration:
   metricName: ActiveMessages
   aggregation:
     type: Total
+resources:
+- namespace: promitor-messaging
+  queueName: orders
+- namespace: promitor-messaging
+  queueName: items
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

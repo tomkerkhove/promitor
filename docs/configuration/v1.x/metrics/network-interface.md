@@ -13,14 +13,16 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 
 Example:
 ```yaml
-  - name: demo_azuresnetworkinterface_bytesreceivedrate
-    description: "Number of bytes the Network Interface sent"
-    resourceType: NetworkInterface
-    networkInterfaceName: promitor-network-interface
-    azureMetricConfiguration:
-      metricName: BytesReceivedRate
-      aggregation:
-        type: Average
+name: azure_network_interface_bytes_received_rate
+description: "Number of bytes the Network Interface sent"
+resourceType: NetworkInterface
+azureMetricConfiguration:
+  metricName: BytesReceivedRate
+  aggregation:
+    type: Average
+resources:
+- networkInterfaceName: promitor-network-interface-1
+- networkInterfaceName: promitor-network-interface-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

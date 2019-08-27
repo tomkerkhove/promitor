@@ -15,10 +15,9 @@ You can find more documentation on each metric in the Azure Cache for Redis [mon
 
 Example:
 ```yaml
-name: redis_cache_hits
+name: azure_redis_cache_cache_hits
 description: "The number of successful key lookups during the specified reporting interval. This maps to keyspace_hits from the Redis INFO command."
 resourceType: RedisCache
-cacheName: Promitor
 scraping:
   schedule: "0 */2 * ? * *"
 azureMetricConfiguration:
@@ -26,6 +25,9 @@ azureMetricConfiguration:
   aggregation:
     type: Total
     interval: 00:01:00
+resources:
+- cacheName: Promitor-1
+- cacheName: Promitor-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

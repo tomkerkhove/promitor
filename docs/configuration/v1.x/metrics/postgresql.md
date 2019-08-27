@@ -13,10 +13,9 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 
 Example:
 ```yaml
-name: postgre_sql_cpu_percent
+name: azure_postgre_sql_cpu_percent
 description: "The CPU percentage on the server"
 resourceType: PostgreSql
-serverName: Promitor
 scraping:
   schedule: "0 */2 * ? * *"
 azureMetricConfiguration:
@@ -24,6 +23,9 @@ azureMetricConfiguration:
   aggregation:
     type: Average
     interval: 00:01:00
+resources:
+- serverName: Promitor-1
+- serverName: Promitor-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />

@@ -13,14 +13,16 @@ All supported metrics are not documented in the official [Azure Monitor document
 
 Example:
 ```yaml
-name: demo_container_registry_total_pull_count
+name: azure_container_registry_total_pull_count
 description: "Amount of images that were pulled from the container registry"
 resourceType: ContainerRegistry
-registryName: promitor
 azureMetricConfiguration:
   metricName: TotalPullCount
   aggregation:
     type: Average
+resources:
+- registryName: promitor-1
+- registryName: promitor-2
 ```
 
 [&larr; back to metrics declarations](/configuration/metrics)<br />
