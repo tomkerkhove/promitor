@@ -29,7 +29,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 - Provides scraping endpoint for Prometheus
 - Automatically scrapes Azure Monitor metrics
-- Built-in support for a variety of Azure services ([overview](configuration/v0.x/metrics#supported-azure-services))
+- Built-in support for a variety of Azure services ([overview](configuration/v1.x/metrics#supported-azure-services))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to Azure Application Insights
@@ -42,14 +42,14 @@ And there is more on the way - Check our [backlog](https://github.com/tomkerkhov
     - [Running Promitor on Kubernetes](deployment#kubernetes)
     - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Metrics**
-    - [General Declaration](configuration/v0.x/metrics)
-    - [Supported Providers](configuration/v0.x/metrics#supported-azure-services)
+    - [General Declaration](configuration/v1.x/metrics)
+    - [Supported Providers](configuration/v1.x/metrics#supported-azure-services)
     - [What labels do we provide?](metrics/labels)
 - **Configuration**
-    - [Runtime](configuration/v0.x/#runtime)
-    - [Scraping](configuration/v0.x/#scraping)
+    - [Runtime](configuration/v1.x/runtime)
+    - [Scraping](configuration/v1.x/runtime#scraping)
     - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
-    - [Logging & External Providers](configuration/v0.x/#logging)
+    - [Logging & External Providers](configuration/v1.x/#logging)
 - **Operations**
     - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
     - [Configuration REST APIs](operations#configuration-rest-apis)
