@@ -20,7 +20,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
             if (scraping.Schedule == null)
             {
-                // TODO: this will log an error if this deserializer is reused to deserialize the scraping settings for a metric instead of the global scraping settings. Need to fix that!
                 Logger.LogError("No default metric scraping schedule was configured!");
             }
 
