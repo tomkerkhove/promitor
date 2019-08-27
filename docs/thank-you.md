@@ -44,6 +44,7 @@ We are using the following GitHub Apps:
 - [Request Info](https://github.com/apps/request-info) - Requests more info from newly opened Pull Requests and Issues.
 - [YAMBURGER](https://github.com/apps/yamburger) - Finds YAML syntax errors.
 - [Reminders](https://github.com/apps/reminders) - Set reminders on Issues and Pull Requests.
+- [Check TODO](https://github.com/marketplace/check-todo) - Check TODO allows you to discover added/edited TODO items in your code, when a Pull Request is created/updated.
 - [ImgBot](https://github.com/marketplace/imgbot) - Optimizing images across our repo.
 - [Stale](https://github.com/apps/Stale) - Closes abandoned issues after a period of inactivity.
 - [WIP](https://github.com/apps/wip) - Do Not Merge – as a service.
