@@ -18,7 +18,7 @@ echo 'Changing name of chart'
 ((Get-Content -path $chartName/Chart.yaml -Raw) -replace 'promitor-agent-scraper', $chartName) | Set-Content -Path $chartName/Chart.yaml
 
 echo 'Changing image tag'
-((Get-Content -path $chartName/values.yaml -Raw) -replace '1.0.0', $imageVersion) | Set-Content -Path $chartName/values.yaml
+((Get-Content -path $chartName/values.yaml -Raw) -replace '1.0.0-rc-1', $imageVersion) | Set-Content -Path $chartName/values.yaml
 
 echo 'Changing repo name'
 ((Get-Content -path $chartName/values.yaml -Raw) -replace 'tomkerkhove/promitor-agent-scraper', $imageName) | Set-Content -Path $chartName/values.yaml
