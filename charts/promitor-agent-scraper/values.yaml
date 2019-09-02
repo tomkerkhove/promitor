@@ -15,20 +15,19 @@ azureAuthentication:
   appId: ""
   appKey: ""
 
-runtime:
-  prometheus:
-    scrapeEndpointPath: /metrics
-    enableMetricTimestamps: True
-    metricUnavailableValue: NaN
-  telemetry:
-    defaultLogLevel: "Error"
-    applicationInsights:
-      enabled: False
-      key: ""
-      logLevel: ""
-    containerLogs:
-      enabled: True
-      logLevel: ""
+prometheus:
+  scrapeEndpointPath: /metrics
+  enableMetricTimestamps: True
+  metricUnavailableValue: NaN
+telemetry:
+  defaultLogLevel: "Error"
+  applicationInsights:
+    enabled: False
+    key: ""
+    logLevel: ""
+  containerLogs:
+    enabled: True
+    logLevel: ""
 
 ## Metric Declaration YAML
 azureMetadata:
