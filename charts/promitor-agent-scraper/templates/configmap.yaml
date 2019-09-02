@@ -9,7 +9,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 data:
-  yaml: |-
+  runtime.yaml: |-
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
       prometheus:
