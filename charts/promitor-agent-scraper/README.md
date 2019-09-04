@@ -52,15 +52,15 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |
-| `runtime.prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
-| `runtime.prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
-| `runtime.prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
-| `runtime.telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
-| `runtime.telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
-| `runtime.telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
-| `runtime.telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
-| `runtime.telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  | 
-| `runtime.telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
+| `prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
+| `prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
+| `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
+| `telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
+| `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
+| `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
+| `telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
+| `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  | 
+| `telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
 | `azureMetadata.tenantId`  | Id of Azure tenant |             |
 | `azureMetadata.subscriptionId`  | Id of Azure subscription |             |
 | `azureMetadata.resourceGroupName`  | Name of resource group | `promitor`            |

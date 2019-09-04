@@ -14,6 +14,9 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
@@ -77,6 +80,17 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<ValidationLogger>();
             services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
+
+            services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
+            services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
+            services.AddSingleton<IDeserializer<MetricDefaultsV1>, MetricDefaultsDeserializer>();
+            services.AddSingleton<IDeserializer<MetricDefinitionV1>, MetricDefinitionDeserializer>();
+            services.AddSingleton<IDeserializer<AggregationV1>, AggregationDeserializer>();
+            services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();
+            services.AddSingleton<IDeserializer<AzureMetricConfigurationV1>, AzureMetricConfigurationDeserializer>();
+            services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();
+            services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
+            services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();
 
             return services;
         }

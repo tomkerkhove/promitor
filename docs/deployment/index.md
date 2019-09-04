@@ -40,12 +40,6 @@ To use this, you will need to provide parameters [via `--set` or `--values`](htt
 to these, you will need a metric declaration file as described in [Metric Declaration](/configuration/metrics).
 
 ```yaml
-azureAuthentication:
-  # PROMITOR_AUTH_APPID (Required)
-  appId: "<azure-ad-app-id>"
-  # PROMITOR_AUTH_APPKEY (Required)
-  appKey: "<azure-ad-app-key>"
-
 azureMetadata:
   tenantId: "<azure-tenant-id>"
   subscriptionId: "<azure-subscription-id>"

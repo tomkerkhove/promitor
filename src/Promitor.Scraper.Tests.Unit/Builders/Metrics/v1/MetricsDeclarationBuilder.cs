@@ -2,12 +2,14 @@
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Integrations.AzureStorage;
+using Promitor.Scraper.Tests.Unit.Serialization.v1;
 
 namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 {
@@ -19,6 +21,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         {
             Scraping = new ScrapingV1 { Schedule = @"0 * * ? * *" }
         };
+
+        private V1Deserializer _v1Deserializer;
 
         public MetricsDeclarationBuilder(AzureMetadataV1 azureMetadata)
         {
@@ -59,21 +63,30 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Metrics = _metrics
             };
 
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper);
+            _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
+
+            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, _v1Deserializer);
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
         public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new ServiceBusQueueMetricDefinitionV1
+            var resource = new ServiceBusQueueResourceV1
+            {
+                QueueName = queueName,
+                Namespace = serviceBusNamespace
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                QueueName = queueName,
-                Namespace = serviceBusNamespace,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.ServiceBusQueue
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -82,12 +95,18 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new ContainerInstanceMetricDefinitionV1
+            var resource = new ContainerInstanceResourceV1
+            {
+                ContainerGroup = containerGroup
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                ContainerGroup = containerGroup,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.ContainerInstance
             };
 
             _metrics.Add(metric);
@@ -98,13 +117,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithContainerRegistryMetric(string metricName = "promitor-container-registry", string metricDescription = "Description for a metric", string registryName = "promitor-container-registry", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new ContainerRegistryMetricDefinitionV1
+            var resource = new ContainerRegistryResourceV1
+            {
+                RegistryName = registryName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                RegistryName = registryName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.ContainerRegistry
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -113,13 +139,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithCosmosDbMetric(string metricName = "promitor-cosmosdb", string metricDescription = "Description for a metric", string dbName = "promitor-cosmosdb", string azureMetricName = "TotalRequests")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new CosmosDbMetricDefinitionV1
+            var resource = new CosmosDbResourceV1
+            {
+                DbName = dbName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                DbName = dbName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.CosmosDb
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -133,15 +166,22 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 RawValue = sasToken
             };
 
-            var metric = new StorageQueueMetricDefinitionV1
+            var resource = new StorageQueueResourceV1
+            {
+                QueueName = queueName,
+                AccountName = accountName,
+                SasToken = secret
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                QueueName = queueName,
-                AccountName = accountName,
-                SasToken = secret,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.StorageQueue
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -150,12 +190,18 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new VirtualMachineMetricDefinitionV1
+            var resource = new VirtualMachineResourceV1
+            {
+                VirtualMachineName = virtualMachineName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                VirtualMachineName = virtualMachineName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.VirtualMachine
             };
 
             _metrics.Add(metric);
@@ -166,12 +212,18 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new NetworkInterfaceMetricDefinitionV1
+            var resource = new NetworkInterfaceResourceV1
+            {
+                NetworkInterfaceName = networkInterfaceName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                NetworkInterfaceName = networkInterfaceName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.NetworkInterface
             };
 
             _metrics.Add(metric);
@@ -182,14 +234,21 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new GenericAzureMetricDefinitionV1
+            var resource = new GenericResourceV1
+            {
+                ResourceUri = resourceUri,
+                Filter = filter
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                ResourceUri = resourceUri,
-                Filter = filter,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.Generic
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -210,13 +269,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis", string metricDescription = "Description for a metric", string cacheName = "promitor-redis", string azureMetricName = "CacheHits")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new RedisCacheMetricDefinitionV1
+            var resource = new RedisCacheResourceV1
+            {
+                CacheName = cacheName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                CacheName = cacheName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.RedisCache
             };
+
             _metrics.Add(metric);
 
             return this;
@@ -225,13 +291,20 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithPostgreSqlMetric(string metricName = "promitor-postgresql", string metricDescription = "Description for a metric", string serverName = "promitor-postgresql", string azureMetricName = "cpu_percent")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var metric = new PostgreSqlMetricDefinitionV1
+            var resource = new PostgreSqlResourceV1
+            {
+                ServerName = serverName
+            };
+
+            var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
-                ServerName = serverName,
-                AzureMetricConfiguration = azureMetricConfiguration
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.PostgreSql
             };
+
             _metrics.Add(metric);
 
             return this;

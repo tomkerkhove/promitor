@@ -1,29 +1,32 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.Metrics;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class SecretDeserializer : Deserializer<SecretV1>
+    public class SecretDeserializer : Deserializer<SecretV1>
     {
-        internal SecretDeserializer(ILogger logger) : base(logger)
+        private const string RawValueTag = "rawValue";
+        private const string EnvironmentVariableTag = "environmentVariable";
+
+        public SecretDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override SecretV1 Deserialize(YamlMappingNode node)
+        public override SecretV1 Deserialize(YamlMappingNode node)
         {
-            var secret = new SecretV1();
+            var rawValue = node.GetString(RawValueTag);
+            var environmentVariable = node.GetString(EnvironmentVariableTag);
 
-            if (node.Children.ContainsKey("rawValue"))
+            var secret = new SecretV1
             {
-                var rawValueNode = node.Children[new YamlScalarNode("rawValue")];
-                secret.RawValue = rawValueNode.ToString();
-            }
+                RawValue = rawValue,
+                EnvironmentVariable = environmentVariable
+            };
 
-            if (node.Children.ContainsKey("environmentVariable"))
+            if (!string.IsNullOrEmpty(secret.RawValue) && !string.IsNullOrEmpty(secret.EnvironmentVariable))
             {
-                var rawEnvironmentVariable = node.Children[new YamlScalarNode("environmentVariable")];
-                secret.EnvironmentVariable = rawEnvironmentVariable.ToString();
+                Logger.LogWarning("Secret with environment variable '{EnvironmentVariable}' also has a rawValue provided.", secret.EnvironmentVariable);
             }
 
             return secret;

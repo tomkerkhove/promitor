@@ -11,7 +11,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
     [Category("Unit")]
     public class CosmosDbMetricsDeclarationValidationStepTests
     {
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public CosmosDbMetricsDeclarationValidationStepTests()
         {

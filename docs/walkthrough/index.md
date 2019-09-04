@@ -205,12 +205,13 @@ metrics:
   - name: demo_queue_size
     description: "Amount of active messages of the 'demo_queue' queue"
     resourceType: ServiceBusQueue
-    namespace: <service-bus-namespace>
-    queueName: demo_queue
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
         type: Total
+    resources:
+      - namespace: <service-bus-namespace>
+        queueName: demo_queue
 ```
 
 ## Deploy Promitor to your cluster using Helm

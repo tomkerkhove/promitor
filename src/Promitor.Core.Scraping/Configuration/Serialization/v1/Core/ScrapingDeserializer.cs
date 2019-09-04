@@ -1,24 +1,24 @@
 ﻿using Microsoft.Extensions.Logging;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
-    internal class ScrapingDeserializer : Deserializer<Model.ScrapingV1>
+    public class ScrapingDeserializer : Deserializer<ScrapingV1>
     {
-        internal ScrapingDeserializer(ILogger logger) : base(logger)
+        private const string ScheduleTag = "schedule";
+
+        public ScrapingDeserializer(ILogger logger) : base(logger)
         {
         }
 
-        internal override Model.ScrapingV1 Deserialize(YamlMappingNode node)
+        public override ScrapingV1 Deserialize(YamlMappingNode node)
         {
-            var scraping = new Model.ScrapingV1();
+            var scraping = new ScrapingV1();
 
-            if (node.Children.ContainsKey("schedule"))
-            {
-                var rawScheduleNode = node.Children[new YamlScalarNode("schedule")];
-                scraping.Schedule = rawScheduleNode.ToString();
-            }
-            else
+            scraping.Schedule = node.GetString(ScheduleTag);
+
+            if (scraping.Schedule == null)
             {
                 Logger.LogError("No default metric scraping schedule was configured!");
             }
