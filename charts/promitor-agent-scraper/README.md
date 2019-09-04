@@ -48,7 +48,7 @@ The following table lists the configurable parameters of the Promitor chart and 
 | Parameter                  | Description              | Default              |
 |:---------------------------|:-------------------------|:---------------------|
 | `image.repository`  | Repository which provides the image | `tomkerkhove/promitor-agent-scraper` |
-| `image.tag`  | Tag of image to use | `1.0.0-preview-8`            |
+| `image.tag`  | Tag of image to use | `1.0.0-rc-1`            |
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |

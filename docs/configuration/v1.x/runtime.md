@@ -44,7 +44,7 @@ server:
   httpPort: 80 # Optional. Default: 80
 ```
 
-# Scraping Prometheus
+# Prometheus Scraping Endpoint
 Promitor automatically scrapes Azure Monitor and makes the information available based on the metrics configuration.
 
 The behavior of this can be configured to fit your needs:
