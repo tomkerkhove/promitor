@@ -8,7 +8,7 @@
 <a href="https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master" rel="nofollow"><img src="https://img.shields.io/azure-devops/build/tomkerkhove/promitor/50/master.svg?label=Scraper%20Agent%20-%20CI&style=flat-square" alt="Build Status"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Stars"></a>
 <a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
-<a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-PayPal-blue.svg?style=flat-square" alt="Donate"></a>
 </p>
 
 **Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
@@ -35,7 +35,7 @@ Learn more about our security policy [here](https://github.com/tomkerkhove/promi
 ## Donate
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work you can do a small donation.
 
-[![Donate](https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square)](https://github.com/users/tomkerkhove/sponsorship)
+[![Donate](https://img.shields.io/badge/Donate%20via-PayPal-blue.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LYCEDSP3S5P9G&source=url)
 
 ## Get in touch
 Do you have a security issue to report or just want to privately contact me? Feel free to [write me an email](mailto:kerkhove.tom@gmail.com)
