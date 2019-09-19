@@ -145,6 +145,18 @@ stages:
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
+     - powershell: |
+         docker tag $(Image.TaggedName):promitor-agent-scraper-ci docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
+       displayName: 'Tag experimental image'
+       condition: ne(variables['Build.Reason'], 'PullRequest')
+     - task: Docker@1
+       displayName: 'Push ''$(Image.Name)'' image to GitHub Package Registry'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+         command: 'Push an image'
+         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
+       condition: ne(variables['Build.Reason'], 'PullRequest')
 - stage: Helm
   displayName: Helm Chart
   dependsOn: Docker
