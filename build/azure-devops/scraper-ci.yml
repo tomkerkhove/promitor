@@ -146,7 +146,7 @@ stages:
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - powershell: |
-         docker tag $(Image.TaggedName):promitor-agent-scraper-ci docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
+         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
        displayName: 'Tag experimental image'
        condition: ne(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
