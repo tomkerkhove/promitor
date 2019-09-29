@@ -146,7 +146,7 @@ stages:
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
-       displayName: 'Push experimental image to GitHub Package Registry'
+       displayName: 'Push PR image to GitHub Package Registry'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
