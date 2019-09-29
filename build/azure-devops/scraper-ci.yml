@@ -119,7 +119,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --no-cache'
+         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'
@@ -144,10 +144,6 @@ stages:
          dockerRegistryEndpoint: 'Docker Hub'
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - powershell: |
-         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)
-       displayName: 'Tag image for PR'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
        displayName: 'Push experimental image to GitHub Package Registry'
