@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Promitor.Core.Configuration.Model.Server;
 
 namespace Promitor.Scraper.Host
@@ -22,13 +22,13 @@ namespace Promitor.Scraper.Host
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        public static IHostBuilder BuildWebHost(string[] args)
         {
             var configuration = CreateConfiguration();
             var httpPort = DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
-            return WebHost.CreateDefaultBuilder(args)
+            return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                 .UseKestrel(kestrelServerOptions =>
                 {
                     kestrelServerOptions.AddServerHeader = false;
