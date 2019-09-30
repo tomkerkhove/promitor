@@ -19,7 +19,7 @@
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.11.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.26.1" />
     <PackageReference Include="Prometheus.Client" Version="3.0.2" />
-    <PackageReference Include="YamlDotNet" Version="6.1.2" />
+    <PackageReference Include="YamlDotNet" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
