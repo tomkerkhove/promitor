@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "promitor-agent-scraper.fullname" . }}
@@ -27,9 +27,9 @@ spec:
         type: {{ .Values.service.selectorType }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-      {{- if .Values.secrets.createSecret }}
+        {{- if .Values.secrets.createSecret }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
-      {{- end }}
+        {{- end }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
