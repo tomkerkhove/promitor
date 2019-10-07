@@ -15,6 +15,7 @@ This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cl
 
 ## Prerequisites
 
+- Kubernetes v1.9 or above
 - Azure Subscription
 - Azure AD Application to authenticate with ([docs](https://promitor.io/configuration/#authentication-with-azure-monitor))
 
