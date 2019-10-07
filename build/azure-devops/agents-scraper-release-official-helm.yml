@@ -10,7 +10,6 @@ variables:
 stages:
 - stage: ReleaseHelm
   displayName: Release Helm Chart
-  dependsOn: Build
   jobs:
    - job: PushHelmChart
      displayName: Push Helm Chart to ACR
