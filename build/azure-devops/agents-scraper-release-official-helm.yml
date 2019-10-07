@@ -4,7 +4,7 @@ resources:
 trigger: none
 pr: none
 variables:
-  Release.TagName: 'Helm-$(Helm.Chart.Version)'
+  Release.TagName: 'helm-$(Helm.Chart.Version)'
   Release.Title: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
   # Helm.App.Version is configured in the build definition as settable at queue time
   # Helm.Chart.Version is configured in the build definition as settable at queue time
