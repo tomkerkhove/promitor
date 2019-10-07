@@ -1,4 +1,4 @@
-name: $(Image.Version)
+name: $(Helm.Chart.Version)
 resources:
 - repo: self
 trigger: none
