@@ -71,4 +71,4 @@ stages:
                --values /path/to/helm-configuration.yaml
           ```
 
-          Helm chart image is available on [Helm Hub](https://hub.helm.sh/charts/promitor/promitor-agent-scraper/$(Helm.Chart.Version)).
+          Helm chart image is available on [Helm Hub](https://hub.helm.sh/charts/promitor/promitor-agent-scraper/$(Helm.Chart.Version).
