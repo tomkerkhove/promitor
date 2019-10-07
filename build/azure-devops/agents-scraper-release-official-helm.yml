@@ -1,0 +1,72 @@
+name: $(Image.Version)
+resources:
+- repo: self
+trigger: none
+pr: none
+variables:
+  Release.TagName: 'Helm-$(Helm.Chart.Version)'
+  # Helm.App.Version is configured in the build definition as settable at queue time
+  # Helm.Chart.Version is configured in the build definition as settable at queue time
+stages:
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  jobs:
+   - job: PushHelmChart
+     displayName: Push Helm Chart to ACR
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       inputs:
+        helmVersion: '2.9.1'
+     - powershell: |
+        mkdir output/
+        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
+       workingDirectory: charts
+       displayName: 'Package Helm Chart'
+     - task: AzureCLI@1
+       displayName: 'Push Helm Chart to Azure Container Registry'
+       inputs:
+        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
+        scriptLocation: inlineScript
+        inlineScript: |
+         az configure --defaults acr=promitor
+         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
+
+- stage: ReleaseGitHub
+  displayName: Release on GitHub
+  dependsOn: ReleaseHelm
+  jobs:
+   - job: CreateRelease
+     displayName: Create Release
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: GitHubRelease@0
+       displayName: 'Create GitHub Release'
+       inputs:
+         gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+         repositoryName: tomkerkhove/promitor
+         action: Create
+         tagSource: manual
+         tag: '$(Release.TagName)'
+         title: '$(Release.Title)'
+         isDraft: true
+         releaseNotes: |
+          ### Breaking Changes
+          Here are a list of breaking changes and how to mitigate them:
+          - TBW (#) - _Use new approach documented here_
+          ### Installing our Helm repo
+          ```
+          ❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+          ```
+          ### Getting started
+          Deploying Promitor Scraper v$(Helm.App.Version) with Helm is super easy:
+          ```
+          ❯ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
+               --set azureAuthentication.appId='<azure-ad-app-id>' \
+               --set azureAuthentication.appKey='<azure-ad-app-key>' \
+               --values /path/to/helm-configuration.yaml
+          ```
+
+          Helm chart image is available on [Helm Hub](https://hub.helm.sh/charts/promitor/promitor-agent-scraper/$(Helm.Chart.Version)).
