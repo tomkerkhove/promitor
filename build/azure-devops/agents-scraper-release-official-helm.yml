@@ -53,6 +53,8 @@ stages:
          tag: '$(Release.TagName)'
          title: '$(Release.Title)'
          isDraft: true
+         addChangeLog: false
+         releaseNotesSource: 'input'
          releaseNotes: |
           ### Breaking Changes
           Here are a list of breaking changes and how to mitigate them:
@@ -70,4 +72,4 @@ stages:
                --values /path/to/helm-configuration.yaml
           ```
 
-          Helm chart image is available on [Helm Hub](https://hub.helm.sh/charts/promitor/promitor-agent-scraper/$(Helm.Chart.Version)).
+          Helm chart image is available on [Helm Hub](https://hub.helm.sh/charts/promitor/promitor-agent-scraper/$(Helm.Chart.Version).
