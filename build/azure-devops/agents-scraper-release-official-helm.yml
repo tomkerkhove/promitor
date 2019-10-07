@@ -62,7 +62,7 @@ stages:
           ❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
           ```
           ### Getting started
-          Deploying Promitor Scraper with Helm is super easy:
+          Deploying Promitor Scraper v$(Helm.App.Version) with Helm is super easy:
           ```
           ❯ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
