@@ -119,11 +119,24 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+         arguments: '--tag promitor-agent-scraper-ci --no-cache'
+         useDefaultContext: false
+         buildContext: ./src/
+         imageName: '$(Image.TaggedName)'
+         addDefaultLabels: false
+       condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+     - task: Docker@1
+       displayName: 'Build an image'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'
          addDefaultLabels: false
+       condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
        displayName: 'Run an image'
        inputs:
