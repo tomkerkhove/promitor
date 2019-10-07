@@ -53,6 +53,7 @@ stages:
          tag: '$(Release.TagName)'
          title: '$(Release.Title)'
          isDraft: true
+         addChangeLog: false
          releaseNotes: |
           ### Breaking Changes
           Here are a list of breaking changes and how to mitigate them:
