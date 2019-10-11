@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model.Server;
 
 namespace Promitor.Scraper.Host
@@ -14,6 +15,7 @@ namespace Promitor.Scraper.Host
             Welcome();
 
             BuildWebHost(args)
+                .Build()
                 .Run();
         }
 
@@ -28,25 +30,27 @@ namespace Promitor.Scraper.Host
             var httpPort = DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
+            // TODO: Configure verbosity https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.0#add-providers
+
             return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-                .UseKestrel(kestrelServerOptions =>
+                .ConfigureWebHostDefaults(webHostBuilder =>
                 {
-                    kestrelServerOptions.AddServerHeader = false;
-                })
-                .UseConfiguration(configuration)
-                .UseUrls(endpointUrl)
-                .UseStartup<Startup>()
-                .Build();
+                    webHostBuilder.UseKestrel(kestrelServerOptions => { kestrelServerOptions.AddServerHeader = false; })
+                        .ConfigureLogging((hostContext, loggingBuilder) => { loggingBuilder.AddConsole(consoleLoggerOptions => consoleLoggerOptions.TimestampFormat = "[u]"); })
+                        .UseConfiguration(configuration)
+                        .UseUrls(endpointUrl)
+                        .UseStartup<Startup>();
+                });
         }
 
         private static IConfigurationRoot CreateConfiguration()
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddYamlFile("/config/runtime.yaml", false, true)
                 .AddEnvironmentVariables()
-                .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
-                .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
+                .AddEnvironmentVariables("PROMITOR_") // Used for all environment variables for Promitor
+                .AddEnvironmentVariables("PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
                 .Build();
 
             return configuration;

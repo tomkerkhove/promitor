@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -21,7 +23,6 @@ using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Core.Telemetry.Loggers;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
@@ -72,12 +73,10 @@ namespace Promitor.Scraper.Host.Extensions
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
-            services.AddTransient<ILogger, RuntimeLogger>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
-            services.AddTransient<ValidationLogger>();
             services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
@@ -111,11 +110,11 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection UseWebApi(this IServiceCollection services)
         {
-            services.AddMvc()
+            services.AddControllers()
                     .AddJsonOptions(jsonOptions =>
                     {
-                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                        jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        jsonOptions.JsonSerializerOptions.IgnoreNullValues=true;
                     });
 
             return services;
@@ -182,13 +181,13 @@ namespace Promitor.Scraper.Host.Extensions
 
         private static string GetXmlDocumentationPath(IServiceCollection services)
         {
-            var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IHostingEnvironment));
+            var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IWebHostEnvironment));
             if (hostingEnvironment == null)
             {
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IWebHostEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
