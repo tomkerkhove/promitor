@@ -71,13 +71,8 @@ stages:
        inputs:
          command: restore
          projects: 'src/Promitor.sln'
-     - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
-       inputs:
-         SolutionOrProjectPath: 'src/Promitor.sln'
-         AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
-       env:
-         MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
      - task: ResharperCli@2
+       displayName: 'Run Resharper Code Quality'
        inputs:
          solutionOrProjectPath: 'src/Promitor.sln'
          failBuildLevelSelector: 'Warning'
