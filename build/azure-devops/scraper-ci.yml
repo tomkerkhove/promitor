@@ -77,6 +77,11 @@ stages:
          AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
        env:
          MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
+     - task: ResharperCli@2
+       inputs:
+         solutionOrProjectPath: 'src/Promitor.sln'
+         failBuildLevelSelector: 'Warning'
+         commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
 - stage: Test
   displayName: Run Tests
   dependsOn: []
