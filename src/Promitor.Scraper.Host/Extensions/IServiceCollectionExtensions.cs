@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -27,7 +30,6 @@ using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Validation;
-using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Scraper.Host.Extensions
@@ -146,36 +148,35 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="apiVersion">Version of the API</param>
         public static IServiceCollection UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
-            var openApiInformation = new Info
+            var openApiInformation = new OpenApiInfo
             {
-                Contact = new Contact
+                Contact = new OpenApiContact
                 {
                     Name = "Tom Kerkhove",
-                    Url = "https://blog.tomkerkhove.be"
+                    Url = new Uri("https://blog.tomkerkhove.be")
                 },
                 Title = $"Promitor v{apiVersion}",
                 Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./..{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
                 Version = $"v{apiVersion}",
-                License = new License
+                License = new OpenApiLicense
                 {
                     Name = "MIT",
-                    Url = "https://github.com/tomkerkhove/promitor/LICENSE"
+                    Url = new Uri("https://github.com/tomkerkhove/promitor/LICENSE")
                 }
             };
 
             var xmlDocumentationPath = GetXmlDocumentationPath(services);
 
-            //services.AddSwaggerGen(swaggerGenerationOptions =>
-            //{
-            //    swaggerGenerationOptions.EnableAnnotations();
-            //    swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
-            //    swaggerGenerationOptions.DescribeAllEnumsAsStrings();
-
-            //    if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
-            //    {
-            //        swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
-            //    }
-            //});
+            services.AddSwaggerGen(swaggerGenerationOptions =>
+            {
+                swaggerGenerationOptions.EnableAnnotations();
+                swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
+                
+                if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
+                {
+                    swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
+                }
+            });
 
             return services;
         }
