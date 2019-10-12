@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -9,13 +8,13 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ServiceBusQueueDeserializerTests : ResourceDeserializerTest
+    public class ServiceBusQueueDeserializerTests : ResourceDeserializerTest<ServiceBusQueueDeserializer>
     {
         private readonly ServiceBusQueueDeserializer _deserializer;
 
         public ServiceBusQueueDeserializerTests()
         {
-            _deserializer = new ServiceBusQueueDeserializer(NullLogger.Instance);
+            _deserializer = new ServiceBusQueueDeserializer(Logger);
         }
 
         [Fact]
@@ -58,7 +57,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ServiceBusQueueDeserializer(NullLogger.Instance);
+            return new ServiceBusQueueDeserializer(Logger);
         }
     }
 }

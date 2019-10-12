@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 
         private readonly IDeserializer<SecretV1> _secretDeserializer;
 
-        public StorageQueueDeserializer(IDeserializer<SecretV1> secretDeserializer, ILogger logger) : base(logger)
+        public StorageQueueDeserializer(IDeserializer<SecretV1> secretDeserializer, ILogger<StorageQueueDeserializer> logger) : base(logger)
         {
             _secretDeserializer = secretDeserializer;
         }

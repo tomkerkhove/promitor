@@ -65,7 +65,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 
             _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
 
-            var configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, _v1Deserializer);
+            var configurationSerializer = new ConfigurationSerializer(NullLogger<ConfigurationSerializer>.Instance, mapper, _v1Deserializer);
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
@@ -83,7 +83,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.ServiceBusQueue
             };
 
@@ -105,7 +105,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.ContainerInstance
             };
 
@@ -127,7 +127,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.ContainerRegistry
             };
 
@@ -149,7 +149,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.CosmosDb
             };
 
@@ -200,7 +200,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.VirtualMachine
             };
 
@@ -222,7 +222,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.NetworkInterface
             };
 
@@ -245,7 +245,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.Generic
             };
 
@@ -279,7 +279,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.RedisCache
             };
 
@@ -301,7 +301,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.PostgreSql
             };
 

@@ -11,10 +11,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
     public class MetricAggregationDeserializerTests
     {
         private readonly MetricAggregationDeserializer _deserializer;
-        
+
         public MetricAggregationDeserializerTests()
         {
-            _deserializer = new MetricAggregationDeserializer(NullLogger.Instance);
+            _deserializer = new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance);
         }
 
         [Fact]

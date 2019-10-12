@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core.Scraping.Configuration.Serialization;
+﻿using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
@@ -7,13 +6,13 @@ using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public class GenericResourceDeserializerTests : ResourceDeserializerTest
+    public class GenericResourceDeserializerTests : ResourceDeserializerTest<GenericResourceDeserializer>
     {
         private readonly GenericResourceDeserializer _deserializer;
 
         public GenericResourceDeserializerTests()
         {
-            _deserializer = new GenericResourceDeserializer(NullLogger.Instance);
+            _deserializer = new GenericResourceDeserializer(Logger);
         }
 
         [Fact]
@@ -56,7 +55,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new GenericResourceDeserializer(NullLogger.Instance);
+            return new GenericResourceDeserializer(Logger);
         }
     }
 }

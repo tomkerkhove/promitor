@@ -13,7 +13,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public AggregationDeserializerTests()
         {
-            _deserializer = new AggregationDeserializer(NullLogger.Instance);
+            _deserializer = new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance);
         }
 
         [Fact]

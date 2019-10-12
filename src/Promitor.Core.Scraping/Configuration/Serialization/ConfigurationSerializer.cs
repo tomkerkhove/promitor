@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         private readonly IMapper _mapper;
         private readonly IDeserializer<MetricsDeclarationV1> _v1Deserializer;
 
-        public ConfigurationSerializer(ILogger logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v1Deserializer)
+        public ConfigurationSerializer(ILogger<ConfigurationSerializer> logger, IMapper mapper, IDeserializer<MetricsDeclarationV1> v1Deserializer)
         {
             _logger = logger;
             _mapper = mapper;

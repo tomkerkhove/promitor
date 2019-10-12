@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string ServerNameTag = "serverName";
 
-        public PostgreSqlDeserializer(ILogger logger) : base(logger)
+        public PostgreSqlDeserializer(ILogger<PostgreSqlDeserializer> logger) : base(logger)
         {
         }
 

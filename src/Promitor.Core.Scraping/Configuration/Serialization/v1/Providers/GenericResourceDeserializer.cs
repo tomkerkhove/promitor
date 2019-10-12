@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         private const string FilterTag = "filter";
         private const string ResourceUriTag = "resourceUri";
 
-        public GenericResourceDeserializer(ILogger logger) : base(logger)
+        public GenericResourceDeserializer(ILogger<GenericResourceDeserializer> logger) : base(logger)
         {
         }
 

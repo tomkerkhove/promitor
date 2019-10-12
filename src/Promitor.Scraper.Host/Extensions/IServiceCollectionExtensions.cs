@@ -41,8 +41,8 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
         {
-            var spToCreateJobsWith = services.BuildServiceProvider();
-            var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
+            var serviceProviderToCreateJobsWith = services.BuildServiceProvider();
+            var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(true);
 
             foreach (var metric in metrics.Metrics)
@@ -56,7 +56,7 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),
                             serviceProvider.GetService<MetricScraperFactory>(),
-                            serviceProvider.GetService<ILogger>(),
+                            serviceProvider.GetService<ILogger<MetricScrapingJob>>(),
                             serviceProvider.GetService<IExceptionTracker>()));
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
@@ -78,6 +78,7 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
+            services.AddTransient<ConfigurationSerializer>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
@@ -164,17 +165,17 @@ namespace Promitor.Scraper.Host.Extensions
 
             var xmlDocumentationPath = GetXmlDocumentationPath(services);
 
-            services.AddSwaggerGen(swaggerGenerationOptions =>
-            {
-                swaggerGenerationOptions.EnableAnnotations();
-                swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
-                swaggerGenerationOptions.DescribeAllEnumsAsStrings();
+            //services.AddSwaggerGen(swaggerGenerationOptions =>
+            //{
+            //    swaggerGenerationOptions.EnableAnnotations();
+            //    swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
+            //    swaggerGenerationOptions.DescribeAllEnumsAsStrings();
 
-                if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
-                {
-                    swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
-                }
-            });
+            //    if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
+            //    {
+            //        swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
+            //    }
+            //});
 
             return services;
         }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Scraper.Host.Validation.Exceptions;
@@ -23,14 +24,12 @@ namespace Promitor.Scraper.Host.Validation
 
         public RuntimeValidator(
             IOptions<MetricsConfiguration> metricsConfiguration,
-            ILogger validatorLogger,
-            IConfiguration configuration,
-            IMapper mapper,
-            IDeserializer<MetricsDeclarationV1> v1Deserializer)
+            ILogger<RuntimeValidator> validatorLogger,
+            IMetricsDeclarationProvider scrapeConfigurationProvider,
+            IConfiguration configuration)
         {
             _validationLogger = validatorLogger;
 
-            var scrapeConfigurationProvider = new MetricsDeclarationProvider(configuration, _validationLogger, mapper, v1Deserializer);
             _validationSteps = new List<IValidationStep>
             {
                 new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),

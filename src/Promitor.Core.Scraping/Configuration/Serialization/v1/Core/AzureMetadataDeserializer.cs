@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         private const string SubscriptionIdTag = "subscriptionId";
         private const string ResourceGroupNameTag = "resourceGroupName";
 
-        public AzureMetadataDeserializer(ILogger logger) : base(logger)
+        public AzureMetadataDeserializer(ILogger<AzureMetadataDeserializer> logger) : base(logger)
         {
         }
 

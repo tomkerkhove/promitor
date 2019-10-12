@@ -9,12 +9,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     public class AzureResourceDeserializerFactory : IAzureResourceDeserializerFactory
     {
         private readonly IDeserializer<SecretV1> _secretDeserializer;
-        private readonly ILogger _logger;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public AzureResourceDeserializerFactory(IDeserializer<SecretV1> secretDeserializer, ILogger logger)
+        public AzureResourceDeserializerFactory(IDeserializer<SecretV1> secretDeserializer, ILoggerFactory loggerFactory)
         {
             _secretDeserializer = secretDeserializer;
-            _logger = logger;
+            _loggerFactory = loggerFactory;
         }
 
         public IDeserializer<AzureResourceDefinitionV1> GetDeserializerFor(ResourceType resourceType)
@@ -22,25 +22,35 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             switch (resourceType)
             {
                 case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueDeserializer(_logger);
+                    var serviceBusLogger = _loggerFactory.CreateLogger<ServiceBusQueueDeserializer>();
+                    return new ServiceBusQueueDeserializer(serviceBusLogger);
                 case ResourceType.Generic:
-                    return new GenericResourceDeserializer(_logger);
+                    var genericLogger = _loggerFactory.CreateLogger<GenericResourceDeserializer>();
+                    return new GenericResourceDeserializer(genericLogger);
                 case ResourceType.StorageQueue:
-                    return new StorageQueueDeserializer(_secretDeserializer, _logger);
+                    var storageQueueLogger = _loggerFactory.CreateLogger<StorageQueueDeserializer>();
+                    return new StorageQueueDeserializer(_secretDeserializer, storageQueueLogger);
                 case ResourceType.ContainerInstance:
-                    return new ContainerInstanceDeserializer(_logger);
+                    var containerInstanceLogger = _loggerFactory.CreateLogger<ContainerInstanceDeserializer>();
+                    return new ContainerInstanceDeserializer(containerInstanceLogger);
                 case ResourceType.VirtualMachine:
-                    return new VirtualMachineDeserializer(_logger);
+                    var virtualMachineLogger = _loggerFactory.CreateLogger<VirtualMachineDeserializer>();
+                    return new VirtualMachineDeserializer(virtualMachineLogger);
                 case ResourceType.ContainerRegistry:
-                    return new ContainerRegistryDeserializer(_logger);
+                    var containerRegistryLogger = _loggerFactory.CreateLogger<ContainerRegistryDeserializer>();
+                    return new ContainerRegistryDeserializer(containerRegistryLogger);
                 case ResourceType.NetworkInterface:
-                    return new NetworkInterfaceDeserializer(_logger);
+                    var networkLogger = _loggerFactory.CreateLogger<NetworkInterfaceDeserializer>();
+                    return new NetworkInterfaceDeserializer(networkLogger);
                 case ResourceType.CosmosDb:
-                    return new CosmosDbDeserializer(_logger);
+                    var cosmosDbLogger = _loggerFactory.CreateLogger<CosmosDbDeserializer>();
+                    return new CosmosDbDeserializer(cosmosDbLogger);
                 case ResourceType.RedisCache:
-                    return new RedisCacheDeserializer(_logger);
+                    var redisCacheLogger = _loggerFactory.CreateLogger<RedisCacheDeserializer>();
+                    return new RedisCacheDeserializer(redisCacheLogger);
                 case ResourceType.PostgreSql:
-                    return new PostgreSqlDeserializer(_logger);
+                    var postgreSqlLogger = _loggerFactory.CreateLogger<PostgreSqlDeserializer>();
+                    return new PostgreSqlDeserializer(postgreSqlLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Host.Scheduling
             IPrometheusMetricWriter prometheusMetricWriter,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
-            ILogger logger, IExceptionTracker exceptionTracker)
+            ILogger<MetricScrapingJob> logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));

@@ -14,17 +14,17 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="app">Application Builder</param>
         public static void UseOpenApiUi(this IApplicationBuilder app)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(swaggerUiOptions =>
-            {
-                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
-                swaggerUiOptions.DisplayOperationId();
-                swaggerUiOptions.EnableDeepLinking();
-                swaggerUiOptions.DocumentTitle = "Promitor API";
-                swaggerUiOptions.DocExpansion(DocExpansion.List);
-                swaggerUiOptions.DisplayRequestDuration();
-                swaggerUiOptions.EnableFilter();
-            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(swaggerUiOptions =>
+            //{
+            //    swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
+            //    swaggerUiOptions.DisplayOperationId();
+            //    swaggerUiOptions.EnableDeepLinking();
+            //    swaggerUiOptions.DocumentTitle = "Promitor API";
+            //    swaggerUiOptions.DocExpansion(DocExpansion.List);
+            //    swaggerUiOptions.DisplayRequestDuration();
+            //    swaggerUiOptions.EnableFilter();
+            //});
         }
 
         /// <summary>
