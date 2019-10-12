@@ -1,0 +1,26 @@
+{
+  "name": "promitor",
+  "version": "1.0.0",
+  "description": "Promitor, an Azure Monitor scraper for Prometheus",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "markdownlint": "markdownlint -c .markdownlint.json --ignore node_modules ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomkerkhove/promitor.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomkerkhove/promitor/issues"
+  },
+  "homepage": "https://github.com/tomkerkhove/promitor#readme",
+  "devDependencies": {
+    "markdownlint-cli": "^0.18.0"
+  }
+}

@@ -83,3 +83,34 @@ Include details about your configuration and environment:
 - **Which version of Promitor are you using?**
 - **What's the name and version of the container host that you're using**? Is it Docker, Kubernetes,...?
 - **What configuration is it using and how does your scraping declaration look like?**
+
+## Development
+
+Developing Promitor requires the following tools to be installed:
+
+- [.NET Core](https://dotnet.microsoft.com/download).
+- [Docker](https://www.docker.com/).
+- [node.js](https://nodejs.org/en/).
+
+### Installing npm Packages
+
+We use npm as part of our build tooling. To make sure you have the correct tools
+installed, run the following command from the root of the repository:
+
+```shell
+npm install
+```
+
+## Documentation
+
+All of the documentation for Promitor is written in markdown. We use [markdownlint](https://github.com/DavidAnson/markdownlint)
+to ensure that our markdown follows the same set of formatting guidelines.
+
+You can run markdownlint using the following command:
+
+```shell
+npm run markdownlint
+```
+
+The markdownlint repository has information about various tools you can use to
+integrate it with various different text editors.
