@@ -77,12 +77,12 @@ stages:
          solutionOrProjectPath: 'src/Promitor.sln'
          failBuildLevelSelector: 'Warning'
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
-- stage: Linting
-  displayName: Linting
+- stage: Docs
+  displayName: Docs
   dependsOn: []
   jobs:
-   - job: RunLinters
-     displayName: Run Linters
+   - job: RunMarkdownLinter
+     displayName: Run Markdown Linter
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
