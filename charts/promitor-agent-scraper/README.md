@@ -1,17 +1,21 @@
 # Promitor
 
-[Promitor](https://promitor.io/) is an Azure Monitor scraper for Prometheus providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
+[Promitor](https://promitor.io/) is an Azure Monitor scraper for Prometheus providing
+a scraping endpoint for Prometheus that provides a configured subset of Azure
+Monitor metrics.
 
 ## TL;DR
 
 ```console
-$ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
-$ helm install promitor/promitor-agent-scraper
+helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+helm install promitor/promitor-agent-scraper
 ```
 
 ## Introduction
 
-This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cluster using the Helm package manager. It will provide the scraper agent with a Kubernetes Service so that other Pods can consume it.
+This chart bootstraps a **Promitor Scraper Agent** deployment on a Kubernetes cluster
+using the Helm package manager. It will provide the scraper agent with a Kubernetes
+Service so that other Pods can consume it.
 
 ## Prerequisites
 
@@ -30,21 +34,24 @@ $ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
                --values /path/to/metric-declaration.yaml
 ```
 
-The command deploys Prometheus on the Kubernetes cluster with the specified metrics declaration, for more information see [our documentation](https://promitor.io/deployment/#using-our-helm-chart).
+The command deploys Prometheus on the Kubernetes cluster with the specified metrics
+declaration, for more information see [our documentation](https://promitor.io/deployment/#using-our-helm-chart).
 
 ## Uninstalling the Chart
 
 To uninstall/delete the `promitor-agent-scraper` deployment:
 
 ```console
-$ helm delete promitor-agent-scraper
+helm delete promitor-agent-scraper
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+The command removes all the Kubernetes components associated with the chart and
+deletes the release.
 
 ## Configuration
 
-The following table lists the configurable parameters of the Promitor chart and their default values.
+The following table lists the configurable parameters of the Promitor chart and
+their default values.
 
 | Parameter                  | Description              | Default              |
 |:---------------------------|:-------------------------|:---------------------|
@@ -60,7 +67,7 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
 | `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
 | `telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
-| `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  | 
+| `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  |
 | `telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
 | `azureMetadata.tenantId`  | Id of Azure tenant |             |
 | `azureMetadata.subscriptionId`  | Id of Azure subscription |             |
@@ -78,7 +85,8 @@ The following table lists the configurable parameters of the Promitor chart and 
 | `service.labelType`  | Label to assign to your service | `infrastructure`            |
 | `service.selectorType`  | Selector type to use for the service | `runtime`            |
 
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
+Specify each parameter using the `--set key=value[,key=value]` argument to
+`helm install`. For example:
 
 ```console
 $ helm install promitor/promitor-agent-scraper --name promitor-agent-scraper \
@@ -89,8 +97,9 @@ $ helm install promitor/promitor-agent-scraper --name promitor-agent-scraper \
                --values C:\Promitor\metric-declaration.yaml
 ```
 
-Alternatively, a YAML file that specifies the values for the above parameters can be provided while installing the chart. For example,
+Alternatively, a YAML file that specifies the values for the above parameters can
+be provided while installing the chart. For example,
 
 ```console
-$ helm install promitor/promitor-agent-scraper --name promitor-agent-scraper -f values.yaml
+helm install promitor/promitor-agent-scraper --name promitor-agent-scraper -f values.yaml
 ```
