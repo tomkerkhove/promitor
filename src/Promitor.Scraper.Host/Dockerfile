@@ -8,10 +8,10 @@ COPY Promitor.Core.Telemetry.Metrics/* Promitor.Core.Telemetry.Metrics/
 COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
 COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Scraper.Host/* Promitor.Scraper.Host/
-RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release -o app
+RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release --output app
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.0-alpine3.9 as runtime
 WORKDIR /app
-COPY --from=build /src/Promitor.Scraper.Host/app .
+COPY --from=build /src/app .
 
 ENTRYPOINT ["dotnet", "Promitor.Scraper.Host.dll"]
