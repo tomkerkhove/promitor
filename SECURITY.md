@@ -9,8 +9,11 @@
 
 ## Reporting a Vulnerability
 
-Vulnerabilities should be reported by [sending an email](mailto:kerkhove.tom@gmail.com) and will be considered.
+Vulnerabilities should be reported by [sending an email](mailto:kerkhove.tom@gmail.com)
+and will be considered.
 
-In case of a confirmed breach you get full credit and can be keep in the loop if preferred.
+In case of a confirmed breach you get full credit and can be keep in the loop if
+preferred.
 
-We do not provide compensations for reporting vulnerabilities except for eternal gratitude.
+We do not provide compensations for reporting vulnerabilities except for eternal
+gratitude.
