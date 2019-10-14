@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/tomkerkhove/promitor#readme",
   "devDependencies": {
-    "markdownlint-cli": "^0.18.0"
+    "markdownlint-cli": "0.18.0"
   }
 }
