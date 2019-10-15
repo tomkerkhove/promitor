@@ -13,7 +13,8 @@ The promitor repository is made up of a number of different directories:
 - `/.vscode` - contains shared configuration files for [VS Code](https://code.visualstudio.com/).
 - `/build` - contains the configuration files for Promitor's CI process.
 - `/charts` - contains Promitor's [Helm](https://helm.sh/) chart.
-- `/deploy` - TODO.
+- `/deploy` - contains the automation that is being used to manage Promitor, such
+  as the automated updates concerning new Docker images in a pull request.
 - `/docs` - contains the source code (mainly markdown files) for building the
   <https://promitor.io>.
 - `/src` - contains the .NET source code for the Promitor application.
@@ -97,16 +98,27 @@ and set the following environment variables:
   Azure Monitor API.
 - `PROMITOR_AUTH_APPKEY` - your service principal secret.
 
-Next, edit [src/metric-config.yaml](src/metric-config.yaml), configure some metrics
-and set the following keys:
+Next, edit [src/metric-config.yaml](src/metric-config.yaml) and set the following
+keys:
 
 - `azureMetadata.tenantId` - your Azure tenant Id.
 - `azureMetadata.subscriptionId` - your Azure subscription Id.
 - `azureMetadata.resourceGroupName` - the default resource group to use if none
   is specified for a metric.
 
-Finally, run the Promitor.Docker project.
+Configure at least one scraper under the `metrics` section and finally, run the
+Promitor.Docker project.
+
+You can find more information about how to configure Promitor [here](https://promitor.io/configuration/v1.x/metrics/).
 
 **NOTE:** Please make sure not to commit your changes to `docker-compose.override.yml`
 or `metric-config.yaml`. If you do, you may end up publishing your Azure credentials
 by accident.
+
+## Docker
+
+To build the Docker image, run the following command from the `/src` directory:
+
+```shell
+docker build . --file .\Promitor.Scraper.Host\Dockerfile --tag promitor --no-cache
+```
