@@ -31,6 +31,8 @@ welcome bug reports, improvement suggestions and pull requests.
 Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/metrics/)?
 You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
+Information about making changes to Promitor can be found [here](development-guide.md).
+
 ## Support
 
 Promitor is actively maintained and developed with best-effort support.
