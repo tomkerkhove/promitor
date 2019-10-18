@@ -15,7 +15,7 @@ The following fields need to be provided:
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftservicebusnamespaces).
 
-The following scraper-specific metric label(s) will be added:
+The following scraper-specific metric label will be added:
 
 - `entity_name` - Name of the queue
 

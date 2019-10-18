@@ -22,7 +22,7 @@ Supported metrics:
   in the queue to be processed.
 - `MessageCount`
 
-The following scraper-specific metric label(s) will be added:
+The following scraper-specific metric label will be added:
 
 - `queue_name` - Name of the queue
 
