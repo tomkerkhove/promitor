@@ -31,6 +31,7 @@ Currently we support this for:
 
 - Azure Service Bus
 - Azure Storage Queue
+- Azure SQL Database
 
 For more information, we recommend reading the [scraper-specific documentation](./../configuration/v1.x/metrics/#supported-azure-services).
 

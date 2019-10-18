@@ -309,5 +309,33 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithAzureSqlDatabaseMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string serverName = "promitor-sql-server",
+            string databaseName = "promitor-db",
+            string metricDescription = "Metric description")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new AzureSqlDatabaseResourceV1
+            {
+                ServerName = serverName,
+                DatabaseName = databaseName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> {resource},
+                ResourceType = ResourceType.AzureSqlDatabase
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }

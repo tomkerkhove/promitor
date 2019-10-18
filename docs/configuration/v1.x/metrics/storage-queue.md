@@ -22,7 +22,7 @@ Supported metrics:
   in the queue to be processed.
 - `MessageCount`
 
-The following scraper-specific metric label(s) will be added:
+The following scraper-specific metric label will be added:
 
 - `queue_name` - Name of the queue
 
@@ -48,6 +48,6 @@ resources:
 ```
 
 <!-- markdownlint-disable MD033 -->
-[&larr; back to metrics declarations](/configuration/metrics)<br />
+[&larr; back to metrics declarations](/configuration/v1.x/metrics)<br />
 [&larr; back to introduction](/)
 <!-- markdownlint-enable -->

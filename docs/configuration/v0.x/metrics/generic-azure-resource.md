@@ -33,6 +33,6 @@ azureMetricConfiguration:
 ```
 
 <!-- markdownlint-disable MD033 -->
-[&larr; back to metrics declarations](/configuration/metrics)<br />
+[&larr; back to metrics declarations](/configuration/v0.x/metrics)<br />
 [&larr; back to introduction](/)
 <!-- markdownlint-enable -->
