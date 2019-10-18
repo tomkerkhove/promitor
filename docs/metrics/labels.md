@@ -30,8 +30,8 @@ Every scraper can provide additional labels to provide more information.
 Currently we support this for:
 
 - Azure Service Bus
-- Azure Storage Queue
 - Azure SQL Database
+- Azure Storage Queue
 
 For more information, we recommend reading the [scraper-specific documentation](./../configuration/v1.x/metrics/#supported-azure-services).
 
