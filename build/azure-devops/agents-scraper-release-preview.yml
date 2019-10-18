@@ -61,6 +61,7 @@ stages:
          tagSource: 'manual'
          tag: '$(Release.TagName)'
          title: '$(Release.Title)'
+         changeLogType: issueBased
          releaseNotesSource: 'input'
          releaseNotes: |
            ### Breaking Changes
