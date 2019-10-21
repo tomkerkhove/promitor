@@ -52,10 +52,10 @@ namespace Promitor.Scraper.Host
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile("/config/runtime.yaml", false, true)
+                .AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
-                .AddEnvironmentVariables("PROMITOR_") // Used for all environment variables for Promitor
-                .AddEnvironmentVariables("PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
+                .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
+                .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
                 .Build();
 
             return configuration;
