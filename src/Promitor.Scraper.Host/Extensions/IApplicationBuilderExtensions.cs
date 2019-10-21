@@ -14,18 +14,22 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="app">Application Builder</param>
         public static void UseOpenApiUi(this IApplicationBuilder app)
         {
+            // New Swagger UI
             app.UseSwagger(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
+            app.UseSwaggerUI(swaggerUiOptions =>
+            {
+                swaggerUiOptions.ConfigureDefaultOptions();
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
+                swaggerUiOptions.RoutePrefix = "api/docs";
+            });
+
+            // Deprecated Swagger UI
             app.UseSwagger(setupAction => setupAction.SerializeAsV2 = true);
             app.UseSwaggerUI(swaggerUiOptions =>
             {
-                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
-                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API (Swagger 2.0)");
-                swaggerUiOptions.DisplayOperationId();
-                swaggerUiOptions.EnableDeepLinking();
-                swaggerUiOptions.DocumentTitle = "Promitor API";
-                swaggerUiOptions.DocExpansion(DocExpansion.List);
-                swaggerUiOptions.DisplayRequestDuration();
-                swaggerUiOptions.EnableFilter();
+                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API (OpenAPI 3.0)");
+                swaggerUiOptions.ConfigureDefaultOptions();
             });
         }
 
