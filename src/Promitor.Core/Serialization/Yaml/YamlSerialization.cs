@@ -11,6 +11,7 @@ namespace Promitor.Core.Serialization.Yaml
         {
             var builder = new SerializerBuilder();
             builder.WithNamingConvention(namingConvention);
+            builder.ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitDefaults);
 
             return builder.Build();
         }

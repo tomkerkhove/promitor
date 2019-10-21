@@ -86,6 +86,7 @@ stages:
          title: '$(Release.Title)'
          releaseNotesSource: input
          isDraft: true
+         changeLogType: issueBased
          releaseNotes: |
           ### Breaking Changes
           Here are a list of breaking changes and how to mitigate them:

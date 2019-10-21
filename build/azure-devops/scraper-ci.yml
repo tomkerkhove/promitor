@@ -71,12 +71,26 @@ stages:
        inputs:
          command: restore
          projects: 'src/Promitor.sln'
-     - task: alanwales.resharper-code-analysis.custom-build-task.ResharperCli@1
+     - task: ResharperCli@2
+       displayName: 'Run Resharper Code Quality'
        inputs:
-         SolutionOrProjectPath: 'src/Promitor.sln'
-         AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
-       env:
-         MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
+         solutionOrProjectPath: 'src/Promitor.sln'
+         failBuildLevelSelector: 'Warning'
+         commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
+- stage: Docs
+  displayName: Docs
+  dependsOn: []
+  jobs:
+   - job: RunMarkdownLinter
+     displayName: Run Markdown Linter
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - script: npm install
+       displayName: 'Install npm Packages'
+     - script: npm run --silent markdownlint
+       displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
   dependsOn: []
@@ -119,11 +133,24 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
+         arguments: '--tag promitor-agent-scraper-ci --no-cache'
+         useDefaultContext: false
+         buildContext: ./src/
+         imageName: '$(Image.TaggedName)'
+         addDefaultLabels: false
+       condition: not(eq(variables['Build.Reason'], 'PullRequest'))
+     - task: Docker@1
+       displayName: 'Build an image'
+       inputs:
+         containerregistrytype: 'Container Registry'
+         dockerRegistryEndpoint: 'Docker Hub'
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'
          addDefaultLabels: false
+       condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
        displayName: 'Run an image'
        inputs:
