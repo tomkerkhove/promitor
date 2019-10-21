@@ -36,7 +36,12 @@ namespace Promitor.Scraper.Host
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder.UseKestrel(kestrelServerOptions => { kestrelServerOptions.AddServerHeader = false; })
-                        .ConfigureLogging((hostContext, loggingBuilder) => { loggingBuilder.AddConsole(consoleLoggerOptions => consoleLoggerOptions.TimestampFormat = "[u]"); })
+                        .ConfigureLogging((hostContext, loggingBuilder) =>
+                        {
+                            loggingBuilder.AddConsole(consoleLoggerOptions => consoleLoggerOptions.TimestampFormat = "[HH:mm:ss] ");
+                            loggingBuilder.AddDebug();
+                            loggingBuilder.SetMinimumLevel(LogLevel.Information);
+                        })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
                         .UseStartup<Startup>();
