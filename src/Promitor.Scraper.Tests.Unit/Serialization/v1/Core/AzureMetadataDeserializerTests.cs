@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public AzureMetadataDeserializerTests()
         {
-            _deserializer = new AzureMetadataDeserializer(NullLogger.Instance);
+            _deserializer = new AzureMetadataDeserializer(NullLogger<AzureMetadataDeserializer>.Instance);
         }
 
         [Fact]

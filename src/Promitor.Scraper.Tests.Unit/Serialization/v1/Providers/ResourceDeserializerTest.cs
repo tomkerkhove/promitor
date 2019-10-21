@@ -1,11 +1,14 @@
-﻿using Promitor.Core.Scraping.Configuration.Serialization;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public abstract class ResourceDeserializerTest
+    public abstract class ResourceDeserializerTest<TDeserializer>
     {
+        protected ILogger<TDeserializer> Logger = NullLogger<TDeserializer>.Instance;
         protected abstract IDeserializer<AzureResourceDefinitionV1> CreateDeserializer();
 
         [Fact]

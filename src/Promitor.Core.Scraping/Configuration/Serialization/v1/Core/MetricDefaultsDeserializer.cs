@@ -15,7 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         public MetricDefaultsDeserializer(
             IDeserializer<AggregationV1> aggregationDeserializer,
             IDeserializer<ScrapingV1> scrapingDeserializer,
-            ILogger logger) : base(logger)
+            ILogger<MetricDefaultsDeserializer> logger) : base(logger)
         {
             _aggregationDeserializer = aggregationDeserializer;
             _scrapingDeserializer = scrapingDeserializer;

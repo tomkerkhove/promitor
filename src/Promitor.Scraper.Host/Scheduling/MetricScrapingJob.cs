@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CronScheduler.AspNetCore;
+using CronScheduler.Extensions.Scheduler;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Host.Scheduling
             IPrometheusMetricWriter prometheusMetricWriter,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
-            ILogger logger, IExceptionTracker exceptionTracker)
+            ILogger<MetricScrapingJob> logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));

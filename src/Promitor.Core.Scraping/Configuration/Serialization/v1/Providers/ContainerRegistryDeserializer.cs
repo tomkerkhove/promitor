@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string RegistryNameTag = "registryName";
 
-        public ContainerRegistryDeserializer(ILogger logger) : base(logger)
+        public ContainerRegistryDeserializer(ILogger<ContainerRegistryDeserializer> logger) : base(logger)
         {
         }
 

@@ -8,7 +8,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         private const string ScheduleTag = "schedule";
 
-        public ScrapingDeserializer(ILogger logger) : base(logger)
+        public ScrapingDeserializer(ILogger<ScrapingDeserializer> logger) : base(logger)
         {
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -9,18 +8,18 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ContainerInstanceDeserializerTests : ResourceDeserializerTest
+    public class ContainerInstanceDeserializerTests : ResourceDeserializerTest<ContainerInstanceDeserializer>
     {
         private readonly ContainerInstanceDeserializer _deserializer;
 
         public ContainerInstanceDeserializerTests()
         {
-            _deserializer = new ContainerInstanceDeserializer(NullLogger.Instance);
+            _deserializer = new ContainerInstanceDeserializer(Logger);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ContainerInstanceDeserializer(NullLogger.Instance);
+            return new ContainerInstanceDeserializer(Logger);
         }
 
         [Fact]

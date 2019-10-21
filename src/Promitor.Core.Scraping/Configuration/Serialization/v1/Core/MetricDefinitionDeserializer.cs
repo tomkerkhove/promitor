@@ -22,7 +22,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         public MetricDefinitionDeserializer(IDeserializer<AzureMetricConfigurationV1> azureMetricConfigurationDeserializer,
             IDeserializer<ScrapingV1> scrapingDeserializer,
             IAzureResourceDeserializerFactory azureResourceDeserializerFactory,
-            ILogger logger) : base(logger)
+            ILogger<MetricDefinitionDeserializer> logger) : base(logger)
         {
             _azureMetricConfigurationDeserializer = azureMetricConfigurationDeserializer;
             _scrapingDeserializer = scrapingDeserializer;

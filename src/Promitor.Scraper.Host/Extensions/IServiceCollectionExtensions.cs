@@ -1,10 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -21,12 +26,10 @@ using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry;
 using Promitor.Core.Telemetry.Interfaces;
-using Promitor.Core.Telemetry.Loggers;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Validation;
-using Swashbuckle.AspNetCore.Swagger;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Scraper.Host.Extensions
@@ -40,8 +43,8 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
         {
-            var spToCreateJobsWith = services.BuildServiceProvider();
-            var metricsProvider = spToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
+            var serviceProviderToCreateJobsWith = services.BuildServiceProvider();
+            var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(true);
 
             foreach (var metric in metrics.Metrics)
@@ -55,7 +58,7 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),
                             serviceProvider.GetService<MetricScraperFactory>(),
-                            serviceProvider.GetService<ILogger>(),
+                            serviceProvider.GetService<ILogger<MetricScrapingJob>>(),
                             serviceProvider.GetService<IExceptionTracker>()));
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
@@ -72,13 +75,12 @@ namespace Promitor.Scraper.Host.Extensions
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
-            services.AddTransient<ILogger, RuntimeLogger>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
-            services.AddTransient<ValidationLogger>();
             services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
+            services.AddTransient<ConfigurationSerializer>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
@@ -111,11 +113,11 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection UseWebApi(this IServiceCollection services)
         {
-            services.AddMvc()
+            services.AddControllers()
                     .AddJsonOptions(jsonOptions =>
                     {
-                        jsonOptions.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
-                        jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                        jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                        jsonOptions.JsonSerializerOptions.IgnoreNullValues=true;
                     });
 
             return services;
@@ -146,20 +148,20 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="apiVersion">Version of the API</param>
         public static IServiceCollection UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
         {
-            var openApiInformation = new Info
+            var openApiInformation = new OpenApiInfo
             {
-                Contact = new Contact
+                Contact = new OpenApiContact
                 {
                     Name = "Tom Kerkhove",
-                    Url = "https://blog.tomkerkhove.be"
+                    Url = new Uri("https://blog.tomkerkhove.be")
                 },
                 Title = $"Promitor v{apiVersion}",
                 Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./..{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
                 Version = $"v{apiVersion}",
-                License = new License
+                License = new OpenApiLicense
                 {
                     Name = "MIT",
-                    Url = "https://github.com/tomkerkhove/promitor/LICENSE"
+                    Url = new Uri("https://github.com/tomkerkhove/promitor/LICENSE")
                 }
             };
 
@@ -169,8 +171,7 @@ namespace Promitor.Scraper.Host.Extensions
             {
                 swaggerGenerationOptions.EnableAnnotations();
                 swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
-                swaggerGenerationOptions.DescribeAllEnumsAsStrings();
-
+                
                 if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
                 {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
@@ -182,13 +183,13 @@ namespace Promitor.Scraper.Host.Extensions
 
         private static string GetXmlDocumentationPath(IServiceCollection services)
         {
-            var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IHostingEnvironment));
+            var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IWebHostEnvironment));
             if (hostingEnvironment == null)
             {
                 return string.Empty;
             }
 
-            var contentRootPath = ((IHostingEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IWebHostEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;

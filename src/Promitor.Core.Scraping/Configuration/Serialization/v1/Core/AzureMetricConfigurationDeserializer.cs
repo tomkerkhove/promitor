@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         private const string AggregationTag = "aggregation";
         private readonly IDeserializer<MetricAggregationV1> _aggregationDeserializer;
 
-        public AzureMetricConfigurationDeserializer(IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger logger)
+        public AzureMetricConfigurationDeserializer(IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger<AzureMetricConfigurationDeserializer> logger)
             : base(logger)
         {
             _aggregationDeserializer = aggregationDeserializer;

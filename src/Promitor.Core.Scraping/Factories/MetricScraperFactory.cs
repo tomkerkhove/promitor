@@ -19,7 +19,7 @@ namespace Promitor.Core.Scraping.Factories
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, ILogger logger, IExceptionTracker exceptionTracker)
+        public MetricScraperFactory(IConfiguration configuration, ILogger<MetricScraperFactory> logger, IExceptionTracker exceptionTracker)
         {
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));

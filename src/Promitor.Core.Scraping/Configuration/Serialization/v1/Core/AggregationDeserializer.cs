@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         private readonly TimeSpan _defaultAggregationInterval = TimeSpan.FromMinutes(5);
 
-        public AggregationDeserializer(ILogger logger) : base(logger)
+        public AggregationDeserializer(ILogger<AggregationDeserializer> logger) : base(logger)
         {
         }
 

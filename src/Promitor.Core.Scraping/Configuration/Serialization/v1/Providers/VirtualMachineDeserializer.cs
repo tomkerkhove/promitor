@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string VirtualMachineNameTag = "virtualMachineName";
 
-        public VirtualMachineDeserializer(ILogger logger) : base(logger)
+        public VirtualMachineDeserializer(ILogger<VirtualMachineDeserializer> logger) : base(logger)
         {
         }
 

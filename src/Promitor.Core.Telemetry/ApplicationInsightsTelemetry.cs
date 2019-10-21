@@ -15,7 +15,7 @@ namespace Promitor.Core.Telemetry
         private readonly IOptionsMonitor<ApplicationInsightsConfiguration> _applicationInsightsConfiguration;
         private readonly TelemetryClient _telemetryClient;
 
-        public ApplicationInsightsTelemetry(IOptionsMonitor<ApplicationInsightsConfiguration> applicationInsightsConfiguration, ILogger logger)
+        public ApplicationInsightsTelemetry(IOptionsMonitor<ApplicationInsightsConfiguration> applicationInsightsConfiguration, ILogger<ApplicationInsightsTelemetry> logger)
         {
             Guard.NotNull(applicationInsightsConfiguration, nameof(applicationInsightsConfiguration));
             Guard.NotNull(logger, nameof(logger));

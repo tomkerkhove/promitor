@@ -14,10 +14,12 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="app">Application Builder</param>
         public static void UseOpenApiUi(this IApplicationBuilder app)
         {
-            app.UseSwagger();
+            app.UseSwagger(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
+            app.UseSwagger(setupAction => setupAction.SerializeAsV2 = true);
             app.UseSwaggerUI(swaggerUiOptions =>
             {
-                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
+                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API (Swagger 2.0)");
                 swaggerUiOptions.DisplayOperationId();
                 swaggerUiOptions.EnableDeepLinking();
                 swaggerUiOptions.DocumentTitle = "Promitor API";

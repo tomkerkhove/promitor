@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1
@@ -10,21 +11,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
     {
         public static V1Deserializer CreateDeserializer()
         {
-            var logger = NullLogger.Instance;
             return new V1Deserializer(
-                new AzureMetadataDeserializer(logger),
+                new AzureMetadataDeserializer(NullLogger<AzureMetadataDeserializer>.Instance),
                 new MetricDefaultsDeserializer(
-                    new AggregationDeserializer(logger),
-                    new ScrapingDeserializer(logger),
-                    logger),
+                    new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance),
+                    new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),
+                    NullLogger<MetricDefaultsDeserializer>.Instance),
                 new MetricDefinitionDeserializer(
                     new AzureMetricConfigurationDeserializer(
-                        new MetricAggregationDeserializer(logger),
-                        logger),
-                    new ScrapingDeserializer(logger),
-                    new AzureResourceDeserializerFactory(new SecretDeserializer(logger), logger),
-                    logger),
-                logger);
+                        new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance),
+                        NullLogger<AzureMetricConfigurationDeserializer>.Instance),
+                    new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),
+                    new AzureResourceDeserializerFactory(new SecretDeserializer(NullLogger<SecretDeserializer>.Instance), new LoggerFactory()),
+                    NullLogger<MetricDefinitionDeserializer>.Instance),
+                NullLogger<V1Deserializer>.Instance);
         }
     }
 }

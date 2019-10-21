@@ -30,7 +30,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _azureMetricConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
                 _resourceDeserializerFactory.Object,
-                NullLogger.Instance);
+                NullLogger<MetricDefinitionDeserializer>.Instance);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             YamlAssert.PropertySet(
                 _deserializer,
                 yamlText,
-                new Dictionary<string, string>{{"app", "promitor"}, {"env", "test"}},
+                new Dictionary<string, string> { { "app", "promitor" }, { "env", "test" } },
                 d => d.Labels);
         }
 
@@ -113,7 +113,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 @"azureMetricConfiguration:
     metricName: ActiveMessages";
             var node = YamlUtils.CreateYamlNode(yamlText);
-            var configurationNode = (YamlMappingNode) node.Children["azureMetricConfiguration"];
+            var configurationNode = (YamlMappingNode)node.Children["azureMetricConfiguration"];
             var configuration = new AzureMetricConfigurationV1();
 
             _azureMetricConfigurationDeserializer.Setup(d => d.Deserialize(configurationNode)).Returns(configuration);
@@ -195,7 +195,7 @@ resources:
 
             var resources = new List<AzureResourceDefinitionV1>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode) node.Children["resources"])).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode)node.Children["resources"])).Returns(resources);
 
             // Act
             var definition = _deserializer.Deserialize(node);

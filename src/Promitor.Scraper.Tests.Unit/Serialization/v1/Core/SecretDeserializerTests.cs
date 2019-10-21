@@ -12,7 +12,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
         public SecretDeserializerTests()
         {
-            _deserializer = new SecretDeserializer(NullLogger.Instance);
+            _deserializer = new SecretDeserializer(NullLogger<SecretDeserializer>.Instance);
         }
 
         [Fact]

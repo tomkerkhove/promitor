@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string ContainerGroupTag = "containerGroup";
 
-        public ContainerInstanceDeserializer(ILogger logger) : base(logger)
+        public ContainerInstanceDeserializer(ILogger<ContainerInstanceDeserializer> logger) : base(logger)
         {
         }
 

@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         private const string TypeTag = "type";
         private const string IntervalTag = "interval";
 
-        public MetricAggregationDeserializer(ILogger logger) : base(logger)
+        public MetricAggregationDeserializer(ILogger<MetricAggregationDeserializer> logger) : base(logger)
         {
         }
 

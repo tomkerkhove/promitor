@@ -15,7 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         public V1Deserializer(IDeserializer<AzureMetadataV1> azureMetadataDeserializer,
             IDeserializer<MetricDefaultsV1> defaultsDeserializer,
             IDeserializer<MetricDefinitionV1> metricsDeserializer,
-            ILogger logger) : base(logger)
+            ILogger<V1Deserializer> logger) : base(logger)
         {
             _azureMetadataDeserializer = azureMetadataDeserializer;
             _defaultsDeserializer = defaultsDeserializer;
