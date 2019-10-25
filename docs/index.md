@@ -74,6 +74,12 @@ support. Are you having issues or feature requests?
 
 Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
+## Customers
+
+We are proud to have the following customer(s) running Promitor in production:
+
+![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
+
 ## Thank you
 
 We'd like to thank all the services, tooling & NuGet packages that support us -
