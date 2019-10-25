@@ -23,6 +23,12 @@
 
 All documentation is available on [promitor.io](https://promitor.io)
 
+## Customers
+
+We are proud to have the following customer(s) running Promitor in production:
+
+![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
+
 ## Contribution
 
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We
