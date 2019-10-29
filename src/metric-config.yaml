@@ -74,3 +74,13 @@ metrics:
         queueName: orders
         sasToken:
           environmentVariable: SECRETS_STORAGEQUEUE_SAS
+  - name: promitor_demo_azuresqldb_dtu
+    description: "The DTU consumption percentage used by an Azure SQL Database."
+    resourceType: AzureSqlDatabase
+    azureMetricConfiguration:
+      metricName: dtu_consumption_percent
+      aggregation:
+        type: Average
+    resources:
+      - serverName: promitor
+        databaseName: promitor-db-1
