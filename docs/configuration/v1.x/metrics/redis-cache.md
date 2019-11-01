@@ -17,6 +17,10 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 You can find more documentation on each metric in the Azure Cache for Redis
 [monitoring documentation](https://docs.microsoft.com/en-us/azure/azure-cache-for-redis/cache-how-to-monitor#available-metrics-and-reporting-intervals).
 
+The following scraper-specific metric labels will be added:
+
+- `instance_name` - The name of the Redis Cache instance
+
 Example:
 
 ```yaml
