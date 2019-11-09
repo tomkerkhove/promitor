@@ -13,6 +13,6 @@
         CosmosDb = 8,
         RedisCache = 9,
         PostgreSql = 10,
-        AzureSqlDatabase = 11
+        SqlDatabase = 11
     }
 }

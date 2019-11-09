@@ -6,15 +6,15 @@ using YamlDotNet.RepresentationModel;
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
     /// <summary>
-    /// Used to deserialize a <see cref="AzureSqlDatabaseResourceV1" /> resource.
+    /// Used to deserialize a <see cref="SqlDatabaseResourceV1" /> resource.
     /// </summary>
-    public class AzureSqlDatabaseDeserializer : ResourceDeserializer
+    public class SqlDatabaseDeserializer : ResourceDeserializer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AzureSqlDatabaseDeserializer" /> class.
+        /// Initializes a new instance of the <see cref="SqlDatabaseDeserializer" /> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public AzureSqlDatabaseDeserializer(ILogger logger) : base(logger)
+        public SqlDatabaseDeserializer(ILogger logger) : base(logger)
         {
         }
 
@@ -23,7 +23,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
             var serverName = node.GetString("serverName");
             var databaseName = node.GetString("databaseName");
 
-            return new AzureSqlDatabaseResourceV1
+            return new SqlDatabaseResourceV1
             {
                 ServerName = serverName,
                 DatabaseName = databaseName

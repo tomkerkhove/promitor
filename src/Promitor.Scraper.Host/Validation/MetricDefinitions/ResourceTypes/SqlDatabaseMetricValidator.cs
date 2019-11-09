@@ -8,16 +8,16 @@ using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
     /// <summary>
-    /// Validates <see cref="AzureSqlDatabaseResourceDefinition" /> objects.
+    /// Validates <see cref="SqlDatabaseResourceDefinition" /> objects.
     /// </summary>
-    public class AzureSqlDatabaseMetricValidator : IMetricValidator
+    public class SqlDatabaseMetricValidator : IMetricValidator
     {
         /// <inheritdoc />
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var definition in metricDefinition.Resources.Cast<AzureSqlDatabaseResourceDefinition>())
+            foreach (var definition in metricDefinition.Resources.Cast<SqlDatabaseResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(definition.ServerName))
                 {
