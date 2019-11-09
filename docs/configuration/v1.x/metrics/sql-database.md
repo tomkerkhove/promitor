@@ -5,7 +5,7 @@ title: Azure SQL Database Declaration
 
 ## Azure SQL Database - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1.0-green.svg)
 
-You can scrape an Azure SQL Database via the `AzureSqlDatabase` resource type.
+You can scrape an Azure SQL Database via the `SqlDatabase` resource type.
 
 The following fields need to be provided:
 
@@ -24,7 +24,7 @@ Example:
 ```yaml
 name: azure_sql_database_dtu_consumption_percent
 description: "The DTU consumption percentage used by an Azure SQL Database."
-resourceType: AzureSqlDatabase
+resourceType: SqlDatabase
 azureMetricConfiguration:
   metricName: dtu_consumption_percent
   aggregation:
