@@ -31,7 +31,7 @@ azureMetricConfiguration:
     type: Average
 resources:
 - serverName: promitor-sql-server
-- databaseName: promitor-db
+  databaseName: promitor-db
 ```
 
 <!-- markdownlint-disable MD033 -->
