@@ -310,7 +310,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAzureSqlDatabaseMetric(
+        public MetricsDeclarationBuilder WithSqlDatabaseMetric(
             string metricName = "promitor-sql-db",
             string azureMetricName = "cpu_percent",
             string serverName = "promitor-sql-server",
@@ -318,7 +318,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Metric description")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new AzureSqlDatabaseResourceV1
+            var resource = new SqlDatabaseResourceV1
             {
                 ServerName = serverName,
                 DatabaseName = databaseName
@@ -330,7 +330,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
                 Resources = new List<AzureResourceDefinitionV1> {resource},
-                ResourceType = ResourceType.AzureSqlDatabase
+                ResourceType = ResourceType.SqlDatabase
             };
 
             _metrics.Add(metric);
