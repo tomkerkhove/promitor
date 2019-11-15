@@ -2,6 +2,6 @@
 	path = changelog/themes/hugo-changelog-theme
 	url = https://github.com/jsnjack/hugo-changelog-theme
 
-[submodule "changelog/themes/hugo-changelog-theme/assets/spectre"]
+[submodule "assets/spectre"]
 	path = changelog/themes/hugo-changelog-theme/assets/spectre
 	url = https://github.com/picturepan2/spectre.git
