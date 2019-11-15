@@ -1,0 +1,149 @@
+$tag-added: #32b643;
+$tag-changed:#ffb700;
+$tag-deprecated: #acb3c2;
+$tag-removed: #2176ff;
+$tag-fixed: #a1548b;
+$tag-security: #e85600;
+$tag-performance: deeppink;
+
+// $primary-color: #e54747;
+
+// Variables and mixins
+@import "spectre/src/variables";
+@import "spectre/src/mixins";
+
+/*! Spectre.css v#{$version} | MIT License | github.com/picturepan2/spectre */
+// Reset and dependencies
+@import "spectre/src/normalize";
+@import "spectre/src/base";
+
+// Elements
+@import "spectre/src/typography";
+// @import "spectre/src/asian";
+// @import "spectre/src/tables";
+// @import "spectre/src/buttons";
+// @import "spectre/src/forms";
+@import "spectre/src/labels";
+// @import "spectre/src/codes";
+// @import "spectre/src/media";
+
+// Icons
+@import "spectre/src/icons/icons-core";
+@import "spectre/src/icons/icons-navigation";
+
+// Layout
+@import "spectre/src/layout";
+// @import "spectre/src/navbar";
+
+// Components
+@import "spectre/src/accordions";
+// @import "spectre/src/avatars";
+// @import "spectre/src/badges";
+// @import "spectre/src/breadcrumbs";
+// @import "spectre/src/bars";
+// @import "spectre/src/cards";
+// @import "spectre/src/chips";
+// @import "spectre/src/dropdowns";
+// @import "spectre/src/empty";
+// @import "spectre/src/menus";
+// @import "spectre/src/modals";
+// @import "spectre/src/navs";
+@import "spectre/src/pagination";
+// @import "spectre/src/panels";
+// @import "spectre/src/popovers";
+// @import "spectre/src/steps";
+// @import "spectre/src/tabs";
+// @import "spectre/src/tiles";
+// @import "spectre/src/toasts";
+// @import "spectre/src/tooltips";
+
+// Utility classes
+// @import "spectre/src/animations";
+@import "spectre/src/utilities";
+
+@import "spectre/src/timelines";
+
+
+.tag-added {
+    background: $tag-added;
+}
+
+.tag-performance {
+    background: $tag-performance;
+}
+
+.tag-changed {
+    background: $tag-changed;
+}
+
+.tag-deprecated {
+    background: $tag-deprecated;
+}
+
+.tag-removed {
+    background: $tag-removed;
+}
+
+.tag-fixed {
+    background: $tag-fixed;
+}
+
+.tag-security {
+    background: $tag-security;
+}
+
+.changes li {
+    list-style: none;
+}
+
+.changes h4 {
+    margin-bottom: 0;
+}
+
+.full-screen-message {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+    font-size: 200%;
+    text-decoration: none;
+    color: #363636;
+}
+.full-screen-message a {
+    display: inline-block;
+}
+
+.deprecated {
+    border-radius: 10px;
+
+    label {
+        cursor: pointer;
+    }
+
+    .accordion-body {
+        margin-top: 1rem;
+
+        .timeline-item::before {
+            background-color: #ffb700;
+        }
+
+        p {
+            margin: 0 0 .2rem;
+        }
+    }
+}
+
+.experimental ul {
+    margin: 0.4em;
+}
+
+li code {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+    vertical-align: middle;
+}

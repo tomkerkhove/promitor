@@ -1,0 +1,82 @@
+{{ partial "head.html" . }}
+<div class="section text-center">
+    {{ partial "logo.html" . }}
+</div>
+
+<div class="content">
+    <div class="container grid-lg">
+        <div class="columns">
+            <div class="column col-10 col-sm-12 col-mx-auto text-left">
+                {{ $paginator := .Paginate ( where .Site.RegularPages.ByWeight.Reverse "Section" "released" ) }}
+
+                <div class="section timeline">
+                    {{ if eq $paginator.PageNumber 1 }}
+                        {{ $deprecatedFeatures := where .Site.RegularPages "Section" "deprecated" }}
+                        {{ if $deprecatedFeatures }}
+                            <div class="accordion deprecated">
+                                <input type="checkbox" id="accordion-1" name="accordion-checkbox" hidden>
+                                <label class="accordion-header" for="accordion-1">
+                                    <i class="icon icon-arrow-right mr-1"></i>
+                                    <span class="label label-rounded label-warning">{{ len ($deprecatedFeatures) }}</span> deprecated features
+                                </label>
+                                <div class="accordion-body">
+                                    {{ range ($deprecatedFeatures.ByParam "removal_date").Reverse }}
+                                    <div class="timeline-item">
+                                        <div class="timeline-left">
+                                            <div class="timeline-icon"></div>
+                                        </div>
+                                        <div class="timeline-content">
+                                            <div>
+                                                <h6>{{ .Params.removal_date }}</h6>
+                                                {{ .Content }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ end }}
+                                </div>
+                            </div>
+                        {{ end }}
+
+                        {{ $experimentalPages := where .Site.RegularPages "Section" "experimental" }}
+                        {{ if $experimentalPages }}
+                            <div class="timeline-item experimental">
+                                <div class="timeline-left">
+                                    <div class="timeline-icon"></div>
+                                </div>
+                                <div class="changes timeline-content">
+                                    <div>
+                                        {{ range $experimentalPages }}
+                                            {{ .Content }}
+                                        {{ end }}
+                                    </div>
+                                </div>
+                            </div>
+                        {{ end }}
+                    {{ end }}
+
+                    {{ range $paginator.Pages }}
+                        <div class="timeline-item">
+                            <div class="timeline-left">
+                                <div class="timeline-icon"></div>
+                            </div>
+                            <div class="changes timeline-content">
+                                <h4>
+                                    {{ .Params.Version }} {{ .Title }}
+                                </h4>
+                                <small>{{ .Params.Subtitle }}</small>
+                                <div>
+                                    {{ .Content }}
+                                </div>
+                            </div>
+                        </div>
+                    {{ end }}
+                </div>
+
+                <div class="section centered">
+                    {{ partial "pagination.html" . }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ partial "footer.html" . }}

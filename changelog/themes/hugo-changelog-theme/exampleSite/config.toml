@@ -1,0 +1,5 @@
+baseURL = "https://example.com"
+languageCode = "en-us"
+title = "Hugo Changelog"
+
+paginate = 4
