@@ -7,7 +7,7 @@ weight:
 version:
 ---
 
-#### Feature X will be removed
+#### Swagger UI 2.0
 
 Lorem markdownum fulmen repetita atro praecipitem tela accepto quantumque
 funeribus spes; casus memorabile. [Concidit culmine](http://ora-tyria.net/),

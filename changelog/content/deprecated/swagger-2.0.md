@@ -2,12 +2,12 @@
 title:
 subtitle: created on {{ now.Format "2006-01-02" }}
 date: 2018-09-02T20:46:47+02:00
-removal_date: 2019-07-02
+removal_date: 2019-07-07
 weight:
 version:
 ---
 
-#### Feature Y will be removed
+#### Swagger 2.0
 
 Lorem markdownum fulmen repetita atro praecipitem tela accepto quantumque
 funeribus spes; casus memorabile. [Concidit culmine](http://ora-tyria.net/),
