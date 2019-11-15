@@ -10,20 +10,20 @@ namespace Promitor.Core.Scraping.ResourceTypes
     /// <summary>
     /// Scrapes an Azure SQL Database.
     /// </summary>
-    public class AzureSqlDatabaseScraper : Scraper<AzureSqlDatabaseResourceDefinition>
+    public class SqlDatabaseScraper : Scraper<SqlDatabaseResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}";
 
         /// <summary>
-        /// Initializes an instance of the <see cref="AzureSqlDatabaseScraper" /> class.
+        /// Initializes an instance of the <see cref="SqlDatabaseScraper" /> class.
         /// </summary>
         /// <param name="scraperConfiguration">The scraper configuration</param>
-        public AzureSqlDatabaseScraper(ScraperConfiguration scraperConfiguration)
+        public SqlDatabaseScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, AzureSqlDatabaseResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlDatabaseResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(
                 ResourceUriTemplate,

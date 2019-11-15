@@ -9,19 +9,19 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class AzureSqlDatabaseDeserializerTests : ResourceDeserializerTest
+    public class SqlDatabaseDeserializerTests : ResourceDeserializerTest
     {
-        private readonly AzureSqlDatabaseDeserializer _deserializer;
+        private readonly SqlDatabaseDeserializer _deserializer;
 
-        public AzureSqlDatabaseDeserializerTests()
+        public SqlDatabaseDeserializerTests()
         {
-            _deserializer = new AzureSqlDatabaseDeserializer(NullLogger.Instance);
+            _deserializer = new SqlDatabaseDeserializer(NullLogger.Instance);
         }
 
         [Fact]
         public void Deserialize_ServerNameSupplied_SetsServerName()
         {
-            YamlAssert.PropertySet<AzureSqlDatabaseResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<SqlDatabaseResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "serverName: promitor-sql-server",
                 "promitor-sql-server",
@@ -31,7 +31,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_ServerNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<AzureSqlDatabaseResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<SqlDatabaseResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 c => c.ServerName);
@@ -40,7 +40,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_DatabaseNameSupplied_SetsDatabaseName()
         {
-            YamlAssert.PropertySet<AzureSqlDatabaseResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<SqlDatabaseResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "databaseName: promitor-db",
                 "promitor-db",
@@ -50,7 +50,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_DatabaseNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<AzureSqlDatabaseResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<SqlDatabaseResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 c => c.DatabaseName);
@@ -58,7 +58,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new AzureSqlDatabaseDeserializer(NullLogger.Instance);
+            return new SqlDatabaseDeserializer(NullLogger.Instance);
         }
     }
 }

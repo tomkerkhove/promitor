@@ -65,8 +65,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlScraper(scraperConfiguration);
-                case ResourceType.AzureSqlDatabase:
-                    return new AzureSqlDatabaseScraper(scraperConfiguration);
+                case ResourceType.SqlDatabase:
+                    return new SqlDatabaseScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

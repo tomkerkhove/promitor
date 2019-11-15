@@ -41,8 +41,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     return new RedisCacheDeserializer(_logger);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlDeserializer(_logger);
-                case ResourceType.AzureSqlDatabase:
-                    return new AzureSqlDatabaseDeserializer(_logger);
+                case ResourceType.SqlDatabase:
+                    return new SqlDatabaseDeserializer(_logger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

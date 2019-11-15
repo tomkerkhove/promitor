@@ -31,7 +31,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .ForCtorParam("ns", o => o.MapFrom(s => s.Namespace));
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
-            CreateMap<AzureSqlDatabaseResourceV1, AzureSqlDatabaseResourceDefinition>();
+            CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
@@ -49,7 +49,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
                 .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
-                .Include<AzureSqlDatabaseResourceV1, AzureSqlDatabaseResourceDefinition>();
+                .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
         }
     }
 }

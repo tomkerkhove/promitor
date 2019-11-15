@@ -3,7 +3,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTy
     /// <summary>
     /// Represents an Azure SQL Database to scrape.
     /// </summary>
-    public class AzureSqlDatabaseResourceV1 : AzureResourceDefinitionV1
+    public class SqlDatabaseResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
         /// The name of the SQL Server instance.

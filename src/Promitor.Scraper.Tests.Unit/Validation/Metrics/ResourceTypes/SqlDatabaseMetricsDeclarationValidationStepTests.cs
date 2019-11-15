@@ -9,22 +9,22 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class AzureSqlDatabaseMetricsDeclarationValidationStepTests
+    public class SqlDatabaseMetricsDeclarationValidationStepTests
     {
         private readonly IMapper _mapper;
 
-        public AzureSqlDatabaseMetricsDeclarationValidationStepTests()
+        public SqlDatabaseMetricsDeclarationValidationStepTests()
         {
             var config = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             _mapper = config.CreateMapper();
         }
 
         [Fact]
-        public void AzureSqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureSqlDatabaseMetric(azureMetricName: string.Empty)
+                .WithSqlDatabaseMetric(azureMetricName: string.Empty)
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
@@ -37,11 +37,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureSqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
+        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureSqlDatabaseMetric(metricDescription: string.Empty)
+                .WithSqlDatabaseMetric(metricDescription: string.Empty)
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
@@ -54,11 +54,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureSqlDatabaseMetricsDeclaration_DeclarationWithoutServerName_Fails()
+        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutServerName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureSqlDatabaseMetric(serverName: string.Empty)
+                .WithSqlDatabaseMetric(serverName: string.Empty)
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
@@ -71,11 +71,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureSqlDatabaseMetricsDeclaration_DeclarationWithoutDatabaseName_Fails()
+        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutDatabaseName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureSqlDatabaseMetric(databaseName: string.Empty)
+                .WithSqlDatabaseMetric(databaseName: string.Empty)
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 
