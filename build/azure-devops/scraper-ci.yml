@@ -77,20 +77,20 @@ stages:
          solutionOrProjectPath: 'src/Promitor.sln'
          failBuildLevelSelector: 'Warning'
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
-# - stage: Docs
-#   displayName: Docs
-#   dependsOn: []
-#   jobs:
-#    - job: RunMarkdownLinter
-#      displayName: Run Markdown Linter
-#      condition: succeeded()
-#      pool:
-#        vmImage: ubuntu-16.04
-#      steps:
-#      - script: npm install
-#        displayName: 'Install npm Packages'
-#      - script: npm run --silent markdownlint
-#        displayName: 'Run markdownlint'
+- stage: Docs
+  displayName: Docs
+  dependsOn: []
+  jobs:
+   - job: RunMarkdownLinter
+     displayName: Run Markdown Linter
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - script: npm install
+       displayName: 'Install npm Packages'
+     - script: npm run --silent markdownlint
+       displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
   dependsOn: []
