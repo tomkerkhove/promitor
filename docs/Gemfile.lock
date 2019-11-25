@@ -251,8 +251,5 @@ DEPENDENCIES
   github-pages (>= 192)
   nokogiri (>= 1.10.4)
 
-RUBY VERSION
-   ruby 2.5.5p157
-
 BUNDLED WITH
    2.0.2
