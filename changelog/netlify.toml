@@ -1,3 +1,10 @@
+[Settings]
+# Added automatically by the Netlify CLI. It has no effect during normal 
+# Git-backed deploys.
+ID = "a8a22b94-477b-439e-9bc4-b98ae0af10cc"
+
+# Settings in the [build] context are global and are applied to all contexts 
+# unless otherwise overridden by more specific contexts.  
 [build]
 publish = "public"
 command = "hugo --gc --minify"
