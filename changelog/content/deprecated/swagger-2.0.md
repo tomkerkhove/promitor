@@ -1,10 +1,12 @@
 ---
 subtitle: created on {{ now.Format "2006-01-02" }}
 date: 2018-09-02T20:46:47+02:00
-removal_date: 
+weight:
+version:
 ---
 
 #### Swagger 2.0
+
 ###### Deprecated as of v1.1 and will be removed in v2.0
 
 OpenAPI v3.0 has been released in 2017 which is the new industry standard.

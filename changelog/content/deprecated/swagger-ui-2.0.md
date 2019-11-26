@@ -8,6 +8,7 @@ version:
 ---
 
 #### Swagger UI 2.0
+
 ###### Deprecated as of v1.1 and will be removed in v2.0
 
 OpenAPI v3.0 has been released in 2017 which is the new industry standard.
