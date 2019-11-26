@@ -1,21 +1,21 @@
 ---
-title:
 subtitle: created on {{ now.Format "2006-01-02" }}
 date: 2018-09-02T20:46:47+02:00
-removal_date: 2019-07-07
-weight:
-version:
+removal_date: 
 ---
 
 #### Swagger 2.0
+###### Deprecated as of v1.1 and will be removed in v2.0
 
-Lorem markdownum fulmen repetita atro praecipitem tela accepto quantumque
-funeribus spes; casus memorabile. [Concidit culmine](http://ora-tyria.net/),
-unda ad **adhuc** liquidi cognata, sua cetera; ceu iam facientia quem. Regina
-referre tibi places cum et meritorum, **in atque**, capillos et deos. Di sua
-cepit excidit pectore probarunt fatale muta vento in Tamasenum.
+OpenAPI v3.0 has been released in 2017 which is the new industry standard.
+With Promitor, we want to support that standard and have decided to go forward
+with 3.0 instead of 2.0.
 
-Templa hunc, exosa felix os temerasse Boreas facies nam ferre regimen! Fidemque
-signans stant Volturnus dicta vides, utque caelo pallidiora.
+We've added support for OpenAPI 3.0 in Promitor v1.1 next to Swagger 2.0 so you
+can migrate to it before we remove 2.0 in Promitor v2.0.
 
-Tandem stat surgis. Rerum nati arbitrio, nactusque dilectos a!
+**Impact:** Migration is required - API documentation will no longer be available.
+
+**Alternative:** Use API documentation provided in OpenAPI v3.0 format.
+
+**Discussion:** [GitHub Issue #782](https://github.com/tomkerkhove/promitor/issues/782)
