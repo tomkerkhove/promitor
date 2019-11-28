@@ -9,7 +9,7 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class AzureSqlDatabaseDeserializerTests : ResourceDeserializerTest<AzureSqlDatabaseDeserializer>
+    public class SqlDatabaseDeserializerTests : ResourceDeserializerTest<SqlDatabaseDeserializer>
     {
         private readonly SqlDatabaseDeserializer _deserializer;
 
