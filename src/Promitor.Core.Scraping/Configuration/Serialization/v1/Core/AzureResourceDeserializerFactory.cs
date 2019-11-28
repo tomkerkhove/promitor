@@ -51,9 +51,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.PostgreSql:
                     var postgreSqlLogger = _loggerFactory.CreateLogger<PostgreSqlDeserializer>();
                     return new PostgreSqlDeserializer(postgreSqlLogger);
-                case ResourceType.AzureSqlDatabase:
-                    var sqlDatabaseLogger = _loggerFactory.CreateLogger<AzureSqlDatabaseDeserializer>();
-                    return new AzureSqlDatabaseDeserializer(sqlDatabaseLogger);
+                case ResourceType.SqlDatabase:
+                    var sqlDatabaseLogger = _loggerFactory.CreateLogger<SqlDatabaseDeserializer>();
+                    return new SqlDatabaseDeserializer(sqlDatabaseLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

@@ -85,12 +85,12 @@
             <param name="metricDefinition">Metric definition to validate</param>
             <returns>List of validation errors</returns>
         </member>
-        <member name="T:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.AzureSqlDatabaseMetricValidator">
+        <member name="T:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator">
             <summary>
-            Validates <see cref="T:Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes.AzureSqlDatabaseResourceDefinition" /> objects.
+            Validates <see cref="T:Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes.SqlDatabaseResourceDefinition" /> objects.
             </summary>
         </member>
-        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.AzureSqlDatabaseMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
         </member>
     </members>

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+STABLE_BRANCH=master
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+if [ "$CURRENT_BRANCH" = "$STABLE_BRANCH" ]
+then
+    if [ `ls -l site/changelog/content/experimental | wc -l` -gt 1 ]
+    then
+        echo -e "\033[0;31mThere are experimental changes. Consider creating a release in develop branch\033[0m"
+    fi
+fi
