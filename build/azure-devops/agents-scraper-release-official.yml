@@ -29,7 +29,8 @@ stages:
         $index = "$(Image.Version)".IndexOf(".", 2);
         $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
         Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;isOutput=true]$majorMinorVersion")
+       name: DetermineMajorMinor
        displayName: 'Determine ''{major}.{minor}'' version'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
@@ -74,6 +75,8 @@ stages:
      displayName: Create Release
      pool:
        vmImage: ubuntu-16.04
+     variables:
+       BuildJob.DefinedMajorMinorVersion: $[ dependencies.Build.outputs['DetermineMajorMinor.Image.MajorMinorVersion'] ]
      steps:
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
@@ -104,7 +107,7 @@ stages:
           New Docker image tags are available:
           - `latest`
           - `$(Image.Version)`
-          - `$(Image.MajorMinorVersion)`
+          - `$(BuildJob.DefinedMajorMinorVersion)`
 
           Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
