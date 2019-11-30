@@ -88,7 +88,12 @@ stages:
          isDraft: true
          changeLogType: issueBased
          releaseNotes: |
-          ### Breaking Changes
+          ### What's new?
+          Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
+          #### Deprecations
+          Here are a list of new deprecations and how to mitigate them:
+          - TBW _(Discussion [#]())_
+          #### Breaking Changes
           Here are a list of breaking changes and how to mitigate them:
           - TBW (#) - _Use new approach documented here_
           ### Getting started
