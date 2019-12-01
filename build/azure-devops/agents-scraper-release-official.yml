@@ -13,26 +13,43 @@ variables:
   # Image.Version is configured in the build definition as settable at queue time
   # Helm.Chart.Version is configured in the build definition as settable at queue time
 stages:
-- stage: Build
-  displayName: Build and Push Docker image
+- stage: Init
+  displayName: Prepare Release
   jobs:
-   - job: Build
+   - job: DetermineVersion
+     displayName: Determine Version
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
      - powershell: |
         Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
         $index = "$(Image.Version)".IndexOf(".", 2);
         $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
         Write-Host "Found version '$majorMinorVersion'"
         Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-        Write-Output ("##vso[task.setvariable variable=MajorMinorVersion;isOutput=true]$majorMinorVersion")
-       name: DetermineMajorMinor
        displayName: 'Determine ''{major}.{minor}'' version'
+     - template: ./../templates/persist-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: Build
+  dependsOn: Init
+  displayName: Build and Push Docker image
+  jobs:
+   - job: Build
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+        version: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
@@ -76,9 +93,12 @@ stages:
      displayName: Create Release
      pool:
        vmImage: ubuntu-16.04
-     variables:
-       BuildJob.DefinedMajorMinorVersion: $[ dependencies.Build.outputs['DetermineMajorMinor.MajorMinorVersion'] ]
      steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:
@@ -108,7 +128,7 @@ stages:
           New Docker image tags are available:
           - `latest`
           - `$(Image.Version)`
-          - `$(BuildJob.DefinedMajorMinorVersion)`
+          - `$(Image.MajorMinorVersion)`
 
           Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
