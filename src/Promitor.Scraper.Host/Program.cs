@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model.Server;
+using Serilog;
 
 namespace Promitor.Scraper.Host
 {
@@ -13,6 +14,11 @@ namespace Promitor.Scraper.Host
         public static void Main(string[] args)
         {
             Welcome();
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
 
             BuildWebHost(args)
                 .Build()
@@ -33,15 +39,10 @@ namespace Promitor.Scraper.Host
             // TODO: Configure verbosity https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.0#add-providers
 
             return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder.UseKestrel(kestrelServerOptions => { kestrelServerOptions.AddServerHeader = false; })
-                        .ConfigureLogging((hostContext, loggingBuilder) =>
-                        {
-                            loggingBuilder.AddConsole(consoleLoggerOptions => consoleLoggerOptions.TimestampFormat = "[HH:mm:ss] ");
-                            loggingBuilder.AddDebug();
-                            loggingBuilder.SetMinimumLevel(LogLevel.Information);
-                        })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
                         .UseStartup<Startup>();
