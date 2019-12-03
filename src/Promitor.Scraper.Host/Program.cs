@@ -3,7 +3,6 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model.Server;
 using Serilog;
 
@@ -15,10 +14,8 @@ namespace Promitor.Scraper.Host
         {
             Welcome();
 
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
+            // Let's hook in a logger for start-up purposes.
+            ConfigureStartupLogging();
 
             BuildWebHost(args)
                 .Build()
@@ -36,13 +33,14 @@ namespace Promitor.Scraper.Host
             var httpPort = DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
-            // TODO: Configure verbosity https://docs.microsoft.com/en-us/aspnet/core/fundamentals/logging/?view=aspnetcore-3.0#add-providers
-
             return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
                 .UseSerilog()
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
-                    webHostBuilder.UseKestrel(kestrelServerOptions => { kestrelServerOptions.AddServerHeader = false; })
+                    webHostBuilder.UseKestrel(kestrelServerOptions =>
+                        {
+                            kestrelServerOptions.AddServerHeader = false;
+                        })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
                         .UseStartup<Startup>();
@@ -67,6 +65,14 @@ namespace Promitor.Scraper.Host
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
 
             return serverConfiguration?.HttpPort ?? 80;
+        }
+
+        private static void ConfigureStartupLogging()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
         }
     }
 }

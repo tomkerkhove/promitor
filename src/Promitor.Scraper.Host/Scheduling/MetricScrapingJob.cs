@@ -9,7 +9,6 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 
 namespace Promitor.Scraper.Host.Scheduling
@@ -20,7 +19,6 @@ namespace Promitor.Scraper.Host.Scheduling
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
-        private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
 
         private readonly MetricScraperFactory _metricScraperFactory;
@@ -30,7 +28,7 @@ namespace Promitor.Scraper.Host.Scheduling
             IPrometheusMetricWriter prometheusMetricWriter,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
-            ILogger<MetricScrapingJob> logger, IExceptionTracker exceptionTracker)
+            ILogger<MetricScrapingJob> logger)
         {
             Guard.NotNull(metric, nameof(metric));
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
@@ -38,13 +36,11 @@ namespace Promitor.Scraper.Host.Scheduling
             Guard.NotNull(runtimeMetricsCollector, nameof(runtimeMetricsCollector));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
             Guard.NotNull(logger, nameof(logger));
-            Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
             _metric = metric;
             _metricsDeclarationProvider = metricsDeclarationProvider;
             _prometheusMetricWriter = prometheusMetricWriter;
             _runtimeMetricsCollector = runtimeMetricsCollector;
-            _exceptionTracker = exceptionTracker;
             _logger = logger;
 
             _metricScraperFactory = metricScraperFactory;
@@ -74,8 +70,7 @@ namespace Promitor.Scraper.Host.Scheduling
             }
             catch (Exception exception)
             {
-                _logger.LogError($"Failed to scrape: {exception.Message}");
-                _exceptionTracker.Track(exception);
+                _logger.LogCritical(exception, $"Failed to scrape: {exception.Message}");
             }
         }
 

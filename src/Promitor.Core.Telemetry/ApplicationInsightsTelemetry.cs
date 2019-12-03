@@ -47,7 +47,7 @@ namespace Promitor.Core.Telemetry
 
         public void Track(Exception exception)
         {
-            if (exception == null || _applicationInsightsConfiguration.CurrentValue.Verbosity == LogLevel.None)
+            if (exception == null)
             {
                 return;
             }

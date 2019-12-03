@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Bogus;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration;
 using Promitor.Core.Configuration.Model;
 using Promitor.Scraper.Tests.Unit.Generators.Config;
+using Serilog.Events;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Configuration
@@ -75,7 +75,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredApplicationInsightsVerbosity_UsesConfigured()
         {
             // Arrange
-            var verbosity = LogLevel.Error;
+            var verbosity = LogEventLevel.Error;
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithApplicationInsightsTelemetry(verbosity: verbosity)
                 .GenerateAsync();
@@ -93,7 +93,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredContainerLogVerbosity_UsesConfigured()
         {
             // Arrange
-            var verbosity = LogLevel.Error;
+            var verbosity = LogEventLevel.Error;
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithContainerTelemetry(verbosity)
                 .GenerateAsync();
@@ -111,7 +111,7 @@ namespace Promitor.Scraper.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredDefaultTelemetryVerbosityConfigured_UsesConfigured()
         {
             // Arrange
-            var defaultVerbosity = LogLevel.Error;
+            var defaultVerbosity = LogEventLevel.Error;
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithGeneralTelemetry(defaultVerbosity)
                 .GenerateAsync();

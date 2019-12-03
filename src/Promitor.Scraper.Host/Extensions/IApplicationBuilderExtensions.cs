@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Prometheus.Client.AspNetCore;
+using Promitor.Core.Configuration.Model.Telemetry;
+using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Serilog;
+using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 // ReSharper disable once CheckNamespace
@@ -8,6 +13,46 @@ namespace Promitor.Scraper.Host.Extensions
     // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
+        /// <summary>
+        ///     Use Serilog to emit logs to multiple sinks
+        /// </summary>
+        /// <param name="app">Application Builder</param>
+        /// <param name="configuration">Configuration of the application</param>
+        public static IApplicationBuilder UseSerilog(this IApplicationBuilder app, IConfiguration configuration)
+        {
+            var telemetryConfiguration = configuration.Get<TelemetryConfiguration>();
+            var ai = configuration.Get<ApplicationInsightsConfiguration>();
+
+            var defaultLogLevel = DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
+            var loggerConfiguration = new LoggerConfiguration()
+                .MinimumLevel.Is(defaultLogLevel)
+                .Enrich.FromLogContext();
+
+            var appInsightsConfig = telemetryConfiguration.ApplicationInsights;
+            if (appInsightsConfig?.IsEnabled == true)
+            {
+                var logLevel = DetermineSinkLogLevel(appInsightsConfig.Verbosity);
+                loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel);
+            }
+
+            var consoleLogConfig = telemetryConfiguration.ContainerLogs;
+            if (consoleLogConfig?.IsEnabled == true)
+            {
+                var logLevel = DetermineSinkLogLevel(consoleLogConfig.Verbosity);
+
+                loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel);
+            }
+
+            Log.Logger = loggerConfiguration.CreateLogger();
+
+            return app;
+        }
+
+        private static LogEventLevel DetermineSinkLogLevel(LogEventLevel? logLevel)
+        {
+            return logLevel ?? LogEventLevel.Verbose;
+        }
+
         /// <summary>
         ///     Add support for Open API with API explorer
         /// </summary>

@@ -23,8 +23,6 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry;
-using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Scraper.Host.Scheduling;
@@ -57,8 +55,7 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),
                             serviceProvider.GetService<MetricScraperFactory>(),
-                            serviceProvider.GetService<ILogger<MetricScrapingJob>>(),
-                            serviceProvider.GetService<IExceptionTracker>()));
+                            serviceProvider.GetService<ILogger<MetricScrapingJob>>()));
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
                 }
@@ -73,7 +70,6 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
-            services.AddTransient<IExceptionTracker, ApplicationInsightsTelemetry>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
@@ -116,7 +112,7 @@ namespace Promitor.Scraper.Host.Extensions
                     .AddJsonOptions(jsonOptions =>
                     {
                         jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                        jsonOptions.JsonSerializerOptions.IgnoreNullValues=true;
+                        jsonOptions.JsonSerializerOptions.IgnoreNullValues = true;
                     });
 
             return services;
@@ -127,14 +123,14 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<RuntimeConfiguration>(configuration);
-            services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
-            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
+            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+            services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
+            services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
-            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+            services.Configure<RuntimeConfiguration>(configuration);
 
             return services;
         }
@@ -170,7 +166,7 @@ namespace Promitor.Scraper.Host.Extensions
             {
                 swaggerGenerationOptions.EnableAnnotations();
                 swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
-                
+
                 if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
                 {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
@@ -197,9 +193,9 @@ namespace Promitor.Scraper.Host.Extensions
         // ReSharper disable once UnusedParameter.Local
         private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
         {
-            var exceptionTrackerService = services.FirstOrDefault(service => service.ServiceType == typeof(IExceptionTracker));
-            var exceptionTracker = (IExceptionTracker)exceptionTrackerService?.ImplementationInstance;
-            exceptionTracker?.Track(e.Exception);
+            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
+            var loggerInstance = (ILogger)logger?.ImplementationInstance;
+            loggerInstance?.LogCritical(e.Exception, "Unhandled job exception");
 
             e.SetObserved();
         }

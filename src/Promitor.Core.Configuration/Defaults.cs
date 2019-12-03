@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Serilog.Events;
 
 namespace Promitor.Core.Configuration
 {
@@ -23,17 +24,17 @@ namespace Promitor.Core.Configuration
         
         public class Telemetry
         {
-            public static LogLevel? DefaultVerbosity { get; set; } = LogLevel.Error;
+            public static LogEventLevel? DefaultVerbosity { get; set; } = LogEventLevel.Error;
 
             public class ContainerLogs
             {
-                public static LogLevel? Verbosity { get; set; } = null;
+                public static LogEventLevel? Verbosity { get; set; } = null;
                 public static bool IsEnabled { get; set; } = true;
             }
 
             public class ApplicationInsights
             {
-                public static LogLevel? Verbosity { get; set; } = null;
+                public static LogEventLevel? Verbosity { get; set; } = null;
                 public static bool IsEnabled { get; set; } = false;
             }
         }

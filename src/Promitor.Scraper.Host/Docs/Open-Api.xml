@@ -22,6 +22,13 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UseSerilog(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Use Serilog to emit logs to multiple sinks
+            </summary>
+            <param name="app">Application Builder</param>
+            <param name="configuration">Configuration of the application</param>
+        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
                 Add support for Open API with API explorer
