@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Prometheus.Client.AspNetCore;
+using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Telemetry;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -20,8 +22,11 @@ namespace Promitor.Scraper.Host.Extensions
         /// <param name="configuration">Configuration of the application</param>
         public static IApplicationBuilder UseSerilog(this IApplicationBuilder app, IConfiguration configuration)
         {
-            var telemetryConfiguration = configuration.Get<TelemetryConfiguration>();
-            var ai = configuration.Get<ApplicationInsightsConfiguration>();
+            var telemetryConfiguration = configuration.Get<RuntimeConfiguration>()?.Telemetry;
+            if (telemetryConfiguration == null)
+            {
+                throw new Exception("Unable to get telemetry configuration");
+            }
 
             var defaultLogLevel = DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
             var loggerConfiguration = new LoggerConfiguration()

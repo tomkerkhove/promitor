@@ -123,14 +123,14 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
-            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
-            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+            services.Configure<RuntimeConfiguration>(configuration);
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
-            services.Configure<RuntimeConfiguration>(configuration);
+            services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
+            services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
+            services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
 
             return services;
         }
