@@ -4,13 +4,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
-using Serilog.Events;
 
 namespace Promitor.Scraper.Tests.Unit.Generators.Config
 {
@@ -97,7 +97,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithGeneralTelemetry(LogEventLevel? defaultVerbosity = LogEventLevel.Verbose)
+        public RuntimeConfigurationGenerator WithGeneralTelemetry(LogLevel? defaultVerbosity = LogLevel.Trace)
         {
             var telemetryConfiguration = defaultVerbosity == null
                 ? null
@@ -111,7 +111,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithContainerTelemetry(LogEventLevel? verbosity = LogEventLevel.Verbose, bool? isEnabled = true)
+        public RuntimeConfigurationGenerator WithContainerTelemetry(LogLevel? verbosity = LogLevel.Trace, bool? isEnabled = true)
         {
             var containerLogConfiguration = verbosity == null && isEnabled == null
                 ? null
@@ -131,7 +131,7 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithApplicationInsightsTelemetry(string instrumentationKey = "XYZ", LogEventLevel? verbosity = LogEventLevel.Verbose, bool? isEnabled = true)
+        public RuntimeConfigurationGenerator WithApplicationInsightsTelemetry(string instrumentationKey = "XYZ", LogLevel? verbosity = LogLevel.Trace, bool? isEnabled = true)
         {
             var applicationInsightsTelemetry = verbosity == null && isEnabled == null && string.IsNullOrWhiteSpace(instrumentationKey)
                 ? null

@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Prometheus.Client.AspNetCore;
 using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.Telemetry;
 using Serilog;
 using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -53,9 +52,32 @@ namespace Promitor.Scraper.Host.Extensions
             return app;
         }
 
-        private static LogEventLevel DetermineSinkLogLevel(LogEventLevel? logLevel)
+        private static LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
         {
-            return logLevel ?? LogEventLevel.Verbose;
+            if (logLevel == null)
+            {
+                return LogEventLevel.Error;
+            }
+
+            switch (logLevel)
+            {
+                case LogLevel.Critical:
+                    return LogEventLevel.Fatal;
+                case LogLevel.Trace:
+                    return LogEventLevel.Verbose;
+                case LogLevel.Error:
+                    return LogEventLevel.Error;
+                case LogLevel.Debug:
+                    return LogEventLevel.Debug;
+                case LogLevel.Information:
+                    return LogEventLevel.Information;
+                case LogLevel.None:
+                    return LogEventLevel.Fatal;
+                case LogLevel.Warning:
+                    return LogEventLevel.Warning;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(logLevel),logLevel, "Unable to determine correct log event level.");
+            }
         }
 
         /// <summary>

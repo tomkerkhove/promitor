@@ -1,11 +1,11 @@
 ﻿using Bogus;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
-using Serilog.Events;
 
 namespace Promitor.Scraper.Tests.Unit.Generators.Config
 {
@@ -34,20 +34,20 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogEventLevel.Error)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .Generate();
 
             var applicationInsightsConfiguration = new Faker<ApplicationInsightsConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogEventLevel.Error)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .RuleFor(containerConfiguration => containerConfiguration.InstrumentationKey, faker => faker.Random.Guid().ToString())
                 .Generate();
 
             var telemetryConfiguration = new Faker<TelemetryConfiguration>()
                 .StrictMode(true)
-                .RuleFor(telemetry => telemetry.DefaultVerbosity, faker => LogEventLevel.Error)
+                .RuleFor(telemetry => telemetry.DefaultVerbosity, faker => LogLevel.Error)
                 .RuleFor(telemetry => telemetry.ContainerLogs, faker => containerLogConfiguration)
                 .RuleFor(telemetry => telemetry.ApplicationInsights, faker => applicationInsightsConfiguration)
                 .Generate();

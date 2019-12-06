@@ -1,10 +1,10 @@
-﻿using Serilog.Events;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Promitor.Core.Configuration.Model.Telemetry.Interfaces
 {
     public interface ISinkConfiguration
     {
-        LogEventLevel? Verbosity { get; }
+        LogLevel? Verbosity { get; }
         bool IsEnabled { get; }
     }
 }
