@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RuntimeFrameworkVersion>3.0.0</RuntimeFrameworkVersion>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Guard.Net" Version="1.2.0" />
       <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.1.1" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.0" />
     </ItemGroup>
 
 </Project>
