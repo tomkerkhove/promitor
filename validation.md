@@ -8,7 +8,7 @@ validation into the deserializers.
 
 - A consistent output format that explains exactly what the problem is, and ideally
   where it is.
-- We must indicate when unknown field values are specified so we can highlight typos.
+- We must indicate when unknown field names are specified so we can highlight typos.
 
 ## Nice to Haves
 
