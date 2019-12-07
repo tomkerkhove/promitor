@@ -157,7 +157,8 @@ Promitor can send telemetry to Azure Application Insights when there is a need t
 
 It currently supports:
 
-- Exceptions during scraping
+- Traces _(starting of v1.1)_
+- Exceptions
 
 In order to enable use this sink, the following configuration needs to be provided:
 

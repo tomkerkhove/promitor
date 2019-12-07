@@ -9,3 +9,4 @@ version:
 - {{% tag added %}} OpenAPI v3.0 support (`/api/v1/docs.json` | [#734](https://github.com/tomkerkhove/promitor/issues/734))
 - {{% tag added %}} OpenAPI UI based on OpenAPI v3.0 (`/api/docs/` | [#734](https://github.com/tomkerkhove/promitor/issues/734))
 - {{% tag changed %}} Helm Chart creates apps/v1 Deployment instead of v1beta1 ([#669](https://github.com/tomkerkhove/promitor/issues/669))
+- {{% tag added %}} Provide  traces in Azure Application Insights
