@@ -150,3 +150,103 @@ Expected result:
 ```text
 5:2: 'tenantId' has already been specified at line 4, column 2.
 ```
+
+## Implementation
+
+We could start by altering the `Deserializer` class so that you can describe the
+fields you want to deserialize in the subclasses. For example, we would be able
+to define the `AzureMetadataDeserializer` like this:
+
+```csharp
+public class AzureMetadataDeserializer : Deserializer<AzureMetadataV1>
+{
+    public AzureMetadataDeserializer()
+    {
+        MapRequired(metadata => metadata.TenantId);
+        MapRequired(metadata => metadata.SubscriptionId);
+        MapOptional(metadata => metadata.ResourceGroupName);
+    }
+}
+```
+
+*(I know that the group name isn't optional in the Azure Metadata, but I'm just
+using it as an example)*
+
+This means that the Deserializer now knows about the fields that need to be deserialized.
+So when we call its `Deserialize()` method, it can set any fields, and then report
+any missing required fields. As pseudocode it would look something like this:
+
+```csharp
+public TObject Deserialize(YamlMappingNode node, ErrorReporter errorReporter)
+{
+    var result = new TObject();
+    foreach (var child in node.Children)
+    {
+        if (FieldIsValid(child))
+        {
+            SetValue(result, child);
+        }
+        else
+        {
+            WarnAboutUnknownField(errorReporter, child);
+        }
+    }
+
+    ReportMissingRequiredFields(errorReporter);
+
+    return result;
+}
+```
+
+The `ErrorReporter` interface would look something like this:
+
+```csharp
+public interface ErrorReporter
+{
+    bool HasErrors { get; }
+    bool HasMessages { get; }
+    void ReportError(YamlNode node, string message);
+    void ReportWarning(YamlNode node, string message);
+    void OutputMessages(TextWriter textWriter);
+}
+```
+
+The `YamlNode` has information in it about line and column numbers, so we can add
+that to the error messages output.
+
+The overall deserialization process would look something like this:
+
+```csharp
+var errorReporter = new DefaultErrorReporter();
+
+var configuration = rootDeserializer.Deserialize(yamlNode, errorReporter);
+
+if (errorReporter.HasMessages)
+{
+    // Output the messages
+
+    if (errorReporter.HasErrors)
+    {
+        // Exit the application
+    }
+}
+```
+
+### Property Name Suggestions
+
+Because the deserializers know about their supported properties, we can use a
+string distance algorithm to figure out possible suggestions based on the actual
+name supplied.
+
+For example, if we had the following yaml:
+
+```yaml
+tennatId: abc-123
+subscriptionId: def-321
+resourceGroupId: group
+```
+
+We know that the three possible correct names are "tenantId", "subscriptionId",
+and "resourceGroupId". We can then use something like a [distance algorithm](https://www.csharpstar.com/csharp-string-distance-algorithm/)
+to calculate which of our correct names are close enough to what was supplied for
+us to suggest it.
