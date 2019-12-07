@@ -66,11 +66,10 @@ the response to avoid leaking secrets.
 We provide API documentation to make it easier for you to consume our REST APIs them:
 
 - **OpenAPI 3.0 format** ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)
-    - You can explore it with OpenAPI UI on `/api/docs`
-    - You can find the raw documentation on `/api/v1/docs.json`
+  - You can explore it with OpenAPI UI on `/api/docs`
+  - You can find the raw documentation on `/api/v1/docs.json`
 - **Swagger 2.0 format** [![Deprecation Badge](https://img.shields.io/badge/Deprecated%20as%20of-v1.1-red)](http://changelog.promitor.io/)
-    - You can explore it with Swagger UI on `/swagger`
-    - You can find the raw documentation on `/swagger/v1/swagger.json`
-
+  - You can explore it with Swagger UI on `/swagger`
+  - You can find the raw documentation on `/swagger/v1/swagger.json`
 
 [&larr; back](/)
