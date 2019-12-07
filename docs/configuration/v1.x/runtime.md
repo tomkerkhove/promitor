@@ -157,7 +157,7 @@ Promitor can send telemetry to Azure Application Insights when there is a need t
 
 It currently supports:
 
-- Traces _(starting of v1.1)_
+- Traces  ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)
 - Exceptions
 
 In order to enable use this sink, the following configuration needs to be provided:
