@@ -3,7 +3,7 @@ layout: default
 title: Generic Azure Resource Declaration
 ---
 
-## Generic Azure Resource - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v0.2.0-green.svg)
+## Generic Azure Resource - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v0.2-green.svg)
 
 You can declare to scrape a generic Azure resource via the `Generic` resource type.
 

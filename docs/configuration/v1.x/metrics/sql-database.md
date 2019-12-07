@@ -3,7 +3,7 @@ layout: default
 title: Azure SQL Database Declaration
 ---
 
-## Azure SQL Database - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1.0-green.svg)
+## Azure SQL Database - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)
 
 You can scrape an Azure SQL Database via the `SqlDatabase` resource type.
 

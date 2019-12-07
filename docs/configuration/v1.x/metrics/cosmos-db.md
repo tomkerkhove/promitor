@@ -3,7 +3,7 @@ layout: default
 title: Azure Cosmos Db Declaration
 ---
 
-## Azure Cosmos Db - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Cosmos Db - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape Cosmos Db via the `CosmosDb` resource type.
 

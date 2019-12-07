@@ -3,7 +3,7 @@ layout: default
 title: Azure Cache for Redis Declaration
 ---
 
-## Azure Cache for Redis - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Cache for Redis - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape an Azure Cache for Redis via the `RedisCache` resource
 type.

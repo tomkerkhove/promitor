@@ -3,7 +3,7 @@ layout: default
 title: Azure Network Interface Declaration
 ---
 
-## Azure Network Interface - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Network Interface - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape an [Azure Network Interface](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface)
 via the `NetworkInterface` resource type.

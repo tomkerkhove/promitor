@@ -3,7 +3,7 @@ layout: default
 title: Azure Database for PostgreSQL
 ---
 
-## Azure Database for PostgreSQL - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Database for PostgreSQL - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape an Azure Database for PostgreSQL server via the `PostgreSql`
 resource type.
