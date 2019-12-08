@@ -17,6 +17,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         private readonly Mock<IDeserializer<AzureMetricConfigurationV1>> _azureMetricConfigurationDeserializer;
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
         private readonly Mock<IAzureResourceDeserializerFactory> _resourceDeserializerFactory;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         private readonly MetricDefinitionDeserializer _deserializer;
 
@@ -116,10 +117,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var configurationNode = (YamlMappingNode)node.Children["azureMetricConfiguration"];
             var configuration = new AzureMetricConfigurationV1();
 
-            _azureMetricConfigurationDeserializer.Setup(d => d.Deserialize(configurationNode)).Returns(configuration);
+            _azureMetricConfigurationDeserializer.Setup(d => d.Deserialize(configurationNode, _errorReporter.Object)).Returns(configuration);
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(configuration, definition.AzureMetricConfiguration);
@@ -133,10 +134,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var node = YamlUtils.CreateYamlNode(yamlText);
 
             _azureMetricConfigurationDeserializer.Setup(
-                d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new AzureMetricConfigurationV1());
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new AzureMetricConfigurationV1());
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Null(definition.AzureMetricConfiguration);
@@ -153,10 +154,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var scrapingNode = (YamlMappingNode)node.Children["scraping"];
             var scraping = new ScrapingV1();
 
-            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode)).Returns(scraping);
+            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode, _errorReporter.Object)).Returns(scraping);
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(scraping, definition.Scraping);
@@ -169,10 +170,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             const string yamlText = "name: promitor_test_metric";
             var node = YamlUtils.CreateYamlNode(yamlText);
 
-            _scrapingDeserializer.Setup(d => d.Deserialize(It.IsAny<YamlMappingNode>())).Returns(new ScrapingV1());
+            _scrapingDeserializer.Setup(
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new ScrapingV1());
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, It.IsAny<IErrorReporter>());
 
             // Assert
             Assert.Null(definition.Scraping);
@@ -195,10 +197,10 @@ resources:
 
             var resources = new List<AzureResourceDefinitionV1>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode)node.Children["resources"])).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object)).Returns(resources);
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(resources, definition.Resources);
@@ -220,10 +222,10 @@ resources:
 
             var resources = new List<AzureResourceDefinitionV1>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode)node.Children["resources"])).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object)).Returns(resources);
 
             // Act
-            var definition = _deserializer.Deserialize(node);
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Null(definition.Resources);

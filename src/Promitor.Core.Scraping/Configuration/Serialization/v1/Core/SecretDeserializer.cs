@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        public override SecretV1 Deserialize(YamlMappingNode node)
+        public override SecretV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var rawValue = node.GetString(RawValueTag);
             var environmentVariable = node.GetString(EnvironmentVariableTag);

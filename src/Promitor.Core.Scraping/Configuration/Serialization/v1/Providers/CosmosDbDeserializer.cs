@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override CosmosDbResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override CosmosDbResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var databaseName = node.GetString(DatabaseNameTag);
 

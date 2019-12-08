@@ -17,12 +17,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
             _secretDeserializer = secretDeserializer;
         }
 
-        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var storageAccountResource = base.DeserializeResource(node);
+            var storageAccountResource = base.DeserializeResource(node, errorReporter);
 
             var queueName = node.GetString(QueueNameTag);
-            var sasToken = node.DeserializeChild(SasTokenTag, _secretDeserializer);
+            var sasToken = node.DeserializeChild(SasTokenTag, _secretDeserializer, errorReporter);
 
             var storageQueueResource = new StorageQueueResourceV1(storageAccountResource)
             {

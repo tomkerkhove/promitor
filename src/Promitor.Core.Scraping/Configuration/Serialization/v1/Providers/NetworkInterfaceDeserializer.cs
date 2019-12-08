@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override NetworkInterfaceResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override NetworkInterfaceResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var networkInterfaceName = node.GetString(NetworkInterfaceNameTag);
 

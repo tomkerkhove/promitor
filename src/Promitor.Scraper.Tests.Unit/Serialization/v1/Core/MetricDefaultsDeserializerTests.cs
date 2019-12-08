@@ -15,6 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         private readonly MetricDefaultsDeserializer _deserializer;
         private readonly Mock<IDeserializer<AggregationV1>> _aggregationDeserializer;
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public MetricDefaultsDeserializerTests()
         {
@@ -37,10 +38,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
             var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
             var aggregation = new AggregationV1();
-            _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode)).Returns(aggregation);
+            _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode, _errorReporter.Object)).Returns(aggregation);
 
             // Act
-            var defaults = _deserializer.Deserialize(node);
+            var defaults = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(aggregation, defaults.Aggregation);
@@ -57,10 +58,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
             // Act
-            _deserializer.Deserialize(node);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            _aggregationDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlMappingNode>()), Times.Never);
+            _aggregationDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>()), Times.Never);
         }
 
         [Fact]
@@ -75,10 +76,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
             var scrapingNode = (YamlMappingNode)node.Children["scraping"];
             var scraping = new ScrapingV1();
-            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode)).Returns(scraping);
+            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode, _errorReporter.Object)).Returns(scraping);
 
             // Act
-            var defaults = _deserializer.Deserialize(node);
+            var defaults = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(scraping, defaults.Scraping);
@@ -95,10 +96,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
             // Act
-            _deserializer.Deserialize(node);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            _scrapingDeserializer.Verify(d => d.Deserialize(It.IsAny<YamlMappingNode>()), Times.Never);
+            _scrapingDeserializer.Verify(
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>()), Times.Never);
         }
     }
 }

@@ -10,9 +10,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var storageAccountResource = base.DeserializeResource(node);
+            var storageAccountResource = base.DeserializeResource(node, errorReporter);
 
             return new BlobStorageResourceV1(storageAccountResource);
         }

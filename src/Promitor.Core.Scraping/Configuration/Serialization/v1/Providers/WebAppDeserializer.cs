@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override WebAppResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override WebAppResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var webAppName = node.GetString(WebAppNameTag);
             var slotName = node.GetString(SlotNameTag);

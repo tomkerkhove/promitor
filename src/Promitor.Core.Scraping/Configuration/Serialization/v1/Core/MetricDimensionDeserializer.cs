@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        public override MetricDimensionV1 Deserialize(YamlMappingNode node)
+        public override MetricDimensionV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             return new MetricDimensionV1
             {

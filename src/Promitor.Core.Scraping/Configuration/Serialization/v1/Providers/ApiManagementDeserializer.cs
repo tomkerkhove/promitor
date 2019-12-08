@@ -17,7 +17,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override ApiManagementResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override ApiManagementResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var instanceName = node.GetString("instanceName");
             var locationName = node.GetString("locationName");

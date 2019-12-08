@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override VirtualMachineScaleSetResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override VirtualMachineScaleSetResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var scaleSetName = node.GetString(ScaleSetNameTag);
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
-using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
@@ -9,27 +8,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         private const string IntervalTag = "interval";
 
-        private readonly TimeSpan _defaultAggregationInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan DefaultAggregationInterval = TimeSpan.FromMinutes(5);
 
         public AggregationDeserializer(ILogger<AggregationDeserializer> logger) : base(logger)
         {
+            MapOptional(aggregation => aggregation.Interval, DefaultAggregationInterval);
         }
 
-        public override AggregationV1 Deserialize(YamlMappingNode node)
-        {
-            var interval = node.GetTimeSpan(IntervalTag);
-
-            var aggregation = new AggregationV1 {Interval = interval};
-
-            if (aggregation.Interval == null)
-            {
-                aggregation.Interval = _defaultAggregationInterval;
-                Logger.LogWarning(
-                    "No default aggregation was configured, falling back to {AggregationInterval}",
-                    aggregation.Interval?.ToString("g"));
-            }
-
-            return aggregation;
-        }
+        // TODO: Figure out if we want to make Interval required depending on the context
     }
 }

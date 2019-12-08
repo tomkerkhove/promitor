@@ -22,13 +22,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _metricsDeserializer = metricsDeserializer;
         }
 
-        public override MetricsDeclarationV1 Deserialize(YamlMappingNode rootNode)
+        public override MetricsDeclarationV1 Deserialize(YamlMappingNode rootNode, IErrorReporter errorReporter)
         {
             ValidateVersion(rootNode);
 
-            var azureMetadata = DeserializeAzureMetadata(rootNode);
-            var metricDefaults = DeserializeMetricDefaults(rootNode);
-            var metrics = DeserializeMetrics(rootNode);
+            var azureMetadata = DeserializeAzureMetadata(rootNode, errorReporter);
+            var metricDefaults = DeserializeMetricDefaults(rootNode, errorReporter);
+            var metrics = DeserializeMetrics(rootNode, errorReporter);
 
             return new MetricsDeclarationV1
             {
@@ -53,31 +53,31 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             }
         }
 
-        private AzureMetadataV1 DeserializeAzureMetadata(YamlMappingNode rootNode)
+        private AzureMetadataV1 DeserializeAzureMetadata(YamlMappingNode rootNode, IErrorReporter errorReporter)
         {
             if (rootNode.Children.TryGetValue("azureMetadata", out var azureMetadataNode))
             {
-                return _azureMetadataDeserializer.Deserialize((YamlMappingNode)azureMetadataNode);
+                return _azureMetadataDeserializer.Deserialize((YamlMappingNode)azureMetadataNode, errorReporter);
             }
 
             return null;
         }
 
-        private MetricDefaultsV1 DeserializeMetricDefaults(YamlMappingNode rootNode)
+        private MetricDefaultsV1 DeserializeMetricDefaults(YamlMappingNode rootNode, IErrorReporter errorReporter)
         {
             if (rootNode.Children.TryGetValue("metricDefaults", out var defaultsNode))
             {
-                return _defaultsDeserializer.Deserialize((YamlMappingNode)defaultsNode);
+                return _defaultsDeserializer.Deserialize((YamlMappingNode)defaultsNode, errorReporter);
             }
 
             return null;
         }
 
-        private List<MetricDefinitionV1> DeserializeMetrics(YamlMappingNode rootNode)
+        private List<MetricDefinitionV1> DeserializeMetrics(YamlMappingNode rootNode, IErrorReporter errorReporter)
         {
             if (rootNode.Children.TryGetValue("metrics", out var metricsNode))
             {
-                return _metricsDeserializer.Deserialize((YamlSequenceNode)metricsNode);
+                return _metricsDeserializer.Deserialize((YamlSequenceNode)metricsNode, errorReporter);
             }
 
             return null;

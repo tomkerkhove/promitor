@@ -57,7 +57,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var v1Config = _v1Deserializer.Deserialize(rootNode);
+                    var errorReporter = new ErrorReporter();
+                    var v1Config = _v1Deserializer.Deserialize(rootNode, errorReporter);
 
                     return _mapper.Map<MetricsDeclaration>(v1Config);
                 default:

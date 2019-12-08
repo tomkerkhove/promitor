@@ -29,7 +29,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _azureResourceDeserializerFactory = azureResourceDeserializerFactory;
         }
 
-        public override MetricDefinitionV1 Deserialize(YamlMappingNode node)
+        public override MetricDefinitionV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var name = node.GetString(NameTag);
             var description = node.GetString(DescriptionTag);
@@ -44,38 +44,38 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 Labels = labels
             };
 
-            DeserializeAzureMetricConfiguration(node, metricDefinition);
-            DeserializeScraping(node, metricDefinition);
-            DeserializeMetrics(node, metricDefinition);
+            DeserializeAzureMetricConfiguration(node, metricDefinition, errorReporter);
+            DeserializeScraping(node, metricDefinition, errorReporter);
+            DeserializeMetrics(node, metricDefinition, errorReporter);
 
             return metricDefinition;
         }
 
-        private void DeserializeAzureMetricConfiguration(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
+        private void DeserializeAzureMetricConfiguration(YamlMappingNode node, MetricDefinitionV1 metricDefinition, IErrorReporter errorReporter)
         {
             if (node.Children.TryGetValue(AzureMetricConfigurationTag, out var configurationNode))
             {
                 metricDefinition.AzureMetricConfiguration =
-                    _azureMetricConfigurationDeserializer.Deserialize((YamlMappingNode) configurationNode);
+                    _azureMetricConfigurationDeserializer.Deserialize((YamlMappingNode) configurationNode, errorReporter);
             }
         }
 
-        private void DeserializeScraping(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
+        private void DeserializeScraping(YamlMappingNode node, MetricDefinitionV1 metricDefinition, IErrorReporter errorReporter)
         {
             if (node.Children.TryGetValue(ScrapingTag, out var scrapingNode))
             {
-                metricDefinition.Scraping = _scrapingDeserializer.Deserialize((YamlMappingNode)scrapingNode);
+                metricDefinition.Scraping = _scrapingDeserializer.Deserialize((YamlMappingNode)scrapingNode, errorReporter);
             }
         }
 
-        private void DeserializeMetrics(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
+        private void DeserializeMetrics(YamlMappingNode node, MetricDefinitionV1 metricDefinition, IErrorReporter errorReporter)
         {
             if (metricDefinition.ResourceType != null &&
                 metricDefinition.ResourceType != ResourceType.NotSpecified &&
                 node.Children.TryGetValue(ResourcesTag, out var metricsNode))
             {
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
-                metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode);
+                metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode, errorReporter);
             }
         }
     }

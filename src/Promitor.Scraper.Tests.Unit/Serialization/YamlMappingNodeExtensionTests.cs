@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
@@ -139,6 +140,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
         public void DeserializeChild_PropertySpecified_DeserializesChild()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             const string yamlText =
 @"aggregation:
     interval: 00:05:00";
@@ -146,7 +148,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
             var deserializer = new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance);
 
             // Act
-            var aggregation = node.DeserializeChild("aggregation", deserializer);
+            var aggregation = node.DeserializeChild("aggregation", deserializer, errorReporter.Object);
 
             // Assert
             Assert.Equal(TimeSpan.FromMinutes(5), aggregation.Interval);
@@ -156,11 +158,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
         public void DeserializeChild_PropertyNotSpecified_Null()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(@"time: 00:05:30");
             var deserializer = new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance);
 
             // Act
-            var aggregation = node.DeserializeChild("aggregation", deserializer);
+            var aggregation = node.DeserializeChild("aggregation", deserializer, errorReporter.Object);
 
             // Assert
             Assert.Null(aggregation);

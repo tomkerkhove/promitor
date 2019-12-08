@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override ContainerInstanceResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override ContainerInstanceResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var containerGroup = node.GetString(ContainerGroupTag);
 

@@ -17,7 +17,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override SqlManagedInstanceResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override SqlManagedInstanceResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var instanceName = node.GetString("instanceName");
 

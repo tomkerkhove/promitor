@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override GenericResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override GenericResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var filter = node.GetString(FilterTag);
             var resourceUri = node.GetString(ResourceUriTag);

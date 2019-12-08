@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override ServiceBusQueueResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override ServiceBusQueueResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var queueName = node.GetString(QueueNameTag);
             var @namespace = node.GetString(NamespaceTag);

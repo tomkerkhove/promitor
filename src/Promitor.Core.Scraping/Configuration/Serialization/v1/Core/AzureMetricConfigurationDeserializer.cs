@@ -19,31 +19,31 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _aggregationDeserializer = aggregationDeserializer;
         }
 
-        public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node)
+        public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             return new AzureMetricConfigurationV1
             {
                 MetricName = node.GetString(MetricNameTag),
-                Dimension = DeserializeDimension(node),
-                Aggregation = DeserializeAggregation(node)
+                Dimension = DeserializeDimension(node, errorReporter),
+                Aggregation = DeserializeAggregation(node, errorReporter)
             };
         }
 
-        private MetricAggregationV1 DeserializeAggregation(YamlMappingNode node)
+        private MetricAggregationV1 DeserializeAggregation(YamlMappingNode node, IErrorReporter errorReporter)
         {
             if (node.Children.TryGetValue(AggregationTag, out var aggregationNode))
             {
-                return _aggregationDeserializer.Deserialize((YamlMappingNode)aggregationNode);
+                return _aggregationDeserializer.Deserialize((YamlMappingNode) aggregationNode, errorReporter);
             }
 
             return null;
         }
 
-        private MetricDimensionV1 DeserializeDimension(YamlMappingNode node)
+        private MetricDimensionV1 DeserializeDimension(YamlMappingNode node, IErrorReporter errorReporter)
         {
             if (node.Children.TryGetValue(DimensionTag, out var aggregationNode))
             {
-                return _dimensionDeserializer.Deserialize((YamlMappingNode)aggregationNode);
+                return _dimensionDeserializer.Deserialize((YamlMappingNode)aggregationNode, errorReporter);
             }
 
             return null;

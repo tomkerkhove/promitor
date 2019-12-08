@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override PostgreSqlResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override PostgreSqlResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var serverName = node.GetString(ServerNameTag);
 

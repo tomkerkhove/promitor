@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override ContainerRegistryResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override ContainerRegistryResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var registryName = node.GetString(RegistryNameTag);
 

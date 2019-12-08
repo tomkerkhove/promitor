@@ -14,7 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
         }
 
-        public override MetricAggregationV1 Deserialize(YamlMappingNode node)
+        public override MetricAggregationV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var aggregationType = node.GetEnum<AggregationType>(TypeTag);
 

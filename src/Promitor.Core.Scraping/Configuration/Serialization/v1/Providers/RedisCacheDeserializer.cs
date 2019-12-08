@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override RedisCacheResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override RedisCacheResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var cacheName = node.GetString(CacheNameTag);
 

@@ -17,9 +17,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override SqlServerResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override SqlServerResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var sqlServerResource = base.DeserializeResource(node);
+            var sqlServerResource = base.DeserializeResource(node, errorReporter);
 
             return new SqlDatabaseResourceV1(sqlServerResource)
             {

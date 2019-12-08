@@ -15,6 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         private readonly AzureMetricConfigurationDeserializer _deserializer;
         private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;
         private readonly Mock<IDeserializer<MetricAggregationV1>> _aggregationDeserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public AzureMetricConfigurationDeserializerTests()
         {
@@ -54,10 +55,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
 
             var aggregation = new MetricAggregationV1();
-            _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode)).Returns(aggregation);
+            _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode, _errorReporter.Object)).Returns(aggregation);
 
             // Act
-            var config = _deserializer.Deserialize(node);
+            var config = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(aggregation, config.Aggregation);
@@ -74,10 +75,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var dimensionNode = (YamlMappingNode)node.Children["dimension"];
 
             var dimension = new MetricDimensionV1();
-            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode)).Returns(dimension);
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
 
             // Act
-            var config = _deserializer.Deserialize(node);
+            var config = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(dimension, config.Dimension);

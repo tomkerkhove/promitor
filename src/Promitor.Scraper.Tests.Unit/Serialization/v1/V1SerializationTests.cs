@@ -27,6 +27,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         private readonly V1Deserializer _v1Deserializer;
         private readonly ConfigurationSerializer _configurationSerializer;
         private readonly MetricsDeclarationV1 _metricsDeclaration;
+        private readonly IErrorReporter _errorReporter = new ErrorReporter();
 
         public V1SerializationTests()
         {
@@ -130,7 +131,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             var yaml = _configurationSerializer.Serialize(_metricsDeclaration);
 
             // Act
-            var deserializedModel = _v1Deserializer.Deserialize(YamlUtils.CreateYamlNode(yaml));
+            var deserializedModel = _v1Deserializer.Deserialize(YamlUtils.CreateYamlNode(yaml), _errorReporter);
 
             // Assert
             Assert.NotNull(deserializedModel);

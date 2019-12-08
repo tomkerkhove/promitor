@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AppPlanResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override AppPlanResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var appPlanName = node.GetString(AppPlanNameTag);
 

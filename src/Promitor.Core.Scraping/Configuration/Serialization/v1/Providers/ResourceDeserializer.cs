@@ -17,9 +17,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        public override AzureResourceDefinitionV1 Deserialize(YamlMappingNode node)
+        public override AzureResourceDefinitionV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var resource = DeserializeResource(node);
+            var resource = DeserializeResource(node, errorReporter);
 
             resource.ResourceGroupName = node.GetString(ResourceGroupNameTag);
 
@@ -31,7 +31,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         ///     object with all its custom properties populated.
         /// </summary>
         /// <param name="node">The yaml node.</param>
+        /// <param name="errorReporter">Used to report errors with the deserialization process.</param>
         /// <returns>The deserialized object.</returns>
-        protected abstract TResourceDefinition DeserializeResource(YamlMappingNode node);
+        protected abstract TResourceDefinition DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter);
     }
 }

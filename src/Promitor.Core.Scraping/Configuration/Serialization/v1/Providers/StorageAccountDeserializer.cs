@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var accountName = node.GetString(AccountNameTag);
 

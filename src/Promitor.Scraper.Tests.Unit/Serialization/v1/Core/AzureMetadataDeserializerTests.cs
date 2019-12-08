@@ -1,7 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
@@ -13,6 +15,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
     public class AzureMetadataDeserializerTests
     {
         private readonly AzureMetadataDeserializer _deserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public AzureMetadataDeserializerTests()
         {
@@ -54,17 +57,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_InvalidAzureCloudSupplied_ThrowsException()
+        public void Deserialize_InvalidAzureCloudSupplied_ReportsError()
         {
             var yamlText =
                 @"azureMetadata:
     cloud: invalid";
 
             // Arrange
-            var node = YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
+            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
 
             // Act
-            Assert.Throws<ArgumentException>(() => _deserializer.Deserialize((YamlMappingNode) node));
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node.Children["cloud"], "'invalid' is not a valid value for 'cloud'."));
         }
 
         [Fact]
@@ -99,6 +105,22 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_TenantIdNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'");
+            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+
+            // Act
+            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("tenantId"))));
+        }
+
+        [Fact]
         public void Deserialize_SubscriptionIdSupplied_SetsSubscriptionId()
         {
             const string subscriptionId = "0f9d7fea-99e8-4768-8672-06a28514f77e";
@@ -130,6 +152,22 @@ $@"azureMetadata:
         }
 
         [Fact]
+        public void Deserialize_SubscriptionIdNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+
+            // Act
+            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("subscriptionId"))));
+        }
+
+        [Fact]
         public void Deserialize_ResourceGroupNameSupplied_SetsResourceGroupName()
         {
             const string resourceGroupName = "promitor-group";
@@ -158,6 +196,22 @@ $@"azureMetadata:
                 yamlText,
                 "azureMetadata",
                 a => a.ResourceGroupName);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceGroupNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+
+            // Act
+            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("resourceGroupName"))));
         }
     }
 }

@@ -21,12 +21,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _scrapingDeserializer = scrapingDeserializer;
         }
 
-        public override MetricDefaultsV1 Deserialize(YamlMappingNode node)
+        public override MetricDefaultsV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var defaults = new MetricDefaultsV1();
 
-            defaults.Aggregation = node.DeserializeChild(AggregationTag, _aggregationDeserializer);
-            defaults.Scraping = node.DeserializeChild(ScrapingTag, _scrapingDeserializer);
+            defaults.Aggregation = node.DeserializeChild(AggregationTag, _aggregationDeserializer, errorReporter);
+            defaults.Scraping = node.DeserializeChild(ScrapingTag, _scrapingDeserializer, errorReporter);
 
             return defaults;
         }

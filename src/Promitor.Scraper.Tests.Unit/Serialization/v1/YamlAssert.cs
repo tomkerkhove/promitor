@@ -1,4 +1,5 @@
 ﻿using System;
+using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Xunit;
 using YamlDotNet.RepresentationModel;
@@ -19,12 +20,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="propertyAccessor">The property to check.</param>
         public static void PropertySet<TObject, TResult>(
             IDeserializer<TObject> deserializer, string yamlText, TResult expected, Func<TObject, TResult> propertyAccessor)
+            where TObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText);
 
             // Act
-            var definition = deserializer.Deserialize(node);
+            var definition = deserializer.Deserialize(node, errorReporter.Object);
 
             // Assert
             Assert.Equal(expected, propertyAccessor(definition));
@@ -44,12 +47,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         public static void PropertySet<TObject, TBaseObject, TResult>(
             IDeserializer<TBaseObject> deserializer, string yamlText, TResult expected, Func<TObject, TResult> propertyAccessor)
             where TObject: TBaseObject
+            where TBaseObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText);
 
             // Act
-            var definition = deserializer.Deserialize(node);
+            var definition = deserializer.Deserialize(node, errorReporter.Object);
 
             // Assert
             Assert.Equal(expected, propertyAccessor((TObject)definition));
@@ -68,12 +73,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="propertyAccessor">The property to check.</param>
         public static void PropertySet<TObject, TResult>(
             IDeserializer<TObject> deserializer, string yamlText, string yamlElement, TResult expected, Func<TObject, TResult> propertyAccessor)
+            where TObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText).Children[yamlElement];
 
             // Act
-            var definition = deserializer.Deserialize((YamlMappingNode)node);
+            var definition = deserializer.Deserialize((YamlMappingNode)node, errorReporter.Object);
 
             // Assert
             Assert.Equal(expected, propertyAccessor(definition));
@@ -88,12 +95,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="propertyAccessor">The property to check.</param>
         public static void PropertyNull<TObject>(
             IDeserializer<TObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
+            where TObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText);
 
             // Act
-            var definition = deserializer.Deserialize(node);
+            var definition = deserializer.Deserialize(node, errorReporter.Object);
 
             // Assert
             Assert.Null(propertyAccessor(definition));
@@ -110,12 +119,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         public static void PropertyNull<TObject, TBaseObject>(
             IDeserializer<TBaseObject> deserializer, string yamlText, Func<TObject, object> propertyAccessor)
             where TObject: TBaseObject
+            where TBaseObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText);
 
             // Act
-            var definition = deserializer.Deserialize(node);
+            var definition = deserializer.Deserialize(node, errorReporter.Object);
 
             // Assert
             Assert.Null(propertyAccessor((TObject)definition));
@@ -132,12 +143,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
         /// <param name="yamlElement">The element to look for the property under.</param>
         public static void PropertyNull<TObject>(
             IDeserializer<TObject> deserializer, string yamlText, string yamlElement, Func<TObject, object> propertyAccessor)
+            where TObject: new()
         {
             // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode(yamlText).Children[yamlElement];
 
             // Act
-            var definition = deserializer.Deserialize((YamlMappingNode)node);
+            var definition = deserializer.Deserialize((YamlMappingNode)node, errorReporter.Object);
 
             // Assert
             Assert.Null(propertyAccessor(definition));

@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override VirtualMachineResourceV1 DeserializeResource(YamlMappingNode node)
+        protected override VirtualMachineResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var virtualMachineName = node.GetString(VirtualMachineNameTag);
 
