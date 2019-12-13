@@ -28,7 +28,7 @@ namespace Promitor.Scraper.Host
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            { 
+            {
                 app.UseDeveloperExceptionPage();
             }
 
@@ -36,7 +36,9 @@ namespace Promitor.Scraper.Host
 
             app.UsePrometheusScraper(_prometheusBaseUriPath)
                 .UseSerilog(_configuration)
-                .UseOpenApiUi();
+                .UseOpenApiUi()
+                .UseRouting()
+                .UseEndpoints(endpoints => endpoints.MapControllers());
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -45,10 +47,10 @@ namespace Promitor.Scraper.Host
             services.AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(_configuration)
-                .UseWebApi()
                 .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
                 .UseHealthChecks()
-                .ScheduleMetricScraping();
+                .ScheduleMetricScraping()
+                .UseWebApi();
         }
 
         private void ValidateRuntimeConfiguration(IApplicationBuilder app)

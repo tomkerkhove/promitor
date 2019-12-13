@@ -84,7 +84,7 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Add support for Open API with API explorer
         /// </summary>
         /// <param name="app">Application Builder</param>
-        public static void UseOpenApiUi(this IApplicationBuilder app)
+        public static IApplicationBuilder UseOpenApiUi(this IApplicationBuilder app)
         {
             // New Swagger UI
             app.UseSwagger(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
@@ -103,6 +103,8 @@ namespace Promitor.Scraper.Host.Extensions
                 swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API (OpenAPI 3.0)");
                 swaggerUiOptions.ConfigureDefaultOptions();
             });
+
+            return app;
         }
 
         /// <summary>

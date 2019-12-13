@@ -108,7 +108,8 @@ namespace Promitor.Scraper.Host.Extensions
         /// </summary>
         public static IServiceCollection UseWebApi(this IServiceCollection services)
         {
-            services.AddControllers()
+            services.AddRouting()
+                    .AddControllers()
                     .AddJsonOptions(jsonOptions =>
                     {
                         jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
