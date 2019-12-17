@@ -13,7 +13,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
         private static readonly TimeSpan DefaultInterval = TimeSpan.FromMinutes(5);
 
         private readonly Mock<IErrorReporter> errorReporter = new Mock<IErrorReporter>();
-        private readonly RegistrationConfigDeserializer deserializer = new RegistrationConfigDeserializer();
+        private readonly Mock<IDeserializer> childDeserializer = new Mock<IDeserializer>();
+        private readonly RegistrationConfigDeserializer deserializer;
+
+        public DeserializationTests()
+        {
+            deserializer = new RegistrationConfigDeserializer(childDeserializer.Object);
+        }
 
         [Fact]
         public void Deserialize_RequiredFieldSupplied_SetsField()
@@ -194,9 +200,45 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             Assert.True(result.InvertedProperty);
         }
 
+        [Fact]
+        public void Deserialize_RequiredChildObject_CanUseChildDeserializer()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"child:
+    childProperty: 123");
+            var child = new ChildConfig();
+            childDeserializer.Setup(
+                d => d.DeserializeObject((YamlMappingNode)node.Children["child"], errorReporter.Object)).Returns(child);
+
+            // Act
+            var result = deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            Assert.Same(child, result.Child);
+        }
+
+        [Fact]
+        public void Deserialize_OptionalChildObject_CanUseChildDeserializer()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"optionalChild:
+    childProperty: 123");
+            var child = new ChildConfig();
+            childDeserializer.Setup(
+                d => d.DeserializeObject((YamlMappingNode)node.Children["optionalChild"], errorReporter.Object)).Returns(child);
+
+            // Act
+            var result = deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            Assert.Same(child, result.OptionalChild);
+        }
+
         // TODO: Test for duplicate field registration
 
-        private class RegistrationConfig
+        public class RegistrationConfig
         {
             public string Name { get; set; }
             public int Age { get; set; }
@@ -208,11 +250,18 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             public TimeSpan DefaultedInterval { get; set; }
             public TimeSpan? NullableInterval { get; set; }
             public bool InvertedProperty { get; set; }
+            public ChildConfig Child { get; set; }
+            public ChildConfig OptionalChild { get; set; }
+        }
+
+        public class ChildConfig
+        {
+            public string ChildProperty { get; set; }
         }
 
         private class RegistrationConfigDeserializer: Deserializer<RegistrationConfig>
         {
-            public RegistrationConfigDeserializer() : base(NullLogger.Instance)
+            public RegistrationConfigDeserializer(IDeserializer childDeserializer) : base(NullLogger.Instance)
             {
                 MapRequired(t => t.Name);
                 MapRequired(t => t.Age);
@@ -224,6 +273,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
                 MapOptional(t => t.DefaultedInterval, DefaultInterval);
                 MapOptional(t => t.NullableInterval);
                 MapOptional(t => t.InvertedProperty, false, InvertBooleanString);
+                MapRequired(t => t.Child, childDeserializer);
+                MapOptional(t => t.OptionalChild, childDeserializer);
             }
 
             private static object InvertBooleanString(string value, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

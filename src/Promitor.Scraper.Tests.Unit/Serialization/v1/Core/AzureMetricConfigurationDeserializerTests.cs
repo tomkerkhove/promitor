@@ -45,6 +45,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_MetricNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("metricName"))));
+        }
+
+        [Fact]
         public void Deserialize_AggregationSupplied_UsesDeserializer()
         {
             // Arrange
@@ -55,7 +68,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
 
             var aggregation = new MetricAggregationV1();
-            _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode, _errorReporter.Object)).Returns(aggregation);
+            _aggregationDeserializer.Setup(
+                d => d.DeserializeObject(aggregationNode, _errorReporter.Object)).Returns(aggregation);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -75,7 +89,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var dimensionNode = (YamlMappingNode)node.Children["dimension"];
 
             var dimension = new MetricDimensionV1();
-            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
+            _dimensionDeserializer.Setup(d => d.DeserializeObject(dimensionNode, _errorReporter.Object)).Returns(dimension);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -100,6 +114,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _deserializer,
                 "metricName: ActiveMessages",
                 c => c.Aggregation);
+        }
+
+        [Fact]
+        public void Deserialize_AggregationNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("aggregation"))));
         }
     }
 }

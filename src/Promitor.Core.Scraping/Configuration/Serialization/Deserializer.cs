@@ -77,16 +77,40 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return deserializedObjects;
         }
 
+        public object DeserializeObject(YamlMappingNode node, IErrorReporter errorReporter)
+        {
+            return Deserialize(node, errorReporter);
+        }
+
         protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
             _fields[GetName(memberExpression)] = new FieldContext(memberExpression.Member as PropertyInfo, true, default(TReturn), customMapperFunc);
         }
+
+        protected void MapRequired<TReturn>(
+            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
+            where TReturn: new()
+        {
+            var memberExpression = (MemberExpression)accessorExpression.Body;
+            _fields[GetName(memberExpression)] = new FieldContext(
+                memberExpression.Member as PropertyInfo, true, default(TReturn), null, deserializer);
+        }
         
-        protected void MapOptional<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
+        protected void MapOptional<TReturn>(
+            Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
             _fields[GetName(memberExpression)] = new FieldContext(memberExpression.Member as PropertyInfo, false, defaultValue, customMapperFunc);
+        }
+
+        protected void MapOptional<TReturn>(
+            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
+            where TReturn: new()
+        {
+            var memberExpression = (MemberExpression)accessorExpression.Body;
+            _fields[GetName(memberExpression)] = new FieldContext(
+                memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer);
         }
 
         private static string GetName(MemberExpression memberExpression)
@@ -100,6 +124,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             if (fieldContext.CustomMapperFunc != null)
             {
                 return fieldContext.CustomMapperFunc(fieldNodePair.Value.ToString(), fieldNodePair, errorReporter);
+            }
+
+
+            if (fieldContext.Deserializer != null)
+            {
+                return fieldContext.Deserializer.DeserializeObject((YamlMappingNode)fieldNodePair.Value, errorReporter);
             }
 
             var propertyType = Nullable.GetUnderlyingType(fieldContext.PropertyInfo.PropertyType) ?? fieldContext.PropertyInfo.PropertyType;
@@ -146,12 +176,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
         private class FieldContext
         {
-            public FieldContext(PropertyInfo propertyInfo, bool isRequired, object defaultValue, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc)
+            public FieldContext(PropertyInfo propertyInfo, bool isRequired, object defaultValue, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc, IDeserializer deserializer = null)
             {
                 CustomMapperFunc = customMapperFunc;
                 PropertyInfo = propertyInfo;
                 IsRequired = isRequired;
                 DefaultValue = defaultValue;
+                Deserializer = deserializer;
             }
 
             public bool HasBeenSet { get; private set; }
@@ -159,6 +190,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             public bool IsRequired { get; }
             public object DefaultValue { get; }
             public Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> CustomMapperFunc { get; }
+            public IDeserializer Deserializer { get; }
 
             public void SetValue(TObject target, object value)
             {
