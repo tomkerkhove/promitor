@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -34,6 +36,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _deserializer,
                 "interval: 00:05:00",
                 a => a.Type);
+        }
+
+        [Fact]
+        public void Deserialize_TypeNotSupplied_ReportsError()
+        {
+            // Arrange
+            var errorReporter = new Mock<IErrorReporter>();
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act
+            var result = _deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("type"))));
         }
 
         [Fact]
