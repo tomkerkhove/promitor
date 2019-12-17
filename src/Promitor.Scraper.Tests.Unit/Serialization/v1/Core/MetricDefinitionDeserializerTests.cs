@@ -51,6 +51,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_NameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("description: 'Test metric'");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("name"))));
+        }
+
+        [Fact]
         public void Deserialize_DescriptionSupplied_SetsDescription()
         {
             YamlAssert.PropertySet(
@@ -64,6 +77,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         public void Deserialize_DescriptionNotSupplied_Null()
         {
             YamlAssert.PropertyNull(_deserializer, "name: metric", d => d.Description);
+        }
+
+        [Fact]
+        public void Deserialize_DescriptionNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("description"))));
         }
 
         [Fact]
@@ -83,6 +109,32 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _deserializer,
                 "name: promitor_test_metric",
                 d => d.ResourceType);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceTypeNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("resourceType"))));
+        }
+
+        [Fact]
+        public void Deserialize_ResourceType_NotSpecified_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceType: 'NotSpecified'");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node["resourceType"], "'resourceType' must not be set to 'NotSpecified'."));
         }
 
         [Fact]
@@ -117,7 +169,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var configurationNode = (YamlMappingNode)node.Children["azureMetricConfiguration"];
             var configuration = new AzureMetricConfigurationV1();
 
-            _azureMetricConfigurationDeserializer.Setup(d => d.Deserialize(configurationNode, _errorReporter.Object)).Returns(configuration);
+            _azureMetricConfigurationDeserializer.Setup(d => d.DeserializeObject(configurationNode, _errorReporter.Object)).Returns(configuration);
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -144,6 +196,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_AzureMetricConfigurationNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("azureMetricConfiguration"))));
+        }
+
+        [Fact]
         public void Deserialize_ScrapingSupplied_UsesDeserializer()
         {
             // Arrange
@@ -154,7 +219,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var scrapingNode = (YamlMappingNode)node.Children["scraping"];
             var scraping = new ScrapingV1();
 
-            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode, _errorReporter.Object)).Returns(scraping);
+            _scrapingDeserializer.Setup(d => d.DeserializeObject(scrapingNode, _errorReporter.Object)).Returns(scraping);
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -174,7 +239,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new ScrapingV1());
 
             // Act
-            var definition = _deserializer.Deserialize(node, It.IsAny<IErrorReporter>());
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Null(definition.Scraping);
@@ -229,6 +294,19 @@ resources:
 
             // Assert
             Assert.Null(definition.Resources);
+        }
+
+        [Fact]
+        public void Deserialize_ResourcesNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceType: Generic");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("resources"))));
         }
     }
 }
