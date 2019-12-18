@@ -1,11 +1,5 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Builder;
 using Prometheus.Client.AspNetCore;
-using Promitor.Core.Configuration.Model;
-using Serilog;
-using Serilog.Events;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 // ReSharper disable once CheckNamespace
