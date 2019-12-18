@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -42,6 +44,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 yamlText,
                 "scraping",
                 s => s.Schedule);
+        }
+
+        [Fact]
+        public void Deserialize_ScheduleNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: promitor");
+            var errorReporter = new Mock<IErrorReporter>();
+
+            // Act
+            var result = _deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("schedule"))));
         }
     }
 }
