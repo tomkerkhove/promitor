@@ -58,7 +58,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         }
 
         /// <inheritdoc />
-        public List<TObject> Deserialize(YamlSequenceNode nodes, IErrorReporter errorReporter)
+        public IReadOnlyCollection<TObject> Deserialize(YamlSequenceNode nodes, IErrorReporter errorReporter)
         {
             Guard.NotNull(nodes, nameof(nodes));
 

@@ -43,6 +43,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_AccountNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("accountName"))));
+        }
+
+        [Fact]
         public void Deserialize_QueueNameSupplied_SetsQueueName()
         {
             YamlAssert.PropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
@@ -62,6 +75,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_QueueNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("queueName"))));
+        }
+
+        [Fact]
         public void Deserialize_SasTokenSupplied_UsesDeserializer()
         {
             // Arrange
@@ -72,7 +98,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             var sasTokenNode = (YamlMappingNode)node.Children["sasToken"];
 
             var secret = new SecretV1();
-            _secretDeserializer.Setup(d => d.Deserialize(sasTokenNode, _errorReporter.Object)).Returns(secret);
+            _secretDeserializer.Setup(d => d.DeserializeObject(sasTokenNode, _errorReporter.Object)).Returns(secret);
 
             // Act
             var resource = (StorageQueueResourceV1)_deserializer.Deserialize(node, _errorReporter.Object);
@@ -88,6 +114,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.SasToken);
+        }
+
+        [Fact]
+        public void Deserialize_SasTokenNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("sasToken"))));
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

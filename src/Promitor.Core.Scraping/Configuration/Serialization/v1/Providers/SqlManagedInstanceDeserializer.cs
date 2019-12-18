@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
-using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
@@ -15,16 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public SqlManagedInstanceDeserializer(ILogger logger) : base(logger)
         {
-        }
-
-        protected override SqlManagedInstanceResourceV1 DeserializeResource(YamlMappingNode node, IErrorReporter errorReporter)
-        {
-            var instanceName = node.GetString("instanceName");
-
-            return new SqlManagedInstanceResourceV1
-            {
-                InstanceName = instanceName
-            };
+            MapRequired(resource => resource.InstanceName);
         }
     }
 }

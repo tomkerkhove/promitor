@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -39,6 +40,20 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-resource-group",
                 c => c.ContainerGroup);
+        }
+
+        [Fact]
+        public void Deserialize_ContainerGroupNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+            var errorReporter = new Mock<IErrorReporter>();
+
+            // Act
+            _deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("containerGroup"))));
         }
     }
 }

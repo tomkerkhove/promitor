@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -73,7 +74,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             return null;
         }
 
-        private List<MetricDefinitionV1> DeserializeMetrics(YamlMappingNode rootNode, IErrorReporter errorReporter)
+        private IReadOnlyCollection<MetricDefinitionV1> DeserializeMetrics(YamlMappingNode rootNode, IErrorReporter errorReporter)
         {
             if (rootNode.Children.TryGetValue("metrics", out var metricsNode))
             {

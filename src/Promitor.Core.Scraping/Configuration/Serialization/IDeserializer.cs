@@ -21,7 +21,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     /// An object that can deserialize a yaml node into an object.
     /// </summary>
     /// <typeparam name="TObject">The type of object that can be deserialized.</typeparam>
-    public interface IDeserializer<TObject> : IDeserializer where TObject: new()
+    public interface IDeserializer<out TObject> : IDeserializer where TObject: new()
     {
         /// <summary>
         /// Deserializes the specified node.
@@ -37,6 +37,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// <param name="node">The node to deserialize.</param>
         /// <param name="errorReporter">Used to report deserialization errors.</param>
         /// <returns>The deserialized objects.</returns>
-        List<TObject> Deserialize(YamlSequenceNode node, IErrorReporter errorReporter);
+        IReadOnlyCollection<TObject> Deserialize(YamlSequenceNode node, IErrorReporter errorReporter);
     }
 }

@@ -37,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new StorageAccountDeserializer(Logger);
+            return new FileStorageDeserializer(Logger);
         }
     }
 }

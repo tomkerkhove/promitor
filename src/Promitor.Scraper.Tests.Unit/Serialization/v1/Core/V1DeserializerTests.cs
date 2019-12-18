@@ -154,7 +154,7 @@ metricDefaults:
 metrics:
 - name: promitor_metrics_total";
             var yamlNode = YamlUtils.CreateYamlNode(config);
-            var metrics = new List<MetricDefinitionV1>();
+            var metrics = new List<MetricDefinitionV1> { new MetricDefinitionV1 { Name = "test_metric" } };
             _metricsDeserializer.Setup(
                 d => d.Deserialize(It.IsAny<YamlSequenceNode>(), It.IsAny<IErrorReporter>())).Returns(metrics);
 
@@ -162,7 +162,7 @@ metrics:
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
 
             // Assert
-            Assert.Same(metrics, declaration.Metrics);
+            Assert.Collection(declaration.Metrics, metric => Assert.Equal("test_metric", metric.Name));
         }
 
         [Fact]

@@ -260,15 +260,20 @@ resources:
             _resourceDeserializerFactory.Setup(
                 f => f.GetDeserializerFor(ResourceType.Generic)).Returns(resourceDeserializer.Object);
 
-            var resources = new List<AzureResourceDefinitionV1>();
+            var resources = new List<AzureResourceDefinitionV1>
+            {
+                new AzureResourceDefinitionV1 { ResourceGroupName = "promitor-group" }
+            };
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object)).Returns(resources);
+                d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object))
+                .Returns(resources);
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Same(resources, definition.Resources);
+            Assert.Collection(definition.Resources,
+                resource => Assert.Equal("promitor-group", resource.ResourceGroupName));
         }
 
         [Fact]
