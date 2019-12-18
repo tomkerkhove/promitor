@@ -22,7 +22,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
 
             _deserializer = new MetricDefaultsDeserializer(
-                _aggregationDeserializer.Object, _scrapingDeserializer.Object, NullLogger.Instance);
+                _aggregationDeserializer.Object, _scrapingDeserializer.Object, NullLogger<MetricDefaultsDeserializer>.Instance);
         }
 
         [Fact]

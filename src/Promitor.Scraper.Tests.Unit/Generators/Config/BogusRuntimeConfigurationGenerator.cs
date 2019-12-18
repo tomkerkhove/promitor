@@ -34,20 +34,20 @@ namespace Promitor.Scraper.Tests.Unit.Generators.Config
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Critical)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .Generate();
 
             var applicationInsightsConfiguration = new Faker<ApplicationInsightsConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Critical)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .RuleFor(containerConfiguration => containerConfiguration.InstrumentationKey, faker => faker.Random.Guid().ToString())
                 .Generate();
 
             var telemetryConfiguration = new Faker<TelemetryConfiguration>()
                 .StrictMode(true)
-                .RuleFor(telemetry => telemetry.DefaultVerbosity, faker => LogLevel.Critical)
+                .RuleFor(telemetry => telemetry.DefaultVerbosity, faker => LogLevel.Error)
                 .RuleFor(telemetry => telemetry.ContainerLogs, faker => containerLogConfiguration)
                 .RuleFor(telemetry => telemetry.ApplicationInsights, faker => applicationInsightsConfiguration)
                 .Generate();

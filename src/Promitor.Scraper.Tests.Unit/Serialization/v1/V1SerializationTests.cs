@@ -34,7 +34,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             var mapper = mapperConfiguration.CreateMapper();
 
             _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
-            _configurationSerializer = new ConfigurationSerializer(NullLogger.Instance, mapper, _v1Deserializer);
+            _configurationSerializer = new ConfigurationSerializer(NullLogger<ConfigurationSerializer>.Instance, mapper, _v1Deserializer);
 
             _metricsDeclaration = new MetricsDeclarationV1
             {
@@ -144,7 +144,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             Assert.Equal("promitor_demo_generic_queue_size", deserializedModel.Metrics.ElementAt(0).Name);
             Assert.Equal("Amount of active messages of the 'orders' queue (determined with Generic provider)", deserializedModel.Metrics.ElementAt(0).Description);
             Assert.Equal(ResourceType.Generic, deserializedModel.Metrics.ElementAt(0).ResourceType);
-            Assert.Equal(new Dictionary<string, string> {{"app", "promitor"}}, deserializedModel.Metrics.ElementAt(0).Labels);
+            Assert.Equal(new Dictionary<string, string> { { "app", "promitor" } }, deserializedModel.Metrics.ElementAt(0).Labels);
             Assert.Equal("ActiveMessages", deserializedModel.Metrics.ElementAt(0).AzureMetricConfiguration.MetricName);
             Assert.Equal(AggregationType.Average, deserializedModel.Metrics.ElementAt(0).AzureMetricConfiguration.Aggregation.Type);
             Assert.Equal(2, deserializedModel.Metrics.ElementAt(0).Resources.Count);
@@ -188,7 +188,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             Assert.Equal(ResourceType.Generic, firstMetric.ResourceType);
             Assert.Equal("promitor_demo_generic_queue_size", firstMetric.PrometheusMetricDefinition.Name);
             Assert.Equal("Amount of active messages of the 'orders' queue (determined with Generic provider)", firstMetric.PrometheusMetricDefinition.Description);
-            Assert.Collection(firstMetric.Resources, 
+            Assert.Collection(firstMetric.Resources,
                 r =>
                 {
                     var definition = Assert.IsType<GenericAzureResourceDefinition>(r);
@@ -206,7 +206,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             Assert.Equal(ResourceType.ServiceBusQueue, secondMetric.ResourceType);
             Assert.Equal("promitor_demo_servicebusqueue_queue_size", secondMetric.PrometheusMetricDefinition.Name);
             Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)", secondMetric.PrometheusMetricDefinition.Description);
-            Assert.Collection(secondMetric.Resources, 
+            Assert.Collection(secondMetric.Resources,
                 r =>
                 {
                     var definition = Assert.IsType<ServiceBusQueueResourceDefinition>(r);

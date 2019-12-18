@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
+﻿using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -9,7 +8,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public class StorageQueueDeserializerTests : ResourceDeserializerTest
+    public class StorageQueueDeserializerTests : ResourceDeserializerTest<StorageQueueDeserializer>
     {
         private readonly Mock<IDeserializer<SecretV1>> _secretDeserializer;
 
@@ -19,7 +18,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         {
             _secretDeserializer = new Mock<IDeserializer<SecretV1>>();
 
-            _deserializer = new StorageQueueDeserializer(_secretDeserializer.Object, NullLogger.Instance);
+            _deserializer = new StorageQueueDeserializer(_secretDeserializer.Object, Logger);
         }
 
         [Fact]
@@ -91,7 +90,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new StorageQueueDeserializer(new Mock<IDeserializer<SecretV1>>().Object, NullLogger.Instance);
+            return new StorageQueueDeserializer(new Mock<IDeserializer<SecretV1>>().Object, Logger);
         }
     }
 }

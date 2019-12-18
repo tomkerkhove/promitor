@@ -51,7 +51,7 @@ namespace Promitor.Core.Scraping.Prometheus
                 {
                     if (labels.ContainsKey(customLabel.Key))
                     {
-                        _logger.LogWarning("Custom label '{CustomLabelName}' was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabel.Key], customLabel.Value);
+                        _logger.LogWarning("Custom label {CustomLabelName} was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabel.Key], customLabel.Value);
                         continue;
                     }
 

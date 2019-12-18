@@ -29,7 +29,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 _metadataDeserializer.Object,
                 _defaultsDeserializer.Object,
                 _metricsDeserializer.Object,
-                NullLogger.Instance);
+                NullLogger<V1Deserializer>.Instance);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         {
             // Arrange
             var yamlNode = YamlUtils.CreateYamlNode("azureMetadata:");
-            
+
             // Act
             var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode));
 

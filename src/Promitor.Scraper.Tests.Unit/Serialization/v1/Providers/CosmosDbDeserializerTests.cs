@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -9,13 +8,13 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class CosmosDbDeserializerTests : ResourceDeserializerTest
+    public class CosmosDbDeserializerTests : ResourceDeserializerTest<CosmosDbDeserializer>
     {
         private readonly CosmosDbDeserializer _deserializer;
 
         public CosmosDbDeserializerTests()
         {
-            _deserializer = new CosmosDbDeserializer(NullLogger.Instance);
+            _deserializer = new CosmosDbDeserializer(Logger);
         }
 
         [Fact]
@@ -39,7 +38,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new CosmosDbDeserializer(NullLogger.Instance);
+            return new CosmosDbDeserializer(Logger);
         }
     }
 }

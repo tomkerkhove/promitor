@@ -14,7 +14,7 @@ pr:
     - charts/promitor-agent-scraper/*
     - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
 variables:
-  DotNet.SDK.Version: '2.2.402'
+  DotNet.SDK.Version: '3.1.100'
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
@@ -101,6 +101,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+       inputs:
+         version: '$(DotNet.Sdk.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'dotnet test'
        inputs:

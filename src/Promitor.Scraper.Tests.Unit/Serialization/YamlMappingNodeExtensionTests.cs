@@ -143,7 +143,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
 @"aggregation:
     interval: 00:05:00";
             var node = YamlUtils.CreateYamlNode(yamlText);
-            var deserializer = new AggregationDeserializer(NullLogger.Instance);
+            var deserializer = new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance);
 
             // Act
             var aggregation = node.DeserializeChild("aggregation", deserializer);
@@ -157,7 +157,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode(@"time: 00:05:30");
-            var deserializer = new AggregationDeserializer(NullLogger.Instance);
+            var deserializer = new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance);
 
             // Act
             var aggregation = node.DeserializeChild("aggregation", deserializer);

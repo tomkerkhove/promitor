@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>2.2.3</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,13 +35,13 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
-    <PackageReference Include="CronScheduler.AspNetCore" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.7" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="CronScheduler.AspNetCore" Version="2.0.0" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="1.6.0" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="3.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="4.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="3.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.0.0-rc4" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="YamlDotNet" Version="8.0.0" />
   </ItemGroup>
@@ -53,7 +53,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
-    <ProjectReference Include="..\Promitor.Core.Telemetry\Promitor.Core.Telemetry.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />
   </ItemGroup>

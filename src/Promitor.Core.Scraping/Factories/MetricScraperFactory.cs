@@ -7,7 +7,6 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
-using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
@@ -15,19 +14,16 @@ namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
-        private readonly IExceptionTracker _exceptionTracker;
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, ILogger logger, IExceptionTracker exceptionTracker)
+        public MetricScraperFactory(IConfiguration configuration, ILogger<MetricScraperFactory> logger)
         {
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
-            Guard.NotNull(exceptionTracker, nameof(exceptionTracker));
 
             _logger = logger;
             _configuration = configuration;
-            _exceptionTracker = exceptionTracker;
         }
 
         /// <summary>
@@ -41,7 +37,7 @@ namespace Promitor.Core.Scraping.Factories
             IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
-            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _logger, _exceptionTracker);
+            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _logger);
 
             switch (metricDefinitionResourceType)
             {

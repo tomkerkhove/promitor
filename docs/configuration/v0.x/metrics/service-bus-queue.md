@@ -3,7 +3,7 @@ layout: default
 title: Azure Service Bus Queue Declaration
 ---
 
-## Azure Service Bus Queue - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v0.1.0-green.svg)
+## Azure Service Bus Queue - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v0.1-green.svg)
 
 You can declare to scrape an Azure Service Bus Queue via the `ServiceBusQueue`
 resource type.

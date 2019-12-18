@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         private const string RawValueTag = "rawValue";
         private const string EnvironmentVariableTag = "environmentVariable";
 
-        public SecretDeserializer(ILogger logger) : base(logger)
+        public SecretDeserializer(ILogger<SecretDeserializer> logger) : base(logger)
         {
         }
 

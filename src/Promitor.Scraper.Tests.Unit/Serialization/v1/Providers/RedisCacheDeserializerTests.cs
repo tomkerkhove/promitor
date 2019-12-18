@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -9,13 +8,13 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class RedisCacheDeserializerTests : ResourceDeserializerTest
+    public class RedisCacheDeserializerTests : ResourceDeserializerTest<RedisCacheDeserializer>
     {
         private readonly RedisCacheDeserializer _deserializer;
 
         public RedisCacheDeserializerTests()
         {
-            _deserializer = new RedisCacheDeserializer(NullLogger.Instance);
+            _deserializer = new RedisCacheDeserializer(Logger);
         }
 
         [Fact]
@@ -39,7 +38,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new RedisCacheDeserializer(NullLogger.Instance);
+            return new RedisCacheDeserializer(Logger);
         }
     }
 }

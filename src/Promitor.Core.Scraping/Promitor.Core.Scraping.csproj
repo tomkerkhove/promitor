@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.3</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Promitor.Core.Telemetry\Promitor.Core.Telemetry.csproj" />
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />

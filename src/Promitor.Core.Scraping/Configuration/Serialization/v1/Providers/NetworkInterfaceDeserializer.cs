@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string NetworkInterfaceNameTag = "networkInterfaceName";
 
-        public NetworkInterfaceDeserializer(ILogger logger) : base(logger)
+        public NetworkInterfaceDeserializer(ILogger<NetworkInterfaceDeserializer> logger) : base(logger)
         {
         }
 

@@ -3,7 +3,7 @@ layout: default
 title: Azure Storage Queue Declaration
 ---
 
-## Azure Storage Queue - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Storage Queue - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape an Azure Queue via the `StorageQueue` resource type.
 

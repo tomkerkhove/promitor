@@ -12,19 +12,27 @@ namespace Promitor.Scraper.Host.Extensions
         ///     Add support for Open API with API explorer
         /// </summary>
         /// <param name="app">Application Builder</param>
-        public static void UseOpenApiUi(this IApplicationBuilder app)
+        public static IApplicationBuilder UseOpenApiUi(this IApplicationBuilder app)
         {
-            app.UseSwagger();
+            // New Swagger UI
+            app.UseSwagger(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
+            app.UseSwaggerUI(swaggerUiOptions =>
+            {
+                swaggerUiOptions.ConfigureDefaultOptions();
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
+                swaggerUiOptions.RoutePrefix = "api/docs";
+            });
+
+            // Deprecated Swagger UI
+            app.UseSwagger(setupAction => setupAction.SerializeAsV2 = true);
             app.UseSwaggerUI(swaggerUiOptions =>
             {
                 swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
-                swaggerUiOptions.DisplayOperationId();
-                swaggerUiOptions.EnableDeepLinking();
-                swaggerUiOptions.DocumentTitle = "Promitor API";
-                swaggerUiOptions.DocExpansion(DocExpansion.List);
-                swaggerUiOptions.DisplayRequestDuration();
-                swaggerUiOptions.EnableFilter();
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API (OpenAPI 3.0)");
+                swaggerUiOptions.ConfigureDefaultOptions();
             });
+
+            return app;
         }
 
         /// <summary>

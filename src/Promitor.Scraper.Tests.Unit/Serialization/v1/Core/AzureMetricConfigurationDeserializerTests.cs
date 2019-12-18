@@ -19,7 +19,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         {
             _aggregationDeserializer = new Mock<IDeserializer<MetricAggregationV1>>();
 
-            _deserializer = new AzureMetricConfigurationDeserializer(_aggregationDeserializer.Object, NullLogger.Instance);
+            _deserializer = new AzureMetricConfigurationDeserializer(_aggregationDeserializer.Object, NullLogger<AzureMetricConfigurationDeserializer>.Instance);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 @"aggregation:
     type: Average";
             var node = YamlUtils.CreateYamlNode(yamlText);
-            var aggregationNode = (YamlMappingNode) node.Children["aggregation"];
+            var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
 
             var aggregation = new MetricAggregationV1();
             _aggregationDeserializer.Setup(d => d.Deserialize(aggregationNode)).Returns(aggregation);

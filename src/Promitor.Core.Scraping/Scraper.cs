@@ -8,7 +8,6 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
 // ReSharper disable All
@@ -22,7 +21,6 @@ namespace Promitor.Core.Scraping
     public abstract class Scraper<TResourceDefinition> : IScraper<AzureResourceDefinition>
       where TResourceDefinition : AzureResourceDefinition
     {
-        private readonly IExceptionTracker _exceptionTracker;
         private readonly ILogger _logger;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly ScraperConfiguration _scraperConfiguration;
@@ -35,7 +33,6 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
             _logger = scraperConfiguration.Logger;
-            _exceptionTracker = scraperConfiguration.ExceptionTracker;
             _scraperConfiguration = scraperConfiguration;
             _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
@@ -70,7 +67,7 @@ namespace Promitor.Core.Scraping
                 var castedMetricDefinition = scrapeDefinition.Resource as TResourceDefinition;
                 if (castedMetricDefinition == null)
                 {
-                    throw new ArgumentException($"Could not cast metric definition of type '{scrapeDefinition.Resource.ResourceType}' to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
+                    throw new ArgumentException($"Could not cast metric definition of type {scrapeDefinition.Resource.ResourceType} to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
                 }
 
                 var aggregationInterval = scrapeDefinition.AzureMetricConfiguration.Aggregation.Interval;
@@ -82,21 +79,21 @@ namespace Promitor.Core.Scraping
                     aggregationType,
                     aggregationInterval.Value);
 
-                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
+                _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
 
                 _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)
             {
-                HandleErrorResponseException(errorResponseException);
+                HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
             }
             catch (Exception exception)
             {
-                _exceptionTracker.Track(exception);
+                _logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
             }
         }
 
-        private void HandleErrorResponseException(ErrorResponseException errorResponseException)
+        private void HandleErrorResponseException(ErrorResponseException errorResponseException, string metricName)
         {
             string reason = string.Empty;
 
@@ -127,11 +124,11 @@ namespace Promitor.Core.Scraping
                 catch (Exception)
                 {
                     // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
-                    _exceptionTracker.Track(errorResponseException);
+                    _logger.LogCritical(errorResponseException, "Failed to scrape resource for metric '{MetricName}'", metricName);
                 }
             }
 
-            _exceptionTracker.Track(new Exception(reason));
+            _logger.LogCritical(reason);
         }
 
         /// <summary>

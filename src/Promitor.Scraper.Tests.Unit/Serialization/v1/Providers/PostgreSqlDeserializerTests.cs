@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core.Scraping.Configuration.Serialization;
+﻿using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
@@ -7,13 +6,13 @@ using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
-    public class PostgreSqlDeserializerTests : ResourceDeserializerTest
+    public class PostgreSqlDeserializerTests : ResourceDeserializerTest<PostgreSqlDeserializer>
     {
         private readonly PostgreSqlDeserializer _deserializer;
 
         public PostgreSqlDeserializerTests()
         {
-            _deserializer = new PostgreSqlDeserializer(NullLogger.Instance);
+            _deserializer = new PostgreSqlDeserializer(Logger);
         }
 
         [Fact]
@@ -37,7 +36,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new PostgreSqlDeserializer(NullLogger.Instance);
+            return new PostgreSqlDeserializer(Logger);
         }
     }
 }

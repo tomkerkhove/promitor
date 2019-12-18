@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string DatabaseNameTag = "dbName";
 
-        public CosmosDbDeserializer(ILogger logger) : base(logger)
+        public CosmosDbDeserializer(ILogger<CosmosDbDeserializer> logger) : base(logger)
         {
         }
 

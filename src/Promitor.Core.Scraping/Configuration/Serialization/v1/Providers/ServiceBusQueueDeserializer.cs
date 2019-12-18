@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         private const string QueueNameTag = "queueName";
         private const string NamespaceTag = "namespace";
 
-        public ServiceBusQueueDeserializer(ILogger logger) : base(logger)
+        public ServiceBusQueueDeserializer(ILogger<ServiceBusQueueDeserializer> logger) : base(logger)
         {
         }
 

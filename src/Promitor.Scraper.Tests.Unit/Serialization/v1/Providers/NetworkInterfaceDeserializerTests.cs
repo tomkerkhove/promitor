@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -11,13 +8,13 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class NetworkInterfaceDeserializerTests : ResourceDeserializerTest
+    public class NetworkInterfaceDeserializerTests : ResourceDeserializerTest<NetworkInterfaceDeserializer>
     {
         private readonly NetworkInterfaceDeserializer _deserializer;
 
         public NetworkInterfaceDeserializerTests()
         {
-            _deserializer = new NetworkInterfaceDeserializer(new Mock<ILogger>().Object);
+            _deserializer = new NetworkInterfaceDeserializer(Logger);
         }
 
         [Fact]
@@ -41,7 +38,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new NetworkInterfaceDeserializer(NullLogger.Instance);
+            return new NetworkInterfaceDeserializer(Logger);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         private const string CacheNameTag = "cacheName";
 
-        public RedisCacheDeserializer(ILogger logger) : base(logger)
+        public RedisCacheDeserializer(ILogger<RedisCacheDeserializer> logger) : base(logger)
         {
         }
 

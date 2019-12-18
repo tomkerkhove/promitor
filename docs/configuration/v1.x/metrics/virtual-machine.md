@@ -3,7 +3,7 @@ layout: default
 title: Azure Virtual Machine Declaration
 ---
 
-## Azure Virtual Machine - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0.0-green.svg)
+## Azure Virtual Machine - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)
 
 You can declare to scrape an Azure Virtual Machine via the `VirtualMachine` resource
 type.
