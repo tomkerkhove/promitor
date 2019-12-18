@@ -3,8 +3,11 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Server;
 using Serilog;
+using Serilog.Events;
 
 namespace Promitor.Scraper.Host
 {
@@ -34,7 +37,7 @@ namespace Promitor.Scraper.Host
             var endpointUrl = $"http://+:{httpPort}";
 
             return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
-                .UseSerilog()
+
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {
                     webHostBuilder.UseKestrel(kestrelServerOptions =>
@@ -43,7 +46,8 @@ namespace Promitor.Scraper.Host
                         })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
+                        .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration));
                 });
         }
 
@@ -73,6 +77,64 @@ namespace Promitor.Scraper.Host
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
                 .CreateLogger();
+        }
+
+        public static LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
+        {
+            var telemetryConfiguration = configuration.Get<RuntimeConfiguration>()?.Telemetry;
+            if (telemetryConfiguration == null)
+            {
+                throw new Exception("Unable to get telemetry configuration");
+            }
+
+            var defaultLogLevel = DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
+            loggerConfiguration.MinimumLevel.Is(defaultLogLevel)
+                               .Enrich.FromLogContext();
+
+            var appInsightsConfig = telemetryConfiguration.ApplicationInsights;
+            if (appInsightsConfig?.IsEnabled == true)
+            {
+                var logLevel = DetermineSinkLogLevel(appInsightsConfig.Verbosity);
+                loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel);
+            }
+
+            var consoleLogConfig = telemetryConfiguration.ContainerLogs;
+            if (consoleLogConfig?.IsEnabled == true)
+            {
+                var logLevel = DetermineSinkLogLevel(consoleLogConfig.Verbosity);
+
+                loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel);
+            }
+
+            return loggerConfiguration;
+        }
+
+        private static LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
+        {
+            if (logLevel == null)
+            {
+                return LogEventLevel.Verbose;
+            }
+
+            switch (logLevel)
+            {
+                case LogLevel.Critical:
+                    return LogEventLevel.Fatal;
+                case LogLevel.Trace:
+                    return LogEventLevel.Verbose;
+                case LogLevel.Error:
+                    return LogEventLevel.Error;
+                case LogLevel.Debug:
+                    return LogEventLevel.Debug;
+                case LogLevel.Information:
+                    return LogEventLevel.Information;
+                case LogLevel.None:
+                    return LogEventLevel.Fatal;
+                case LogLevel.Warning:
+                    return LogEventLevel.Warning;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, "Unable to determine correct log event level.");
+            }
         }
     }
 }

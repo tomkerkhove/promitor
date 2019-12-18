@@ -35,7 +35,6 @@ namespace Promitor.Scraper.Host
             ValidateRuntimeConfiguration(app);
 
             app.UsePrometheusScraper(_prometheusBaseUriPath)
-                .UseSerilog(_configuration)
                 .UseOpenApiUi()
                 .UseRouting()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
