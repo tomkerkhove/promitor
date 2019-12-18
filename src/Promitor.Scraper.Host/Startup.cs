@@ -8,6 +8,7 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Scraper.Host.Extensions;
 using Promitor.Scraper.Host.Validation;
+using Serilog;
 
 namespace Promitor.Scraper.Host
 {
@@ -36,6 +37,7 @@ namespace Promitor.Scraper.Host
 
             app.UsePrometheusScraper(_prometheusBaseUriPath)
                 .UseOpenApiUi()
+                .UseSerilogRequestLogging()
                 .UseRouting()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
         }
