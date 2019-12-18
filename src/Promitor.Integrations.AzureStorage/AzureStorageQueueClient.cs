@@ -33,7 +33,7 @@ namespace Promitor.Integrations.AzureStorage
             await queue.FetchAttributesAsync();
             var messageCount = queue.ApproximateMessageCount ?? 0;
 
-            _logger.LogInformation("Current size of queue {0} is {1}", queueName, messageCount);
+            _logger.LogInformation("Current size of queue {QueueName} is {Count}", queueName, messageCount);
 
             return messageCount;
         }

@@ -61,7 +61,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Scraping Azure Monitor - {timestamp}", DateTimeOffset.Now);
+            _logger.LogInformation("Scraping Azure Monitor - {Timestamp}", DateTimeOffset.UtcNow);
 
             var scrapeConfiguration = _metricsDeclarationProvider.Get();
             try
@@ -70,13 +70,13 @@ namespace Promitor.Scraper.Host.Scheduling
             }
             catch (Exception exception)
             {
-                _logger.LogCritical(exception, $"Failed to scrape: {exception.Message}");
+                _logger.LogCritical(exception, "Failed to scrape: {Exception}", exception.Message);
             }
         }
 
         private async Task ScrapeMetric(AzureMetadata azureMetadata, ScrapeDefinition<AzureResourceDefinition> metricDefinitionDefinition)
         {
-            _logger.LogInformation("Scraping '{MetricName}' for resource type '{ResourceType}'", metricDefinitionDefinition.PrometheusMetricDefinition.Name, metricDefinitionDefinition.Resource.ResourceType);
+            _logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}", metricDefinitionDefinition.PrometheusMetricDefinition.Name, metricDefinitionDefinition.Resource.ResourceType);
 
             var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, azureMetadata, _prometheusMetricWriter, _runtimeMetricsCollector);
             await scraper.ScrapeAsync(metricDefinitionDefinition);

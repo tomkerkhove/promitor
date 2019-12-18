@@ -67,7 +67,7 @@ namespace Promitor.Core.Scraping
                 var castedMetricDefinition = scrapeDefinition.Resource as TResourceDefinition;
                 if (castedMetricDefinition == null)
                 {
-                    throw new ArgumentException($"Could not cast metric definition of type '{scrapeDefinition.Resource.ResourceType}' to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
+                    throw new ArgumentException($"Could not cast metric definition of type {scrapeDefinition.Resource.ResourceType} to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
                 }
 
                 var aggregationInterval = scrapeDefinition.AzureMetricConfiguration.Aggregation.Interval;
@@ -79,7 +79,7 @@ namespace Promitor.Core.Scraping
                     aggregationType,
                     aggregationInterval.Value);
 
-                _logger.LogInformation("Found value '{MetricValue}' for metric '{MetricName}' with aggregation interval '{AggregationInterval}'", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
+                _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
 
                 _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
