@@ -277,6 +277,29 @@ resources:
         }
 
         [Fact]
+        public void Deserialize_ResourcesSupplied_DoesNotReportWarning()
+        {
+            // Because we're handling deserializing the resources manually, we
+            // need to explicitly ignore the field to stop a warning being reported
+            // about an unknown field
+
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resources:
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("resources"))), Times.Never);
+        }
+
+        [Fact]
         public void Deserialize_ResourcesWithUnspecifiedResourceType_Null()
         {
             // Arrange
@@ -312,6 +335,28 @@ resources:
 
             // Assert
             _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("resources"))));
+        }
+
+        [Fact]
+        public void Deserialize_NoDeserializerForResourceType_ReportsError()
+        {
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resources:
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+
+            _resourceDeserializerFactory.Setup(
+                f => f.GetDeserializerFor(It.IsAny<ResourceType>())).Returns((IDeserializer<AzureResourceDefinitionV1>)null);
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                r => r.ReportError(node.Children["resourceType"], "Could not find a deserializer for resource type 'Generic'."));
         }
     }
 }

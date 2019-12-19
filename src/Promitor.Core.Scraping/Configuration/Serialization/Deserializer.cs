@@ -13,6 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     public abstract class Deserializer<TObject> : IDeserializer<TObject>
         where TObject: new()
     {
+        private readonly HashSet<string> _ignoredFields = new HashSet<string>();
         private readonly Dictionary<string, FieldContext> _fields = new Dictionary<string, FieldContext>();
 
         protected ILogger Logger { get; }
@@ -31,6 +32,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             foreach (var child in node.Children)
             {
+                if (_ignoredFields.Contains(child.Key.ToString()))
+                {
+                    continue;
+                }
+
                 if (_fields.TryGetValue(child.Key.ToString(), out var fieldContext))
                 {
                     fieldContext.SetValue(
@@ -111,6 +117,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var memberExpression = (MemberExpression)accessorExpression.Body;
             _fields[GetName(memberExpression)] = new FieldContext(
                 memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer);
+        }
+
+        protected void IgnoreField(string fieldName)
+        {
+            _ignoredFields.Add(fieldName);
         }
 
         private static string GetName(MemberExpression memberExpression)

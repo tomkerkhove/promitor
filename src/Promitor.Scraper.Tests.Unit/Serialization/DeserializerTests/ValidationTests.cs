@@ -119,6 +119,20 @@ country: Scotland");
             errorReporter.Verify(r => r.ReportError(dayValueNode, $"'twenty' is not a valid value for 'interval'. The value must be in the format 'hh:mm:ss'."));
         }
 
+        [Fact]
+        public void Deserialize_IgnoreField_DoesNotReportErrorIfFieldFound()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("customField: 1234");
+
+            // Act
+            deserializer.Deserialize(node, errorReporter.Object);
+
+            // Assert
+            errorReporter.Verify(
+                r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("customField"))), Times.Never);
+        }
+
         // TODO: Check for invalid formats (crontab expression, timespan, etc)
         // TODO: Add a test to make sure that the error is against the mapping node rather than its value for missing required fields
 
@@ -138,6 +152,7 @@ country: Scotland");
                 MapOptional(t => t.Age);
                 MapOptional(t => t.Day);
                 MapOptional(t => t.Interval);
+                IgnoreField("customField");
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             : base(logger)
         {
             MapRequired(config => config.MetricName);
-            MapRequired(config => config.Dimension, dimensionDeserializer);
+            MapOptional(config => config.Dimension, dimensionDeserializer);
             MapRequired(config => config.Aggregation, aggregationDeserializer);
         }
     }

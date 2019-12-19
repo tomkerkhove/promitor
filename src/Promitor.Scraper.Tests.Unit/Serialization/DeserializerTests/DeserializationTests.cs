@@ -236,8 +236,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             Assert.Same(child, result.OptionalChild);
         }
 
-        // TODO: Test for duplicate field registration
-
         public class RegistrationConfig
         {
             public string Name { get; set; }

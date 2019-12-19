@@ -26,9 +26,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             _v1Deserializer = v1Deserializer;
         }
 
-        public MetricsDeclaration Deserialize(string rawMetricsDeclaration)
+        public MetricsDeclaration Deserialize(string rawMetricsDeclaration, IErrorReporter errorReporter)
         {
             Guard.NotNullOrWhitespace(rawMetricsDeclaration, nameof(rawMetricsDeclaration));
+            Guard.NotNull(errorReporter, nameof(errorReporter));
 
             var input = new StringReader(rawMetricsDeclaration);
             try
@@ -36,7 +37,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 var metricsDeclarationYamlStream = new YamlStream();
                 metricsDeclarationYamlStream.Load(input);
 
-                var metricsDeclaration = InterpretYamlStream(metricsDeclarationYamlStream);
+                var metricsDeclaration = InterpretYamlStream(metricsDeclarationYamlStream, errorReporter);
 
                 return metricsDeclaration;
             }
@@ -46,7 +47,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             }
         }
 
-        private MetricsDeclaration InterpretYamlStream(YamlStream metricsDeclarationYamlStream)
+        private MetricsDeclaration InterpretYamlStream(YamlStream metricsDeclarationYamlStream, IErrorReporter errorReporter)
         {
             var document = metricsDeclarationYamlStream.Documents.First();
             var rootNode = (YamlMappingNode)document.RootNode;
@@ -57,7 +58,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             switch (specVersion)
             {
                 case SpecVersion.v1:
-                    var errorReporter = new ErrorReporter();
                     var v1Config = _v1Deserializer.Deserialize(rootNode, errorReporter);
 
                     return _mapper.Map<MetricsDeclaration>(v1Config);

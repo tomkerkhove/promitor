@@ -180,7 +180,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             var yaml = _configurationSerializer.Serialize(_metricsDeclaration);
 
             // Act
-            var runtimeModel = _configurationSerializer.Deserialize(yaml);
+            var runtimeModel = _configurationSerializer.Deserialize(yaml, _errorReporter);
 
             // Assert
             Assert.NotNull(runtimeModel);

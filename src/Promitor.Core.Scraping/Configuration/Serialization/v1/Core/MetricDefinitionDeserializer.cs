@@ -24,6 +24,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             MapOptional(definition => definition.Labels);
             MapRequired(definition => definition.AzureMetricConfiguration, azureMetricConfigurationDeserializer);
             MapOptional(definition => definition.Scraping, scrapingDeserializer);
+            IgnoreField(ResourcesTag);
         }
 
         public override MetricDefinitionV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
@@ -42,16 +43,24 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 return;
             }
 
+            var resourceTypeNode = node.Children["resourceType"];
             if (metricDefinition.ResourceType == ResourceType.NotSpecified)
             {
-                errorReporter.ReportError(node.Children["resourceType"], "'resourceType' must not be set to 'NotSpecified'.");
+                errorReporter.ReportError(resourceTypeNode, "'resourceType' must not be set to 'NotSpecified'.");
                 return;
             }
 
             if (node.Children.TryGetValue(ResourcesTag, out var metricsNode))
             {
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
-                metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode, errorReporter);
+                if (resourceDeserializer != null)
+                {
+                    metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode, errorReporter);
+                }
+                else
+                {
+                    errorReporter.ReportError(resourceTypeNode, $"Could not find a deserializer for resource type '{metricDefinition.ResourceType}'.");
+                }
             }
             else
             {
