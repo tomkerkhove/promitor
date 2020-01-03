@@ -15,7 +15,8 @@ metrics:
     resourceType: ContainerInstance
     azureMetricConfiguration:
       metricName: CpuUsage
-      dimensionName: containerName
+      dimension:
+        name: containerName
       aggregation:
         type: Average
     resources:
