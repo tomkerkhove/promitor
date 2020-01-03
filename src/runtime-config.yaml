@@ -11,7 +11,8 @@ telemetry:
   applicationInsights:
     instrumentationKey: ABC
     isEnabled: true
+    verbosity: warning
   containerLogs:
     isEnabled: true
     verbosity: trace
-  defaultVerbosity: warning
+  defaultVerbosity: trace
