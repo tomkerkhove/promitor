@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using GuardNet;
 using Promitor.Integrations.AzureMonitor;
 
@@ -96,10 +97,5 @@ namespace Promitor.Core.Scraping
         /// Labels that are related to the metric
         /// </summary>
         public Dictionary<string, string> Labels { get; } = new Dictionary<string, string>();
-
-        public override string ToString()
-        {
-            return MetricValues == null || MetricValues.Count > 0 ? "No value found" : MetricValues.Select(metric => $"'{metric.Value}': {metric.Value}").ToString();
-        }
     }
 }

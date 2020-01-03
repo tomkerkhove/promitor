@@ -63,7 +63,7 @@ namespace Promitor.Core.Scraping
                 {
                     throw new ArgumentNullException(nameof(scrapeDefinition));
                 }
-                
+
                 var castedMetricDefinition = scrapeDefinition.Resource as TResourceDefinition;
                 if (castedMetricDefinition == null)
                 {
@@ -79,7 +79,7 @@ namespace Promitor.Core.Scraping
                     aggregationType,
                     aggregationInterval.Value);
 
-                _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", scrapedMetricResult, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
+                LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
 
                 _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
@@ -90,6 +90,21 @@ namespace Promitor.Core.Scraping
             catch (Exception exception)
             {
                 _logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
+            }
+        }
+
+        private void LogMeasuredMetrics(ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)
+        {
+            foreach (var measuredMetric in scrapedMetricResult.MetricValues)
+            {
+                if (measuredMetric.IsDimensional)
+                {
+                    _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension {DimensionValue} as part of {DimensionName} dimension with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValue, measuredMetric.DimensionName, aggregationInterval);
+                }
+                else
+                {
+                    _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
+                }
             }
         }
 
@@ -106,7 +121,7 @@ namespace Promitor.Core.Scraping
             {
                 try
                 {
-                    var definition = new {error = new {code = "", message = ""}};
+                    var definition = new { error = new { code = "", message = "" } };
                     var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
 
                     if (jsonError != null && jsonError.error != null)
