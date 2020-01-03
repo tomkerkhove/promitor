@@ -8,6 +8,7 @@ Here is an overview of how we label metrics.
 There are a couple of scenarios where labels are being added:
 
 - Built-in labels
+- Metric dimension labels
 - Scaler-specific labels
 - Bring-your-own labels
 
@@ -22,6 +23,12 @@ built-in labels:
 - `subscription_id` - Id of the subscription.
 - `resource_group` - Name of the resource group.
 - `instance_name` - Name of the instance, if applicable.
+
+## Metric dimension labels
+
+Metrics support specifying a dimension which will be scraped in Azure Monitor.
+
+Every metric value will be reported under the configured metric name, but a label for the dimension and it's respective value will be added.
 
 ## Scraper-specific labels
 

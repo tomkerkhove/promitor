@@ -33,7 +33,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 ## Features
 
 - Provides scraping endpoint for Prometheus
-- Automatically scrapes Azure Monitor metrics
+- Automatically scrapes Azure Monitor metrics (single and multi-dimensional)
 - Built-in support for a variety of Azure services ([overview](configuration/v1.x/metrics#supported-azure-services))
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
@@ -63,6 +63,7 @@ and vote for features!
   - [Health](operations#health)
 - **Walkthroughs**
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough)
+- [**Frequently asked questions (FAQs)**](/faq)
 
 ## Support
 
