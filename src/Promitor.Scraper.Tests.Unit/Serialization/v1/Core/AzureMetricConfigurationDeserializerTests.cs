@@ -42,6 +42,25 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_DimensionNameSupplied_SetsDimensionName()
+        {
+            YamlAssert.PropertySet(
+                _deserializer,
+                "dimensionName: containerName",
+                "containerName",
+                a => a.DimensionName);
+        }
+
+        [Fact]
+        public void Deserialize_DimensionNameNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                a => a.DimensionName);
+        }
+
+        [Fact]
         public void Deserialize_AggregationSupplied_UsesDeserializer()
         {
             // Arrange

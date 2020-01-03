@@ -7,6 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     public class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfigurationV1>
     {
         private const string MetricNameTag = "metricName";
+        private const string DimensionNameTag = "dimensionName";
         private const string AggregationTag = "aggregation";
         private readonly IDeserializer<MetricAggregationV1> _aggregationDeserializer;
 
@@ -21,6 +22,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             return new AzureMetricConfigurationV1
             {
                 MetricName = node.GetString(MetricNameTag),
+                DimensionName = node.GetString(DimensionNameTag),
                 Aggregation = DeserializeAggregation(node)
             };
         }
