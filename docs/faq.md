@@ -3,7 +3,7 @@ layout: default
 title: Frequently asked questions (FAQs)
 ---
 
-# Are multi-dimensional metrics supported?
+## Are multi-dimensional metrics supported?
 
 Yes, every scraper supports scraping multi-dimensional metrics except for
 Azure Storage queues.
