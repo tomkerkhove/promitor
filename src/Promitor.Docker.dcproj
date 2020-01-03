@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>d61a88b9-f9bb-43e2-abd3-754e3ed32317</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/docs</DockerServiceUrl>
     <DockerServiceName>promitor.scraper</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
