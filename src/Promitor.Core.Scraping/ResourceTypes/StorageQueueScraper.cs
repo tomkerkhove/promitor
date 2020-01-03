@@ -5,6 +5,7 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureStorage;
 
 namespace Promitor.Core.Scraping.ResourceTypes
@@ -47,7 +48,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 {"queue_name", resource.QueueName}
             };
 
-            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, foundMetricValue, labels);
+            var measuredMetrics = new List<MeasuredMetric>
+            {
+                MeasuredMetric.CreateWithoutDimension(foundMetricValue)
+            };
+
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, measuredMetrics, labels);
         }
     }
 }

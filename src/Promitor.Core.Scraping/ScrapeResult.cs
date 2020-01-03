@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
+using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping
 {
@@ -11,8 +13,8 @@ namespace Promitor.Core.Scraping
         /// <param name="subscriptionId">Subscription that contains the resource that was scraped</param>
         /// <param name="resourceGroupName">Resource group name that contains the resource that was scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
-        /// <param name="metricValue">Value of the metric that was found</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, string.Empty, resourceUri, metricValue, new Dictionary<string, string>())
+        /// <param name="metricValues">Collection of metrics that were found</param>
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string resourceUri, List<MeasuredMetric> metricValues) : this(subscriptionId, resourceGroupName, string.Empty, resourceUri, metricValues, new Dictionary<string, string>())
         {
         }
 
@@ -23,9 +25,9 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceGroupName">Resource group name that contains the resource that was scraped</param>
         /// <param name="instanceName">Name of the resource that is being scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
-        /// <param name="metricValue">Value of the metric that was found</param>
+        /// <param name="metricValues">Collection of metrics that were found</param>
         /// <param name="customLabels">A collection of custom labels to add to the scraping result</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue, Dictionary<string, string> customLabels)
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, List<MeasuredMetric> metricValues, Dictionary<string, string> customLabels)
         {
             Guard.NotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Guard.NotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
@@ -35,7 +37,7 @@ namespace Promitor.Core.Scraping
             SubscriptionId = subscriptionId;
             ResourceGroupName = resourceGroupName;
             ResourceUri = resourceUri;
-            MetricValue = metricValue;
+            MetricValues = metricValues;
 
             Labels.Add("resource_group", resourceGroupName);
             Labels.Add("subscription_id", subscriptionId);
@@ -60,8 +62,8 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceGroupName">Resource group name that contains the resource that was scraped</param>
         /// <param name="instanceName">Name of the resource that is being scraped</param>
         /// <param name="resourceUri">Uri of the resource that was scraped</param>
-        /// <param name="metricValue">Value of the metric that was found</param>
-        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, double? metricValue) : this(subscriptionId, resourceGroupName, instanceName, resourceUri, metricValue, new Dictionary<string, string>())
+        /// <param name="metricValues">Collection of metrics that were found</param>
+        public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, List<MeasuredMetric> metricValues) : this(subscriptionId, resourceGroupName, instanceName, resourceUri, metricValues, new Dictionary<string, string>())
         {
         }
 
@@ -88,7 +90,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Value of the metric that was found
         /// </summary>
-        public double? MetricValue { get; }
+        public List<MeasuredMetric> MetricValues { get; }
 
         /// <summary>
         /// Labels that are related to the metric
@@ -97,7 +99,7 @@ namespace Promitor.Core.Scraping
 
         public override string ToString()
         {
-            return MetricValue == null ? "No value found" : MetricValue.ToString();
+            return MetricValues == null || MetricValues.Count > 0 ? "No value found" : MetricValues.Select(metric => $"'{metric.Value}': {metric.Value}").ToString();
         }
     }
 }
