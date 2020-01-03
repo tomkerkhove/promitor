@@ -10,6 +10,17 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
+  - name: promitor_demo_container_cpu
+    description: "The CPU of our containers in a container group."
+    resourceType: ContainerInstance
+    azureMetricConfiguration:
+      metricName: CpuUsage
+      dimensionName: containerName
+      aggregation:
+        type: Average
+    resources:
+    - containerGroup: promitor-container-group
+      resourceGroupName: promitor-sources
   - name: promitor_demo_generic_queue_size
     description: "Amount of active messages of the 'orders' queue (determined with Generic provider)"
     resourceType: Generic
@@ -20,8 +31,8 @@ metrics:
       aggregation:
         type: Average
     resources:
-      - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
-        filter: EntityName eq 'orders'
+    - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+      filter: EntityName eq 'orders'
   - name: promitor_demo_generic_namespace_size
     description: "Size of all queues in our Azure Service Bus namespace (determined with Generic provider)"
     resourceType: Generic
@@ -34,7 +45,7 @@ metrics:
         type: Average
     resources:
       # filter is deliberately omitted given filter is optional
-      - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+    - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
   - name: promitor_demo_servicebusqueue_queue_size
     description: "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)"
     resourceType: ServiceBusQueue
@@ -45,8 +56,8 @@ metrics:
         # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
         interval: 00:15:00
     resources:
-      - namespace: promitor-messaging
-        queueName: orders
+    - namespace: promitor-messaging
+      queueName: orders
   - name: promitor_demo_azurestoragequeue_queue_size
     description: "Approximate amount of messages in 'orders' queue (determined with StorageQueue provider)"
     resourceType: StorageQueue
@@ -58,10 +69,10 @@ metrics:
       aggregation:
         type: Total
     resources:
-      - accountName: promitor
-        queueName: orders
-        sasToken:
-          rawValue: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwla&se=2022-08-07T00:16:01Z&st=2019-08-06T16:16:01Z&spr=https&sig=Ik4jprS89kGIFRM0qaQpXrv0ttP3pnlhmGQuYVQ7cbA%3D"
+    - accountName: promitor
+      queueName: orders
+      sasToken:
+        rawValue: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwla&se=2022-08-07T00:16:01Z&st=2019-08-06T16:16:01Z&spr=https&sig=Ik4jprS89kGIFRM0qaQpXrv0ttP3pnlhmGQuYVQ7cbA%3D"
   - name: promitor_demo_azurestoragequeue_queue_timespentinqueue
     description: "Approximate amount of time that the oldest message has been in 'orders' queue (determined with StorageQueue provider)"
     resourceType: StorageQueue
@@ -70,10 +81,10 @@ metrics:
       aggregation:
         type: Total
     resources:
-      - accountName: promitor
-        queueName: orders
-        sasToken:
-          environmentVariable: SECRETS_STORAGEQUEUE_SAS
+    - accountName: promitor
+      queueName: orders
+      sasToken:
+        environmentVariable: SECRETS_STORAGEQUEUE_SAS
   - name: promitor_demo_azuresqldb_dtu
     description: "The DTU consumption percentage used by an Azure SQL Database."
     resourceType: SqlDatabase
@@ -82,5 +93,5 @@ metrics:
       aggregation:
         type: Average
     resources:
-      - serverName: promitor
-        databaseName: promitor-db-1
+    - serverName: promitor
+      databaseName: promitor-db-1
