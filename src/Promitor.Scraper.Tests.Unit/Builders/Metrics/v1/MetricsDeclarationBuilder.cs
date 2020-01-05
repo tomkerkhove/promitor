@@ -69,9 +69,9 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
-        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string metricDimension = "", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total", bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, metricDimension);
             var resource = new ServiceBusQueueResourceV1
             {
                 QueueName = queueName,
@@ -83,9 +83,13 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.ServiceBusQueue
             };
+
+            if (omitResource == false)
+            {
+                metric.Resources = new List<AzureResourceDefinitionV1> { resource };
+            }
 
             _metrics.Add(metric);
 
@@ -254,9 +258,9 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName)
+        private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName, string metricDimension = "")
         {
-            return new AzureMetricConfigurationV1
+            var metricConfig = new AzureMetricConfigurationV1
             {
                 MetricName = azureMetricName,
                 Aggregation = new MetricAggregationV1
@@ -264,6 +268,16 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                     Type = AggregationType.Average
                 }
             };
+
+            if (string.IsNullOrWhiteSpace(metricDimension) == false)
+            {
+                metricConfig.Dimension = new MetricDimensionV1
+                {
+                    Name = metricDimension
+                };
+            }
+
+            return metricConfig;
         }
 
         public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis", string metricDescription = "Description for a metric", string cacheName = "promitor-redis", string azureMetricName = "CacheHits")
@@ -329,7 +343,7 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> {resource},
+                Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.SqlDatabase
             };
 

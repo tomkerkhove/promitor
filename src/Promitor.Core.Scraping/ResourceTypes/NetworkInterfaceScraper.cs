@@ -20,7 +20,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
             var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.NetworkInterfaceName);
 
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
+            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
+            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri);
 
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.NetworkInterfaceName, resourceUri, foundMetricValue);
         }

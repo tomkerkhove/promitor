@@ -20,7 +20,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
+        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -34,6 +34,57 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 
             // Assert
             Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void ServiceBusQueuesMetricsDeclaration_UseEntityNameAsDimension_Blocked()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(metricDimension: "EntityName")
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+        }
+
+        [Fact]
+        public void ServiceBusQueuesMetricsDeclaration_UseAllowedDimension_Succeeded()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(metricDimension: "OperationResult")
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation is not successful");
+        }
+
+        [Fact]
+        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceInfo_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(omitResource: true)
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was successful");
         }
 
         [Fact]

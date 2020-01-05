@@ -50,6 +50,11 @@ Every metric that is being declared needs to define the following fields:
 
 Additionally, the following fields are optional:
 
+- `azureMetricConfiguration.dimension.Name` - The name of the dimension that should
+   be used to scrape a multi-dimensional metric in Azure Monitor.
+  - ☝ *Promitor simply acts as a proxy and will not validate if it's supported or
+     not, we recommend verifying that the dimension is supported in the
+     [official documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported)*
 - `scraping.schedule` - A scraping schedule for the individual metric; overrides
   the the one specified in `metricDefaults`
 
@@ -83,6 +88,8 @@ metrics:
       schedule: "0 */2 * ? * *"
     azureMetricConfiguration:
       metricName: ActiveMessages
+      dimension:
+        name: <dimension-name>
       aggregation:
         type: Total
         interval: 00:15:00

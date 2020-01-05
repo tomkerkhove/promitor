@@ -82,6 +82,7 @@ namespace Promitor.Scraper.Host.Extensions
             services.AddSingleton<IDeserializer<MetricDefaultsV1>, MetricDefaultsDeserializer>();
             services.AddSingleton<IDeserializer<MetricDefinitionV1>, MetricDefinitionDeserializer>();
             services.AddSingleton<IDeserializer<AggregationV1>, AggregationDeserializer>();
+            services.AddSingleton<IDeserializer<MetricDimensionV1>, MetricDimensionDeserializer>();
             services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();
             services.AddSingleton<IDeserializer<AzureMetricConfigurationV1>, AzureMetricConfigurationDeserializer>();
             services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();

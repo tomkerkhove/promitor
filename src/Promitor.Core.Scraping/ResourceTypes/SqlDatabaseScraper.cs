@@ -33,7 +33,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 resource.DatabaseName);
 
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri);
+            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
+            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri);
 
             var labels = new Dictionary<string, string>
             {

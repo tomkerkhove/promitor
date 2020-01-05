@@ -19,6 +19,10 @@ The following scraper-specific metric label will be added:
 
 - `entity_name` - Name of the queue
 
+Notes:
+
+- We currently do not support `EntityPath` as a dimension due to internal limitations.
+
 Example:
 
 ```yaml

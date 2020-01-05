@@ -8,6 +8,7 @@ using Promitor.Core.Configuration;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
+using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.Prometheus
 {
@@ -28,22 +29,31 @@ namespace Promitor.Core.Scraping.Prometheus
         public void ReportMetric(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapedMetricResult)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
-            var labels = DetermineLabels(metricDefinition, scrapedMetricResult);
 
-            var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Names);
-            var metricValue = DetermineMetricMeasurement(scrapedMetricResult);
-            gauge.WithLabels(labels.Values).Set(metricValue);
+            foreach (var measuredMetric in scrapedMetricResult.MetricValues)
+            {
+                var measuredMetricValue = DetermineMetricMeasurement(measuredMetric);
+                var labels = DetermineLabels(metricDefinition, scrapedMetricResult, measuredMetric);
+                
+                var gauge = Metrics.CreateGauge(metricDefinition.Name, metricDefinition.Description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Names);
+                gauge.WithLabels(labels.Values).Set(measuredMetricValue);
+            }
         }
 
-        private double DetermineMetricMeasurement(ScrapeResult scrapedMetricResult)
+        private double DetermineMetricMeasurement(MeasuredMetric scrapedMetricResult)
         {
             var metricUnavailableValue = _prometheusConfiguration.CurrentValue?.MetricUnavailableValue ?? Defaults.Prometheus.MetricUnavailableValue;
-            return scrapedMetricResult.MetricValue ?? metricUnavailableValue;
+            return scrapedMetricResult.Value ?? metricUnavailableValue;
         }
 
-        private (string[] Names, string[] Values) DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult)
+        private (string[] Names, string[] Values) DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
         {
             var labels = new Dictionary<string, string>(scrapeResult.Labels);
+
+            if (measuredMetric.IsDimensional)
+            {
+                labels.Add(measuredMetric.DimensionName, measuredMetric.DimensionValue);
+            }
 
             if (metricDefinition?.Labels?.Any() == true)
             {

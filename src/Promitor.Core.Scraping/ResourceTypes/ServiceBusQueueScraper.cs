@@ -22,7 +22,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
             var filter = $"EntityName eq '{resource.QueueName}'";
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, aggregationType, aggregationInterval, resourceUri, filter);
+            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
+            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName,dimensionName, aggregationType, aggregationInterval, resourceUri, filter);
 
             var labels = new Dictionary<string, string>
             {
