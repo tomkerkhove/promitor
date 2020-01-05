@@ -88,8 +88,8 @@ metrics:
       schedule: "0 */2 * ? * *"
     azureMetricConfiguration:
       metricName: ActiveMessages
-      # dimension:
-      #  name: <dimension-name>
+      dimension:
+        name: <dimension-name>
       aggregation:
         type: Total
         interval: 00:15:00
