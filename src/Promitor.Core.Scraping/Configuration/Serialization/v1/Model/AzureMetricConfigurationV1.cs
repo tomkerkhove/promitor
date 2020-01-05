@@ -8,9 +8,9 @@
         public string MetricName { get; set; }
 
         /// <summary>
-        /// Name of the dimension to use for a given Azure Monitor metric.
+        /// Information about the dimension of an Azure Monitor metric
         /// </summary>
-        public string DimensionName { get; set; }
+        public MetricDimensionV1 Dimension { get; set; }
 
         /// <summary>
         /// The settings for how the metric should be aggregated before being returned from Azure.

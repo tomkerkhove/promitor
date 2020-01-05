@@ -18,7 +18,7 @@ namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 
             var errorMessages = new List<string>();
 
-            var configuredDimension = metricDefinition.AzureMetricConfiguration?.DimensionName;
+            var configuredDimension = metricDefinition.AzureMetricConfiguration?.Dimension?.Name;
             if (string.IsNullOrWhiteSpace(configuredDimension) == false
                 && configuredDimension.Equals(UnsupportedEntityDimension, StringComparison.InvariantCultureIgnoreCase))
             {

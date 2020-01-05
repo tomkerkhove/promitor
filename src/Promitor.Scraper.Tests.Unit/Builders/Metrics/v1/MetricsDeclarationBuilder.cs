@@ -260,15 +260,24 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 
         private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName, string metricDimension = "")
         {
-            return new AzureMetricConfigurationV1
+            var metricConfig = new AzureMetricConfigurationV1
             {
                 MetricName = azureMetricName,
-                DimensionName = metricDimension,
                 Aggregation = new MetricAggregationV1
                 {
                     Type = AggregationType.Average
                 }
             };
+
+            if (string.IsNullOrWhiteSpace(metricDimension) == false)
+            {
+                metricConfig.Dimension = new MetricDimensionV1
+                {
+                    Name = metricDimension
+                };
+            }
+
+            return metricConfig;
         }
 
         public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis", string metricDescription = "Description for a metric", string cacheName = "promitor-redis", string azureMetricName = "CacheHits")

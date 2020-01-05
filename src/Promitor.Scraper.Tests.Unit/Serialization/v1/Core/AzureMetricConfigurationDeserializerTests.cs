@@ -13,13 +13,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
     public class AzureMetricConfigurationDeserializerTests
     {
         private readonly AzureMetricConfigurationDeserializer _deserializer;
+        private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;
         private readonly Mock<IDeserializer<MetricAggregationV1>> _aggregationDeserializer;
 
         public AzureMetricConfigurationDeserializerTests()
         {
+            _dimensionDeserializer = new Mock<IDeserializer<MetricDimensionV1>>();
             _aggregationDeserializer = new Mock<IDeserializer<MetricAggregationV1>>();
 
-            _deserializer = new AzureMetricConfigurationDeserializer(_aggregationDeserializer.Object, NullLogger<AzureMetricConfigurationDeserializer>.Instance);
+            _deserializer = new AzureMetricConfigurationDeserializer(_dimensionDeserializer.Object,_aggregationDeserializer.Object, NullLogger<AzureMetricConfigurationDeserializer>.Instance);
         }
 
         [Fact]
@@ -42,30 +44,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_DimensionNameSupplied_SetsDimensionName()
-        {
-            YamlAssert.PropertySet(
-                _deserializer,
-                "dimensionName: containerName",
-                "containerName",
-                a => a.DimensionName);
-        }
-
-        [Fact]
-        public void Deserialize_DimensionNameNotSupplied_Null()
-        {
-            YamlAssert.PropertyNull(
-                _deserializer,
-                "resourceGroupName: promitor-group",
-                a => a.DimensionName);
-        }
-
-        [Fact]
         public void Deserialize_AggregationSupplied_UsesDeserializer()
         {
             // Arrange
             const string yamlText =
-@"aggregation:
+                @"aggregation:
     type: Average";
             var node = YamlUtils.CreateYamlNode(yamlText);
             var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
@@ -78,6 +61,35 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 
             // Assert
             Assert.Same(aggregation, config.Aggregation);
+        }
+
+        [Fact]
+        public void Deserialize_DimensionSupplied_UsesDeserializer()
+        {
+            // Arrange
+            const string yamlText =
+                @"dimension:
+  name: EntityPath";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var dimensionNode = (YamlMappingNode)node.Children["dimension"];
+
+            var dimension = new MetricDimensionV1();
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode)).Returns(dimension);
+
+            // Act
+            var config = _deserializer.Deserialize(node);
+
+            // Assert
+            Assert.Same(dimension, config.Dimension);
+        }
+
+        [Fact]
+        public void Deserialize_DimensionNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull(
+                _deserializer,
+                "metricName: ActiveMessages",
+                c => c.Dimension);
         }
 
         [Fact]
