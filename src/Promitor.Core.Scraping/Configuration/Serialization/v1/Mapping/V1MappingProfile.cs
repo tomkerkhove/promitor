@@ -33,6 +33,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
+            CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
@@ -50,7 +51,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
                 .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
-                .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
+                .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
+                .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceDefinition>();
         }
     }
 }

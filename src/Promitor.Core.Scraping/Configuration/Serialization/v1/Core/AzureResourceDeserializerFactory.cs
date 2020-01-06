@@ -54,6 +54,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.SqlDatabase:
                     var sqlDatabaseLogger = _loggerFactory.CreateLogger<SqlDatabaseDeserializer>();
                     return new SqlDatabaseDeserializer(sqlDatabaseLogger);
+                case ResourceType.SqlManagedInstance:
+                    var sqlManagedInstanceLogger = _loggerFactory.CreateLogger<SqlManagedInstanceDeserializer>();
+                    return new SqlManagedInstanceDeserializer(sqlManagedInstanceLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

@@ -93,6 +93,14 @@
         <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
         </member>
+        <member name="T:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator">
+            <summary>
+            Validates <see cref="T:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator" /> objects.
+            </summary>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <inheritdoc />
+        </member>
         <member name="M:Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptionsExtensions.ConfigureDefaultOptions(Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions)">
             <summary>
             Configure the default options for our Swagger UI portal
