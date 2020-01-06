@@ -351,5 +351,31 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithSqlManagedInstanceMetric(
+            string metricName = "promitor-sql-managed-instance",
+            string azureMetricName = "cpu_percent",
+            string instanceName = "promitor-sql-instance",
+            string metricDescription = "Metric description")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new SqlManagedInstanceResourceV1
+            {
+                InstanceName = instanceName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.SqlManagedInstance
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }

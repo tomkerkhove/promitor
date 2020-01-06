@@ -116,6 +116,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
+- [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
 

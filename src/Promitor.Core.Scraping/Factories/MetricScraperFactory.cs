@@ -63,6 +63,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseScraper(scraperConfiguration);
+                case ResourceType.SqlManagedInstance:
+                    return new SqlManagedInstanceScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
