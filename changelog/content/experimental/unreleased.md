@@ -7,6 +7,7 @@ version:
 
 - {{% tag added %}} Multi-dimensional metric support ([docs](https://promitor.io/configuration/v1.x/metrics/#metrics) | [#81](https://github.com/tomkerkhove/promitor/issues/81))
 - {{% tag added %}} Azure SQL Database Scraper ([docs](https://promitor.io/configuration/v1.x/metrics/sql-database) | [#317](https://github.com/tomkerkhove/promitor/issues/317))
+- {{% tag added %}} Azure SQL Managed Instance Scraper ([docs](https://promitor.io/configuration/v1.x/metrics/sql-managed-instance) | [#381](https://github.com/tomkerkhove/promitor/issues/381))
 - {{% tag added %}} OpenAPI v3.0 support (`/api/v1/docs.json` | [docs](ttps://promitor.io/operations/#exploring-our-rest-apis) | [#734](https://github.com/tomkerkhove/promitor/issues/734))
 - {{% tag added %}} OpenAPI UI based on OpenAPI v3.0 (`/api/docs/` | [docs](ttps://promitor.io/operations/#exploring-our-rest-apis) | [#734](https://github.com/tomkerkhove/promitor/issues/734))
 - {{% tag added %}} Provide traces in Azure Application Insights ([docs](https://promitor.io/configuration/v1.x/runtime#azure-application-insights) | [#29](https://github.com/tomkerkhove/promitor/issues/29))
