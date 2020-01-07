@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.Serialization;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -23,7 +21,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             var metadata = new AzureMetadataV1();
 
-            var azureCloud = node.GetEnum<AzureCloudsV1>(CloudTag); ;
+            var azureCloud = node.GetEnum<AzureCloudsV1>(CloudTag);
             var cloud = DetermineAzureCloud(azureCloud);
 
             metadata.TenantId = node.GetString(TenantIdTag);
