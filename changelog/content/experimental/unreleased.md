@@ -5,7 +5,8 @@ weight: 1
 version:
 ---
 
-- {{% tag added %}} Multi-dimensional metric support ([docs](https://promitor.io/configuration/v1.x/metrics/#metrics) | [#81](https://github.com/tomkerkhove/promitor/issues/81))
+- {{% tag added %}} Support for all Azure clouds ([docs](https://promitor.io/configuration/v1.x/metrics/#azure) | [FAQ](https://promitor.io/faq) | [#114](https://github.com/tomkerkhove/promitor/issues/114))
+- {{% tag added %}} Multi-dimensional metric support ([docs](https://promitor.io/configuration/v1.x/metrics/#metrics) | [FAQ](https://promitor.io/faq) | [#81](https://github.com/tomkerkhove/promitor/issues/81))
 - {{% tag added %}} Azure SQL Database Scraper ([docs](https://promitor.io/configuration/v1.x/metrics/sql-database) | [#317](https://github.com/tomkerkhove/promitor/issues/317))
 - {{% tag added %}} Azure SQL Managed Instance Scraper ([docs](https://promitor.io/configuration/v1.x/metrics/sql-managed-instance) | [#381](https://github.com/tomkerkhove/promitor/issues/381))
 - {{% tag added %}} OpenAPI v3.0 support (`/api/v1/docs.json` | [docs](ttps://promitor.io/operations/#exploring-our-rest-apis) | [#734](https://github.com/tomkerkhove/promitor/issues/734))
