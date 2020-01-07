@@ -18,6 +18,8 @@ values are `v1`.
 - `azureMetadata.tenantId` - The id of the Azure tenant that will be queried.
 - `azureMetadata.subscriptionId` - The id of the default subscription to query.
 - `azureMetadata.resourceGroupName` - The name of the default resource group to query.
+- `azureMetadata.cloud` - The name of the Azure cloud to use. Options are `Global`
+ (default), `China`, `UsGov` & `Germany`.
 
 ### Metric Defaults
 
@@ -70,6 +72,7 @@ azureMetadata:
   tenantId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   subscriptionId: yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy
   resourceGroupName: promitor
+  cloud: China
 metricDefaults:
   aggregation:
     interval: 00:05:00
