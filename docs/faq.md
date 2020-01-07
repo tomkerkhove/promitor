@@ -5,8 +5,10 @@ title: Frequently asked questions (FAQs)
 
 ## What Azure clouds are supported?
 
-We support `Global` (default), `China`, `UsGov` & `Germany` Azure clouds which can be configured in the metric
- configuration under `azureMetadata`.
+We support `Global` (default), `China`, `UsGov` & `Germany` Azure clouds.
+
+This can be configured in the metric configuration under `azureMetadata`.
+
 For more information see our ['Metric Configuration' page](/configuration/v1.x/metrics/#metrics).
 
 ## Are multi-dimensional metrics supported?
