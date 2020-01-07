@@ -1,7 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
+using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
 {
@@ -16,12 +20,60 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_AzureCloudSupplied_SetsAzureCloud()
+        {
+            AzureEnvironment azureCloud = AzureEnvironment.AzureChinaCloud;
+
+            var yamlText =
+                $@"azureMetadata:
+    cloud: '{AzureCloudsV1.China}'";
+
+            YamlAssert.PropertySet(
+                _deserializer,
+                yamlText,
+                "azureMetadata",
+                azureCloud,
+                a => a.Cloud);
+        }
+
+        [Fact]
+        public void Deserialize_AzureCloudNotSupplied_SetsGlobalAzureCloud()
+        {
+            AzureEnvironment azureCloud = AzureEnvironment.AzureGlobalCloud;
+
+            var yamlText =
+                @"azureMetadata:
+    tenantId: ABC";
+
+            YamlAssert.PropertySet(
+                _deserializer,
+                yamlText,
+                "azureMetadata",
+                azureCloud,
+                a => a.Cloud);
+        }
+
+        [Fact]
+        public void Deserialize_InvalidAzureCloudSupplied_ThrowsException()
+        {
+            var yamlText =
+                @"azureMetadata:
+    cloud: invalid";
+
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
+
+            // Act
+            Assert.Throws<ArgumentException>(() => _deserializer.Deserialize((YamlMappingNode) node));
+        }
+
+        [Fact]
         public void Deserialize_TenantIdSupplied_SetsTenantId()
         {
             const string tenantId = "c8819874-9e56-4e3f-b1a8-1c0325138f27";
 
             var yamlText =
-$@"azureMetadata:
+                $@"azureMetadata:
     tenantId: '{tenantId}'";
 
             YamlAssert.PropertySet(
