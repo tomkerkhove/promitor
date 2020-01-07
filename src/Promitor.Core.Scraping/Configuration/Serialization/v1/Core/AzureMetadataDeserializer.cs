@@ -49,7 +49,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     return AzureEnvironment.AzureChinaCloud;
                 case AzureCloudsV1.Germany:
                     return AzureEnvironment.AzureGermanCloud;
-                case AzureCloudsV1.USGov:
+                case AzureCloudsV1.UsGov:
                     return AzureEnvironment.AzureUSGovernment;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), azureCloud, $"{azureCloud} is not supported yet");

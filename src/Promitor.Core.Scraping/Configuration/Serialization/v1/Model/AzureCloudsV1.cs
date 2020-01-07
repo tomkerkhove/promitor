@@ -4,7 +4,7 @@
     {
         Global,
         China,
-        USGov,
+        UsGov,
         Germany
     }
 }
