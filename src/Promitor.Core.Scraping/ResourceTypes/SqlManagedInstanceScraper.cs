@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    public class SqlManagedInstanceScraper : Scraper<SqlManagedInstanceDefinition>
+    public class SqlManagedInstanceScraper : Scraper<SqlManagedInstanceResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/managedInstances/{2}";
 
@@ -18,13 +18,13 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlManagedInstanceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlManagedInstanceResourceDefinition resourceResourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = string.Format(
                 ResourceUriTemplate,
                 AzureMetadata.SubscriptionId,
                 scrapeDefinition.ResourceGroupName,
-                resourceDefinition.InstanceName);
+                resourceResourceDefinition.InstanceName);
 
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;

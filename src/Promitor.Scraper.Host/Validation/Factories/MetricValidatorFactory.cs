@@ -35,6 +35,8 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new SqlDatabaseMetricValidator();
                 case ResourceType.SqlManagedInstance:
                     return new SqlManagedInstanceMetricValidator();
+                case ResourceType.VirtualMachineScaleSet:
+                    return new VirtualMachineScaleSetMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

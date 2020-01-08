@@ -7,21 +7,17 @@ using Promitor.Scraper.Host.Validation.MetricDefinitions.Interfaces;
 
 namespace Promitor.Scraper.Host.Validation.MetricDefinitions.ResourceTypes
 {
-    /// <summary>
-    /// Validates <see cref="SqlManagedInstanceMetricValidator" /> objects.
-    /// </summary>
-    public class SqlManagedInstanceMetricValidator : IMetricValidator
+    internal class VirtualMachineScaleSetMetricValidator : IMetricValidator
     {
-        /// <inheritdoc />
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var definition in metricDefinition.Resources.Cast<SqlManagedInstanceResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<VirtualMachineScaleSetResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(definition.InstanceName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.ScaleSetName))
                 {
-                    yield return "No instance name is configured";
+                    yield return "No virtual machine scale set name is configured";
                 }
             }
         }
