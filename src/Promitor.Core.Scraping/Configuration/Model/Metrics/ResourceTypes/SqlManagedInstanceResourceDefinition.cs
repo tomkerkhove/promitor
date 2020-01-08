@@ -3,14 +3,14 @@
     /// <summary>
     /// Represents an Azure SQL Managed Instance resource.
     /// </summary>
-    public class SqlManagedInstanceDefinition : AzureResourceDefinition
+    public class SqlManagedInstanceResourceDefinition : AzureResourceDefinition
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlManagedInstanceDefinition" /> class.
+        /// Initializes a new instance of the <see cref="SqlManagedInstanceResourceDefinition" /> class.
         /// </summary>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="instanceName">The name of the Azure SQL Managed Instance resource.</param>
-        public SqlManagedInstanceDefinition(string resourceGroupName, string instanceName)
+        public SqlManagedInstanceResourceDefinition(string resourceGroupName, string instanceName)
             : base(ResourceType.SqlManagedInstance, resourceGroupName)
         {
             InstanceName = instanceName;

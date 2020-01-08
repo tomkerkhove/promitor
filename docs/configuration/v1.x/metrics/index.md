@@ -122,6 +122,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
+- [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 

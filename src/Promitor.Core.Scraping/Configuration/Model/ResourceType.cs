@@ -14,6 +14,7 @@
         RedisCache = 9,
         PostgreSql = 10,
         SqlDatabase = 11,
-        SqlManagedInstance = 12
+        SqlManagedInstance = 12,
+        VirtualMachineScaleSet = 13
     }
 }
