@@ -52,7 +52,7 @@ namespace Promitor.Core.Scraping.Prometheus
 
             if (measuredMetric.IsDimensional)
             {
-                labels.Add(measuredMetric.DimensionName, measuredMetric.DimensionValue);
+                labels.Add(measuredMetric.DimensionName.ToLower(), measuredMetric.DimensionValue);
             }
 
             if (metricDefinition?.Labels?.Any() == true)
