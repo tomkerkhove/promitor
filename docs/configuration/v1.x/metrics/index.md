@@ -111,11 +111,13 @@ service supported by Azure Monitor.
 
 We also provide a simplified way to scrape the following Azure resources:
 
+- [Azure App Plan](app-plan)
 - [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
 - [Azure Database for PostgreSQL](postgresql)
+- [Azure Function App](function-app)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
@@ -123,6 +125,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Storage Queue](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
 - [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
+- [Azure Web App](web-app)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
