@@ -15,6 +15,9 @@
         PostgreSql = 10,
         SqlDatabase = 11,
         SqlManagedInstance = 12,
-        VirtualMachineScaleSet = 13
+        VirtualMachineScaleSet = 13,
+        AppPlan = 14,
+        WebApp = 15,
+        FunctionApp = 16
     }
 }

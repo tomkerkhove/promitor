@@ -67,6 +67,12 @@ namespace Promitor.Core.Scraping.Factories
                     return new SqlManagedInstanceScraper(scraperConfiguration);
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetScraper(scraperConfiguration);
+                case ResourceType.AppPlan:
+                    return new AppPlanScraper(scraperConfiguration);
+                case ResourceType.WebApp:
+                    return new WebAppScraper(scraperConfiguration);
+                case ResourceType.FunctionApp:
+                    return new FunctionAppScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
