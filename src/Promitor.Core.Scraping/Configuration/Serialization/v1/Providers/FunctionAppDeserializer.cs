@@ -8,6 +8,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     public class FunctionAppDeserializer : ResourceDeserializer
     {
         private const string FunctionAppNameTag = "functionAppName";
+        private const string SlotNameTag = "slotName";
 
         public FunctionAppDeserializer(ILogger<FunctionAppDeserializer> logger) : base(logger)
         {
@@ -16,10 +17,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
         {
             var functionAppName = node.GetString(FunctionAppNameTag);
+            var slotName = node.GetString(SlotNameTag);
 
             return new FunctionAppResourceV1
             {
-                FunctionAppName = functionAppName
+                FunctionAppName = functionAppName,
+                SlotName = slotName
             };
         }
     }

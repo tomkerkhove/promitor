@@ -14,6 +14,10 @@ The following fields need to be provided:
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftwebsites-functions).
 
+The following scraper-specific metric label will be added:
+
+- `slot_name` - Name of the deployment slot. If none is specified, `production` will be used.
+
 Example:
 
 ```yaml

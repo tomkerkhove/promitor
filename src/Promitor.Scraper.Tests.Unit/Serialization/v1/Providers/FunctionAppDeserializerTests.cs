@@ -36,6 +36,25 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 r => r.FunctionAppName);
         }
 
+        [Fact]
+        public void Deserialize_SlotNameSupplied_SetsName()
+        {
+            YamlAssert.PropertySet<FunctionAppResourceV1, AzureResourceDefinitionV1, string>(
+                _deserializer,
+                "slotName: staging",
+                "staging",
+                r => r.SlotName);
+        }
+
+        [Fact]
+        public void Deserialize_SlotNameNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull<FunctionAppResourceV1, AzureResourceDefinitionV1>(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                r => r.SlotName);
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new FunctionAppDeserializer(Logger);
