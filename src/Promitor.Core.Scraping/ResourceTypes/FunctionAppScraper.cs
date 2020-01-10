@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 {
     internal class FunctionAppScraper : Scraper<FunctionAppResourceDefinition>
     {
-        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Web/sites/{2}/slots/{3}";
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Web/sites/{2}";
 
         public FunctionAppScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
@@ -19,7 +19,13 @@ namespace Promitor.Core.Scraping.ResourceTypes
         protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, FunctionAppResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var slotName = string.IsNullOrWhiteSpace(resource.SlotName) ? "production" : resource.SlotName;
-            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.FunctionAppName, slotName);
+            var resourceUri = string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.FunctionAppName);
+            
+            // Production slot should not be suffixed in resource URI
+            if (slotName != "production")
+            {
+                resourceUri += $"/slots/{slotName}";
+            }
 
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
             var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
