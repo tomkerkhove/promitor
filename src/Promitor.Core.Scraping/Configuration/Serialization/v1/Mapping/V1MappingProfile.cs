@@ -35,6 +35,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
             CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
+            CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
+            CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
+            CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
@@ -54,7 +57,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
                 .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>()
-                .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
+                .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
+                .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
+                .Include<WebAppResourceV1, WebAppResourceDefinition>()
+                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>();
         }
     }
 }
