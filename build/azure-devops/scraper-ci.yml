@@ -14,7 +14,7 @@ pr:
     - charts/promitor-agent-scraper/*
     - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
 variables:
-  DotNet.SDK.Version: '3.1.100'
+  DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
