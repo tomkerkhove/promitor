@@ -22,18 +22,18 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
-        <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UseOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
-            <summary>
-                Add support for Open API with API explorer
-            </summary>
-            <param name="app">Application Builder</param>
-        </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
             <summary>
                 Add support for exposing a prometheus scraping endpoint
             </summary>
             <param name="app">Application Builder</param>
             <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
+        </member>
+        <member name="M:Promitor.Scraper.Host.Extensions.IApplicationBuilderExtensions.ExposeOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+                Add support for Open API with API explorer
+            </summary>
+            <param name="app">Application Builder</param>
         </member>
         <member name="M:Promitor.Scraper.Host.Extensions.IServiceCollectionExtensions.ScheduleMetricScraping(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
