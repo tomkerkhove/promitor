@@ -10,7 +10,7 @@ COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Scraper.Host/* Promitor.Scraper.Host/
 RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release --output app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.0-alpine as runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.1-alpine as runtime
 WORKDIR /app
 COPY --from=build /src/app .
 
