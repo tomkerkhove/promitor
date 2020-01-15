@@ -51,8 +51,7 @@ This requires the following steps:
 
 ## Scraping
 
-1. Implement a scraper that inherits from `Scraper<TResourceDefinition>`. This will
-  specify how to call Azure Monitor.
+1. Implement a scraper, that inherits from `AzureMonitorScraper<TResourceDefinition>`, which will specify what resource to scrape with Azure Monitor.
 2. Hook your new scraper in our `MetricScraperFactory` which determines what scraper
   to use for the passed configuration.
 
