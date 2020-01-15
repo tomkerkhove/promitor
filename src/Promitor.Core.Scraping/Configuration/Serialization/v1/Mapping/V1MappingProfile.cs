@@ -44,7 +44,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MetricDefinitionV1, MetricDefinition>()
                 .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1));
             
-            CreateMap<AzureResourceDefinitionV1, AzureResourceDefinition>()
+            CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()

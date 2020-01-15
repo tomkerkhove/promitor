@@ -9,5 +9,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         }
 
         public string ScaleSetName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => ScaleSetName;
     }
 }

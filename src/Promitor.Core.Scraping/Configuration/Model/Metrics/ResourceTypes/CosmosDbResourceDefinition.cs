@@ -9,5 +9,8 @@
         }
 
         public string DbName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => DbName;
     }
 }

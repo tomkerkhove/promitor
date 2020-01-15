@@ -4,19 +4,8 @@
     ///     Describes a resource in Azure that can be scraped. Inheriting classes can add whatever
     ///     additional information is required to scrape a particular Azure resource.
     /// </summary>
-    public abstract class AzureResourceDefinition : IAzureResourceDefinition
+    public interface IAzureResourceDefinition
     {
-        /// <summary>
-        ///     Constructor
-        /// </summary>
-        /// <param name="resourceType">Type of resource that is configured</param>
-        /// <param name="resourceGroupName">Specify a resource group to scrape that defers from the default resource group.</param>
-        protected AzureResourceDefinition(ResourceType resourceType, string resourceGroupName)
-        {
-            ResourceType = resourceType;
-            ResourceGroupName = resourceGroupName;
-        }
-
         /// <summary>
         ///     Type of resource that is configured
         /// </summary>
@@ -28,7 +17,13 @@
         /// </summary>
         public string ResourceGroupName { get; }
 
-        /// <inheritdoc />
-        public abstract string GetResourceName();
+        /// <summary>
+        ///     Gets the name of the resource
+        /// </summary>
+        /// <remarks>This should return the name of the main resource</remarks>
+        /// <example>
+        ///     For an Azure SQL Database it should be the name of the DB, not the server
+        /// </example>
+        string GetResourceName();
     }
 }

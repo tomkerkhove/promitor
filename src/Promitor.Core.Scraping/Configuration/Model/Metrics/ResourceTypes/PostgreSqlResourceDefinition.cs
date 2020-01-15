@@ -9,5 +9,8 @@
         }
 
         public string ServerName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => ServerName;
     }
 }

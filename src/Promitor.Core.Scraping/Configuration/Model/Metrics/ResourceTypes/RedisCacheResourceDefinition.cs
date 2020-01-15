@@ -9,5 +9,8 @@
         }
 
         public string CacheName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => CacheName;
     }
 }

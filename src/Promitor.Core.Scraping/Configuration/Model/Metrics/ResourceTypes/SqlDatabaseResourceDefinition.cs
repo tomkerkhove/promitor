@@ -27,5 +27,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         /// The name of the database.
         /// </summary>
         public string DatabaseName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => DatabaseName;
     }
 }

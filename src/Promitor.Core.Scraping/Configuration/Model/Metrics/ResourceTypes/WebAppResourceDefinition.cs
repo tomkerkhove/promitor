@@ -1,6 +1,6 @@
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class WebAppResourceDefinition : AzureResourceDefinition
+    public class WebAppResourceDefinition : AzureResourceDefinition, IAppServiceResourceDefinition
     {
         public WebAppResourceDefinition(string resourceGroupName, string webAppName, string slotName)
             : base(ResourceType.WebApp, resourceGroupName)
@@ -18,5 +18,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         /// The name of the deployment slot.
         /// </summary>
         public string SlotName { get; set; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => WebAppName;
     }
 }
