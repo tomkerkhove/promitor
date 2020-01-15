@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Configuration/* Promitor.Core.Configuration/
