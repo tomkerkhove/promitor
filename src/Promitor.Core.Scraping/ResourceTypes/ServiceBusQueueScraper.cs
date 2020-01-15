@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ServiceBusQueueResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.Namespace);
         }

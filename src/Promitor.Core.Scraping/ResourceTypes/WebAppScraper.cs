@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override string BuildResourceUriWithoutDeploymentSlot(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, WebAppResourceDefinition resource)
+        protected override string BuildResourceUriWithoutDeploymentSlot(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, WebAppResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.WebAppName);
         }

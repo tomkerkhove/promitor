@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ContainerRegistryResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ContainerRegistryResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.RegistryName);
         }

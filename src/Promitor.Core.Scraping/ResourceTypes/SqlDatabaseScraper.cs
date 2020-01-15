@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlDatabaseResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, SqlDatabaseResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.ServerName, resource.DatabaseName);
         }

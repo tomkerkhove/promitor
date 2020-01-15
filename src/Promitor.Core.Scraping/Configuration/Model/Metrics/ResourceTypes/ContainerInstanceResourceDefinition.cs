@@ -9,5 +9,8 @@
         }
 
         public string ContainerGroup { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => ContainerGroup;
     }
 }

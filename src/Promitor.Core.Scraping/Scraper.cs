@@ -10,20 +10,17 @@ using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
-// ReSharper disable All
-
 namespace Promitor.Core.Scraping
 {
     /// <summary>
     ///     A generic scraper
     /// </summary>
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
-    public abstract class Scraper<TResourceDefinition> : IScraper<AzureResourceDefinition>
-      where TResourceDefinition : AzureResourceDefinition
+    public abstract class Scraper<TResourceDefinition> : IScraper<IAzureResourceDefinition>
+      where TResourceDefinition : class, IAzureResourceDefinition
     {
         private readonly ILogger _logger;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
-        private readonly ScraperConfiguration _scraperConfiguration;
 
         /// <summary>
         ///     Constructor
@@ -33,7 +30,6 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
             _logger = scraperConfiguration.Logger;
-            _scraperConfiguration = scraperConfiguration;
             _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
             AzureMetadata = scraperConfiguration.AzureMetadata;
@@ -46,31 +42,31 @@ namespace Promitor.Core.Scraping
         protected AzureMetadata AzureMetadata { get; }
 
         /// <summary>
-        ///     Default configuration for metrics
-        /// </summary>
-        protected MetricDefaults MetricDefaults { get; }
-
-        /// <summary>
         ///     Client to interact with Azure Monitor
         /// </summary>
         protected AzureMonitorClient AzureMonitorClient { get; }
 
-        public async Task ScrapeAsync(ScrapeDefinition<AzureResourceDefinition> scrapeDefinition)
+        public async Task ScrapeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
         {
+            if (scrapeDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(scrapeDefinition));
+            }
+
+            var aggregationInterval = scrapeDefinition.AzureMetricConfiguration?.Aggregation?.Interval;
+            if (aggregationInterval == null)
+            {
+                throw new ArgumentNullException(nameof(scrapeDefinition));
+            }
+
             try
             {
-                if (scrapeDefinition == null)
-                {
-                    throw new ArgumentNullException(nameof(scrapeDefinition));
-                }
-
                 var castedMetricDefinition = scrapeDefinition.Resource as TResourceDefinition;
                 if (castedMetricDefinition == null)
                 {
                     throw new ArgumentException($"Could not cast metric definition of type {scrapeDefinition.Resource.ResourceType} to {typeof(TResourceDefinition)}. Payload: {JsonConvert.SerializeObject(scrapeDefinition)}");
                 }
 
-                var aggregationInterval = scrapeDefinition.AzureMetricConfiguration.Aggregation.Interval;
                 var aggregationType = scrapeDefinition.AzureMetricConfiguration.Aggregation.Type;
                 var scrapedMetricResult = await ScrapeResourceAsync(
                     AzureMetadata.SubscriptionId,
@@ -93,7 +89,7 @@ namespace Promitor.Core.Scraping
             }
         }
 
-        private void LogMeasuredMetrics(ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)
+        private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)
         {
             foreach (var measuredMetric in scrapedMetricResult.MetricValues)
             {
@@ -156,7 +152,7 @@ namespace Promitor.Core.Scraping
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         protected abstract Task<ScrapeResult> ScrapeResourceAsync(
             string subscriptionId,
-            ScrapeDefinition<AzureResourceDefinition> scrapeDefinition,
+            ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition,
             TResourceDefinition resourceDefinition,
             AggregationType aggregationType,
             TimeSpan aggregationInterval);
@@ -168,6 +164,6 @@ namespace Promitor.Core.Scraping
         /// <param name="scrapeDefinition">Contains all the information needed to scrape the resource.</param>
         /// <param name="resource">Contains the resource cast to the specific resource type.</param>
         /// <returns>Uri of Azure resource</returns>
-        protected abstract string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
+        protected abstract string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
     }
 }

@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
-// ReSharper disable All
-
 namespace Promitor.Core.Scraping
 {
     /// <summary>
@@ -13,7 +11,7 @@ namespace Promitor.Core.Scraping
     /// </summary>
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class AzureMonitorScraper<TResourceDefinition> : Scraper<TResourceDefinition>
-        where TResourceDefinition : AzureResourceDefinition
+        where TResourceDefinition : class, IAzureResourceDefinition
     {
         /// <summary>
         ///     Constructor
@@ -24,7 +22,7 @@ namespace Promitor.Core.Scraping
         }
 
         /// <inheritdoc />
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, TResourceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
             var resourceUri = BuildResourceUri(AzureMetadata.SubscriptionId, scrapeDefinition, resourceDefinition);
 
@@ -33,11 +31,9 @@ namespace Promitor.Core.Scraping
             var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
 
-            // TODO: Get instance name
-            var instanceName = "foo";
-
+            var instanceName = resourceDefinition.GetResourceName();
             var metricLabels = DetermineMetricLabels(resourceDefinition);
-
+            
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, instanceName, resourceUri, foundMetricValue, metricLabels);
         }
 

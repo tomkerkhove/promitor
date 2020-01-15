@@ -10,7 +10,7 @@ namespace Promitor.Core.Scraping
     /// </summary>
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class AppServiceScraper<TResourceDefinition> : AzureMonitorScraper<TResourceDefinition>
-      where TResourceDefinition : AzureResourceDefinition, IAppServiceResourceDefinition
+      where TResourceDefinition : class, IAppServiceResourceDefinition
     {
         /// <summary>
         ///     Constructor
@@ -27,10 +27,10 @@ namespace Promitor.Core.Scraping
         /// <param name="scrapeDefinition">Contains all the information needed to scrape the resource.</param>
         /// <param name="resource">Contains the resource cast to the specific resource type.</param>
         /// <returns>Uri of Azure resource</returns>
-        protected abstract string BuildResourceUriWithoutDeploymentSlot(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
+        protected abstract string BuildResourceUriWithoutDeploymentSlot(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
 
         /// <inheritdoc />
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, TResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resource)
         {
             var slotName = DetermineSlotName(resource);
             var resourceUri = BuildResourceUriWithoutDeploymentSlot(subscriptionId, scrapeDefinition, resource);

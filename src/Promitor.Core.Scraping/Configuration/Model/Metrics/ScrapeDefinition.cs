@@ -5,7 +5,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     /// <summary>
     /// Defines an individual Azure resource to be scraped.
     /// </summary>
-    public class ScrapeDefinition<TResourceDefinition> where TResourceDefinition: AzureResourceDefinition
+    public class ScrapeDefinition<TResourceDefinition> where TResourceDefinition : class, IAzureResourceDefinition
     {
         /// <summary>
         /// Creates a new instance of the <see cref="ScrapeDefinition{TResourceDefinition}"/> class.

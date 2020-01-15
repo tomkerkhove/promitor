@@ -11,5 +11,8 @@
 
         public string Namespace { get; }
         public string QueueName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => QueueName;
     }
 }

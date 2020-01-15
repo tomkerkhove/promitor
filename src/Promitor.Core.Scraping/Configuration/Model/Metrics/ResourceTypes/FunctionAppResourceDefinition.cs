@@ -17,5 +17,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         /// The name of the deployment slot.
         /// </summary>
         public string SlotName { get; set; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => FunctionAppName;
     }
 }
