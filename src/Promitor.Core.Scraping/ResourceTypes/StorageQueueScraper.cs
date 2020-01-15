@@ -55,5 +55,10 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, measuredMetrics, labels);
         }
+
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource)
+        {
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
+        }
     }
 }

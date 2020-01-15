@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
+﻿using System.Collections.Generic;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
@@ -10,39 +7,28 @@ namespace Promitor.Core.Scraping.ResourceTypes
     /// <summary>
     /// Scrapes an Azure SQL Database.
     /// </summary>
-    public class SqlDatabaseScraper : Scraper<SqlDatabaseResourceDefinition>
+    public class SqlDatabaseScraper : AzureMonitorScraper<SqlDatabaseResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Sql/servers/{2}/databases/{3}";
 
-        /// <summary>
-        /// Initializes an instance of the <see cref="SqlDatabaseScraper" /> class.
-        /// </summary>
-        /// <param name="scraperConfiguration">The scraper configuration</param>
         public SqlDatabaseScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlDatabaseResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, SqlDatabaseResourceDefinition resource)
         {
-            var resourceUri = string.Format(
-                ResourceUriTemplate,
-                AzureMetadata.SubscriptionId,
-                scrapeDefinition.ResourceGroupName,
-                resource.ServerName,
-                resource.DatabaseName);
+            return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.ServerName, resource.DatabaseName);
+        }
 
-            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri);
+        protected override Dictionary<string, string> DetermineMetricLabels(SqlDatabaseResourceDefinition resourceDefinition)
+        {
+            var metricLabels = base.DetermineMetricLabels(resourceDefinition);
 
-            var labels = new Dictionary<string, string>
-            {
-                {"server", resource.ServerName},
-                {"database", resource.DatabaseName}
-            };
+            metricLabels.TryAdd("server", resourceDefinition.ServerName);
+            metricLabels.TryAdd("database", resourceDefinition.DatabaseName);
 
-            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, null, resourceUri, foundMetricValue, labels);
+            return metricLabels;
         }
     }
 }

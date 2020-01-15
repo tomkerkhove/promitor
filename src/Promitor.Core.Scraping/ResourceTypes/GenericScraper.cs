@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
+﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    internal class GenericScraper : Scraper<GenericAzureResourceDefinition>
+    internal class GenericScraper : AzureMonitorScraper<GenericAzureResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/{2}";
 
@@ -15,14 +12,9 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, GenericAzureResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, GenericAzureResourceDefinition resource)
         {
-            var resourceUri = string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.ResourceUri);
-            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName,dimensionName, aggregationType, aggregationInterval, resourceUri, resource.Filter);
-
-            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceUri, foundMetricValue);
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.ResourceUri);
         }
     }
 }

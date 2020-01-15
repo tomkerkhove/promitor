@@ -15,7 +15,7 @@ using Promitor.Integrations.AzureMonitor;
 namespace Promitor.Core.Scraping
 {
     /// <summary>
-    ///     Azure Monitor Scraper
+    ///     A generic scraper
     /// </summary>
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class Scraper<TResourceDefinition> : IScraper<AzureResourceDefinition>
@@ -160,5 +160,14 @@ namespace Promitor.Core.Scraping
             TResourceDefinition resourceDefinition,
             AggregationType aggregationType,
             TimeSpan aggregationInterval);
+
+        /// <summary>
+        /// Builds the URI of the resource to scrape
+        /// </summary>
+        /// <param name="subscriptionId">Subscription id in which the resource lives</param>
+        /// <param name="scrapeDefinition">Contains all the information needed to scrape the resource.</param>
+        /// <param name="resource">Contains the resource cast to the specific resource type.</param>
+        /// <returns>Uri of Azure resource</returns>
+        protected abstract string BuildResourceUri(string subscriptionId, ScrapeDefinition<AzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
     }
 }

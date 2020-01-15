@@ -1,6 +1,6 @@
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class FunctionAppResourceDefinition : AzureResourceDefinition
+    public class FunctionAppResourceDefinition : AzureResourceDefinition, IAppServiceResourceDefinition
     {
         public FunctionAppResourceDefinition(string resourceGroupName, string functionAppName)
             : base(ResourceType.FunctionApp, resourceGroupName)
