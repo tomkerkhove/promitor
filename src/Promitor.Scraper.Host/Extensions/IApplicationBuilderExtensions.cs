@@ -33,22 +33,22 @@ namespace Promitor.Scraper.Host.Extensions
         public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app)
         {
             // New Swagger UI
-            app.UseOpenApi(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
-            app.UseOpenApiUi(swaggerUiOptions =>
-            {
-                swaggerUiOptions.ConfigureDefaultOptions();
-                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
-                swaggerUiOptions.RoutePrefix = "api/docs";
-            });
+            app.UseOpenApi(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json")
+               .UseOpenApiUi(swaggerUiOptions =>
+               {
+                   swaggerUiOptions.ConfigureDefaultOptions();
+                   swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API");
+                   swaggerUiOptions.RoutePrefix = "api/docs";
+               });
 
             // Deprecated Swagger UI
-            app.UseOpenApi(setupAction => setupAction.SerializeAsV2 = true);
-            app.UseOpenApiUi(swaggerUiOptions =>
-            {
-                swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
-                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API (OpenAPI 3.0)");
-                swaggerUiOptions.ConfigureDefaultOptions();
-            });
+            app.UseOpenApi(setupAction => setupAction.SerializeAsV2 = true)
+               .UseOpenApiUi(swaggerUiOptions =>
+               {
+                   swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", "Promitor API");
+                   swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor API (OpenAPI 3.0)");
+                   swaggerUiOptions.ConfigureDefaultOptions();
+               });
 
             return app;
         }
@@ -65,12 +65,11 @@ namespace Promitor.Scraper.Host.Extensions
         }
 
         // This is based on Swashbuckles' UseOpenApi, but they are reusing existing SwaggerUIOptions which is not ideal since we want to support OpenAPI 2.0 & 3.0
-        private static IApplicationBuilder UseOpenApiUi(this IApplicationBuilder app, Action<SwaggerUIOptions> setupAction)
+        private static void UseOpenApiUi(this IApplicationBuilder app, Action<SwaggerUIOptions> setupAction)
         {
             SwaggerUIOptions swaggerUiOptions = new SwaggerUIOptions();
             setupAction?.Invoke(swaggerUiOptions);
             app.UseMiddleware<SwaggerUIMiddleware>((object)swaggerUiOptions);
-            return app;
         }
     }
 }
