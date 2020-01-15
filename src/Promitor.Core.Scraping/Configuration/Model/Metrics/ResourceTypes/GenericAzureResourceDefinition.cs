@@ -11,5 +11,8 @@
 
         public string Filter { get; }
         public string ResourceUri { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => null;
     }
 }

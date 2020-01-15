@@ -20,5 +20,8 @@
         /// The name of the Azure SQL Managed Instance resource.
         /// </summary>
         public string InstanceName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => InstanceName;
     }
 }

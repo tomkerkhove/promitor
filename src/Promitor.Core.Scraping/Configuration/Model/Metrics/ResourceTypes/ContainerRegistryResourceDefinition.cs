@@ -9,5 +9,8 @@
         }
 
         public string RegistryName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => RegistryName;
     }
 }

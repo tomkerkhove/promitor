@@ -13,5 +13,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         public string AccountName { get; }
         public string QueueName { get; }
         public Secret SasToken { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => AccountName;
     }
 }

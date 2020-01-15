@@ -20,7 +20,7 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         {
             // Arrange
             var resource = new ContainerInstanceResourceDefinition("containerInstanceResourceGroup", "containerGroup");
-            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<AzureResourceDefinition> {resource});
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> {resource});
 
             // Act
             var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
@@ -34,7 +34,7 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         {
             // Arrange
             var resource = new ContainerInstanceResourceDefinition(null, "containerGroup");
-            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<AzureResourceDefinition> { resource });
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
 
             // Act
             var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
@@ -48,7 +48,7 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         {
             // Arrange
             var resource = new ContainerInstanceResourceDefinition(string.Empty, "containerGroup");
-            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<AzureResourceDefinition> { resource });
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
 
             // Act
             var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
