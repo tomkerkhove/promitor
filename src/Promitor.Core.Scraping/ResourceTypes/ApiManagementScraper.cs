@@ -19,10 +19,5 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
             return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.InstanceName);
         }
-
-        protected override string DetermineMetricFilter(ApiManagementResourceDefinition resourceDefinition)
-        {
-            return "HostName eq '*'";
-        }
     }
 }
