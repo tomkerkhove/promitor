@@ -8,7 +8,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
     /// </summary>
     public class FileStorageScraper : AzureMonitorScraper<FileStorageResourceDefinition>
     {
-        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/fileServices";
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/fileServices/default";
 
         public FileStorageScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)

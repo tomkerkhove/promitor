@@ -8,7 +8,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
     /// </summary>
     public class BlobStorageScraper : AzureMonitorScraper<BlobStorageResourceDefinition>
     {
-        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/blobServices";
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/blobServices/default";
 
         public BlobStorageScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
