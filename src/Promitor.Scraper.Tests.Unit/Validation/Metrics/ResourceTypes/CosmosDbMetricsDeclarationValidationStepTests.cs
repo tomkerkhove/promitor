@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
     public class CosmosDbMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void CosmosDbMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
+        public void CosmosDbMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()

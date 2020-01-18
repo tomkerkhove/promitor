@@ -10,7 +10,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
     public class ContainerRegistryMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void ContainerRegistryMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
+        public void ContainerRegistryMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
