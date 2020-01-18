@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using Promitor.Integrations.AzureStorage;
 using Promitor.Scraper.Host.Validation.Steps;
