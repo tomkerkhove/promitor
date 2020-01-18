@@ -37,6 +37,7 @@ Every scraper can provide additional labels to provide more information.
 
 Currently we support this for:
 
+- Azure API Management
 - Azure Function App
 - Azure Service Bus
 - Azure SQL Database

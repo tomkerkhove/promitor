@@ -11,8 +11,23 @@ You can scrape an Azure API Management via the `ApiManagement`
 The following fields need to be provided:
 
 - `instanceName` - The name of the Azure API Management instance.
+- `locationName` - The name of the regional deployment of the gateway. (optional)
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftapimanagementservice).
+
+### Multi-region support
+
+Azure API Management instances can be deployed to multiple regions across the world.
+
+Promitor supports different scenarios:
+
+1. Report metrics for metrics for all locations (default)
+2. Scope metric to a single region by configuring `locationName`.
+3. Report metrics but split it across all regions by using the `Location` dimension.
+
+The following scraper-specific metric label will be added for scenario 2 & 3:
+
+- `location` - Name of the location
 
 Example:
 
