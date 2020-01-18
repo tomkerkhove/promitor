@@ -18,6 +18,11 @@
         VirtualMachineScaleSet = 13,
         AppPlan = 14,
         WebApp = 15,
-        FunctionApp = 16
+        FunctionApp = 16,
+        SqlServer = 17,
+        BlobStorage = 18,
+        FileStorage = 19,
+        StorageAccount = 20,
+        ApiManagement = 21,
     }
 }
