@@ -41,6 +41,7 @@ namespace Promitor.Scraper.Host.Scheduling
             Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
             Guard.NotNull(runtimeMetricsCollector, nameof(runtimeMetricsCollector));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
+            Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
 
             _metric = metric;
@@ -64,7 +65,7 @@ namespace Promitor.Scraper.Host.Scheduling
         private void ConfigureJob()
         {
             CronSchedule = _metric.Scraping.Schedule;
-            RunImmediately = false;
+            RunImmediately = true;
         }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
