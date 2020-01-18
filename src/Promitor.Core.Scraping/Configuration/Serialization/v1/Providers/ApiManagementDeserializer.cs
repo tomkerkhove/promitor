@@ -20,10 +20,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         protected override ApiManagementResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var instanceName = node.GetString("instanceName");
+            var locationName = node.GetString("locationName");
 
             return new ApiManagementResourceV1
             {
-                InstanceName = instanceName
+                InstanceName = instanceName,
+                LocationName = locationName
             };
         }
     }

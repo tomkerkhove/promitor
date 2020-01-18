@@ -16,7 +16,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_InstanceNameSupplied_SetsAccountName()
+        public void Deserialize_InstanceNameSupplied_SetsInstanceName()
         {
             const string instanceName = "promitor-gateway";
             YamlAssert.PropertySet<ApiManagementResourceV1, AzureResourceDefinitionV1, string>(
@@ -33,6 +33,26 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.InstanceName);
+        }
+
+        [Fact]
+        public void Deserialize_LocationNameSupplied_SetsLocationName()
+        {
+            const string locationName = "West Europe";
+            YamlAssert.PropertySet<ApiManagementResourceV1, AzureResourceDefinitionV1, string>(
+                _deserializer,
+                $"locationName: '{locationName}'",
+                locationName,
+                r => r.LocationName);
+        }
+
+        [Fact]
+        public void Deserialize_LocationNameNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull<ApiManagementResourceV1, AzureResourceDefinitionV1>(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                r => r.LocationName);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

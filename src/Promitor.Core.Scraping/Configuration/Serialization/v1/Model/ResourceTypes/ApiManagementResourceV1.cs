@@ -9,5 +9,10 @@
         ///     The name of the Azure API Management resource.
         /// </summary>
         public string InstanceName { get; set; }
+
+        /// <summary>
+        ///     Name of the location
+        /// </summary>
+        public string LocationName { get; set; }
     }
 }

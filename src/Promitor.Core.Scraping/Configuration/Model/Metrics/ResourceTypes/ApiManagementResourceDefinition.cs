@@ -17,9 +17,14 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         }
 
         /// <summary>
-        /// The name of the Azure API Management to get metrics for.
+        ///     The name of the Azure API Management to get metrics for.
         /// </summary>
         public string InstanceName { get; set; }
+
+        /// <summary>
+        ///     Name of the location.
+        /// </summary>
+        public string LocationName { get; set; }
 
         /// <inheritdoc />
         public override string GetResourceName() => InstanceName;
