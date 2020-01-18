@@ -24,4 +24,11 @@ However, you can only use it with metrics in Azure Monitor that support this,
 for a complete overview we recommend reading the
 [official documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported).
 
+## Why does Azure Blob & File Storage only report account-level information?
+
+Azure Monitor currently only provides account-level metrics which we can serve.
+
+As part of [#450](https://github.com/tomkerkhove/promitor/issues/450) &
+ [#446](https://github.com/tomkerkhove/promitor/issues/446) we plan to provide the capability to have more granular information.
+
 [&larr; back](/)
