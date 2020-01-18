@@ -121,7 +121,6 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Function App](function-app)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
-- [Azure SQL Server](sql-server)
 - [Azure SQL Database](sql-database)
 - [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure Storage (Account)](storage-account)
