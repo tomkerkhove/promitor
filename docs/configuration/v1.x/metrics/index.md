@@ -111,6 +111,7 @@ service supported by Azure Monitor.
 
 We also provide a simplified way to scrape the following Azure resources:
 
+- [Azure API Management](api-management)
 - [Azure App Plan](app-plan)
 - [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)
@@ -122,7 +123,10 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
 - [Azure SQL Managed Instance](sql-managed-instance)
-- [Azure Storage Queue](storage-queue)
+- [Azure Storage (Account)](storage-account)
+- [Azure Storage (Blob)](blob-storage)
+- [Azure Storage (Files)](file-storage)
+- [Azure Storage (Queue)](storage-queue)
 - [Azure Virtual Machine](virtual-machine)
 - [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
 - [Azure Web App](web-app)

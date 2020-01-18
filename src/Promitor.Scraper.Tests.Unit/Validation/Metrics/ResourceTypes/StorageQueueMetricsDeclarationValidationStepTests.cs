@@ -1,7 +1,5 @@
 using System;
 using System.ComponentModel;
-using AutoMapper;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureStorage;
 using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
@@ -11,25 +9,17 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category(category: "Unit")]
-    public class AzureStorageQueueMetricsDeclarationValidationStepTests
+    public class StorageQueueMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
-        private readonly IMapper _mapper;
-
-        public AzureStorageQueueMetricsDeclarationValidationStepTests()
-        {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            _mapper = mapperConfiguration.CreateMapper();
-        }
-
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithNotSupportedMetricName_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithNotSupportedMetricName_Fails()
         {
             // Arrange
             var azureMetricName = Guid.NewGuid().ToString();
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(azureMetricName: azureMetricName)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
+                .WithStorageQueueMetric(azureMetricName: azureMetricName)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -40,13 +30,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutAccountName_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutAccountName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(accountName: string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(accountName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -57,13 +47,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(azureMetricName: string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(azureMetricName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -74,13 +64,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(metricDescription: string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(metricDescription: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -91,13 +81,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -108,13 +98,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutQueueName_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutQueueName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(queueName: string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(queueName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -125,13 +115,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_DeclarationWithoutSasToken_Fails()
+        public void StorageQueuesMetricsDeclaration_DeclarationWithoutSasToken_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(sasToken: string.Empty)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+                .WithStorageQueueMetric(sasToken: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -142,14 +132,14 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithAzureMetricNameInDifferentCasing_Succeeds()
+        public void StorageQueuesMetricsDeclaration_ValidDeclarationWithAzureMetricNameInDifferentCasing_Succeeds()
         {
             // Arrange
             var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpper();
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(azureMetricName: azureMetricName)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
+                .WithStorageQueueMetric(azureMetricName: azureMetricName)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -160,13 +150,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithMessageCount_Succeeds()
+        public void StorageQueuesMetricsDeclaration_ValidDeclarationWithMessageCount_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric()
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
+                .WithStorageQueueMetric()
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
@@ -177,13 +167,13 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AzureStorageQueuesMetricsDeclaration_ValidDeclarationWithTimeSpentInQueue_Succeeds()
+        public void StorageQueuesMetricsDeclaration_ValidDeclarationWithTimeSpentInQueue_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAzureStorageQueueMetric(azureMetricName: AzureStorageConstants.Queues.Metrics.TimeSpentInQueue)
-                .Build(_mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, _mapper);
+                .WithStorageQueueMetric(azureMetricName: AzureStorageConstants.Queues.Metrics.TimeSpentInQueue)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);

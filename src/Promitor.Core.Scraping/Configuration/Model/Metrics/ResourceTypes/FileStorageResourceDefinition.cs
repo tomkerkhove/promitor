@@ -1,0 +1,27 @@
+namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
+{
+    /// <summary>
+    ///     Represents files in an Azure Storage account resource.
+    /// </summary>
+    public class FileStorageResourceDefinition : AzureResourceDefinition
+    {
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileStorageResourceDefinition" /> class.
+        /// </summary>
+        /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
+        /// <param name="accountName">The name of the Azure Storage resource.</param>
+        public FileStorageResourceDefinition(string resourceGroupName, string accountName)
+            : base(ResourceType.FileStorage, resourceGroupName)
+        {
+            AccountName = accountName;
+        }
+
+        /// <summary>
+        ///     The name of the Azure Storage resource.
+        /// </summary>
+        public string AccountName { get; }
+
+        /// <inheritdoc />
+        public override string GetResourceName() => AccountName;
+    }
+}

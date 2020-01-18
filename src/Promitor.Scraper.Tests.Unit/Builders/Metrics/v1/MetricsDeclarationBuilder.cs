@@ -184,6 +184,29 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithApiManagementMetric(string metricName = "promitor-api-management", string metricDescription = "Description for a metric", string instanceName = "promitor-app-plan", string locationName = "West Europe", string azureMetricName = "TotalRequests")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new ApiManagementResourceV1
+            {
+                InstanceName = instanceName,
+                LocationName = locationName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.ApiManagement
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithFunctionAppMetric(string metricName = "promitor-fuction-app", string metricDescription = "Description for a metric", string functionAppName = "promitor-fuction-app", string azureMetricName = "TotalRequests")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
@@ -205,8 +228,8 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
-        
-        public MetricsDeclarationBuilder WithAzureStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
+
+        public MetricsDeclarationBuilder WithStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var secret = new SecretV1
@@ -228,6 +251,72 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 AzureMetricConfiguration = azureMetricConfiguration,
                 Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.StorageQueue
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithStorageAccountMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new StorageAccountResourceV1
+            {
+                AccountName = accountName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.StorageAccount
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithFileStorageMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new FileStorageResourceV1
+            {
+                AccountName = accountName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.FileStorage
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new BlobStorageResourceV1
+            {
+                AccountName = accountName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.BlobStorage
             };
 
             _metrics.Add(metric);
@@ -434,6 +523,32 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
                 AzureMetricConfiguration = azureMetricConfiguration,
                 Resources = new List<AzureResourceDefinitionV1> { resource },
                 ResourceType = ResourceType.SqlDatabase
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSqlServerMetric(
+            string metricName = "promitor-sql-server",
+            string azureMetricName = "cpu_percent",
+            string serverName = "promitor-sql-server",
+            string metricDescription = "Metric description")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new SqlServerResourceV1
+            {
+                ServerName = serverName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.SqlServer
             };
 
             _metrics.Add(metric);

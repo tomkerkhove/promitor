@@ -73,6 +73,16 @@ namespace Promitor.Core.Scraping.Factories
                     return new WebAppScraper(scraperConfiguration);
                 case ResourceType.FunctionApp:
                     return new FunctionAppScraper(scraperConfiguration);
+                case ResourceType.SqlServer:
+                    return new SqlServerScraper(scraperConfiguration);
+                case ResourceType.ApiManagement:
+                    return new ApiManagementScraper(scraperConfiguration);
+                case ResourceType.StorageAccount:
+                    return new StorageAccountScraper(scraperConfiguration);
+                case ResourceType.BlobStorage:
+                    return new BlobStorageScraper(scraperConfiguration);
+                case ResourceType.FileStorage:
+                    return new FileStorageScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

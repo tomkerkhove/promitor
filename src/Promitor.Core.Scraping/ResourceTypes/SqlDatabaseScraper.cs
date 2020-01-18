@@ -5,7 +5,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 namespace Promitor.Core.Scraping.ResourceTypes
 {
     /// <summary>
-    /// Scrapes an Azure SQL Database.
+    ///     Scrapes an Azure SQL Database.
     /// </summary>
     public class SqlDatabaseScraper : AzureMonitorScraper<SqlDatabaseResourceDefinition>
     {
