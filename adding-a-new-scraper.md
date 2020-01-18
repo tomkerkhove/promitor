@@ -17,7 +17,7 @@ discuss your scenario_
   and inherit from
   `Promitor.Core.Scraping.Configuration.Model.Metrics.AzureResourceDefinition` -
   this class should go in `.\src\Promitor.Core.Scraping\Configuration\Model\Metrics\ResourceTypes`.
-3. Describe the resource configurationh for which you're scraping metrics by creating
+3. Describe the resource configuration for which you're scraping metrics by creating
  `<New-Type>ResourceV1`
   and inherit from
    `Promitor.Core.Scraping.Configuration.Serialization.v1.Model.AzureResourceDefinitionV1` -
