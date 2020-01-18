@@ -1,29 +1,24 @@
 ﻿using System;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
-        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, ILogger<MetricScraperFactory> logger)
+        public MetricScraperFactory(ILogger<MetricScraperFactory> logger)
         {
-            Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
 
             _logger = logger;
-            _configuration = configuration;
         }
 
         /// <summary>
@@ -32,11 +27,10 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
-        /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
+        /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
         public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            IPrometheusMetricWriter prometheusMetricWriter, IRuntimeMetricsCollector runtimeMetricsCollector)
+            IPrometheusMetricWriter prometheusMetricWriter, AzureMonitorClient azureMonitorClient)
         {
-            var azureMonitorClient = CreateAzureMonitorClient(azureMetadata, runtimeMetricsCollector);
             var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _logger);
 
             switch (metricDefinitionResourceType)
@@ -86,25 +80,6 @@ namespace Promitor.Core.Scraping.Factories
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, IRuntimeMetricsCollector runtimeMetricsCollector)
-        {
-            var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud,azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, _logger);
-            return azureMonitorClient;
-        }
-
-        private AzureCredentials DetermineAzureCredentials()
-        {
-            var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-            var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-
-            return new AzureCredentials
-            {
-                ApplicationId = applicationId,
-                Secret = applicationKey
-            };
         }
     }
 }

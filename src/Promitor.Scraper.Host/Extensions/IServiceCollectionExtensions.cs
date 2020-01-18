@@ -55,6 +55,7 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),
                             serviceProvider.GetService<MetricScraperFactory>(),
+                            serviceProvider.GetService<IConfiguration>(),
                             serviceProvider.GetService<ILogger<MetricScrapingJob>>()));
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
