@@ -5,6 +5,10 @@
     /// </summary>
     public class BlobStorageResourceV1 : StorageAccountResourceV1
     {
+        public BlobStorageResourceV1()
+        {
+        }
+
         public BlobStorageResourceV1(StorageAccountResourceV1 storageAccountResource)
             : base(storageAccountResource?.AccountName, storageAccountResource?.ResourceGroupName)
         {

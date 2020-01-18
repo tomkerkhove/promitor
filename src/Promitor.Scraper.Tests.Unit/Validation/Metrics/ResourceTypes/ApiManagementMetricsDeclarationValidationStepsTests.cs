@@ -1,20 +1,20 @@
-﻿using Promitor.Scraper.Host.Validation.Steps;
-using Promitor.Scraper.Tests.Unit.Stubs;
 using System.ComponentModel;
+using Promitor.Scraper.Host.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
+using Promitor.Scraper.Tests.Unit.Stubs;
 using Xunit;
 
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class SqlDatabaseMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
+    public class ApiManagementMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void ApiManagementMetricsDeclaration_DeclarationWithoutAzureMetricName_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(azureMetricName: string.Empty)
+                .WithApiManagementMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -23,15 +23,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is not successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
+        public void ApiManagementMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(metricDescription: string.Empty)
+                .WithApiManagementMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -40,15 +40,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation is successful");
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutServerName_Fails()
+        public void ApiManagementMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(serverName: string.Empty)
+                .WithApiManagementMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -57,15 +57,15 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is not successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutDatabaseName_Fails()
+        public void ApiManagementMetricsDeclaration_DeclarationWithoutInstanceName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(databaseName: string.Empty)
+                .WithApiManagementMetric(instanceName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -74,24 +74,24 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is not successful");
+            Assert.False(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void ApiManagementMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric()
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithApiManagementMetric()
                 .Build(Mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
             // Act
             var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation is successful");
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
     }
 }

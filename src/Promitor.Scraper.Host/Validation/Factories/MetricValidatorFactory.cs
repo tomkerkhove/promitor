@@ -43,6 +43,16 @@ namespace Promitor.Scraper.Host.Validation.Factories
                     return new AppPlanMetricValidator();
                 case ResourceType.FunctionApp:
                     return new FunctionAppMetricValidator();
+                case ResourceType.ApiManagement:
+                    return new ApiManagementMetricValidator();
+                case ResourceType.StorageAccount:
+                    return new StorageAccountMetricValidator();
+                case ResourceType.BlobStorage:
+                    return new BlobStorageMetricValidator();
+                case ResourceType.FileStorage:
+                    return new FileStorageMetricValidator();
+                case ResourceType.SqlServer:
+                    return new SqlServerMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

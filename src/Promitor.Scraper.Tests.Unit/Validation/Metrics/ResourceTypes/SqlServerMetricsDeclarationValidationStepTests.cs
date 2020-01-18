@@ -7,14 +7,14 @@ using Xunit;
 namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class SqlDatabaseMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
+    public class SqlServerMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void SqlServerMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(azureMetricName: string.Empty)
+                .WithSqlServerMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -27,11 +27,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
+        public void SqlServerMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(metricDescription: string.Empty)
+                .WithSqlServerMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -44,11 +44,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutServerName_Fails()
+        public void SqlServerMetricsDeclaration_DeclarationWithoutServerName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(serverName: string.Empty)
+                .WithSqlServerMetric(serverName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -61,28 +61,11 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void SqlDatabaseMetricsDeclaration_DeclarationWithoutDatabaseName_Fails()
+        public void SqlServerMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric(databaseName: string.Empty)
-                .Build(Mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is not successful");
-        }
-
-        [Fact]
-        public void SqlDatabaseMetricsDeclaration_ValidDeclaration_Succeeds()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlDatabaseMetric()
+                .WithSqlServerMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
