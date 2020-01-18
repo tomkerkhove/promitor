@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class ContainerRegistryDeserializer : ResourceDeserializer
+    public class ContainerRegistryDeserializer : ResourceDeserializer<ContainerRegistryResourceV1>
     {
         private const string RegistryNameTag = "registryName";
 
@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override ContainerRegistryResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var registryName = node.GetString(RegistryNameTag);
 

@@ -5,9 +5,8 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class StorageQueueDeserializer : ResourceDeserializer
+    public class StorageQueueDeserializer : StorageAccountDeserializer
     {
-        private const string AccountNameTag = "accountName";
         private const string QueueNameTag = "queueName";
         private const string SasTokenTag = "sasToken";
 
@@ -18,18 +17,20 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
             _secretDeserializer = secretDeserializer;
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override StorageAccountResourceV1 DeserializeResource(YamlMappingNode node)
         {
-            var accountName = node.GetString(AccountNameTag);
+            var storageAccountResource = base.DeserializeResource(node);
+
             var queueName = node.GetString(QueueNameTag);
             var sasToken = node.DeserializeChild(SasTokenTag, _secretDeserializer);
 
-            return new StorageQueueResourceV1
+            var storageQueueResource = new StorageQueueResourceV1(storageAccountResource)
             {
-                AccountName = accountName,
                 QueueName = queueName,
                 SasToken = sasToken
             };
+
+            return storageQueueResource;
         }
     }
 }

@@ -24,10 +24,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_AccountNameSupplied_SetsAccountName()
         {
+            const string storageAccountName = "promitor-account";
             YamlAssert.PropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                "accountName: promitor-acct",
-                "promitor-acct",
+                $"accountName: {storageAccountName}",
+                storageAccountName,
                 r => r.AccountName);
         }
 

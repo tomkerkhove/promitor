@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class VirtualMachineDeserializer : ResourceDeserializer
+    public class VirtualMachineDeserializer : ResourceDeserializer<VirtualMachineResourceV1>
     {
         private const string VirtualMachineNameTag = "virtualMachineName";
 
@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override VirtualMachineResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var virtualMachineName = node.GetString(VirtualMachineNameTag);
 

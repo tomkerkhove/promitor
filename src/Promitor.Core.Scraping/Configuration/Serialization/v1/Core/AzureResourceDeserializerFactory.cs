@@ -69,6 +69,21 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.FunctionApp:
                     var functionAppLogger = _loggerFactory.CreateLogger<FunctionAppDeserializer>();
                     return new FunctionAppDeserializer(functionAppLogger);
+                case ResourceType.ApiManagement:
+                    var apiManagementLogger = _loggerFactory.CreateLogger<ApiManagementDeserializer>();
+                    return new ApiManagementDeserializer(apiManagementLogger);
+                case ResourceType.SqlServer:
+                    var sqlServerLogger = _loggerFactory.CreateLogger<SqlServerDeserializer>();
+                    return new SqlServerDeserializer(sqlServerLogger);
+                case ResourceType.StorageAccount:
+                    var storageAccountLogger = _loggerFactory.CreateLogger<StorageAccountDeserializer>();
+                    return new StorageAccountDeserializer(storageAccountLogger);
+                case ResourceType.BlobStorage:
+                    var blobStorageLogger = _loggerFactory.CreateLogger<BlobStorageDeserializer>();
+                    return new BlobStorageDeserializer(blobStorageLogger);
+                case ResourceType.FileStorage:
+                    var fileStorageLogger = _loggerFactory.CreateLogger<FileStorageDeserializer>();
+                    return new FileStorageDeserializer(fileStorageLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

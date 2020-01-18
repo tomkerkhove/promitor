@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class ContainerInstanceDeserializer : ResourceDeserializer
+    public class ContainerInstanceDeserializer : ResourceDeserializer<ContainerInstanceResourceV1>
     {
         private const string ContainerGroupTag = "containerGroup";
 
@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override ContainerInstanceResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var containerGroup = node.GetString(ContainerGroupTag);
 

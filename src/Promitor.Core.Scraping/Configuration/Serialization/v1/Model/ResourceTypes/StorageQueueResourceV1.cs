@@ -3,12 +3,16 @@
     /// <summary>
     /// Contains the configuration required to scrape a storage queue.
     /// </summary>
-    public class StorageQueueResourceV1 : AzureResourceDefinitionV1
+    public class StorageQueueResourceV1 : StorageAccountResourceV1
     {
-        /// <summary>
-        /// The storage queue account name.
-        /// </summary>
-        public string AccountName { get; set; }
+        public StorageQueueResourceV1()
+        {
+        }
+
+        public StorageQueueResourceV1(StorageAccountResourceV1 storageAccountResource)
+            : base(storageAccountResource?.AccountName, storageAccountResource?.ResourceGroupName)
+        {
+        }
 
         /// <summary>
         /// The name of the queue.

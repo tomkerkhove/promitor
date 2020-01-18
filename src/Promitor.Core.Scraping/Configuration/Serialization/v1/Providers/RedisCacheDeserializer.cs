@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class RedisCacheDeserializer : ResourceDeserializer
+    public class RedisCacheDeserializer : ResourceDeserializer<RedisCacheResourceV1>
     {
         private const string CacheNameTag = "cacheName";
 
@@ -13,7 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override RedisCacheResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var cacheName = node.GetString(CacheNameTag);
 

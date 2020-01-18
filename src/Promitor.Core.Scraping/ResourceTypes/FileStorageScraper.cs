@@ -6,16 +6,16 @@ namespace Promitor.Core.Scraping.ResourceTypes
     /// <summary>
     ///     Scrapes file information for an Azure Storage account.
     /// </summary>
-    public class FilesStorageScraper : AzureMonitorScraper<BlobStorageResourceDefinition>
+    public class FileStorageScraper : AzureMonitorScraper<FileStorageResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Storage/storageAccounts/{2}/fileServices";
 
-        public FilesStorageScraper(ScraperConfiguration scraperConfiguration)
+        public FileStorageScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
         {
         }
 
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, BlobStorageResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, FileStorageResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
         }

@@ -82,7 +82,7 @@ namespace Promitor.Core.Scraping.Factories
                 case ResourceType.BlobStorage:
                     return new BlobStorageScraper(scraperConfiguration);
                 case ResourceType.FileStorage:
-                    return new FilesStorageScraper(scraperConfiguration);
+                    return new FileStorageScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

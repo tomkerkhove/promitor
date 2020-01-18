@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class GenericResourceDeserializer : ResourceDeserializer
+    public class GenericResourceDeserializer : ResourceDeserializer<GenericResourceV1>
     {
         private const string FilterTag = "filter";
         private const string ResourceUriTag = "resourceUri";
@@ -14,7 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
         }
 
-        protected override AzureResourceDefinitionV1 DeserializeResource(YamlMappingNode node)
+        protected override GenericResourceV1 DeserializeResource(YamlMappingNode node)
         {
             var filter = node.GetString(FilterTag);
             var resourceUri = node.GetString(ResourceUriTag);
