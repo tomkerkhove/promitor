@@ -3,9 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.Extensions.Scheduler;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -23,7 +21,6 @@ namespace Promitor.Scraper.Host.Scheduling
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
         private readonly AzureMonitorClient _azureMonitorClient;
-        private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
 
         private readonly MetricScraperFactory _metricScraperFactory;
@@ -33,7 +30,7 @@ namespace Promitor.Scraper.Host.Scheduling
             IPrometheusMetricWriter prometheusMetricWriter,
             IRuntimeMetricsCollector runtimeMetricsCollector,
             MetricScraperFactory metricScraperFactory,
-            IConfiguration configuration,
+            AzureMonitorClient azureMonitorClient,
             ILogger<MetricScrapingJob> logger)
         {
             Guard.NotNull(metric, nameof(metric));
@@ -41,18 +38,17 @@ namespace Promitor.Scraper.Host.Scheduling
             Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
             Guard.NotNull(runtimeMetricsCollector, nameof(runtimeMetricsCollector));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
-            Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
             Guard.NotNull(logger, nameof(logger));
 
             _metric = metric;
             _metricsDeclarationProvider = metricsDeclarationProvider;
             _prometheusMetricWriter = prometheusMetricWriter;
             _runtimeMetricsCollector = runtimeMetricsCollector;
-            _configuration = configuration;
             _logger = logger;
 
             _metricScraperFactory = metricScraperFactory;
-            _azureMonitorClient = ConfigureAzureMonitorClient();
+            _azureMonitorClient = azureMonitorClient;
             ConfigureJob();
         }
 
@@ -89,26 +85,6 @@ namespace Promitor.Scraper.Host.Scheduling
 
             var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, azureMetadata, _prometheusMetricWriter, _azureMonitorClient);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
-        }
-
-        private AzureMonitorClient ConfigureAzureMonitorClient()
-        {
-            var azureCredentials = DetermineAzureCredentials();
-            var azureMetadata = _metricsDeclarationProvider.Get().AzureMetadata;
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _runtimeMetricsCollector, _logger);
-            return azureMonitorClient;
-        }
-
-        private AzureCredentials DetermineAzureCredentials()
-        {
-            var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-            var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-
-            return new AzureCredentials
-            {
-                ApplicationId = applicationId,
-                Secret = applicationKey
-            };
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Promitor.Core;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -17,6 +18,7 @@ using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -25,6 +27,7 @@ using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Validation;
 
@@ -44,6 +47,12 @@ namespace Promitor.Scraper.Host.Extensions
             var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(true);
 
+            var logger = serviceProviderToCreateJobsWith.GetService<ILogger<MetricScrapingJob>>();
+            var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
+            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IRuntimeMetricsCollector>();
+            var azureMonitorClient = ConfigureAzureMonitorClient(metrics, runtimeMetricCollector, configuration, logger);
+            services.AddSingleton(azureMonitorClient);
+
             foreach (var metric in metrics.Metrics)
             {
                 foreach (var resource in metric.Resources)
@@ -55,14 +64,34 @@ namespace Promitor.Scraper.Host.Extensions
                         serviceProvider.GetService<IPrometheusMetricWriter>(),
                             serviceProvider.GetService<IRuntimeMetricsCollector>(),
                             serviceProvider.GetService<MetricScraperFactory>(),
-                            serviceProvider.GetService<IConfiguration>(),
-                            serviceProvider.GetService<ILogger<MetricScrapingJob>>()));
+                            azureMonitorClient,
+                            logger));
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
                 }
             }
 
             return services;
+        }
+
+        private static AzureMonitorClient ConfigureAzureMonitorClient(MetricsDeclaration metricsDeclaration, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, ILogger logger)
+        {
+            var azureCredentials = DetermineAzureCredentials(configuration);
+            var azureMetadata = metricsDeclaration.AzureMetadata;
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricCollector, logger);
+            return azureMonitorClient;
+        }
+
+        private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
+        {
+            var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
+            var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+
+            return new AzureCredentials
+            {
+                ApplicationId = applicationId,
+                Secret = applicationKey
+            };
         }
 
         /// <summary>
