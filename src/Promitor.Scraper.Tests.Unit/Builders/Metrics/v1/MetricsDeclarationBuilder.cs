@@ -184,6 +184,28 @@ namespace Promitor.Scraper.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithApiManagementMetric(string metricName = "promitor-api-management", string metricDescription = "Description for a metric", string instanceName = "promitor-app-plan", string azureMetricName = "TotalRequests")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new ApiManagementResourceV1
+            {
+                InstanceName = instanceName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.AppPlan
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithFunctionAppMetric(string metricName = "promitor-fuction-app", string metricDescription = "Description for a metric", string functionAppName = "promitor-fuction-app", string azureMetricName = "TotalRequests")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);

@@ -38,12 +38,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
             CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
             CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
+            CreateMap<ApiManagementResourceV1, ApiManagementResourceDefinition>();
+            CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
+            CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
+            CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
+            CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
             CreateMap<MetricDefinitionV1, MetricDefinition>()
                 .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1));
-            
+
             CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
@@ -60,7 +65,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<WebAppResourceV1, WebAppResourceDefinition>()
-                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>();
+                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>()
+                .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
+                .Include<SqlServerResourceV1, SqlServerResourceDefinition>()
+                .Include<StorageAccountResourceV1, StorageAccountResourceDefinition>()
+                .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
+                .Include<FileStorageResourceV1, FileStorageResourceDefinition>();
         }
     }
 }

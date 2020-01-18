@@ -1,6 +1,4 @@
-using System.Runtime.Serialization;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using YamlDotNet.RepresentationModel;
 
