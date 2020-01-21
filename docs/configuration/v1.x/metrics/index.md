@@ -123,6 +123,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
 - [Azure SQL Managed Instance](sql-managed-instance)
+- [Azure SQL Server](sql-server)
 - [Azure Storage (Account)](storage-account)
 - [Azure Storage (Blob)](blob-storage)
 - [Azure Storage (Files)](file-storage)
