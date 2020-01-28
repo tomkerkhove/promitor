@@ -99,7 +99,7 @@ namespace Promitor.Core.Scraping.Factories
         {
             var azureCredentials = DetermineAzureCredentials();
 
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _azureMonitorLoggingOptions, runtimeMetricsCollector, _loggerFactory);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _azureMonitorLoggingOptions, runtimeMetricsCollector, _loggerFactory, _logger);
             return azureMonitorClient;
         }
 
