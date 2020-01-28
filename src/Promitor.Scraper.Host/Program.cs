@@ -6,8 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Server;
+using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
 using Serilog.Events;
+using Serilog.Filters;
 
 namespace Promitor.Scraper.Host
 {
@@ -95,7 +97,8 @@ namespace Promitor.Scraper.Host
             if (appInsightsConfig?.IsEnabled == true)
             {
                 var logLevel = DetermineSinkLogLevel(appInsightsConfig.Verbosity);
-                loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel);
+                loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel)
+                                   .Filter.ByExcluding(Matching.FromSource<AzureMonitorIntegrationLogger>());
             }
 
             var consoleLogConfig = telemetryConfiguration.ContainerLogs;
@@ -103,7 +106,8 @@ namespace Promitor.Scraper.Host
             {
                 var logLevel = DetermineSinkLogLevel(consoleLogConfig.Verbosity);
 
-                loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel);
+                loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel)
+                                   .Filter.With(new AzureMonitorLoggingFilter(new AzureMonitorLoggingOptions(configuration)));
             }
 
             return loggerConfiguration;

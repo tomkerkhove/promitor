@@ -9,21 +9,28 @@ using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.AzureMonitor.Logging;
 
 namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
+        private readonly AzureMonitorLoggingOptions _azureMonitorLoggingOptions;
         private readonly IConfiguration _configuration;
+        private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(IConfiguration configuration, ILogger<MetricScraperFactory> logger)
+        public MetricScraperFactory(AzureMonitorLoggingOptions azureMonitorLoggingOptions, IConfiguration configuration, ILogger<MetricScraperFactory> logger, ILoggerFactory loggerFactory)
         {
+            Guard.NotNull(azureMonitorLoggingOptions, nameof(azureMonitorLoggingOptions));
             Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(logger, nameof(logger));
 
             _logger = logger;
+            _loggerFactory = loggerFactory;
             _configuration = configuration;
+            _azureMonitorLoggingOptions = azureMonitorLoggingOptions;
         }
 
         /// <summary>
@@ -91,7 +98,8 @@ namespace Promitor.Core.Scraping.Factories
         private AzureMonitorClient CreateAzureMonitorClient(AzureMetadata azureMetadata, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var azureCredentials = DetermineAzureCredentials();
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud,azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricsCollector, _logger);
+
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _azureMonitorLoggingOptions, runtimeMetricsCollector, _loggerFactory);
             return azureMonitorClient;
         }
 

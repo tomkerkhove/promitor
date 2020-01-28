@@ -25,6 +25,7 @@ using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Scraper.Host.Scheduling;
 using Promitor.Scraper.Host.Validation;
 
@@ -72,6 +73,7 @@ namespace Promitor.Scraper.Host.Extensions
         {
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+            services.AddTransient<AzureMonitorLoggingOptions>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
             services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
