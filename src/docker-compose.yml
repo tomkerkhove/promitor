@@ -5,7 +5,7 @@ services:
     image: tomkerkhove/promitor-agent-scraper
     build:
       context: .
-      dockerfile: Promitor.Scraper.Host/Dockerfile
+      dockerfile: Promitor.Scraper.Host/Dockerfile.linux
     volumes:
       - "./metric-config.yaml:/config/metrics-declaration.yaml"
       - "./runtime-config.yaml:/config/runtime.yaml"
