@@ -197,8 +197,8 @@ stages:
          imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
        
-   - job: DockerBuildLinux
-     displayName: Build Docker Image (Linux)
+   - job: DockerBuildWindows
+     displayName: Build Docker Image (Windows)
      condition: succeeded()
      pool:
        vmImage: windows-2019
