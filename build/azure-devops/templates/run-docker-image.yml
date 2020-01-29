@@ -1,0 +1,27 @@
+parameters:
+  imageName: ''
+  containerName: 'promitor-ci'
+
+steps:
+- bash: |
+    echo "Variable 'imageName' found with value '$IMAGE_NAME'"
+    if [ -z "$IMAGE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"imageName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    IMAGE_NAME: ${{ parameters.imageName }}
+  displayName: Check for required parameters in YAML template
+- task: Docker@1
+  displayName: 'Run ''${{ parameters.imageName }}'' image as ''${{ parameters.containerName }}'' container'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: 'Docker Hub'
+    command: 'Run an image'
+    imageName: '${{ parameters.imageName }}'
+    containerName: '${{ parameters.containerName }}'
+    ports: '8999:80'
+    volumes: '$(System.DefaultWorkingDirectory)/src/metric-config.yaml:c:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+    envVars: |
+     PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
+     PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
