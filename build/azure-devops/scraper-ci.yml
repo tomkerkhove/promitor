@@ -196,7 +196,6 @@ stages:
          command: 'Push an image'
          imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-       
    - job: DockerBuildWindows
      displayName: Build Docker Image (Windows)
      condition: succeeded()
