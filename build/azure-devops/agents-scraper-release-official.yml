@@ -58,7 +58,7 @@ stages:
      - task: Docker@1
        displayName: 'Build Docker image'
        inputs:
-        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile.linux
+        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
         arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
         imageName: '$(Image.TaggedName)'
         includeLatestTag: true

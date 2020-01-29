@@ -136,7 +136,7 @@ stages:
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile.linux
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --no-cache'
          useDefaultContext: false
          buildContext: ./src/
@@ -148,7 +148,7 @@ stages:
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile.linux
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
@@ -218,7 +218,7 @@ stages:
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile.windows
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --no-cache'
          useDefaultContext: false
          buildContext: ./src/
@@ -230,7 +230,7 @@ stages:
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile.windows
+         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
          arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
