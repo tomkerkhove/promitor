@@ -183,6 +183,28 @@ telemetry:
   defaultVerbosity: error # Optional. Default: error
 ```
 
+## Azure Monitor
+
+Promitor interacts with Azure Monitor API to scrape all the required metrics.
+
+During troubleshooting it can be interesting to gain insights on what the API returns, for which you can opt-in.
+
+The behavior of this can be configured to fit your needs:
+
+- `azureMonitor.logging.informationLevel` - Defines granularity of information that should be reported. Available
+ options are `Basic`, `Headers`, `Body` & `BodyAndHeaders`. (Default: `Basic`)
+- `azureMonitor.logging.isEnabled` - Defines whether or not information concerning the integration with Azure Monitor
+ API. (Default: `false`)
+
+Example:
+
+```yaml
+azureMonitor:
+  logging:
+    informationLevel: Basic # Optional. Default: Basic
+    isEnabled: false # Optional. Default: false
+```
+
 ## Overriding configuration with environment variables
 
 In certain scenarios you'd like to override what was configured in the runtime YAML.
