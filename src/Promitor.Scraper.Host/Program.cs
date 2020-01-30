@@ -9,7 +9,6 @@ using Promitor.Core.Configuration.Model.Server;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Filters;
 
 namespace Promitor.Scraper.Host
 {
@@ -89,6 +88,12 @@ namespace Promitor.Scraper.Host
                 throw new Exception("Unable to get telemetry configuration");
             }
 
+            var azureMonitorConfiguration = configuration.Get<RuntimeConfiguration>()?.AzureMonitor?.Logging;
+            if (azureMonitorConfiguration == null)
+            {
+                throw new Exception("Unable to get logging configuration for Azure Monitor");
+            }
+
             var defaultLogLevel = DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
             loggerConfiguration.MinimumLevel.Is(defaultLogLevel)
                                .Enrich.FromLogContext();
@@ -98,7 +103,7 @@ namespace Promitor.Scraper.Host
             {
                 var logLevel = DetermineSinkLogLevel(appInsightsConfig.Verbosity);
                 loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel)
-                                   .Filter.ByExcluding(Matching.FromSource<AzureMonitorIntegrationLogger>());
+                    .Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
             }
 
             var consoleLogConfig = telemetryConfiguration.ContainerLogs;
@@ -107,7 +112,7 @@ namespace Promitor.Scraper.Host
                 var logLevel = DetermineSinkLogLevel(consoleLogConfig.Verbosity);
 
                 loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel)
-                                   .Filter.With(new AzureMonitorLoggingFilter(new AzureMonitorLoggingOptions(configuration)));
+                                   .Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
             }
 
             return loggerConfiguration;

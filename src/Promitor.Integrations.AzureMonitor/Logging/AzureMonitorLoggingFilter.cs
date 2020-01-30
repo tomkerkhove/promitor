@@ -1,4 +1,5 @@
 ﻿using GuardNet;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Filters;
@@ -7,13 +8,13 @@ namespace Promitor.Integrations.AzureMonitor.Logging
 {
     public class AzureMonitorLoggingFilter : ILogEventFilter
     {
-        private readonly AzureMonitorLoggingOptions _azureMonitorLoggingOptions;
+        private readonly AzureMonitorLoggingConfiguration _azureMonitorLoggingConfiguration;
 
-        public AzureMonitorLoggingFilter(AzureMonitorLoggingOptions azureMonitorLoggingOptions)
+        public AzureMonitorLoggingFilter(AzureMonitorLoggingConfiguration azureMonitorLoggingConfiguration)
         {
-            Guard.NotNull(azureMonitorLoggingOptions, nameof(azureMonitorLoggingOptions));
+            Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
-            _azureMonitorLoggingOptions = azureMonitorLoggingOptions;
+            _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
         }
 
         public bool IsEnabled(LogEvent logEvent)
@@ -22,7 +23,7 @@ namespace Promitor.Integrations.AzureMonitor.Logging
             var isMonitorIntegrationMessage = filterMonitorLogger(logEvent);
             if (isMonitorIntegrationMessage)
             {
-                return _azureMonitorLoggingOptions.IsEnabled;
+                return _azureMonitorLoggingConfiguration.IsEnabled;
             }
 
             return true;

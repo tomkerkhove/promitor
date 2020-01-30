@@ -2,6 +2,8 @@
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -15,14 +17,14 @@ namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
-        private readonly AzureMonitorLoggingOptions _azureMonitorLoggingOptions;
+        private readonly AzureMonitorLoggingConfiguration _azureMonitorLoggingConfiguration;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
 
-        public MetricScraperFactory(AzureMonitorLoggingOptions azureMonitorLoggingOptions, IConfiguration configuration, ILogger<MetricScraperFactory> logger, ILoggerFactory loggerFactory)
+        public MetricScraperFactory(IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, IConfiguration configuration, ILogger<MetricScraperFactory> logger, ILoggerFactory loggerFactory)
         {
-            Guard.NotNull(azureMonitorLoggingOptions, nameof(azureMonitorLoggingOptions));
+            Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(logger, nameof(logger));
@@ -30,7 +32,9 @@ namespace Promitor.Core.Scraping.Factories
             _logger = logger;
             _loggerFactory = loggerFactory;
             _configuration = configuration;
-            _azureMonitorLoggingOptions = azureMonitorLoggingOptions;
+            
+            // TODO: Make it pretty
+            _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration.Value;
         }
 
         /// <summary>
@@ -99,7 +103,7 @@ namespace Promitor.Core.Scraping.Factories
         {
             var azureCredentials = DetermineAzureCredentials();
 
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _azureMonitorLoggingOptions, runtimeMetricsCollector, _loggerFactory, _logger);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, _azureMonitorLoggingConfiguration, runtimeMetricsCollector, _loggerFactory, _logger);
             return azureMonitorClient;
         }
 

@@ -11,6 +11,7 @@ using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Rest;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
@@ -32,20 +33,21 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
-        /// <param name="azureMonitorLoggingOptions">Options for Azure Monitor logging</param>
+        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="logger"></param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, AzureMonitorLoggingOptions azureMonitorLoggingOptions, IRuntimeMetricsCollector runtimeMetricsCollector, ILoggerFactory loggerFactory, ILogger logger)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, AzureMonitorLoggingConfiguration azureMonitorLoggingConfiguration, IRuntimeMetricsCollector runtimeMetricsCollector, ILoggerFactory loggerFactory, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
             Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+            Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
             _logger = logger;
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingOptions, loggerFactory, runtimeMetricsCollector);
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, runtimeMetricsCollector);
         }
 
         /// <summary>
@@ -212,7 +214,7 @@ namespace Promitor.Integrations.AzureMonitor
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, AzureMonitorLoggingOptions azureMonitorLoggingOptions, ILoggerFactory loggerFactory, IRuntimeMetricsCollector runtimeMetricsCollector)
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, AzureMonitorLoggingConfiguration azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, IRuntimeMetricsCollector runtimeMetricsCollector)
         {
             var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
 
@@ -222,14 +224,14 @@ namespace Promitor.Integrations.AzureMonitor
             var azureClientConfiguration = Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);
 
-            if (azureMonitorLoggingOptions.IsEnabled)
+            if (azureMonitorLoggingConfiguration.IsEnabled)
             {
                 var integrationLogger = loggerFactory.CreateLogger<AzureMonitorIntegrationLogger>();
                 ServiceClientTracing.AddTracingInterceptor(new AzureMonitorIntegrationLogger(_logger));
                 ServiceClientTracing.IsEnabled = true;
 
                 azureClientConfiguration = azureClientConfiguration.WithDelegatingHandler(new HttpLoggingDelegatingHandler())
-                    .WithLogLevel(HttpLoggingDelegatingHandler.Level.BodyAndHeaders);
+                    .WithLogLevel(azureMonitorLoggingConfiguration.InformationLevel);
             }
 
             return azureClientConfiguration
