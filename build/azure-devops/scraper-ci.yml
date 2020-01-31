@@ -204,7 +204,7 @@ stages:
     Helm.Chart.Name: 'promitor-agent-scraper-ci'
   jobs:
    - job: Helm2_x
-     displayName: Lint, Package & Push Chart
+     displayName: Helm 2.x - Lint
      condition: succeeded()
      variables:
        Helm.Version: '2.9.1'
@@ -212,6 +212,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - task: HelmInstaller@0
+       displayName: 'Install Helm (v$(Helm.Version))'
        inputs:
         helmVersion: '$(Helm.Version)'
         checkLatestHelmVersion: false
@@ -228,6 +229,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - task: HelmInstaller@0
+       displayName: 'Install Helm (latest)'
        inputs:
         # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
         helmVersion: '$(Helm.Version)'
