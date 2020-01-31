@@ -11,6 +11,15 @@ This can be configured in the metric configuration under `azureMetadata`.
 
 For more information see our ['Metric Configuration' page](/configuration/v1.x/metrics/#metrics).
 
+## Is scraping multiple subscriptions supported?
+
+No, we do not support scraping multiple subscriptions as of today as we consider that to be a security boundary.
+
+However, you can deploy multiple instances of Promitor that each scrape another subscription.
+
+We have it on [our backlog](https://github.com/tomkerkhove/promitor/issues/761) to see if there is
+ enough demand for it, feel free to give a :+1:. If that is the case, we will reconsider this limitation.
+
 ## Are multi-dimensional metrics supported?
 
 Yes, every scraper supports scraping multi-dimensional metrics except for
