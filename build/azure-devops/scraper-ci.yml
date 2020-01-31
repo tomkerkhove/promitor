@@ -247,7 +247,6 @@ stages:
    - job: Helm3_x
      displayName: Helm 3.x - Lint, Package & Push Chart
      condition: succeeded()
-     variables:
      pool:
        vmImage: ubuntu-16.04
      steps:
