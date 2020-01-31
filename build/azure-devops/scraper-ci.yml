@@ -19,6 +19,29 @@ variables:
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
 stages:
+- stage: Init
+  displayName: Prepare Build
+  dependsOn: [Build,Docs,Test,Docker]
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+     - template: ./../templates/persist-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
 - stage: Build
   dependsOn: []
   jobs:
