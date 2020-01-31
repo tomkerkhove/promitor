@@ -17,7 +17,8 @@ No, we do not support scraping multiple subscriptions as of today as we consider
 
 However, you can deploy multiple instances of Promitor that each scrape another subscription.
 
-We have it on [our backlog](https://github.com/tomkerkhove/promitor/issues/761) to see if there is enough demand for it, feel free to give a :+1:. If that is the case, we will reconsider this limitation.
+We have it on [our backlog](https://github.com/tomkerkhove/promitor/issues/761) to see if there is
+ enough demand for it, feel free to give a :+1:. If that is the case, we will reconsider this limitation.
 
 ## Are multi-dimensional metrics supported?
 
