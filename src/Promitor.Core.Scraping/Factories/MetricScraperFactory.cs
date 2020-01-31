@@ -11,13 +11,12 @@ using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Integrations.AzureMonitor.Logging;
 
 namespace Promitor.Core.Scraping.Factories
 {
     public class MetricScraperFactory
     {
-        private readonly AzureMonitorLoggingConfiguration _azureMonitorLoggingConfiguration;
+        private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly IConfiguration _configuration;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
@@ -33,8 +32,7 @@ namespace Promitor.Core.Scraping.Factories
             _loggerFactory = loggerFactory;
             _configuration = configuration;
             
-            // TODO: Make it pretty
-            _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration.Value;
+            _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
         }
 
         /// <summary>
