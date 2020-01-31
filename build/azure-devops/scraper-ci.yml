@@ -110,6 +110,11 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - script: npm install
        displayName: 'Version $(Build.BuildNumber)'
      - script: npm install
