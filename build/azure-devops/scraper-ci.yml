@@ -37,6 +37,7 @@ stages:
          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
          Write-Host "Build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
      - template: ./../templates/persist-variable.yml
        parameters:
           variableName: 'Build.BuildNumber'
@@ -110,13 +111,6 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - download: current
-       artifact: variables
-     - template: ./../templates/read-variable.yml
-       parameters:
-          variableName: 'Build.BuildNumber'
-     - script: 'echo $(Build.BuildNumber)'
-       displayName: 'Version'
      - script: npm install
        displayName: 'Install npm Packages'
      - script: npm run --silent markdownlint
@@ -151,16 +145,11 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - task: Docker@1
        displayName: 'Build an image'
        inputs:
@@ -264,16 +253,11 @@ stages:
         # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
         helmVersion: '$(Helm.Version)'
         checkLatestHelmVersion: true
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - powershell: |
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
