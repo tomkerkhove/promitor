@@ -199,19 +199,39 @@ stages:
 - stage: Helm
   displayName: Helm Chart
   dependsOn: Docker
+  variables:
+    Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+    Helm.Chart.Name: 'promitor-agent-scraper-ci'
   jobs:
-   - job: HelmChart
+   - job: Helm2_x
      displayName: Lint, Package & Push Chart
      condition: succeeded()
      variables:
-       Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
-       Helm.Chart.Name: 'promitor-agent-scraper-ci'
+       Helm.Version: '2.9.1'
      pool:
        vmImage: ubuntu-16.04
      steps:
      - task: HelmInstaller@0
        inputs:
-        helmVersion: '2.9.1'
+        helmVersion: '$(Helm.Version)'
+        checkLatestHelmVersion: false
+     - powershell: |
+        helm lint promitor-agent-scraper/ --strict
+       workingDirectory: charts
+       displayName: 'Lint Helm Chart'
+   - job: Helm3_x
+     displayName: Helm 3.x - Lint, Package & Push Chart
+     condition: succeeded()
+     variables:
+       Helm.Version: '2.9.1'
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       inputs:
+        # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
+        helmVersion: '$(Helm.Version)'
+        checkLatestHelmVersion: true
      - powershell: |
          $prNumber = '$(System.PullRequest.PullRequestNumber)'
          $buildNumber = '$(Build.BuildNumber)'
