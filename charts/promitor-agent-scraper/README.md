@@ -63,6 +63,7 @@ their default values.
 | `prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
 | `prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
 | `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
+| `prometheus.enableServiceDiscovery`  | Indication wheter or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
 | `telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
 | `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
 | `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
