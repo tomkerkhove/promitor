@@ -228,7 +228,7 @@ namespace Promitor.Integrations.AzureMonitor
             if (azureMonitorLogging.IsEnabled)
             {
                 var integrationLogger = loggerFactory.CreateLogger<AzureMonitorIntegrationLogger>();
-                ServiceClientTracing.AddTracingInterceptor(new AzureMonitorIntegrationLogger(_logger));
+                ServiceClientTracing.AddTracingInterceptor(new AzureMonitorIntegrationLogger(integrationLogger));
                 ServiceClientTracing.IsEnabled = true;
 
                 azureClientConfiguration = azureClientConfiguration.WithDelegatingHandler(new HttpLoggingDelegatingHandler())
