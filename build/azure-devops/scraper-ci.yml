@@ -217,7 +217,7 @@ stages:
          command: 'Push an image'
          imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-- stage: Helm
+- stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
   jobs:
@@ -238,7 +238,7 @@ stages:
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
-- stage: Helm
+- stage: Helm3
   displayName: Helm Chart (3.x)
   dependsOn: Docker
   variables:
