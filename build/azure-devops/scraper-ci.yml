@@ -115,8 +115,8 @@ stages:
      - template: ./../templates/read-variable.yml
        parameters:
           variableName: 'Build.BuildNumber'
-     - script: npm install
-       displayName: 'Version $(Build.BuildNumber)'
+     - script: 'echo $(Build.BuildNumber)'
+       displayName: 'Version'
      - script: npm install
        displayName: 'Install npm Packages'
      - script: npm run --silent markdownlint
