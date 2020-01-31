@@ -21,7 +21,7 @@ variables:
 stages:
 - stage: Init
   displayName: Prepare Build
-  dependsOn: [Build,Docs,Test,Docker]
+  dependsOn: []
   jobs:
    - job: DetermineVersion
      displayName: Determine Version
@@ -43,7 +43,7 @@ stages:
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: Build
      displayName: Build Codebase
@@ -102,7 +102,7 @@ stages:
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
 - stage: Docs
   displayName: Docs
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: RunMarkdownLinter
      displayName: Run Markdown Linter
@@ -116,7 +116,7 @@ stages:
        displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: RunUnitTests
      displayName: Run Unit Tests
@@ -136,7 +136,7 @@ stages:
          arguments: '--configuration $(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: DockerBuild
      displayName: Build Docker Image Tests
