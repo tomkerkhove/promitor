@@ -18,6 +18,8 @@ variables:
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
+  Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+  Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -216,11 +218,8 @@ stages:
          imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 - stage: Helm
-  displayName: Helm Chart
+  displayName: Helm Chart (2.x)
   dependsOn: Docker
-  variables:
-    Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
-    Helm.Chart.Name: 'promitor-agent-scraper-ci'
   jobs:
    - job: Helm2_x
      displayName: Helm 2.x - Lint
@@ -239,11 +238,16 @@ stages:
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
        displayName: 'Lint Helm Chart'
+- stage: Helm
+  displayName: Helm Chart (3.x)
+  dependsOn: Docker
+  variables:
+    Helm.Version: '3.0.0'
+  jobs:
    - job: Helm3_x
      displayName: Helm 3.x - Lint, Package & Push Chart
      condition: succeeded()
      variables:
-       Helm.Version: '2.9.1'
      pool:
        vmImage: ubuntu-16.04
      steps:
