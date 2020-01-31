@@ -111,6 +111,8 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - script: npm install
+       displayName: 'Version $(Build.BuildNumber)'
+     - script: npm install
        displayName: 'Install npm Packages'
      - script: npm run --silent markdownlint
        displayName: 'Run markdownlint'
