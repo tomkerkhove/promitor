@@ -19,6 +19,7 @@ prometheus:
   scrapeEndpointPath: /metrics
   enableMetricTimestamps: True
   metricUnavailableValue: NaN
+  enableServiceDiscovery: True
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
