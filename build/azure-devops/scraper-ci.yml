@@ -18,9 +18,35 @@ variables:
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
+  Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+  Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
-- stage: Build
+- stage: Init
+  displayName: Prepare Build
   dependsOn: []
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - template: ./../templates/persist-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: Build
+  dependsOn: [Init]
   jobs:
    - job: Build
      displayName: Build Codebase
@@ -79,7 +105,7 @@ stages:
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
 - stage: Docs
   displayName: Docs
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: RunMarkdownLinter
      displayName: Run Markdown Linter
@@ -93,7 +119,7 @@ stages:
        displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: RunUnitTests
      displayName: Run Unit Tests
@@ -113,7 +139,7 @@ stages:
          arguments: '--configuration $(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
-  dependsOn: []
+  dependsOn: [Init]
   jobs:
    - job: DockerBuild
      displayName: Build Docker Image Tests
@@ -121,16 +147,11 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - task: Docker@1
        displayName: 'Build an image'
        inputs:
@@ -196,32 +217,50 @@ stages:
          command: 'Push an image'
          imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-- stage: Helm
-  displayName: Helm Chart
+- stage: Helm2
+  displayName: Helm Chart (2.x)
   dependsOn: Docker
   jobs:
-   - job: HelmChart
-     displayName: Lint, Package & Push Chart
+   - job: Helm2_x
+     displayName: Helm 2.x - Lint
      condition: succeeded()
      variables:
-       Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
-       Helm.Chart.Name: 'promitor-agent-scraper-ci'
+       Helm.Version: '2.9.1'
      pool:
        vmImage: ubuntu-16.04
      steps:
      - task: HelmInstaller@0
+       displayName: 'Install Helm (v$(Helm.Version))'
        inputs:
-        helmVersion: '2.9.1'
+        helmVersion: '$(Helm.Version)'
+        checkLatestHelmVersion: false
      - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+        helm lint promitor-agent-scraper/ --strict
+       workingDirectory: charts
+       displayName: 'Lint Helm Chart'
+- stage: Helm3
+  displayName: Helm Chart (3.x)
+  dependsOn: Docker
+  variables:
+    Helm.Version: '3.0.0'
+  jobs:
+   - job: Helm3_x
+     displayName: Helm 3.x - Lint, Package & Push Chart
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       displayName: 'Install Helm (latest)'
+       inputs:
+        # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
+        helmVersion: '$(Helm.Version)'
+        checkLatestHelmVersion: true
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - powershell: |
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts

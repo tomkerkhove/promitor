@@ -8,9 +8,14 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using GuardNet;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Microsoft.Rest;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor.Exceptions;
+using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
 
 namespace Promitor.Integrations.AzureMonitor
@@ -29,20 +34,21 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
+        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
-        /// <param name="logger">Logger to use during interaction with Azure Monitor</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IRuntimeMetricsCollector runtimeMetricsCollector, ILogger logger)
+        /// <param name="loggerFactory">Factory to create loggers with</param>
+        /// <param name="logger"></param>
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, IRuntimeMetricsCollector runtimeMetricsCollector, ILoggerFactory loggerFactory, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
             Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+            Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
-            var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
-
-            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, applicationId, runtimeMetricsCollector, logger);
-            _authenticatedAzureSubscription = Azure.Configure().WithDelegatingHandler(monitorHandler).Authenticate(credentials).WithSubscription(subscriptionId);
+            _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
             _logger = logger;
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, runtimeMetricsCollector);
         }
 
         /// <summary>
@@ -207,6 +213,31 @@ namespace Promitor.Integrations.AzureMonitor
             }
 
             return metricQuery;
+        }
+
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, IRuntimeMetricsCollector runtimeMetricsCollector)
+        {
+            var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
+
+            var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, applicationId, runtimeMetricsCollector, throttlingLogger);
+
+            var azureClientConfiguration = Azure.Configure()
+                .WithDelegatingHandler(monitorHandler);
+            var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
+            if (azureMonitorLogging.IsEnabled)
+            {
+                var integrationLogger = loggerFactory.CreateLogger<AzureMonitorIntegrationLogger>();
+                ServiceClientTracing.AddTracingInterceptor(new AzureMonitorIntegrationLogger(integrationLogger));
+                ServiceClientTracing.IsEnabled = true;
+
+                azureClientConfiguration = azureClientConfiguration.WithDelegatingHandler(new HttpLoggingDelegatingHandler())
+                    .WithLogLevel(azureMonitorLogging.InformationLevel);
+            }
+
+            return azureClientConfiguration
+                .Authenticate(credentials)
+                .WithSubscription(subscriptionId);
         }
     }
 }

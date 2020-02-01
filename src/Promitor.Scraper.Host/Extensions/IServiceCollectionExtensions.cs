@@ -10,6 +10,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Promitor.Core.Configuration.Model;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Configuration.Model.Metrics;
@@ -133,6 +134,8 @@ namespace Promitor.Scraper.Host.Extensions
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+            services.Configure<AzureMonitorConfiguration>(configuration.GetSection("azureMonitor"));
+            services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
 
             return services;
         }
