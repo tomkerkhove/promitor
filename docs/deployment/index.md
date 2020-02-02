@@ -3,7 +3,7 @@ layout: default
 title: Deploying Promitor
 ---
 
-Promitor supports running on Linux & Windows workloads, here is an overview of how you can deploy it.
+Here is an overview of how you can deploy Promitor on your infrastructure, we support both Linux and Windows.
 
 _For more information about advanced configuration, read our documentation [here](/configuration)._
 
