@@ -3,6 +3,14 @@ layout: default
 title: Frequently asked questions (FAQs)
 ---
 
+Here are a list of questions you may have:
+
+- [What Azure clouds are supported?](#what-azure-clouds-are-supported)
+- [What operating systems are supported?](#what-operating-systems-are-supported)
+- [Is scraping multiple subscriptions supported?](#is-scraping-multiple-subscriptions-supported)
+- [Are multi-dimensional metrics supported?](#are-multi-dimensional-metrics-supported)
+- [Why does Azure Blob & File Storage only report account-level information?](#why-does-azure-blob--file-storage-only-report-account-level-information)
+
 ## What Azure clouds are supported?
 
 We support `Global` (default), `China`, `UsGov` & `Germany` Azure clouds.
@@ -10,6 +18,10 @@ We support `Global` (default), `China`, `UsGov` & `Germany` Azure clouds.
 This can be configured in the metric configuration under `azureMetadata`.
 
 For more information see our ['Metric Configuration' page](/configuration/v1.x/metrics/#metrics).
+
+## What operating systems are supported?
+
+As of today, we only support Linux platforms but [we are working to support Windows as well](https://github.com/tomkerkhove/promitor/issues/67).
 
 ## Is scraping multiple subscriptions supported?
 
