@@ -41,6 +41,14 @@ Azure Resource Manager API:
 
 You can read more about the Azure Resource Manager limitations on [docs.microsoft.com](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-request-limits).
 
+## Azure Monitor Integration
+
+Promitor interacts with Azure Monitor API to scrape all the required metrics.
+
+During troubleshooting it can be interesting to gain insights on what the API returns, for which you can opt-in.
+
+You can opt-in for it by configuring the [runtime telemetry](/configuration/v1.x/runtime#azure-monitor).
+
 ## Configuration REST APIs
 
 In order to run Promitor certain aspects have to be configured. Once up & running,
