@@ -6,7 +6,12 @@ title: Runtime Configuration
 This article covers an overview of all the knobs that you can tweak to align the
 runtime with your needs.
 
-Promitor runtime is configured by mounting a volume to `/config/runtime.yaml`.
+Promitor runtime is configured by mounting the configuration to a volume.
+
+Depending on the operating system, it need to be available on :
+
+- `/config/runtime.yaml` for Linux
+- `c:/config/runtime.yaml` for Windows
 
 We provide the capability to override te runtime YAML via [environment variables](#overriding-configuration-with-environment-variables),
 if you have the need for it.
