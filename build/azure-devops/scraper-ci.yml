@@ -231,20 +231,15 @@ stages:
        OS.Name: 'windows'
      steps:
      - powershell: |
-        echo "Listing folders in '$(Pipeline.Workspace)'"
-        dir $(Pipeline.Workspace)/
-        dir $(Pipeline.Workspace)/variables/
-        echo "Reading file '$(Pipeline.Workspace)/variables/Build.BuildNumber.variable'"
-        Get-Content -Path $(Pipeline.Workspace)\variables\Build.BuildNumber.variable
-        $READ_VAR=$(Get-Content -Path $(Pipeline.Workspace)\variables\Build.BuildNumber.variable)
-        echo "Read value '$READ_VAR'"
-        echo "##vso[task.setvariable variable=Build.BuildNumber;]$READ_VAR"
-       displayName: 'Reading ''Build.BuildNumber'' variable'
-     - download: current
-       artifact: variables
-     - template: ./../templates/read-variable.yml
-       parameters:
-          variableName: 'Build.BuildNumber'
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: Docker@1
        displayName: 'Build Windows image'
        inputs:
