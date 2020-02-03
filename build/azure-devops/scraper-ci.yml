@@ -285,14 +285,6 @@ stages:
          command: 'Push an image'
          imageName: '$(Image.TaggedName)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: Docker@1
-       displayName: 'Push PR image to GitHub Package Registry'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-         command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
 - stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
