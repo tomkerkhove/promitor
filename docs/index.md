@@ -60,6 +60,7 @@ and vote for features!
   - [Runtime](configuration/v1.x/runtime)
 - **Operations**
   - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
+  - [Azure Monitor Integration](operations#azure-monitor-integration)
   - [Configuration REST APIs](operations#configuration-rest-apis)
   - [Health](operations#health)
 - **Walkthroughs**

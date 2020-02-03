@@ -5,8 +5,5 @@ weight: 1
 version:
 ---
 
-- {{% tag added %}} Azure API Management ([docs](https://promitor.io/configuration/v1.x/metrics/api-management) | [#331](https://github.com/tomkerkhove/promitor/issues/331))
-- {{% tag added %}} Azure SQL Server ([docs](https://promitor.io/configuration/v1.x/metrics/sql-server) | [#318](https://github.com/tomkerkhove/promitor/issues/318))
-- {{% tag added %}} Azure Storage account ([docs](https://promitor.io/configuration/v1.x/metrics/storage-account) | [#403](https://github.com/tomkerkhove/promitor/issues/403))
-- {{% tag added %}} Azure Storage Blobs ([docs](https://promitor.io/configuration/v1.x/metrics/blob-storage) | [#384](https://github.com/tomkerkhove/promitor/issues/384))
-- {{% tag added %}} Azure Storage Files ([docs](https://promitor.io/configuration/v1.x/metrics/file-storage) | [#386](https://github.com/tomkerkhove/promitor/issues/386))
+- {{% tag added %}} Support Prometheus service discovery in Helm chart ([#861](https://github.com/tomkerkhove/promitor/issues/861))
+- {{% tag added %}} Capability to gain insights on Azure Monitor integration ([docs](http://promitor.io/operations/#azure-monitor-integration) | [#848](https://github.com/tomkerkhove/promitor/issues/848))
