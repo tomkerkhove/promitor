@@ -21,7 +21,7 @@ For more information see our ['Metric Configuration' page](/configuration/v1.x/m
 
 ## What operating systems are supported?
 
-As of today, we only support Linux platforms but [we are working to support Windows as well](https://github.com/tomkerkhove/promitor/issues/67).
+We support running on both Linux & Windows platforms.
 
 ## Is scraping multiple subscriptions supported?
 

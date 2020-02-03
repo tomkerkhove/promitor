@@ -38,6 +38,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to container logs & Azure Application Insights
+- Available for Linux & Windows runtimes
 - Support for all Azure clouds
 
 And there is more on the way - Check our [backlog](https://github.com/tomkerkhove/promitor/issues)
