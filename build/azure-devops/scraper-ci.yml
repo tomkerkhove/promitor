@@ -230,11 +230,13 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
+     - download: current
+       artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
           variableName: 'Build.BuildNumber'
      - task: Docker@1
-       displayName: 'Build an image'
+       displayName: 'Build Windows image'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
@@ -246,7 +248,7 @@ stages:
          addDefaultLabels: false
        condition: not(eq(variables['Build.Reason'], 'PullRequest'))
      - task: Docker@1
-       displayName: 'Build an image'
+       displayName: 'Build Windows image'
        inputs:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
