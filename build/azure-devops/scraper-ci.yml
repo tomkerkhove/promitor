@@ -235,8 +235,8 @@ stages:
         dir $(Pipeline.Workspace)/
         dir $(Pipeline.Workspace)/variables/
         echo "Reading file '$(Pipeline.Workspace)/variables/Build.BuildNumber.variable'"
-        cat $(Pipeline.Workspace)\variables\Build.BuildNumber.variable
-        READ_VAR=$(cat $(Pipeline.Workspace)\variables\Build.BuildNumber.variable)
+        cat $(Pipeline.Workspace)/variables/Build.BuildNumber.variable
+        READ_VAR=$(cat $(Pipeline.Workspace)/variables/Build.BuildNumber.variable)
         echo "Read value '$READ_VAR'"
         if [ -z "$READ_VAR" ]; then
           echo "##vso[task.logissue type=error;]No variable read with name \"Build.BuildNumber\""
