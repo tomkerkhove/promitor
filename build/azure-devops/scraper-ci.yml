@@ -230,7 +230,7 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - bash: |
+     - powershell: |
         echo "Listing folders in '$(Pipeline.Workspace)'"
         dir $(Pipeline.Workspace)/
         dir $(Pipeline.Workspace)/variables/
