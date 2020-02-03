@@ -140,12 +140,17 @@ stages:
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]
+  variables:
+    Tags.PR: '$(System.PullRequest.PullRequestNumber)-$(OS.Name)'
+    Tags.Experimental: 'experimental-$(OS.Name)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
+     variables:
+       OS.Name: 'linux'
      steps:
      - download: current
        artifact: variables
@@ -170,7 +175,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
+         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'
@@ -203,10 +208,10 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
          command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
+         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - powershell: |
-         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
+         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)
        displayName: 'Tag image as experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
      - task: Docker@1
@@ -215,24 +220,19 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
          command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
+         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
    - job: DockerBuildWindows
      displayName: Build Docker Image (Windows)
      condition: succeeded()
      pool:
        vmImage: windows-2019
+     variables:
+       OS.Name: 'windows'
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
      - task: Docker@1
        displayName: 'Build an image'
        inputs:
@@ -251,7 +251,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
+         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR) --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'
@@ -284,10 +284,10 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
          command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
+         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - powershell: |
-         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
+         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)
        displayName: 'Tag image as experimental'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
      - task: Docker@1
@@ -296,7 +296,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
          command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
+         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
 - stage: Helm2
   displayName: Helm Chart (2.x)
