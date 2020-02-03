@@ -251,7 +251,7 @@ stages:
      - template: ./../templates/run-docker-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
-          volumes: '$(System.DefaultWorkingDirectory)/src/metric-config.yaml:c:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+          volumes: '$(System.DefaultWorkingDirectory)/src/:c:/config/ promitor-agent-scraper-ci'
      - task: Docker@1
        displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
        inputs:
