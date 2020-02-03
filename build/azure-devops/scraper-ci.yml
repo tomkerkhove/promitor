@@ -238,10 +238,6 @@ stages:
         Get-Content -Path $(Pipeline.Workspace)\variables\Build.BuildNumber.variable
         $READ_VAR=$(Get-Content -Path $(Pipeline.Workspace)\variables\Build.BuildNumber.variable)
         echo "Read value '$READ_VAR'"
-        if [ -z "$READ_VAR" ]; then
-          echo "##vso[task.logissue type=error;]No variable read with name \"Build.BuildNumber\""
-          echo "##vso[task.complete result=Failed;]"
-        fi
         echo "##vso[task.setvariable variable=Build.BuildNumber;]$READ_VAR"
        displayName: 'Reading ''Build.BuildNumber'' variable'
      - download: current
