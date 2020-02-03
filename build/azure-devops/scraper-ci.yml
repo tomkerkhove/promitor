@@ -266,7 +266,7 @@ stages:
          imageName: '$(Image.TaggedName)'
          containerName: 'promitor-ci'
          ports: '8998:80'
-         volumes: '$(System.DefaultWorkingDirectory)/src/metric-config.yaml:c:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+         volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
          envVars: |
           PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
           PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
