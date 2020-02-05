@@ -258,7 +258,7 @@ stages:
          containerregistrytype: 'Container Registry'
          dockerRegistryEndpoint: 'Docker Hub'
          dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR) --no-cache'
+         arguments: '--tag promitor-agent-scraper-ci  --build-arg CONFIG_FOLDER="c:/config/" --no-cache'
          useDefaultContext: false
          buildContext: ./src/
          imageName: '$(Image.TaggedName)'

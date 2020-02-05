@@ -12,6 +12,8 @@ RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configur
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.1 as runtime
 WORKDIR /app
+ARG CONFIG_FOLDER="/config/"
+ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
 COPY --from=build /src/app .
 
 ENTRYPOINT ["dotnet", "Promitor.Scraper.Host.dll"]
