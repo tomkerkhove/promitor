@@ -181,19 +181,11 @@ stages:
          imageName: '$(Image.TaggedName)'
          addDefaultLabels: false
        condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: Docker@1
-       displayName: 'Run Linux image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Run an image'
-         imageName: '$(Image.TaggedName)'
-         containerName: 'promitor-ci'
-         ports: '8999:80'
-         volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
-         envVars: |
-          PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
-          PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
+     - template: ./../templates/run-docker-image.yml
+       parameters:
+          volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+          imageName: '$(Image.TaggedName)'
+          os: '$(OS.Name)'
      - task: Docker@1
        displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
        inputs:
@@ -269,19 +261,6 @@ stages:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
           os: '$(OS.Name)'
-     - task: Docker@1
-       displayName: 'Run Windows image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Run an image'
-         imageName: '$(Image.TaggedName)'
-         containerName: 'promitor-ci'
-         ports: '8998:80'
-         volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
-         envVars: |
-          PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
-          PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
      - task: Docker@1
        displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
        inputs:
