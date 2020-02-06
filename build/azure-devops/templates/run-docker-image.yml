@@ -2,6 +2,7 @@ parameters:
   imageName: ''
   containerName: 'promitor-ci'
   volumes: 'promitor-ci'
+  os: ''
 
 steps:
 - bash: |
@@ -20,13 +21,19 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"volumes\""
       echo "##vso[task.complete result=Failed;]"
     fi
+    echo "Variable 'os' found with value '$OS'"
+    if [ -z "$OS" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"os\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
   env:
     IMAGE_NAME: ${{ parameters.imageName }}
     CONTAINER_NAME: ${{ parameters.containerName }}
     VOLUMES: ${{ parameters.volumes }}
+    OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
-  displayName: 'Run ''${{ parameters.imageName }}'' image as ''${{ parameters.containerName }}'' container'
+  displayName: 'Run ''${{ parameters.imageName }}'' image as ''${{ parameters.containerName }}'' container (${{ parameters.os }})'
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker Hub'

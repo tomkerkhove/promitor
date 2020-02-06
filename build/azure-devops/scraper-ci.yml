@@ -264,6 +264,11 @@ stages:
          imageName: '$(Image.TaggedName)'
          addDefaultLabels: false
        condition: eq(variables['Build.Reason'], 'PullRequest')
+     - template: ./../templates/run-docker-image.yml
+       parameters:
+          volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
+          imageName: '$(Image.TaggedName)'
+          os: '$(OS.Name)'
      - task: Docker@1
        displayName: 'Run Windows image'
        inputs:
