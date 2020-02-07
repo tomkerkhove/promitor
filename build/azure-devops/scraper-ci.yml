@@ -150,6 +150,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      variables:
+       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
      steps:
      - download: current
@@ -157,63 +158,40 @@ stages:
      - template: ./../templates/read-variable.yml
        parameters:
           variableName: 'Build.BuildNumber'
-     - task: Docker@1
-       displayName: 'Build an image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --no-cache'
-         useDefaultContext: false
-         buildContext: ./src/
-         imageName: '$(Image.TaggedName)'
-         addDefaultLabels: false
-       condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-     - task: Docker@1
-       displayName: 'Build an image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR) --no-cache'
-         useDefaultContext: false
-         buildContext: ./src/
-         imageName: '$(Image.TaggedName)'
-         addDefaultLabels: false
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-scraper-ci'
+             os: '$(OS.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             os: '$(OS.Name)'
      - template: ./../templates/run-docker-image.yml
        parameters:
           volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
           os: '$(OS.Name)'
-     - task: Docker@1
-       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: Docker@1
-       displayName: 'Push PR image to GitHub Package Registry'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-         command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - powershell: |
-         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)
-       displayName: 'Tag image as experimental'
-       condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-     - task: Docker@1
-       displayName: 'Push experimental image to GitHub Package Registry'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-         command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
-       condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'
    - job: DockerBuildWindows
      displayName: Build Docker Image (Windows)
      condition: succeeded()
@@ -239,13 +217,12 @@ stages:
              buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
              tags: '--tag promitor-agent-scraper-ci --tag promitor-agent-scraper-ci-non-pr'
              os: '$(OS.Name)'
-     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/build-docker-image.yml
-          parameters:
-             imageName: '$(Image.TaggedName)'
-             buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
-             tags: '--tag promitor-agent-scraper-ci'
-             os: '$(OS.Name)'
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+          tags: '--tag promitor-agent-scraper-ci'
+          os: '$(OS.Name)'
      - template: ./../templates/run-docker-image.yml
        parameters:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'

@@ -11,16 +11,6 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"imageName\""
       echo "##vso[task.complete result=Failed;]"
     fi
-    echo "Variable 'tags' found with value '$TAGS'"
-    if [ -z "$TAGS" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"tags\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'buildArgs' found with value '$BUILD_ARGS'"
-    if [ -z "$BUILD_ARGS" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"buildArgs\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
     echo "Variable 'os' found with value '$OS'"
     if [ -z "$OS" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"os\""
@@ -28,8 +18,6 @@ steps:
     fi
   env:
     IMAGE_NAME: ${{ parameters.imageName }}
-    BUILD_ARGS: ${{ parameters.buildArgs }}
-    TAGS: ${{ parameters.tags }}
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
