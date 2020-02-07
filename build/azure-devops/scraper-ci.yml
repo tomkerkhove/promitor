@@ -236,7 +236,7 @@ stages:
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
-          tags: 'promitor-agent-scraper-ci'
+          tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
      - template: ./../templates/run-docker-image.yml
        parameters:
