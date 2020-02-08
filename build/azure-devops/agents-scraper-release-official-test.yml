@@ -5,7 +5,7 @@ trigger: none
 pr: none
 variables:
   DotNet.SDK.Version: '3.1.101'
-  Image.Name: 'tomkerkhove/promitor-agent-scraper'
+  Image.Name: 'tomkerkhove/promitor-agent-scraper-sandbox'
   Image.TaggedName: '$(Image.Name):$(Image.Version)'
   Release.TagName: '$(Build.BuildNumber)'
   Helm.App.Version: '$(Image.Version)'
