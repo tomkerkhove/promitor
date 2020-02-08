@@ -62,7 +62,7 @@ stages:
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: ''
-          tags: '--tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
+          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
           os: '$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
