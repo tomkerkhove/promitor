@@ -135,10 +135,6 @@ stages:
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''latest'''
-        imageName: '$(Image.Name):latest'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
         imageDisplayName: '''latest-$(OS.Name)'''
         imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
