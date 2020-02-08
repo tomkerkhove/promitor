@@ -1,0 +1,121 @@
+name: $(Image.Version)
+resources:
+- repo: self
+trigger: none
+pr: none
+variables:
+  DotNet.SDK.Version: '3.1.101'
+  Image.Name: 'tomkerkhove/promitor-agent-scraper'
+  Image.TaggedName: '$(Image.Name):$(Image.Version)'
+  Release.TagName: '$(Build.BuildNumber)'
+  Helm.App.Version: '$(Image.Version)'
+  # Release.Title is configured in the build definition as settable at queue time
+  # Image.Version is configured in the build definition as settable at queue time
+  # Helm.Chart.Version is configured in the build definition as settable at queue time
+stages:
+- stage: Init
+  displayName: Prepare Release
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+        $index = "$(Image.Version)".IndexOf(".", 2);
+        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+        Write-Host "Found version '$majorMinorVersion'"
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+       displayName: 'Determine ''{major}.{minor}'' version'
+     - template: ./../templates/persist-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: Build
+  dependsOn: Init
+  displayName: Build and Push Docker image
+  jobs:
+   - job: BuildLinux
+     displayName: Build Linux Docker image
+     pool:
+       vmImage: ubuntu-16.04
+     variables:
+       OS.Name: 'linux'
+     steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+        version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          buildArgs: ''
+          tags: '--tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
+          os: '$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}'''
+        imageName: '$(Image.TaggedName)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-linux'''
+        imageName: '$(Image.TaggedName)-linux'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}-linux'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-linux'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest'''
+        imageName: '$(Image.Name):latest'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest-linux'''
+        imageName: '$(Image.Name):latest-linux'
+- stage: ReleaseGitHub
+  displayName: Release on GitHub
+  dependsOn: Build
+  jobs:
+   - job: CreateRelease
+     displayName: Create Release
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  dependsOn: Build
+  jobs:
+   - job: PushHelmChart
+     displayName: Push Helm Chart to ACR
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: HelmInstaller@0
+       inputs:
+        helmVersion: '2.9.1'
+     - powershell: |
+        mkdir output/
+        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
+       workingDirectory: charts
+       displayName: 'Package Helm Chart'

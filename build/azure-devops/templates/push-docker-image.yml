@@ -1,5 +1,6 @@
 parameters:
   registryEndpoint: 'Docker Hub'
+  imageDisplayName: ''
   imageName: ''
 
 steps:
@@ -19,7 +20,7 @@ steps:
     IMAGE_NAME: ${{ parameters.imageName }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
-  displayName: 'Push image to ${{ parameters.registryEndpoint }}'
+  displayName: 'Push ${{ parameters.imageDisplayName }} image to ${{ parameters.registryEndpoint }}'
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: '${{ parameters.registryEndpoint }}'
