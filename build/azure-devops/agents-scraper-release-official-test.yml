@@ -95,11 +95,13 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - download: current
-       artifact: variables
-     - template: ./../templates/read-variable.yml
-       parameters:
-          variableName: 'Image.MajorMinorVersion'
+     - powershell: |
+        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+        $index = "$(Image.Version)".IndexOf(".", 2);
+        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+        Write-Host "Found version '$majorMinorVersion'"
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+       displayName: 'Determine ''{major}.{minor}'' version'
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
        inputs:
