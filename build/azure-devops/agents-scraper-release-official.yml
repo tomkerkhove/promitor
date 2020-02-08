@@ -131,9 +131,9 @@ stages:
           ```
           ### Docker Image information
           New Docker image tags are available:
-          - `latest`
-          - `$(Image.Version)`
-          - `$(Image.MajorMinorVersion)`
+          - `latest`, `latest-linux`, `latest-windows`
+          - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+          - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
 
           Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
