@@ -62,7 +62,7 @@ stages:
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: ''
-          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
+          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
           os: '$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
@@ -70,24 +70,24 @@ stages:
         imageName: '$(Image.TaggedName)'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}-linux'''
-        imageName: '$(Image.TaggedName)-linux'
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''{major}.{minor}-linux'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-linux'
+        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''latest'''
         imageName: '$(Image.Name):latest'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''latest-linux'''
-        imageName: '$(Image.Name):latest-linux'
+        imageDisplayName: '''latest-$(OS.Name)'''
+        imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
