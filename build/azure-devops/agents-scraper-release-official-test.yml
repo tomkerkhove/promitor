@@ -62,7 +62,7 @@ stages:
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: ''
-          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
+          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
           os: '$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
@@ -70,24 +70,75 @@ stages:
         imageName: '$(Image.TaggedName)'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}-linux'''
-        imageName: '$(Image.TaggedName)-linux'
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''{major}.{minor}-linux'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-linux'
+        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''latest'''
         imageName: '$(Image.Name):latest'
      - template: ./../templates/push-docker-image.yml
        parameters:
-        imageDisplayName: '''latest-linux'''
-        imageName: '$(Image.Name):latest-linux'
+        imageDisplayName: '''latest-$(OS.Name)'''
+        imageName: '$(Image.Name):latest-$(OS.Name)'
+   - job: BuildWindows
+     displayName: Build Windows Docker image
+     pool:
+       vmImage: windows-2019
+     variables:
+       OS.Name: 'windows'
+     steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+          variableName: 'Image.MajorMinorVersion'
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+        version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+          tags: '--tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
+          os: '$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}'''
+        imageName: '$(Image.TaggedName)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest'''
+        imageName: '$(Image.Name):latest'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest-$(OS.Name)'''
+        imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
