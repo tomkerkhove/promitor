@@ -58,36 +58,36 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-     - task: Docker@1
-       displayName: 'Build Docker image'
-       inputs:
-        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-        arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          buildArgs: ''
+          tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-linux --tag $(Image.Name):$(Image.MajorMinorVersion)-linux --tag $(Image.Name):latest-linux'
+          os: '$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}'''
         imageName: '$(Image.TaggedName)'
-        includeLatestTag: true
-        useDefaultContext: false
-        buildContext: ./src/
-     - task: Docker@1
-       displayName: 'Push ''{major}.{minor}.{patch}'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
-        imageName: '$(Image.TaggedName)'
-     - task: Docker@1
-       displayName: 'Push ''{major}.{minor}'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-linux'''
+        imageName: '$(Image.TaggedName)-linux'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-     - task: Docker@1
-       displayName: 'Push ''latest'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}-linux'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-linux'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest'''
         imageName: '$(Image.Name):latest'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest-linux'''
+        imageName: '$(Image.Name):latest-linux'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
