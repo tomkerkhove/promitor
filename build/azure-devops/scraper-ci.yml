@@ -151,6 +151,7 @@ stages:
        vmImage: ubuntu-16.04
      variables:
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
+       Image.TaggedName.OSAgnostic: '$(Image.Name):PR$(System.PullRequest.PullRequestNumber)'
        OS.Name: 'linux'
      steps:
      - download: current
@@ -168,7 +169,7 @@ stages:
         - template: ./../templates/build-docker-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
              os: '$(OS.Name)'
      - template: ./../templates/run-docker-image.yml
        parameters:
@@ -179,6 +180,13 @@ stages:
         - template: ./../templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName.OSAgnostic)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
