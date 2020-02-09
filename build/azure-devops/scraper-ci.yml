@@ -169,7 +169,12 @@ stages:
         - template: ./../templates/build-docker-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             tags: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             os: '$(OS.Name)'
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName.OSAgnostic)'
+             tags: '--tag promitor-agent-scraper-ci'
              os: '$(OS.Name)'
      - template: ./../templates/run-docker-image.yml
        parameters:
@@ -182,15 +187,15 @@ stages:
               imageName: '$(Image.TaggedName)'
         - template: ./../templates/push-docker-image.yml
           parameters:
+              imageName: '$(Image.TaggedName.OSAgnostic)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
               imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
               imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-              imageName: '$(Image.TaggedName.OSAgnostic)'
      - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
         - powershell: |
             docker tag $(Image.TaggedName) $(Image.Experimental)
