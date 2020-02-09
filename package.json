@@ -23,7 +23,7 @@
   "devDependencies": {
     "husky": "4.2.1",
     "lint-staged": "10.0.7",
-    "markdownlint-cli": "0.21.0"
+    "markdownlint-cli": "0.22.0"
   },
   "lint-staged": {
     "*.md": [
