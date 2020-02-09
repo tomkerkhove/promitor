@@ -100,10 +100,12 @@
                             "expression": {
                                 "and": [
                                     {
-                                        "contains": [
-                                            "@outputs('Determine_GitHub_Issue_Id')",
-                                            "linux"
-                                        ]
+                                        "not": {
+                                            "contains": [
+                                                "@outputs('Determine_GitHub_Issue_Id')",
+                                                "-"
+                                            ]
+                                        }
                                     }
                                 ]
                             },
