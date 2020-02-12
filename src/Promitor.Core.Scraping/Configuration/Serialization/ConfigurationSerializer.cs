@@ -72,7 +72,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 throw new Exception("No version was specified in the metric declaration");
             }
 
-            var rawSpecVersion = mappingNode.Children[new YamlScalarNode("version")]?.ToString();
+            var rawSpecVersion = mappingNode.Children[new YamlScalarNode("version")].ToString();
 
             if (System.Enum.TryParse(typeof(SpecVersion), rawSpecVersion, true, out var specVersion) == false)
             {
