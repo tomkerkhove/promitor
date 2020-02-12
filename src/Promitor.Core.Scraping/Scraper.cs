@@ -120,7 +120,7 @@ namespace Promitor.Core.Scraping
                     var definition = new { error = new { code = "", message = "" } };
                     var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
 
-                    if (jsonError != null && jsonError.error != null)
+                    if (jsonError.error != null)
                     {
                         if (!string.IsNullOrEmpty(jsonError.error.message))
                         {
