@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -14,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         where TObject: new()
     {
         private readonly HashSet<string> _ignoredFields = new HashSet<string>();
-        private readonly Dictionary<string, FieldContext> _fields = new Dictionary<string, FieldContext>();
+        private readonly List<FieldDeserializationInfo> _fields = new List<FieldDeserializationInfo>();
 
         protected ILogger Logger { get; }
 
@@ -29,18 +28,19 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         public virtual TObject Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var result = new TObject();
+            var deserializationContext = new DeserializationContext<TObject>(_ignoredFields, _fields);
 
             foreach (var child in node.Children)
             {
-                if (_ignoredFields.Contains(child.Key.ToString()))
+                if (deserializationContext.IsIgnored(child.Key.ToString()))
                 {
                     continue;
                 }
 
-                if (_fields.TryGetValue(child.Key.ToString(), out var fieldContext))
+                if (deserializationContext.TryGetField(child.Key.ToString(), out var fieldContext))
                 {
                     fieldContext.SetValue(
-                        result, GetFieldValue(child, fieldContext, errorReporter));
+                        result, GetFieldValue(child, fieldContext.DeserializationInfo, errorReporter));
                 }
                 else
                 {
@@ -48,15 +48,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 }
             }
 
-            foreach (var unsetField in _fields.Where(field => !field.Value.HasBeenSet))
+            foreach (var unsetField in deserializationContext.UnsetFields)
             {
-                if (unsetField.Value.IsRequired)
+                if (unsetField.DeserializationInfo.IsRequired)
                 {
-                    errorReporter.ReportError(node, $"'{unsetField.Key}' is a required field but was not found.");
+                    errorReporter.ReportError(node, $"'{unsetField.DeserializationInfo.YamlFieldName}' is a required field but was not found.");
                 }
                 else
                 {
-                    unsetField.Value.SetDefaultValue(result);
+                    unsetField.SetDefaultValue(result);
                 }
             }
 
@@ -91,7 +91,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields[GetName(memberExpression)] = new FieldContext(memberExpression.Member as PropertyInfo, true, default(TReturn), customMapperFunc);
+            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, true, default(TReturn), customMapperFunc));
         }
 
         protected void MapRequired<TReturn>(
@@ -99,15 +99,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             where TReturn: new()
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields[GetName(memberExpression)] = new FieldContext(
-                memberExpression.Member as PropertyInfo, true, default(TReturn), null, deserializer);
+            _fields.Add(new FieldDeserializationInfo(
+                memberExpression.Member as PropertyInfo, true, default(TReturn), null, deserializer));
         }
         
         protected void MapOptional<TReturn>(
             Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields[GetName(memberExpression)] = new FieldContext(memberExpression.Member as PropertyInfo, false, defaultValue, customMapperFunc);
+            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, false, defaultValue, customMapperFunc));
         }
 
         protected void MapOptional<TReturn>(
@@ -115,8 +115,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             where TReturn: new()
         {
             var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields[GetName(memberExpression)] = new FieldContext(
-                memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer);
+            _fields.Add(new FieldDeserializationInfo(
+                memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer));
         }
 
         protected void IgnoreField(string fieldName)
@@ -124,26 +124,20 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             _ignoredFields.Add(fieldName);
         }
 
-        private static string GetName(MemberExpression memberExpression)
-        {
-            return Char.ToLowerInvariant(memberExpression.Member.Name[0]) + memberExpression.Member.Name.Substring(1);
-        }
-
         private static object GetFieldValue(
-            KeyValuePair<YamlNode, YamlNode> fieldNodePair, FieldContext fieldContext, IErrorReporter errorReporter)
+            KeyValuePair<YamlNode, YamlNode> fieldNodePair, FieldDeserializationInfo fieldDeserializationInfo, IErrorReporter errorReporter)
         {
-            if (fieldContext.CustomMapperFunc != null)
+            if (fieldDeserializationInfo.CustomMapperFunc != null)
             {
-                return fieldContext.CustomMapperFunc(fieldNodePair.Value.ToString(), fieldNodePair, errorReporter);
+                return fieldDeserializationInfo.CustomMapperFunc(fieldNodePair.Value.ToString(), fieldNodePair, errorReporter);
             }
 
-
-            if (fieldContext.Deserializer != null)
+            if (fieldDeserializationInfo.Deserializer != null)
             {
-                return fieldContext.Deserializer.DeserializeObject((YamlMappingNode)fieldNodePair.Value, errorReporter);
+                return fieldDeserializationInfo.Deserializer.DeserializeObject((YamlMappingNode)fieldNodePair.Value, errorReporter);
             }
 
-            var propertyType = Nullable.GetUnderlyingType(fieldContext.PropertyInfo.PropertyType) ?? fieldContext.PropertyInfo.PropertyType;
+            var propertyType = Nullable.GetUnderlyingType(fieldDeserializationInfo.PropertyInfo.PropertyType) ?? fieldDeserializationInfo.PropertyInfo.PropertyType;
             if (propertyType.IsEnum)
             {
                 var parseSucceeded = System.Enum.TryParse(
@@ -175,44 +169,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             try
             {
-                return Convert.ChangeType(fieldNodePair.Value.ToString(), fieldContext.PropertyInfo.PropertyType);
+                return Convert.ChangeType(fieldNodePair.Value.ToString(), fieldDeserializationInfo.PropertyInfo.PropertyType);
             }
             catch (FormatException)
             {
-                errorReporter.ReportError(fieldNodePair.Value, $"'{fieldNodePair.Value}' is not a valid value for '{fieldNodePair.Key}'. The value must be of type {fieldContext.PropertyInfo.PropertyType}.");
+                errorReporter.ReportError(fieldNodePair.Value, $"'{fieldNodePair.Value}' is not a valid value for '{fieldNodePair.Key}'. The value must be of type {fieldDeserializationInfo.PropertyInfo.PropertyType}.");
             }
 
             return null;
-        }
-
-        private class FieldContext
-        {
-            public FieldContext(PropertyInfo propertyInfo, bool isRequired, object defaultValue, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc, IDeserializer deserializer = null)
-            {
-                CustomMapperFunc = customMapperFunc;
-                PropertyInfo = propertyInfo;
-                IsRequired = isRequired;
-                DefaultValue = defaultValue;
-                Deserializer = deserializer;
-            }
-
-            public bool HasBeenSet { get; private set; }
-            public PropertyInfo PropertyInfo { get; }
-            public bool IsRequired { get; }
-            public object DefaultValue { get; }
-            public Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> CustomMapperFunc { get; }
-            public IDeserializer Deserializer { get; }
-
-            public void SetValue(TObject target, object value)
-            {
-                PropertyInfo.SetValue(target, value);
-                HasBeenSet = true;
-            }
-
-            public void SetDefaultValue(TObject target)
-            {
-                PropertyInfo.SetValue(target, DefaultValue);
-            }
         }
     }
 }

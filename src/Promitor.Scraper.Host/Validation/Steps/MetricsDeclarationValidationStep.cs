@@ -62,15 +62,19 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         private void LogDeserializationMessages(IErrorReporter errorReporter)
         {
-            foreach (var message in errorReporter.Messages)
+            if (errorReporter.Messages.Any())
             {
-                if (message.MessageType == MessageType.Error)
+                var combinedMessages = string.Join(
+                    Environment.NewLine, errorReporter.Messages.Select(message => message.FormattedMessage));
+
+                var deserializationProblemsMessage = $"The following problems were found with the metric configuration:{Environment.NewLine}{combinedMessages}";
+                if (errorReporter.HasErrors)
                 {
-                    Logger.LogError(message.FormattedMessage);
+                    Logger.LogError(deserializationProblemsMessage);
                 }
                 else
                 {
-                    Logger.LogWarning(message.FormattedMessage);
+                    Logger.LogWarning(deserializationProblemsMessage);
                 }
             }
         }

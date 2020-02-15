@@ -133,6 +133,26 @@ country: Scotland");
                 r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("customField"))), Times.Never);
         }
 
+        [Fact]
+        public void Deserialize_CalledMultipleTimes_DoesNotReusePreviousState()
+        {
+            // Since the deserializers are created once during startup, this test is to ensure
+            // that if the same deserializer is used to deserialize multiple Yaml nodes, we don't
+            // reuse the state from the previous time.
+
+            // Arrange
+            var node1 = YamlUtils.CreateYamlNode("name: Promitor");
+            var node2 = YamlUtils.CreateYamlNode("age: 20");
+
+            // Act
+            deserializer.Deserialize(node1, errorReporter.Object);
+            var result = deserializer.Deserialize(node2, errorReporter.Object);
+
+            // Assert
+            errorReporter.Verify(
+                r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("name"))));
+        }
+
         // TODO: Check for invalid formats (crontab expression, timespan, etc)
         // TODO: Add a test to make sure that the error is against the mapping node rather than its value for missing required fields
 

@@ -35,6 +35,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// </summary>
         public string Message { get; }
 
+        /// <summary>
+        /// Gets the message formatted for output to users.
+        /// </summary>
         public string FormattedMessage => $"{MessageType} {Node.Start.Line}:{Node.Start.Column}: {Message}";
 
         public override string ToString()
