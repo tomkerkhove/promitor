@@ -37,8 +37,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="runtimeMetricsCollector">Metrics collector for our runtime</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        /// <param name="logger"></param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, IRuntimeMetricsCollector runtimeMetricsCollector, ILoggerFactory loggerFactory, ILogger logger)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, IRuntimeMetricsCollector runtimeMetricsCollector, ILoggerFactory loggerFactory)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -47,7 +46,6 @@ namespace Promitor.Integrations.AzureMonitor
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _logger = logger;
             _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, runtimeMetricsCollector);
         }
 
