@@ -1,8 +1,6 @@
 ﻿using System;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
