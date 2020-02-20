@@ -16,3 +16,7 @@ telemetry:
     isEnabled: true
     verbosity: trace
   defaultVerbosity: trace
+azureMonitor:
+  logging:
+    informationLevel: Headers
+    isEnabled: true

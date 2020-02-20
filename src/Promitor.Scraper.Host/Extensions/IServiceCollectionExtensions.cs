@@ -8,9 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Promitor.Core;
 using Promitor.Core.Configuration.Model;
+using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Configuration.Model.Metrics;
@@ -48,9 +50,11 @@ namespace Promitor.Scraper.Host.Extensions
             var metrics = metricsProvider.Get(true);
 
             var logger = serviceProviderToCreateJobsWith.GetService<ILogger<MetricScrapingJob>>();
+            var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
+            var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IRuntimeMetricsCollector>();
-            var azureMonitorClient = ConfigureAzureMonitorClient(metrics, runtimeMetricCollector, configuration, logger);
+            var azureMonitorClient = ConfigureAzureMonitorClient(metrics, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
             services.AddSingleton(azureMonitorClient);
 
             foreach (var metric in metrics.Metrics)
@@ -74,11 +78,11 @@ namespace Promitor.Scraper.Host.Extensions
             return services;
         }
 
-        private static AzureMonitorClient ConfigureAzureMonitorClient(MetricsDeclaration metricsDeclaration, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, ILogger logger)
+        private static AzureMonitorClient ConfigureAzureMonitorClient(MetricsDeclaration metricsDeclaration, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             var azureCredentials = DetermineAzureCredentials(configuration);
             var azureMetadata = metricsDeclaration.AzureMetadata;
-            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, runtimeMetricCollector, logger);
+            var azureMonitorClient = new AzureMonitorClient(azureMetadata.Cloud, azureMetadata.TenantId, azureMetadata.SubscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, runtimeMetricCollector, loggerFactory);
             return azureMonitorClient;
         }
 
@@ -163,6 +167,8 @@ namespace Promitor.Scraper.Host.Extensions
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
+            services.Configure<AzureMonitorConfiguration>(configuration.GetSection("azureMonitor"));
+            services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
 
             return services;
         }

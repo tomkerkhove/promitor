@@ -11,6 +11,7 @@ type.
 The following fields need to be provided:
 
 - `functionAppName` - The name of the Azure Function App
+- `slotName` - The name of the deployment slot *(optional)*
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftwebsites-functions).
 
