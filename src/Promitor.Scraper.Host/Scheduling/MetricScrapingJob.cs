@@ -9,7 +9,6 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Scraper.Host.Scheduling
