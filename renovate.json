@@ -12,7 +12,7 @@
         "datasources": ["docker"],
         "packagePatterns": ["^mcr.microsoft.com/dotnet/core/"],
         "groupName": ".NET Core Docker containers",
-      },
+      }
     ],
   "extends": [
     "config:base",
