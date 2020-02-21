@@ -9,9 +9,9 @@
   "prConcurrentLimit": 0,
   "packageRules": [
       {
-        "datasources": ['docker'],
-        "packagePatterns": ['^mcr.microsoft.com/dotnet/core/'],
-        "groupName": '.NET Core Docker containers',
+        "datasources": ["docker"],
+        "packagePatterns": ["^mcr.microsoft.com/dotnet/core/"],
+        "groupName": ".NET Core Docker containers",
       },
     ],
   "extends": [
