@@ -101,7 +101,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             _secretDeserializer.Setup(d => d.DeserializeObject(sasTokenNode, _errorReporter.Object)).Returns(secret);
 
             // Act
-            var resource = (StorageQueueResourceV1)_deserializer.Deserialize(node, _errorReporter.Object);
+            var resource = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(secret, resource.SasToken);

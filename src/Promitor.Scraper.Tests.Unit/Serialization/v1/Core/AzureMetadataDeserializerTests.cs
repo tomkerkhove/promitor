@@ -15,7 +15,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
     public class AzureMetadataDeserializerTests
     {
         private readonly AzureMetadataDeserializer _deserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public AzureMetadataDeserializerTests()
         {

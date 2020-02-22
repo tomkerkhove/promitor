@@ -10,15 +10,15 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 {
     public class DeserializationTests
     {
-        private static readonly TimeSpan DefaultInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan defaultInterval = TimeSpan.FromMinutes(5);
 
-        private readonly Mock<IErrorReporter> errorReporter = new Mock<IErrorReporter>();
-        private readonly Mock<IDeserializer> childDeserializer = new Mock<IDeserializer>();
-        private readonly RegistrationConfigDeserializer deserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IDeserializer> _childDeserializer = new Mock<IDeserializer>();
+        private readonly RegistrationConfigDeserializer _deserializer;
 
         public DeserializationTests()
         {
-            deserializer = new RegistrationConfigDeserializer(childDeserializer.Object);
+            _deserializer = new RegistrationConfigDeserializer(_childDeserializer.Object);
         }
 
         [Fact]
@@ -28,7 +28,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal("Promitor", result.Name);
@@ -41,7 +41,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("town: Glasgow");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal("Glasgow", result.Town);
@@ -54,7 +54,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("age: 17");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Null(result.Name);
@@ -67,7 +67,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("age: 22");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(22, result.Age);
@@ -80,7 +80,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(0, result.Age);
@@ -93,7 +93,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("day: Monday");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(DayOfWeek.Monday, result.Day);
@@ -106,7 +106,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("nullableDay: Monday");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(DayOfWeek.Monday, result.NullableDay);
@@ -119,7 +119,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(default(DayOfWeek), result.Day);
@@ -136,7 +136,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
     third: art");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             var expectedClasses = new Dictionary<string, string>
@@ -155,7 +155,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("interval: 01:02:03");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(new TimeSpan(1, 2, 3), result.Interval);
@@ -168,10 +168,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Equal(DefaultInterval, result.DefaultedInterval);
+            Assert.Equal(defaultInterval, result.DefaultedInterval);
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("nullableInterval: 01:02:03");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Equal(new TimeSpan(1, 2, 3), result.NullableInterval);
@@ -194,7 +194,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("invertedProperty: false");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.True(result.InvertedProperty);
@@ -208,11 +208,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 @"child:
     childProperty: 123");
             var child = new ChildConfig();
-            childDeserializer.Setup(
-                d => d.DeserializeObject((YamlMappingNode)node.Children["child"], errorReporter.Object)).Returns(child);
+            _childDeserializer.Setup(
+                d => d.DeserializeObject((YamlMappingNode)node.Children["child"], _errorReporter.Object)).Returns(child);
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(child, result.Child);
@@ -226,11 +226,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 @"optionalChild:
     childProperty: 123");
             var child = new ChildConfig();
-            childDeserializer.Setup(
-                d => d.DeserializeObject((YamlMappingNode)node.Children["optionalChild"], errorReporter.Object)).Returns(child);
+            _childDeserializer.Setup(
+                d => d.DeserializeObject((YamlMappingNode)node.Children["optionalChild"], _errorReporter.Object)).Returns(child);
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(child, result.OptionalChild);
@@ -268,7 +268,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
                 MapRequired(t => t.Classes);
                 MapOptional(t => t.Town);
                 MapOptional(t => t.Interval);
-                MapOptional(t => t.DefaultedInterval, DefaultInterval);
+                MapOptional(t => t.DefaultedInterval, defaultInterval);
                 MapOptional(t => t.NullableInterval);
                 MapOptional(t => t.InvertedProperty, false, InvertBooleanString);
                 MapRequired(t => t.Child, childDeserializer);

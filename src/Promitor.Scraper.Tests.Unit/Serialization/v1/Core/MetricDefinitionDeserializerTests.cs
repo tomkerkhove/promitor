@@ -314,9 +314,9 @@ resources:
             _resourceDeserializerFactory.Setup(
                 f => f.GetDeserializerFor(It.IsAny<ResourceType>())).Returns(resourceDeserializer.Object);
 
-            var resources = new List<AzureResourceDefinitionV1>();
             resourceDeserializer.Setup(
-                d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object)).Returns(resources);
+                    d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object))
+                .Returns(new List<AzureResourceDefinitionV1>());
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);

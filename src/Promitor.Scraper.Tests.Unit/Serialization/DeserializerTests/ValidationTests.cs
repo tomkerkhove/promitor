@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Scraper.Tests.Unit.Serialization.v1;
 using Xunit;
 using YamlDotNet.RepresentationModel;
 
@@ -10,8 +11,8 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 {
     public class ValidationTests
     {
-        private readonly Mock<IErrorReporter> errorReporter = new Mock<IErrorReporter>();
-        private readonly TestDeserializer deserializer = new TestDeserializer();
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly TestDeserializer _deserializer = new TestDeserializer();
         
         [Fact]
         public void Deserialize_RequiredFieldMissing_ReportsError()
@@ -20,10 +21,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("age: 20");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
-            errorReporter.Verify(r => r.ReportError(node, "'name' is a required field but was not found."));
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "name");
         }
         
         [Fact]
@@ -33,10 +34,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            errorReporter.Verify(
+            _errorReporter.Verify(
                 r => r.ReportError(node, It.Is<string>(message => message.Contains("name"))), Times.Never);
         }
         
@@ -47,10 +48,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            errorReporter.Verify(
+            _errorReporter.Verify(
                 r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(message => message.Contains("age"))), Times.Never);
         }
 
@@ -63,14 +64,14 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 country: Scotland");
 
             // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
+            var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             var cityTagNode = node.Children.Single(c => c.Key.ToString() == "city").Key;
             var countryTagNode = node.Children.Single(c => c.Key.ToString() == "country").Key;
             
-            errorReporter.Verify(r => r.ReportWarning(cityTagNode, "Unknown field 'city'."));
-            errorReporter.Verify(r => r.ReportWarning(countryTagNode, "Unknown field 'country'."));
+            _errorReporter.Verify(r => r.ReportWarning(cityTagNode, "Unknown field 'city'."));
+            _errorReporter.Verify(r => r.ReportWarning(countryTagNode, "Unknown field 'country'."));
         }
 
         [Fact]
@@ -78,14 +79,14 @@ country: Scotland");
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("day: Sundag");
-
-            // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
             var dayValueNode = node.Children.Single(c => c.Key.ToString() == "day").Value;
-            
-            errorReporter.Verify(r => r.ReportError(dayValueNode, "'Sundag' is not a valid value for 'day'."));
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                dayValueNode,
+                "'Sundag' is not a valid value for 'day'.");
         }
 
         [Fact]
@@ -93,14 +94,14 @@ country: Scotland");
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("age: twenty");
-
-            // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
             var dayValueNode = node.Children.Single(c => c.Key.ToString() == "age").Value;
-            
-            errorReporter.Verify(r => r.ReportError(dayValueNode, $"'twenty' is not a valid value for 'age'. The value must be of type {typeof(int)}."));
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                dayValueNode,
+                $"'twenty' is not a valid value for 'age'. The value must be of type {typeof(int)}.");
         }
 
         [Fact]
@@ -108,14 +109,14 @@ country: Scotland");
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("interval: twenty");
-
-            // Act
-            var result = deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
             var dayValueNode = node.Children.Single(c => c.Key.ToString() == "interval").Value;
-            
-            errorReporter.Verify(r => r.ReportError(dayValueNode, $"'twenty' is not a valid value for 'interval'. The value must be in the format 'hh:mm:ss'."));
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                dayValueNode,
+                $"'twenty' is not a valid value for 'interval'. The value must be in the format 'hh:mm:ss'.");
         }
 
         [Fact]
@@ -125,10 +126,10 @@ country: Scotland");
             var node = YamlUtils.CreateYamlNode("customField: 1234");
 
             // Act
-            deserializer.Deserialize(node, errorReporter.Object);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            errorReporter.Verify(
+            _errorReporter.Verify(
                 r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("customField"))), Times.Never);
         }
 
@@ -144,11 +145,11 @@ country: Scotland");
             var node2 = YamlUtils.CreateYamlNode("age: 20");
 
             // Act
-            deserializer.Deserialize(node1, errorReporter.Object);
-            var result = deserializer.Deserialize(node2, errorReporter.Object);
+            _deserializer.Deserialize(node1, _errorReporter.Object);
+            _deserializer.Deserialize(node2, _errorReporter.Object);
 
             // Assert
-            errorReporter.Verify(
+            _errorReporter.Verify(
                 r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("name"))));
         }
 

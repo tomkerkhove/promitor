@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -15,7 +14,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             MapRequired(metadata => metadata.SubscriptionId);
             MapRequired(metadata => metadata.ResourceGroupName);
             MapOptional(metadata => metadata.Cloud, AzureEnvironment.AzureGlobalCloud, DetermineAzureCloud);
-
         }
 
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

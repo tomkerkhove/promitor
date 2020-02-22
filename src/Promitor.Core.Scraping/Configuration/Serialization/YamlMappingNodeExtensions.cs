@@ -44,7 +44,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// Gets the contents of the node.
         /// </summary>
         /// <param name="node">The node containing the property.</param>
-        /// <param name="propertyName">The name of the property.</param>
         /// <returns>The child items of the property as a dictionary.</returns>
         public static Dictionary<string, string> GetDictionary(this YamlMappingNode node)
         {
