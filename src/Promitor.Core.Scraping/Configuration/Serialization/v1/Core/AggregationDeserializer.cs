@@ -14,7 +14,5 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             MapOptional(aggregation => aggregation.Interval, DefaultAggregationInterval);
         }
-
-        // TODO: Figure out if we want to make Interval required depending on the context
     }
 }

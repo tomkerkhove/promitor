@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
-using Promitor.Scraper.Tests.Unit.Serialization;
 using Xunit;
 using YamlDotNet.RepresentationModel;
 
@@ -152,9 +151,6 @@ country: Scotland");
             errorReporter.Verify(
                 r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("name"))));
         }
-
-        // TODO: Check for invalid formats (crontab expression, timespan, etc)
-        // TODO: Add a test to make sure that the error is against the mapping node rather than its value for missing required fields
 
         private class TestConfigObject
         {

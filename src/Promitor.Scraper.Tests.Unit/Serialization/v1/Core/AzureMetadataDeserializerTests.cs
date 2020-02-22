@@ -59,18 +59,17 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_InvalidAzureCloudSupplied_ReportsError()
         {
-            var yamlText =
-                @"azureMetadata:
-    cloud: invalid";
+            var yamlNode = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    cloud: invalid");
+            var azureMetadataNode = (YamlMappingNode)yamlNode.Children["azureMetadata"];
+            var errorNode = azureMetadataNode.Children["cloud"];
 
-            // Arrange
-            var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
-
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node.Children["cloud"], "'invalid' is not a valid value for 'cloud'."));
+            YamlAssert.ReportsError(
+                _deserializer,
+                azureMetadataNode,
+                errorNode,
+                "'invalid' is not a valid value for 'cloud'.");
         }
 
         [Fact]
@@ -111,13 +110,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
     subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'");
-            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
-            // Act
-            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("tenantId"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "tenantId");
         }
 
         [Fact]
@@ -158,13 +157,13 @@ $@"azureMetadata:
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
     tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
-            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
-            // Act
-            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("subscriptionId"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "subscriptionId");
         }
 
         [Fact]
@@ -205,13 +204,13 @@ $@"azureMetadata:
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
     tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
-            var metaDataNode = node.Children.Single(c => c.Key.ToString() == "azureMetadata");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
-            // Act
-            var result = _deserializer.Deserialize((YamlMappingNode)metaDataNode.Value, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(metaDataNode.Value, It.Is<string>(m => m.Contains("resourceGroupName"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "resourceGroupName");
         }
     }
 }

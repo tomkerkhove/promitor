@@ -50,11 +50,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
 
-            // Act
-            var result = _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("metricName"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "metricName");
         }
 
         [Fact]
@@ -122,11 +122,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
 
-            // Act
-            var result = _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("aggregation"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "aggregation");
         }
     }
 }

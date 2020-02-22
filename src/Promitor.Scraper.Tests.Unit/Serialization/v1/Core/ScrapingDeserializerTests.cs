@@ -51,13 +51,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("name: promitor");
-            var errorReporter = new Mock<IErrorReporter>();
 
-            // Act
-            var result = _deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
-            errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("schedule"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "schedule");
         }
     }
 }

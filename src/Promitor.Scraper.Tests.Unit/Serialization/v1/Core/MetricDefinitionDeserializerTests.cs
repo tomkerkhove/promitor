@@ -56,11 +56,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("description: 'Test metric'");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("name"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "name");
         }
 
         [Fact]
@@ -85,11 +85,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("description"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "description");
         }
 
         [Fact]
@@ -117,11 +117,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("resourceType"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "resourceType");
         }
 
         [Fact]
@@ -130,11 +130,12 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceType: 'NotSpecified'");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node["resourceType"], "'resourceType' must not be set to 'NotSpecified'."));
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                node["resourceType"],
+                "'resourceType' must not be set to 'NotSpecified'.");
         }
 
         [Fact]
@@ -201,11 +202,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("azureMetricConfiguration"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "azureMetricConfiguration");
         }
 
         [Fact]
@@ -330,11 +331,11 @@ resources:
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceType: Generic");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("resources"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "resources");
         }
 
         [Fact]
@@ -351,12 +352,12 @@ resources:
             _resourceDeserializerFactory.Setup(
                 f => f.GetDeserializerFor(It.IsAny<ResourceType>())).Returns((IDeserializer<AzureResourceDefinitionV1>)null);
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(
-                r => r.ReportError(node.Children["resourceType"], "Could not find a deserializer for resource type 'Generic'."));
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                node.Children["resourceType"],
+                "Could not find a deserializer for resource type 'Generic'.");
         }
     }
 }

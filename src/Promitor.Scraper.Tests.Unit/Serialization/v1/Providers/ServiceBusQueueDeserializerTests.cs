@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
@@ -12,7 +11,6 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
     public class ServiceBusQueueDeserializerTests : ResourceDeserializerTest<ServiceBusQueueDeserializer>
     {
         private readonly ServiceBusQueueDeserializer _deserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public ServiceBusQueueDeserializerTests()
         {
@@ -44,11 +42,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("queueName"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "queueName");
         }
 
         [Fact]
@@ -76,11 +74,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("namespace"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "namespace");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

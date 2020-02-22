@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 using YamlDotNet.RepresentationModel;
 
@@ -32,7 +34,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             // Assert
             Assert.Equal(expected, propertyAccessor(definition));
         }
-        
+
         /// <summary>
         /// Deserializes the yaml and asserts that the specified property has been set.
         /// Use this overload where the deserializer actually returns a subclass of <typeparamref name="TBaseObject"/>.
@@ -154,6 +156,84 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
 
             // Assert
             Assert.Null(propertyAccessor(definition));
+        }
+
+        /// <summary>
+        /// Checks that the specified error message is reported while deserializing the yaml.
+        /// </summary>
+        /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="yamlNode">The Yaml to deserialize.</param>
+        /// <param name="errorNode">The node that should have the error.</param>
+        /// <param name="expectedMessage">The message that should be reported.</param>
+        /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
+        public static void ReportsError<TObject>(
+            IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, YamlNode errorNode, string expectedMessage)
+            where TObject: new()
+        {
+            ReportsMessage(deserializer, yamlNode, errorNode, expectedMessage, MessageType.Error);
+        }
+
+        /// <summary>
+        /// Checks that the specified warning message is reported while deserializing the yaml.
+        /// </summary>
+        /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="yamlNode">The Yaml to deserialize.</param>
+        /// <param name="errorNode">The node that should have the warning.</param>
+        /// <param name="expectedMessage">The message that should be reported.</param>
+        /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
+        public static void ReportsWarning<TObject>(
+            IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, YamlNode errorNode, string expectedMessage)
+            where TObject: new()
+        {
+            ReportsMessage(deserializer, yamlNode, errorNode, expectedMessage, MessageType.Warning);
+        }
+
+        /// <summary>
+        /// Checks that the specified error message is reported while deserializing the yaml.
+        /// </summary>
+        /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="yamlNode">The Yaml to deserialize.</param>
+        /// <param name="errorNode">The node that should have the error.</param>
+        /// <param name="expectedMessage">The message that should be reported.</param>
+        /// <param name="expectedMessageType">The type of message that should be reported.</param>
+        /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
+        public static void ReportsMessage<TObject>(
+            IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, YamlNode errorNode, string expectedMessage, MessageType expectedMessageType)
+            where TObject: new()
+        {
+            // Arrange
+            var errorReporter = new ErrorReporter();
+
+            // Act
+            deserializer.Deserialize(yamlNode, errorReporter);
+
+            // Assert
+            var message = errorReporter.Messages.FirstOrDefault(m => m.Node == errorNode && m.Message == expectedMessage);
+            Assert.True(message != null, "Error message not found against specified yaml element.");
+            Assert.Equal(expectedMessageType, message.MessageType);
+        }
+
+        /// <summary>
+        /// Checks that an error is reported for the specified property while deserializing the yaml.
+        /// </summary>
+        /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="yamlNode">The Yaml to deserialize.</param>
+        /// <param name="propertyName">The property that should have an error.</param>
+        /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
+        public static void ReportsErrorForProperty<TObject>(
+            IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, string propertyName)
+            where TObject: new()
+        {
+            // Arrange
+            var errorReporter = new ErrorReporter();
+
+            // Act
+            deserializer.Deserialize(yamlNode, errorReporter);
+
+            // Assert
+            var message = errorReporter.Messages.FirstOrDefault(m => m.Node == yamlNode && m.Message.Contains(propertyName));
+            Assert.True(message != null, "Error message not found against specified yaml element.");
+            Assert.Equal(MessageType.Error, message.MessageType);
         }
     }
 }

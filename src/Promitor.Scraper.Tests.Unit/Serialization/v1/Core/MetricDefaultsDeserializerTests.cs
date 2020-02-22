@@ -113,11 +113,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         interval: '00:05:00'";
             var node = (YamlMappingNode)YamlUtils.CreateYamlNode(yamlText).Children["metricDefaults"];
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("scraping"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "scraping");
         }
     }
 }

@@ -42,14 +42,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         public void Deserialize_TypeNotSupplied_ReportsError()
         {
             // Arrange
-            var errorReporter = new Mock<IErrorReporter>();
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
 
-            // Act
-            var result = _deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
-            errorReporter.Verify(r => r.ReportError(node, It.Is<string>(m => m.Contains("type"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "type");
         }
 
         [Fact]

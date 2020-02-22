@@ -48,11 +48,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("accountName"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "accountName");
         }
 
         [Fact]
@@ -80,11 +80,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("queueName"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "queueName");
         }
 
         [Fact]
@@ -122,11 +122,11 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
 
-            // Act
-            _deserializer.Deserialize(node, _errorReporter.Object);
-
-            // Assert
-            _errorReporter.Verify(r => r.ReportError(node, It.Is<string>(s => s.Contains("sasToken"))));
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "sasToken");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

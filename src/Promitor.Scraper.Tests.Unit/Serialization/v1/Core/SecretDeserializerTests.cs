@@ -60,13 +60,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("name: 123");
-            var errorReporter = new Mock<IErrorReporter>();
 
-            // Act
-            _deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
-            errorReporter.Verify(r => r.ReportError(node, "Either 'environmentVariable' or 'rawValue' must be supplied for a secret."));
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                node,
+                "Either 'environmentVariable' or 'rawValue' must be supplied for a secret.");
         }
 
         [Fact]
@@ -76,13 +76,13 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
             var node = YamlUtils.CreateYamlNode(
 @"rawValue: 123
 environmentVariable: PROMITOR_SECRET");
-            var errorReporter = new Mock<IErrorReporter>();
 
-            // Act
-            _deserializer.Deserialize(node, errorReporter.Object);
-
-            // Assert
-            errorReporter.Verify(r => r.ReportWarning(node, "Secret with environment variable 'PROMITOR_SECRET' also has a rawValue provided."));
+            // Act / Assert
+            YamlAssert.ReportsWarning(
+                _deserializer,
+                node,
+                node,
+                "Secret with environment variable 'PROMITOR_SECRET' also has a rawValue provided.");
         }
     }
 }
