@@ -48,7 +48,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var node = YamlUtils.CreateYamlNode("name: Promitor");
 
             // Act
-            var result = _deserializer.Deserialize(node, _errorReporter.Object);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             _errorReporter.Verify(
@@ -64,7 +64,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
 country: Scotland");
 
             // Act
-            var result = _deserializer.Deserialize(node, _errorReporter.Object);
+            _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             var cityTagNode = node.Children.Single(c => c.Key.ToString() == "city").Key;

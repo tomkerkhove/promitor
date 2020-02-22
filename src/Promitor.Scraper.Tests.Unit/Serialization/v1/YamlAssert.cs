@@ -230,7 +230,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1
             deserializer.Deserialize(yamlNode, errorReporter);
 
             // Assert
-            var message = errorReporter.Messages.FirstOrDefault(m => object.ReferenceEquals(m.Node, yamlNode) && m.Message.Contains(propertyName));
+            var message = errorReporter.Messages.FirstOrDefault(m => ReferenceEquals(m.Node, yamlNode) && m.Message.Contains(propertyName));
             Assert.True(message != null, "Error message not found against specified yaml element.");
             Assert.Equal(MessageType.Error, message.MessageType);
         }
