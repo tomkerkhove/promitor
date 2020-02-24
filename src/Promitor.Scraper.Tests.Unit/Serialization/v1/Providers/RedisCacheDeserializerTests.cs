@@ -36,6 +36,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 r => r.CacheName);
         }
 
+        [Fact]
+        public void Deserialize_CacheNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "cacheName");
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new RedisCacheDeserializer(Logger);

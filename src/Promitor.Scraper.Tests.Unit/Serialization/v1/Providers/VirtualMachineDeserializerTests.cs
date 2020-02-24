@@ -36,6 +36,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 r => r.VirtualMachineName);
         }
 
+        [Fact]
+        public void Deserialize_VirtualMachineNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "virtualMachineName");
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new VirtualMachineDeserializer(Logger);

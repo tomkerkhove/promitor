@@ -8,7 +8,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 {
     public class BlobStorageDeserializerTests : ResourceDeserializerTest<BlobStorageDeserializer>
     {
-        private readonly StorageAccountDeserializer _deserializer;
+        private readonly BlobStorageDeserializer _deserializer;
 
         public BlobStorageDeserializerTests()
         {
@@ -37,7 +37,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new StorageAccountDeserializer(Logger);
+            return new BlobStorageDeserializer(Logger);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
     public class StorageQueueDeserializerTests : ResourceDeserializerTest<StorageQueueDeserializer>
     {
         private readonly Mock<IDeserializer<SecretV1>> _secretDeserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         private readonly StorageQueueDeserializer _deserializer;
 
@@ -42,6 +43,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_AccountNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "accountName");
+        }
+
+        [Fact]
         public void Deserialize_QueueNameSupplied_SetsQueueName()
         {
             YamlAssert.PropertySet<StorageQueueResourceV1, AzureResourceDefinitionV1, string>(
@@ -61,6 +75,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_QueueNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "queueName");
+        }
+
+        [Fact]
         public void Deserialize_SasTokenSupplied_UsesDeserializer()
         {
             // Arrange
@@ -71,10 +98,10 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
             var sasTokenNode = (YamlMappingNode)node.Children["sasToken"];
 
             var secret = new SecretV1();
-            _secretDeserializer.Setup(d => d.Deserialize(sasTokenNode)).Returns(secret);
+            _secretDeserializer.Setup(d => d.DeserializeObject(sasTokenNode, _errorReporter.Object)).Returns(secret);
 
             // Act
-            var resource = (StorageQueueResourceV1)_deserializer.Deserialize(node);
+            var resource = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
             Assert.Same(secret, resource.SasToken);
@@ -87,6 +114,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.SasToken);
+        }
+
+        [Fact]
+        public void Deserialize_SasTokenNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "sasToken");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

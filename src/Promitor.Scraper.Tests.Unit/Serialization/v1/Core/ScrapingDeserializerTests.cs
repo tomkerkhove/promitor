@@ -43,5 +43,18 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 "scraping",
                 s => s.Schedule);
         }
+
+        [Fact]
+        public void Deserialize_ScheduleNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: promitor");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "schedule");
+        }
     }
 }

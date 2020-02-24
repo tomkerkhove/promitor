@@ -1,6 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -54,17 +54,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_InvalidAzureCloudSupplied_ThrowsException()
+        public void Deserialize_InvalidAzureCloudSupplied_ReportsError()
         {
-            var yamlText =
-                @"azureMetadata:
-    cloud: invalid";
+            var yamlNode = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    cloud: invalid");
+            var azureMetadataNode = (YamlMappingNode)yamlNode.Children["azureMetadata"];
+            var errorNode = azureMetadataNode.Children["cloud"];
 
-            // Arrange
-            var node = YamlUtils.CreateYamlNode(yamlText).Children["azureMetadata"];
-
-            // Act
-            Assert.Throws<ArgumentException>(() => _deserializer.Deserialize((YamlMappingNode) node));
+            YamlAssert.ReportsError(
+                _deserializer,
+                azureMetadataNode,
+                errorNode,
+                "'invalid' is not a valid value for 'cloud'.");
         }
 
         [Fact]
@@ -99,6 +101,22 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_TenantIdNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "tenantId");
+        }
+
+        [Fact]
         public void Deserialize_SubscriptionIdSupplied_SetsSubscriptionId()
         {
             const string subscriptionId = "0f9d7fea-99e8-4768-8672-06a28514f77e";
@@ -130,6 +148,22 @@ $@"azureMetadata:
         }
 
         [Fact]
+        public void Deserialize_SubscriptionIdNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "subscriptionId");
+        }
+
+        [Fact]
         public void Deserialize_ResourceGroupNameSupplied_SetsResourceGroupName()
         {
             const string resourceGroupName = "promitor-group";
@@ -158,6 +192,22 @@ $@"azureMetadata:
                 yamlText,
                 "azureMetadata",
                 a => a.ResourceGroupName);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceGroupNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+            var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metaDataNode,
+                "resourceGroupName");
         }
     }
 }

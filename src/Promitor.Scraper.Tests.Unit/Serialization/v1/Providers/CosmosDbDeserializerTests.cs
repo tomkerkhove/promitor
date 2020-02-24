@@ -36,6 +36,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 c => c.DbName);
         }
 
+        [Fact]
+        public void Deserialize_DbNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "dbName");
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new CosmosDbDeserializer(Logger);

@@ -6,27 +6,24 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     public class SecretDeserializer : Deserializer<SecretV1>
     {
-        private const string RawValueTag = "rawValue";
-        private const string EnvironmentVariableTag = "environmentVariable";
-
         public SecretDeserializer(ILogger<SecretDeserializer> logger) : base(logger)
         {
+            MapOptional(secret => secret.RawValue);
+            MapOptional(secret => secret.EnvironmentVariable);
         }
 
-        public override SecretV1 Deserialize(YamlMappingNode node)
+        public override SecretV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var rawValue = node.GetString(RawValueTag);
-            var environmentVariable = node.GetString(EnvironmentVariableTag);
+            var secret = base.Deserialize(node, errorReporter);
 
-            var secret = new SecretV1
+            if (string.IsNullOrEmpty(secret.EnvironmentVariable) && string.IsNullOrEmpty(secret.RawValue))
             {
-                RawValue = rawValue,
-                EnvironmentVariable = environmentVariable
-            };
+                errorReporter.ReportError(node, "Either 'environmentVariable' or 'rawValue' must be supplied for a secret.");
+            }
 
             if (!string.IsNullOrEmpty(secret.RawValue) && !string.IsNullOrEmpty(secret.EnvironmentVariable))
             {
-                Logger.LogWarning("Secret with environment variable '{EnvironmentVariable}' also has a rawValue provided.", secret.EnvironmentVariable);
+                errorReporter.ReportWarning(node, $"Secret with environment variable '{secret.EnvironmentVariable}' also has a rawValue provided.");
             }
 
             return secret;

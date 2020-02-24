@@ -53,6 +53,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 r => r.ResourceUri);
         }
 
+        [Fact]
+        public void Deserialize_ResourceUriNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "resourceUri");
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new GenericResourceDeserializer(Logger);

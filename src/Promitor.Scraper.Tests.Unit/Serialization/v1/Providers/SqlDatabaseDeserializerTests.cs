@@ -11,12 +11,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
     [Category("Unit")]
     public class SqlDatabaseDeserializerTests : ResourceDeserializerTest<SqlDatabaseDeserializer>
     {
-        private readonly SqlDatabaseDeserializer _deserializer;
-
-        public SqlDatabaseDeserializerTests()
-        {
-            _deserializer = new SqlDatabaseDeserializer(NullLogger.Instance);
-        }
+        private readonly SqlDatabaseDeserializer _deserializer = new SqlDatabaseDeserializer(NullLogger.Instance);
 
         [Fact]
         public void Deserialize_ServerNameSupplied_SetsServerName()
@@ -38,6 +33,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_ServerNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "serverName");
+        }
+
+        [Fact]
         public void Deserialize_DatabaseNameSupplied_SetsDatabaseName()
         {
             YamlAssert.PropertySet<SqlDatabaseResourceV1, AzureResourceDefinitionV1, string>(
@@ -54,6 +62,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 c => c.DatabaseName);
+        }
+
+        [Fact]
+        public void Deserialize_DatabaseNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "databaseName");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

@@ -40,5 +40,18 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 "resourceGroupName: promitor-resource-group",
                 c => c.ContainerGroup);
         }
+
+        [Fact]
+        public void Deserialize_ContainerGroupNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "containerGroup");
+        }
     }
 }

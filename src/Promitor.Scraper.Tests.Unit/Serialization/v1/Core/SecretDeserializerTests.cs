@@ -52,5 +52,35 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
                 "rawValue: abc123",
                 s => s.EnvironmentVariable);
         }
+
+        [Fact]
+        public void Deserialize_EnvironmentVariableAndRawValueNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("name: 123");
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                node,
+                "Either 'environmentVariable' or 'rawValue' must be supplied for a secret.");
+        }
+
+        [Fact]
+        public void Deserialize_EnvironmentVariableAndRawValueBothSupplied_ReportsWarning()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"rawValue: 123
+environmentVariable: PROMITOR_SECRET");
+
+            // Act / Assert
+            YamlAssert.ReportsWarning(
+                _deserializer,
+                node,
+                node,
+                "Secret with environment variable 'PROMITOR_SECRET' also has a rawValue provided.");
+        }
     }
 }
