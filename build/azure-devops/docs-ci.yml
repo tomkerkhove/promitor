@@ -1,0 +1,45 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+resources:
+- repo: self
+trigger: none
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - docs/*
+variables:
+  DotNet.SDK.Version: '3.1.101'
+  DotNet.Configuration: 'release'
+  Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
+  Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
+  Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+  Helm.Chart.Name: 'promitor-agent-scraper-ci'
+stages:
+- stage: Init
+  displayName: Prepare Build
+  dependsOn: []
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "Build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - template: ./../templates/persist-variable.yml
+       parameters:
+          variableName: 'Build.BuildNumber'
+     - script: npm install
+       displayName: 'Install npm Packages'
+     - script: npm run --silent markdownlint
+       displayName: 'Run markdownlint'

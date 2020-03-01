@@ -13,7 +13,6 @@ pr:
     - build/azure-devops/scraper-ci.yml
     - charts/promitor-agent-scraper/*
     - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
-    - docs/*
 variables:
   DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
@@ -104,20 +103,6 @@ stages:
          solutionOrProjectPath: 'src/Promitor.sln'
          failBuildLevelSelector: 'Warning'
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
-- stage: Docs
-  displayName: Docs
-  dependsOn: [Init]
-  jobs:
-   - job: RunMarkdownLinter
-     displayName: Run Markdown Linter
-     condition: succeeded()
-     pool:
-       vmImage: ubuntu-16.04
-     steps:
-     - script: npm install
-       displayName: 'Install npm Packages'
-     - script: npm run --silent markdownlint
-       displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
   dependsOn: [Init]
