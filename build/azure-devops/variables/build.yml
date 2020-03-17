@@ -1,0 +1,2 @@
+variables:
+  DotNet.Sdk.Version: '3.1.200'
