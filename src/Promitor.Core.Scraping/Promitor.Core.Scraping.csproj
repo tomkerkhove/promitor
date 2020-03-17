@@ -16,8 +16,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Guard.Net" Version="1.2.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.13.0" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.31.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.13.1" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.31.1" />
     <PackageReference Include="Prometheus.Client" Version="3.1.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>

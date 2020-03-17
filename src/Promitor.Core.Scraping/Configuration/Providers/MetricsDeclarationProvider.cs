@@ -19,11 +19,12 @@ namespace Promitor.Core.Scraping.Configuration.Providers
             _configuration = configuration;
         }
 
-        public virtual MetricsDeclaration Get(bool applyDefaults = false)
+        public virtual MetricsDeclaration Get(bool applyDefaults = false, IErrorReporter errorReporter = null)
         {
             var rawMetricsDeclaration = ReadRawDeclaration();
+            errorReporter ??= new ErrorReporter();
 
-            var config = _configurationSerializer.Deserialize(rawMetricsDeclaration);
+            var config = _configurationSerializer.Deserialize(rawMetricsDeclaration, errorReporter);
 
             if (applyDefaults)
             {

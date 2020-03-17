@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.102 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.200 AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Configuration/* Promitor.Core.Configuration/

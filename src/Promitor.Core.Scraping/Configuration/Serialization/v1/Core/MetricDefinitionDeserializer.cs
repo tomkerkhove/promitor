@@ -7,16 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     public class MetricDefinitionDeserializer : Deserializer<MetricDefinitionV1>
     {
-        private const string NameTag = "name";
-        private const string DescriptionTag = "description";
-        private const string ResourceTypeTag = "resourceType";
-        private const string LabelsTag = "labels";
-        private const string AzureMetricConfigurationTag = "azureMetricConfiguration";
-        private const string ScrapingTag = "scraping";
         private const string ResourcesTag = "resources";
-
-        private readonly IDeserializer<AzureMetricConfigurationV1> _azureMetricConfigurationDeserializer;
-        private readonly IDeserializer<ScrapingV1> _scrapingDeserializer;
         private readonly IAzureResourceDeserializerFactory _azureResourceDeserializerFactory;
 
         public MetricDefinitionDeserializer(IDeserializer<AzureMetricConfigurationV1> azureMetricConfigurationDeserializer,
@@ -24,58 +15,55 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             IAzureResourceDeserializerFactory azureResourceDeserializerFactory,
             ILogger<MetricDefinitionDeserializer> logger) : base(logger)
         {
-            _azureMetricConfigurationDeserializer = azureMetricConfigurationDeserializer;
-            _scrapingDeserializer = scrapingDeserializer;
             _azureResourceDeserializerFactory = azureResourceDeserializerFactory;
+
+            MapRequired(definition => definition.Name);
+            MapRequired(definition => definition.Description);
+            MapRequired(definition => definition.ResourceType);
+            MapOptional(definition => definition.Labels);
+            MapRequired(definition => definition.AzureMetricConfiguration, azureMetricConfigurationDeserializer);
+            MapOptional(definition => definition.Scraping, scrapingDeserializer);
+            IgnoreField(ResourcesTag);
         }
 
-        public override MetricDefinitionV1 Deserialize(YamlMappingNode node)
+        public override MetricDefinitionV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
-            var name = node.GetString(NameTag);
-            var description = node.GetString(DescriptionTag);
-            var resourceType = node.GetEnum<ResourceType>(ResourceTypeTag);
-            var labels = node.GetDictionary(LabelsTag);
+            var metricDefinition = base.Deserialize(node, errorReporter);
 
-            var metricDefinition = new MetricDefinitionV1
-            {
-                Name = name,
-                Description = description,
-                ResourceType = resourceType,
-                Labels = labels
-            };
-
-            DeserializeAzureMetricConfiguration(node, metricDefinition);
-            DeserializeScraping(node, metricDefinition);
-            DeserializeMetrics(node, metricDefinition);
+            DeserializeMetrics(node, metricDefinition, errorReporter);
 
             return metricDefinition;
         }
 
-        private void DeserializeAzureMetricConfiguration(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
+        private void DeserializeMetrics(YamlMappingNode node, MetricDefinitionV1 metricDefinition, IErrorReporter errorReporter)
         {
-            if (node.Children.TryGetValue(AzureMetricConfigurationTag, out var configurationNode))
+            if (metricDefinition.ResourceType == null)
             {
-                metricDefinition.AzureMetricConfiguration =
-                    _azureMetricConfigurationDeserializer.Deserialize((YamlMappingNode) configurationNode);
+                return;
             }
-        }
 
-        private void DeserializeScraping(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
-        {
-            if (node.Children.TryGetValue(ScrapingTag, out var scrapingNode))
+            var resourceTypeNode = node.Children["resourceType"];
+            if (metricDefinition.ResourceType == ResourceType.NotSpecified)
             {
-                metricDefinition.Scraping = _scrapingDeserializer.Deserialize((YamlMappingNode)scrapingNode);
+                errorReporter.ReportError(resourceTypeNode, "'resourceType' must not be set to 'NotSpecified'.");
+                return;
             }
-        }
 
-        private void DeserializeMetrics(YamlMappingNode node, MetricDefinitionV1 metricDefinition)
-        {
-            if (metricDefinition.ResourceType != null &&
-                metricDefinition.ResourceType != ResourceType.NotSpecified &&
-                node.Children.TryGetValue(ResourcesTag, out var metricsNode))
+            if (node.Children.TryGetValue(ResourcesTag, out var metricsNode))
             {
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
-                metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode);
+                if (resourceDeserializer != null)
+                {
+                    metricDefinition.Resources = resourceDeserializer.Deserialize((YamlSequenceNode)metricsNode, errorReporter);
+                }
+                else
+                {
+                    errorReporter.ReportError(resourceTypeNode, $"Could not find a deserializer for resource type '{metricDefinition.ResourceType}'.");
+                }
+            }
+            else
+            {
+                errorReporter.ReportError(node, "'resources' is a required field but was not found.");
             }
         }
     }

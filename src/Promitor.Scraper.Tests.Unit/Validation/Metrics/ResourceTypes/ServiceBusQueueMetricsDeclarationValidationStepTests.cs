@@ -74,7 +74,7 @@ namespace Promitor.Scraper.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was successful");
+            Assert.False(validationResult.IsSuccessful, "Validation was successful but should have failed");
         }
 
         [Fact]

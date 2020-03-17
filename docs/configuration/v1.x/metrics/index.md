@@ -38,7 +38,6 @@ Every metric that is being declared needs to define the following fields:
 - `description` - Description for the metric that will be exposed in the scrape
   endpoint for Prometheus.
 - `resourceType` - Defines what type of resource needs to be queried.
-- `labels` - Defines a set of custom labels to include for a given metric.
 - `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor
   to query
 - `azureMetricConfiguration.aggregation.type` - The aggregation that needs to be
@@ -57,6 +56,7 @@ Additionally, the following fields are optional:
   - ☝ *Promitor simply acts as a proxy and will not validate if it's supported or
      not, we recommend verifying that the dimension is supported in the
      [official documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported)*
+- `labels` - Defines a set of custom labels to include for a given metric.
 - `scraping.schedule` - A scraping schedule for the individual metric; overrides
   the the one specified in `metricDefaults`
 

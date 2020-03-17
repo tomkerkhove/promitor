@@ -104,7 +104,7 @@ stages:
          failBuildLevelSelector: 'Warning'
          commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
 - stage: Docs
-  displayName: Docs
+  displayName: Doc
   dependsOn: [Init]
   jobs:
    - job: RunMarkdownLinter

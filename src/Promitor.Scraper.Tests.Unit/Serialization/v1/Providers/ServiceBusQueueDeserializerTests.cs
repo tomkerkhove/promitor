@@ -37,6 +37,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_QueueNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "queueName");
+        }
+
+        [Fact]
         public void Deserialize_NamespaceSupplied_SetsNamespace()
         {
             YamlAssert.PropertySet<ServiceBusQueueResourceV1, AzureResourceDefinitionV1, string>(
@@ -53,6 +66,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.Namespace);
+        }
+
+        [Fact]
+        public void Deserialize_NamespaceNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "namespace");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

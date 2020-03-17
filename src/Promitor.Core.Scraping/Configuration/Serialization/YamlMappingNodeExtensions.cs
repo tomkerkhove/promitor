@@ -41,6 +41,23 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         }
 
         /// <summary>
+        /// Gets the contents of the node.
+        /// </summary>
+        /// <param name="node">The node containing the property.</param>
+        /// <returns>The child items of the property as a dictionary.</returns>
+        public static Dictionary<string, string> GetDictionary(this YamlMappingNode node)
+        {
+            var result = new Dictionary<string, string>();
+
+            foreach (var (key, value) in node.Children)
+            {
+                result[key.ToString()] = value.ToString();
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Gets the contents of the specified property as a dictionary.
         /// </summary>
         /// <param name="node">The node containing the property.</param>
@@ -50,14 +67,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         {
             if (node.Children.TryGetValue(propertyName, out var propertyNode))
             {
-                var result = new Dictionary<string, string>();
-
-                foreach (var (key, value) in ((YamlMappingNode) propertyNode).Children)
-                {
-                    result[key.ToString()] = value.ToString();
-                }
-
-                return result;
+                return GetDictionary(((YamlMappingNode)propertyNode));
             }
 
             return null;
@@ -86,14 +96,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// <param name="node">The yaml node.</param>
         /// <param name="propertyName">The name of the property to deserialize.</param>
         /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="errorReporter">Used to report information about the deserialization process.</param>
         /// <returns>The deserialized property, or null if the property does not exist.</returns>
         public static TObject DeserializeChild<TObject>(
-            this YamlMappingNode node, string propertyName, IDeserializer<TObject> deserializer)
-            where TObject: class
+            this YamlMappingNode node, string propertyName, IDeserializer<TObject> deserializer, IErrorReporter errorReporter)
+            where TObject: class, new()
         {
             if (node.Children.TryGetValue(propertyName, out var propertyNode))
             {
-                return deserializer.Deserialize((YamlMappingNode)propertyNode);
+                return deserializer.Deserialize((YamlMappingNode)propertyNode, errorReporter);
             }
 
             return null;

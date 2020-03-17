@@ -37,6 +37,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_TypeNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "type");
+        }
+
+        [Fact]
         public void Deserialize_IntervalSupplied_SetsInterval()
         {
             YamlAssert.PropertySet(

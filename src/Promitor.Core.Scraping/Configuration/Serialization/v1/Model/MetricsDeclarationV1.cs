@@ -11,6 +11,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         public string Version { get; set; } = SpecVersion.v1.ToString();
         public AzureMetadataV1 AzureMetadata { get; set; }
         public MetricDefaultsV1 MetricDefaults { get; set; }
-        public List<MetricDefinitionV1> Metrics { get; set; }
+        public IReadOnlyCollection<MetricDefinitionV1> Metrics { get; set; }
     }
 }

@@ -36,6 +36,19 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 c => c.RegistryName);
         }
 
+        [Fact]
+        public void Deserialize_RegistryNameNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "registryName");
+        }
+
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
             return new ContainerRegistryDeserializer(Logger);

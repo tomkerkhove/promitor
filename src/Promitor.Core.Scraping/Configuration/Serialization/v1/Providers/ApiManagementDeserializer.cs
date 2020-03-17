@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
-using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
@@ -15,18 +14,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public ApiManagementDeserializer(ILogger logger) : base(logger)
         {
-        }
-
-        protected override ApiManagementResourceV1 DeserializeResource(YamlMappingNode node)
-        {
-            var instanceName = node.GetString("instanceName");
-            var locationName = node.GetString("locationName");
-
-            return new ApiManagementResourceV1
-            {
-                InstanceName = instanceName,
-                LocationName = locationName
-            };
+            MapRequired(resource => resource.InstanceName);
+            MapOptional(resource => resource.LocationName);
         }
     }
 }

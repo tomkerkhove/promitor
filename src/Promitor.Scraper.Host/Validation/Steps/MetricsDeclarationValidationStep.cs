@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -6,6 +7,7 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Serialization.Yaml;
 using Promitor.Scraper.Host.Validation.Interfaces;
 using Promitor.Scraper.Host.Validation.MetricDefinitions;
@@ -29,10 +31,18 @@ namespace Promitor.Scraper.Host.Validation.Steps
 
         public ValidationResult Run()
         {
-            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            var errorReporter = new ErrorReporter();
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true, errorReporter: errorReporter);
             if (metricsDeclaration == null)
             {
                 return ValidationResult.Failure(ComponentName, "Unable to deserialize configured metrics declaration");
+            }
+
+            LogDeserializationMessages(errorReporter);
+
+            if (errorReporter.HasErrors)
+            {
+                return ValidationResult.Failure(ComponentName, "Errors were found while deserializing the metric configuration.");
             }
 
             LogMetricsDeclaration(metricsDeclaration);
@@ -48,6 +58,25 @@ namespace Promitor.Scraper.Host.Validation.Steps
             validationErrors.AddRange(metricsErrorMessages);
 
             return validationErrors.Any() ? ValidationResult.Failure(ComponentName, validationErrors) : ValidationResult.Successful(ComponentName);
+        }
+
+        private void LogDeserializationMessages(IErrorReporter errorReporter)
+        {
+            if (errorReporter.Messages.Any())
+            {
+                var combinedMessages = string.Join(
+                    Environment.NewLine, errorReporter.Messages.Select(message => message.FormattedMessage));
+
+                var deserializationProblemsMessage = $"The following problems were found with the metric configuration:{Environment.NewLine}{combinedMessages}";
+                if (errorReporter.HasErrors)
+                {
+                    Logger.LogError(deserializationProblemsMessage);
+                }
+                else
+                {
+                    Logger.LogWarning(deserializationProblemsMessage);
+                }
+            }
         }
 
         private void LogMetricsDeclaration(MetricsDeclaration metricsDeclaration)
