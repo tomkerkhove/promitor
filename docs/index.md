@@ -83,6 +83,7 @@ Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/ch
 We are proud to have the following customer(s) running Promitor in production:
 
 ![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
+![ResDiary](./media/logos/customers/resdiary.png)
 
 ## Thank you
 
