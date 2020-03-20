@@ -22,4 +22,4 @@ steps:
    mkdir -p $(Pipeline.Workspace)/variables
    echo "$(${{ parameters.currentVariableName }})" > $(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable
    echo "Variable written to '$(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable'"
-  displayName: 'Persist ''${{ parameters.variableName }}'' to  ''${{ parameters.persistedVariableName }}''  variable'
+  displayName: 'Persist ''${{ parameters.currentVariableName }}'' to  ''${{ parameters.persistedVariableName }}''  variable'
