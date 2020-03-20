@@ -1,5 +1,5 @@
 parameters:
-  variableName: ''
+  variableName: 'Image.MajorMinorVersion'
 
 steps:
 - bash: |
