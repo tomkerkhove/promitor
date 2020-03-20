@@ -16,7 +16,7 @@ steps:
     fi
   env:
     PERSISTED_VARIABLE_NAME: ${{ parameters.persistedVariableName }}
-    TARGET_VARIABLE_NAME: ${{ parameters.persistedVariableName }}
+    TARGET_VARIABLE_NAME: ${{ parameters.targetVariableName }}
   displayName: Check for required parameters in YAML template
 - bash: |
    echo "Listing folders in '$(Pipeline.Workspace)'"

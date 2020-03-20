@@ -159,7 +159,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        persistedVariableName: 'Build.BuildNumber'
+        persistedVariableName: 'App.Version'
         targetVariableName: 'App.Version'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-docker-image.yml
@@ -289,7 +289,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        persistedVariableName: 'Build.BuildNumber'
+        persistedVariableName: 'App.Version'
         targetVariableName: 'App.Version'
      - powershell: |
         helm lint promitor-agent-scraper/ --strict
