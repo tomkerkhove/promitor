@@ -4,8 +4,8 @@ parameters:
 
 steps:
 - bash: |
-    echo "Variable 'currentVariableName' found with value '$VARIABLE_NAME'"
-    if [ -z "$VARIABLE_NAME" ]; then
+    echo "Variable 'currentVariableName' found with value '$CURRENT_VARIABLE_NAME'"
+    if [ -z "$CURRENT_VARIABLE_NAME" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"currentVariableName\""
       echo "##vso[task.complete result=Failed;]"
     fi
