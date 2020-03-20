@@ -36,9 +36,6 @@ stages:
          Write-Host "Build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
        condition: eq(variables['Build.Reason'], 'PullRequest')
-     - template: ./../templates/persist-variable.yml
-       parameters:
-          variableName: 'Build.BuildNumber'
      - script: npm install
        displayName: 'Install npm Packages'
      - script: npm run --silent markdownlint

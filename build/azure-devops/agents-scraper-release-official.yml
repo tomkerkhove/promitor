@@ -34,7 +34,8 @@ stages:
        displayName: 'Determine ''{major}.{minor}'' version'
      - template: ./../templates/persist-variable.yml
        parameters:
-          variableName: 'Image.MajorMinorVersion'
+          currentVariableName: 'Image.MajorMinorVersion'
+          persistedVariableName: 'Image.MajorMinorVersion'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
@@ -52,7 +53,8 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        variableName: 'Image.MajorMinorVersion'
+        persistedVariableName: 'Image.MajorMinorVersion'
+        targetVariableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
        inputs:
@@ -146,7 +148,8 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        variableName: 'Image.MajorMinorVersion'
+        persistedVariableName: 'Image.MajorMinorVersion'
+        targetVariableName: 'Image.MajorMinorVersion'
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:
