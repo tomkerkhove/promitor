@@ -1,0 +1,28 @@
+parameters:
+  registryEndpoint: 'Docker Hub'
+  imageDisplayName: ''
+  imageName: ''
+
+steps:
+- bash: |
+    echo "Variable 'registryEndpoint' found with value '$REGISTRY_ENDPOINT'"
+    if [ -z "$REGISTRY_ENDPOINT" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"registryEndpoint\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'imageName' found with value '$IMAGE_NAME'"
+    if [ -z "$IMAGE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"imageName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    REGISTRY_ENDPOINT: ${{ parameters.registryEndpoint }}
+    IMAGE_NAME: ${{ parameters.imageName }}
+  displayName: Check for required parameters in YAML template
+- task: Docker@1
+  displayName: 'Push ${{ parameters.imageDisplayName }} image to ${{ parameters.registryEndpoint }}'
+  inputs:
+    containerregistrytype: 'Container Registry'
+    dockerRegistryEndpoint: '${{ parameters.registryEndpoint }}'
+    command: 'Push an image'
+    imageName: '${{ parameters.imageName }}'

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.200-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.200 AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Core.Configuration/* Promitor.Core.Configuration/
@@ -10,8 +10,10 @@ COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Scraper.Host/* Promitor.Scraper.Host/
 RUN dotnet publish Promitor.Scraper.Host/Promitor.Scraper.Host.csproj --configuration release --output app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2-alpine as runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.2 as runtime
 WORKDIR /app
+ARG CONFIG_FOLDER="/config/"
+ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
 COPY --from=build /src/app .
 
 ENTRYPOINT ["dotnet", "Promitor.Scraper.Host.dll"]

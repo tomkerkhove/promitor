@@ -3,7 +3,7 @@ layout: default
 title: Deploying Promitor
 ---
 
-Here is an overview of how you can deploy Promitor.
+Here is an overview of how you can deploy Promitor on your infrastructure, we support both Linux and Windows.
 
 _For more information about advanced configuration, read our documentation [here](/configuration)._
 
@@ -98,6 +98,9 @@ We provide a few options by offering multiple Docker tags:
 _(Alternative could be to use [image digest pinning](https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier))_
 
 ![Image Tagging Strategy](./../media/deploy-image-tagging-strategy.png)
+
+**All of the above tags are available for Linux. Every tag can be suffixed with
+ `-linux` or `-windows` to target a specific OS.**
 
 You can also pin to a specific digest of an image to ensure that you are running
 the same image across your infrastructure. However, you will not receive security

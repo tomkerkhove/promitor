@@ -1,18 +1,25 @@
 parameters:
-  variableName: ''
+  currentVariableName: ''
+  persistedVariableName: ''
 
 steps:
 - bash: |
-    echo "Variable 'variableName' found with value '$VARIABLE_NAME'"
-    if [ -z "$VARIABLE_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"variableName\""
+    echo "Variable 'currentVariableName' found with value '$CURRENT_VARIABLE_NAME'"
+    if [ -z "$CURRENT_VARIABLE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"currentVariableName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'persistedVariableName' found with value '$PERSISTED_VARIABLE_NAME'"
+    if [ -z "$PERSISTED_VARIABLE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"persistedVariableName\""
       echo "##vso[task.complete result=Failed;]"
     fi
   env:
-    VARIABLE_NAME: ${{ parameters.variableName }}
+    CURRENT_VARIABLE_NAME: ${{ parameters.currentVariableName }}
+    PERSISTED_VARIABLE_NAME: ${{ parameters.persistedVariableName }}
   displayName: Check for required parameters in YAML template
 - powershell: |
    mkdir -p $(Pipeline.Workspace)/variables
-   echo "$(${{ parameters.variableName }})" > $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable
-   echo "Variable written to '$(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable'"
-  displayName: 'Persist ''${{ parameters.variableName }}'' variable'
+   echo "$(${{ parameters.currentVariableName }})" > $(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable
+   echo "Variable written to '$(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable'"
+  displayName: 'Persist ''${{ parameters.currentVariableName }}'' to  ''${{ parameters.persistedVariableName }}''  variable'

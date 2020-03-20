@@ -61,32 +61,65 @@
                         },
                         "Determine_GitHub_Issue_Id": {
                             "inputs": "@replace(toLower(triggerBody()?['push_data']?['tag']), 'pr', '')",
-                            "runAfter": {},
+                            "runAfter": {
+                            },
                             "type": "Compose"
                         },
-                        "HTTP": {
-                            "inputs": {
-                                "authentication": {
-                                    "password": "[parameters('GitHub.Bot.Password')]",
-                                    "type": "Basic",
-                                    "username": "[parameters('GitHub.Bot.Name')]"
+                        "Only_comment_for_Linux": {
+                            "actions": {
+                                "Define_GitHub_comment_text": {
+                                    "inputs": "Docker image for this PR was built and is available on [Docker Hub](@{triggerBody()?['repository']?['repo_url']}).\n\nYou can pull it locally via the CLI:\n```shell\ndocker pull @{triggerBody()?['repository']?['repo_name']}:@{triggerBody()?['push_data']?['tag']}\n```\n\nWant to verify the new version? Run it locally:\n```shell\ndocker run -d -p 8999:80 --name promitor-agent-scraper-@{triggerBody()?['push_data']?['tag']} \\\n                         --env PROMITOR_AUTH_APPID='<azure-ad-app-id>' \\\n                         --env-file C:/Promitor/az-mon-auth.creds \\\n                         --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml  \\\n                         --volume C:/Promitor/runtime-config.yaml:/config/runtime.yaml \\\n                         @{triggerBody()?['repository']?['repo_name']}:@{triggerBody()?['push_data']?['tag']}\n```\n\nYou can find a CI version of our Helm chart on [hub.helm.sh](https://hub.helm.sh/charts/promitor/promitor-agent-scraper-ci)",
+                                    "runAfter": {
+                                        "Determine_GitHub_Issue_Id": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Compose"
                                 },
-                                "body": {
-                                    "body": "@{outputs('Define_GitHub_comment_text')}"
-                                },
-                                "method": "POST",
-                                "uri": "@{concat('https://api.github.com/repos/', parameters('GitHub.Repo.Owner'),'/', parameters('GitHub.Repo.Name'),'/issues/', outputs('Determine_GitHub_Issue_Id'),'/comments')}"
+                                "HTTP": {
+                                    "inputs": {
+                                        "authentication": {
+                                            "password": "[parameters('GitHub.Bot.Password')]",
+                                            "type": "Basic",
+                                            "username": "[parameters('GitHub.Bot.Name')]"
+                                        },
+                                        "body": {
+                                            "body": "@{outputs('Define_GitHub_comment_text')}"
+                                        },
+                                        "method": "POST",
+                                        "uri": "@{concat('https://api.github.com/repos/', parameters('GitHub.Repo.Owner'),'/', parameters('GitHub.Repo.Name'),'/issues/', outputs('Determine_GitHub_Issue_Id'),'/comments')}"
+                                    },
+                                    "runAfter": {
+                                        "Define_GitHub_comment_text": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Http"
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "not": {
+                                            "contains": [
+                                                "@outputs('Determine_GitHub_Issue_Id')",
+                                                "-"
+                                            ]
+                                        }
+                                    }
+                                ]
                             },
                             "runAfter": {
-                                "Define_GitHub_comment_text": [
+                                "Determine_GitHub_Issue_Id": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "Http"
+                            "type": "If"
                         }
                     },
                     "contentVersion": "1.0.0.0",
-                    "outputs": {},
+                    "outputs": {
+                    },
                     "parameters": {
                         "GitHub.Repo.Owner": {
                             "defaultValue": "[parameters('GitHub.Repo.Owner')]",
@@ -178,9 +211,11 @@
                         }
                     }
                 },
-                "parameters": {}
+                "parameters": {
+                }
             },
-            "dependsOn": []
+            "dependsOn": [
+            ]
         },
         {
             "type": "Microsoft.Insights/actionGroups",
@@ -190,14 +225,16 @@
             "properties": {
                 "groupShortName": "AlertHandler",
                 "enabled": true,
-                "smsReceivers": [],
+                "smsReceivers": [
+                ],
                 "emailReceivers": [
                     {
                         "name": "Tom Kerkhove",
                         "emailAddress": "kerkhove.tom@gmail.com"
                     }
                 ],
-                "webhookReceivers": []
+                "webhookReceivers": [
+                ]
             }
         },
         {
@@ -205,7 +242,8 @@
             "type": "Microsoft.Insights/metricAlerts",
             "location": "global",
             "apiVersion": "2018-03-01",
-            "tags": {},
+            "tags": {
+            },
             "properties": {
                 "description": "Scraper CI Bot - Docker Hub integration failed to run and post a comment on the pull request in GitHub",
                 "severity": 3,
@@ -221,7 +259,8 @@
                         {
                             "name": "1st criterion",
                             "metricName": "RunsFailed",
-                            "dimensions": [],
+                            "dimensions": [
+                            ],
                             "operator": "GreaterThanOrEqual",
                             "threshold": "1",
                             "timeAggregation": "Total"
@@ -244,7 +283,8 @@
             "type": "Microsoft.Insights/metricAlerts",
             "location": "global",
             "apiVersion": "2018-03-01",
-            "tags": {},
+            "tags": {
+            },
             "properties": {
                 "description": "Scraper CI Bot - Docker Hub integration failed to be triggered due to an issue",
                 "severity": 3,
@@ -260,7 +300,8 @@
                         {
                             "name": "1st criterion",
                             "metricName": "TriggersFailed",
-                            "dimensions": [],
+                            "dimensions": [
+                            ],
                             "operator": "GreaterThanOrEqual",
                             "threshold": "1",
                             "timeAggregation": "Total"

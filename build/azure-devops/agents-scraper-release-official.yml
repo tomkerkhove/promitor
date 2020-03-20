@@ -34,22 +34,26 @@ stages:
        displayName: 'Determine ''{major}.{minor}'' version'
      - template: ./../templates/persist-variable.yml
        parameters:
-          variableName: 'Image.MajorMinorVersion'
+          currentVariableName: 'Image.MajorMinorVersion'
+          persistedVariableName: 'Image.MajorMinorVersion'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
   dependsOn: Init
   displayName: Build and Push Docker image
   jobs:
-   - job: Build
+   - job: BuildLinux
+     displayName: Build Linux Docker image
      pool:
        vmImage: ubuntu-16.04
+     variables:
+       OS.Name: 'linux'
      steps:
      - download: current
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-          variableName: 'Image.MajorMinorVersion'
+        variableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
        inputs:
@@ -59,36 +63,77 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
-     - task: Docker@1
-       displayName: 'Build Docker image'
-       inputs:
-        dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-        arguments: '-t $(Image.Name):$(Image.MajorMinorVersion)'
+     - template: ./../templates/build-docker-image.yml
+       parameters:
         imageName: '$(Image.TaggedName)'
-        includeLatestTag: true
-        useDefaultContext: false
-        buildContext: ./src/
-     - task: Docker@1
-       displayName: 'Push ''{major}.{minor}.{patch}'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
+        buildArgs: ''
+        tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
+        os: '$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}'''
         imageName: '$(Image.TaggedName)'
-     - task: Docker@1
-       displayName: 'Push ''{major}.{minor}'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-     - task: Docker@1
-       displayName: 'Push ''latest'' to Docker Hub'
-       inputs:
-        containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'Docker Hub'
-        command: 'Push an image'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest'''
         imageName: '$(Image.Name):latest'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest-$(OS.Name)'''
+        imageName: '$(Image.Name):latest-$(OS.Name)'
+   - job: BuildWindows
+     displayName: Build Windows Docker image
+     pool:
+       vmImage: windows-2019
+     variables:
+       OS.Name: 'windows'
+     steps:
+     - powershell: |
+        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+        $index = "$(Image.Version)".IndexOf(".", 2);
+        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+        Write-Host "Found version '$majorMinorVersion'"
+        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+       displayName: 'Determine ''{major}.{minor}'' version'
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+        version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+        buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+        tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
+        os: '$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+     - template: ./../templates/push-docker-image.yml
+       parameters:
+        imageDisplayName: '''latest-$(OS.Name)'''
+        imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
@@ -102,7 +147,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-          variableName: 'Image.MajorMinorVersion'
+        variableName: 'Image.MajorMinorVersion'
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:
@@ -135,9 +180,9 @@ stages:
           ```
           ### Docker Image information
           New Docker image tags are available:
-          - `latest`
-          - `$(Image.Version)`
-          - `$(Image.MajorMinorVersion)`
+          - `latest`, `latest-linux`, `latest-windows`
+          - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+          - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
 
           Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
           For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
