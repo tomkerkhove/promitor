@@ -42,8 +42,8 @@ stages:
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - template: ./../templates/persist-variable.yml
        parameters:
-          currentVariableName: 'Build.BuildNumber'
-          persistedVariableName: 'App.Version'
+        currentVariableName: 'Build.BuildNumber'
+        persistedVariableName: 'App.Version'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
