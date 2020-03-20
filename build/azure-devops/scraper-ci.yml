@@ -152,7 +152,7 @@ stages:
        vmImage: ubuntu-16.04
      variables:
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
-       Image.TaggedName.OSAgnostic: '$(Image.Name):pr$(System.PullRequest.PullRequestNumber)'
+       Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
        OS.Name: 'linux'
      steps:
      - download: current
