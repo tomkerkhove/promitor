@@ -53,8 +53,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        persistedVariableName: 'Image.MajorMinorVersion'
-        targetVariableName: 'Image.MajorMinorVersion'
+        variableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
        inputs:
@@ -148,8 +147,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-        persistedVariableName: 'Image.MajorMinorVersion'
-        targetVariableName: 'Image.MajorMinorVersion'
+        variableName: 'Image.MajorMinorVersion'
      - task: GitHubRelease@0
        displayName: 'Create GitHub Release'
        inputs:

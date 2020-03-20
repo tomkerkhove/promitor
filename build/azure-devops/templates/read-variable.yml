@@ -1,34 +1,27 @@
 parameters:
-  persistedVariableName: ''
-  targetVariableName: ''
+  variableName: ''
 
 steps:
 - bash: |
-    echo "Variable 'persistedVariableName' found with value '$PERSISTED_VARIABLE_NAME'"
-    if [ -z "$PERSISTED_VARIABLE_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"persistedVariableName\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'persistedVariableName' found with value '$TARGET_VARIABLE_NAME'"
-    if [ -z "$TARGET_VARIABLE_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"persistedVariableName\""
+    echo "Variable 'variableName' found with value '$VARIABLE_NAME'"
+    if [ -z "$VARIABLE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"variableName\""
       echo "##vso[task.complete result=Failed;]"
     fi
   env:
-    PERSISTED_VARIABLE_NAME: ${{ parameters.persistedVariableName }}
-    TARGET_VARIABLE_NAME: ${{ parameters.targetVariableName }}
+    VARIABLE_NAME: ${{ parameters.variableName }}
   displayName: Check for required parameters in YAML template
 - bash: |
    echo "Listing folders in '$(Pipeline.Workspace)'"
    dir $(Pipeline.Workspace)/
    dir $(Pipeline.Workspace)/variables/
-   echo "Reading file '$(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable'"
-   cat $(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable
-   READ_VAR=$(cat $(Pipeline.Workspace)/variables/${{ parameters.persistedVariableName }}.variable)
+   echo "Reading file '$(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable'"
+   cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable
+   READ_VAR=$(cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable)
    echo "Read value '$READ_VAR'"
    if [ -z "$READ_VAR" ]; then
-      echo "##vso[task.logissue type=error;]No variable read with name \"${{ parameters.persistedVariableName }}\""
+      echo "##vso[task.logissue type=error;]No variable read with name \"${{ parameters.variableName }}\""
       echo "##vso[task.complete result=Failed;]"
     fi
-   echo "##vso[task.setvariable variable=${{ parameters.targetVariableName }};]$READ_VAR"
-  displayName: 'Assigning ''${{ parameters.persistedVariableName }}'' persisted value to ''${{ parameters.targetVariableName }}'' variable'
+   echo "##vso[task.setvariable variable=${{ parameters.variableName }};]$READ_VAR"
+  displayName: 'Reading ''${{ parameters.variableName }}'' variable'
