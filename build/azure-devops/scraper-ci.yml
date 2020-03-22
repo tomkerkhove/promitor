@@ -17,7 +17,7 @@ variables:
   DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
-  Image.TaggedName: '$(Image.Name):PR$(Tags.PR)'
+  Image.TaggedName: '$(Image.Name):$(Tags.PR)'
   Helm.Chart.Version: '0.0.0-$(App.Version)'
   Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
