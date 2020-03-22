@@ -142,7 +142,7 @@ stages:
   displayName: Docker Image
   dependsOn: [Init]
   variables:
-    Tags.PR: '$(System.PullRequest.PullRequestNumber)-$(OS.Name)'
+    Tags.PR: '$(App.Version)-$(OS.Name)'
     Tags.Experimental: 'experimental-$(OS.Name)'
   jobs:
    - job: DockerBuildLinux
