@@ -145,6 +145,7 @@ stages:
   variables:
     Tags.PR: '$(App.Version)-$(OS.Name)'
     Tags.Experimental: 'experimental-$(OS.Name)'
+    Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -152,7 +153,6 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      variables:
-       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
        OS.Name: 'linux'
      steps:
@@ -245,14 +245,19 @@ stages:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
           os: '$(OS.Name)'
-     - task: Docker@1
-       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'
 - stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
