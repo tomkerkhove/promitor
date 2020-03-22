@@ -17,7 +17,7 @@ variables:
   DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
-  Image.TaggedName: '$(Image.Name):PR$(Tags.PR)'
+  Image.TaggedName: '$(Image.Name):$(Tags.PR)'
   Helm.Chart.Version: '0.0.0-$(App.Version)'
   Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
@@ -35,7 +35,7 @@ stages:
          $buildNumber = '$(Build.BuildNumber)'
          Write-Host "Initial build number: '$buildNumber'"
          Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
          Write-Host "Build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
@@ -142,8 +142,9 @@ stages:
   displayName: Docker Image
   dependsOn: [Init]
   variables:
-    Tags.PR: '$(System.PullRequest.PullRequestNumber)-$(OS.Name)'
+    Tags.PR: '$(App.Version)-$(OS.Name)'
     Tags.Experimental: 'experimental-$(OS.Name)'
+    Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -151,8 +152,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      variables:
-       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
-       Image.TaggedName.OSAgnostic: '$(Image.Name):pr$(System.PullRequest.PullRequestNumber)'
+       Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
        OS.Name: 'linux'
      steps:
      - download: current
@@ -214,11 +214,19 @@ stages:
          $buildNumber = '$(Build.BuildNumber)'
          Write-Host "Initial build number: '$buildNumber'"
          Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version & build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
        condition: eq(variables['Build.Reason'], 'PullRequest')
+     - powershell: |
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Build number: '$buildNumber'"
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version is '$buildNumber'"
+       displayName: 'Assign App Version variable'
+       condition: ne(variables['Build.Reason'], 'PullRequest')
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-docker-image.yml
           parameters:
@@ -237,14 +245,19 @@ stages:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
           os: '$(OS.Name)'
-     - task: Docker@1
-       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'
 - stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
