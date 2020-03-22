@@ -225,7 +225,7 @@ stages:
          Write-Host "Build number: '$buildNumber'"
          Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
          Write-Host "App version is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
+       displayName: 'Assign App Version variable'
        condition: ne(variables['Build.Reason'], 'PullRequest')
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-docker-image.yml
