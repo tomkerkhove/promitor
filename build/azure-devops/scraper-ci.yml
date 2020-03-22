@@ -37,9 +37,18 @@ stages:
          Write-Host "PR Number '$prNumber'"
          $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version & build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
        condition: eq(variables['Build.Reason'], 'PullRequest')
+     - powershell: |
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Build number: '$buildNumber'"
+         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
+       condition: ne(variables['Build.Reason'], 'PullRequest')
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
