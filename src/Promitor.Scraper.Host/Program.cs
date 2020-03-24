@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Promitor.Core;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Integrations.AzureMonitor.Logging;
@@ -54,9 +55,15 @@ namespace Promitor.Scraper.Host
 
         private static IConfigurationRoot CreateConfiguration()
         {
+            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+            if (string.IsNullOrWhiteSpace(configurationFolder))
+            {
+                throw new Exception("Unable to determine the configuration folder");
+            }
+
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile("/config/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
                 .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML

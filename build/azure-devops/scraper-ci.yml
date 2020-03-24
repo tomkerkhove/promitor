@@ -17,8 +17,8 @@ variables:
   DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
-  Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
-  Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
+  Image.TaggedName: '$(Image.Name):$(Tags.PR)'
+  Helm.Chart.Version: '0.0.0-$(App.Version)'
   Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
 - stage: Init
@@ -35,14 +35,15 @@ stages:
          $buildNumber = '$(Build.BuildNumber)'
          Write-Host "Initial build number: '$buildNumber'"
          Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'PR$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
          Write-Host "##vso[build.updatebuildnumber]$buildNumber"
          Write-Host "Build number is '$buildNumber'"
        displayName: 'Change Build Number to PR format'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - template: ./../templates/persist-variable.yml
        parameters:
-          variableName: 'Build.BuildNumber'
+        currentVariableName: 'Build.BuildNumber'
+        persistedVariableName: 'App.Version'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
@@ -140,83 +141,123 @@ stages:
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]
+  variables:
+    Tags.PR: '$(App.Version)-$(OS.Name)'
+    Tags.Experimental: 'experimental-$(OS.Name)'
+    Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
   jobs:
-   - job: DockerBuild
-     displayName: Build Docker Image Tests
+   - job: DockerBuildLinux
+     displayName: Build Docker Image (Linux)
      condition: succeeded()
      pool:
        vmImage: ubuntu-16.04
+     variables:
+       Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
+       OS.Name: 'linux'
      steps:
      - download: current
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-          variableName: 'Build.BuildNumber'
-     - task: Docker@1
-       displayName: 'Build an image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --no-cache'
-         useDefaultContext: false
-         buildContext: ./src/
-         imageName: '$(Image.TaggedName)'
-         addDefaultLabels: false
-       condition: not(eq(variables['Build.Reason'], 'PullRequest'))
-     - task: Docker@1
-       displayName: 'Build an image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         dockerFile: ./src/Promitor.Scraper.Host/Dockerfile
-         arguments: '--tag promitor-agent-scraper-ci --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --no-cache'
-         useDefaultContext: false
-         buildContext: ./src/
-         imageName: '$(Image.TaggedName)'
-         addDefaultLabels: false
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: Docker@1
-       displayName: 'Run an image'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Run an image'
-         imageName: '$(Image.TaggedName)'
-         containerName: 'promitor-ci'
-         ports: '8999:80'
-         volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
-         envVars: |
-          PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
-          PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
-     - task: Docker@1
-       displayName: 'Push ''$(Image.Name)'' image to Docker Hub'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'Docker Hub'
-         command: 'Push an image'
-         imageName: '$(Image.TaggedName)'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: Docker@1
-       displayName: 'Push PR image to GitHub Package Registry'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-         command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
+        variableName: 'App.Version'
+     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-scraper-ci'
+             os: '$(OS.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             os: '$(OS.Name)'
+     - template: ./../templates/run-docker-image.yml
+       parameters:
+          volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+          imageName: '$(Image.TaggedName)'
+          os: '$(OS.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName.OSAgnostic)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'
+   - job: DockerBuildWindows
+     displayName: Build Docker Image (Windows)
+     condition: succeeded()
+     pool:
+       vmImage: windows-2019
+     variables:
+       OS.Name: 'windows'
+     steps:
+     - powershell: |
+         $prNumber = '$(System.PullRequest.PullRequestNumber)'
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Initial build number: '$buildNumber'"
+         Write-Host "PR Number '$prNumber'"
+         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
+         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version & build number is '$buildNumber'"
+       displayName: 'Change Build Number to PR format'
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - powershell: |
-         docker tag $(Image.TaggedName) docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental
-       displayName: 'Tag image as experimental'
-       condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-     - task: Docker@1
-       displayName: 'Push experimental image to GitHub Package Registry'
-       inputs:
-         containerregistrytype: 'Container Registry'
-         dockerRegistryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-         command: 'Push an image'
-         imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:experimental'
-       condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+         $buildNumber = '$(Build.BuildNumber)'
+         Write-Host "Build number: '$buildNumber'"
+         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+         Write-Host "App version is '$buildNumber'"
+       displayName: 'Assign App Version variable'
+       condition: ne(variables['Build.Reason'], 'PullRequest')
+     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ./../templates/build-docker-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+             tags: '--tag promitor-agent-scraper-ci --tag promitor-agent-scraper-ci-non-pr'
+             os: '$(OS.Name)'
+     - template: ./../templates/build-docker-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+          tags: '--tag promitor-agent-scraper-ci'
+          os: '$(OS.Name)'
+     - template: ./../templates/run-docker-image.yml
+       parameters:
+          volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
+          imageName: '$(Image.TaggedName)'
+          os: '$(OS.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'
 - stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
@@ -260,7 +301,7 @@ stages:
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
-          variableName: 'Build.BuildNumber'
+        variableName: 'App.Version'
      - powershell: |
         helm lint promitor-agent-scraper/ --strict
        workingDirectory: charts
@@ -270,7 +311,7 @@ stages:
        inputs:
         targetType: filePath
         filePath: ./build/helm/CI/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(Build.BuildNumber)"'
+        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
         workingDirectory: 'charts'
      - task: PowerShell@2
        displayName: 'Package Helm Chart'

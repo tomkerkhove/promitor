@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeFrameworkVersion>3.1.0</RuntimeFrameworkVersion>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -17,7 +18,7 @@
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Guard.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.13.1" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.31.1" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.32.0" />
     <PackageReference Include="Prometheus.Client" Version="3.1.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>

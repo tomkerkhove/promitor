@@ -3,7 +3,7 @@ layout: default
 title: Deploying Promitor
 ---
 
-Here is an overview of how you can deploy Promitor.
+Here is an overview of how you can deploy Promitor on your infrastructure, we support both Linux and Windows.
 
 _For more information about advanced configuration, read our documentation [here](/configuration)._
 
@@ -14,7 +14,8 @@ _For more information about advanced configuration, read our documentation [here
                            --env PROMITOR_AUTH_APPID='<azure-ad-app-id>' \
                            --env-file C:/Promitor/az-mon-auth.creds \
                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                           tomkerkhove/promitor-agent-scraper:1.0.0
+                           --volume C:/Promitor/runtime-config.yaml:/config/runtime.yaml \
+                           tomkerkhove/promitor-agent-scraper:1.4.0
 ```
 
 ## Kubernetes
@@ -33,9 +34,10 @@ Install the Promitor Chart repository:
 If all goes well you should be able to list all Promitor charts:
 
 ```shell
-❯ helm search promitor/
-NAME                            CHART VERSION   APP VERSION      DESCRIPTION
-promitor/promitor-agent-scraper 0.1.0           1.0.0  A Helm chart to deploy Promitor, an Azure Monitor scraper...
+❯ helm search hub promitor
+URL                                                     CHART VERSION   APP VERSION     DESCRIPTION
+https://hub.helm.sh/charts/promitor/promitor-ag...      1.4.0           1.4.0           A Helm chart to deploy Promitor, an Azure Monit...
+https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-PR920     0.0.0-PR920     A Helm chart to deploy Promitor, an Azure Monit...
 ```
 
 ### Using our Helm Chart
@@ -98,6 +100,9 @@ We provide a few options by offering multiple Docker tags:
 _(Alternative could be to use [image digest pinning](https://docs.docker.com/engine/reference/commandline/pull/#pull-an-image-by-digest-immutable-identifier))_
 
 ![Image Tagging Strategy](./../media/deploy-image-tagging-strategy.png)
+
+**All of the above tags are available for Linux. Every tag can be suffixed with
+ `-linux` or `-windows` to target a specific OS.**
 
 You can also pin to a specific digest of an image to ensure that you are running
 the same image across your infrastructure. However, you will not receive security

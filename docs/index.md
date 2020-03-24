@@ -25,7 +25,7 @@ docker run -d -p 8999:80 --name promitor-agent-scraper \
                          --env-file C:/Promitor/az-mon-auth.creds \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
                          --volume C:/Promitor/runtime-config.yaml:/config/runtime.yaml \
-                         tomkerkhove/promitor-agent-scraper:1.0.0
+                         tomkerkhove/promitor-agent-scraper:1.4.0
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).
@@ -38,6 +38,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 - Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to container logs & Azure Application Insights
+- Available for Linux & Windows runtimes
 - Support for all Azure clouds
 
 And there is more on the way - Check our [backlog](https://github.com/tomkerkhove/promitor/issues)
@@ -82,6 +83,7 @@ Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/ch
 We are proud to have the following customer(s) running Promitor in production:
 
 ![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
+![ResDiary](./media/logos/customers/resdiary.png)
 
 ## Thank you
 
