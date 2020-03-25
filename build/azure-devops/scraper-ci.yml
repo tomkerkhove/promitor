@@ -14,12 +14,15 @@ pr:
     - charts/promitor-agent-scraper/*
     - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
 variables:
-  DotNet.SDK.Version: '3.1.101'
-  DotNet.Configuration: 'release'
-  Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
-  Image.TaggedName: '$(Image.Name):$(Tags.PR)'
-  Helm.Chart.Version: '0.0.0-$(App.Version)'
-  Helm.Chart.Name: 'promitor-agent-scraper-ci'
+  - template: ./variables/build.yml
+  - name: Image.Name
+    value: 'tomkerkhove/promitor-agent-scraper-ci'
+  - name: Image.TaggedName
+    value: '$(Image.Name):$(Tags.PR)'
+  - name: Helm.Chart.Version
+    value: '0.0.0-$(App.Version)'
+  - name: Helm.Chart.Name
+    value: 'promitor-agent-scraper-ci'
 stages:
 - stage: Init
   displayName: Prepare Build
