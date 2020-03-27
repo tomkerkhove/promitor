@@ -44,6 +44,10 @@ Information about making changes to Promitor can be found [here](development-gui
 
 Learn more about our support options [here](https://github.com/tomkerkhove/promitor/blob/master/SUPPORT.md).
 
+Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/tomkerkhove/).
+
+[![Sam Vanhoutte](./media/supporters/samvanhoutte.png)](https://github.com/samvanhoutte)
+
 ## Security
 
 Learn more about our security policy [here](https://github.com/tomkerkhove/promitor/security/policy).
