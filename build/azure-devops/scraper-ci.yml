@@ -146,8 +146,6 @@ stages:
   dependsOn: [Init]
   variables:
     Tags.PR: '$(App.Version)-$(OS.Name)'
-    Tags.Experimental: 'experimental-$(OS.Name)'
-    Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -156,6 +154,8 @@ stages:
        vmImage: ubuntu-16.04
      variables:
        Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
+       Tags.Experimental: 'experimental-$(OS.Name)'
+       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
      steps:
      - download: current
@@ -199,7 +199,6 @@ stages:
         - powershell: |
             docker tag $(Image.TaggedName) $(Image.Experimental)
           displayName: 'Tag image as experimental'
-          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
@@ -252,15 +251,6 @@ stages:
         - template: ./../templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
-        - powershell: |
-            docker tag $(Image.TaggedName) $(Image.Experimental)
-          displayName: 'Tag image as experimental'
-          condition: and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: '$(Image.Experimental)'
 - stage: Helm2
   displayName: Helm Chart (2.x)
   dependsOn: Docker
