@@ -2,8 +2,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
     public class AppPlanResourceDefinition : AzureResourceDefinition
     {
-        public AppPlanResourceDefinition(string resourceGroupName, string appPlanName)
-            : base(ResourceType.AppPlan, resourceGroupName)
+        public AppPlanResourceDefinition(string subscriptionId, string resourceGroupName, string appPlanName)
+            : base(ResourceType.AppPlan, subscriptionId, resourceGroupName)
         {
             AppPlanName = appPlanName;
         }

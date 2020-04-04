@@ -59,6 +59,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
                 PrometheusMetricDefinition,
                 Scraping,
                 resource,
+                string.IsNullOrEmpty(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId,
                 string.IsNullOrEmpty(resource.ResourceGroupName) ? azureMetadata.ResourceGroupName : resource.ResourceGroupName);
         }
     }
