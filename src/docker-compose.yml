@@ -6,6 +6,25 @@ services:
     build:
       context: .
       dockerfile: Promitor.Scraper.Host/Dockerfile
+    links:
+        - graphite
     volumes:
       - "./metric-config.yaml:/config/metrics-declaration.yaml"
       - "./runtime-config.yaml:/config/runtime.yaml"
+  graphite:
+    image: graphiteapp/graphite-statsd
+    restart: always
+    ports:
+      - 2000:80
+      - 2003:2003
+      - 2004:2004
+      - 2023:2023
+      - 2024:2024
+      - 8125:8125/udp
+      - 8126:8126
+  grafana:
+    image: grafana/grafana
+    links:
+        - graphite
+    ports:
+      - 3000:3000
