@@ -2,8 +2,8 @@
 {
     public class PostgreSqlResourceDefinition : AzureResourceDefinition
     {
-        public PostgreSqlResourceDefinition(string resourceGroupName, string serverName)
-            : base(ResourceType.PostgreSql, resourceGroupName)
+        public PostgreSqlResourceDefinition(string subscriptionId, string resourceGroupName, string serverName)
+            : base(ResourceType.PostgreSql, subscriptionId, resourceGroupName)
         {
             ServerName = serverName;
         }

@@ -12,6 +12,12 @@
         public ResourceType ResourceType { get; }
 
         /// <summary>
+        ///     Specify a subscription to scrape that defers from the default subscription.
+        ///     This enables you to do multi-subscription scraping with one configuration file.
+        /// </summary>
+        public string SubscriptionId { get; }
+
+        /// <summary>
         ///     Specify a resource group to scrape that defers from the default resource group.
         ///     This enables you to do multi-resource group scraping with one configuration file.
         /// </summary>

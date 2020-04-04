@@ -2,8 +2,8 @@
 {
     public class GenericAzureResourceDefinition : AzureResourceDefinition
     {
-        public GenericAzureResourceDefinition(string resourceGroupName, string filter, string resourceUri)
-            : base(ResourceType.Generic, resourceGroupName)
+        public GenericAzureResourceDefinition(string subscriptionId, string resourceGroupName, string filter, string resourceUri)
+            : base(ResourceType.Generic, subscriptionId, resourceGroupName)
         {
             Filter = filter;
             ResourceUri = resourceUri;

@@ -2,8 +2,8 @@
 {
     public class ContainerRegistryResourceDefinition : AzureResourceDefinition
     {
-        public ContainerRegistryResourceDefinition(string resourceGroupName, string registryName)
-            : base(ResourceType.ContainerRegistry, resourceGroupName)
+        public ContainerRegistryResourceDefinition(string subscriptionId, string resourceGroupName, string registryName)
+            : base(ResourceType.ContainerRegistry, subscriptionId, resourceGroupName)
         {
             RegistryName = registryName;
         }

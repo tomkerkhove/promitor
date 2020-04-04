@@ -8,11 +8,12 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlDatabaseResourceDefinition" /> class.
         /// </summary>
+        /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="serverName">The name of the Azure SQL Server instance.</param>
         /// <param name="databaseName">The name of the Azure SQL database name.</param>
-        public SqlDatabaseResourceDefinition(string resourceGroupName, string serverName, string databaseName)
-            : base(ResourceType.SqlDatabase, resourceGroupName)
+        public SqlDatabaseResourceDefinition(string subscriptionId, string resourceGroupName, string serverName, string databaseName)
+            : base(ResourceType.SqlDatabase, subscriptionId, resourceGroupName)
         {
             ServerName = serverName;
             DatabaseName = databaseName;
