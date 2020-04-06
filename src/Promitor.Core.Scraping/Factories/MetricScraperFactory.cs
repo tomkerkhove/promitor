@@ -24,14 +24,12 @@ namespace Promitor.Core.Scraping.Factories
         /// <summary>
         ///     Creates a scraper that is capable of scraping a specific resource type
         /// </summary>
-        /// <param name="azureMetadata">Metadata concerning the Azure resources</param>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, AzureMetadata azureMetadata,
-            IPrometheusMetricWriter prometheusMetricWriter, AzureMonitorClient azureMonitorClient)
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, IPrometheusMetricWriter prometheusMetricWriter, AzureMonitorClient azureMonitorClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMetadata, azureMonitorClient, prometheusMetricWriter, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, prometheusMetricWriter, _logger);
 
             switch (metricDefinitionResourceType)
             {
