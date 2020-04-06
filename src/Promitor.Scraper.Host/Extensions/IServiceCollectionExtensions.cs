@@ -58,7 +58,7 @@ namespace Promitor.Scraper.Host.Extensions
                 foreach (var resource in metric.Resources)
                 {
                     var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-                    var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, services);
+                    var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
 
                     services.AddScheduler(builder =>

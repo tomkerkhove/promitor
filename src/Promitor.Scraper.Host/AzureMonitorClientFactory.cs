@@ -16,7 +16,17 @@ namespace Promitor.Scraper.Host
     {
         private readonly Dictionary<string, AzureMonitorClient> _azureMonitorClients = new Dictionary<string, AzureMonitorClient>();
 
-        public AzureMonitorClient CreateIfNotExists(AzureEnvironment cloud, string tenantId, string subscriptionId, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, IServiceCollection services)
+        /// <summary>
+        /// Provides an Azure Monitor client
+        /// </summary>
+        /// <param name="cloud">Name of the Azure cloud to interact with</param>
+        /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
+        /// <param name="subscriptionId">Id of the Azure subscription</param>
+        /// <param name="runtimeMetricCollector">Metrics collector for our runtime</param>
+        /// <param name="configuration">Configuration of Promitor</param>
+        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
+        /// <param name="loggerFactory">Factory to create loggers with</param>
+        public AzureMonitorClient CreateIfNotExists(AzureEnvironment cloud, string tenantId, string subscriptionId, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             if (_azureMonitorClients.ContainsKey(subscriptionId))
             {
@@ -24,7 +34,6 @@ namespace Promitor.Scraper.Host
             }
 
             var azureMonitorClient = CreateNewAzureMonitorClient(cloud, tenantId, subscriptionId, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-            //services.AddSingleton(azureMonitorClient);
             _azureMonitorClients.Add(subscriptionId, azureMonitorClient);
 
             return azureMonitorClient;
