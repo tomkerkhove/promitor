@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 image:
   repository: tomkerkhove/promitor-agent-scraper
-  tag: latest
+  tag: 1.0.0
   pullPolicy: Always
 
 azureAuthentication:
@@ -77,21 +77,23 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
+## Role-based access control
+## https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 rbac:
   ## If true, create & use RBAC resources
-  ##
   create: true
 
   ## If true, create & use Pod Security Policy resources
-  ## https://kubernetes.io/docs/concepts/policy/pod-security-policy/
-  pspEnabled: false
+  ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+  podSecurityPolicyEnabled: false
 
-  ## if rbac.create is false or (if rbac.create is true and rbac.serviceAccount.create is false)
-  ## the service account rbac.serviceAccount.name will be used instead
+  ## Service Account for pods
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
   serviceAccount:
-    # Specifies whether a service account should be created
+    ## Specifies whether a service account should be created
     create: true
-    # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
+
+    ## The name of the service account to use.
+    ## If not set and create is true, a name is generated using the fullname template
     name:
     annotations: {}

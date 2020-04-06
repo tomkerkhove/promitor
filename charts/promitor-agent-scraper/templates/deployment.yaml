@@ -31,7 +31,13 @@ spec:
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
     spec:
-      serviceAccountName: {{ template "promitor-agent-scraper.serviceAccountName" . }}
+      {{- if .Values.rbac.create }}
+      {{- if .Values.rbac.serviceAccount.create }}
+      serviceAccountName: {{ template "promitor-agent-scraper.fullname" . }}
+      {{- else }}
+      serviceAccountName: {{ .Values.rbac.serviceAccount.name | quote }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
