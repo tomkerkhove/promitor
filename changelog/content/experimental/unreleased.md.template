@@ -5,4 +5,9 @@ weight: 1
 version:
 ---
 
-
+- {{% tag added %}} Add a test for template variable overwrite
+- {{% tag changed %}} Include language code in REF_NOT_FOUND errors
+- {{% tag fixed %}} Improve minifier MIME type resolution
+- {{% tag deprecated %}} Set GO111MODULE=on for mage install
+- {{% tag removed %}} Add instruction to install PostCSS when missing
+- {{% tag security %}} Update snapcraft build config to Go 1.11
