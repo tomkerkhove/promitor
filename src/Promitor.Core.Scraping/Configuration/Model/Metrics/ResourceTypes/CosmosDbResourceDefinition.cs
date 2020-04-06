@@ -2,8 +2,8 @@
 {
     public class CosmosDbResourceDefinition : AzureResourceDefinition
     {
-        public CosmosDbResourceDefinition(string resourceGroupName, string dbName)
-            : base(ResourceType.CosmosDb, resourceGroupName)
+        public CosmosDbResourceDefinition(string subscriptionId, string resourceGroupName, string dbName)
+            : base(ResourceType.CosmosDb, subscriptionId, resourceGroupName)
         {
             DbName = dbName;
         }

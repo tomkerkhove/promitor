@@ -116,7 +116,7 @@ country: Scotland");
                 _deserializer,
                 node,
                 dayValueNode,
-                $"'twenty' is not a valid value for 'interval'. The value must be in the format 'hh:mm:ss'.");
+                "'twenty' is not a valid value for 'interval'. The value must be in the format 'hh:mm:ss'.");
         }
 
         [Fact]

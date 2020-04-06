@@ -46,8 +46,12 @@ Every metric that is being declared needs to define the following fields:
   interval defined in `metricDefaults.aggregation.interval` with a new interval
 - `resources` - An array of one or more resources to get metrics for. The fields
   required vary depending on the `resourceType` being created, and are documented
-  for each resource. All resources support an optional `resourceGroupName` to allow
-  the global resource group to be overridden.
+  for each resource.
+
+All resources provide the capability to override the default Azure metadata:
+
+- `subscriptionId` - Changes the subscription id to which the resource belongs. _(Overrides `azureMetadata.subscriptionId`)_
+- `resourceGroupName` - Changes the resource group that contains resource. (Overrides `azureMetadata.resourceGroupName`)
 
 Additionally, the following fields are optional:
 
@@ -102,6 +106,7 @@ metrics:
       - namespace: promitor-messaging-dev
         queueName: orders
         resourceGroupName: promitor-dev
+        subscriptionId: ABC
 ```
 
 ## Supported Azure Services

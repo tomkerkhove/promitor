@@ -8,10 +8,11 @@
         /// <summary>
         ///     Initializes a new instance of the <see cref="SqlServerResourceDefinition" /> class.
         /// </summary>
+        /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="serverName">The name of the Azure SQL Server resource.</param>
-        public SqlServerResourceDefinition(string resourceGroupName, string serverName)
-            : base(ResourceType.SqlServer, resourceGroupName)
+        public SqlServerResourceDefinition(string subscriptionId, string resourceGroupName, string serverName)
+            : base(ResourceType.SqlServer, subscriptionId, resourceGroupName)
         {
             ServerName = serverName;
         }

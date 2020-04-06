@@ -122,7 +122,7 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.DeserializerTests
             var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Equal(default(DayOfWeek), result.Day);
+            Assert.Equal(default, result.Day);
         }
 
         [Fact]

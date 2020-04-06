@@ -59,6 +59,10 @@ metrics:
     resources:
     - namespace: promitor-messaging
       queueName: orders
+    - namespace: promitor-messaging-other-subscription
+      queueName: orders
+      subscriptionId: 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+      resourceGroupName: promitor-sources
   - name: promitor_demo_azurestoragequeue_queue_size
     description: "Approximate amount of messages in 'orders' queue (determined with StorageQueue provider)"
     resourceType: StorageQueue
