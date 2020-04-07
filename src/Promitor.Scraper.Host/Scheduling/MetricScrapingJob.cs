@@ -13,45 +13,38 @@ namespace Promitor.Scraper.Host.Scheduling
 {
     public class MetricScrapingJob : IScheduledJob
     {
-        private readonly ScrapeDefinition<IAzureResourceDefinition> _metric;
+        private readonly ScrapeDefinition<IAzureResourceDefinition> _metricScrapeDefinition;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly AzureMonitorClient _azureMonitorClient;
         private readonly ILogger _logger;
 
         private readonly MetricScraperFactory _metricScraperFactory;
 
-        public MetricScrapingJob(ScrapeDefinition<IAzureResourceDefinition> metric,
+        public MetricScrapingJob(string jobName,
+            ScrapeDefinition<IAzureResourceDefinition> metricScrapeDefinition,
             IPrometheusMetricWriter prometheusMetricWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClient azureMonitorClient,
             ILogger<MetricScrapingJob> logger)
         {
-            Guard.NotNull(metric, nameof(metric));
+            Guard.NotNull(metricScrapeDefinition, nameof(metricScrapeDefinition));
             Guard.NotNull(prometheusMetricWriter, nameof(prometheusMetricWriter));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
+            Guard.NotNullOrWhitespace(jobName, nameof(jobName));
             Guard.NotNull(logger, nameof(logger));
 
-            _metric = metric;
+            Name = jobName;
+
+            _metricScrapeDefinition = metricScrapeDefinition;
             _prometheusMetricWriter = prometheusMetricWriter;
             _logger = logger;
 
             _metricScraperFactory = metricScraperFactory;
             _azureMonitorClient = azureMonitorClient;
-            ConfigureJob();
         }
 
-        public string CronSchedule { get; set; }
-
-        // ReSharper disable once UnassignedGetOnlyAutoProperty
-        public string CronTimeZone { get; }
-        public bool RunImmediately { get; set; }
-
-        private void ConfigureJob()
-        {
-            CronSchedule = _metric.Scraping.Schedule;
-            RunImmediately = true;
-        }
+        public string Name { get; }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
@@ -59,7 +52,7 @@ namespace Promitor.Scraper.Host.Scheduling
 
             try
             {
-                await ScrapeMetric(_metric);
+                await ScrapeMetric(_metricScrapeDefinition);
             }
             catch (Exception exception)
             {

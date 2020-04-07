@@ -46,7 +46,6 @@ namespace Promitor.Scraper.Host.Extensions
             var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(applyDefaults: true);
 
-            var logger = serviceProviderToCreateJobsWith.GetService<ILogger<MetricScrapingJob>>();
             var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
@@ -61,13 +60,23 @@ namespace Promitor.Scraper.Host.Extensions
                     var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
 
+                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}";
+
                     services.AddScheduler(builder =>
                     {
-                        builder.AddJob(serviceProvider => new MetricScrapingJob(scrapeDefinition,
-                        serviceProvider.GetService<IPrometheusMetricWriter>(),
-                            serviceProvider.GetService<MetricScraperFactory>(),
-                            azureMonitorClient,
-                            logger));
+                        builder.AddJob(jobServices =>
+                        {
+                            return new MetricScrapingJob(jobName, scrapeDefinition,
+                                jobServices.GetService<IPrometheusMetricWriter>(),
+                                jobServices.GetService<MetricScraperFactory>(),
+                                azureMonitorClient,
+                                jobServices.GetService<ILogger<MetricScrapingJob>>());
+                        }, schedulerOptions =>
+                        {
+                            schedulerOptions.CronSchedule = scrapeDefinition.Scraping.Schedule;
+                            schedulerOptions.RunImmediately = true;
+                        },
+                        jobName: jobName);
                         builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
                     });
                 }

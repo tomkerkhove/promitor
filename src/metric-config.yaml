@@ -100,7 +100,7 @@ metrics:
     resources:
     - serverName: promitor
       databaseName: promitor-db-1
-  - name: azure_web_app_cpu
+  - name: promitor_demo_webapp_cpu
     description: "Amount of CPU time used for an Azure Web App"
     resourceType: WebApp
     azureMetricConfiguration:
@@ -113,7 +113,7 @@ metrics:
     - webAppName: promitor-web-app
       resourceGroupName: promitor-sources
       slotName: staging
-  - name: azure_function_requests
+  - name: promitor_demo_function_requests
     description: "Amount of requests for an Azure Function App"
     resourceType: FunctionApp
     azureMetricConfiguration:
@@ -123,10 +123,7 @@ metrics:
     resources:
     - functionAppName: promitor-function-app
       resourceGroupName: promitor-sources
-    - functionAppName: promitor-function-app
-      resourceGroupName: promitor-sources
-      slotName: staging
-  - name: azure_app_plan_percentage_cpu
+  - name: promitor_demo_appplan_percentage_cpu
     description: "Average percentage of memory usage on an Azure App Plan"
     resourceType: AppPlan
     azureMetricConfiguration:
