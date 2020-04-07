@@ -29,6 +29,8 @@ values are `v1`.
   a cron that fits your needs.
 - `metricDefaults.aggregation.interval` - The default interval which defines over
   what period measurements of a metric should be aggregated.
+  a cron that fits your needs.
+- `metricDefaults.labels` - The default lebals that will be applied to all metrics. _(starting as of v1.6)_
 
 ### Metrics
 
@@ -83,6 +85,9 @@ metricDefaults:
   scraping:
     # Every minute
     schedule: "0 * * ? * *"
+  labels:
+    geo: china
+    environment: dev
 metrics:
   - name: azure_service_bus_active_messages
     description: "The number of active messages on a service bus queue."
