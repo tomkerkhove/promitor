@@ -91,7 +91,6 @@ their default values.
 | `service.labelType`  | Label to assign to your service | `infrastructure`            |
 | `service.selectorType`  | Selector type to use for the service | `runtime`            |
 
-
 Specify each parameter using the `--set key=value[,key=value]` argument to
 `helm install`. For example:
 
