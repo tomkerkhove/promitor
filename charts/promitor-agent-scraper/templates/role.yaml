@@ -1,6 +1,6 @@
 {{- if and .Values.rbac.create .Values.rbac.podSecurityPolicyEnabled }}
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
+kind: Role
 metadata:
   labels:
     app: {{ template "promitor-agent-scraper.name" . }}
