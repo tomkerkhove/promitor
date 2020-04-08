@@ -14,9 +14,5 @@ roleRef:
   name: {{ template "promitor-agent-scraper.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    {{- if .Values.rbac.serviceAccount.name }}
-    name: {{ .Values.rbac.serviceAccount.name }}
-    {{- else }}
-    name: {{ template "promitor-agent-scraper.fullname" . }}
-    {{- end }}
+    name: {{ template "promitor-agent-scraper.serviceaccountname" . }}
 {{- end -}}

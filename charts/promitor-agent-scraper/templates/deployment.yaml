@@ -32,11 +32,7 @@ spec:
         {{- end }}
     spec:
       {{- if .Values.rbac.create }}
-      {{- if .Values.rbac.serviceAccount.name }}
-      serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
-      {{- else if .Values.rbac.serviceAccount.create }}
-      serviceAccountName: {{ template "promitor-agent-scraper.fullname" . }}
-      {{- end }}
+      serviceAccountName: {{ template "promitor-agent-scraper.serviceaccountname" . }}
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
