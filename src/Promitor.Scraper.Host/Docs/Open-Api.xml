@@ -4,6 +4,18 @@
         <name>Promitor.Scraper.Host</name>
     </assembly>
     <members>
+        <member name="M:Promitor.Scraper.Host.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Telemetry.Metrics.Interfaces.IRuntimeMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Core.Configuration.Model.AzureMonitor.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Provides an Azure Monitor client
+            </summary>
+            <param name="cloud">Name of the Azure cloud to interact with</param>
+            <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
+            <param name="subscriptionId">Id of the Azure subscription</param>
+            <param name="runtimeMetricCollector">Metrics collector for our runtime</param>
+            <param name="configuration">Configuration of Promitor</param>
+            <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
+            <param name="loggerFactory">Factory to create loggers with</param>
+        </member>
         <member name="M:Promitor.Scraper.Host.Controllers.v1.ConfigurationController.GetMetricDeclaration">
             <summary>
                 Get Metrics Declaration

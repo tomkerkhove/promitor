@@ -4,7 +4,6 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
@@ -32,14 +31,8 @@ namespace Promitor.Core.Scraping
             _logger = scraperConfiguration.Logger;
             _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
-            AzureMetadata = scraperConfiguration.AzureMetadata;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
         }
-
-        /// <summary>
-        ///     Metadata concerning the Azure resources
-        /// </summary>
-        protected AzureMetadata AzureMetadata { get; }
 
         /// <summary>
         ///     Client to interact with Azure Monitor
@@ -69,7 +62,7 @@ namespace Promitor.Core.Scraping
 
                 var aggregationType = scrapeDefinition.AzureMetricConfiguration.Aggregation.Type;
                 var scrapedMetricResult = await ScrapeResourceAsync(
-                    AzureMetadata.SubscriptionId,
+                    scrapeDefinition.SubscriptionId,
                     scrapeDefinition,
                     castedMetricDefinition,
                     aggregationType,

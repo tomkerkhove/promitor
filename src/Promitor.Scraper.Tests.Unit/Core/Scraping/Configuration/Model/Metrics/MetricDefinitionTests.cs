@@ -13,14 +13,14 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         private readonly PrometheusMetricDefinition _prometheusMetricDefinition =
             new PrometheusMetricDefinition("promitor_test", "test", new Dictionary<string, string>());
 
-        private readonly AzureMetadata _azureMetadata = new AzureMetadata{ResourceGroupName = "global-resource-group"};
+        private readonly AzureMetadata _azureMetadata = new AzureMetadata { ResourceGroupName = "global-resource-group", SubscriptionId = "global-subscription-id"};
 
         [Fact]
         public void CreateScrapeDefinition_ResourceOverridesResourceGroupName_UsesOverriddenName()
         {
             // Arrange
-            var resource = new ContainerInstanceResourceDefinition("containerInstanceResourceGroup", "containerGroup");
-            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> {resource});
+            var resource = new ContainerInstanceResourceDefinition(null, "containerInstanceResourceGroup", "containerGroup");
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
 
             // Act
             var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
@@ -33,7 +33,7 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         public void CreateScrapeDefinition_ResourceDoesNotSpecifyResourceGroupName_UsesGlobalName()
         {
             // Arrange
-            var resource = new ContainerInstanceResourceDefinition(null, "containerGroup");
+            var resource = new ContainerInstanceResourceDefinition("subscription", null, "containerGroup");
             var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
 
             // Act
@@ -42,12 +42,39 @@ namespace Promitor.Scraper.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
             // Assert
             Assert.Equal(_azureMetadata.ResourceGroupName, scrapeDefinition.ResourceGroupName);
         }
+        [Fact]
+        public void CreateScrapeDefinition_ResourceOverridesSubscription_UsesOverriddenName()
+        {
+            // Arrange
+            var resource = new ContainerInstanceResourceDefinition("subscription", "containerInstanceResourceGroup", "containerGroup");
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
+
+            // Act
+            var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
+
+            // Assert
+            Assert.Equal(resource.SubscriptionId, scrapeDefinition.SubscriptionId);
+        }
+
+        [Fact]
+        public void CreateScrapeDefinition_ResourceDoesNotSpecifySubscription_UsesGlobalName()
+        {
+            // Arrange
+            var resource = new ContainerInstanceResourceDefinition(null, "containerInstanceResourceGroup", "containerGroup");
+            var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
+
+            // Act
+            var scrapeDefinition = definition.CreateScrapeDefinition(resource, _azureMetadata);
+
+            // Assert
+            Assert.Equal(_azureMetadata.SubscriptionId, scrapeDefinition.SubscriptionId);
+        }
 
         [Fact]
         public void CreateScrapeDefinition_ResourceHasEmptyResourceGroupName_UsesGlobalName()
         {
             // Arrange
-            var resource = new ContainerInstanceResourceDefinition(string.Empty, "containerGroup");
+            var resource = new ContainerInstanceResourceDefinition("subscription", string.Empty, "containerGroup");
             var definition = new MetricDefinition(_prometheusMetricDefinition, new Promitor.Core.Scraping.Configuration.Model.Scraping(), new AzureMetricConfiguration(), ResourceType.ContainerInstance, new List<IAzureResourceDefinition> { resource });
 
             // Act

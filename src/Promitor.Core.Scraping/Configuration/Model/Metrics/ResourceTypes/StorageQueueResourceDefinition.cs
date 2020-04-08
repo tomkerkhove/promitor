@@ -2,8 +2,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
     public class StorageQueueResourceDefinition : AzureResourceDefinition
     {
-        public StorageQueueResourceDefinition(string resourceGroupName, string accountName, string queueName, Secret sasToken)
-            : base(ResourceType.StorageQueue, resourceGroupName)
+        public StorageQueueResourceDefinition(string subscriptionId, string resourceGroupName, string accountName, string queueName, Secret sasToken)
+            : base(ResourceType.StorageQueue, subscriptionId, resourceGroupName)
         {
             AccountName = accountName;
             QueueName = queueName;

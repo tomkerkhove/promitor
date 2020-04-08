@@ -8,10 +8,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
         /// <summary>
         ///     Initializes a new instance of the <see cref="StorageAccountResourceDefinition" /> class.
         /// </summary>
+        /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="accountName">The name of the Azure Storage resource.</param>
-        public StorageAccountResourceDefinition(string resourceGroupName, string accountName)
-            : base(ResourceType.StorageAccount, resourceGroupName)
+        public StorageAccountResourceDefinition(string subscriptionId, string resourceGroupName, string accountName)
+            : base(ResourceType.StorageAccount, subscriptionId, resourceGroupName)
         {
             AccountName = accountName;
         }

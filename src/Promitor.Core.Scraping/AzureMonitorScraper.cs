@@ -24,7 +24,7 @@ namespace Promitor.Core.Scraping
         /// <inheritdoc />
         protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            var resourceUri = BuildResourceUri(AzureMetadata.SubscriptionId, scrapeDefinition, resourceDefinition);
+            var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, resourceDefinition);
 
             var metricFilter = DetermineMetricFilter(resourceDefinition);
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;

@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ApiManagementResourceDefinition resource)
         {
-            return string.Format(ResourceUriTemplate, AzureMetadata.SubscriptionId, scrapeDefinition.ResourceGroupName, resource.InstanceName);
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.InstanceName);
         }
 
         protected override string DetermineMetricFilter(ApiManagementResourceDefinition resourceDefinition)

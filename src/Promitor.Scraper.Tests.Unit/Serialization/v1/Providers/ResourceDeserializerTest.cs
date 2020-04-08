@@ -33,5 +33,29 @@ namespace Promitor.Scraper.Tests.Unit.Serialization.v1.Providers
                 "someProperty: someValue",
                 c => c.ResourceGroupName);
         }
+
+        [Fact]
+        public void Deserialize_SubscriptionIdSupplied_SetsSubscriptionId()
+        {
+            const string subscriptionId = "subscription-ABC";
+            var deserializer = CreateDeserializer();
+
+            YamlAssert.PropertySet(
+                deserializer,
+                $"subscriptionId: {subscriptionId}",
+                subscriptionId,
+                c => c.SubscriptionId);
+        }
+
+        [Fact]
+        public void Deserialize_SubscriptionIdNotSupplied_Null()
+        {
+            var deserializer = CreateDeserializer();
+
+            YamlAssert.PropertyNull(
+                deserializer,
+                "someProperty: someValue",
+                c => c.SubscriptionId);
+        }
     }
 }

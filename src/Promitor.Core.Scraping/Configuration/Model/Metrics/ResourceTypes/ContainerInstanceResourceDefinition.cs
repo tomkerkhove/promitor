@@ -2,8 +2,8 @@
 {
     public class ContainerInstanceResourceDefinition : AzureResourceDefinition
     {
-        public ContainerInstanceResourceDefinition(string resourceGroupName, string containerGroup)
-            : base(ResourceType.ContainerInstance, resourceGroupName)
+        public ContainerInstanceResourceDefinition(string subscriptionId, string resourceGroupName, string containerGroup)
+            : base(ResourceType.ContainerInstance, subscriptionId, resourceGroupName)
         {
             ContainerGroup = containerGroup;
         }
