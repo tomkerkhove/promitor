@@ -32,10 +32,10 @@ spec:
         {{- end }}
     spec:
       {{- if .Values.rbac.create }}
-      {{- if .Values.rbac.serviceAccount.create }}
+      {{- if .Values.rbac.serviceAccount.name }}
+      serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
+      {{- else if .Values.rbac.serviceAccount.create }}
       serviceAccountName: {{ template "promitor-agent-scraper.fullname" . }}
-      {{- else }}
-      serviceAccountName: {{ .Values.rbac.serviceAccount.name | quote }}
       {{- end }}
       {{- end }}
       containers:

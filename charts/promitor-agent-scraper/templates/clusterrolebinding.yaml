@@ -14,10 +14,10 @@ roleRef:
   name: {{ template "promitor-agent-scraper.fullname" . }}
 subjects:
   - kind: ServiceAccount
-    {{- if .Values.rbac.serviceAccount.create }}
-    name: {{ template "promitor-agent-scraper.fullname" . }}
+    {{- if .Values.rbac.serviceAccount.name }}
+    name: {{ .Values.rbac.serviceAccount.name }}
     {{- else }}
-    name: {{ .Values.rbac.serviceAccount.name | quote }}
+    name: {{ template "promitor-agent-scraper.fullname" . }}
     {{- end }}
     namespace: {{ .Release.Namespace }}
 {{- end -}}
