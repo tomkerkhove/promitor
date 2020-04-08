@@ -79,7 +79,7 @@ their default values.
 | `rbac.create` | If true, create & use RBAC resources | `true` |
 | `rbac.podSecurityPolicyEnabled` | Create pod security policy resources | `false` |
 | `rbac.serviceAccount.create` | Create service account resource | `true` |
-| `rbac.serviceAccount.name` | Service account name to use. If create is true, a name is generated using the fullname template | `` |
+| `rbac.serviceAccount.name` | Service account name to use if create is false. If create is true, a name is generated using the fullname template | `default` |
 | `rbac.serviceAccount.annotations` | Service account annotations| `{}` |
 | `resources`  | Pod resource requests & limits |    `{}`    |
 | `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |
