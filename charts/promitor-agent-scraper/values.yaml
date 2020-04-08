@@ -76,3 +76,24 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
+
+## Role-based access control
+## https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+rbac:
+  ## If true, create & use RBAC resources
+  create: true
+
+  ## If true, create & use Pod Security Policy resources
+  ## ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+  podSecurityPolicyEnabled: false
+
+  ## Service Account for pods
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+  serviceAccount:
+    ## Specifies whether a service account should be created
+    create: true
+
+    ## The name of the service account to use if create is false
+    ## If create is true, a name is generated using the fullname template
+    name: default
+    annotations: {}

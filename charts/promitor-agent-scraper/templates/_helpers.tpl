@@ -41,3 +41,14 @@ Create secret name based on whether or not user defined it.
 {{- printf "%s" .Values.secrets.secretName -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create service account name based on whether or not user defined it.
+*/}}
+{{- define "promitor-agent-scraper.serviceaccountname" -}}
+{{- if .Values.rbac.serviceAccount.create -}}
+{{ template "promitor-agent-scraper.fullname" . }}
+{{- else -}}
+{{- printf "%s" .Values.rbac.serviceAccount.name -}}
+{{- end -}}
+{{- end -}}
