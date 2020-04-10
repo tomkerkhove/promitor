@@ -38,7 +38,7 @@ namespace Promitor.Runtime.Agents.Scraper
             var httpPort = DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
-            return Microsoft.Extensions.Hosting.Host.CreateDefaultBuilder(args)
+            return Host.CreateDefaultBuilder(args)
 
                 .ConfigureWebHostDefaults(webHostBuilder =>
                 {

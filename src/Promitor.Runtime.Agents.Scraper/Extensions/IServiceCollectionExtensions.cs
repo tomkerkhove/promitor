@@ -27,7 +27,6 @@ using Promitor.Core.Scraping.Prometheus;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
-using Promitor.Runtime.Agents.Scraper;
 using Promitor.Runtime.Agents.Scraper.Scheduling;
 using Promitor.Runtime.Agents.Scraper.Validation;
 
