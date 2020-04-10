@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{19235B76-EE2F-4343-AA08-47615EC684EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agents", "Agents", "{710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Scraper.Tests.Unit", "Promitor.Scraper.Tests.Unit\Promitor.Scraper.Tests.Unit.csproj", "{D53C3256-A239-4FA9-8B54-56487570EE33}"
 EndProject
