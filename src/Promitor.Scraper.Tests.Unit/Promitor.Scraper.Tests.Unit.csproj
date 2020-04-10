@@ -36,7 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
-    <ProjectReference Include="..\Promitor.Scraper.Host\Promitor.Scraper.Host.csproj" />
+    <ProjectReference Include="..\Promitor.Runtime.Agents.Scraper\Promitor.Runtime.Agents.Scraper.csproj" />
   </ItemGroup>
 
 </Project>

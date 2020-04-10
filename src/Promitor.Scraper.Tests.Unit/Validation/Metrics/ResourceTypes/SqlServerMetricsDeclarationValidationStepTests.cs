@@ -1,4 +1,4 @@
-﻿using Promitor.Scraper.Host.Validation.Steps;
+﻿using Promitor.Runtime.Agents.Scraper.Validation.Steps;
 using Promitor.Scraper.Tests.Unit.Stubs;
 using System.ComponentModel;
 using Promitor.Scraper.Tests.Unit.Builders.Metrics.v1;
