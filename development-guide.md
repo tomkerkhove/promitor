@@ -62,7 +62,7 @@ Promitor code is split into multiple projects by functionality, with the followi
 projects worth highlighting:
 
 - Promitor.Runtime.Agents.Scraper - contains the main console application that runs Promitor.
-- Promitor.Scraper.Tests.Unit - contains the XUnit unit tests.
+- Promitor.Tests.Unit - contains the XUnit unit tests.
 - Promitor.Docker - contains a Visual Studio Docker project for running Promitor
   during development.
 
@@ -72,7 +72,7 @@ If you are using Visual Studio, the solution file for Promitor is [src/Promitor.
 
 ### Running Tests
 
-To run the unit tests for Promitor, open a terminal and navigate to `src/Promitor.Scraper.Tests.Unit`,
+To run the unit tests for Promitor, open a terminal and navigate to `src/Promitor.Tests.Unit`,
 and run the following command:
 
 ```shell

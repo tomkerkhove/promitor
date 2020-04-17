@@ -51,7 +51,8 @@ namespace Promitor.Runtime.Agents.Scraper.Controllers.v1
         {
             var runtimeConfig = _runtimeConfiguration.CurrentValue.Clone();
 
-            if (string.IsNullOrWhiteSpace(runtimeConfig?.Telemetry?.ApplicationInsights?.InstrumentationKey) == false)
+            if (runtimeConfig?.Telemetry?.ApplicationInsights != null
+                && string.IsNullOrWhiteSpace(runtimeConfig.Telemetry.ApplicationInsights.InstrumentationKey) == false)
             {
                 runtimeConfig.Telemetry.ApplicationInsights.InstrumentationKey = "***";
             }

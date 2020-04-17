@@ -80,6 +80,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 throw new Exception($"Unable to determine version '{rawSpecVersion}' that was specified in the metric declaration");
             }
 
+            // ReSharper disable once PossibleNullReferenceException
             return (SpecVersion)specVersion;
         }
 

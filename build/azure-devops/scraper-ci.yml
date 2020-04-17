@@ -139,7 +139,7 @@ stages:
        displayName: 'dotnet test'
        inputs:
          command: test
-         projects: 'src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj'
+         projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
          arguments: '--configuration $(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image

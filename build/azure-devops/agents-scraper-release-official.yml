@@ -62,7 +62,7 @@ stages:
        displayName: 'Run Unit Tests'
        inputs:
         command: test
-        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+        projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
      - template: ./../templates/build-docker-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
@@ -115,7 +115,7 @@ stages:
        displayName: 'Run Unit Tests'
        inputs:
         command: test
-        projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+        projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
      - template: ./../templates/build-docker-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
