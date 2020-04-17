@@ -10,7 +10,7 @@ pr:
   paths:
     include:
     - src/*
-    - build/azure-devops/scraper-ci.yml
+    - build/azure-devops/agents-ci-scraper.yml
     - charts/promitor-agent-scraper/*
 variables:
   - template: ./variables/build.yml
