@@ -27,7 +27,7 @@ discuss your scenario_
 5. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
   to handle your new resource type by returning a new instance of the Deserializer
   you created in the previous step.
-6. Provide a unit test in `.\src\Promitor.Scraper.Tests.Unit\Serialization\v1\Providers`
+6. Provide a unit test in `.\src\Promitor.Tests.Unit\Serialization\v1\Providers`
   that tests the deserialization based on our sample. Your test class must inherit
   from `ResourceDeserializerTest` to ensure the inherited functionality is tested.
 
@@ -47,7 +47,7 @@ This requires the following steps:
   the validation inputs, steps, and outputs typical of validator implementation.
 2. Add construction and usage of this validator to `.\src\Promitor.Runtime.Agents.Scraper\Validation\Factories\MetricValidatorFactory.cs`
   for the ResourceType you created in step #1 above.
-3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Scraper.Tests.Unit\Validation\Metrics\ResourceTypes`
+3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Tests.Unit\Validation\Metrics\ResourceTypes`
 
 ## Scraping
 

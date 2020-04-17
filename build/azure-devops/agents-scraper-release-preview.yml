@@ -31,7 +31,7 @@ stages:
        displayName: 'Run Unit Tests'
        inputs:
          command: test
-         projects: src/Promitor.Scraper.Tests.Unit/Promitor.Scraper.Tests.Unit.csproj
+         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
      - task: Docker@1
        displayName: 'Build Docker image'
        inputs:
