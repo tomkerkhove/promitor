@@ -137,6 +137,10 @@ stages:
        Tags.Experimental: 'experimental-$(OS.Name)'
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
+       Container.Port: 8888
+       Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
+       Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
+       # Agent.Auth.AppSecret is added on the pipeline config
      steps:
      - download: current
        artifact: variables
