@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{19235B76-EE2F-4343-AA08-47615EC684EC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agents", "Agents", "{710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Tests.Unit", "Promitor.Tests.Unit\Promitor.Tests.Unit.csproj", "{D53C3256-A239-4FA9-8B54-56487570EE33}"
@@ -34,6 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}"
 	ProjectSection(SolutionItems) = preProject
+		..\tests\discovery-config.yaml = ..\tests\discovery-config.yaml
 		metric-config.yaml = metric-config.yaml
 		runtime-config.yaml = runtime-config.yaml
 	EndProjectSection
@@ -42,7 +41,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Telemetry.Met
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Configuration", "Promitor.Core.Configuration\Promitor.Core.Configuration.csproj", "{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Runtime.Agents.Scraper", "Promitor.Runtime.Agents.Scraper\Promitor.Runtime.Agents.Scraper.csproj", "{07161A83-6952-4FA4-B84C-59D766569BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.Scraper", "Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj", "{07161A83-6952-4FA4-B84C-59D766569BAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.ResourceDiscovery", "Promitor.Agents.ResourceDiscovery\Promitor.Agents.ResourceDiscovery.csproj", "{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.Core", "Promitor.Agents.Core\Promitor.Agents.Core.csproj", "{CDC2F68B-52FE-4299-ACED-D01E2477727C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,12 +88,19 @@ Global
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{19235B76-EE2F-4343-AA08-47615EC684EC} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{710EC1C2-88E8-4D5C-A2DA-89C321CB7D48} = {9D006E55-567F-4521-9366-490679CA00BF}
 		{D53C3256-A239-4FA9-8B54-56487570EE33} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
 		{05524B1B-9965-4E36-9626-A2823B8588AA} = {9D006E55-567F-4521-9366-490679CA00BF}
@@ -101,7 +111,9 @@ Global
 		{F929434C-07FB-4B55-A8EE-5C77D8B49809} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 		{3AB59144-8090-4AF3-9322-E357B2CAF11F} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2} = {05524B1B-9965-4E36-9626-A2823B8588AA}
-		{07161A83-6952-4FA4-B84C-59D766569BAF} = {19235B76-EE2F-4343-AA08-47615EC684EC}
+		{07161A83-6952-4FA4-B84C-59D766569BAF} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
+		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
+		{CDC2F68B-52FE-4299-ACED-D01E2477727C} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

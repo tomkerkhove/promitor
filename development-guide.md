@@ -61,7 +61,7 @@ The C# code for Promitor can be found in the `/src` folder in the repository. Th
 Promitor code is split into multiple projects by functionality, with the following
 projects worth highlighting:
 
-- Promitor.Runtime.Agents.Scraper - contains the main console application that runs Promitor.
+- Promitor.Agents.Scraper - contains the main console application that runs Promitor.
 - Promitor.Tests.Unit - contains the XUnit unit tests.
 - Promitor.Docker - contains a Visual Studio Docker project for running Promitor
   during development.
@@ -120,5 +120,5 @@ by accident.
 To build the Docker image, run the following command from the `/src` directory:
 
 ```shell
-docker build . --file .\Promitor.Runtime.Agents.Scraper\Dockerfile --tag promitor --no-cache
+docker build . --file .\Promitor.Agents.Scraper\Dockerfile --tag promitor --no-cache
 ```

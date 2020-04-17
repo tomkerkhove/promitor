@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Options;
 using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Runtime.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Validation.Misc

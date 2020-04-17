@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 using Promitor.Core;
-using Promitor.Runtime.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Validation.Authentication

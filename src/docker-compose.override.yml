@@ -1,6 +1,14 @@
 version: '3.4'
 
 services:
+  promitor.agents.resourcediscovery:
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - "ASPNETCORE_URLS=https://+:443;http://+:80"
+      - "PROMITOR_DISCOVERY_APPID=67882a00-21d3-4ee7-b32a-430ea0768cd3"
+      - "PROMITOR_DISCOVERY_APPSECRET=_M6e4CNu]x2SSN0hUFobamWttPyVXl?-"
+    ports:
+      - "7777:80"
   promitor.agents.scraper:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

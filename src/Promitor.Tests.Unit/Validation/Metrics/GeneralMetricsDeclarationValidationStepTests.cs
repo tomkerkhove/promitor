@@ -2,7 +2,7 @@
 using AutoMapper;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
-using Promitor.Runtime.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
 using MetricsDeclarationBuilder = Promitor.Tests.Unit.Builders.Metrics.v1.MetricsDeclarationBuilder;

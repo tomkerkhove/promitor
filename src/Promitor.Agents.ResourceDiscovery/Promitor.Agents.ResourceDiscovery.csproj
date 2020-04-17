@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <RuntimeFrameworkVersion>3.1.3</RuntimeFrameworkVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
+    <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
+    <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Docs\Open-Api.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Arcus.Observability.Telemetry.Core" Version="0.1.0-preview-7" />
+    <PackageReference Include="Guard.NET" Version="1.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Azure.Management.ResourceGraph" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.10" />
+    <PackageReference Include="Arcus.WebApi.Correlation" Version="0.4.0" />
+    <PackageReference Include="Arcus.WebApi.Logging" Version="0.4.0" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
+    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
+    <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />
+  </ItemGroup>
+
+</Project>
