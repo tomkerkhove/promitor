@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.ResourceDis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.Core", "Promitor.Agents.Core\Promitor.Agents.Core.csproj", "{CDC2F68B-52FE-4299-ACED-D01E2477727C}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Tests.Integration", "Promitor.Tests.Integration\Promitor.Tests.Integration.csproj", "{B3079BB2-2B5D-4E04-9570-99F86C4352D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDC2F68B-52FE-4299-ACED-D01E2477727C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3079BB2-2B5D-4E04-9570-99F86C4352D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3079BB2-2B5D-4E04-9570-99F86C4352D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3079BB2-2B5D-4E04-9570-99F86C4352D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3079BB2-2B5D-4E04-9570-99F86C4352D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,6 +120,7 @@ Global
 		{07161A83-6952-4FA4-B84C-59D766569BAF} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{CDC2F68B-52FE-4299-ACED-D01E2477727C} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
+		{B3079BB2-2B5D-4E04-9570-99F86C4352D2} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}
