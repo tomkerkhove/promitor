@@ -1,5 +1,6 @@
 parameters:
   imageName: ''
+  dockerFile: './src/Promitor.Agents.Scraper/Dockerfile'
   buildArgs: ''
   tags: '--tag promitor-agent-scraper-ci'
   os: ''
@@ -11,6 +12,11 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"imageName\""
       echo "##vso[task.complete result=Failed;]"
     fi
+    echo "Variable 'dockerFile' found with value '$DOCKER_FILE'"
+    if [ -z "$DOCKER_FILE" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"dockerFile\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
     echo "Variable 'os' found with value '$OS'"
     if [ -z "$OS" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"os\""
@@ -18,6 +24,7 @@ steps:
     fi
   env:
     IMAGE_NAME: ${{ parameters.imageName }}
+    DOCKER_FILE: ${{ parameters.dockerFile }}
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
@@ -25,7 +32,7 @@ steps:
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker Hub'
-    dockerFile: ./src/Promitor.Agents.Scraper/Dockerfile
+    dockerFile: ${{ parameters.dockerFile }}
     arguments: '${{ parameters.tags }} ${{ parameters.buildArgs }} --no-cache'
     useDefaultContext: false
     buildContext: ./src/

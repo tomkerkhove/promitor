@@ -135,7 +135,7 @@ stages:
      variables:
        Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
        Tags.Experimental: 'experimental-$(OS.Name)'
-       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-ci:$(Tags.Experimental)'
+       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
        Container.Port: 8888
        Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
@@ -162,18 +162,20 @@ stages:
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-docker-image.yml
           parameters:
+             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-scraper-ci'
+             tags: '--tag promitor-agent-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/build-docker-image.yml
           parameters:
+             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
     #  - template: ./../templates/run-docker-image.yml
     #    parameters:
-    #       volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+    #       volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-discovery-ci'
     #       imageName: '$(Image.TaggedName)'
     #       os: '$(OS.Name)'
      - task: Bash@3
@@ -209,11 +211,11 @@ stages:
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-resource-discovery-pr:$(System.PullRequest.PullRequestNumber)'
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-resource-discovery-pr:$(Tags.PR)'
      - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
         - powershell: |
             docker tag $(Image.TaggedName) $(Image.Experimental)
