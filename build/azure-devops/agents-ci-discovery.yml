@@ -191,7 +191,7 @@ stages:
        displayName: 'Run Integration Tests'
        inputs:
          command: test
-         projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
+         projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
          arguments: '--configuration $(DotNet.Configuration)'
      - task: Bash@3
        inputs:
