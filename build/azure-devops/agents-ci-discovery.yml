@@ -182,7 +182,7 @@ stages:
        inputs:
          targetType: 'inline'
          script: |
-           docker run -d -p $(Container.Port):80 --name promitor-agent-discovery-ci --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml $(Image.Name):$(Build.BuildNumber)
+           docker run -d -p $(Container.Port):80 --name promitor-discovery-agent --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml $(Image.TaggedName)
            sleep 10
            docker logs promitor-discovery-agent
          failOnStderr: true
