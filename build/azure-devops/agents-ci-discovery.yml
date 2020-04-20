@@ -78,15 +78,6 @@ stages:
        inputs:
          artifact: 'Build'
          path: '$(Build.SourcesDirectory)'
-    #  - task: DotNetCoreInstaller@0
-    #    displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
-    #    inputs:
-    #      version: '$(DotNet.Sdk.Version)'
-    #  - task: DotNetCoreCLI@2
-    #    displayName: 'Restore NuGet Packages'
-    #    inputs:
-    #      command: restore
-    #      projects: 'src/Promitor.sln'
      - task: ResharperCli@2
        displayName: 'Run Resharper Code Quality'
        inputs:
