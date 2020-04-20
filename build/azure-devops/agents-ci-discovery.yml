@@ -27,16 +27,8 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
@@ -86,15 +78,15 @@ stages:
        inputs:
          artifact: 'Build'
          path: '$(Build.SourcesDirectory)'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
-       inputs:
-         version: '$(DotNet.Sdk.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'Restore NuGet Packages'
-       inputs:
-         command: restore
-         projects: 'src/Promitor.sln'
+    #  - task: DotNetCoreInstaller@0
+    #    displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+    #    inputs:
+    #      version: '$(DotNet.Sdk.Version)'
+    #  - task: DotNetCoreCLI@2
+    #    displayName: 'Restore NuGet Packages'
+    #    inputs:
+    #      command: restore
+    #      projects: 'src/Promitor.sln'
      - task: ResharperCli@2
        displayName: 'Run Resharper Code Quality'
        inputs:
@@ -171,11 +163,6 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-    #  - template: ./../templates/run-docker-image.yml
-    #    parameters:
-    #       volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-discovery-ci'
-    #       imageName: '$(Image.TaggedName)'
-    #       os: '$(OS.Name)'
      - task: Bash@3
        inputs:
          targetType: 'inline'
