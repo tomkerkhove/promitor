@@ -5,7 +5,7 @@ parameters:
   os: ''
 
 steps:
-- template: ./../templates/build-docker-image.yml
+- template: ./templates/build-docker-image.yml
   parameters:
       dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
       imageName: '${{ parameters.imageName }}'
