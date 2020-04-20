@@ -160,16 +160,14 @@ stages:
          tokenPrefix: '#{'
          tokenSuffix: '}#'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: ./../templates/build-docker-image.yml
+        - template: ./../templates/build-discovery-image.yml
           parameters:
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/build-docker-image.yml
+      - template: ./../templates/build-discovery-image.yml
           parameters:
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
