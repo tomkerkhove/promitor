@@ -28,7 +28,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-      - template: ./../templates/determine-pr-version.yml
+        - template: ./../templates/determine-pr-version.yml
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
