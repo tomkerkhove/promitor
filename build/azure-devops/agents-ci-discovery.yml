@@ -28,7 +28,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-      - template: ./../templates/determine-pr-version.yml
+        - template: ./../templates/determine-pr-version.yml
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
@@ -158,7 +158,7 @@ stages:
              tags: '--tag promitor-agent-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-      - template: ./../templates/build-discovery-image.yml
+        - template: ./../templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
