@@ -57,7 +57,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
         private static Dictionary<string, object> GenerateMetadata(List<HealthProbeResult> healthProbeResults)
         {
             var healthResultMetadata = new Dictionary<string, object>();
-            healthProbeResults.ForEach(result => healthResultMetadata.Add($"Subscription '{result.Subscription}'", new { IsSuccessful = result.IsSuccessful, Message = result.Description }));
+            healthProbeResults.ForEach(result => healthResultMetadata.Add($"Subscription '{result.Subscription}'", new {result.IsSuccessful, Message = result.Description }));
 
             return healthResultMetadata;
         }
