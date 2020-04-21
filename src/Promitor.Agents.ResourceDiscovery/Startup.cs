@@ -75,7 +75,6 @@ namespace Promitor.Agents.ResourceDiscovery
                 swaggerGenerationOptions.OperationFilter<AddHeaderOperationFilter>("X-Transaction-Id", "Transaction ID is used to correlate multiple operation calls. A new transaction ID will be generated if not specified.", false);
                 swaggerGenerationOptions.OperationFilter<AddResponseHeadersFilter>();
 
-
                 if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
                 {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
@@ -142,7 +141,6 @@ namespace Promitor.Agents.ResourceDiscovery
                 swaggerUiOptions.DocumentTitle = ApiName;
             });
             app.UseEndpoints(endpoints => endpoints.MapControllers());
-
         }
     }
 }

@@ -79,7 +79,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 _queryBuilder.Append($"{fields[fieldCount]}, ");
             }
 
-
             _queryBuilder.AppendLine($"{fields.Last()}");
 
             return this;
