@@ -187,11 +187,11 @@ stages:
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-resource-discovery-pr:$(System.PullRequest.PullRequestNumber)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber)'
         - template: ./../templates/push-docker-image.yml
           parameters:
               registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-resource-discovery-pr:$(Tags.PR)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
      - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
         - powershell: |
             docker tag $(Image.TaggedName) $(Image.Experimental)
