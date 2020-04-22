@@ -114,9 +114,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             }
         }
 
-        private List<Resource> ParseQueryResults(QueryResponse response)
+        private List<Resource> ParseQueryResults(QueryResponse queryResponse)
         {
-            var result = response.Data as JObject;
+            var result = queryResponse.Data as JObject;
+            if (result == null)
+            {
+                throw new ParseException(queryResponse);
+            }
+
             var rows = result["rows"];
             var foundResources = new List<Resource>();
             foreach (var row in rows)
