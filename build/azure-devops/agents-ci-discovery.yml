@@ -17,6 +17,8 @@ variables:
     value: 'tomkerkhove/promitor-agent-discovery-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
+  - name: Container.Name
+    value: 'promitor-discovery-agent'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -106,7 +108,6 @@ stages:
        Tags.Experimental: 'experimental-$(OS.Name)'
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
-       Container.Name: 'promitor-discovery-agent'
        Container.Port: 8888
        Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
        Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
