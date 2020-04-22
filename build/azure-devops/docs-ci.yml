@@ -9,6 +9,7 @@ pr:
   paths:
     include:
     - docs/*
+    - changelog/*
 variables:
   DotNet.SDK.Version: '3.1.101'
   DotNet.Configuration: 'release'
