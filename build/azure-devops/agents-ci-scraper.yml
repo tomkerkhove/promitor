@@ -81,20 +81,6 @@ stages:
      - template: ./../templates/run-code-quality.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
-- stage: Docs
-  displayName: Doc
-  dependsOn: [Init]
-  jobs:
-   - job: RunMarkdownLinter
-     displayName: Run Markdown Linter
-     condition: succeeded()
-     pool:
-       vmImage: ubuntu-16.04
-     steps:
-     - script: npm install
-       displayName: 'Install npm Packages'
-     - script: npm run --silent markdownlint
-       displayName: 'Run markdownlint'
 - stage: Test
   displayName: Run Tests
   dependsOn: [Init]
