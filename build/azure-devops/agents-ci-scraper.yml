@@ -32,16 +32,8 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
