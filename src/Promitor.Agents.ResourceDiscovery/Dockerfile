@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201 AS build
 WORKDIR /src
 COPY ["Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj", "Promitor.Agents.ResourceDiscovery/"]
 RUN dotnet restore "Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj"
