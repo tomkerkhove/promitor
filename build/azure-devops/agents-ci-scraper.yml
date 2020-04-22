@@ -208,15 +208,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: HelmInstaller@0
-       displayName: 'Install Helm (v$(Helm.Version))'
-       inputs:
+     - template: ./templates/lint-helm-chart.yml
+       parameters:
         helmVersion: '$(Helm.Version)'
-        checkLatestHelmVersion: false
-     - powershell: |
-        helm lint promitor-agent-scraper/ --strict
-       workingDirectory: charts
-       displayName: 'Lint Helm Chart'
+        chartName: 'promitor-agent-scraper'
 - stage: Helm3
   displayName: Helm Chart (3.x)
   dependsOn: Docker
@@ -229,21 +224,15 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: HelmInstaller@0
-       displayName: 'Install Helm (latest)'
-       inputs:
-        # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
-        helmVersion: '$(Helm.Version)'
-        checkLatestHelmVersion: true
      - download: current
        artifact: variables
      - template: ./../templates/read-variable.yml
        parameters:
         variableName: 'App.Version'
-     - powershell: |
-        helm lint promitor-agent-scraper/ --strict
-       workingDirectory: charts
-       displayName: 'Lint Helm Chart'
+     - template: ./templates/lint-helm-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: 'promitor-agent-scraper'
      - task: PowerShell@2
        displayName: 'Transform Helm Chart in CI Chart'
        inputs:
