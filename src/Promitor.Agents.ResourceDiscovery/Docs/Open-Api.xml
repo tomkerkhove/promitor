@@ -55,6 +55,17 @@
             </summary>
             <remarks>Lists all available resource collections.</remarks>
         </member>
+        <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
+            <summary>
+                Response provided by Azure Resource Graph after running a query
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.#ctor(Microsoft.Azure.Management.ResourceGraph.Models.QueryResponse)">
+            <summary>
+                Constructor
+            </summary>
+            <param name="queryResponse">Response provided by Azure Resource Graph after running a query</param>
+        </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration})">
             <summary>
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
