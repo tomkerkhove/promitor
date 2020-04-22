@@ -61,4 +61,4 @@ steps:
       sleep 10
       docker logs ${{ parameters.containerName }}
     failOnStderr: true
-  displayName: Run Resource Discovery image as ''${{ parameters.containerName }}'' container on ${{ parameters.os }}
+  displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}
