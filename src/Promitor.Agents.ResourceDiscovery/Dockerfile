@@ -3,14 +3,13 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201 AS build
 WORKDIR /src
-COPY ["Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj", "Promitor.Agents.ResourceDiscovery/"]
-RUN dotnet restore "Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj"
+COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
+RUN dotnet restore Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj
 COPY . .
-WORKDIR "/src/Promitor.Agents.ResourceDiscovery"
-RUN dotnet build "Promitor.Agents.ResourceDiscovery.csproj" -c Release -o /app/build
+RUN dotnet build Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Promitor.Agents.ResourceDiscovery.csproj" -c Release -o /app/publish
+RUN dotnet publish Promitor.Agents.ResourceDiscovery.csproj -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
