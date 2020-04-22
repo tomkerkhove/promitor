@@ -211,11 +211,6 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - template: ./../templates/build-discovery-image.yml
-       parameters:
-        imageName: '$(Image.TaggedName)'
-        tags: '--tag promitor-agent-discovery-ci'
-        os: '$(OS.Name)'
      - template: ./../templates/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
