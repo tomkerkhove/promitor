@@ -1,0 +1,28 @@
+parameters:
+  dotnetVersion: ''
+
+steps:
+- bash: |
+    echo "Variable 'dotnetVersion' found with value '$DOTNET_VERSION'"
+    if [ -z "$DOTNET_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"dotnetVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    DOTNET_VERSION: ${{ parameters.dotnetVersion }}
+  displayName: Check for required parameters in YAML template
+- task: DotNetCoreInstaller@0
+  displayName: 'Import .Net Core Sdk (${{ parameters.dotnetVersion }})'
+  inputs:
+    version: '${{ parameters.dotnetVersion }}'
+- task: DotNetCoreCLI@2
+  displayName: 'Restore NuGet Packages'
+  inputs:
+    command: restore
+    projects: 'src/Promitor.sln'
+- task: ResharperCli@2
+  displayName: 'Run Resharper Code Quality'
+  inputs:
+    solutionOrProjectPath: 'src/Promitor.sln'
+    failBuildLevelSelector: 'Warning'
+    commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
