@@ -165,24 +165,15 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-         Write-Host "App version & build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - powershell: |
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Build number: '$buildNumber'"
-         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-         Write-Host "App version is '$buildNumber'"
-       displayName: 'Assign App Version variable'
-       condition: ne(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
+     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - powershell: |
+            $buildNumber = '$(Build.BuildNumber)'
+            Write-Host "Build number: '$buildNumber'"
+            Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+            Write-Host "App version is '$buildNumber'"
+          displayName: 'Assign App Version variable'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-scraper-image.yml
           parameters:
