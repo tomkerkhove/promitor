@@ -1,0 +1,28 @@
+parameters:
+  helmVersion: '3.1.2'
+  chartName: ''
+
+steps:
+- bash: |
+    echo "Variable 'helmVersion' found with value '$HELM_VERSION'"
+    if [ -z "$HELM_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"helmVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'chartName' found with value '$CHART_NAME'"
+    if [ -z "$CHART_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"chartName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    CHART_NAME: ${{ parameters.chartName }}
+    HELM_VERSION: ${{ parameters.helmVersion }}
+  displayName: Check for required parameters in YAML template
+- task: HelmInstaller@1
+  displayName: 'Install Helm (${{ parameters.helmVersion }}'
+  inputs:
+    helmVersionToInstall: '${{ parameters.helmVersion }}'
+- powershell: |
+    helm lint ${{ parameters.chartName }}/ --strict
+  workingDirectory: charts
+  displayName: 'Lint ''${{ parameters.chartName }}'' Helm Chart'
