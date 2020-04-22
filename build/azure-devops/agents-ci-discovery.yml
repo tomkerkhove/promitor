@@ -139,15 +139,6 @@ stages:
           discoveryAppId: '$(Agent.Auth.AppId)'
           discoveryAppSecret: '$(Agent.Auth.AppSecret)'
           os: '$(OS.Name)'
-    #  - task: Bash@3
-    #    inputs:
-    #      targetType: 'inline'
-    #      script: |
-    #        docker run -d -p $(Container.Port):80 --name promitor-discovery-agent --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml $(Image.TaggedName)
-    #        sleep 10
-    #        docker logs promitor-discovery-agent
-    #      failOnStderr: true
-    #    displayName: Run promitor-discovery-agent Docker image
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -217,19 +208,10 @@ stages:
           imageName: '$(Image.TaggedName)'
           containerName: '$(Container.Name)'
           containerPort: '$(Container.Port)'
-          volumes: '$(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml'
+          volumes: '$(Pipeline.Workspace)/s/tests/discovery-config.yaml:C:/config/resource-declaration.yaml'
           discoveryAppId: '$(Agent.Auth.AppId)'
           discoveryAppSecret: '$(Agent.Auth.AppSecret)'
           os: '$(OS.Name)'
-    #  - task: Bash@3
-    #    inputs:
-    #      targetType: 'inline'
-    #      script: |
-    #        docker run -d -p $(Container.Port):80 --name promitor-discovery-agent --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml $(Image.TaggedName)
-    #        sleep 10
-    #        docker logs promitor-discovery-agent
-    #      failOnStderr: true
-    #    displayName: Run promitor-discovery-agent Docker image
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
