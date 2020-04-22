@@ -33,7 +33,7 @@ steps:
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
-  displayName: 'Run image as ''${{ parameters.containerName }}'' container on ${{ parameters.os }}'
+  displayName: 'Run Scraper image as ''${{ parameters.containerName }}'' container on ${{ parameters.os }}'
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker Hub'

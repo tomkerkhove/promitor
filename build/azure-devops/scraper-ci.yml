@@ -174,7 +174,7 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - template: ./../templates/run-docker-image.yml
+     - template: ./../templates/run-scraper-image.yml
        parameters:
           volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
@@ -241,7 +241,7 @@ stages:
           buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
           tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
-     - template: ./../templates/run-docker-image.yml
+     - template: ./../templates/run-scraper-image.yml
        parameters:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
