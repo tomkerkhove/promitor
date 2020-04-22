@@ -1,0 +1,14 @@
+parameters:
+  imageName: ''
+  buildArgs: ''
+  tags: '--tag promitor-agent-scraper-ci'
+  os: ''
+
+steps:
+- template: ./build-docker-image.yml
+  parameters:
+      dockerFile: './src/Promitor.Agents.Scraper/Dockerfile'
+      imageName: '${{ parameters.imageName }}'
+      buildArgs: '${{ parameters.buildArgs }}'
+      tags: '${{ parameters.tags }}'
+      os: '${{ parameters.os }}'

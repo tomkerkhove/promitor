@@ -1,0 +1,14 @@
+parameters:
+  imageName: ''
+  buildArgs: ''
+  tags: '--tag promitor-agent-discovery-ci'
+  os: ''
+
+steps:
+- template: ./build-docker-image.yml
+  parameters:
+      dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile'
+      imageName: '${{ parameters.imageName }}'
+      buildArgs: '${{ parameters.buildArgs }}'
+      tags: '${{ parameters.tags }}'
+      os: '${{ parameters.os }}'

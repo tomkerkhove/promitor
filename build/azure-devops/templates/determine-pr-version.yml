@@ -1,0 +1,10 @@
+steps:
+- powershell: |
+    $prNumber = '$(System.PullRequest.PullRequestNumber)'
+    $buildNumber = '$(Build.BuildNumber)'
+    Write-Host "Initial build number: '$buildNumber'"
+    Write-Host "PR Number '$prNumber'"
+    $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
+    Write-Host "##vso[build.updatebuildnumber]$buildNumber"
+    Write-Host "Build number is '$buildNumber'"
+  displayName: 'Change Build Number to PR format'

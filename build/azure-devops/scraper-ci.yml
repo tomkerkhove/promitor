@@ -12,7 +12,6 @@ pr:
     - src/*
     - build/azure-devops/scraper-ci.yml
     - charts/promitor-agent-scraper/*
-    - deploy/automation/docker-hub/ci/* # Add Docker Hub bot here to trigger it for testing sake
 variables:
   - template: ./variables/build.yml
   - name: Image.Name
@@ -164,13 +163,13 @@ stages:
        parameters:
         variableName: 'App.Version'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: ./../templates/build-docker-image.yml
+        - template: ./../templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/build-docker-image.yml
+        - template: ./../templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
@@ -230,13 +229,13 @@ stages:
        displayName: 'Assign App Version variable'
        condition: ne(variables['Build.Reason'], 'PullRequest')
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: ./../templates/build-docker-image.yml
+        - template: ./../templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
              tags: '--tag promitor-agent-scraper-ci --tag promitor-agent-scraper-ci-non-pr'
              os: '$(OS.Name)'
-     - template: ./../templates/build-docker-image.yml
+     - template: ./../templates/build-scraper-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'

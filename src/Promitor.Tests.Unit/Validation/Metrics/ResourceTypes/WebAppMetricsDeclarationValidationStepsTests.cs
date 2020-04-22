@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using Promitor.Runtime.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;

@@ -1,0 +1,79 @@
+azureLandscape:
+  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  subscriptions:
+  - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+  - 0f9d7fea-99e8-4768-8672-06a28514f77e
+resourceCollections:
+- name: service-bus
+  type: microsoft.servicebus/namespaces
+  criteria:
+    subscriptions:
+    - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+- name: app-services-north-europe
+  type: microsoft.web/sites
+  criteria:
+    regions:
+    - northeurope
+- name: app-services
+  type: microsoft.web/sites
+  criteria:
+    regions:
+    - northeurope
+    - westeurope
+- criteria:
+    resourceGroups:
+    - promitor-sources
+  name: app-services-filtered
+  type: microsoft.web/sites
+- criteria:
+    tags:
+      app: promitor-sample
+  name: logic-apps
+  type: microsoft.logic/workflows
+# The following are used for integration testing:
+- name: no-filter
+  type: microsoft.logic/workflows
+- name: one-resource-group-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    resourceGroups:
+    - promitor-testing-resource-discovery-eu
+- name: two-resource-group-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    resourceGroups:
+    - promitor-testing-resource-discovery-eu
+    - promitor-testing-resource-discovery-us
+- name: one-subscriptions-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    subscriptions:
+    - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+- name: two-subscriptions-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    subscriptions:
+    - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+    - 0f9d7fea-99e8-4768-8672-06a28514f77e
+- name: one-tag-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    tags:
+      app: promitor-resource-discovery-tests
+- name: two-tag-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    tags:
+      app: promitor-resource-discovery-tests
+      region: europe
+- name: one-region-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    regions:
+    - northeurope
+- name: two-region-scenario
+  type: microsoft.logic/workflows
+  criteria:
+    regions:
+    - northeurope
+    - westeurope

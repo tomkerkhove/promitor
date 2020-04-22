@@ -63,7 +63,7 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-docker-image.yml
+     - template: ./../templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
         buildArgs: ''
@@ -116,7 +116,7 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-docker-image.yml
+     - template: ./../templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
         buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'

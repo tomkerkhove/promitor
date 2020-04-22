@@ -1,0 +1,206 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+resources:
+- repo: self
+trigger:
+- master
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - src/*
+    - build/azure-devops/agents-ci-discovery.yml
+variables:
+  - template: ./variables/build.yml
+  - name: Image.Name
+    value: 'tomkerkhove/promitor-agent-discovery-ci'
+  - name: Image.TaggedName
+    value: '$(Image.Name):$(Tags.PR)'
+stages:
+- stage: Init
+  displayName: Prepare Build
+  dependsOn: []
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
+     - template: ./../templates/persist-variable.yml
+       parameters:
+        currentVariableName: 'Build.BuildNumber'
+        persistedVariableName: 'App.Version'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: Build
+  dependsOn: [Init]
+  jobs:
+   - job: Build
+     displayName: Build Codebase
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Install .NET SDK'
+       inputs:
+         version: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet build'
+       inputs:
+         projects: src/Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj
+         arguments: '--configuration $(DotNet.Configuration)'
+     - task: CopyFiles@2
+       displayName: 'Copy Build Files'
+       inputs:
+         contents: 'src/**'
+         targetFolder: '$(Pipeline.Workspace)/build'
+     - task: PublishPipelineArtifact@0
+       displayName: 'Publish Build Pipeline Artifact'
+       inputs:
+         targetPath: '$(Pipeline.Workspace)/build'
+         artifactName: Build
+- stage: CodeQuality
+  displayName: Code Quality
+  dependsOn: [Init]
+  jobs:
+   - job: RunCodeQuality
+     displayName: Run Code Quality
+     condition: succeeded()
+     pool:
+       vmImage: windows-2019
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+       inputs:
+         version: '$(DotNet.Sdk.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Restore NuGet Packages'
+       inputs:
+         command: restore
+         projects: 'src/Promitor.sln'
+     - task: ResharperCli@2
+       displayName: 'Run Resharper Code Quality'
+       inputs:
+         solutionOrProjectPath: 'src/Promitor.sln'
+         failBuildLevelSelector: 'Warning'
+         commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
+- stage: Test
+  displayName: Run Tests
+  dependsOn: [Init]
+  jobs:
+   - job: RunUnitTests
+     displayName: Run Unit Tests
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - task: DotNetCoreInstaller@0
+       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+       inputs:
+         version: '$(DotNet.Sdk.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'dotnet test'
+       inputs:
+         command: test
+         projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
+         arguments: '--configuration $(DotNet.Configuration)'
+- stage: Docker
+  displayName: Docker Image
+  dependsOn: [Init]
+  variables:
+    Tags.PR: '$(App.Version)-$(OS.Name)'
+  jobs:
+   - job: DockerBuildLinux
+     displayName: Build Docker Image (Linux)
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     variables:
+       Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
+       Tags.Experimental: 'experimental-$(OS.Name)'
+       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
+       OS.Name: 'linux'
+       Container.Port: 8888
+       Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
+       Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
+       # Agent.Auth.AppSecret is added on the pipeline config
+     steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+        variableName: 'App.Version'
+     - task: replacetokens@3
+       displayName: Replace Tokens in Integration Test Configuration
+       inputs:
+         rootDirectory: './src'
+         targetFiles: '**/appsettings.json'
+         encoding: 'auto'
+         writeBOM: true
+         verbosity: 'detailed'
+         actionOnMissing: 'fail'
+         keepToken: false
+         tokenPrefix: '#{'
+         tokenSuffix: '}#'
+     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
+        - template: ./../templates/build-discovery-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-discovery-ci'
+             os: '$(OS.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/build-discovery-image.yml
+          parameters:
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
+             os: '$(OS.Name)'
+     - task: Bash@3
+       inputs:
+         targetType: 'inline'
+         script: |
+           docker run -d -p $(Container.Port):80 --name promitor-discovery-agent --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-declaration.yaml $(Image.TaggedName)
+           sleep 10
+           docker logs promitor-discovery-agent
+         failOnStderr: true
+       displayName: Run promitor-discovery-agent Docker image
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Integration Tests'
+       inputs:
+         command: test
+         projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
+         arguments: '--configuration $(DotNet.Configuration)'
+     - task: Bash@3
+       inputs:
+         targetType: 'inline'
+         script: |
+           docker logs promitor-discovery-agent
+         failOnStderr: true
+       displayName: Show promitor-discovery-agent logs
+       condition: always()
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName.OSAgnostic)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
+     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
+        - powershell: |
+            docker tag $(Image.TaggedName) $(Image.Experimental)
+          displayName: 'Tag image as experimental'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
+              imageName: '$(Image.Experimental)'

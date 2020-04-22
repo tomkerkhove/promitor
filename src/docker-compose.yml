@@ -1,11 +1,18 @@
 version: '3.4'
 
 services:
+  promitor.agents.resourcediscovery:
+    image: tomkerkhove/promitor-agent-discovery
+    build:
+      context: .
+      dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile
+    volumes:
+      - "./../tests/discovery-config.yaml:/config/resource-declaration.yaml"
   promitor.agents.scraper:
     image: tomkerkhove/promitor-agent-scraper
     build:
       context: .
-      dockerfile: Promitor.Runtime.Agents.Scraper/Dockerfile
+      dockerfile: Promitor.Agents.Scraper/Dockerfile
     links:
         - graphite
     volumes:

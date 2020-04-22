@@ -42,10 +42,10 @@ fails to start up.
 This requires the following steps:
 
 1. Create a new validator that implements `IMetricValidator`. This validator should
-  reside in `.\src\Promitor.Runtime.Agents.Scraper\Validation\MetricDefinitions\ResourceTypes`.
+  reside in `.\src\Promitor.Agents.Scraper\Validation\MetricDefinitions\ResourceTypes`.
   You can look at the contents of `ServiceBusQueueMetricValidator` for an idea of
   the validation inputs, steps, and outputs typical of validator implementation.
-2. Add construction and usage of this validator to `.\src\Promitor.Runtime.Agents.Scraper\Validation\Factories\MetricValidatorFactory.cs`
+2. Add construction and usage of this validator to `.\src\Promitor.Agents.Scraper\Validation\Factories\MetricValidatorFactory.cs`
   for the ResourceType you created in step #1 above.
 3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Tests.Unit\Validation\Metrics\ResourceTypes`
 
