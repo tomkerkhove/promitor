@@ -86,16 +86,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
-       inputs:
-         version: '$(DotNet.Sdk.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet test'
-       inputs:
-         command: test
-         projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
-         arguments: '--configuration $(DotNet.Configuration)'
+     - template: ./../templates/run-unit-tests.yml
+       parameters:
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]
