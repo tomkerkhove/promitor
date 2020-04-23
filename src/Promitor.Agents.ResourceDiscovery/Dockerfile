@@ -7,5 +7,8 @@ RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDis
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3 AS runtime
 WORKDIR /app
+ARG CONFIG_FOLDER="/config/"
+ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
 COPY --from=build /app .
+
 ENTRYPOINT ["dotnet", "Promitor.Agents.ResourceDiscovery.dll"]

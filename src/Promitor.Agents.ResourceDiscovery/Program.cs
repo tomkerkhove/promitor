@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Promitor.Core;
 
 namespace Promitor.Agents.ResourceDiscovery
 {
@@ -26,10 +29,17 @@ namespace Promitor.Agents.ResourceDiscovery
 
         private static IConfiguration CreateConfiguration(string[] args)
         {
+            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+            if (string.IsNullOrWhiteSpace(configurationFolder))
+            {
+                throw new Exception("Unable to determine the configuration folder");
+            }
+
             IConfigurationRoot configuration =
                 new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
                     .AddCommandLine(args)
-                    .AddYamlFile("/config/resource-declaration.yaml", optional: false, reloadOnChange: true)
+                    .AddYamlFile($"{configurationFolder}/resource-declaration.yaml", optional: false, reloadOnChange: true)
                     .AddEnvironmentVariables("PROMITOR_")
                     .Build();
 
