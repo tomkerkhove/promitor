@@ -224,7 +224,7 @@ stages:
        inputs:
          targetType: 'inline'
          script: |
-           docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:C:/config/resource-declaration.yaml $(Image.TaggedName)
+           docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)\s\tests\discovery-config.yaml:c:\config\resource-declaration.yaml $(Image.TaggedName)
            sleep 10
            docker logs $(Container.Name)
          failOnStderr: true
