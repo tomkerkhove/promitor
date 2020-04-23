@@ -53,12 +53,18 @@ steps:
     DISCOVERY_APP_SECRET: ${{ parameters.discoveryAppSecret }}
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
+- script: |
       docker run -d -p ${{ parameters.containerPort }}:80 --name ${{ parameters.containerName }} --env DISCOVERY_APPID='${{ parameters.discoveryAppId }}' --env DISCOVERY_APPSECRET='${{ parameters.discoveryAppSecret }}' --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
       sleep 10
       docker logs ${{ parameters.containerName }}
-    failOnStderr: true
   displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}
+  failOnStderr: true
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: |
+#       docker run -d -p ${{ parameters.containerPort }}:80 --name ${{ parameters.containerName }} --env DISCOVERY_APPID='${{ parameters.discoveryAppId }}' --env DISCOVERY_APPSECRET='${{ parameters.discoveryAppSecret }}' --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
+#       sleep 10
+#       docker logs ${{ parameters.containerName }}
+#     failOnStderr: true
+#   displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}
