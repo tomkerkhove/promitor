@@ -39,7 +39,7 @@ namespace Promitor.Agents.ResourceDiscovery
                 new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddCommandLine(args)
-                    .AddYamlFile($"{configurationFolder}/resource-declaration.yaml", optional: false, reloadOnChange: true)
+                    .AddYamlFile($"{configurationFolder}/resource-discovery-declaration.yaml", optional: false, reloadOnChange: true)
                     .AddEnvironmentVariables("PROMITOR_")
                     .Build();
 
