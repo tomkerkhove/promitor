@@ -180,16 +180,6 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-        Write-Host "Dirring"
-        dir 
-        Write-Host "Dirring"
-        dir $(Pipeline.Workspace)
-        Write-Host "Dirring"
-        dir $(Pipeline.Workspace)/s
-        Write-Host "Dirring"
-        dir $(Pipeline.Workspace)/s/tests
-       displayName: 'Assign App Version variable'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
@@ -217,11 +207,20 @@ stages:
        inputs:
          targetType: 'inline'
          script: |
-           cat $(Pipeline.Workspace)\s\tests\discovery-config.yaml
-           docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)\s\tests\discovery-config.yaml:c:\config\resource-declaration.yaml $(Image.TaggedName)
+           docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\discovery-config.yaml:c:\config\resource-declaration.yaml $(Image.TaggedName)
            sleep 10
            docker logs $(Container.Name)
          failOnStderr: true
+     - task: PowerShell@2
+       displayName: Run Resource Discovery image as $(Container.Name) container on $(OS.Name)
+       inputs:
+         targetType: 'inline'
+         script: |
+           docker run -d -p $(Container.Port):80 --name $(Container.Name)2 --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
+           sleep 10
+           docker logs $(Container.Name)2
+         failOnStderr: true
+       condition: always()
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -232,6 +231,14 @@ stages:
          targetType: 'inline'
          script: |
            docker logs promitor-discovery-agent
+         failOnStderr: true
+       condition: always()
+     - task: PowerShell@2
+       displayName: Show promitor-discovery-agent2 logs
+       inputs:
+         targetType: 'inline'
+         script: |
+           docker logs promitor-discovery-agent2
          failOnStderr: true
        condition: always()
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
