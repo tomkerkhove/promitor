@@ -201,25 +201,22 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
+     - script: |
+         docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
+         sleep 10
+         docker logs $(Container.Name)
+       displayName: Run image on Linux
+       failOnStderr: true
     #  - task: PowerShell@2
     #    displayName: Run Resource Discovery image as $(Container.Name) container on $(OS.Name)
     #    inputs:
     #      targetType: 'inline'
     #      script: |
-    #        docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\discovery-config.yaml:c:\config\resource-discovery-declaration.yaml $(Image.TaggedName)
+    #        docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
     #        sleep 10
     #        docker logs $(Container.Name)
     #      failOnStderr: true
-     - task: PowerShell@2
-       displayName: Run Resource Discovery image as $(Container.Name) container on $(OS.Name)
-       inputs:
-         targetType: 'inline'
-         script: |
-           docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
-           sleep 10
-           docker logs $(Container.Name)
-         failOnStderr: true
-       condition: always()
+    #    condition: always()
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -230,14 +227,6 @@ stages:
          targetType: 'inline'
          script: |
            docker logs promitor-discovery-agent
-         failOnStderr: true
-       condition: always()
-     - task: PowerShell@2
-       displayName: Show promitor-discovery-agent2 logs
-       inputs:
-         targetType: 'inline'
-         script: |
-           docker logs promitor-discovery-agent2
          failOnStderr: true
        condition: always()
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
