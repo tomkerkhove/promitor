@@ -187,6 +187,16 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
+     - powershell: |
+        Write-Host "Dirring"
+        dir 
+        Write-Host "Dirring"
+        dir $(Pipeline.Workspace)
+        Write-Host "Dirring"
+        dir $(Pipeline.Workspace)/s
+        Write-Host "Dirring"
+        dir $(Pipeline.Workspace)/s/tests
+       displayName: 'Assign App Version variable'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
