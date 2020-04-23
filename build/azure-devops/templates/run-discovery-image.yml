@@ -54,6 +54,8 @@ steps:
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - script: |
+      echo Mounting volumes: ${{ parameters.volumes }}
+      echo App Id volumes: '${{ parameters.discoveryAppId }}'
       docker run -d -p ${{ parameters.containerPort }}:80 --name ${{ parameters.containerName }} --env DISCOVERY_APPID='${{ parameters.discoveryAppId }}' --env DISCOVERY_APPSECRET='${{ parameters.discoveryAppSecret }}' --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
       sleep 10
       docker logs ${{ parameters.containerName }}
