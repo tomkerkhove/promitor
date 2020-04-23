@@ -1,0 +1,41 @@
+parameters:
+  dotnetVersion: ''
+  buildConfiguration: ''
+  targetFolder: ''
+
+steps:
+- bash: |
+    echo "Variable 'dotnetVersion' found with value '$DOTNET_VERSION'"
+    if [ -z "$DOTNET_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"dotnetVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'buildConfiguration' found with value '$BUILD_CONFIG'"
+    if [ -z "$BUILD_CONFIG" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"buildConfiguration\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'targetFolder' found with value '$TARGET_FOLDER'"
+    if [ -z "$TARGET_FOLDER" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"targetFolder\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    DOTNET_VERSION: ${{ parameters.dotnetVersion }}
+    BUILD_CONFIG: ${{ parameters.buildConfiguration }}
+    TARGET_FOLDER: ${{ parameters.targetFolder }}
+  displayName: Check for required parameters in YAML template
+- task: DotNetCoreInstaller@0
+  displayName: 'Install .NET SDK'
+  inputs:
+    version: '${{ parameters.dotnetVersion }}'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    projects: src/Promitor.sln
+    arguments: '--configuration ${{ parameters.buildConfiguration }}'
+- task: CopyFiles@2
+  displayName: 'Copy Build Files'
+  inputs:
+    contents: 'src/**'
+    targetFolder: '${{ parameters.targetFolder }}'

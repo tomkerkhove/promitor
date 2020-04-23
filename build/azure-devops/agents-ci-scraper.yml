@@ -51,20 +51,25 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-         version: '$(DotNet.SDK.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet build'
-       inputs:
-         projects: src/Promitor.sln
-         arguments: '--configuration $(DotNet.Configuration)'
-     - task: CopyFiles@2
-       displayName: 'Copy Build Files'
-       inputs:
-         contents: 'src/**'
-         targetFolder: '$(Pipeline.Workspace)/build'
+     - template: ./../templates/build-solution.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+        targetFolder: '$(Pipeline.Workspace)/build'
+    #  - task: DotNetCoreInstaller@0
+    #    displayName: 'Install .NET SDK'
+    #    inputs:
+    #      version: '$(DotNet.SDK.Version)'
+    #  - task: DotNetCoreCLI@2
+    #    displayName: 'dotnet build'
+    #    inputs:
+    #      projects: src/Promitor.sln
+    #      arguments: '--configuration $(DotNet.Configuration)'
+    #  - task: CopyFiles@2
+    #    displayName: 'Copy Build Files'
+    #    inputs:
+    #      contents: 'src/**'
+    #      targetFolder: '$(Pipeline.Workspace)/build'
      - task: PublishPipelineArtifact@0
        displayName: 'Publish Build Pipeline Artifact'
        inputs:
