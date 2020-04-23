@@ -121,6 +121,13 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
+     - script: |
+         echo What images are around?
+         docker images
+         echo What's running?
+         docker ps
+       displayName: Run image on Linux
+       failOnStderr: true
      - template: ./../templates/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
