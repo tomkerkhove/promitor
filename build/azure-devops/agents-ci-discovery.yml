@@ -122,10 +122,6 @@ stages:
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
      - script: |
-         echo What images are around?
-         docker images
-         echo What's running?
-         docker ps
          docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/:/config/ $(Image.TaggedName)
          sleep 10
          docker logs $(Container.Name)
