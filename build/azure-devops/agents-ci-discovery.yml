@@ -121,21 +121,21 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - script: |
-         docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/:/config/ $(Image.TaggedName)
-         sleep 10
-         docker logs $(Container.Name)
-       displayName: Run image on Linux
-       failOnStderr: true
-    #  - template: ./../templates/run-discovery-image.yml
-    #    parameters:
-    #       imageName: '$(Image.TaggedName)'
-    #       containerName: '$(Container.Name)'
-    #       containerPort: '$(Container.Port)'
-    #       volumes: '$(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-discovery-declaration.yaml'
-    #       discoveryAppId: '$(Agent.Auth.AppId)'
-    #       discoveryAppSecret: '$(Agent.Auth.AppSecret)'
-    #       os: '$(OS.Name)'
+    #  - script: |
+    #      docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/:/config/ $(Image.TaggedName)
+    #      sleep 10
+    #      docker logs $(Container.Name)
+    #    displayName: Run image on Linux
+    #    failOnStderr: true
+     - template: ./../templates/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          containerName: '$(Container.Name)'
+          containerPort: '$(Container.Port)'
+          volumes: '$(Pipeline.Workspace)/s/tests/discovery-config.yaml:/config/resource-discovery-declaration.yaml'
+          discoveryAppId: '$(Agent.Auth.AppId)'
+          discoveryAppSecret: '$(Agent.Auth.AppSecret)'
+          os: '$(OS.Name)'
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -201,12 +201,12 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - script: |
-         docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
-         sleep 10
-         docker logs $(Container.Name)
-       displayName: Run image on Linux
-       failOnStderr: true
+    #  - script: |
+    #      docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(System.DefaultWorkingDirectory)\tests\:c:\config\ $(Image.TaggedName)
+    #      sleep 10
+    #      docker logs $(Container.Name)
+    #    displayName: Run image on $(OS.Name)
+    #    failOnStderr: true
     #  - task: PowerShell@2
     #    displayName: Run Resource Discovery image as $(Container.Name) container on $(OS.Name)
     #    inputs:
@@ -217,6 +217,15 @@ stages:
     #        docker logs $(Container.Name)
     #      failOnStderr: true
     #    condition: always()
+     - template: ./../templates/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.TaggedName)'
+          containerName: '$(Container.Name)'
+          containerPort: '$(Container.Port)'
+          volumes: $(System.DefaultWorkingDirectory)\tests\:c:\config\'
+          discoveryAppId: '$(Agent.Auth.AppId)'
+          discoveryAppSecret: '$(Agent.Auth.AppSecret)'
+          os: '$(OS.Name)'
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
