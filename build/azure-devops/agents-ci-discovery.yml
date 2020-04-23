@@ -217,6 +217,7 @@ stages:
        inputs:
          targetType: 'inline'
          script: |
+           cat $(Pipeline.Workspace)\s\tests\discovery-config.yaml
            docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)\s\tests\discovery-config.yaml:c:\config\resource-declaration.yaml $(Image.TaggedName)
            sleep 10
            docker logs $(Container.Name)
