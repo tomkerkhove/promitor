@@ -219,15 +219,11 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - template: ./../templates/run-discovery-image.yml
-       parameters:
-          imageName: '$(Image.TaggedName)'
-          containerName: '$(Container.Name)'
-          containerPort: '$(Container.Port)'
-          volumes: '$(Pipeline.Workspace)/s/tests/discovery-config.yaml:C:/config/resource-declaration.yaml'
-          discoveryAppId: '$(Agent.Auth.AppId)'
-          discoveryAppSecret: '$(Agent.Auth.AppSecret)'
-          os: '$(OS.Name)'
+     - powershell: |
+          docker run -d -p $(Container.Port):80 --name $(Container.Name) --env DISCOVERY_APPID='$(Agent.Auth.AppId)' --env DISCOVERY_APPSECRET='$(Agent.Auth.AppSecret)' --volume $(Pipeline.Workspace)/s/tests/discovery-config.yaml:C:/config/resource-declaration.yaml $(Image.TaggedName)
+          sleep 10
+          docker logs $(Container.Name)
+       displayName: Run Resource Discovery image as $(Container.Name) container on $(OS.Name)
      - template: ./../templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
