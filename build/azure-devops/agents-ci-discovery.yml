@@ -46,20 +46,25 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-         version: '$(DotNet.SDK.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet build'
-       inputs:
-         projects: src/Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj
-         arguments: '--configuration $(DotNet.Configuration)'
-     - task: CopyFiles@2
-       displayName: 'Copy Build Files'
-       inputs:
-         contents: 'src/**'
-         targetFolder: '$(Pipeline.Workspace)/build'
+     - template: ./../templates/build-solution.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+        targetFolder: '$(Pipeline.Workspace)/build'
+    #  - task: DotNetCoreInstaller@0
+    #    displayName: 'Install .NET SDK'
+    #    inputs:
+    #      version: '$(DotNet.SDK.Version)'
+    #  - task: DotNetCoreCLI@2
+    #    displayName: 'dotnet build'
+    #    inputs:
+    #      projects: src/Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj
+    #      arguments: '--configuration $(DotNet.Configuration)'
+    #  - task: CopyFiles@2
+    #    displayName: 'Copy Build Files'
+    #    inputs:
+    #      contents: 'src/**'
+    #      targetFolder: '$(Pipeline.Workspace)/build'
      - task: PublishPipelineArtifact@0
        displayName: 'Publish Build Pipeline Artifact'
        inputs:
@@ -97,6 +102,10 @@ stages:
   dependsOn: [Init]
   variables:
     Tags.PR: '$(App.Version)-$(OS.Name)'
+    Container.Port: 8888
+    Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
+    Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
+    # Agent.Auth.AppSecret is added on the pipeline config
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -108,10 +117,6 @@ stages:
        Tags.Experimental: 'experimental-$(OS.Name)'
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
-       Container.Port: 8888
-       Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
-       Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
-       # Agent.Auth.AppSecret is added on the pipeline config
      steps:
      - download: current
        artifact: variables
