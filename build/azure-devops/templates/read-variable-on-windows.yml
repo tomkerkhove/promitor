@@ -11,7 +11,7 @@ steps:
   env:
     VARIABLE_NAME: ${{ parameters.variableName }}
   displayName: Check for required parameters in YAML template
-- script: |
+- powershell: |
    echo "Listing folders in '$(Pipeline.Workspace)'"
    dir $(Pipeline.Workspace)/
    dir $(Pipeline.Workspace)/variables/
