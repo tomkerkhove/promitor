@@ -17,7 +17,7 @@ steps:
    dir $(Pipeline.Workspace)/variables/
    echo "Reading file '$(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable'"
    cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable
-   $readVariable = $(cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable)
+   $readVariable = (cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable)
    echo "Read value '$readVariable'"
    if ([string]::IsNullOrWhitespace($readVariable)) {
       echo "##vso[task.logissue type=error;]No variable read with name \"${{ parameters.variableName }}\""
