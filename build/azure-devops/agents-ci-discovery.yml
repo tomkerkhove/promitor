@@ -87,6 +87,7 @@ stages:
   displayName: Docker Image
   dependsOn: [Init]
   variables:
+    Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
     Tags.PR: '$(App.Version)-$(OS.Name)'
     Container.Port: 8888
     Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
@@ -99,7 +100,6 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      variables:
-       Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
        Tags.Experimental: 'experimental-$(OS.Name)'
        Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
@@ -180,19 +180,6 @@ stages:
         variableName: 'App.Version'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/determine-pr-version.yml
-        # - powershell: |
-        #     $buildNumber = '$(Build.BuildNumber)'
-        #     Write-Host "Build number: '$buildNumber'"
-        #     Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-        #     Write-Host "App Version '$buildNumber'"
-        #   displayName: 'Assign App Version variable'
-     - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - powershell: |
-            $buildNumber = '$(Build.BuildNumber)'
-            Write-Host "Build number: '$buildNumber'"
-            Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-            Write-Host "App version is '$buildNumber'"
-          displayName: 'Assign App Version variable'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-discovery-image.yml
           parameters:
