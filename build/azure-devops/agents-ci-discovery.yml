@@ -140,7 +140,7 @@ stages:
          script: |
            docker logs $(Container.Name)
          failOnStderr: true
-       displayName: Show promitor-discovery-agent logs
+       displayName: Show $(Container.Name) logs
        condition: always()
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/push-docker-image.yml
@@ -209,11 +209,11 @@ stages:
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - task: PowerShell@2
-       displayName: Show promitor-discovery-agent logs
+       displayName: Show $(Container.Name) logs
        inputs:
          targetType: 'inline'
          script: |
-           docker logs promitor-discovery-agent
+           docker logs $(Container.Name)
          failOnStderr: true
        condition: always()
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
