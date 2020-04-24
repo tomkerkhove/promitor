@@ -1,0 +1,27 @@
+parameters:
+  variableName: ''
+
+steps:
+- bash: |
+    echo "Variable 'variableName' found with value '$VARIABLE_NAME'"
+    if [ -z "$VARIABLE_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"variableName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    VARIABLE_NAME: ${{ parameters.variableName }}
+  displayName: Check for required parameters in YAML template
+- powershell: |
+   echo "Listing folders in '$(Pipeline.Workspace)'"
+   dir $(Pipeline.Workspace)/
+   dir $(Pipeline.Workspace)/variables/
+   echo "Reading file '$(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable'"
+   cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable
+   $readVariable = (cat $(Pipeline.Workspace)/variables/${{ parameters.variableName }}.variable)
+   echo "Read value '$readVariable'"
+   if ([string]::IsNullOrWhitespace($readVariable)) {
+      echo "##vso[task.logissue type=error;]No variable read with name \"${{ parameters.variableName }}\""
+      echo "##vso[task.complete result=Failed;]"
+   }
+   echo "##vso[task.setvariable variable=${{ parameters.variableName }};]$readVariable"
+  displayName: 'Reading ''${{ parameters.variableName }}'' variable'

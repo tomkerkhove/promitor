@@ -48,10 +48,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
-    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
-    <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
-    <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
-    <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,18 +1,14 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
-WORKDIR /app
-
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201 AS build
 WORKDIR /src
-COPY ["Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj", "Promitor.Agents.ResourceDiscovery/"]
-RUN dotnet restore "Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj"
-COPY . .
-WORKDIR "/src/Promitor.Agents.ResourceDiscovery"
-RUN dotnet build "Promitor.Agents.ResourceDiscovery.csproj" -c Release -o /app/build
+COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
+COPY Promitor.Agents.Core/* Promitor.Agents.Core/
+COPY Promitor.Core/* Promitor.Core/
+RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app
 
-FROM build AS publish
-RUN dotnet publish "Promitor.Agents.ResourceDiscovery.csproj" -c Release -o /app/publish
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
+ARG CONFIG_FOLDER="/config/"
+ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
+COPY --from=build /app .
+
 ENTRYPOINT ["dotnet", "Promitor.Agents.ResourceDiscovery.dll"]

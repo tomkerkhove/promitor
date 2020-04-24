@@ -20,7 +20,9 @@ variables:
     value: '$(Image.Name):$(Tags.PR)'
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.Name
+  - name: Helm.Chart.Official.Name
+    value: 'promitor-agent-scraper'
+  - name: Helm.Chart.CI.Name
     value: 'promitor-agent-scraper-ci'
 stages:
 - stage: Init
@@ -32,16 +34,8 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "Build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
      - template: ./../templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
@@ -57,20 +51,11 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-         version: '$(DotNet.SDK.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet build'
-       inputs:
-         projects: src/Promitor.sln
-         arguments: '--configuration $(DotNet.Configuration)'
-     - task: CopyFiles@2
-       displayName: 'Copy Build Files'
-       inputs:
-         contents: 'src/**'
-         targetFolder: '$(Pipeline.Workspace)/build'
+     - template: ./../templates/build-solution.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+        targetFolder: '$(Pipeline.Workspace)/build'
      - task: PublishPipelineArtifact@0
        displayName: 'Publish Build Pipeline Artifact'
        inputs:
@@ -86,40 +71,9 @@ stages:
      pool:
        vmImage: windows-2019
      steps:
-     - task: DownloadPipelineArtifact@2
-       displayName: 'Download Build Artifact'
-       inputs:
-         artifact: 'Build'
-         path: '$(Build.SourcesDirectory)'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
-       inputs:
-         version: '$(DotNet.Sdk.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'Restore NuGet Packages'
-       inputs:
-         command: restore
-         projects: 'src/Promitor.sln'
-     - task: ResharperCli@2
-       displayName: 'Run Resharper Code Quality'
-       inputs:
-         solutionOrProjectPath: 'src/Promitor.sln'
-         failBuildLevelSelector: 'Warning'
-         commandLineInterfacePath: '$(Build.SourcesDirectory)/Lib/Resharper'
-- stage: Docs
-  displayName: Doc
-  dependsOn: [Init]
-  jobs:
-   - job: RunMarkdownLinter
-     displayName: Run Markdown Linter
-     condition: succeeded()
-     pool:
-       vmImage: ubuntu-16.04
-     steps:
-     - script: npm install
-       displayName: 'Install npm Packages'
-     - script: npm run --silent markdownlint
-       displayName: 'Run markdownlint'
+     - template: ./../templates/run-code-quality.yml
+       parameters:
+        dotnetVersion: '$(DotNet.Sdk.Version)'
 - stage: Test
   displayName: Run Tests
   dependsOn: [Init]
@@ -130,16 +84,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: DotNetCoreInstaller@0
-       displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
-       inputs:
-         version: '$(DotNet.Sdk.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'dotnet test'
-       inputs:
-         command: test
-         projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
-         arguments: '--configuration $(DotNet.Configuration)'
+     - template: ./../templates/run-unit-tests.yml
+       parameters:
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]
@@ -159,7 +107,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'App.Version'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
@@ -174,7 +122,7 @@ stages:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-scraper-pr:$(Tags.PR)'
              os: '$(OS.Name)'
-     - template: ./../templates/run-docker-image.yml
+     - template: ./../templates/run-scraper-image.yml
        parameters:
           volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
@@ -210,24 +158,13 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-         $prNumber = '$(System.PullRequest.PullRequestNumber)'
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Initial build number: '$buildNumber'"
-         Write-Host "PR Number '$prNumber'"
-         $buildNumber = 'pr$(System.PullRequest.PullRequestNumber)'
-         Write-Host "##vso[build.updatebuildnumber]$buildNumber"
-         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-         Write-Host "App version & build number is '$buildNumber'"
-       displayName: 'Change Build Number to PR format'
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - powershell: |
-         $buildNumber = '$(Build.BuildNumber)'
-         Write-Host "Build number: '$buildNumber'"
-         Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
-         Write-Host "App version is '$buildNumber'"
-       displayName: 'Assign App Version variable'
-       condition: ne(variables['Build.Reason'], 'PullRequest')
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable-on-windows.yml
+       parameters:
+        variableName: 'App.Version'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: ./../templates/build-scraper-image.yml
           parameters:
@@ -241,7 +178,7 @@ stages:
           buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
           tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
-     - template: ./../templates/run-docker-image.yml
+     - template: ./../templates/run-scraper-image.yml
        parameters:
           volumes: '$(System.DefaultWorkingDirectory)\src:c:\config promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
@@ -262,15 +199,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: HelmInstaller@0
-       displayName: 'Install Helm (v$(Helm.Version))'
-       inputs:
+     - template: ./templates/lint-helm-chart.yml
+       parameters:
         helmVersion: '$(Helm.Version)'
-        checkLatestHelmVersion: false
-     - powershell: |
-        helm lint promitor-agent-scraper/ --strict
-       workingDirectory: charts
-       displayName: 'Lint Helm Chart'
+        chartName: '$(Helm.Chart.Official.Name)'
 - stage: Helm3
   displayName: Helm Chart (3.x)
   dependsOn: Docker
@@ -283,34 +215,28 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - task: HelmInstaller@0
-       displayName: 'Install Helm (latest)'
-       inputs:
-        # Although it doesn't matter, since 'checkLatestHelmVersion' will get latest
-        helmVersion: '$(Helm.Version)'
-        checkLatestHelmVersion: true
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'App.Version'
-     - powershell: |
-        helm lint promitor-agent-scraper/ --strict
-       workingDirectory: charts
-       displayName: 'Lint Helm Chart'
+     - template: ./templates/lint-helm-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Helm.Chart.Official.Name)'
      - task: PowerShell@2
        displayName: 'Transform Helm Chart in CI Chart'
        inputs:
         targetType: filePath
         filePath: ./build/helm/CI/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
+        arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
         workingDirectory: 'charts'
      - task: PowerShell@2
        displayName: 'Package Helm Chart'
        inputs:
         targetType: filePath
         filePath: ./build/helm/CI/Package-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.Name)" -chartVersion "$(Helm.Chart.Version)"'
+        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)"'
         workingDirectory: 'charts'
      - task: AzureCLI@1
        displayName: 'Push Helm Chart to Azure Container Registry'
@@ -319,11 +245,11 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
          az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/$(Helm.Chart.Name)-$(Helm.Chart.Version).tgz --force
+         az acr helm push --name promitor charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz --force
        condition: eq(variables['Build.Reason'], 'PullRequest')
      - task: PublishBuildArtifacts@1
        displayName: 'Publish Helm Chart'
        inputs:
-        PathtoPublish: charts/output/$(Helm.Chart.Name)-$(Helm.Chart.Version).tgz
+        PathtoPublish: charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz
         ArtifactName: helm
        condition: eq(variables['Build.Reason'], 'PullRequest')
