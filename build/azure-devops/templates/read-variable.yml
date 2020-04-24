@@ -2,7 +2,7 @@ parameters:
   variableName: ''
 
 steps:
-- bash: |
+- script: |
     echo "Variable 'variableName' found with value '$VARIABLE_NAME'"
     if [ -z "$VARIABLE_NAME" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"variableName\""
@@ -11,7 +11,7 @@ steps:
   env:
     VARIABLE_NAME: ${{ parameters.variableName }}
   displayName: Check for required parameters in YAML template
-- bash: |
+- script: |
    echo "Listing folders in '$(Pipeline.Workspace)'"
    dir $(Pipeline.Workspace)/
    dir $(Pipeline.Workspace)/variables/
