@@ -175,7 +175,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-windows.yml
        parameters:
         variableName: 'App.Version'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
