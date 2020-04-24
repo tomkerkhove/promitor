@@ -56,7 +56,7 @@ steps:
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
       echo App secret: ${{ parameters.discoveryAppSecret }}
-      docker run -d -p ${{ parameters.containerPort }}:80 --name ${{ parameters.containerName }} --env DISCOVERY_APPID=${{ parameters.discoveryAppId }} --env DISCOVERY_APPSECRET='${{ parameters.discoveryAppSecret }}' --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
+      docker run -d -p ${{ parameters.containerPort }}:80 --name ${{ parameters.containerName }} --env DISCOVERY_APPID=${{ parameters.discoveryAppId }} --env DISCOVERY_APPSECRET=${{ parameters.discoveryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
       sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}
