@@ -107,7 +107,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'App.Version'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
@@ -217,7 +217,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'App.Version'
      - template: ./templates/lint-helm-chart.yml

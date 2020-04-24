@@ -51,7 +51,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
@@ -145,7 +145,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable.yml
+     - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - task: GitHubRelease@0
