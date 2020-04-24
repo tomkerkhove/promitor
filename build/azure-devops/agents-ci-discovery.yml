@@ -132,7 +132,7 @@ stages:
           imageName: '$(Image.TaggedName)'
           containerName: '$(Container.Name)'
           containerPort: '$(Container.Port)'
-          volumes: '$(Pipeline.Workspace)/s/tests/:/config/'
+          volumes: '$(Pipeline.Workspace)/s/tests/:/config/
           discoveryAppId: '$(Agent.Auth.AppId)'
           discoveryAppSecret: '$(Agent.Auth.AppSecret)'
           os: '$(OS.Name)'
@@ -222,7 +222,7 @@ stages:
           imageName: '$(Image.TaggedName)'
           containerName: '$(Container.Name)'
           containerPort: '$(Container.Port)'
-          volumes: $(System.DefaultWorkingDirectory)\tests\:c:\config\'
+          volumes: $(System.DefaultWorkingDirectory)\tests\:c:\config\
           discoveryAppId: '$(Agent.Auth.AppId)'
           discoveryAppSecret: '$(Agent.Auth.AppSecret)'
           os: '$(OS.Name)'
