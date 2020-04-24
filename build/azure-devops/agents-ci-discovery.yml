@@ -173,8 +173,19 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
+     - download: current
+       artifact: variables
+     - template: ./../templates/read-variable.yml
+       parameters:
+        variableName: 'App.Version'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/determine-pr-version.yml
+        # - powershell: |
+        #     $buildNumber = '$(Build.BuildNumber)'
+        #     Write-Host "Build number: '$buildNumber'"
+        #     Write-Host "##vso[task.setvariable variable=App.Version]$buildNumber"
+        #     Write-Host "App Version '$buildNumber'"
+        #   displayName: 'Assign App Version variable'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - powershell: |
             $buildNumber = '$(Build.BuildNumber)'
