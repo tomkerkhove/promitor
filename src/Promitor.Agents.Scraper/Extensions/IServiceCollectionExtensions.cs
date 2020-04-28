@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using JustEat.StatsD;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,7 @@ using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.Sinks.Core;
 using Promitor.Integrations.Sinks.Statsd;
+using Promitor.Core.Configuration.Model.Sinks;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Agents.Scraper.Extensions
@@ -135,12 +137,41 @@ namespace Promitor.Agents.Scraper.Extensions
         ///     Adds the required metric sinks
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static IServiceCollection UseMetricSinks(this IServiceCollection services)
+        /// <param name="configuration">Configuration of the application</param>
+        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration)
         {
-            // TODO: Add based on configuration
-            services.AddSingleton<IMetricSink, StatsdMetricSink>();
+            var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
+            if (metricSinkConfiguration?.Statsd != null)
+            {
+                AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
+            }
 
             return services;
+        }
+
+        private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
+        {
+            services.AddSingleton<IMetricSink, StatsdMetricSink>();
+            services.AddStatsD(provider =>
+            {
+                var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+                var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
+                var host = statsdConfiguration.Host;
+                var port = statsdConfiguration.Port;
+                var metricPrefix = statsdConfiguration.MetricPrefix;
+
+                return new StatsDConfiguration
+                {
+                    Host = host,
+                    Port = port,
+                    Prefix = metricPrefix,
+                    OnError = ex =>
+                    {
+                        logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
+                        return true;
+                    }
+                };
+            });
         }
 
         /// <summary>

@@ -4,26 +4,30 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Promitor.Agents.Scraper.Extensions;
+using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
-using Promitor.Agents.Scraper.Validation;
-using Promitor.Agents.Scraper.Extensions;
 using Serilog;
 
 namespace Promitor.Agents.Scraper
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
         private readonly string _prometheusBaseUriPath;
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
 
             var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
             _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
         }
+
+        /// <summary>
+        ///     Configuration of the application
+        /// </summary>
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,9 +51,9 @@ namespace Promitor.Agents.Scraper
         {
             services.AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
-                .ConfigureYamlConfiguration(_configuration)
+                .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
-                .UseMetricSinks()
+                .UseMetricSinks(Configuration)
                 .UseHealthChecks()
                 .ScheduleMetricScraping()
                 .UseWebApi();

@@ -65,11 +65,12 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Promitor.Core.Configuration.Model.Sinks.MetricSinkConfiguration)">
             <summary>
                 Adds the required metric sinks
             </summary>
             <param name="services">Collections of services in application</param>
+            <param name="metricSinkConfiguration">Configuration for all metric sinks</param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
