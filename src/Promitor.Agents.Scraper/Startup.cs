@@ -49,6 +49,7 @@ namespace Promitor.Agents.Scraper
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(_configuration)
                 .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
+                .UseMetricSinks()
                 .UseHealthChecks()
                 .ScheduleMetricScraping()
                 .UseWebApi();

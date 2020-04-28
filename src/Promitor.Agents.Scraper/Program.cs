@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
+using JustEat.StatsD;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Server;
 using Promitor.Integrations.AzureMonitor.Logging;
+using Promitor.Integrations.Sinks.Statsd;
 using Serilog;
 using Serilog.Events;
 
@@ -50,6 +53,30 @@ namespace Promitor.Agents.Scraper
                         .UseUrls(endpointUrl)
                         .UseStartup<Startup>()
                         .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration));
+                })
+                .ConfigureServices(services =>
+                {
+                    // TODO: Add based on configuration
+                    services.AddStatsD(provider =>
+                    {
+                        var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+                        var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
+                        var statsDHost = "graphite";
+                        var statsDPort = 8125;
+                        var statsdMetricPrefix = "poc.promitor.";
+
+                        return new StatsDConfiguration
+                        {
+                            Host = statsDHost,
+                            Port = statsDPort,
+                            Prefix = statsdMetricPrefix,
+                            OnError = ex =>
+                            {
+                                logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", statsDHost, statsDPort, statsdMetricPrefix);
+                                return true;
+                            }
+                        };
+                    });
                 });
         }
 

@@ -29,6 +29,8 @@ using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
+using Promitor.Integrations.Sinks.Core;
+using Promitor.Integrations.Sinks.Statsd;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Agents.Scraper.Extensions
@@ -122,6 +124,18 @@ namespace Promitor.Agents.Scraper.Extensions
         {
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy());
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Adds the required metric sinks
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection UseMetricSinks(this IServiceCollection services)
+        {
+            // TODO: Add based on configuration
+            services.AddSingleton<IMetricSink, StatsdMetricSink>();
 
             return services;
         }

@@ -1,9 +1,11 @@
-﻿using Promitor.Core.Scraping;
+﻿using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Integrations.Sinks.Core
 {
     public interface IMetricSink
     {
-        void ReportMetric(string metricName, string metricDescription, ScrapeResult scrapedMetricResult);
+        MetricSinkType SinkType { get; }
+
+        void ReportMetric(string metricName, string metricDescription, MeasuredMetric measuredMetric);
     }
 }

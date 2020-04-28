@@ -1,14 +1,29 @@
-﻿using System;
-using Promitor.Core.Scraping;
+﻿using GuardNet;
+using JustEat.StatsD;
+using Microsoft.Extensions.Logging;
+using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
-    public class StatsdMetricSink : IMetricSink
+    public class StatsdMetricSink : MetricSink, IMetricSink
     {
-        public void ReportMetric(string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
+        private readonly IStatsDPublisher _statsDPublisher;
+
+        public StatsdMetricSink(IStatsDPublisher statsDPublisher, ILogger<StatsdMetricSink> logger)
+        : base(logger)
         {
-            throw new NotImplementedException();
+            Guard.NotNull(statsDPublisher, nameof(statsDPublisher));
+
+            _statsDPublisher = statsDPublisher;
+        }
+
+        public override MetricSinkType SinkType => MetricSinkType.StatsD;
+
+        public override void ReportMetric(string metricName, string metricDescription, MeasuredMetric measuredMetric)
+        {
+            var metricValue = measuredMetric.Value ?? 0;
+            _statsDPublisher.Gauge(metricValue, metricName);
         }
     }
 }
