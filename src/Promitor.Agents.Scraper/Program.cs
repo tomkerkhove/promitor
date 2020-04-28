@@ -49,34 +49,34 @@ namespace Promitor.Agents.Scraper
                         {
                             kestrelServerOptions.AddServerHeader = false;
                         })
+                        .ConfigureServices(services =>
+                        {
+                            // TODO: Add based on configuration
+                            services.AddStatsD(provider =>
+                            {
+                                var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+                                var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
+                                var statsDHost = "graphite";
+                                var statsDPort = 8125;
+                                var statsdMetricPrefix = "poc.promitor.";
+
+                                return new StatsDConfiguration
+                                {
+                                    Host = statsDHost,
+                                    Port = statsDPort,
+                                    Prefix = statsdMetricPrefix,
+                                    OnError = ex =>
+                                    {
+                                        logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", statsDHost, statsDPort, statsdMetricPrefix);
+                                        return true;
+                                    }
+                                };
+                            });
+                        })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
                         .UseStartup<Startup>()
                         .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration));
-                })
-                .ConfigureServices(services =>
-                {
-                    // TODO: Add based on configuration
-                    services.AddStatsD(provider =>
-                    {
-                        var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-                        var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
-                        var statsDHost = "graphite";
-                        var statsDPort = 8125;
-                        var statsdMetricPrefix = "poc.promitor.";
-
-                        return new StatsDConfiguration
-                        {
-                            Host = statsDHost,
-                            Port = statsDPort,
-                            Prefix = statsdMetricPrefix,
-                            OnError = ex =>
-                            {
-                                logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", statsDHost, statsDPort, statsdMetricPrefix);
-                                return true;
-                            }
-                        };
-                    });
                 });
         }
 

@@ -6,6 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
+using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping.Factories
@@ -25,11 +26,12 @@ namespace Promitor.Core.Scraping.Factories
         ///     Creates a scraper that is capable of scraping a specific resource type
         /// </summary>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
+        /// <param name="sink">Sink to write all metrics to</param>
         /// <param name="prometheusMetricWriter">Metrics collector for our Prometheus scraping endpoint</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, IPrometheusMetricWriter prometheusMetricWriter, AzureMonitorClient azureMonitorClient)
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, IMetricSink sink, IPrometheusMetricWriter prometheusMetricWriter, AzureMonitorClient azureMonitorClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, prometheusMetricWriter, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, sink, prometheusMetricWriter, _logger);
 
             switch (metricDefinitionResourceType)
             {

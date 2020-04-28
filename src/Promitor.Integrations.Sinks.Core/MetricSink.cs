@@ -2,6 +2,7 @@
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping;
+using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Integrations.Sinks.Core

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Scraping.Prometheus.Interfaces;
+using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Agents.Scraper.Scheduling
@@ -16,12 +17,14 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly ScrapeDefinition<IAzureResourceDefinition> _metricScrapeDefinition;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly AzureMonitorClient _azureMonitorClient;
+        private readonly IMetricSink _metricSink;
         private readonly ILogger _logger;
 
         private readonly MetricScraperFactory _metricScraperFactory;
 
         public MetricScrapingJob(string jobName,
             ScrapeDefinition<IAzureResourceDefinition> metricScrapeDefinition,
+            IMetricSink metricSink,
             IPrometheusMetricWriter prometheusMetricWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClient azureMonitorClient,
@@ -38,6 +41,7 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             _metricScrapeDefinition = metricScrapeDefinition;
             _prometheusMetricWriter = prometheusMetricWriter;
+            _metricSink = metricSink;
             _logger = logger;
 
             _metricScraperFactory = metricScraperFactory;
@@ -64,7 +68,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             _logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}", metricDefinitionDefinition.PrometheusMetricDefinition.Name, metricDefinitionDefinition.Resource.ResourceType);
 
-            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _prometheusMetricWriter, _azureMonitorClient);
+            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _metricSink, _prometheusMetricWriter, _azureMonitorClient);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

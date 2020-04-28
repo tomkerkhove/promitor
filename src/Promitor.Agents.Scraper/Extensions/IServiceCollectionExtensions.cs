@@ -29,6 +29,7 @@ using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
+using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.Sinks.Core;
 using Promitor.Integrations.Sinks.Statsd;
 
@@ -49,6 +50,7 @@ namespace Promitor.Agents.Scraper.Extensions
             var metrics = metricsProvider.Get(applyDefaults: true);
 
             var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
+            var metricSink = serviceProviderToCreateJobsWith.GetRequiredService<IMetricSink>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IRuntimeMetricsCollector>();
@@ -69,6 +71,7 @@ namespace Promitor.Agents.Scraper.Extensions
                         builder.AddJob(jobServices =>
                         {
                             return new MetricScrapingJob(jobName, scrapeDefinition,
+                                metricSink,
                                 jobServices.GetService<IPrometheusMetricWriter>(),
                                 jobServices.GetService<MetricScraperFactory>(),
                                 azureMonitorClient,

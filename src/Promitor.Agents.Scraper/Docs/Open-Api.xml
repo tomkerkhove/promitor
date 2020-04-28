@@ -65,6 +65,12 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Adds the required metric sinks
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Expose services as Web API
