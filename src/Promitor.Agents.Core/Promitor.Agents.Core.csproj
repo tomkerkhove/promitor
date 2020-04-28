@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.3.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="5.1.1" />
   </ItemGroup>
 
