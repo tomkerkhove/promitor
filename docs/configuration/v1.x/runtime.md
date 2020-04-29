@@ -66,6 +66,7 @@ Promitor automatically scrapes Azure Monitor and makes the information available
 by providing the metric information to the configured sinks.
 
 As of today, we support the follow sinks:
+
 - **Prometheus Scraping Endpoint** (see below)
 - **StatsD**
 
@@ -74,10 +75,11 @@ As of today, we support the follow sinks:
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
 In order to push metrics to a StatsD server, you'll need to configure following:
+
 - `metricSinks.statsd.host` - DNS name or IP address of server.
 - `metricSinks.statsd.host` - Port (UDP) address of server. (Default: `8125`)
-- `metricSinks.statsd.metricPrefix` - Prefix that will be added to every metric 
-  defined in the metric declaration.
+- `metricSinks.statsd.metricPrefix` - Prefix that will be added to every metric
+ defined in the metric declaration.
 
 ```yaml
 metricSinks:
