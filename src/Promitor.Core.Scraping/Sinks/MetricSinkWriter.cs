@@ -24,6 +24,9 @@ namespace Promitor.Core.Scraping.Sinks
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
         {
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotNull(scrapedMetricResult, nameof(scrapedMetricResult));
+
             var reportTasks = new List<Task>();
             foreach (var sink in _configuredSinks)
             {
@@ -34,8 +37,13 @@ namespace Promitor.Core.Scraping.Sinks
             await Task.WhenAll(reportTasks);
         }
 
-        public async Task ReportMetricAsync(IMetricSink sink, string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
+        private async Task ReportMetricAsync(IMetricSink sink, string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
         {
+            Guard.NotNull(sink, nameof(sink));
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotNull(scrapedMetricResult, nameof(scrapedMetricResult));
+            Guard.NotNull(scrapedMetricResult.MetricValues, nameof(scrapedMetricResult.MetricValues));
+
             foreach (var measuredMetric in scrapedMetricResult.MetricValues)
             {
                 try
