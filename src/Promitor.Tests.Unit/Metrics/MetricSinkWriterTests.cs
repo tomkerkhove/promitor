@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Bogus;
+using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping;
 using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.Sinks.Statsd;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Metrics
@@ -117,14 +119,39 @@ namespace Promitor.Tests.Unit.Metrics
             secondSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, It.IsAny<MeasuredMetric>()), Times.Once());
         }
 
-        private ScrapeResult GenerateScrapeResult(double metricValue)
+        [Fact]
+        public async Task ReportMetricAsync_WriteToStatsDSink_Succeeds()
+        {
+            // Arrange
+            var metricName = _bogus.Name.FirstName();
+            var metricDescription = _bogus.Lorem.Sentence();
+            var metricValue = _bogus.Random.Double();
+            var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
+            var scrapeResult = GenerateScrapeResult(measuredMetric);
+            var statsDPublisherMock = new Mock<IStatsDPublisher>();
+            var statsdMetricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { statsdMetricSink }, NullLogger<MetricSinkWriter>.Instance);
+            
+            // Act
+            await metricSinkWriter.ReportMetricAsync(metricName, metricDescription, scrapeResult);
+
+            // Assert
+            statsDPublisherMock.Verify(mock => mock.Gauge(metricValue, metricName), Times.Once());
+        }
+
+        private ScrapeResult GenerateScrapeResult(MeasuredMetric measuredMetric)
         {
             var subscriptionId = _bogus.Name.FirstName();
             var resourceGroupName = _bogus.Name.FirstName();
             var instanceName = _bogus.Name.FirstName();
             var resourceUri = _bogus.Internet.Url();
 
-            return new ScrapeResult(subscriptionId, resourceGroupName, instanceName, resourceUri, new List<MeasuredMetric> { MeasuredMetric.CreateWithoutDimension(metricValue) });
+            return new ScrapeResult(subscriptionId, resourceGroupName, instanceName, resourceUri, new List<MeasuredMetric> { measuredMetric });
+        }
+
+        private ScrapeResult GenerateScrapeResult(double metricValue)
+        {
+            return GenerateScrapeResult(MeasuredMetric.CreateWithoutDimension(metricValue));
         }
     }
 }

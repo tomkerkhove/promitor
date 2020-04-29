@@ -25,6 +25,9 @@ namespace Promitor.Integrations.Sinks.Statsd
 
         public Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric)
         {
+            Guard.NotNullOrEmpty(metricName, nameof(metricName));
+            Guard.NotNull(measuredMetric, nameof(measuredMetric));
+
             var metricValue = measuredMetric.Value ?? 0;
             _statsDPublisher.Gauge(metricValue, metricName);
 

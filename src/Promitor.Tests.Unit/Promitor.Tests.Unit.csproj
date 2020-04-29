@@ -37,6 +37,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
     <ProjectReference Include="..\Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj" />
   </ItemGroup>
 
 </Project>
