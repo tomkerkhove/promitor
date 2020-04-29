@@ -20,7 +20,7 @@ namespace Promitor.Core.Scraping
       where TResourceDefinition : class, IAzureResourceDefinition
     {
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
-        private readonly IMetricSink _metricSink;
+        private readonly MetricSinkWriter _metricSinkWriter;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
             _logger = scraperConfiguration.Logger;
-            _metricSink = scraperConfiguration.Sink;
+            _metricSinkWriter = scraperConfiguration.MetricSinkWriter;
             _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
@@ -73,7 +73,7 @@ namespace Promitor.Core.Scraping
 
                 LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
 
-                _metricSink.ReportMetric(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
+                await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
                 _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)

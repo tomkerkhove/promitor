@@ -7,6 +7,7 @@ using JustEat.StatsD;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -51,7 +52,7 @@ namespace Promitor.Agents.Scraper.Extensions
             var metrics = metricsProvider.Get(applyDefaults: true);
 
             var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
-            var metricSink = serviceProviderToCreateJobsWith.GetRequiredService<IMetricSink>();
+            var metricSinkWriter = serviceProviderToCreateJobsWith.GetRequiredService<MetricSinkWriter>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IRuntimeMetricsCollector>();
@@ -72,7 +73,7 @@ namespace Promitor.Agents.Scraper.Extensions
                         builder.AddJob(jobServices =>
                         {
                             return new MetricScrapingJob(jobName, scrapeDefinition,
-                                metricSink,
+                                metricSinkWriter,
                                 jobServices.GetService<IPrometheusMetricWriter>(),
                                 jobServices.GetService<MetricScraperFactory>(),
                                 azureMonitorClient,
@@ -145,12 +146,14 @@ namespace Promitor.Agents.Scraper.Extensions
                 AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
             }
 
+            services.TryAddSingleton<MetricSinkWriter>();
+
             return services;
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
         {
-            services.AddSingleton<IMetricSink, StatsdMetricSink>();
+            services.AddTransient<IMetricSink, StatsdMetricSink>();
             services.AddStatsD(provider =>
             {
                 var loggerFactory = provider.GetRequiredService<ILoggerFactory>();

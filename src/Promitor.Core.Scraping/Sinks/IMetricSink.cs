@@ -1,9 +1,12 @@
-﻿namespace Promitor.Core.Scraping.Sinks
+﻿using System.Threading.Tasks;
+using Promitor.Integrations.AzureMonitor;
+
+namespace Promitor.Core.Scraping.Sinks
 {
     public interface IMetricSink
     {
-        MetricSinkType SinkType { get; }
+        MetricSinkType Type { get; }
 
-        void ReportMetric(string metricName, string metricDescription, ScrapeResult scrapedMetricResult);
+        Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric);
     }
 }
