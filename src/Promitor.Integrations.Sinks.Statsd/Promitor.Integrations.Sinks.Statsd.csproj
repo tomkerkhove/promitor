@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Promitor.Integrations.Sinks.Core\Promitor.Integrations.Sinks.Core.csproj" />
+    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
   </ItemGroup>
 
 </Project>

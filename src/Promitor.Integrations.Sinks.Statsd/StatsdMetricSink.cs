@@ -1,30 +1,39 @@
-﻿using GuardNet;
+﻿using System.Threading.Tasks;
+using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Sinks;
 using Promitor.Integrations.AzureMonitor;
-using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
-    public class StatsdMetricSink : MetricSink
+    public class StatsdMetricSink : IMetricSink
     {
+        private readonly ILogger<StatsdMetricSink> _logger;
         private readonly IStatsDPublisher _statsDPublisher;
 
         public StatsdMetricSink(IStatsDPublisher statsDPublisher, ILogger<StatsdMetricSink> logger)
-        : base(logger)
         {
             Guard.NotNull(statsDPublisher, nameof(statsDPublisher));
+            Guard.NotNull(logger, nameof(logger));
 
             _statsDPublisher = statsDPublisher;
+            _logger = logger;
         }
 
-        public override MetricSinkType SinkType => MetricSinkType.StatsD;
+        public MetricSinkType Type => MetricSinkType.StatsD;
 
-        public override void ReportMetric(string metricName, string metricDescription, MeasuredMetric measuredMetric)
+        public Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric)
         {
+            Guard.NotNullOrEmpty(metricName, nameof(metricName));
+            Guard.NotNull(measuredMetric, nameof(measuredMetric));
+
             var metricValue = measuredMetric.Value ?? 0;
             _statsDPublisher.Gauge(metricValue, metricName);
+
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+
+            return Task.CompletedTask;
         }
     }
 }

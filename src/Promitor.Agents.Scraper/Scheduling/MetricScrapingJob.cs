@@ -17,14 +17,14 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly ScrapeDefinition<IAzureResourceDefinition> _metricScrapeDefinition;
         private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly AzureMonitorClient _azureMonitorClient;
-        private readonly IMetricSink _metricSink;
+        private readonly MetricSinkWriter _metricSinkWriter;
         private readonly ILogger _logger;
 
         private readonly MetricScraperFactory _metricScraperFactory;
 
         public MetricScrapingJob(string jobName,
             ScrapeDefinition<IAzureResourceDefinition> metricScrapeDefinition,
-            IMetricSink metricSink,
+            MetricSinkWriter metricSinkWriter,
             IPrometheusMetricWriter prometheusMetricWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClient azureMonitorClient,
@@ -41,7 +41,7 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             _metricScrapeDefinition = metricScrapeDefinition;
             _prometheusMetricWriter = prometheusMetricWriter;
-            _metricSink = metricSink;
+            _metricSinkWriter = metricSinkWriter;
             _logger = logger;
 
             _metricScraperFactory = metricScraperFactory;
@@ -68,7 +68,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             _logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}", metricDefinitionDefinition.PrometheusMetricDefinition.Name, metricDefinitionDefinition.Resource.ResourceType);
 
-            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _metricSink, _prometheusMetricWriter, _azureMonitorClient);
+            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _metricSinkWriter, _prometheusMetricWriter, _azureMonitorClient);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }
