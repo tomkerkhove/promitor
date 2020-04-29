@@ -75,7 +75,7 @@ namespace Promitor.Tests.Unit.Metrics
             var metricDescription = _bogus.Lorem.Sentence();
             var metricValue = _bogus.Random.Double();
             var scrapeResult = GenerateScrapeResult(metricValue);
-            var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> {  }, NullLogger<MetricSinkWriter>.Instance);
+            var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink>(), NullLogger<MetricSinkWriter>.Instance);
 
             // Act & Assert
             await metricSinkWriter.ReportMetricAsync(metricName, metricDescription, scrapeResult);
