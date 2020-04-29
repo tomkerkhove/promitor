@@ -21,6 +21,11 @@ Here is a complete example of the runtime YAML:
 ```yaml
 server:
   httpPort: 80 # Optional. Default: 80
+metricSinks:
+  statsd:
+    host: graphite
+    port: 8125
+    metricPrefix: promitor.
 prometheus:
   metricUnavailableValue: NaN # Optional. Default: NaN
   enableMetricTimestamps: false # Optional. Default: true
@@ -53,6 +58,35 @@ Example:
 ```yaml
 server:
   httpPort: 80 # Optional. Default: 80
+```
+
+## Metric Sinks
+
+Promitor automatically scrapes Azure Monitor and makes the information available
+by providing the metric information to the configured sinks.
+
+As of today, we support the follow sinks:
+
+- **Prometheus Scraping Endpoint** (see below)
+- **StatsD**
+
+### StatsD
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
+
+In order to push metrics to a StatsD server, you'll need to configure following:
+
+- `metricSinks.statsd.host` - DNS name or IP address of server.
+- `metricSinks.statsd.host` - Port (UDP) address of server. (Default: `8125`)
+- `metricSinks.statsd.metricPrefix` - Prefix that will be added to every metric
+ defined in the metric declaration.
+
+```yaml
+metricSinks:
+  statsd:
+    host: graphite
+    port: 8125
+    metricPrefix: promitor.
 ```
 
 ## Prometheus Scraping Endpoint

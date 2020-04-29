@@ -5,6 +5,11 @@ prometheus:
   enableMetricTimestamps: true # true by default
   scrapeEndpoint:
     baseUriPath: /scrape
+metricSinks:
+  statsd:
+    host: graphite
+    port: 8125
+    metricPrefix: poc.promitor.
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:

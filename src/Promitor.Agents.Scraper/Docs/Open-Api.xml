@@ -65,6 +65,13 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Adds the required metric sinks
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="configuration">Configuration of the application</param>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Expose services as Web API
@@ -89,6 +96,11 @@
             </summary>
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
+        </member>
+        <member name="P:Promitor.Agents.Scraper.Startup.Configuration">
+            <summary>
+                Configuration of the application
+            </summary>
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <summary>

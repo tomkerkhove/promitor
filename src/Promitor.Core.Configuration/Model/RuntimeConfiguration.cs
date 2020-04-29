@@ -2,6 +2,7 @@
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
+using Promitor.Core.Configuration.Model.Sinks;
 using Promitor.Core.Configuration.Model.Telemetry;
 
 namespace Promitor.Core.Configuration.Model
@@ -10,6 +11,7 @@ namespace Promitor.Core.Configuration.Model
     {
         public ServerConfiguration Server { get; set; } = new ServerConfiguration();
         public PrometheusConfiguration Prometheus { get; set; } = new PrometheusConfiguration();
+        public MetricSinkConfiguration MetricSinks { get; set; } = new MetricSinkConfiguration();
         public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
         public TelemetryConfiguration Telemetry { get; set; } = new TelemetryConfiguration();
         public AzureMonitorConfiguration AzureMonitor { get; set; } = new AzureMonitorConfiguration();
