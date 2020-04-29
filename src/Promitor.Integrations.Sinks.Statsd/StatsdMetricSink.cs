@@ -7,7 +7,7 @@ using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
-    public class StatsdMetricSink : MetricSink, IMetricSink
+    public class StatsdMetricSink : MetricSink
     {
         private readonly IStatsDPublisher _statsDPublisher;
 

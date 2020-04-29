@@ -31,7 +31,6 @@ using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Sinks;
-using Promitor.Integrations.Sinks.Core;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Core.Configuration.Model.Sinks;
 
