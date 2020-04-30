@@ -35,3 +35,8 @@ services:
         - graphite
     ports:
       - 3000:3000
+    volumes:
+      - "./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml"
+      - "./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml"
+      - "./../config/grafana/dashboard-config.json:/var/lib/grafana/dashboards/promitor.json"
+      - "./../config/grafana/grafana.ini:/etc/grafana/grafana.ini"
