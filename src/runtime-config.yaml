@@ -9,7 +9,7 @@ metricSinks:
   statsd:
     host: graphite
     port: 8125
-    metricPrefix: poc.promitor.
+    metricPrefix: promitor.
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
