@@ -53,6 +53,11 @@ azureMetadata:
   subscriptionId: "<azure-subscription-id>"
 
 runtime:
+  metricSinks:
+    statsd:
+      host: graphite
+      port: 8125
+      metricPrefix: poc.promitor.
   prometheus:
     scrapeEndpointPath: /metrics
     enableMetricTimestamps: True

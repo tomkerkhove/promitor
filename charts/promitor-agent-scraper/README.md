@@ -60,6 +60,9 @@ their default values.
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |
+| `metricSinks.statsd.host`  | DNS name or IP address of StatsD server |             |
+| `metricSinks.statsd.port`  | Port (UDP) address of StatsD server | `8125`            |
+| `metricSinks.statsd.metricPrefix`  | Prefix that will be added to every metric defined in the metric declaration |             |
 | `prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
 | `prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
 | `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
