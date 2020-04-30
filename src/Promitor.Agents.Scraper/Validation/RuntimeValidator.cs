@@ -8,6 +8,8 @@ using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Agents.Scraper.Validation.Exceptions;
 using Promitor.Agents.Scraper.Validation.Interfaces;
 using Promitor.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps.Sinks;
+using Promitor.Core.Configuration.Model;
 
 #pragma warning disable 618
 
@@ -19,6 +21,7 @@ namespace Promitor.Agents.Scraper.Validation
         private readonly List<IValidationStep> _validationSteps;
 
         public RuntimeValidator(
+            IOptions<RuntimeConfiguration> runtimeConfiguration,
             IOptions<MetricsConfiguration> metricsConfiguration,
             ILogger<RuntimeValidator> validatorLogger,
             IMetricsDeclarationProvider scrapeConfigurationProvider,
@@ -30,7 +33,8 @@ namespace Promitor.Agents.Scraper.Validation
             {
                 new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),
                 new AzureAuthenticationValidationStep(configuration, _validationLogger),
-                new MetricsDeclarationValidationStep(scrapeConfigurationProvider,  _validationLogger)
+                new MetricsDeclarationValidationStep(scrapeConfigurationProvider,  _validationLogger),
+                new StatsDMetricSinkValidationStep(runtimeConfiguration,  _validationLogger)
             };
         }
 

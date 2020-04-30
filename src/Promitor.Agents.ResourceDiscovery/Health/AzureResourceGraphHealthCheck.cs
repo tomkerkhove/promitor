@@ -44,14 +44,14 @@ namespace Promitor.Agents.ResourceDiscovery.Health
             }
 
             var healthProbeResults = await ProbeSubscriptionsAsync(query);
-            var healtCheckMetadata = GenerateMetadata(healthProbeResults);
+            var healthCheckMetadata = GenerateMetadata(healthProbeResults);
 
             if (healthProbeResults.Any(probeKeyValuePair => probeKeyValuePair.IsSuccessful == false))
             {
-                return HealthCheckResult.Unhealthy("One or more subscriptions are unhealthy.", data: healtCheckMetadata);
+                return HealthCheckResult.Unhealthy("One or more subscriptions are unhealthy.", data: healthCheckMetadata);
             }
 
-            return HealthCheckResult.Healthy("Successfully queried all subscriptions", data: healtCheckMetadata);
+            return HealthCheckResult.Healthy("Successfully queried all subscriptions", data: healthCheckMetadata);
         }
 
         private static Dictionary<string, object> GenerateMetadata(List<HealthProbeResult> healthProbeResults)
