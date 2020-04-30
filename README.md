@@ -3,7 +3,7 @@
 <!-- markdownlint-disable -->
 <p align=center><img src="./docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
 
-<h1 align="center">Azure Monitor Scraper for Prometheus</h1>
+<h1 align="center">Bringing Azure Monitor metrics where you need them.</h1>
 
 <p align="center">
     <a href="./LICENSE" rel="nofollow"><img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square" alt="License"></a>
@@ -14,7 +14,7 @@
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
 </p>
 
-**Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
+**Promitor** brings Azure Monitor metrics where you need them. Promitor is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to StatsD server.
 <!-- markdownlint-enable -->
 
 <!-- markdownlint-disable MD002 -->
