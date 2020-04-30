@@ -48,8 +48,8 @@ namespace Promitor.Agents.Scraper
                         })
                         .UseConfiguration(configuration)
                         .UseUrls(endpointUrl)
-                        .UseStartup<Startup>()
-                        .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration));
+                        .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration))
+                        .UseStartup<Startup>();
                 });
         }
 

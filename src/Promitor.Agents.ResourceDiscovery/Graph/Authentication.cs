@@ -12,9 +12,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             AuthenticationResult authResult = await authContext.AcquireTokenAsync(resource, new ClientCredential(clientId, clientSecret));
 
-            ServiceClientCredentials serviceClientCreds = new TokenCredentials(authResult.AccessToken);
+            ServiceClientCredentials serviceClientCredentials = new TokenCredentials(authResult.AccessToken);
 
-            return serviceClientCreds;
+            return serviceClientCredentials;
         }
     }
 }

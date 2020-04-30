@@ -36,9 +36,7 @@ namespace Promitor.Agents.Scraper
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            ValidateRuntimeConfiguration(app);
-
+            
             app.UsePrometheusScraper(_prometheusBaseUriPath)
                 .ExposeOpenApiUi()
                 .UseSerilogRequestLogging()
@@ -53,15 +51,19 @@ namespace Promitor.Agents.Scraper
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications(_prometheusBaseUriPath, 1)
-                .UseMetricSinks(Configuration)
-                .UseHealthChecks()
+                .UseHealthChecks();
+
+            ValidateRuntimeConfiguration(services);
+
+            services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping()
                 .UseWebApi();
         }
 
-        private void ValidateRuntimeConfiguration(IApplicationBuilder app)
+        private void ValidateRuntimeConfiguration(IServiceCollection services)
         {
-            var runtimeValidator = app.ApplicationServices.GetService<RuntimeValidator>();
+            var serviceProvider = services.BuildServiceProvider();
+            var runtimeValidator = serviceProvider.GetService<RuntimeValidator>();
             runtimeValidator.Run();
         }
     }

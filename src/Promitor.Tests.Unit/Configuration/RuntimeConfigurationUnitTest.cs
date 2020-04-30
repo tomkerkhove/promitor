@@ -394,6 +394,8 @@ namespace Promitor.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.Server);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
             Assert.NotNull(runtimeConfiguration.Telemetry);
             Assert.NotNull(runtimeConfiguration.Telemetry.ApplicationInsights);
             Assert.NotNull(runtimeConfiguration.Telemetry.ContainerLogs);
@@ -411,6 +413,9 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(bogusRuntimeConfiguration.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
             Assert.Equal(bogusRuntimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
             Assert.Equal(bogusRuntimeConfiguration.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Host, runtimeConfiguration.MetricSinks.Statsd.Host);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Port, runtimeConfiguration.MetricSinks.Statsd.Port);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.MetricPrefix, runtimeConfiguration.MetricSinks.Statsd.MetricPrefix);
         }
     }
 }

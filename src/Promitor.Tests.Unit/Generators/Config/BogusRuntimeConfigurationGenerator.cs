@@ -4,6 +4,7 @@ using Promitor.Core.Configuration.Model;
 using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Configuration.Model.Prometheus;
 using Promitor.Core.Configuration.Model.Server;
+using Promitor.Core.Configuration.Model.Sinks;
 using Promitor.Core.Configuration.Model.Telemetry;
 using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 
@@ -51,13 +52,24 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(telemetry => telemetry.ContainerLogs, faker => containerLogConfiguration)
                 .RuleFor(telemetry => telemetry.ApplicationInsights, faker => applicationInsightsConfiguration)
                 .Generate();
+            var statsDConfiguration = new Faker<StatsdSinkConfiguration>()
+                .StrictMode(true)
+                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Host, faker => faker.Person.FirstName)
+                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Port, faker => faker.Random.Int(min: 0))
+                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricPrefix, faker => faker.Person.FirstName)
+                .Generate();
+            var metricSinkConfiguration = new Faker<MetricSinkConfiguration>()
+                .StrictMode(true)
+                .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
+                .Generate();
 
             var runtimeConfiguration = new RuntimeConfiguration
             {
                 Server = serverConfiguration,
                 MetricsConfiguration = metricsConfiguration,
                 Prometheus = prometheusConfiguration,
-                Telemetry = telemetryConfiguration
+                Telemetry = telemetryConfiguration,
+                MetricSinks = metricSinkConfiguration
             };
 
             return runtimeConfiguration;
