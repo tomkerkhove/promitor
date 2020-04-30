@@ -36,7 +36,7 @@ namespace Promitor.Agents.Scraper
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UsePrometheusScraper(_prometheusBaseUriPath)
                 .ExposeOpenApiUi()
                 .UseSerilogRequestLogging()
