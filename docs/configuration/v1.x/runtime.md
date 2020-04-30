@@ -76,8 +76,8 @@ As of today, we support the follow sinks:
 
 In order to push metrics to a StatsD server, you'll need to configure following:
 
-- `metricSinks.statsd.host` - DNS name or IP address of server.
-- `metricSinks.statsd.host` - Port (UDP) address of server. (Default: `8125`)
+- `metricSinks.statsd.host` - DNS name or IP address of StatsD server.
+- `metricSinks.statsd.host` - Port (UDP) address of StatsD server. (Default: `8125`)
 - `metricSinks.statsd.metricPrefix` - Prefix that will be added to every metric
  defined in the metric declaration.
 

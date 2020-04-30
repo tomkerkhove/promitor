@@ -14,7 +14,12 @@ image:
 azureAuthentication:
   appId: ""
   appKey: ""
-
+metricSinks:
+  useStatsd: false
+  statsd:
+    host: ""
+    port: 8125
+    metricPrefix: ""
 prometheus:
   scrapeEndpointPath: /metrics
   enableMetricTimestamps: True

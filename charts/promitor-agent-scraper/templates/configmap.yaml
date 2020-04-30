@@ -12,6 +12,18 @@ data:
   runtime.yaml: |-
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
+      metricSinks:
+
+  {{- if .Values.metricSinks.statsd.host }}
+        statsd:
+          host: {{ .Values.metricSinks.statsd.host | quote }}
+  {{- if .Values.metricSinks.statsd.port }}
+          port: {{ .Values.metricSinks.statsd.port | quote }}
+  {{- end }}
+  {{- if .Values.metricSinks.statsd.metricPrefix }}
+          metricPrefix: {{ .Values.metricSinks.statsd.metricPrefix | quote }}
+  {{- end }}
+  {{- end }}
       prometheus:
         metricUnavailableValue: {{ .Values.prometheus.metricUnavailableValue | quote }}
         enableMetricTimestamps: {{ .Values.prometheus.enableMetricTimestamps | quote }}
