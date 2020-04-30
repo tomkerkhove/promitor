@@ -14,7 +14,7 @@
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
 </p>
 
-**Promitor** brings Azure Monitor metrics where you need them. Promitor is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to StatsD server.
+**Promitor** brings Azure Monitor metrics where you need them. Promitor is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
 <!-- markdownlint-enable -->
 
 <!-- markdownlint-disable MD002 -->
