@@ -24,8 +24,8 @@ server:
 metricSinks:
   statsd:
     host: graphite
-    port: 8125
-    metricPrefix: promitor.
+    port: 8125 # Optional. Default: 8125
+    metricPrefix: promitor. # Optional. Default: None
 prometheus:
   metricUnavailableValue: NaN # Optional. Default: NaN
   enableMetricTimestamps: false # Optional. Default: true
@@ -89,7 +89,9 @@ metricSinks:
     metricPrefix: promitor.
 ```
 
-## Prometheus Scraping Endpoint
+### Prometheus Scraping Endpoint
+
+> :warning: Prometheus is not using our metric sink approach yet and uses a different approach
 
 Promitor automatically scrapes Azure Monitor and makes the information available
 based on the metrics configuration.
