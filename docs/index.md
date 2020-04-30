@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Promitor - An Azure Monitor scraper for Prometheus
+title: Promitor - Bringing Azure Monitor metrics where you need them
 ---
 
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/tomkerkhove/promitor/blob/master/LICENSE)
@@ -8,8 +8,9 @@ title: Promitor - An Azure Monitor scraper for Prometheus
 [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)
 [![Docker Stars](https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)[![Donate](https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square)](https://github.com/users/tomkerkhove/sponsorship)
 
-**Promitor** is an **Azure Monitor scraper for Prometheus** providing a scraping
-endpoint for Prometheus that provides a configured subset of Azure Monitor metrics.
+**Promitor** brings Azure Monitor metrics where you need them. Promitor
+ is an Azure Monitor scraper which makes the metrics available through
+  a scraping endpoint for Prometheus or push to a StatsD server.
 
 {:refdef: style="text-align: center;"}
 ![Promitor](./media/logos/promitor.png)
@@ -32,7 +33,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 ## Features
 
-- Provides scraping endpoint for Prometheus
+- Automatically pushes metrics to systems such as Prometheus & StatsD
 - Automatically scrapes Azure Monitor metrics (single and multi-dimensional) across various subscription & resource groups
 - Built-in support for a variety of Azure services ([overview](configuration/v1.x/metrics#supported-azure-services))
 - Easy to declare metrics to scrape via YAML & APIs
@@ -55,8 +56,10 @@ and vote for features!
   - [Supported Providers](configuration/v1.x/metrics#supported-azure-services)
   - [What labels do we provide?](metrics/labels)
 - **Configuration**
+  - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
+    - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
+    - [StatsD](configuration/v1.x/runtime#statsd)
   - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
-  - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
   - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
   - [Runtime](configuration/v1.x/runtime)
 - **Operations**
