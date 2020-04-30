@@ -182,6 +182,18 @@ namespace Promitor.Tests.Unit.Generators.Config
                 }
             }
 
+            if (_runtimeConfiguration?.MetricSinks != null)
+            {
+                configurationBuilder.AppendLine("metricSinks:");
+                if (_runtimeConfiguration?.MetricSinks.Statsd != null)
+                {
+                    configurationBuilder.AppendLine("  statsD:");
+                    configurationBuilder.AppendLine($"    host: {_runtimeConfiguration?.MetricSinks.Statsd.Host}");
+                    configurationBuilder.AppendLine($"    port: {_runtimeConfiguration?.MetricSinks.Statsd.Port}");
+                    configurationBuilder.AppendLine($"    metricPrefix: {_runtimeConfiguration?.MetricSinks.Statsd.MetricPrefix}");
+                }
+            }
+
             if (_runtimeConfiguration?.MetricsConfiguration != null)
             {
                 configurationBuilder.AppendLine("metricsConfiguration:");
