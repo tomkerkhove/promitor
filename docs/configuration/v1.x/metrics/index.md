@@ -36,9 +36,8 @@ values are `v1`.
 
 Every metric that is being declared needs to define the following fields:
 
-- `name` - Name of the metric that will be exposed in the scrape endpoint for Prometheus.
-- `description` - Description for the metric that will be exposed in the scrape
-  endpoint for Prometheus.
+- `name` - Name of the metric that will be reported.
+- `description` - Description for the metric that will be reported.
 - `resourceType` - Defines what type of resource needs to be queried.
 - `azureMetricConfiguration.metricName` - The name of the metric in Azure Monitor
   to query
