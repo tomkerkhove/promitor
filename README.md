@@ -14,7 +14,7 @@
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
 </p>
 
-**Promitor** brings Azure Monitor metrics where you need them. Promitor is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
+**Promitor** is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
 <!-- markdownlint-enable -->
 
 <!-- markdownlint-disable MD002 -->
@@ -29,6 +29,8 @@ We are proud to have the following customer(s) running Promitor in production:
 
 ![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
 ![ResDiary](./docs/media/logos/customers/resdiary.png)
+
+Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
 ## Contribution
 
@@ -62,7 +64,7 @@ you can do a small donation.
 ## Get in touch
 
 Do you have a security issue to report or just want to privately contact me? Feel
-free to [write me an email](mailto:kerkhove.tom@gmail.com)
+free to [write me an email](mailto:kerkhove.tom@gmail.com) or [get listed as a user](https://forms.gle/hjcpaaVFa1A1hZaK6).
 
 ## Thank you
 
