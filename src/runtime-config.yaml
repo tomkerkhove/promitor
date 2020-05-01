@@ -4,7 +4,7 @@ prometheus:
   metricUnavailableValue: NaN
   enableMetricTimestamps: true # true by default
   scrapeEndpoint:
-    baseUriPath: /scrape
+    baseUriPath: /metrics
 metricSinks:
   statsd:
     host: graphite
