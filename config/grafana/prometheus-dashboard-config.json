@@ -17,7 +17,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1588349036531,
   "links": [],
   "panels": [
     {
@@ -83,16 +82,10 @@
       "pluginVersion": "6.7.2",
       "targets": [
         {
-          "expr": "promitor_ratelimit_arm{subscription_id=\"$subscriptionId\"}",
+          "expr": "promitor_ratelimit_arm{subscription_id=\"$subscription_id\"}",
           "interval": "",
           "legendFormat": "ARM Rate Limiting ({{subscription_id}})",
           "refId": "A"
-        },
-        {
-          "expr": "",
-          "interval": "",
-          "legendFormat": "",
-          "refId": "B"
         }
       ],
       "timeFrom": null,
@@ -142,9 +135,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "promitor_demo_webapp_cpu",
+          "expr": "promitor_demo_webapp_cpu{resource_group=\"$resource_group\"}",
           "instant": false,
           "interval": "",
+          "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
         },
@@ -155,11 +149,59 @@
           "refId": "B"
         },
         {
-          "expr": "",
+          "expr": "promitor_demo_azuresqldb_dtu{resource_group=\"$resource_group\"}",
           "format": "time_series",
           "interval": "",
           "legendFormat": "",
           "refId": "C"
+        },
+        {
+          "expr": "promitor_demo_generic_queue_size{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "D"
+        },
+        {
+          "expr": "promitor_demo_generic_namespace_size{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "E"
+        },
+        {
+          "expr": "promitor_demo_servicebusqueue_queue_size{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "F"
+        },
+        {
+          "expr": "promitor_demo_azurestoragequeue_queue_size{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "G"
+        },
+        {
+          "expr": "promitor_demo_azurestoragequeue_queue_timespentinqueue{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "H"
+        },
+        {
+          "expr": "promitor_demo_webapp_cpu{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "I"
+        },
+        {
+          "expr": "promitor_demo_function_requests{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "J"
+        },
+        {
+          "expr": "promitor_demo_appplan_percentage_cpu{resource_group=\"$resource_group\"}",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "K"
         }
       ],
       "thresholds": [],
@@ -207,7 +249,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "5s",
   "schemaVersion": 22,
   "style": "dark",
   "tags": [],
@@ -216,9 +258,10 @@
       {
         "allValue": null,
         "current": {
-          "tags": [],
-          "text": "0329dd2a-59dc-4493-aa54-cb01cb027dc2",
-          "value": "0329dd2a-59dc-4493-aa54-cb01cb027dc2"
+          "text": "0f9d7fea-99e8-4768-8672-06a28514f77e",
+          "value": [
+            "0f9d7fea-99e8-4768-8672-06a28514f77e"
+          ]
         },
         "datasource": "Prometheus",
         "definition": "label_values(subscription_id)",
@@ -226,18 +269,18 @@
         "includeAll": false,
         "index": -1,
         "label": "Subscription Id",
-        "multi": false,
-        "name": "subscriptionId",
+        "multi": true,
+        "name": "subscription_id",
         "options": [
           {
-            "$$hashKey": "object:585",
-            "selected": true,
+            "$$hashKey": "object:911",
+            "selected": false,
             "text": "0329dd2a-59dc-4493-aa54-cb01cb027dc2",
             "value": "0329dd2a-59dc-4493-aa54-cb01cb027dc2"
           },
           {
-            "$$hashKey": "object:586",
-            "selected": false,
+            "$$hashKey": "object:912",
+            "selected": true,
             "text": "0f9d7fea-99e8-4768-8672-06a28514f77e",
             "value": "0f9d7fea-99e8-4768-8672-06a28514f77e"
           }
@@ -252,12 +295,40 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "text": "promitor-sources",
+          "value": [
+            "promitor-sources"
+          ]
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(resource_group)",
+        "hide": 0,
+        "includeAll": false,
+        "index": -1,
+        "label": "Resource Group",
+        "multi": true,
+        "name": "resource_group",
+        "options": [],
+        "query": "label_values(resource_group)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
       }
     ]
   },
   "time": {
-    "from": "2020-05-01T15:40:46.642Z",
-    "to": "2020-05-01T15:50:46.642Z"
+    "from": "now-5m",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -275,9 +346,9 @@
   },
   "timezone": "",
   "title": "Promitor Scraped Metrics (Prometheus)",
-  "uid": "qes7mveZz",
+  "uid": null,
   "variables": {
     "list": []
   },
-  "version": 1
+  "version": 2
 }

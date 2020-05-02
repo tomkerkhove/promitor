@@ -50,6 +50,6 @@ services:
     volumes:
       - ./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml
       - ./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml
-      - ./../config/grafana/prometheus-dashboard-config.json:/var/lib/grafana/dashboards/prometheus/promitor.json
-      - ./../config/grafana/statsd-dashboard-config.json:/var/lib/grafana/dashboards/statsd/promitor.json
+      - ./../config/grafana/prometheus-dashboard-config.json:/var/lib/grafana/dashboards/prometheus.json
+      - ./../config/grafana/statsd-dashboard-config.json:/var/lib/grafana/dashboards/statsd.json
       - ./../config/grafana/grafana.ini:/etc/grafana/grafana.ini

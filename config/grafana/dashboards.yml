@@ -3,12 +3,8 @@ apiVersion: 1
 providers:
   # <string> an unique provider name
 - name: 'statsd'
-  # <int> org id. will default to orgId 1 if not specified
-  orgId: 1
   # <string, required> name of the dashboard folder. Required
   folder: 'Promitor'
-  # <string> folder UID. will be automatically generated if not specified
-  folderUid: ''
   # <string, required> provider type. Required
   type: file
   # <bool> disable dashboard deletion
@@ -21,15 +17,11 @@ providers:
   allowUiUpdates: false
   options:
     # <string, required> path to dashboard files on disk. Required
-    path: /var/lib/grafana/dashboards/statsd
+    path: /var/lib/grafana/dashboards
   # <string> an unique provider name
 - name: 'prometheus'
-  # <int> org id. will default to orgId 1 if not specified
-  orgId: 1
   # <string, required> name of the dashboard folder. Required
   folder: 'Promitor'
-  # <string> folder UID. will be automatically generated if not specified
-  folderUid: ''
   # <string, required> provider type. Required
   type: file
   # <bool> disable dashboard deletion
@@ -42,4 +34,4 @@ providers:
   allowUiUpdates: false
   options:
     # <string, required> path to dashboard files on disk. Required
-    path: /var/lib/grafana/dashboards/prometheus
+    path: /var/lib/grafana/dashboards
