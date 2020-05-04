@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Promitor.Core.Configuration.Model.Telemetry.Interfaces
+namespace Promitor.Agents.Core.Configuration.Telemetry.Interfaces
 {
     public interface ISinkConfiguration
     {

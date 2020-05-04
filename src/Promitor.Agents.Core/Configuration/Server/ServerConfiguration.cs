@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Configuration.Model.Server
+﻿namespace Promitor.Agents.Core.Configuration.Server
 {
     public class ServerConfiguration
     {

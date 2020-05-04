@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core;
-using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.Server;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
 using Serilog.Events;
@@ -89,13 +89,13 @@ namespace Promitor.Agents.Scraper
 
         public static LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
         {
-            var telemetryConfiguration = configuration.Get<RuntimeConfiguration>()?.Telemetry;
+            var telemetryConfiguration = configuration.Get<ScraperRuntimeConfiguration>()?.Telemetry;
             if (telemetryConfiguration == null)
             {
                 throw new Exception("Unable to get telemetry configuration");
             }
 
-            var azureMonitorConfiguration = configuration.Get<RuntimeConfiguration>()?.AzureMonitor?.Logging;
+            var azureMonitorConfiguration = configuration.Get<ScraperRuntimeConfiguration>()?.AzureMonitor?.Logging;
             if (azureMonitorConfiguration == null)
             {
                 throw new Exception("Unable to get logging configuration for Azure Monitor");

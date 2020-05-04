@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model.Prometheus;
+using Promitor.Core.Telemetry.Metrics.Configuration;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 
 namespace Promitor.Core.Telemetry.Metrics

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 
-namespace Promitor.Core.Configuration.Model.AzureMonitor
+namespace Promitor.Integrations.AzureMonitor.Configuration
 {
     public class AzureMonitorLoggingConfiguration
     {

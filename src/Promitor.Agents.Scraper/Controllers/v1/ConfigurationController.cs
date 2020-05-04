@@ -2,7 +2,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Agents.Scraper.Extensions;
@@ -14,9 +14,9 @@ namespace Promitor.Agents.Scraper.Controllers.v1
     public class ConfigurationController : Controller
     {
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
-        private readonly IOptionsMonitor<RuntimeConfiguration> _runtimeConfiguration;
+        private readonly IOptionsMonitor<ScraperRuntimeConfiguration> _runtimeConfiguration;
 
-        public ConfigurationController(IOptionsMonitor<RuntimeConfiguration> runtimeConfiguration, IMetricsDeclarationProvider metricsDeclarationProvider)
+        public ConfigurationController(IOptionsMonitor<ScraperRuntimeConfiguration> runtimeConfiguration, IMetricsDeclarationProvider metricsDeclarationProvider)
         {
             _runtimeConfiguration = runtimeConfiguration;
             _metricsDeclarationProvider = metricsDeclarationProvider;
@@ -46,7 +46,7 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         [Route("runtime")]
         [SwaggerOperation(OperationId = "Configuration_GetRuntime")]
         [SwaggerResponse((int)HttpStatusCode.OK, Description = "Configuration concerning the runtime",
-            Type = typeof(RuntimeConfiguration))]
+            Type = typeof(ScraperRuntimeConfiguration))]
         public IActionResult GetRuntime()
         {
             var runtimeConfig = _runtimeConfiguration.CurrentValue.Clone();

@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Core;
-using Promitor.Core.Configuration.Model.AzureMonitor;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.AzureMonitor.Configuration;
 
 namespace Promitor.Agents.Scraper
 {

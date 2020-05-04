@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Model.Telemetry.Interfaces;
+using Promitor.Agents.Core.Configuration.Telemetry.Interfaces;
 
-namespace Promitor.Core.Configuration.Model.Telemetry.Sinks
+namespace Promitor.Agents.Core.Configuration.Telemetry.Sinks
 {
     public class ContainerLogConfiguration : ISinkConfiguration
     {

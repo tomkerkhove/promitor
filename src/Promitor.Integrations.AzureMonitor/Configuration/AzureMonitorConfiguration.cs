@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Configuration.Model.AzureMonitor
+﻿namespace Promitor.Integrations.AzureMonitor.Configuration
 {
     public class AzureMonitorConfiguration
     {

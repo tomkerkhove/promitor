@@ -2,7 +2,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201 AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
-COPY Promitor.Core.Configuration/* Promitor.Core.Configuration/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
 COPY Promitor.Core.Telemetry/* Promitor.Core.Telemetry/
 COPY Promitor.Core.Telemetry.Metrics/* Promitor.Core.Telemetry.Metrics/

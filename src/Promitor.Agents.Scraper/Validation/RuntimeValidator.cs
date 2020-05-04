@@ -3,16 +3,15 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model.Metrics;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Agents.Scraper.Validation.Exceptions;
 using Promitor.Agents.Scraper.Validation.Interfaces;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
-using Promitor.Core.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Runtime;
 
 #pragma warning disable 618
-
 namespace Promitor.Agents.Scraper.Validation
 {
     public class RuntimeValidator
@@ -21,7 +20,7 @@ namespace Promitor.Agents.Scraper.Validation
         private readonly List<IValidationStep> _validationSteps;
 
         public RuntimeValidator(
-            IOptions<RuntimeConfiguration> runtimeConfiguration,
+            IOptions<ScraperRuntimeConfiguration> runtimeConfiguration,
             IOptions<MetricsConfiguration> metricsConfiguration,
             ILogger<RuntimeValidator> validatorLogger,
             IMetricsDeclarationProvider scrapeConfigurationProvider,

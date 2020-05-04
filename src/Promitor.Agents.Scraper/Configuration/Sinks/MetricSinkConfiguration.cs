@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Configuration.Model.Sinks
+﻿namespace Promitor.Agents.Scraper.Configuration.Sinks
 {
     public class MetricSinkConfiguration
     {

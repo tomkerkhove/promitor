@@ -4,7 +4,7 @@
         <name>Promitor.Agents.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Telemetry.Metrics.Interfaces.IRuntimeMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Core.Configuration.Model.AzureMonitor.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Telemetry.Metrics.Interfaces.IRuntimeMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
             Provides an Azure Monitor client
             </summary>

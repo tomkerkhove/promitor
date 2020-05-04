@@ -1,21 +1,21 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Interfaces;
-using Promitor.Core.Configuration.Model;
 
 namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
 {
     public class StatsDMetricSinkValidationStep : ValidationStep, IValidationStep
     {
-        private readonly IOptions<RuntimeConfiguration> _runtimeConfiguration;
+        private readonly IOptions<ScraperRuntimeConfiguration> _runtimeConfiguration;
 
-        public StatsDMetricSinkValidationStep(IOptions<RuntimeConfiguration> runtimeConfiguration)
+        public StatsDMetricSinkValidationStep(IOptions<ScraperRuntimeConfiguration> runtimeConfiguration)
             : this(runtimeConfiguration, NullLogger.Instance)
         {
         }
 
-        public StatsDMetricSinkValidationStep(IOptions<RuntimeConfiguration> runtimeConfiguration, ILogger validationLogger)
+        public StatsDMetricSinkValidationStep(IOptions<ScraperRuntimeConfiguration> runtimeConfiguration, ILogger validationLogger)
             : base(validationLogger)
         {
             _runtimeConfiguration = runtimeConfiguration;

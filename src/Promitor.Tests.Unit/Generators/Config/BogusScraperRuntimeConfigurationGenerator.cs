@@ -1,18 +1,18 @@
 ﻿using Bogus;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Core.Configuration.Model.Prometheus;
-using Promitor.Core.Configuration.Model.Server;
-using Promitor.Core.Configuration.Model.Sinks;
-using Promitor.Core.Configuration.Model.Telemetry;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Telemetry;
+using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Scraper.Configuration;
+using Promitor.Agents.Scraper.Configuration.Sinks;
+using Promitor.Core.Scraping.Configuration.Runtime;
+using Promitor.Core.Telemetry.Metrics.Configuration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
-    internal static class BogusRuntimeConfigurationGenerator
+    internal static class BogusScraperRuntimeConfigurationGenerator
     {
-        internal static RuntimeConfiguration Generate()
+        internal static ScraperRuntimeConfiguration Generate()
         {
             var serverConfiguration = new Faker<ServerConfiguration>()
                 .StrictMode(true)
@@ -63,7 +63,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
                 .Generate();
 
-            var runtimeConfiguration = new RuntimeConfiguration
+            var runtimeConfiguration = new ScraperRuntimeConfiguration
             {
                 Server = serverConfiguration,
                 MetricsConfiguration = metricsConfiguration,

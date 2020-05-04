@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Configuration.Model.Metrics
+﻿namespace Promitor.Core.Scraping.Configuration.Runtime
 {
     public class MetricsConfiguration
     {

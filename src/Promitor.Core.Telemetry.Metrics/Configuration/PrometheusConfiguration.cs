@@ -1,5 +1,6 @@
-﻿namespace Promitor.Core.Configuration.Model.Prometheus
+﻿namespace Promitor.Core.Telemetry.Metrics.Configuration
 {
+    // TODO: Move to Promitor.Integrations.Sinks.Prometheus
     public class PrometheusConfiguration
     {
         public ScrapeEndpointConfiguration ScrapeEndpoint { get; set; } = new ScrapeEndpointConfiguration();

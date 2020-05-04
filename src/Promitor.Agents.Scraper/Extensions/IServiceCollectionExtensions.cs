@@ -12,15 +12,13 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.AzureMonitor;
+using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Telemetry;
+using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Scraper.Configuration;
+using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Core.Configuration.Model.Prometheus;
-using Promitor.Core.Configuration.Model.Server;
-using Promitor.Core.Configuration.Model.Telemetry;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -31,9 +29,11 @@ using Promitor.Core.Telemetry.Metrics;
 using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
+using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Sinks;
+using Promitor.Core.Telemetry.Metrics.Configuration;
+using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
-using Promitor.Core.Configuration.Model.Sinks;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Agents.Scraper.Extensions
@@ -197,7 +197,7 @@ namespace Promitor.Agents.Scraper.Extensions
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<RuntimeConfiguration>(configuration);
+            services.Configure<ScraperRuntimeConfiguration>(configuration);
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));

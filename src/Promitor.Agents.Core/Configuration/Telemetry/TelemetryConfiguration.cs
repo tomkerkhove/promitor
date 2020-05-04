@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 
-namespace Promitor.Core.Configuration.Model.Telemetry
+namespace Promitor.Agents.Core.Configuration.Telemetry
 {
     public class TelemetryConfiguration
     {

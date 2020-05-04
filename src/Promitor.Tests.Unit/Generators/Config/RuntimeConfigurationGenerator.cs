@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.Metrics;
-using Promitor.Core.Configuration.Model.Prometheus;
-using Promitor.Core.Configuration.Model.Server;
-using Promitor.Core.Configuration.Model.Telemetry;
-using Promitor.Core.Configuration.Model.Telemetry.Sinks;
+using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Telemetry;
+using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Scraper.Configuration;
+using Promitor.Core.Scraping.Configuration.Runtime;
+using Promitor.Core.Telemetry.Metrics.Configuration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
     internal class RuntimeConfigurationGenerator
     {
-        private readonly RuntimeConfiguration _runtimeConfiguration = new RuntimeConfiguration();
+        private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new ScraperRuntimeConfiguration();
         private bool _isEnableMetricTimestampsInPrometheusSpecified;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
@@ -24,7 +24,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             _runtimeConfiguration.Server = serverConfiguration;
         }
 
-        private RuntimeConfigurationGenerator(RuntimeConfiguration runtimeConfiguration)
+        private RuntimeConfigurationGenerator(ScraperRuntimeConfiguration runtimeConfiguration)
         {
             _runtimeConfiguration = runtimeConfiguration;
             _isEnableMetricTimestampsInPrometheusSpecified = true;
@@ -42,7 +42,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             return new RuntimeConfigurationGenerator(serverConfiguration);
         }
 
-        public static RuntimeConfigurationGenerator WithRuntimeConfiguration(RuntimeConfiguration runtimeConfiguration)
+        public static RuntimeConfigurationGenerator WithRuntimeConfiguration(ScraperRuntimeConfiguration runtimeConfiguration)
         {
             return new RuntimeConfigurationGenerator(runtimeConfiguration);
         }
