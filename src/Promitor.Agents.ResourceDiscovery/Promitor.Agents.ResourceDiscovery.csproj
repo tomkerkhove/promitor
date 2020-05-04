@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arcus.Observability.Telemetry.Core" Version="0.1.1" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Core" Version="0.2.0" />
     <PackageReference Include="Guard.NET" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
