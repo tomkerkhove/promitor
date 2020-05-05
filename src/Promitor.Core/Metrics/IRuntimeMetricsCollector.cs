@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Promitor.Core.Telemetry.Metrics.Interfaces
+namespace Promitor.Core.Metrics
 {
     public interface IRuntimeMetricsCollector
     {

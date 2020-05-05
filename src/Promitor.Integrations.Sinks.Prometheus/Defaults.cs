@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Telemetry.Metrics
+﻿namespace Promitor.Integrations.Sinks.Prometheus
 {
     public static class Defaults
     {

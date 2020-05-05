@@ -1,8 +1,8 @@
 ﻿using Promitor.Agents.Core.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
-using Promitor.Core.Telemetry.Metrics.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Agents.Scraper.Configuration
 {

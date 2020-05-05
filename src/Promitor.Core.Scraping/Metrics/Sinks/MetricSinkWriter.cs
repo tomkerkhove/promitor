@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 
-namespace Promitor.Core.Scraping.Sinks
+namespace Promitor.Core.Scraping.Metrics.Sinks
 {
     public class MetricSinkWriter
     {

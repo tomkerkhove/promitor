@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Telemetry.Metrics.Configuration
+﻿namespace Promitor.Integrations.Sinks.Prometheus.Configuration
 {
     public class ScrapeEndpointConfiguration
     {

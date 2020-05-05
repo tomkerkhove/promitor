@@ -4,12 +4,13 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Prometheus.Client;
+using Promitor.Core.Scraping;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry.Metrics.Configuration;
+using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
-namespace Promitor.Core.Scraping.Prometheus
+namespace Promitor.Integrations.Sinks.Prometheus
 {
     public class PrometheusMetricWriter : IPrometheusMetricWriter
     {
@@ -41,7 +42,7 @@ namespace Promitor.Core.Scraping.Prometheus
 
         private double DetermineMetricMeasurement(MeasuredMetric scrapedMetricResult)
         {
-            var metricUnavailableValue = _prometheusConfiguration.CurrentValue?.MetricUnavailableValue ?? Telemetry.Metrics.Defaults.Prometheus.MetricUnavailableValue;
+            var metricUnavailableValue = _prometheusConfiguration.CurrentValue?.MetricUnavailableValue ?? Defaults.Prometheus.MetricUnavailableValue;
             return scrapedMetricResult.Value ?? metricUnavailableValue;
         }
 

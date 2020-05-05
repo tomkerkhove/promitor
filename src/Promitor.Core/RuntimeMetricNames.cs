@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Telemetry.Metrics
+﻿namespace Promitor.Core
 {
     public static class RuntimeMetricNames
     {

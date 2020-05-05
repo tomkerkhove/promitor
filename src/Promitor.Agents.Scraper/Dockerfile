@@ -4,10 +4,10 @@ COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
 COPY Promitor.Core.Telemetry/* Promitor.Core.Telemetry/
-COPY Promitor.Core.Telemetry.Metrics/* Promitor.Core.Telemetry.Metrics/
 COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
 COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
+COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app
 

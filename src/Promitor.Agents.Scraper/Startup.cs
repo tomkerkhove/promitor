@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
-using Promitor.Core.Telemetry.Metrics.Configuration;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Serilog;
 
 namespace Promitor.Agents.Scraper

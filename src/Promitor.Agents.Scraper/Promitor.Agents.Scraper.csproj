@@ -55,6 +55,7 @@
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureMonitor\Promitor.Integrations.AzureMonitor.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.AzureStorage\Promitor.Integrations.AzureStorage.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.Sinks.Prometheus\Promitor.Integrations.Sinks.Prometheus.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
-namespace Promitor.Core.Scraping.Prometheus.Interfaces
+namespace Promitor.Core.Scraping.Interfaces
 {
     public interface IPrometheusMetricWriter
     {

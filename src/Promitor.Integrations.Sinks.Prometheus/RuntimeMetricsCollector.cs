@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Telemetry.Metrics.Configuration;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Core.Metrics;
+using Promitor.Core.Scraping.Metrics;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
-namespace Promitor.Core.Telemetry.Metrics
+namespace Promitor.Integrations.Sinks.Prometheus
 {
     public class RuntimeMetricsCollector : IRuntimeMetricsCollector
     {
@@ -26,7 +27,7 @@ namespace Promitor.Core.Telemetry.Metrics
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
-            var gauge = Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
+            var gauge = global::Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
         }
     }

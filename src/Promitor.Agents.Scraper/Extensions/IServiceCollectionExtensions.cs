@@ -23,16 +23,15 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Core.Scraping.Prometheus;
-using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Telemetry.Metrics;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Runtime;
-using Promitor.Core.Scraping.Sinks;
-using Promitor.Core.Telemetry.Metrics.Configuration;
+using Promitor.Core.Scraping.Interfaces;
+using Promitor.Core.Scraping.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Integrations.Sinks.Prometheus;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
 
 // ReSharper disable once CheckNamespace

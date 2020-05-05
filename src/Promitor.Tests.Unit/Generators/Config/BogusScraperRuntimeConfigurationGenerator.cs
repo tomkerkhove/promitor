@@ -6,7 +6,7 @@ using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
-using Promitor.Core.Telemetry.Metrics.Configuration;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {

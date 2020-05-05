@@ -12,17 +12,18 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Core.Metrics;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
+using Serilog;
 
 namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
-        private readonly ILogger _logger;
+        private readonly Microsoft.Extensions.Logging.ILogger _logger;
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
 

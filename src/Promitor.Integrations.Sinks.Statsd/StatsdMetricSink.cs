@@ -2,7 +2,7 @@
 using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Sinks;
+using Promitor.Core.Scraping.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Integrations.Sinks.Statsd

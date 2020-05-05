@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Promitor.Integrations.AzureMonitor;
 
-namespace Promitor.Core.Scraping.Sinks
+namespace Promitor.Core.Scraping.Metrics.Sinks
 {
     public interface IMetricSink
     {
