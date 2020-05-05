@@ -16,11 +16,11 @@ namespace Microsoft.AspNetCore.Builder
             // New Swagger UI
             app.UseSwagger(setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json");
             app.UseSwaggerUI(swaggerUiOptions =>
-               {
-                   swaggerUiOptions.ConfigureDefaultOptions();
-                   swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", apiName);
-                   swaggerUiOptions.RoutePrefix = "api/docs";
-               });
+            {
+                swaggerUiOptions.ConfigureDefaultOptions();
+                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", apiName);
+                swaggerUiOptions.RoutePrefix = "api/docs";
+            });
 
             return app;
         }

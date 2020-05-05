@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using GuardNet;
@@ -7,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Serilog.Configuration;
+using Serilog.Events;
 
 namespace Promitor.Agents.Core
 {
@@ -26,6 +30,34 @@ namespace Promitor.Agents.Core
             Guard.NotNull(configuration, nameof(configuration));
 
             Configuration = configuration;
+        }
+
+        /// <summary>
+        /// Use & wire up Serilog with a configuration
+        /// </summary>
+        /// <param name="componentName">Name of the component which is starting up</param>
+        /// <param name="serviceProvider">Registered services in the application</param>
+        protected void UseSerilog(string componentName, IServiceProvider serviceProvider)
+        {
+            Log.Logger = CreateSerilogConfiguration(componentName, serviceProvider).CreateLogger();
+        }
+
+        /// <summary>
+        /// Creates a configuration for Serilog
+        /// </summary>
+        /// <param name="componentName">Name of the component which is starting up</param>
+        /// <param name="serviceProvider">Registered services in the application</param>
+        protected virtual LoggerConfiguration CreateSerilogConfiguration(string componentName, IServiceProvider serviceProvider)
+        {
+            return new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .Enrich.WithComponentName(componentName)
+                .Enrich.WithVersion()
+                .Enrich.WithHttpCorrelationInfo(serviceProvider)
+                .WriteTo.Console()
+                .WriteTo.AzureApplicationInsights(instrumentationKey);
         }
 
         protected string GetXmlDocumentationPath(IServiceCollection services, string docFileName = "Open-Api.xml")

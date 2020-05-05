@@ -15,6 +15,7 @@ namespace Promitor.Agents.Scraper
 {
     public class Startup : AgentStartup
     {
+        private const string ComponentName = "Promitor Scraper";
         private readonly string _prometheusBaseUriPath;
 
         public Startup(IConfiguration configuration)
@@ -53,6 +54,8 @@ namespace Promitor.Agents.Scraper
             services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping()
                 .UseWebApi();
+
+            UseSerilog(ComponentName, services);
         }
 
         private void ValidateRuntimeConfiguration(IServiceCollection services)

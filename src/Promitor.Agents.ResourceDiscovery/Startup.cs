@@ -16,6 +16,7 @@ using Promitor.Agents.ResourceDiscovery.Health;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.Scraper.Extensions;
 using Serilog;
+using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using Swashbuckle.AspNetCore.Filters;
@@ -25,6 +26,7 @@ namespace Promitor.Agents.ResourceDiscovery
     public class Startup : AgentStartup
     {
         private const string ApiName = "Promitor - Resource Discovery API";
+        private const string ComponentName = "Promitor Resource Discovery";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Startup" /> class.
@@ -96,19 +98,8 @@ namespace Promitor.Agents.ResourceDiscovery
                 swaggerUiOptions.DocumentTitle = ApiName;
             });
             app.UseEndpoints(endpoints => endpoints.MapControllers());
-            Log.Logger = CreateLoggerConfiguration().CreateLogger();
-        }
-
-        private LoggerConfiguration CreateLoggerConfiguration()
-        {
-            var instrumentationKey = Configuration.GetValue<string>("foo");
-
-            return new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.ApplicationInsights(instrumentationKey, new TraceTelemetryConverter());
+            
+            UseSerilog(ComponentName, app.ApplicationServices);
         }
     }
 }
