@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,52 +15,72 @@ namespace Promitor.Agents.Scraper
 {
     public class Program : AgentProgram
     {
-        public void Main(string[] args)
+        public static int Main(string[] args)
         {
-            Welcome();
+            try
+            {
+                Welcome();
 
-            // Let's hook in a logger for start-up purposes.
-            ConfigureStartupLogging();
+                // Let's hook in a logger for start-up purposes.
+                ConfigureStartupLogging();
 
-            BuildWebHost(args)
-                .Build()
-                .Run();
+                CreateHostBuilder(args)
+                    .Build()
+                    .Run();
+
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                Log.Fatal(exception, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        private void Welcome()
+        private static void Welcome()
         {
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public IHostBuilder BuildWebHost(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var configuration = BuildConfiguration();
-            var httpPort =  DetermineHttpPort(configuration);
-            var endpointUrl = $"http://+:{httpPort}";
+            IConfiguration configuration = BuildConfiguration();
+            ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
+            IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration);
 
-            return Host.CreateDefaultBuilder(args)
-
-                .ConfigureWebHostDefaults(webHostBuilder =>
-                {
-                    webHostBuilder.UseKestrel(kestrelServerOptions =>
-                        {
-                            kestrelServerOptions.AddServerHeader = false;
-                        })
-                        .UseConfiguration(configuration)
-                        .UseUrls(endpointUrl)
-                        .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration))
-                        .UseStartup<Startup>();
-                });
+            return webHostBuilder;
         }
 
-        private int DetermineHttpPort(IConfiguration configuration)
+        private static ServerConfiguration GetServerConfiguration(IConfiguration configuration)
         {
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
-
-            return base.DetermineHttpPort(serverConfiguration);
+            return serverConfiguration;
         }
 
-        public LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
+        private static IConfigurationRoot BuildConfiguration()
+        {
+            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+            if (string.IsNullOrWhiteSpace(configurationFolder))
+            {
+                throw new Exception("Unable to determine the configuration folder");
+            }
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
+                .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
+                .Build();
+
+            return configuration;
+        }
+
+        public LoggerConfiguration DefineSerilogConfiguration(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
         {
             var telemetryConfiguration = configuration.Get<ScraperRuntimeConfiguration>()?.Telemetry;
             if (telemetryConfiguration == null)

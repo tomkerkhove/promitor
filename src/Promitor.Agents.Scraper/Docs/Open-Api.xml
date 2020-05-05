@@ -97,11 +97,6 @@
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
         </member>
-        <member name="P:Promitor.Agents.Scraper.Startup.Configuration">
-            <summary>
-                Configuration of the application
-            </summary>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <summary>
                 Validates a specific metric definition

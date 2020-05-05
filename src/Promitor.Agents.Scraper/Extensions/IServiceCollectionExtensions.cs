@@ -225,7 +225,7 @@ namespace Promitor.Agents.Scraper.Extensions
                     Name = "Tom Kerkhove",
                     Url = new Uri("https://blog.tomkerkhove.be")
                 },
-                Title = $"Promitor v{apiVersion}",
+                Title = $"Promitor - Scraper API v{apiVersion}",
                 Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
                 Version = $"v{apiVersion}",
                 License = new OpenApiLicense

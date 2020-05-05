@@ -31,10 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}"
-	ProjectSection(SolutionItems) = preProject
-		metric-config.yaml = metric-config.yaml
-		runtime-config.yaml = runtime-config.yaml
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.Scraper", "Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj", "{07161A83-6952-4FA4-B84C-59D766569BAF}"
 EndProject
@@ -47,6 +43,17 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.Sinks.Statsd", "Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj", "{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.Sinks.Prometheus", "Promitor.Integrations.Sinks.Prometheus\Promitor.Integrations.Sinks.Prometheus.csproj", "{AE08087F-866D-42E2-BE25-0D09326DDE85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{EE3BDE48-B756-481F-B5BB-857569568878}"
+	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\scraper\metric-config.yaml = ..\config\promitor\scraper\metric-config.yaml
+		..\config\promitor\scraper\runtime-config.yaml = ..\config\promitor\scraper\runtime-config.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discovery", "Discovery", "{33D4263D-DDDC-4ECC-BB25-834DE9979C7C}"
+	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\resource-discovery\runtime-config.yaml = ..\config\promitor\resource-discovery\runtime-config.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +127,8 @@ Global
 		{B3079BB2-2B5D-4E04-9570-99F86C4352D2} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
 		{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 		{AE08087F-866D-42E2-BE25-0D09326DDE85} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
+		{EE3BDE48-B756-481F-B5BB-857569568878} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
+		{33D4263D-DDDC-4ECC-BB25-834DE9979C7C} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}
