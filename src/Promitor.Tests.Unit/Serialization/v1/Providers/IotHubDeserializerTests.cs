@@ -2,10 +2,12 @@
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
+using System.ComponentModel;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
+    [Category("Unit")]
     public class IotHubDeserializerTests : ResourceDeserializerTest<IotHubDeserializer>
     {
         private readonly IotHubDeserializer _deserializer;
