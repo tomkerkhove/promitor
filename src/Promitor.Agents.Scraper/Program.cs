@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core;
@@ -13,9 +14,9 @@ using Serilog.Events;
 
 namespace Promitor.Agents.Scraper
 {
-    public class Program
+    public class Program : AgentProgram
     {
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             Welcome();
 
@@ -27,15 +28,15 @@ namespace Promitor.Agents.Scraper
                 .Run();
         }
 
-        private static void Welcome()
+        private void Welcome()
         {
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public static IHostBuilder BuildWebHost(string[] args)
+        public IHostBuilder BuildWebHost(string[] args)
         {
-            var configuration = CreateConfiguration();
-            var httpPort = DetermineHttpPort(configuration);
+            var configuration = BuildConfiguration();
+            var httpPort =  DetermineHttpPort(configuration);
             var endpointUrl = $"http://+:{httpPort}";
 
             return Host.CreateDefaultBuilder(args)
@@ -53,41 +54,14 @@ namespace Promitor.Agents.Scraper
                 });
         }
 
-        private static IConfigurationRoot CreateConfiguration()
-        {
-            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-            if (string.IsNullOrWhiteSpace(configurationFolder))
-            {
-                throw new Exception("Unable to determine the configuration folder");
-            }
-
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
-                .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
-                .Build();
-
-            return configuration;
-        }
-
-        private static int DetermineHttpPort(IConfiguration configuration)
+        private int DetermineHttpPort(IConfiguration configuration)
         {
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
 
-            return serverConfiguration?.HttpPort ?? 80;
+            return base.DetermineHttpPort(serverConfiguration);
         }
 
-        private static void ConfigureStartupLogging()
-        {
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-        }
-
-        public static LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
+        public LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
         {
             var telemetryConfiguration = configuration.Get<ScraperRuntimeConfiguration>()?.Telemetry;
             if (telemetryConfiguration == null)
@@ -125,7 +99,7 @@ namespace Promitor.Agents.Scraper
             return loggerConfiguration;
         }
 
-        private static LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
+        private LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
         {
             if (logLevel == null)
             {
