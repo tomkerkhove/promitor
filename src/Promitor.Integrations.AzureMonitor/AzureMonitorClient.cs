@@ -17,7 +17,6 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
-using Serilog;
 
 namespace Promitor.Integrations.AzureMonitor
 {

@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.Extensions.Options;
 using Promitor.Core.Metrics;
-using Promitor.Core.Scraping.Metrics;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus

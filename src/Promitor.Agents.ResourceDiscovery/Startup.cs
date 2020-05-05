@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Arcus.WebApi.Correlation;
+﻿using Arcus.WebApi.Correlation;
 using Arcus.WebApi.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,10 +12,6 @@ using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Health;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.Scraper.Extensions;
-using Serilog;
-using Serilog.Configuration;
-using Serilog.Events;
-using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Promitor.Agents.ResourceDiscovery

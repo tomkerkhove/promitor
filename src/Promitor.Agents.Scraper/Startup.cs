@@ -1,13 +1,16 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Serilog;
 
@@ -25,21 +28,6 @@ namespace Promitor.Agents.Scraper
             _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UsePrometheusScraper(_prometheusBaseUriPath)
-                .ExposeOpenApiUi()
-                .UseSerilogRequestLogging()
-                .UseRouting()
-                .UseEndpoints(endpoints => endpoints.MapControllers());
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -54,8 +42,23 @@ namespace Promitor.Agents.Scraper
             services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping()
                 .UseWebApi();
+        }
 
-            UseSerilog(ComponentName, services);
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UsePrometheusScraper(_prometheusBaseUriPath)
+                .ExposeOpenApiUi()
+                .UseSerilogRequestLogging()
+                .UseRouting()
+                .UseEndpoints(endpoints => endpoints.MapControllers());
+
+            UseSerilog(ComponentName, app.ApplicationServices);
         }
 
         private void ValidateRuntimeConfiguration(IServiceCollection services)
@@ -63,6 +66,21 @@ namespace Promitor.Agents.Scraper
             var serviceProvider = services.BuildServiceProvider();
             var runtimeValidator = serviceProvider.GetService<RuntimeValidator>();
             runtimeValidator.Run();
+        }
+
+        protected override LoggerConfiguration FilterTelemetry(LoggerConfiguration loggerConfiguration)
+        {
+            var standardConfiguration = base.FilterTelemetry(loggerConfiguration);
+
+            var azureMonitorConfiguration = Configuration.Get<ScraperRuntimeConfiguration>()?.AzureMonitor?.Logging;
+            if (azureMonitorConfiguration == null)
+            {
+                throw new Exception("Unable to get logging configuration for Azure Monitor");
+            }
+
+            standardConfiguration.Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
+
+            return standardConfiguration;
         }
     }
 }
