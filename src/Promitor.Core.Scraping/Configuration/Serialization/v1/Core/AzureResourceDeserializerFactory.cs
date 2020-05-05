@@ -84,6 +84,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.FileStorage:
                     var fileStorageLogger = _loggerFactory.CreateLogger<FileStorageDeserializer>();
                     return new FileStorageDeserializer(fileStorageLogger);
+                case ResourceType.IotHub:
+                    var iotHubLogger = _loggerFactory.CreateLogger<IotHubDeserializer>();
+                    return new IotHubDeserializer(iotHubLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }
