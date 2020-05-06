@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.IoTHubName))
                 {
-                    yield return "No IoT Hub name is configured";
+                    yield return "No Azure IoT Hub name is configured";
                 }
             }
         }
