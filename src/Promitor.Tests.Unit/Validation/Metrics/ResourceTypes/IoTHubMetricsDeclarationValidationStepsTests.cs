@@ -65,7 +65,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIoTHubMetric(IoTHubName: string.Empty)
+                .WithIoTHubMetric(iotHubName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
