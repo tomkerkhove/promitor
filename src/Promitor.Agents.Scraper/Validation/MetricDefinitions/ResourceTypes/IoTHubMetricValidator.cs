@@ -22,5 +22,4 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             }
         }
     }
-    
 }
