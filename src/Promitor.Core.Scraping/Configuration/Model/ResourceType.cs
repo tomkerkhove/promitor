@@ -24,6 +24,6 @@
         FileStorage = 19,
         StorageAccount = 20,
         ApiManagement = 21,
-        IotHub = 22,
+        IoTHub = 22,
     }
 }

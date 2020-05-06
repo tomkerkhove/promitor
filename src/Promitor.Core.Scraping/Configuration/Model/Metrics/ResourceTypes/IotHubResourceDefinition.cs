@@ -1,16 +1,16 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class IotHubResourceDefinition : AzureResourceDefinition
+    public class IoTHubResourceDefinition : AzureResourceDefinition
     {
-        public IotHubResourceDefinition(string subscriptionId, string resourceGroupName, string iotHubName)
-          : base(ResourceType.IotHub, subscriptionId, resourceGroupName)
+        public IoTHubResourceDefinition(string subscriptionId, string resourceGroupName, string iotHubName)
+          : base(ResourceType.IoTHub, subscriptionId, resourceGroupName)
         {
-            IotHubName = iotHubName;
+            IoTHubName = iotHubName;
         }
 
-        public string IotHubName { get; }
+        public string IoTHubName { get; }
 
         /// <inheritdoc />
-        public override string GetResourceName() => IotHubName;
+        public override string GetResourceName() => IoTHubName;
     }
 }

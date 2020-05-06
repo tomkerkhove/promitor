@@ -582,12 +582,12 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithIotHubMetric(string metricName = "promitor-iot-hub", string metricDescription = "Description for a metric", string iotHubName = "promitor-iot-hub", string azureMetricName = "devices.totalDevices")
+        public MetricsDeclarationBuilder WithIoTHubMetric(string metricName = "promitor-iot-hub", string metricDescription = "Description for a metric", string iotHubName = "promitor-iot-hub", string azureMetricName = "devices.totalDevices")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new IotHubResourceV1
+            var resource = new IoTHubResourceV1
             {
-                IotHubName = iotHubName
+                IoTHubName = iotHubName
             };
 
             var metric = new MetricDefinitionV1
@@ -596,7 +596,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
                 Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.IotHub
+                ResourceType = ResourceType.IoTHub
             };
 
             _metrics.Add(metric);

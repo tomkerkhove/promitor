@@ -8,19 +8,19 @@ namespace Promitor.Core.Scraping
     /// <summary>
     /// Scrapes an Azure IoT Hub
     /// </summary>
-    public class IotHubScraper : AzureMonitorScraper<IotHubResourceDefinition>
+    public class IoTHubScraper : AzureMonitorScraper<IoTHubResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Devices/IotHubs/{2}";
 
-        public IotHubScraper(ScraperConfiguration scraperConfiguration) : 
+        public IoTHubScraper(ScraperConfiguration scraperConfiguration) : 
             base(scraperConfiguration)
         {
         }
 
         /// <inheritdoc />
-        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, IotHubResourceDefinition resource)
+        protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, IoTHubResourceDefinition resource)
         {
-            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.IotHubName);
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.IoTHubName);
         }
     }
 }

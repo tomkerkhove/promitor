@@ -3,11 +3,11 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class IotHubDeserializer : ResourceDeserializer<IotHubResourceV1>
+    public class IoTHubDeserializer : ResourceDeserializer<IoTHubResourceV1>
     {
-        public IotHubDeserializer(ILogger<IotHubDeserializer> logger) : base(logger)
+        public IoTHubDeserializer(ILogger<IoTHubDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.IotHubName);
+            MapRequired(resource => resource.IoTHubName);
         }
     }
 }

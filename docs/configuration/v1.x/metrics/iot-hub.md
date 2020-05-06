@@ -5,7 +5,7 @@ title: Azure IoT Hub Declaration
 
 ## Azure IoT Hub - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
-You can declare to scrape an Azure IoT Hub via the `IotHub` resource type.
+You can declare to scrape an Azure IoT Hub via the `IoTHub` resource type.
 
 The following fields need to be provided:
 
@@ -18,7 +18,7 @@ Example:
 ```yaml
 name: azure_iot_hub_total_devices
 description: "The number of devices registered to your IoT hub"
-resourceType: IotHub
+resourceType: IoTHub
 azureMetricConfiguration:
   metricName: devices.totalDevices
   aggregation:

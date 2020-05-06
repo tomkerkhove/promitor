@@ -8,38 +8,38 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class IotHubDeserializerTests : ResourceDeserializerTest<IotHubDeserializer>
+    public class IoTHubDeserializerTests : ResourceDeserializerTest<IoTHubDeserializer>
     {
-        private readonly IotHubDeserializer _deserializer;
+        private readonly IoTHubDeserializer _deserializer;
 
-        public IotHubDeserializerTests()
+        public IoTHubDeserializerTests()
         {
-            _deserializer = new IotHubDeserializer(Logger);
+            _deserializer = new IoTHubDeserializer(Logger);
         }
 
         [Fact]
-        public void Deserialize_IotHubNameSupplied_SetsIotHubName()
+        public void Deserialize_IoTHubNameSupplied_SetsIoTHubName()
         {
             const string iotHubName = "promitor-iot-hub";
-            YamlAssert.PropertySet<IotHubResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<IoTHubResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 $"iotHubName: {iotHubName}",
                 iotHubName,
-                r => r.IotHubName);
+                r => r.IoTHubName);
         }
 
         [Fact]
-        public void Deserialize_IotHubNameNotSupplied_Null()
+        public void Deserialize_IoTHubNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<IotHubResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<IoTHubResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
-                r => r.IotHubName);
+                r => r.IoTHubName);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new IotHubDeserializer(Logger);
+            return new IoTHubDeserializer(Logger);
         }
     }
 }

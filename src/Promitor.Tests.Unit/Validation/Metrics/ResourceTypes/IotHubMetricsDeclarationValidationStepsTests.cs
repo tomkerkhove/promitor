@@ -7,14 +7,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class IotHubMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class IoTHubMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void IotHubMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIotHubMetric(azureMetricName: string.Empty)
+                .WithIoTHubMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -27,11 +27,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IotHubMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIotHubMetric(metricDescription: string.Empty)
+                .WithIoTHubMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -44,11 +44,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IotHubMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIotHubMetric(string.Empty)
+                .WithIoTHubMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -61,11 +61,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IotHubMetricsDeclaration_DeclarationWithoutIotHubName_Fails()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutIoTHubName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIotHubMetric(iotHubName: string.Empty)
+                .WithIoTHubMetric(IoTHubName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -78,11 +78,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IotHubMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void IoTHubMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIotHubMetric()
+                .WithIoTHubMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
