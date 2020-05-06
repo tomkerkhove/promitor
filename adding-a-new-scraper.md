@@ -75,4 +75,5 @@ Please provide documentation on the following:
 2. What fields need to be configured and what they are for.
 3. An example configuration.
 
-This should be provided in a new file under `docs\configuration\v1.x\metrics`. Please also update the file `docs/configuration/v1.x/metrics/index.md` to include your new file.
+This should be provided in a new file under `docs\configuration\v1.x\metrics`. 
+Please also update the file `docs/configuration/v1.x/metrics/index.md` to include your new file.
