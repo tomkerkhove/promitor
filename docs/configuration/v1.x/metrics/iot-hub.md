@@ -3,7 +3,7 @@ layout: default
 title: Azure IoT Hub Declaration
 ---
 
-## Azure IoT Hub - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.4-green.svg)
+## Azure IoT Hub - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
 You can declare to scrape an Azure IoT Hub via the `IotHub` resource type.
 
