@@ -140,6 +140,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Virtual Machine](virtual-machine)
 - [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
 - [Azure Web App](web-app)
+- [Azure IoT Hub](iot-hub)
 
 Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
