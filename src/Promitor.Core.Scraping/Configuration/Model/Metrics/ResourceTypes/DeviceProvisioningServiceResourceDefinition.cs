@@ -1,8 +1,8 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 {
-    public class DeviceProvisioningServiceDefinition : AzureResourceDefinition
+    public class DeviceProvisioningServiceResourceDefinition : AzureResourceDefinition
     {
-        public DeviceProvisioningServiceDefinition(string subscriptionId, string resourceGroupName, string deviceProvisioningServiceName)
+        public DeviceProvisioningServiceResourceDefinition(string subscriptionId, string resourceGroupName, string deviceProvisioningServiceName)
           : base(ResourceType.DeviceProvisioningService, subscriptionId, resourceGroupName)
         {
             DeviceProvisioningServiceName = deviceProvisioningServiceName;
