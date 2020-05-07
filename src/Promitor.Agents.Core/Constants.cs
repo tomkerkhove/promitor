@@ -1,10 +1,10 @@
-﻿namespace Promitor.Agents.Scraper
+﻿namespace Promitor.Agents.Core
 {
-    internal static class Constants
+    public static class Constants
     {
-        internal static class Texts
+        public static class Texts
         {
-            internal const string Welcome = @"██████╗ ██████╗  ██████╗ ███╗   ███╗██╗████████╗ ██████╗ ██████╗ 
+            public const string Welcome = @"██████╗ ██████╗  ██████╗ ███╗   ███╗██╗████████╗ ██████╗ ██████╗ 
 ██╔══██╗██╔══██╗██╔═══██╗████╗ ████║██║╚══██╔══╝██╔═══██╗██╔══██╗
 ██████╔╝██████╔╝██║   ██║██╔████╔██║██║   ██║   ██║   ██║██████╔╝
 ██╔═══╝ ██╔══██╗██║   ██║██║╚██╔╝██║██║   ██║   ██║   ██║██╔══██╗

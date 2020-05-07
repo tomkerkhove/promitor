@@ -87,5 +87,10 @@
                 Inject configuration
             </summary>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.AddAzureResourceGraph(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Add Azure Resource Graph integration
+            </summary>
+        </member>
     </members>
 </doc>

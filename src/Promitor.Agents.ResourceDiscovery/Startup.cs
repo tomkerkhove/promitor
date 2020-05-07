@@ -1,24 +1,21 @@
-﻿using Arcus.WebApi.Correlation;
-using Arcus.WebApi.Logging;
+﻿using Arcus.WebApi.Logging;
+using Arcus.WebApi.Logging.Correlation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
-using Promitor.Agents.ResourceDiscovery.Configuration;
-using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Health;
-using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.Scraper.Extensions;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace Promitor.Agents.ResourceDiscovery
 {
     public class Startup : AgentStartup
     {
         private const string ApiName = "Promitor - Resource Discovery API";
+        private const string ApiDescription = "Collection of APIs to provide automatic resource discovery for scraping resources with Promitor Scraper";
         private const string ComponentName = "Promitor Resource Discovery";
 
         /// <summary>
@@ -33,65 +30,31 @@ namespace Promitor.Agents.ResourceDiscovery
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRuntimeConfiguration(Configuration);
+            services.AddRuntimeConfiguration(Configuration)
+                .AddAzureResourceGraph(Configuration)
+                .AddHealthChecks()
+                    .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);
 
-            services.AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-                options.LowercaseQueryStrings = true;
-            });
-
-            services.AddControllers(options =>
-            {
-                options.ReturnHttpNotAcceptable = true;
-                options.RespectBrowserAcceptHeader = true;
-
-                RestrictToJsonContentType(options);
-                AddEnumAsStringRepresentation(options);
-            });
-
-            services.AddHealthChecks()
-                .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);
-            services.AddCorrelation();
-            services.Configure<ResourceDeclaration>(Configuration);
-            services.AddTransient<AzureResourceGraph>();
-            services.AddTransient<ResourceRepository>();
-
-            var openApiInformation = new OpenApiInfo
-            {
-                Title = $"{ApiName} v1",
-                Version = "v1"
-            };
-
-            var xmlDocumentationPath = GetXmlDocumentationPath(services);
-            services.AddSwaggerGen(swaggerGenerationOptions =>
-            {
-                swaggerGenerationOptions.SwaggerDoc("v1", openApiInformation);
-
-                swaggerGenerationOptions.OperationFilter<AddHeaderOperationFilter>("X-Transaction-Id", "Transaction ID is used to correlate multiple operation calls. A new transaction ID will be generated if not specified.", false);
-                swaggerGenerationOptions.OperationFilter<AddResponseHeadersFilter>();
-
-                if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
-                    swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
-            });
+            services.UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
+                    .UseWebApi();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            app.UseCorrelation();
+            app.UseMiddleware<RequestTrackingMiddleware>();
+            app.UseHttpCorrelation();
             app.UseRouting();
 
-            app.UseSwagger(swaggerOptions => { swaggerOptions.RouteTemplate = "api/{documentName}/docs.json"; });
-            app.UseSwaggerUI(swaggerUiOptions =>
-            {
-                swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", ApiName);
-                swaggerUiOptions.RoutePrefix = "api/docs";
-                swaggerUiOptions.DocumentTitle = ApiName;
-            });
+            app.ExposeOpenApiUi(ApiName);
             app.UseEndpoints(endpoints => endpoints.MapControllers());
-            
+
             UseSerilog(ComponentName, app.ApplicationServices);
         }
     }

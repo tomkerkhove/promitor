@@ -15,7 +15,7 @@ namespace Promitor.Agents.ResourceDiscovery
         {
             try
             {
-                // TODO: ASCII Art with Welcome
+                Welcome();
 
                 // Let's hook in a logger for start-up purposes.
                 ConfigureStartupLogging();
@@ -35,6 +35,11 @@ namespace Promitor.Agents.ResourceDiscovery
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        private static void Welcome()
+        {
+            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)

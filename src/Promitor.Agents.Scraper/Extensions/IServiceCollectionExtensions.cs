@@ -1,17 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.Json.Serialization;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using JustEat.StatsD;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -121,18 +115,6 @@ namespace Promitor.Agents.Scraper.Extensions
         }
 
         /// <summary>
-        ///     Use health checks
-        /// </summary>
-        /// <param name="services">Collections of services in application</param>
-        public static IServiceCollection UseHealthChecks(this IServiceCollection services)
-        {
-            services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy());
-
-            return services;
-        }
-
-        /// <summary>
         ///     Adds the required metric sinks
         /// </summary>
         /// <param name="services">Collections of services in application</param>
@@ -176,22 +158,6 @@ namespace Promitor.Agents.Scraper.Extensions
         }
 
         /// <summary>
-        ///     Expose services as Web API
-        /// </summary>
-        public static IServiceCollection UseWebApi(this IServiceCollection services)
-        {
-            services.AddRouting()
-                    .AddControllers()
-                    .AddJsonOptions(jsonOptions =>
-                    {
-                        jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                        jsonOptions.JsonSerializerOptions.IgnoreNullValues = true;
-                    });
-
-            return services;
-        }
-
-        /// <summary>
         ///     Inject configuration
         /// </summary>
         public static IServiceCollection ConfigureYamlConfiguration(this IServiceCollection services, IConfiguration configuration)
@@ -208,61 +174,6 @@ namespace Promitor.Agents.Scraper.Extensions
             services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
 
             return services;
-        }
-
-        /// <summary>
-        ///     Use OpenAPI specification
-        /// </summary>
-        /// <param name="services">Collections of services in application</param>
-        /// <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
-        /// <param name="apiVersion">Version of the API</param>
-        public static IServiceCollection UseOpenApiSpecifications(this IServiceCollection services, string prometheusScrapeEndpointPath, int apiVersion)
-        {
-            var openApiInformation = new OpenApiInfo
-            {
-                Contact = new OpenApiContact
-                {
-                    Name = "Tom Kerkhove",
-                    Url = new Uri("https://blog.tomkerkhove.be")
-                },
-                Title = $"Promitor - Scraper API v{apiVersion}",
-                Description = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{prometheusScrapeEndpointPath}\" target=\"_blank\">{prometheusScrapeEndpointPath}</a>'",
-                Version = $"v{apiVersion}",
-                License = new OpenApiLicense
-                {
-                    Name = "MIT",
-                    Url = new Uri("https://github.com/tomkerkhove/promitor/LICENSE")
-                }
-            };
-
-            var xmlDocumentationPath = GetXmlDocumentationPath(services);
-
-            services.AddSwaggerGen(swaggerGenerationOptions =>
-            {
-                swaggerGenerationOptions.EnableAnnotations();
-                swaggerGenerationOptions.SwaggerDoc($"v{apiVersion}", openApiInformation);
-
-                if (string.IsNullOrEmpty(xmlDocumentationPath) == false)
-                {
-                    swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
-                }
-            });
-
-            return services;
-        }
-
-        private static string GetXmlDocumentationPath(IServiceCollection services)
-        {
-            var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IWebHostEnvironment));
-            if (hostingEnvironment == null)
-            {
-                return string.Empty;
-            }
-
-            var contentRootPath = ((IWebHostEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
-            var xmlDocumentationPath = $"{contentRootPath}/Docs/Open-Api.xml";
-
-            return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;
         }
 
         // ReSharper disable once UnusedParameter.Local
