@@ -43,6 +43,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
+            CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
@@ -70,7 +71,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<SqlServerResourceV1, SqlServerResourceDefinition>()
                 .Include<StorageAccountResourceV1, StorageAccountResourceDefinition>()
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
-                .Include<FileStorageResourceV1, FileStorageResourceDefinition>();
+                .Include<FileStorageResourceV1, FileStorageResourceDefinition>()
+                .Include<IoTHubResourceV1, IoTHubResourceDefinition>();
         }
     }
 }
