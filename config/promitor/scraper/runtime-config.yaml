@@ -24,4 +24,4 @@ telemetry:
 azureMonitor:
   logging:
     informationLevel: Headers
-    isEnabled: true
+    isEnabled: false
