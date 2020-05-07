@@ -20,7 +20,7 @@ namespace Promitor.Core.Scraping
         /// <inheritdoc />
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, KeyVaultResourceDefinition resource)
         {
-            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.KeyVaultName);
+            return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.VaultName);
         }
     }
 }

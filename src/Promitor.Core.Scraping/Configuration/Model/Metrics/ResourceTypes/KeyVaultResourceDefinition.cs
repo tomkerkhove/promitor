@@ -2,15 +2,15 @@
 {
     public class KeyVaultResourceDefinition : AzureResourceDefinition
     {
-        public KeyVaultResourceDefinition(string subscriptionId, string resourceGroupName, string keyVaultName)
+        public KeyVaultResourceDefinition(string subscriptionId, string resourceGroupName, string vaultName)
           : base(ResourceType.KeyVault, subscriptionId, resourceGroupName)
         {
-            KeyVaultName = keyVaultName;
+            VaultName = vaultName;
         }
 
-        public string KeyVaultName { get; }
+        public string VaultName { get; }
 
         /// <inheritdoc />
-        public override string GetResourceName() => KeyVaultName;
+        public override string GetResourceName() => VaultName;
     }
 }

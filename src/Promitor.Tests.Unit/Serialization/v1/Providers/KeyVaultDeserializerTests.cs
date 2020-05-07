@@ -18,23 +18,23 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_KeyVaultNameSupplied_SetsKeyVaultName()
+        public void Deserialize_VaultNameSupplied_SetsVaultName()
         {
-            const string keyVaultName = "promitor-key-vault";
+            const string vaultName = "promitor-key-vault";
             YamlAssert.PropertySet<KeyVaultResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                $"keyVaultName: {keyVaultName}",
-                keyVaultName,
-                r => r.KeyVaultName);
+                $"vaultName: {vaultName}",
+                vaultName,
+                r => r.VaultName);
         }
 
         [Fact]
-        public void Deserialize_KeyVaultNameNotSupplied_Null()
+        public void Deserialize_VaultNameNotSupplied_Null()
         {
             YamlAssert.PropertyNull<KeyVaultResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
-                r => r.KeyVaultName);
+                r => r.VaultName);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

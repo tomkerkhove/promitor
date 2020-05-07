@@ -10,7 +10,7 @@ via the `KeyVault` resource type.
 
 The following fields need to be provided:
 
-- `keyVaultName` - The name of the Azure Key Vault
+- `vaultName` - The name of the Azure Key Vault
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftkeyvaultvaults).
 
@@ -25,8 +25,8 @@ azureMetricConfiguration:
   aggregation:
     type: Average
 resources:
-- keyVaultName: promitor-1
-- keyVaultName: promitor-2
+- vaultName: promitor-1
+- vaultName: promitor-2
 ```
 
 <!-- markdownlint-disable MD033 -->

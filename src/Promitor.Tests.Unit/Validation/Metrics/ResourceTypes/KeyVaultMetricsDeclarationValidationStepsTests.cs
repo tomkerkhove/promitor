@@ -61,11 +61,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KeyVaultMetricsDeclaration_DeclarationWithoutKeyVaultName_Fails()
+        public void KeyVaultMetricsDeclaration_DeclarationWithoutVaultName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKeyVaultMetric(keyVaultName: string.Empty)
+                .WithKeyVaultMetric(vaultName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 

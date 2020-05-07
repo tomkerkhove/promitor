@@ -8,6 +8,6 @@
         /// <summary>
         /// The name of the Azure Key Vault to get metrics for.
         /// </summary>
-        public string KeyVaultName { get; set; }
+        public string VaultName { get; set; }
     }
 }

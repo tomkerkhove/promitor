@@ -15,7 +15,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<KeyVaultResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.KeyVaultName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.VaultName))
                 {
                     yield return "No Azure Key Vault name is configured";
                 }
