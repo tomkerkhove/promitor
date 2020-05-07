@@ -81,6 +81,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new IoTHubScraper(scraperConfiguration);
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceScraper(scraperConfiguration);
+                case ResourceType.KeyVault:
+                    return new KeyVaultScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
