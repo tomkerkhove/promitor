@@ -23,7 +23,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             const string iotHubName = "promitor-iot-hub";
             YamlAssert.PropertySet<IoTHubResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                $"iotHubName: {iotHubName}",
+                $"ioTHubName: {iotHubName}",
                 iotHubName,
                 r => r.IoTHubName);
         }
