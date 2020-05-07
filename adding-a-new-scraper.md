@@ -27,7 +27,8 @@ discuss your scenario_
 5. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
   to handle your new resource type by returning a new instance of the Deserializer
   you created in the previous step.
-6. Provide a unit test in `.\src\Promitor.Tests.Unit\Serialization\v1\Providers`
+6. Update the `Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping.V1MappingProfile` to handle your new resource type by mapping the `<New-Type>ResourceV1` to `<New-Type>ResourceDefinition`
+7. Provide a unit test in `.\src\Promitor.Tests.Unit\Serialization\v1\Providers`
   that tests the deserialization based on our sample. Your test class must inherit
   from `ResourceDeserializerTest` to ensure the inherited functionality is tested.
 
@@ -74,4 +75,5 @@ Please provide documentation on the following:
 2. What fields need to be configured and what they are for.
 3. An example configuration.
 
-This should be provided in a new file under `docs\configuration\metrics`.
+This should be provided in a new file under `docs\configuration\v1.x\metrics` and be listed
+under the supported providers on `docs/configuration/v1.x/metrics/index.md` in alphabetical order.

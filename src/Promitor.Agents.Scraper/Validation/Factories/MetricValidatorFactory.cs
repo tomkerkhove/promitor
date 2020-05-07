@@ -53,6 +53,12 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new FileStorageMetricValidator();
                 case ResourceType.SqlServer:
                     return new SqlServerMetricValidator();
+                case ResourceType.IoTHub:
+                    return new IoTHubMetricValidator();
+                case ResourceType.DeviceProvisioningService:
+                    return new DeviceProvisioningServiceMetricValidator();
+                case ResourceType.KeyVault:
+                    return new KeyVaultMetricValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

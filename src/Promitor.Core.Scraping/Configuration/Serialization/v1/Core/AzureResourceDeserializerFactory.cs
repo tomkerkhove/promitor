@@ -84,6 +84,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.FileStorage:
                     var fileStorageLogger = _loggerFactory.CreateLogger<FileStorageDeserializer>();
                     return new FileStorageDeserializer(fileStorageLogger);
+                case ResourceType.IoTHub:
+                    var iotHubLogger = _loggerFactory.CreateLogger<IoTHubDeserializer>();
+                    return new IoTHubDeserializer(iotHubLogger);
+                case ResourceType.DeviceProvisioningService:
+                    var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
+                    return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);
+                case ResourceType.KeyVault:
+                    var keyVaultLogger = _loggerFactory.CreateLogger<KeyVaultDeserializer>();
+                    return new KeyVaultDeserializer(keyVaultLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }
