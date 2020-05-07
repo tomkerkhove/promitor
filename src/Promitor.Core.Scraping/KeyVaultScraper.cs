@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 namespace Promitor.Core.Scraping
 {
     /// <summary>
-    /// Scrapes an Azure IoT Hub
+    /// Scrapes an Azure Key Vault
     /// </summary>
     public class KeyVaultScraper : AzureMonitorScraper<KeyVaultResourceDefinition>
     {

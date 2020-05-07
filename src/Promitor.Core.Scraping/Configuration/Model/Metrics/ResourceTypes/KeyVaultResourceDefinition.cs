@@ -3,7 +3,7 @@
     public class KeyVaultResourceDefinition : AzureResourceDefinition
     {
         public KeyVaultResourceDefinition(string subscriptionId, string resourceGroupName, string keyVaultName)
-          : base(ResourceType.IoTHub, subscriptionId, resourceGroupName)
+          : base(ResourceType.KeyVault, subscriptionId, resourceGroupName)
         {
             KeyVaultName = keyVaultName;
         }

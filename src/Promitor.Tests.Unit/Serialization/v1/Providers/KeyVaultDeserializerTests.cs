@@ -20,11 +20,11 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_KeyVaultNameSupplied_SetsKeyVaultName()
         {
-            const string iotHubName = "promitor-iot-hub";
+            const string keyVaultName = "promitor-key-vault";
             YamlAssert.PropertySet<KeyVaultResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                $"keyVaultName: {iotHubName}",
-                iotHubName,
+                $"keyVaultName: {keyVaultName}",
+                keyVaultName,
                 r => r.KeyVaultName);
         }
 
