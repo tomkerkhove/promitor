@@ -90,6 +90,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.DeviceProvisioningService:
                     var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
                     return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);
+                case ResourceType.KeyVault:
+                    var keyVaultLogger = _loggerFactory.CreateLogger<KeyVaultDeserializer>();
+                    return new KeyVaultDeserializer(keyVaultLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

@@ -130,6 +130,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Function App](function-app)
 - [Azure IoT Hub](iot-hub)
 - [Azure IoT Hub Device Provisioning Service (DPS)](iot-hub-device-provisioning-service)
+- [Azure Key Vault](key-vault)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Queue](service-bus-queue)
 - [Azure SQL Database](sql-database)
