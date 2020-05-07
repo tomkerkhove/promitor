@@ -5,7 +5,8 @@ title: Azure IoT Hub Device Provisioning Service (DPS) Declaration
 
 ## Azure IoT Hub Device Provisioning Service (DPS) - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
-You can declare to scrape an Azure IoT Hub Device Provisioning Service (DPS) via the `DeviceProvisioningService` resource type.
+You can declare to scrape an Azure IoT Hub Device Provisioning Service (DPS)
+via the `DeviceProvisioningService` resource type.
 
 The following fields need to be provided:
 
