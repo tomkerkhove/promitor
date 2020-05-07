@@ -73,8 +73,8 @@ namespace Promitor.Agents.Core
         {
             return loggerConfiguration.Enrich.FromLogContext()
                                       .Enrich.WithComponentName(componentName)
-                                      .Enrich.WithVersion();
-                                      //.Enrich.WithHttpCorrelationInfo(serviceProvider);
+                                      .Enrich.WithVersion()
+                                      .Enrich.WithHttpCorrelationInfo(serviceProvider);
         }
 
         /// <summary>
