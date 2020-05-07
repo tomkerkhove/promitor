@@ -1,15 +1,15 @@
 ---
 layout: default
-title: Azure Device Provisioning Service Declaration
+title: Azure IoT Hub Device Provisioning Service (DPS) Declaration
 ---
 
-## Azure Device Provisioning Service - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
+## Azure IoT Hub Device Provisioning Service (DPS) - ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
-You can declare to scrape an Azure Device Provisioning Service via the `DeviceProvisioningService` resource type.
+You can declare to scrape an Azure IoT Hub Device Provisioning Service (DPS) via the `DeviceProvisioningService` resource type.
 
 The following fields need to be provided:
 
-- `deviceProvisioningServiceName` - The name of the Azure Device Provisioning Service
+- `deviceProvisioningServiceName` - The name of the Azure IoT Hub Device Provisioning Service (DPS)
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftdevicesprovisioningservices).
 

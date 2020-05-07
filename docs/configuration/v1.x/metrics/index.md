@@ -127,7 +127,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
 - [Azure Database for PostgreSQL](postgresql)
-- [Azure Device Provisioning Service](device-provisioning-service)
+- [Azure IoT Hub Device Provisioning Service (DPS)](device-provisioning-service)
 - [Azure Function App](function-app)
 - [Azure IoT Hub](iot-hub)
 - [Azure Network Interface](network-interface)

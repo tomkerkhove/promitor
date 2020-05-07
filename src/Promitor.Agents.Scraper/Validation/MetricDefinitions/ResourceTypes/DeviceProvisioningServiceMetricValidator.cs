@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.DeviceProvisioningServiceName))
                 {
-                    yield return "No Azure Device Provisioning Service name is configured";
+                    yield return "No Azure IoT Hub Device Provisioning Service (DPS) name is configured";
                 }
             }
         }

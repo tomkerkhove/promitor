@@ -6,7 +6,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 namespace Promitor.Core.Scraping
 {
     /// <summary>
-    /// Scrapes an Azure Device Provisioning Service
+    /// Scrapes an Azure IoT Hub Device Provisioning Service (DPS)
     /// </summary>
     public class DeviceProvisioningServiceScraper : AzureMonitorScraper<DeviceProvisioningServiceResourceDefinition>
     {
