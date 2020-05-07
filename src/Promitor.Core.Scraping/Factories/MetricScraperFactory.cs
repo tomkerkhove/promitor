@@ -79,6 +79,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new FileStorageScraper(scraperConfiguration);
                 case ResourceType.IoTHub:
                     return new IoTHubScraper(scraperConfiguration);
+                case ResourceType.DeviceProvisioningService:
+                    return new DeviceProvisioningServiceScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
