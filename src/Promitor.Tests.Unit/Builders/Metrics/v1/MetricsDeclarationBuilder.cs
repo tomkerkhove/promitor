@@ -604,7 +604,6 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-
         public MetricsDeclarationBuilder WithDeviceProvisioningServiceMetric(string metricName = "promitor-dps", string metricDescription = "Description for a metric", string deviceProvisioningServiceName = "promitor-dps", string azureMetricName = "AttestationAttempts")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
