@@ -87,6 +87,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.IoTHub:
                     var iotHubLogger = _loggerFactory.CreateLogger<IoTHubDeserializer>();
                     return new IoTHubDeserializer(iotHubLogger);
+                case ResourceType.DeviceProvisioningService:
+                    var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
+                    return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

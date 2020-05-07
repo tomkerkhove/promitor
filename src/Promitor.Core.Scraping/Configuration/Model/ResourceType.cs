@@ -25,5 +25,6 @@
         StorageAccount = 20,
         ApiManagement = 21,
         IoTHub = 22,
+        DeviceProvisioningService = 23
     }
 }

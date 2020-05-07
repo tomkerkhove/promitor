@@ -603,5 +603,27 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithDeviceProvisioningServiceMetric(string metricName = "promitor-dps", string metricDescription = "Description for a metric", string deviceProvisioningServiceName = "promitor-dps", string azureMetricName = "AttestationAttempts")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new DeviceProvisioningServiceResourceV1
+            {
+                DeviceProvisioningServiceName = deviceProvisioningServiceName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.DeviceProvisioningService
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }
