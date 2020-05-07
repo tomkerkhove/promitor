@@ -26,6 +26,6 @@
         ApiManagement = 21,
         IoTHub = 22,
         DeviceProvisioningService = 23,
-        KeyVault
+        KeyVault = 24
     }
 }
