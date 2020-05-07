@@ -625,5 +625,27 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithKeyVaultMetric(string metricName = "promitor-kv", string metricDescription = "Description for a metric", string keyVaultName = "promitor-kv", string azureMetricName = "ServiceApiLatency")
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
+            var resource = new KeyVaultResourceV1
+            {
+                KeyVaultName = keyVaultName
+            };
+
+            var metric = new MetricDefinitionV1
+            {
+                Name = metricName,
+                Description = metricDescription,
+                AzureMetricConfiguration = azureMetricConfiguration,
+                Resources = new List<AzureResourceDefinitionV1> { resource },
+                ResourceType = ResourceType.KeyVault
+            };
+
+            _metrics.Add(metric);
+
+            return this;
+        }
     }
 }
