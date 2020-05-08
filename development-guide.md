@@ -98,7 +98,7 @@ and set the following environment variables:
   Azure Monitor API.
 - `PROMITOR_AUTH_APPKEY` - your service principal secret.
 
-Next, edit [src/metric-config.yaml](src/metric-config.yaml) and set the following
+Next, edit [src/metrics.yaml](src/metrics.yaml) and set the following
 keys:
 
 - `azureMetadata.tenantId` - your Azure tenant Id.
@@ -112,7 +112,7 @@ Promitor.Docker project.
 You can find more information about how to configure Promitor [here](https://promitor.io/configuration/v1.x/metrics/).
 
 **NOTE:** Please make sure not to commit your changes to `docker-compose.override.yml`
-or `metric-config.yaml`. If you do, you may end up publishing your Azure credentials
+or `metrics.yaml`. If you do, you may end up publishing your Azure credentials
 by accident.
 
 ## Docker

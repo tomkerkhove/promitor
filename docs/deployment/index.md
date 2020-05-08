@@ -14,7 +14,7 @@ _For more information about advanced configuration, read our documentation [here
                            --env PROMITOR_AUTH_APPID='<azure-ad-app-id>' \
                            --env-file C:/Promitor/az-mon-auth.creds \
                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                           --volume C:/Promitor/runtime-config.yaml:/config/runtime.yaml \
+                           --volume C:/Promitor/runtime.yaml:/config/runtime.yaml \
                            tomkerkhove/promitor-agent-scraper:1.4.0
 ```
 
