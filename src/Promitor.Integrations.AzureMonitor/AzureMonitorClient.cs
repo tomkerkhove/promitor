@@ -22,7 +22,7 @@ namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
-        private readonly Microsoft.Extensions.Logging.ILogger _logger;
+        private readonly ILogger _logger;
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
 
