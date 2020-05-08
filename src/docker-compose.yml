@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile
     volumes:
-      - ./../tests/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
+      - ./../config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
       - ./../config/promitor/resource-discovery/runtime.yaml:/config/runtime.yaml
   promitor.agents.scraper:
     image: tomkerkhove/promitor-agent-scraper
