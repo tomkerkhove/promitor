@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Agents.Scraper.Validation.Interfaces;
+using Promitor.Core.Scraping.Configuration.Runtime;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
 {

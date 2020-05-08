@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 using Bogus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Configuration;
-using Promitor.Core.Configuration.Model;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
+using Defaults = Promitor.Agents.Scraper.Configuration.Defaults;
 
 namespace Promitor.Tests.Unit.Configuration
 {
@@ -26,7 +26,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -45,7 +45,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -63,7 +63,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -81,7 +81,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -99,7 +99,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -117,7 +117,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -134,7 +134,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -152,7 +152,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -172,7 +172,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -190,7 +190,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -208,7 +208,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -226,7 +226,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -246,7 +246,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -265,7 +265,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -281,7 +281,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -298,7 +298,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -315,7 +315,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -332,7 +332,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -351,7 +351,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -370,7 +370,7 @@ namespace Promitor.Tests.Unit.Configuration
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
@@ -384,12 +384,12 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_IsFullyConfigured_UsesCorrectValues()
         {
             // Arrange
-            var bogusRuntimeConfiguration = BogusRuntimeConfigurationGenerator.Generate();
+            var bogusRuntimeConfiguration = BogusScraperRuntimeConfigurationGenerator.Generate();
             var configuration = await RuntimeConfigurationGenerator.WithRuntimeConfiguration(bogusRuntimeConfiguration)
                 .GenerateAsync();
 
             // Act
-            var runtimeConfiguration = configuration.Get<RuntimeConfiguration>();
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
             // Assert
             Assert.NotNull(runtimeConfiguration);

@@ -31,14 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}"
-	ProjectSection(SolutionItems) = preProject
-		metric-config.yaml = metric-config.yaml
-		runtime-config.yaml = runtime-config.yaml
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Telemetry.Metrics", "Promitor.Core.Telemetry.Metrics\Promitor.Core.Telemetry.Metrics.csproj", "{3AB59144-8090-4AF3-9322-E357B2CAF11F}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Configuration", "Promitor.Core.Configuration\Promitor.Core.Configuration.csproj", "{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Agents.Scraper", "Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj", "{07161A83-6952-4FA4-B84C-59D766569BAF}"
 EndProject
@@ -49,6 +41,19 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Tests.Integration", "Promitor.Tests.Integration\Promitor.Tests.Integration.csproj", "{B3079BB2-2B5D-4E04-9570-99F86C4352D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.Sinks.Statsd", "Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj", "{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.Sinks.Prometheus", "Promitor.Integrations.Sinks.Prometheus\Promitor.Integrations.Sinks.Prometheus.csproj", "{AE08087F-866D-42E2-BE25-0D09326DDE85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{EE3BDE48-B756-481F-B5BB-857569568878}"
+	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\scraper\metrics.yaml = ..\config\promitor\scraper\metrics.yaml
+		..\config\promitor\scraper\runtime.yaml = ..\config\promitor\scraper\runtime.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discovery", "Discovery", "{33D4263D-DDDC-4ECC-BB25-834DE9979C7C}"
+	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\resource-discovery\runtime.yaml = ..\config\promitor\resource-discovery\runtime.yaml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,14 +84,6 @@ Global
 		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F929434C-07FB-4B55-A8EE-5C77D8B49809}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AB59144-8090-4AF3-9322-E357B2CAF11F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AB59144-8090-4AF3-9322-E357B2CAF11F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AB59144-8090-4AF3-9322-E357B2CAF11F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AB59144-8090-4AF3-9322-E357B2CAF11F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07161A83-6952-4FA4-B84C-59D766569BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -107,6 +104,10 @@ Global
 		{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,13 +121,14 @@ Global
 		{C3ADE514-95AD-4FDD-8577-45F7EADB4A23} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 		{FCFD60ED-3389-42A1-9B1A-4F2D30DCDA8B} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 		{F929434C-07FB-4B55-A8EE-5C77D8B49809} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
-		{3AB59144-8090-4AF3-9322-E357B2CAF11F} = {05524B1B-9965-4E36-9626-A2823B8588AA}
-		{03C4B0FD-A354-41D1-AD08-E54B4DBB04A2} = {05524B1B-9965-4E36-9626-A2823B8588AA}
 		{07161A83-6952-4FA4-B84C-59D766569BAF} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{9E0B94B6-6D31-4B91-B2C6-B9F0B28837E3} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{CDC2F68B-52FE-4299-ACED-D01E2477727C} = {710EC1C2-88E8-4D5C-A2DA-89C321CB7D48}
 		{B3079BB2-2B5D-4E04-9570-99F86C4352D2} = {34CA9F50-3DF7-490F-A22F-A7C63650F8AB}
 		{7FA0C5E6-2DB5-4A94-B2B0-4A85BD1BA803} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
+		{AE08087F-866D-42E2-BE25-0D09326DDE85} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
+		{EE3BDE48-B756-481F-B5BB-857569568878} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
+		{33D4263D-DDDC-4ECC-BB25-834DE9979C7C} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

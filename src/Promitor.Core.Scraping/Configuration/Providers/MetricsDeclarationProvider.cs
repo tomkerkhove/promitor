@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Promitor.Core.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Configuration.Serialization;
 
 namespace Promitor.Core.Scraping.Configuration.Providers

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Telemetry.Metrics;
-using Promitor.Core.Telemetry.Metrics.Interfaces;
+using Promitor.Core;
+using Promitor.Core.Metrics;
 
 namespace Promitor.Integrations.AzureMonitor.RequestHandlers
 {

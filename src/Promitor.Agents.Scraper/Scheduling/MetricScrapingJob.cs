@@ -6,8 +6,8 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Core.Scraping.Prometheus.Interfaces;
-using Promitor.Core.Scraping.Sinks;
+using Promitor.Core.Scraping.Interfaces;
+using Promitor.Core.Scraping.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Agents.Scraper.Scheduling

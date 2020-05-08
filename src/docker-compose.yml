@@ -7,7 +7,8 @@ services:
       context: .
       dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile
     volumes:
-      - ./../tests/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
+      - ./../config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
+      - ./../config/promitor/resource-discovery/runtime.yaml:/config/runtime.yaml
   promitor.agents.scraper:
     image: tomkerkhove/promitor-agent-scraper
     build:
@@ -16,8 +17,8 @@ services:
     links:
       - graphite
     volumes:
-      - ./metric-config.yaml:/config/metrics-declaration.yaml
-      - ./runtime-config.yaml:/config/runtime.yaml
+      - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
+      - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus

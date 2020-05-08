@@ -1,5 +1,5 @@
 ﻿using GuardNet;
-using Promitor.Core.Configuration.Model.AzureMonitor;
+using Promitor.Integrations.AzureMonitor.Configuration;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Filters;

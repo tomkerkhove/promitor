@@ -4,7 +4,7 @@
         <name>Promitor.Agents.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Telemetry.Metrics.Interfaces.IRuntimeMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Core.Configuration.Model.AzureMonitor.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.IRuntimeMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
             Provides an Azure Monitor client
             </summary>
@@ -41,12 +41,6 @@
             <param name="app">Application Builder</param>
             <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.ExposeOpenApiUi(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
-            <summary>
-                Add support for Open API with API explorer
-            </summary>
-            <param name="app">Application Builder</param>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.ScheduleMetricScraping(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines to use the cron scheduler
@@ -59,12 +53,6 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseHealthChecks(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-                Use health checks
-            </summary>
-            <param name="services">Collections of services in application</param>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Adds the required metric sinks
@@ -72,23 +60,10 @@
             <param name="services">Collections of services in application</param>
             <param name="configuration">Configuration of the application</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseWebApi(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-                Expose services as Web API
-            </summary>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Inject configuration
             </summary>
-        </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseOpenApiSpecifications(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.Int32)">
-            <summary>
-                Use OpenAPI specification
-            </summary>
-            <param name="services">Collections of services in application</param>
-            <param name="prometheusScrapeEndpointPath">Endpoint where the prometheus scraping is exposed</param>
-            <param name="apiVersion">Version of the API</param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.ObjectExtensions.Clone``1(``0)">
             <summary>
@@ -96,11 +71,6 @@
             </summary>
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
-        </member>
-        <member name="P:Promitor.Agents.Scraper.Startup.Configuration">
-            <summary>
-                Configuration of the application
-            </summary>
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <summary>
@@ -124,12 +94,6 @@
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
-        </member>
-        <member name="M:Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptionsExtensions.ConfigureDefaultOptions(Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIOptions)">
-            <summary>
-            Configure the default options for our Swagger UI portal
-            </summary>
-            <param name="swaggerUiOptions">Swagger UI portal options</param>
         </member>
     </members>
 </doc>

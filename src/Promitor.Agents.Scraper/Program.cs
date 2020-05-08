@@ -1,30 +1,40 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core;
+using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Core;
-using Promitor.Core.Configuration.Model;
-using Promitor.Core.Configuration.Model.Server;
-using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
-using Serilog.Events;
 
 namespace Promitor.Agents.Scraper
 {
-    public class Program
+    public class Program : AgentProgram
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            Welcome();
+            try
+            {
+                Welcome();
 
-            // Let's hook in a logger for start-up purposes.
-            ConfigureStartupLogging();
+                // Let's hook in a logger for start-up purposes.
+                ConfigureStartupLogging();
 
-            BuildWebHost(args)
-                .Build()
-                .Run();
+                CreateHostBuilder(args)
+                    .Build()
+                    .Run();
+
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                Log.Fatal(exception, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         private static void Welcome()
@@ -32,28 +42,22 @@ namespace Promitor.Agents.Scraper
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public static IHostBuilder BuildWebHost(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var configuration = CreateConfiguration();
-            var httpPort = DetermineHttpPort(configuration);
-            var endpointUrl = $"http://+:{httpPort}";
+            IConfiguration configuration = BuildConfiguration();
+            ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
+            IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration);
 
-            return Host.CreateDefaultBuilder(args)
-
-                .ConfigureWebHostDefaults(webHostBuilder =>
-                {
-                    webHostBuilder.UseKestrel(kestrelServerOptions =>
-                        {
-                            kestrelServerOptions.AddServerHeader = false;
-                        })
-                        .UseConfiguration(configuration)
-                        .UseUrls(endpointUrl)
-                        .UseSerilog((hostingContext, loggerConfiguration) => ConfigureSerilog(configuration, loggerConfiguration))
-                        .UseStartup<Startup>();
-                });
+            return webHostBuilder;
         }
 
-        private static IConfigurationRoot CreateConfiguration()
+        private static ServerConfiguration GetServerConfiguration(IConfiguration configuration)
+        {
+            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
+            return serverConfiguration;
+        }
+
+        private static IConfigurationRoot BuildConfiguration()
         {
             var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
             if (string.IsNullOrWhiteSpace(configurationFolder))
@@ -70,87 +74,6 @@ namespace Promitor.Agents.Scraper
                 .Build();
 
             return configuration;
-        }
-
-        private static int DetermineHttpPort(IConfiguration configuration)
-        {
-            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
-
-            return serverConfiguration?.HttpPort ?? 80;
-        }
-
-        private static void ConfigureStartupLogging()
-        {
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .CreateLogger();
-        }
-
-        public static LoggerConfiguration ConfigureSerilog(IConfiguration configuration, LoggerConfiguration loggerConfiguration)
-        {
-            var telemetryConfiguration = configuration.Get<RuntimeConfiguration>()?.Telemetry;
-            if (telemetryConfiguration == null)
-            {
-                throw new Exception("Unable to get telemetry configuration");
-            }
-
-            var azureMonitorConfiguration = configuration.Get<RuntimeConfiguration>()?.AzureMonitor?.Logging;
-            if (azureMonitorConfiguration == null)
-            {
-                throw new Exception("Unable to get logging configuration for Azure Monitor");
-            }
-
-            var defaultLogLevel = DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
-            loggerConfiguration.MinimumLevel.Is(defaultLogLevel)
-                               .Enrich.FromLogContext();
-
-            var appInsightsConfig = telemetryConfiguration.ApplicationInsights;
-            if (appInsightsConfig?.IsEnabled == true)
-            {
-                var logLevel = DetermineSinkLogLevel(appInsightsConfig.Verbosity);
-                loggerConfiguration.WriteTo.ApplicationInsights(appInsightsConfig.InstrumentationKey, TelemetryConverter.Traces, restrictedToMinimumLevel: logLevel)
-                    .Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
-            }
-
-            var consoleLogConfig = telemetryConfiguration.ContainerLogs;
-            if (consoleLogConfig?.IsEnabled == true)
-            {
-                var logLevel = DetermineSinkLogLevel(consoleLogConfig.Verbosity);
-
-                loggerConfiguration.WriteTo.Console(restrictedToMinimumLevel: logLevel)
-                                   .Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
-            }
-
-            return loggerConfiguration;
-        }
-
-        private static LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
-        {
-            if (logLevel == null)
-            {
-                return LogEventLevel.Verbose;
-            }
-
-            switch (logLevel)
-            {
-                case LogLevel.Critical:
-                    return LogEventLevel.Fatal;
-                case LogLevel.Trace:
-                    return LogEventLevel.Verbose;
-                case LogLevel.Error:
-                    return LogEventLevel.Error;
-                case LogLevel.Debug:
-                    return LogEventLevel.Debug;
-                case LogLevel.Information:
-                    return LogEventLevel.Information;
-                case LogLevel.None:
-                    return LogEventLevel.Fatal;
-                case LogLevel.Warning:
-                    return LogEventLevel.Warning;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, "Unable to determine correct log event level.");
-            }
         }
     }
 }

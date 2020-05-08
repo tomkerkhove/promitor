@@ -1,0 +1,11 @@
+server:
+  httpPort: 88
+telemetry:
+  applicationInsights:
+    instrumentationKey: ABC
+    isEnabled: true
+    verbosity: warning
+  containerLogs:
+    isEnabled: true
+    verbosity: trace
+  defaultVerbosity: trace

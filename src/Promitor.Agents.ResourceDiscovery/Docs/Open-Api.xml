@@ -79,12 +79,17 @@
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
-            Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Startup"/> class.
+                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Startup" /> class.
             </summary>
         </member>
-        <member name="P:Promitor.Agents.ResourceDiscovery.Startup.Configuration">
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.AddRuntimeConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
-            Gets the configuration of key/value application properties.
+                Inject configuration
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.AddAzureResourceGraph(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Add Azure Resource Graph integration
             </summary>
         </member>
     </members>

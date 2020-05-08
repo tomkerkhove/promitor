@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
-using Promitor.Core.Configuration.Model;
 using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
 
@@ -102,9 +102,9 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             Assert.True(validationResult.IsSuccessful);
         }
 
-        private IOptions<RuntimeConfiguration> CreateRuntimeConfiguration()
+        private IOptions<ScraperRuntimeConfiguration> CreateRuntimeConfiguration()
         {
-            var bogusRuntimeConfiguration = BogusRuntimeConfigurationGenerator.Generate();
+            var bogusRuntimeConfiguration = BogusScraperRuntimeConfigurationGenerator.Generate();
 
             return Options.Create(bogusRuntimeConfiguration);
         }

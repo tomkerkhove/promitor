@@ -124,7 +124,7 @@ stages:
              os: '$(OS.Name)'
      - template: ./../templates/run-scraper-image.yml
        parameters:
-          volumes: '/src/metric-config.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
+          volumes: '/src/metrics.yaml:/config/metrics-declaration.yaml promitor-agent-scraper-ci'
           imageName: '$(Image.TaggedName)'
           os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
