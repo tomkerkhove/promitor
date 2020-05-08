@@ -37,7 +37,8 @@ namespace Promitor.Agents.Scraper.Extensions
                 {
                     jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     jsonOptions.JsonSerializerOptions.IgnoreNullValues = true;
-                });
+                })
+                .AddNewtonsoftJson();
 
             return services;
         }

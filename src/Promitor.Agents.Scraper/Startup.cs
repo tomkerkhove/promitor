@@ -37,7 +37,9 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             var openApiDescription = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{_prometheusBaseUriPath}\" target=\"_blank\">{_prometheusBaseUriPath}</a>'";
-            services.AddAutoMapper(typeof(V1MappingProfile).Assembly)
+            services.UseWebApi()
+                .AddHttpCorrelation()
+                .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1)
@@ -47,9 +49,7 @@ namespace Promitor.Agents.Scraper
             ValidateRuntimeConfiguration(services);
 
             services.UseMetricSinks(Configuration)
-                .ScheduleMetricScraping()
-                .AddHttpCorrelation()
-                .UseWebApi();
+                .ScheduleMetricScraping();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,8 +60,8 @@ namespace Promitor.Agents.Scraper
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>()
-               .UseMiddleware<RequestTrackingMiddleware>()
+            app.UseMiddleware<ExceptionHandlingMiddleware>() 
+               .UseRequestTracking()
                .UseHttpCorrelation()
                .UseRouting()
                .UsePrometheusScraper(_prometheusBaseUriPath)
@@ -73,7 +73,7 @@ namespace Promitor.Agents.Scraper
                    swaggerUiOptions.ConfigureDefaultOptions(ApiName);
                }, openApiOptions => openApiOptions.SerializeAsV2 = true)  // Deprecated Swagger UI
                .UseEndpoints(endpoints => endpoints.MapControllers());
-            
+
             UseSerilog(ComponentName, app.ApplicationServices);
         }
 
