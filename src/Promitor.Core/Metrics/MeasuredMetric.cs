@@ -3,7 +3,7 @@ using System.Linq;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 
-namespace Promitor.Integrations.AzureMonitor
+namespace Promitor.Core.Metrics
 {
     public class MeasuredMetric
     {
@@ -59,7 +59,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="value">Measured metric value</param>
         /// <param name="dimensionName">Name of dimension that is being scraped</param>
         /// <param name="timeseries">Timeseries representing one of the dimensions</param>
-        internal static MeasuredMetric CreateForDimension(double? value, string dimensionName, TimeSeriesElement timeseries)
+        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, TimeSeriesElement timeseries)
         {
             Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
             Guard.NotNull(timeseries, nameof(timeseries));

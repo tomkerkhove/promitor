@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 
-namespace Promitor.Core.Scraping.Metrics.Sinks
+namespace Promitor.Core.Metrics.Sinks
 {
     public class MetricSinkWriter
     {
@@ -55,6 +55,21 @@ namespace Promitor.Core.Scraping.Metrics.Sinks
                     Logger.LogCritical(ex, "Failed to write {MetricName} metric for sink {SinkType}", metricName, sink.Type);
                 }
             }
+        }
+
+        public async Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> metricLabels)
+        {
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotNull(metricLabels, nameof(metricLabels));
+
+            var reportTasks = new List<Task>();
+            foreach (var sink in _configuredSinks)
+            {
+                var reportTask = sink.ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
+                reportTasks.Add(reportTask);
+            }
+
+            await Task.WhenAll(reportTasks);
         }
     }
 }

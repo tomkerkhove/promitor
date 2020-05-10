@@ -4,9 +4,9 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
-using Promitor.Core.Scraping.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor;
 
 namespace Promitor.Core.Scraping

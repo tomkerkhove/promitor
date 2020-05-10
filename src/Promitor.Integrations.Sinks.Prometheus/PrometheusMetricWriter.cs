@@ -4,10 +4,10 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Prometheus.Client;
-using Promitor.Core.Scraping;
+using Promitor.Core;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
-using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus
