@@ -63,7 +63,7 @@ stages:
          artifactName: Build
 - stage: CodeQuality
   displayName: Code Quality
-  dependsOn: [Build]
+  dependsOn: [Init]
   jobs:
    - job: RunCodeQuality
      displayName: Run Code Quality
