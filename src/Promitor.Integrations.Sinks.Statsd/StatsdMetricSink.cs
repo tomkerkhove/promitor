@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Metrics.Sinks;
-using Promitor.Integrations.AzureMonitor;
+using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Sinks;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
@@ -23,12 +24,20 @@ namespace Promitor.Integrations.Sinks.Statsd
 
         public MetricSinkType Type => MetricSinkType.StatsD;
 
-        public Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric)
+        public async Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
             Guard.NotNull(measuredMetric, nameof(measuredMetric));
 
             var metricValue = measuredMetric.Value ?? 0;
+
+            await ReportMetricAsync(metricName, metricDescription, metricValue, new Dictionary<string, string>());
+        }
+
+        public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        {
+            Guard.NotNullOrEmpty(metricName, nameof(metricName));
+
             _statsDPublisher.Gauge(metricValue, metricName);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);

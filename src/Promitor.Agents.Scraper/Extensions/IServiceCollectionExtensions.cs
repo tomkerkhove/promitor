@@ -20,9 +20,9 @@ using Promitor.Core.Scraping.Factories;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Interfaces;
-using Promitor.Core.Scraping.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
@@ -56,7 +56,7 @@ namespace Promitor.Agents.Scraper.Extensions
                 foreach (var resource in metric.Resources)
                 {
                     var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-                    var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+                    var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
 
                     var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}";

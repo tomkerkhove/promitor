@@ -6,9 +6,9 @@ using Bogus;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Promitor.Core.Scraping;
-using Promitor.Core.Scraping.Metrics.Sinks;
-using Promitor.Integrations.AzureMonitor;
+using Promitor.Core;
+using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Sinks.Statsd;
 using Xunit;
 

@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Scraping.Metrics.Sinks
+﻿namespace Promitor.Core.Metrics.Sinks
 {
     public enum MetricSinkType
     {

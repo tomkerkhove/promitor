@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using GuardNet;
-using Promitor.Integrations.AzureMonitor;
+using Promitor.Core.Metrics;
 
-namespace Promitor.Core.Scraping
+namespace Promitor.Core
 {
     public class ScrapeResult
     {
