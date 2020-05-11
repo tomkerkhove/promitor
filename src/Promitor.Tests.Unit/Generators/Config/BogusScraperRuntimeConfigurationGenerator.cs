@@ -63,6 +63,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             var metricSinkConfiguration = new Faker<MetricSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
+                .RuleFor(sinkConfiguration => sinkConfiguration.Prometheus, prometheusConfiguration)
                 .Generate();
 
             var runtimeConfiguration = new ScraperRuntimeConfiguration
