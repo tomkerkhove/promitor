@@ -1,5 +1,7 @@
 ﻿using System;
 using Arcus.WebApi.Logging;
+using Arcus.WebApi.Logging.Correlation;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
