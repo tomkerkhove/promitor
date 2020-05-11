@@ -8,9 +8,9 @@ namespace Promitor.Integrations.Sinks.Prometheus
 {
     public class RuntimeMetricsCollector : IRuntimeMetricsCollector
     {
-        private readonly IOptionsMonitor<PrometheusConfiguration> _prometheusConfiguration;
+        private readonly IOptionsMonitor<PrometheusSinkConfiguration> _prometheusConfiguration;
 
-        public RuntimeMetricsCollector(IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration)
+        public RuntimeMetricsCollector(IOptionsMonitor<PrometheusSinkConfiguration> prometheusConfiguration)
         {
             _prometheusConfiguration = prometheusConfiguration;
         }

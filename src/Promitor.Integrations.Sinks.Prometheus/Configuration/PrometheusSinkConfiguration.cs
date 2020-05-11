@@ -1,6 +1,6 @@
 ﻿namespace Promitor.Integrations.Sinks.Prometheus.Configuration
 {
-    public class PrometheusConfiguration
+    public class PrometheusSinkConfiguration
     {
         public ScrapeEndpointConfiguration ScrapeEndpoint { get; set; } = new ScrapeEndpointConfiguration();
         public double? MetricUnavailableValue { get; set; } = Defaults.Prometheus.MetricUnavailableValue;

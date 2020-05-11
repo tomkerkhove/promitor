@@ -48,7 +48,7 @@ namespace Promitor.Core.Metrics.Sinks
             {
                 try
                 {
-                    await sink.ReportMetricAsync(metricName, metricDescription, measuredMetric);
+                    await sink.ReportMetricAsync(metricName, metricDescription, scrapedMetricResult, measuredMetric);
                 }
                 catch (Exception ex)
                 {

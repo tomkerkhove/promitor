@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
+using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 
@@ -24,7 +25,7 @@ namespace Promitor.Integrations.Sinks.Statsd
 
         public MetricSinkType Type => MetricSinkType.StatsD;
 
-        public async Task ReportMetricAsync(string metricName, string metricDescription, MeasuredMetric measuredMetric)
+        public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
             Guard.NotNull(measuredMetric, nameof(measuredMetric));

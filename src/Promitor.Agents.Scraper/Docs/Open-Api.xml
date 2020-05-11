@@ -35,7 +35,14 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UsePrometheusScraper(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
+        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Adds the required metric sinks
+            </summary>
+            <param name="app">Application Builder</param>
+            <param name="configuration">Configuration of the scraper agent</param>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.AddPrometheusScraperMetricSink(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
             <summary>
                 Add support for exposing a prometheus scraping endpoint
             </summary>

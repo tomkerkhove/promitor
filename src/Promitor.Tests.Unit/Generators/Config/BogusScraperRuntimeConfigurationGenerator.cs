@@ -7,6 +7,8 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
+using PrometheusSinkConfiguration = Promitor.Integrations.Sinks.Prometheus.Configuration.PrometheusSinkConfiguration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
@@ -26,7 +28,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(flagsConfiguration => flagsConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
                 .Generate();
-            var prometheusConfiguration = new Faker<PrometheusConfiguration>()
+            var prometheusConfiguration = new Faker<PrometheusSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
                 .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
@@ -67,7 +69,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             {
                 Server = serverConfiguration,
                 MetricsConfiguration = metricsConfiguration,
-                Prometheus = prometheusConfiguration,
+                PrometheusSink = prometheusConfiguration,
                 Telemetry = telemetryConfiguration,
                 MetricSinks = metricSinkConfiguration
             };

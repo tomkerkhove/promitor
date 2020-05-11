@@ -14,10 +14,10 @@ namespace Promitor.Integrations.Sinks.Prometheus
 {
     public class PrometheusMetricWriter : IPrometheusMetricWriter
     {
-        private readonly IOptionsMonitor<PrometheusConfiguration> _prometheusConfiguration;
+        private readonly IOptionsMonitor<PrometheusSinkConfiguration> _prometheusConfiguration;
         private readonly ILogger<PrometheusMetricWriter> _logger;
 
-        public PrometheusMetricWriter(IOptionsMonitor<PrometheusConfiguration> prometheusConfiguration, ILogger<PrometheusMetricWriter> logger)
+        public PrometheusMetricWriter(IOptionsMonitor<PrometheusSinkConfiguration> prometheusConfiguration, ILogger<PrometheusMetricWriter> logger)
         {
             Guard.NotNull(prometheusConfiguration, nameof(prometheusConfiguration));
             Guard.NotNull(logger, nameof(logger));

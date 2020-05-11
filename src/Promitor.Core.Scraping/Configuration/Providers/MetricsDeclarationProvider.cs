@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -17,6 +19,18 @@ namespace Promitor.Core.Scraping.Configuration.Providers
         {
             _configurationSerializer = configurationSerializer;
             _configuration = configuration;
+        }
+
+        public virtual PrometheusMetricDefinition GetPrometheusDefinition(string metricName, bool applyDefaults = false, IErrorReporter errorReporter = null)
+        {
+            var foundMetric = GetMetricDefinition(metricName,applyDefaults,errorReporter);
+            return foundMetric?.PrometheusMetricDefinition;
+        }
+
+        public virtual MetricDefinition GetMetricDefinition(string metricName, bool applyDefaults = false, IErrorReporter errorReporter = null)
+        {
+            var metricsDeclaration = Get(applyDefaults, errorReporter);
+            return metricsDeclaration.Metrics.FirstOrDefault(metric => metric.PrometheusMetricDefinition.Name.Equals(metricName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public virtual MetricsDeclaration Get(bool applyDefaults = false, IErrorReporter errorReporter = null)
