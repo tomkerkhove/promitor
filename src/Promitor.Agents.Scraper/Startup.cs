@@ -63,9 +63,9 @@ namespace Promitor.Agents.Scraper
             app.UseMiddleware<ExceptionHandlingMiddleware>() 
                .UseRequestTracking()
                .UseHttpCorrelation()
-               .UseRouting();
-            app.UseMetricSinks(Configuration)
-               .AddPrometheusScraperMetricSink(_prometheusBaseUriPath)
+               .UseRouting()
+               .UseMetricSinks(Configuration)
+               .AddPrometheusScraperMetricSink(_prometheusBaseUriPath) // Deprecated and will be gone in 2.0
                .ExposeOpenApiUi() // New Swagger UI
                .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
                {
