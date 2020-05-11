@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 }
             }
 
-            _runtimeConfiguration.PrometheusSink = prometheusSinkConfiguration;
+            _runtimeConfiguration.Prometheus = prometheusSinkConfiguration;
 
             return this;
         }
@@ -162,23 +162,23 @@ namespace Promitor.Tests.Unit.Generators.Config
                 configurationBuilder.AppendLine($"  httpPort: {_runtimeConfiguration?.Server.HttpPort}");
             }
 
-            if (_runtimeConfiguration?.PrometheusSink != null)
+            if (_runtimeConfiguration?.Prometheus != null)
             {
                 configurationBuilder.AppendLine("prometheus:");
-                if (_runtimeConfiguration?.PrometheusSink.ScrapeEndpoint != null)
+                if (_runtimeConfiguration?.Prometheus.ScrapeEndpoint != null)
                 {
                     configurationBuilder.AppendLine("  scrapeEndpoint:");
-                    configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.PrometheusSink.ScrapeEndpoint.BaseUriPath}");
+                    configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
                 }
 
                 if (_isEnableMetricTimestampsInPrometheusSpecified)
                 {
-                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_runtimeConfiguration.PrometheusSink.EnableMetricTimestamps}");
+                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_runtimeConfiguration.Prometheus.EnableMetricTimestamps}");
                 }
 
-                if (_runtimeConfiguration?.PrometheusSink.MetricUnavailableValue != null)
+                if (_runtimeConfiguration?.Prometheus.MetricUnavailableValue != null)
                 {
-                    configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.PrometheusSink.MetricUnavailableValue}");
+                    configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.Prometheus.MetricUnavailableValue}");
                 }
             }
 

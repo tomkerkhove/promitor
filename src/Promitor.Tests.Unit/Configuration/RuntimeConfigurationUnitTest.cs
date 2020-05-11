@@ -156,8 +156,8 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.Equal(metricsDeclarationBasePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
         }
 
@@ -176,8 +176,8 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.Equal(enableMetricsTimestamp, runtimeConfiguration.PrometheusSink.EnableMetricTimestamps);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.Equal(enableMetricsTimestamp, runtimeConfiguration.Prometheus.EnableMetricTimestamps);
         }
 
         [Fact]
@@ -194,8 +194,8 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.Equal(metricUnavailableValue, runtimeConfiguration.PrometheusSink.MetricUnavailableValue);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.Equal(metricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
@@ -212,9 +212,9 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
-            Assert.Equal(scrapeEndpointBaseUri, runtimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.Equal(scrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
         }
 
         [Fact]
@@ -319,8 +319,8 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.Equal(Defaults.Prometheus.EnableMetricTimestamps, runtimeConfiguration.PrometheusSink.EnableMetricTimestamps);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.Equal(Defaults.Prometheus.EnableMetricTimestamps, runtimeConfiguration.Prometheus.EnableMetricTimestamps);
         }
 
         [Fact]
@@ -336,10 +336,10 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
-            Assert.NotEqual(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath);
-            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.PrometheusSink.MetricUnavailableValue);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.NotEqual(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
@@ -355,10 +355,10 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
-            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath);
-            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.PrometheusSink.MetricUnavailableValue);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
@@ -374,10 +374,10 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
-            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath);
-            Assert.NotEqual(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.PrometheusSink.MetricUnavailableValue);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
+            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+            Assert.NotEqual(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
         }
 
         [Fact]
@@ -399,8 +399,8 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Telemetry);
             Assert.NotNull(runtimeConfiguration.Telemetry.ApplicationInsights);
             Assert.NotNull(runtimeConfiguration.Telemetry.ContainerLogs);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink);
-            Assert.NotNull(runtimeConfiguration.PrometheusSink.ScrapeEndpoint);
+            Assert.NotNull(runtimeConfiguration.Prometheus);
+            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
             Assert.Equal(bogusRuntimeConfiguration.Server.HttpPort, runtimeConfiguration.Server.HttpPort);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.DefaultVerbosity, runtimeConfiguration.Telemetry.DefaultVerbosity);
@@ -409,9 +409,9 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.ApplicationInsights.IsEnabled, runtimeConfiguration.Telemetry.ApplicationInsights.IsEnabled);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.ContainerLogs.Verbosity, runtimeConfiguration.Telemetry.ContainerLogs.Verbosity);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.ContainerLogs.IsEnabled, runtimeConfiguration.Telemetry.ContainerLogs.IsEnabled);
-            Assert.Equal(bogusRuntimeConfiguration.PrometheusSink.EnableMetricTimestamps, runtimeConfiguration.PrometheusSink.EnableMetricTimestamps);
-            Assert.Equal(bogusRuntimeConfiguration.PrometheusSink.MetricUnavailableValue, runtimeConfiguration.PrometheusSink.MetricUnavailableValue);
-            Assert.Equal(bogusRuntimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath, runtimeConfiguration.PrometheusSink.ScrapeEndpoint.BaseUriPath);
+            Assert.Equal(bogusRuntimeConfiguration.Prometheus.EnableMetricTimestamps, runtimeConfiguration.Prometheus.EnableMetricTimestamps);
+            Assert.Equal(bogusRuntimeConfiguration.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
+            Assert.Equal(bogusRuntimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
             Assert.Equal(bogusRuntimeConfiguration.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Host, runtimeConfiguration.MetricSinks.Statsd.Host);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Port, runtimeConfiguration.MetricSinks.Statsd.Port);

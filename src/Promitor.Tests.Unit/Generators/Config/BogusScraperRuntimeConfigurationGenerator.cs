@@ -69,7 +69,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             {
                 Server = serverConfiguration,
                 MetricsConfiguration = metricsConfiguration,
-                PrometheusSink = prometheusConfiguration,
+                Prometheus = prometheusConfiguration,
                 Telemetry = telemetryConfiguration,
                 MetricSinks = metricSinkConfiguration
             };
