@@ -67,14 +67,37 @@ by providing the metric information to the configured sinks.
 
 As of today, we support the follow sinks:
 
-- **Prometheus Scraping Endpoint** (see below)
+- **Prometheus Scraping Endpoint**
 - **StatsD**
+
+### Prometheus Scraping Endpoint
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
+
+In order to expose a Prometheus Scraping endpoint, you'll need to configure the sink:
+
+- `prometheus.metricUnavailableValue` - Defines the value that will be reported
+  if a metric is unavailable. (Default: `NaN`)
+- `prometheus.enableMetricTimestamps` - Defines whether or not a timestamp should
+  be included when the value was scraped on Azure Monitor. Supported values are
+  `True` to opt-in & `False` to opt-out. (Default: `true`)
+- `prometheus.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
+  endpoint for Prometheus is being exposed.  (Default: `/metrics`)
+
+```yaml
+metricSinks:
+  prometheus:
+    metricUnavailableValue: NaN # Optional. Default: NaN
+    enableMetricTimestamps: false # Optional. Default: true
+    scrapeEndpoint:
+      baseUriPath: /metrics # Optional. Default: /metrics
+```
 
 ### StatsD
 
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
 
-In order to push metrics to a StatsD server, you'll need to configure following:
+In order to push metrics to a StatsD server, you'll need to configure the sink:
 
 - `metricSinks.statsd.host` - DNS name or IP address of StatsD server.
 - `metricSinks.statsd.host` - Port (UDP) address of StatsD server. (Default: `8125`)
@@ -89,24 +112,11 @@ metricSinks:
     metricPrefix: promitor.
 ```
 
-### Prometheus Scraping Endpoint
+### Prometheus Scraping Endpoint - Legacy Configuration
 
-> :warning: Prometheus is not using our metric sink approach yet and uses a different approach
+![Availability Badge](https://img.shields.io/badge/Will%20Be%20Removed%20In-v2.0-red.svg)
 
-Promitor automatically scrapes Azure Monitor and makes the information available
-based on the metrics configuration.
-
-The behavior of this can be configured to fit your needs:
-
-- `prometheus.metricUnavailableValue` - Defines the value that will be reported
-  if a metric is unavailable. (Default: `NaN`)
-- `prometheus.enableMetricTimestamps` - Defines whether or not a timestamp should
-  be included when the value was scraped on Azure Monitor. Supported values are
-  `True` to opt-in & `False` to opt-out. (Default: `true`)
-- `prometheus.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
-  endpoint for Prometheus is being exposed.  (Default: `/metrics`)
-
-Example:
+For now, we still support configuring it by using the the old way of configuration:
 
 ```yaml
 prometheus:
@@ -115,6 +125,8 @@ prometheus:
   scrapeEndpoint:
     baseUriPath: /metrics # Optional. Default: /metrics
 ```
+
+However, this approach is deprecated and will be removed in 2.0 so we recommend migrating to metric sink approach.
 
 ## Metric Configuration
 
