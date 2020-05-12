@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.202 AS build
 WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
@@ -11,7 +11,7 @@ COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Promet
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3 as runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.4 as runtime
 WORKDIR /app
 ARG CONFIG_FOLDER="/config/"
 ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
