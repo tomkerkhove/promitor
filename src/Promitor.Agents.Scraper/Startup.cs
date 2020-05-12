@@ -1,6 +1,4 @@
 ﻿using System;
-using Arcus.WebApi.Logging;
-using Arcus.WebApi.Logging.Correlation;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -60,7 +58,7 @@ namespace Promitor.Agents.Scraper
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>() 
+            app.UseExceptionHandling()
                .UseRequestTracking()
                .UseHttpCorrelation()
                .UseRouting()
