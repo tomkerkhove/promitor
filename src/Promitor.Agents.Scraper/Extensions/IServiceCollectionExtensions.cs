@@ -28,7 +28,6 @@ using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
-using PrometheusSinkConfiguration = Promitor.Integrations.Sinks.Prometheus.Configuration.PrometheusSinkConfiguration;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Agents.Scraper.Extensions
@@ -129,9 +128,9 @@ namespace Promitor.Agents.Scraper.Extensions
                 AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
             }
 
-            if (metricSinkConfiguration?.Prometheus != null)
+            if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusMetricSink(services, metricSinkConfiguration.Prometheus);
+                AddPrometheusMetricSink(services, metricSinkConfiguration.PrometheusScrapingEndpoint);
             }
 
             services.TryAddSingleton<MetricSinkWriter>();
@@ -139,7 +138,7 @@ namespace Promitor.Agents.Scraper.Extensions
             return services;
         }
 
-        private static void AddPrometheusMetricSink(IServiceCollection services, PrometheusSinkConfiguration prometheus)
+        private static void AddPrometheusMetricSink(IServiceCollection services, PrometheusScrapingEndpointSinkConfiguration prometheusScrapingEndpoint)
         {
             services.AddTransient<IMetricSink, PrometheusMetricSink>();
         }
@@ -178,7 +177,7 @@ namespace Promitor.Agents.Scraper.Extensions
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
-            services.Configure<PrometheusSinkConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("prometheus"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));

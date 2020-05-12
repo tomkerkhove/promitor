@@ -76,21 +76,20 @@ As of today, we support the follow sinks:
 
 In order to expose a Prometheus Scraping endpoint, you'll need to configure the sink:
 
-- `prometheus.metricUnavailableValue` - Defines the value that will be reported
+- `prometheusScrapingEndpoint.metricUnavailableValue` - Defines the value that will be reported
   if a metric is unavailable. (Default: `NaN`)
-- `prometheus.enableMetricTimestamps` - Defines whether or not a timestamp should
+- `prometheusScrapingEndpoint.enableMetricTimestamps` - Defines whether or not a timestamp should
   be included when the value was scraped on Azure Monitor. Supported values are
   `True` to opt-in & `False` to opt-out. (Default: `true`)
-- `prometheus.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
+- `prometheusScrapingEndpoint.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
   endpoint for Prometheus is being exposed.  (Default: `/metrics`)
 
 ```yaml
 metricSinks:
-  prometheus:
+  prometheusScrapingEndpoint:
     metricUnavailableValue: NaN # Optional. Default: NaN
     enableMetricTimestamps: false # Optional. Default: true
-    scrapeEndpoint:
-      baseUriPath: /metrics # Optional. Default: /metrics
+    baseUriPath: /metrics # Optional. Default: /metrics
 ```
 
 ### StatsD

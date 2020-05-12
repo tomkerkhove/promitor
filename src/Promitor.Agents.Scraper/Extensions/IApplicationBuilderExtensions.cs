@@ -17,9 +17,9 @@ namespace Promitor.Agents.Scraper.Extensions
         public static IApplicationBuilder UseMetricSinks(this IApplicationBuilder app, IConfiguration configuration)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
-            if (metricSinkConfiguration?.Prometheus != null)
+            if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusScraperMetricSink(app, metricSinkConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+                AddPrometheusScraperMetricSink(app, metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath);
             }
 
             return app;

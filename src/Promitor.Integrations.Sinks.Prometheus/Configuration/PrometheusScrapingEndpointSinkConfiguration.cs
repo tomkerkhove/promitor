@@ -1,8 +1,8 @@
 ﻿namespace Promitor.Integrations.Sinks.Prometheus.Configuration
 {
-    public class PrometheusSinkConfiguration
+    public class PrometheusScrapingEndpointSinkConfiguration
     {
-        public ScrapeEndpointConfiguration ScrapeEndpoint { get; set; } = new ScrapeEndpointConfiguration();
+        public string BaseUriPath { get; set; } = Defaults.Prometheus.ScrapeEndpointBaseUri;
         public double? MetricUnavailableValue { get; set; } = Defaults.Prometheus.MetricUnavailableValue;
         public bool EnableMetricTimestamps { get; set; } = Defaults.Prometheus.EnableMetricTimestamps;
     }

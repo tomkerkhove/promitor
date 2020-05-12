@@ -6,11 +6,10 @@ prometheus:
   scrapeEndpoint:
     baseUriPath: /metrics-old
 metricSinks:
-  prometheus:
+  prometheusScrapingEndpoint:
     metricUnavailableValue: NaN
     enableMetricTimestamps: true # true by default
-    scrapeEndpoint:
-      baseUriPath: /metrics
+    baseUriPath: /metrics
   statsd:
     host: graphite
     port: 8125

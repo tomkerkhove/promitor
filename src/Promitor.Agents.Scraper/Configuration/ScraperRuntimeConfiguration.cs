@@ -8,7 +8,7 @@ namespace Promitor.Agents.Scraper.Configuration
 {
     public class ScraperRuntimeConfiguration : RuntimeConfiguration
     {
-        public PrometheusSinkConfiguration Prometheus { get; set; } = new PrometheusSinkConfiguration();
+        public PrometheusLegacyConfiguration Prometheus { get; set; } = new PrometheusLegacyConfiguration();
         public MetricSinkConfiguration MetricSinks { get; set; } = new MetricSinkConfiguration();
         public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
         public AzureMonitorConfiguration AzureMonitor { get; set; } = new AzureMonitorConfiguration();

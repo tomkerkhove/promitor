@@ -18,9 +18,9 @@ namespace Promitor.Integrations.Sinks.Prometheus
     {
         private readonly ILogger<PrometheusMetricSink> _logger;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
-        private readonly IOptionsMonitor<PrometheusSinkConfiguration> _prometheusConfiguration;
+        private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public PrometheusMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<PrometheusSinkConfiguration> prometheusConfiguration, ILogger<PrometheusMetricSink> logger)
+        public PrometheusMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration, ILogger<PrometheusMetricSink> logger)
         {
             Guard.NotNull(prometheusConfiguration, nameof(prometheusConfiguration));
             Guard.NotNull(logger, nameof(logger));

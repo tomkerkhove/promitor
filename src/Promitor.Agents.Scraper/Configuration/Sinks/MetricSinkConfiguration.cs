@@ -6,6 +6,6 @@ namespace Promitor.Agents.Scraper.Configuration.Sinks
     public class MetricSinkConfiguration
     {
         public StatsdSinkConfiguration Statsd { get; set; }
-        public PrometheusSinkConfiguration Prometheus { get; set; }
+        public PrometheusScrapingEndpointSinkConfiguration PrometheusScrapingEndpoint { get; set; }
     }
 }

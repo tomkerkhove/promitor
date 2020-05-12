@@ -49,18 +49,18 @@ namespace Promitor.Tests.Unit.Generators.Config
 
         public RuntimeConfigurationGenerator WithPrometheusConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
-            PrometheusSinkConfiguration prometheusSinkConfiguration;
+            PrometheusLegacyConfiguration prometheusLegacyConfiguration;
             if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
             {
-                prometheusSinkConfiguration = null;
+                prometheusLegacyConfiguration = null;
             }
             else
             {
-                prometheusSinkConfiguration = new PrometheusSinkConfiguration();
+                prometheusLegacyConfiguration = new PrometheusLegacyConfiguration();
 
                 if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) == false)
                 {
-                    prometheusSinkConfiguration.ScrapeEndpoint = new ScrapeEndpointConfiguration
+                    prometheusLegacyConfiguration.ScrapeEndpoint = new ScrapeEndpointConfiguration
                     {
                         BaseUriPath = scrapeEndpointBaseUri
                     };
@@ -68,17 +68,17 @@ namespace Promitor.Tests.Unit.Generators.Config
 
                 if (metricUnavailableValue != null)
                 {
-                    prometheusSinkConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
+                    prometheusLegacyConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
                 }
 
                 if (enableMetricsTimestamp != null)
                 {
-                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
+                    prometheusLegacyConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
                     _isEnableMetricTimestampsInPrometheusSpecified = true;
                 }
             }
 
-            _runtimeConfiguration.Prometheus = prometheusSinkConfiguration;
+            _runtimeConfiguration.Prometheus = prometheusLegacyConfiguration;
 
             return this;
         }
