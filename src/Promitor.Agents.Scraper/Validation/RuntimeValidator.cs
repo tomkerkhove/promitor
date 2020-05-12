@@ -33,7 +33,8 @@ namespace Promitor.Agents.Scraper.Validation
                 new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),
                 new AzureAuthenticationValidationStep(configuration, _validationLogger),
                 new MetricsDeclarationValidationStep(scrapeConfigurationProvider,  _validationLogger),
-                new StatsDMetricSinkValidationStep(runtimeConfiguration,  _validationLogger)
+                new StatsDMetricSinkValidationStep(runtimeConfiguration,  _validationLogger),
+                new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration,  _validationLogger)
             };
         }
 
