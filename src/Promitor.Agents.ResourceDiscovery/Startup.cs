@@ -1,6 +1,4 @@
-﻿using Arcus.WebApi.Logging;
-using Arcus.WebApi.Logging.Correlation;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +45,7 @@ namespace Promitor.Agents.ResourceDiscovery
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseExceptionHandling();
             app.UseRequestTracking();
             app.UseHttpCorrelation();
             app.UseRouting();
