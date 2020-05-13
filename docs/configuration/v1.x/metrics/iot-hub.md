@@ -24,8 +24,8 @@ azureMetricConfiguration:
   aggregation:
     type: Total
 resources:
-- iotHubName: promitor-1
-- iotHubName: promitor-2
+- ioTHubName: promitor-1
+- ioTHubName: promitor-2
 ```
 
 <!-- markdownlint-disable MD033 -->
