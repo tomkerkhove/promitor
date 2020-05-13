@@ -9,7 +9,7 @@ You can declare to scrape an Azure IoT Hub via the `IoTHub` resource type.
 
 The following fields need to be provided:
 
-- `iotHubName` - The name of the Azure IoT Hub
+- `ioTHubName` - The name of the Azure IoT Hub
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftdevicesiothubs).
 
