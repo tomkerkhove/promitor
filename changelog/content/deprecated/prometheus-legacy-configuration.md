@@ -7,7 +7,7 @@ weight:
 version:
 ---
 
-#### Legacy Prometheus Configuration
+#### Prometheus Legacy Configuration
 
 ###### Deprecated as of v1.6 and will be removed in v2.0
 
@@ -23,7 +23,7 @@ Because of that we are removing support for the "legacy" Prometheus configuratio
 We've added support for Prometheus metric sink while maintaining the legacy approach until
  it's being removed.
 
-**Impact:** Migration is required - Legacy Prometheus configuration will no longer be available.
+**Impact:** Migration is required - Prometheus legacy configuration will no longer be available.
 
 **Alternative:** Use our new [metric sink concept](https://promitor.io/configuration/v1.x/runtime#prometheus-scraping-endpoint).
 
