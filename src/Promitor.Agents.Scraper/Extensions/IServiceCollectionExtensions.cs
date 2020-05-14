@@ -140,7 +140,7 @@ namespace Promitor.Agents.Scraper.Extensions
 
         private static void AddPrometheusMetricSink(IServiceCollection services, PrometheusScrapingEndpointSinkConfiguration prometheusScrapingEndpoint)
         {
-            services.AddTransient<IMetricSink, PrometheusMetricSink>();
+            services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)

@@ -14,13 +14,13 @@ using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus
 {
-    public class PrometheusMetricSink : IMetricSink
+    public class PrometheusScrapingEndpointMetricSink : IMetricSink
     {
-        private readonly ILogger<PrometheusMetricSink> _logger;
+        private readonly ILogger<PrometheusScrapingEndpointMetricSink> _logger;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public PrometheusMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration, ILogger<PrometheusMetricSink> logger)
+        public PrometheusScrapingEndpointMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration, ILogger<PrometheusScrapingEndpointMetricSink> logger)
         {
             Guard.NotNull(prometheusConfiguration, nameof(prometheusConfiguration));
             Guard.NotNull(logger, nameof(logger));
