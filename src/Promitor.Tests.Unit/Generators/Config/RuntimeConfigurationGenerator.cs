@@ -11,6 +11,7 @@ using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
@@ -47,6 +48,71 @@ namespace Promitor.Tests.Unit.Generators.Config
             return new RuntimeConfigurationGenerator(runtimeConfiguration);
         }
 
+        public RuntimeConfigurationGenerator WithPrometheusMetricSink(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
+        {
+            PrometheusScrapingEndpointSinkConfiguration prometheusSinkConfiguration;
+            if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
+            {
+                prometheusSinkConfiguration = null;
+            }
+            else
+            {
+                prometheusSinkConfiguration = new PrometheusScrapingEndpointSinkConfiguration();
+
+                if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) == false)
+                {
+                    prometheusSinkConfiguration.BaseUriPath = scrapeEndpointBaseUri;
+                }
+
+                if (metricUnavailableValue != null)
+                {
+                    prometheusSinkConfiguration.MetricUnavailableValue = (double) metricUnavailableValue;
+                }
+
+                if (enableMetricsTimestamp != null)
+                {
+                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
+                    _isEnableMetricTimestampsInPrometheusSpecified = true;
+                }
+            }
+
+            _runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint = prometheusSinkConfiguration;
+
+            return this;
+        }
+
+        public RuntimeConfigurationGenerator WithStatsDMetricSink(int? port = 1234, string host = "automated-test.host", string metricPrefix = "test.")
+        {
+            StatsdSinkConfiguration statsdSinkConfiguration;
+            if (string.IsNullOrWhiteSpace(host) && port == null)
+            {
+                statsdSinkConfiguration = null;
+            }
+            else
+            {
+                statsdSinkConfiguration = new StatsdSinkConfiguration();
+
+                if (string.IsNullOrWhiteSpace(host) == false)
+                {
+                    statsdSinkConfiguration.Host = host;
+                }
+
+                if (string.IsNullOrWhiteSpace(metricPrefix) == false)
+                {
+                    statsdSinkConfiguration.MetricPrefix = metricPrefix;
+                }
+
+                if (port != null)
+                {
+                    statsdSinkConfiguration.Port = port.Value;
+                }
+            }
+
+            _runtimeConfiguration.MetricSinks.Statsd = statsdSinkConfiguration;
+
+            return this;
+        }
+
         public RuntimeConfigurationGenerator WithPrometheusLegacyConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
             PrometheusLegacyConfiguration prometheusLegacyConfiguration;
@@ -68,12 +134,12 @@ namespace Promitor.Tests.Unit.Generators.Config
 
                 if (metricUnavailableValue != null)
                 {
-                    prometheusLegacyConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
+                    prometheusLegacyConfiguration.MetricUnavailableValue = (double) metricUnavailableValue;
                 }
 
                 if (enableMetricsTimestamp != null)
                 {
-                    prometheusLegacyConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
+                    prometheusLegacyConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
                     _isEnableMetricTimestampsInPrometheusSpecified = true;
                 }
             }
@@ -191,6 +257,13 @@ namespace Promitor.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    host: {_runtimeConfiguration?.MetricSinks.Statsd.Host}");
                     configurationBuilder.AppendLine($"    port: {_runtimeConfiguration?.MetricSinks.Statsd.Port}");
                     configurationBuilder.AppendLine($"    metricPrefix: {_runtimeConfiguration?.MetricSinks.Statsd.MetricPrefix}");
+                }
+                if (_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint != null)
+                {
+                    configurationBuilder.AppendLine("  prometheusScrapingEndpoint:");
+                    configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath}");
+                    configurationBuilder.AppendLine($"    enableMetricTimestamps: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps}");
+                    configurationBuilder.AppendLine($"    metricUnavailableValue: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue}");
                 }
             }
 
