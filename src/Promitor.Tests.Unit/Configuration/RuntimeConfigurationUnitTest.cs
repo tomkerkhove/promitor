@@ -168,7 +168,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(enableMetricsTimestamp:enableMetricsTimestamp)
+                .WithPrometheusLegacyConfiguration(enableMetricsTimestamp:enableMetricsTimestamp)
                 .GenerateAsync();
 
             // Act
@@ -186,7 +186,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var metricUnavailableValue = _faker.Random.Double(min: 1);
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: metricUnavailableValue)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: metricUnavailableValue)
                 .GenerateAsync();
 
             // Act
@@ -204,7 +204,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var scrapeEndpointBaseUri = _faker.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
+                .WithPrometheusLegacyConfiguration(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
                 .GenerateAsync();
 
             // Act
@@ -311,7 +311,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(enableMetricsTimestamp:null)
+                .WithPrometheusLegacyConfiguration(enableMetricsTimestamp:null)
                 .GenerateAsync();
 
             // Act
@@ -328,7 +328,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: null)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: null)
                 .GenerateAsync();
 
             // Act
@@ -347,7 +347,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: null, scrapeEndpointBaseUri: null)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: null, scrapeEndpointBaseUri: null)
                 .GenerateAsync();
 
             // Act
@@ -366,7 +366,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(scrapeEndpointBaseUri:null)
+                .WithPrometheusLegacyConfiguration(scrapeEndpointBaseUri:null)
                 .GenerateAsync();
 
             // Act

@@ -47,7 +47,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             return new RuntimeConfigurationGenerator(runtimeConfiguration);
         }
 
-        public RuntimeConfigurationGenerator WithPrometheusConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
+        public RuntimeConfigurationGenerator WithPrometheusLegacyConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
             PrometheusLegacyConfiguration prometheusLegacyConfiguration;
             if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
