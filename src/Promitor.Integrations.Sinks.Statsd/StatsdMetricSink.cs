@@ -4,7 +4,6 @@ using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
-using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 
 namespace Promitor.Integrations.Sinks.Statsd
@@ -25,14 +24,23 @@ namespace Promitor.Integrations.Sinks.Statsd
 
         public MetricSinkType Type => MetricSinkType.StatsD;
 
-        public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
+        public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
-            Guard.NotNull(measuredMetric, nameof(measuredMetric));
+            Guard.NotNull(scrapeResult, nameof(scrapeResult));
+            Guard.NotNull(scrapeResult.MetricValues, nameof(scrapeResult.MetricValues));
 
-            var metricValue = measuredMetric.Value ?? 0;
+            var reportMetricTasks = new List<Task>();
 
-            await ReportMetricAsync(metricName, metricDescription, metricValue, new Dictionary<string, string>());
+            foreach (var measuredMetric in scrapeResult.MetricValues)
+            {
+                var metricValue = measuredMetric.Value ?? 0;
+
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, new Dictionary<string, string>());
+                reportMetricTasks.Add(reportMetricTask);
+            }
+
+            await Task.WhenAll(reportMetricTasks);
         }
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)

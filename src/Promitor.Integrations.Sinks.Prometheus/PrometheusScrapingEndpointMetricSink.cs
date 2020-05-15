@@ -32,18 +32,26 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
         public MetricSinkType Type => MetricSinkType.StatsD;
 
-        // TODO: Do we still need measuredMetric?
-        public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
+        public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
-            Guard.NotNull(measuredMetric, nameof(measuredMetric));
+            Guard.NotNull(scrapeResult, nameof(scrapeResult));
+            Guard.NotNull(scrapeResult.MetricValues, nameof(scrapeResult.MetricValues));
 
-            var metricValue = measuredMetric.Value ?? 0;
-            var metricDefinition = _metricsDeclarationProvider.GetPrometheusDefinition(metricName);
+            var reportMetricTasks = new List<Task>();
 
-            var metricLabels = DetermineLabels(metricDefinition, scrapeResult, measuredMetric);
+            foreach (var measuredMetric in scrapeResult.MetricValues)
+            {
+                var metricValue = measuredMetric.Value ?? 0;
+                var metricDefinition = _metricsDeclarationProvider.GetPrometheusDefinition(metricName);
 
-            await ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
+                var metricLabels = DetermineLabels(metricDefinition, scrapeResult, measuredMetric);
+
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
+                reportMetricTasks.Add(reportMetricTask);
+            }
+
+            await Task.WhenAll(reportMetricTasks);
         }
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)

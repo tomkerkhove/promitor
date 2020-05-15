@@ -7,7 +7,7 @@ namespace Promitor.Core.Metrics.Sinks
     {
         MetricSinkType Type { get; }
 
-        Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult, MeasuredMetric measuredMetric);
+        Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult);
         Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels);
     }
 }

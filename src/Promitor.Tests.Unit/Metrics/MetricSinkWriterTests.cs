@@ -7,7 +7,6 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core;
-using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Tests.Unit.Generators;
@@ -97,7 +96,7 @@ namespace Promitor.Tests.Unit.Metrics
             await metricSinkWriter.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            metricSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult, It.IsAny<MeasuredMetric>()), Times.Once());
+            metricSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult), Times.Once());
         }
 
         [Fact]
@@ -116,8 +115,8 @@ namespace Promitor.Tests.Unit.Metrics
             await metricSinkWriter.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            firstSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult, It.IsAny<MeasuredMetric>()), Times.Once());
-            secondSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult, It.IsAny<MeasuredMetric>()), Times.Once());
+            firstSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult), Times.Once());
+            secondSink.Verify(mock => mock.ReportMetricAsync(metricName, metricDescription, scrapeResult), Times.Once());
         }
 
         [Fact]
