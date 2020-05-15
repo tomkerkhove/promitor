@@ -164,11 +164,11 @@ namespace Promitor.Tests.Unit.Configuration
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task RuntimeConfiguration_HasConfiguredEnabledMetricTimestampsInPrometheusEndpoint_UsesConfigured(bool enableMetricsTimestamp)
+        public async Task RuntimeConfiguration_HasConfiguredEnabledMetricTimestampsInLegacyPrometheusEndpointConfiguration_UsesConfigured(bool enableMetricsTimestamp)
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(enableMetricsTimestamp:enableMetricsTimestamp)
+                .WithPrometheusLegacyConfiguration(enableMetricsTimestamp: enableMetricsTimestamp)
                 .GenerateAsync();
 
             // Act
@@ -181,12 +181,12 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
-        public async Task RuntimeConfiguration_HasConfiguredMetricUnavailableValueInPrometheusEndpoint_UsesConfigured()
+        public async Task RuntimeConfiguration_HasConfiguredMetricUnavailableValueInLegacyPrometheusEndpointConfiguration_UsesConfigured()
         {
             // Arrange
             var metricUnavailableValue = _faker.Random.Double(min: 1);
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: metricUnavailableValue)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: metricUnavailableValue)
                 .GenerateAsync();
 
             // Act
@@ -199,12 +199,12 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
-        public async Task RuntimeConfiguration_HasConfiguredPrometheusScrapeEndpointConfigured_UsesConfigured()
+        public async Task RuntimeConfiguration_HasConfiguredPrometheusScrapeEndpointInLegacyPrometheusEndpointConfiguration_UsesConfigured()
         {
             // Arrange
             var scrapeEndpointBaseUri = _faker.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
+                .WithPrometheusLegacyConfiguration(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
                 .GenerateAsync();
 
             // Act
@@ -215,6 +215,121 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Prometheus);
             Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.Equal(scrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task RuntimeConfiguration_HasConfiguredEnabledMetricTimestampsInPrometheusScrapeEndpointSink_UsesConfigured(bool enableMetricsTimestamp)
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithPrometheusMetricSink(enableMetricsTimestamp: enableMetricsTimestamp)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint);
+            Assert.Equal(enableMetricsTimestamp, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredMetricUnavailableValueInPrometheusScrapeEndpointSink_UsesConfigured()
+        {
+            // Arrange
+            var metricUnavailableValue = _faker.Random.Double(min: 1);
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithPrometheusMetricSink(metricUnavailableValue: metricUnavailableValue)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint);
+            Assert.Equal(metricUnavailableValue, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredPrometheusScrapeEndpointSinkConfigured_UsesConfigured()
+        {
+            // Arrange
+            var scrapeEndpointBaseUri = _faker.System.DirectoryPath();
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithPrometheusMetricSink(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint);
+            Assert.Equal(scrapeEndpointBaseUri, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredHostInStatsDEndpoint_UsesConfigured()
+        {
+            // Arrange
+            var statsdHost = _faker.System.DirectoryPath();
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithStatsDMetricSink(host: statsdHost)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
+            Assert.Equal(statsdHost, runtimeConfiguration.MetricSinks.Statsd.Host);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredMetricPrefixInStatsDEndpoint_UsesConfigured()
+        {
+            // Arrange
+            var metricPrefix = _faker.Name.FirstName();
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithStatsDMetricSink(metricPrefix: metricPrefix)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
+            Assert.Equal(metricPrefix, runtimeConfiguration.MetricSinks.Statsd.MetricPrefix);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredPortInStatsDEndpoint_UsesConfigured()
+        {
+            // Arrange
+            var port = _faker.Random.Int();
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithStatsDMetricSink(port: port)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
+            Assert.Equal(port, runtimeConfiguration.MetricSinks.Statsd.Port);
         }
 
         [Fact]
@@ -311,7 +426,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(enableMetricsTimestamp:null)
+                .WithPrometheusLegacyConfiguration(enableMetricsTimestamp: null)
                 .GenerateAsync();
 
             // Act
@@ -328,7 +443,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: null)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: null)
                 .GenerateAsync();
 
             // Act
@@ -347,7 +462,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(metricUnavailableValue: null, scrapeEndpointBaseUri: null)
+                .WithPrometheusLegacyConfiguration(metricUnavailableValue: null, scrapeEndpointBaseUri: null)
                 .GenerateAsync();
 
             // Act
@@ -366,7 +481,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithPrometheusConfiguration(scrapeEndpointBaseUri:null)
+                .WithPrometheusLegacyConfiguration(scrapeEndpointBaseUri: null)
                 .GenerateAsync();
 
             // Act
@@ -413,6 +528,9 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(bogusRuntimeConfiguration.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
             Assert.Equal(bogusRuntimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
             Assert.Equal(bogusRuntimeConfiguration.MetricsConfiguration.AbsolutePath, runtimeConfiguration.MetricsConfiguration.AbsolutePath);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue, runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Host, runtimeConfiguration.MetricSinks.Statsd.Host);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Port, runtimeConfiguration.MetricSinks.Statsd.Port);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.MetricPrefix, runtimeConfiguration.MetricSinks.Statsd.MetricPrefix);

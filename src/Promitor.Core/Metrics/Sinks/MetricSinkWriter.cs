@@ -44,16 +44,13 @@ namespace Promitor.Core.Metrics.Sinks
             Guard.NotNull(scrapedMetricResult, nameof(scrapedMetricResult));
             Guard.NotNull(scrapedMetricResult.MetricValues, nameof(scrapedMetricResult.MetricValues));
 
-            foreach (var measuredMetric in scrapedMetricResult.MetricValues)
+            try
             {
-                try
-                {
-                    await sink.ReportMetricAsync(metricName, metricDescription, measuredMetric);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogCritical(ex, "Failed to write {MetricName} metric for sink {SinkType}", metricName, sink.Type);
-                }
+                await sink.ReportMetricAsync(metricName, metricDescription, scrapedMetricResult);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogCritical(ex, "Failed to write {MetricName} metric for sink {SinkType}", metricName, sink.Type);
             }
         }
 

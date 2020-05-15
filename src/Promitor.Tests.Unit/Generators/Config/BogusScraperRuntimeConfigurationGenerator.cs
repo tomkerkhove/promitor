@@ -7,6 +7,7 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
@@ -26,7 +27,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(flagsConfiguration => flagsConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
                 .Generate();
-            var prometheusConfiguration = new Faker<PrometheusConfiguration>()
+            var prometheusConfiguration = new Faker<PrometheusLegacyConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
                 .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
@@ -58,9 +59,16 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Port, faker => faker.Random.Int(min: 0))
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricPrefix, faker => faker.Person.FirstName)
                 .Generate();
+            var prometheusScrapingEndpointSinkConfiguration = new Faker<PrometheusScrapingEndpointSinkConfiguration>()
+                .StrictMode(true)
+                .RuleFor(promConfiguration => promConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
+                .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
+                .RuleFor(promConfiguration => promConfiguration.EnableMetricTimestamps, faker => faker.Random.Bool())
+                .Generate();
             var metricSinkConfiguration = new Faker<MetricSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
+                .RuleFor(sinkConfiguration => sinkConfiguration.PrometheusScrapingEndpoint, prometheusScrapingEndpointSinkConfiguration)
                 .Generate();
 
             var runtimeConfiguration = new ScraperRuntimeConfiguration

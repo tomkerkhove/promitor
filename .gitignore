@@ -302,3 +302,5 @@ docs/_site/*
 .DS_Store
 
 *.orig
+changelog/public/
+changelog/resources/_gen/

@@ -1,4 +1,4 @@
-﻿namespace Promitor.Agents.Scraper.Configuration.Sinks
+﻿namespace Promitor.Integrations.Sinks.Statsd.Configuration
 {
     public class StatsdSinkConfiguration
     {

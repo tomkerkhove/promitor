@@ -13,7 +13,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class StatsDMetricSinkTests
+    public class PrometheusScrapingEndpointMetricSinkTests
     {
         private readonly Faker _bogus = new Faker();
 

@@ -6,9 +6,9 @@ using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Agents.Scraper.Configuration
 {
-    public class ScraperRuntimeConfiguration: RuntimeConfiguration
+    public class ScraperRuntimeConfiguration : RuntimeConfiguration
     {
-        public PrometheusConfiguration Prometheus { get; set; } = new PrometheusConfiguration();
+        public PrometheusLegacyConfiguration Prometheus { get; set; } = new PrometheusLegacyConfiguration();
         public MetricSinkConfiguration MetricSinks { get; set; } = new MetricSinkConfiguration();
         public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
         public AzureMonitorConfiguration AzureMonitor { get; set; } = new AzureMonitorConfiguration();

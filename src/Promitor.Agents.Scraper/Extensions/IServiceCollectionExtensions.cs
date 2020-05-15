@@ -27,6 +27,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 // ReSharper disable once CheckNamespace
 namespace Promitor.Agents.Scraper.Extensions
@@ -127,9 +128,19 @@ namespace Promitor.Agents.Scraper.Extensions
                 AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
             }
 
+            if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
+            {
+                AddPrometheusMetricSink(services);
+            }
+
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
+        }
+
+        private static void AddPrometheusMetricSink(IServiceCollection services)
+        {
+            services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
@@ -166,7 +177,7 @@ namespace Promitor.Agents.Scraper.Extensions
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
-            services.Configure<PrometheusConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("prometheus"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));

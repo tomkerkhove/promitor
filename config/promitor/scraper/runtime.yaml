@@ -4,8 +4,12 @@ prometheus:
   metricUnavailableValue: NaN
   enableMetricTimestamps: true # true by default
   scrapeEndpoint:
-    baseUriPath: /metrics
+    baseUriPath: /metrics-deprecated
 metricSinks:
+  prometheusScrapingEndpoint:
+    metricUnavailableValue: NaN
+    enableMetricTimestamps: true # true by default
+    baseUriPath: /metrics
   statsd:
     host: graphite
     port: 8125
