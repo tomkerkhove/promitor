@@ -130,7 +130,7 @@ namespace Promitor.Agents.Scraper.Extensions
 
             if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusMetricSink(services, metricSinkConfiguration.PrometheusScrapingEndpoint);
+                AddPrometheusMetricSink(services);
             }
 
             services.TryAddSingleton<MetricSinkWriter>();
@@ -138,7 +138,7 @@ namespace Promitor.Agents.Scraper.Extensions
             return services;
         }
 
-        private static void AddPrometheusMetricSink(IServiceCollection services, PrometheusScrapingEndpointSinkConfiguration prometheusScrapingEndpoint)
+        private static void AddPrometheusMetricSink(IServiceCollection services)
         {
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
