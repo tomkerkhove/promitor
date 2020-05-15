@@ -37,7 +37,6 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             string openApiDescription = BuildOpenApiDescription(Configuration);
-            //var openApiDescription = $"Collection of APIs to manage the Azure Monitor scraper endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{_prometheusBaseUriPath}\" target=\"_blank\">{_prometheusBaseUriPath}</a>'";
             services.UseWebApi()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
