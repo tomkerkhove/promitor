@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -34,7 +36,8 @@ namespace Promitor.Agents.Scraper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var openApiDescription = $"Collection of APIs to manage the Azure Monitor scrape endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{_prometheusBaseUriPath}\" target=\"_blank\">{_prometheusBaseUriPath}</a>'";
+            string openApiDescription = BuildOpenApiDescription(Configuration);
+            //var openApiDescription = $"Collection of APIs to manage the Azure Monitor scraper endpoint for Prometheus.\r\nThe scrape endpoint is exposed at '<a href=\"./../..{_prometheusBaseUriPath}\" target=\"_blank\">{_prometheusBaseUriPath}</a>'";
             services.UseWebApi()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
@@ -96,6 +99,28 @@ namespace Promitor.Agents.Scraper
             standardConfiguration.Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
 
             return standardConfiguration;
+        }
+
+        private string BuildOpenApiDescription(IConfiguration configuration)
+        {
+            var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
+
+            var openApiDescriptionBuilder = new StringBuilder();
+            openApiDescriptionBuilder.Append("Collection of APIs to manage the Promitor Scraper.\r\n\r\n");
+            openApiDescriptionBuilder.AppendLine("Configured metric sinks are:\r\n");
+
+            if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
+            {
+                var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
+                openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"./../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
+            }
+
+            if (metricSinkConfiguration.Statsd != null)
+            {
+                openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
+            }
+            
+            return openApiDescriptionBuilder.ToString();
         }
     }
 }
