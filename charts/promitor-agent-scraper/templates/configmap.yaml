@@ -13,7 +13,6 @@ data:
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
       metricSinks:
-
   {{- if .Values.metricSinks.statsd.host }}
         statsd:
           host: {{ .Values.metricSinks.statsd.host | quote }}
@@ -24,7 +23,7 @@ data:
           metricPrefix: {{ .Values.metricSinks.statsd.metricPrefix | quote }}
   {{- end }}
   {{- end }}
-  {{- if .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath }}
+  {{- if .Values.metricSinks.prometheus.baseUriPath }}
         prometheusScrapingEndpoint:
           metricUnavailableValue: {{ .Values.prometheus.metricUnavailableValue | quote }}
           enableMetricTimestamps: {{ .Values.prometheus.enableMetricTimestamps | quote }}
