@@ -23,12 +23,10 @@ data:
           metricPrefix: {{ .Values.metricSinks.statsd.metricPrefix | quote }}
   {{- end }}
   {{- end }}
-  {{- if .Values.metricSinks.prometheus.baseUriPath }}
         prometheusScrapingEndpoint:
           metricUnavailableValue: {{ .Values.prometheus.metricUnavailableValue | quote }}
           enableMetricTimestamps: {{ .Values.prometheus.enableMetricTimestamps | quote }}
           baseUriPath: {{ .Values.prometheus.scrapeEndpointPath | quote }}
-  {{- end }}
       metricsConfiguration:
         absolutePath: /config/metrics-declaration.yaml
       telemetry:
