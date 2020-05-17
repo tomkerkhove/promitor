@@ -101,7 +101,6 @@ stages:
        vmImage: ubuntu-16.04
      variables:
        Tags.Experimental: 'experimental-$(OS.Name)'
-       Image.Experimental: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-ci:$(Tags.Experimental)'
        OS.Name: 'linux'
      steps:
      - download: current
@@ -119,7 +118,7 @@ stages:
         - template: ./../templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
+             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
              os: '$(OS.Name)'
      - template: ./../templates/run-discovery-image.yml
        parameters:
@@ -149,22 +148,6 @@ stages:
         - template: ./../templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName.OSAgnostic)'
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber)'
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: 'docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
-     - ${{ if and(ne(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranch'], 'refs/heads/master')) }}:
-        - powershell: |
-            docker tag $(Image.TaggedName) $(Image.Experimental)
-          displayName: 'Tag image as experimental'
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-              registryEndpoint: 'GitHub Package Registry - Docker (tomkerkhove)'
-              imageName: '$(Image.Experimental)'
    - job: DockerBuildWindows
      displayName: Build Docker Image (Windows)
      condition: succeeded()
@@ -191,7 +174,7 @@ stages:
         - template: ./../templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(System.PullRequest.PullRequestNumber) --tag docker.pkg.github.com/tomkerkhove/promitor/promitor-agent-discovery-pr:$(Tags.PR)'
+             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
              os: '$(OS.Name)'
      - template: ./../templates/run-discovery-image.yml
        parameters:
