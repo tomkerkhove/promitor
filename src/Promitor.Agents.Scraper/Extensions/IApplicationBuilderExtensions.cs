@@ -32,11 +32,14 @@ namespace Promitor.Agents.Scraper.Extensions
         /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         public static IApplicationBuilder AddPrometheusScraperMetricSink(this IApplicationBuilder app, string scrapeEndpointPath)
         {
-            app.UsePrometheusServer(prometheusOptions =>
+            if (string.IsNullOrWhiteSpace(scrapeEndpointPath) == false)
             {
-                prometheusOptions.MapPath = scrapeEndpointPath;
-                prometheusOptions.UseDefaultCollectors = false;
-            });
+                app.UsePrometheusServer(prometheusOptions =>
+                {
+                    prometheusOptions.MapPath = scrapeEndpointPath;
+                    prometheusOptions.UseDefaultCollectors = false;
+                });
+            }
 
             return app;
         }
