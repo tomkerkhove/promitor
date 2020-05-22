@@ -37,7 +37,8 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             string openApiDescription = BuildOpenApiDescription(Configuration);
-            services.UseWebApi()
+            services.AddHttpClient()
+                .UseWebApi()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
