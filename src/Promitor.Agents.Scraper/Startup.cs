@@ -11,6 +11,7 @@ using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Extensions;
+using Promitor.Agents.Scraper.Health;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
@@ -37,15 +38,20 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             string openApiDescription = BuildOpenApiDescription(Configuration);
-            services.AddHttpClient()
-                .UseWebApi()
+            services.AddHttpClient("Promitor Resource Discovery", client =>
+            {
+                client.BaseAddress = new Uri("http://promitor.agents.resourcediscovery:88/");  // TODO: Replace with config
+                // Provide Promitor User-Agent
+                client.DefaultRequestHeaders.Add("User-Agent", "Promitor Scraper");
+            });
+            services.UseWebApi()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1)
                 .AddHealthChecks()
-                    .AddCheck("self", () => HealthCheckResult.Healthy());
+                    .AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded); // TODO: Only add when we have to
 
             ValidateRuntimeConfiguration(services);
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Swashbuckle.AspNetCore.Filters;
 
 // ReSharper disable once CheckNamespace
@@ -31,14 +32,17 @@ namespace Promitor.Agents.Scraper.Extensions
                     options.RespectBrowserAcceptHeader = true;
 
                     RestrictToJsonContentType(options);
-                    AddEnumAsStringRepresentation(options);
                 })
                 .AddJsonOptions(jsonOptions =>
                 {
                     jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     jsonOptions.JsonSerializerOptions.IgnoreNullValues = true;
                 })
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(jsonOptions =>
+                {
+                    jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                });
 
             return services;
         }
@@ -100,28 +104,13 @@ namespace Promitor.Agents.Scraper.Extensions
             options.OutputFormatters.RemoveType<StringOutputFormatter>();
         }
 
-        private static void AddEnumAsStringRepresentation(MvcOptions options)
-        {
-            var onlyJsonInputFormatters = options.InputFormatters.OfType<SystemTextJsonInputFormatter>();
-            foreach (SystemTextJsonInputFormatter inputFormatter in onlyJsonInputFormatters)
-            {
-                inputFormatter.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            }
-
-            var onlyJsonOutputFormatters = options.OutputFormatters.OfType<SystemTextJsonOutputFormatter>();
-            foreach (SystemTextJsonOutputFormatter outputFormatter in onlyJsonOutputFormatters)
-            {
-                outputFormatter.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            }
-        }
-
         private static string GetXmlDocumentationPath(IServiceCollection services, string docFileName = "Open-Api.xml")
         {
             var hostingEnvironment = services.FirstOrDefault(service => service.ServiceType == typeof(IWebHostEnvironment));
             if (hostingEnvironment == null)
                 return string.Empty;
 
-            var contentRootPath = ((IWebHostEnvironment)hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IWebHostEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/{docFileName}";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;

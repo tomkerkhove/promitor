@@ -11,6 +11,7 @@ using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
+using Promitor.Agents.Scraper.Discovery;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -92,6 +93,8 @@ namespace Promitor.Agents.Scraper.Extensions
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
+            services.AddTransient<ResourceDiscoveryClient>();
+            services.AddTransient<ResourceDiscoveryRepository>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
