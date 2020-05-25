@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
 {
     [Category("Unit")]
-    public class StatsDMetricSinkValidationStepTests
+    public class ResourceDiscoveryValidationStepTests
     {
         [Fact]
         public void Validate_StatsDIsFullyConfigured_Success()
@@ -70,6 +70,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
 
         [Theory]
         [InlineData("")]
+        [InlineData(" ")]
         [InlineData(null)]
         public void Validate_StatsDWithoutHost_Fails(string host)
         {

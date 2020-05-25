@@ -113,6 +113,33 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
+        public RuntimeConfigurationGenerator WithResourceDiscovery(int? port = 1234, string host = "promitor.resource.discovery.host")
+        {
+            ResourceDiscoveryConfiguration resourceDiscoveryConfiguration;
+            if (string.IsNullOrWhiteSpace(host) && port == null)
+            {
+                resourceDiscoveryConfiguration = null;
+            }
+            else
+            {
+                resourceDiscoveryConfiguration = new ResourceDiscoveryConfiguration();
+
+                if (string.IsNullOrWhiteSpace(host) == false)
+                {
+                    resourceDiscoveryConfiguration.Host = host;
+                }
+
+                if (port != null)
+                {
+                    resourceDiscoveryConfiguration.Port = port.Value;
+                }
+            }
+
+            _runtimeConfiguration.ResourceDiscovery = resourceDiscoveryConfiguration;
+
+            return this;
+        }
+
         public RuntimeConfigurationGenerator WithPrometheusLegacyConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
         {
             PrometheusLegacyConfiguration prometheusLegacyConfiguration;
@@ -226,6 +253,13 @@ namespace Promitor.Tests.Unit.Generators.Config
             {
                 configurationBuilder.AppendLine("server:");
                 configurationBuilder.AppendLine($"  httpPort: {_runtimeConfiguration?.Server.HttpPort}");
+            }
+
+            if (_runtimeConfiguration?.ResourceDiscovery != null)
+            {
+                configurationBuilder.AppendLine("resourceDiscovery:");
+                configurationBuilder.AppendLine($"  host: {_runtimeConfiguration?.ResourceDiscovery.Host}");
+                configurationBuilder.AppendLine($"  port: {_runtimeConfiguration?.ResourceDiscovery.Port}");
             }
 
             if (_runtimeConfiguration?.Prometheus != null)

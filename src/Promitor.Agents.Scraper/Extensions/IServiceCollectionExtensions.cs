@@ -178,6 +178,7 @@ namespace Promitor.Agents.Scraper.Extensions
         {
             services.Configure<ScraperRuntimeConfiguration>(configuration);
             services.Configure<MetricsConfiguration>(configuration.GetSection("metricsConfiguration"));
+            services.Configure<ResourceDiscoveryConfiguration>(configuration.GetSection("resourceDiscovery"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("prometheus"));

@@ -27,7 +27,7 @@ namespace Promitor.Agents.Scraper
         private readonly string _legacyPrometheusUriPath;
 
         public Startup(IConfiguration configuration)
-        : base(configuration)
+            : base(configuration)
         {
             var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
             _legacyPrometheusUriPath = runtimeConfiguration?.Prometheus?.ScrapeEndpoint?.BaseUriPath;
@@ -39,18 +39,23 @@ namespace Promitor.Agents.Scraper
             string openApiDescription = BuildOpenApiDescription(Configuration, _legacyPrometheusUriPath);
             services.AddHttpClient("Promitor Resource Discovery", client =>
             {
-                client.BaseAddress = new Uri("http://promitor.agents.resourcediscovery:88/");  // TODO: Replace with config
                 // Provide Promitor User-Agent
                 client.DefaultRequestHeaders.Add("User-Agent", "Promitor Scraper");
             });
+
             services.UseWebApi()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
                 .ConfigureYamlConfiguration(Configuration)
-                .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1)
-                .AddHealthChecks()
-                    .AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded); // TODO: Only add when we have to
+                .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1);
+
+            var healthCheckBuilder = services.AddHealthChecks();
+            var resourceDiscoveryConfiguration = Configuration.GetSection("resourceDiscovery").Get<ResourceDiscoveryConfiguration>();
+            if (resourceDiscoveryConfiguration?.IsConfigured == true)
+            {
+                healthCheckBuilder.AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded);
+            }
 
             ValidateRuntimeConfiguration(services);
 
@@ -67,20 +72,19 @@ namespace Promitor.Agents.Scraper
             }
 
             app.UseExceptionHandling()
-               .UseRequestTracking()
-               .UseHttpCorrelation()
-               .UseRouting()
-               .UseMetricSinks(Configuration)
-               .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
-               .ExposeOpenApiUi() // New Swagger UI
-               .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
-               {
-                   swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", ApiName);
-                   swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor - Scraper API (OpenAPI 3.0)");
-                   swaggerUiOptions.ConfigureDefaultOptions(ApiName);
-               }, openApiOptions => openApiOptions.SerializeAsV2 = true)  // Deprecated Swagger UI
-               .UseEndpoints(endpoints => endpoints.MapControllers());
-
+                .UseRequestTracking()
+                .UseHttpCorrelation()
+                .UseRouting()
+                .UseMetricSinks(Configuration)
+                .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
+                .ExposeOpenApiUi() // New Swagger UI
+                .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
+                {
+                    swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", ApiName);
+                    swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor - Scraper API (OpenAPI 3.0)");
+                    swaggerUiOptions.ConfigureDefaultOptions(ApiName);
+                }, openApiOptions => openApiOptions.SerializeAsV2 = true) // Deprecated Swagger UI
+                .UseEndpoints(endpoints => endpoints.MapControllers());
             UseSerilog(ComponentName, app.ApplicationServices);
         }
 
@@ -102,18 +106,15 @@ namespace Promitor.Agents.Scraper
             }
 
             standardConfiguration.Filter.With(new AzureMonitorLoggingFilter(azureMonitorConfiguration));
-
             return standardConfiguration;
         }
 
         private string BuildOpenApiDescription(IConfiguration configuration, string legacyPrometheusUriPath)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
-
             var openApiDescriptionBuilder = new StringBuilder();
             openApiDescriptionBuilder.Append("Collection of APIs to manage the Promitor Scraper.\r\n\r\n");
             openApiDescriptionBuilder.AppendLine("Configured metric sinks are:\r\n");
-
             if (string.IsNullOrWhiteSpace(legacyPrometheusUriPath) == false)
             {
                 openApiDescriptionBuilder.AppendLine($"<li>Legacy Prometheus scrape endpoint is exposed at <a href=\"./../..{legacyPrometheusUriPath}\" target=\"_blank\">{legacyPrometheusUriPath}</a></li>");
