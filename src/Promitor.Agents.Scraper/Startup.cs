@@ -15,7 +15,6 @@ using Promitor.Agents.Scraper.Health;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
-using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -25,19 +24,19 @@ namespace Promitor.Agents.Scraper
     {
         private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
-        private readonly string _prometheusBaseUriPath;
+        private readonly string _legacyPrometheusUriPath;
 
         public Startup(IConfiguration configuration)
         : base(configuration)
         {
-            var scrapeEndpointConfiguration = configuration.GetSection("prometheus:scrapeEndpoint").Get<ScrapeEndpointConfiguration>();
-            _prometheusBaseUriPath = scrapeEndpointConfiguration.BaseUriPath;
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+            _legacyPrometheusUriPath = runtimeConfiguration?.Prometheus?.ScrapeEndpoint?.BaseUriPath;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string openApiDescription = BuildOpenApiDescription(Configuration);
+            string openApiDescription = BuildOpenApiDescription(Configuration, _legacyPrometheusUriPath);
             services.AddHttpClient("Promitor Resource Discovery", client =>
             {
                 client.BaseAddress = new Uri("http://promitor.agents.resourcediscovery:88/");  // TODO: Replace with config
@@ -72,7 +71,7 @@ namespace Promitor.Agents.Scraper
                .UseHttpCorrelation()
                .UseRouting()
                .UseMetricSinks(Configuration)
-               .AddPrometheusScraperMetricSink(_prometheusBaseUriPath) // Deprecated and will be gone in 2.0
+               .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
                .ExposeOpenApiUi() // New Swagger UI
                .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
                {
@@ -107,13 +106,18 @@ namespace Promitor.Agents.Scraper
             return standardConfiguration;
         }
 
-        private string BuildOpenApiDescription(IConfiguration configuration)
+        private string BuildOpenApiDescription(IConfiguration configuration, string legacyPrometheusUriPath)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
 
             var openApiDescriptionBuilder = new StringBuilder();
             openApiDescriptionBuilder.Append("Collection of APIs to manage the Promitor Scraper.\r\n\r\n");
             openApiDescriptionBuilder.AppendLine("Configured metric sinks are:\r\n");
+
+            if (string.IsNullOrWhiteSpace(legacyPrometheusUriPath) == false)
+            {
+                openApiDescriptionBuilder.AppendLine($"<li>Legacy Prometheus scrape endpoint is exposed at <a href=\"./../..{legacyPrometheusUriPath}\" target=\"_blank\">{legacyPrometheusUriPath}</a></li>");
+            }
 
             if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
             {
@@ -125,7 +129,7 @@ namespace Promitor.Agents.Scraper
             {
                 openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
             }
-            
+
             return openApiDescriptionBuilder.ToString();
         }
     }
