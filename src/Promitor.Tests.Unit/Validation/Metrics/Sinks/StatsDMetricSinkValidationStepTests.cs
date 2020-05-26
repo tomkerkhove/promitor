@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
 {
     [Category("Unit")]
-    public class ResourceDiscoveryValidationStepTests
+    public class StatsDMetricSinkValidationStepTests
     {
         [Fact]
         public void Validate_StatsDIsFullyConfigured_Success()
