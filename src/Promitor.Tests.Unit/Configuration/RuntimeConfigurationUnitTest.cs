@@ -496,6 +496,24 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
+        public async Task RuntimeConfiguration_HasNoResourceDiscoveryPortConfigured_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithResourceDiscovery(port: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.ResourceDiscovery);
+            Assert.NotNull(runtimeConfiguration.ResourceDiscovery.Port);
+            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
+        }
+
+        [Fact]
         public async Task RuntimeConfiguration_IsFullyConfigured_UsesCorrectValues()
         {
             // Arrange
@@ -517,7 +535,10 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Prometheus);
             Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
             Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
+            Assert.NotNull(runtimeConfiguration.ResourceDiscovery);
             Assert.Equal(bogusRuntimeConfiguration.Server.HttpPort, runtimeConfiguration.Server.HttpPort);
+            Assert.Equal(bogusRuntimeConfiguration.ResourceDiscovery.Host, runtimeConfiguration.ResourceDiscovery.Host);
+            Assert.Equal(bogusRuntimeConfiguration.ResourceDiscovery.Port, runtimeConfiguration.ResourceDiscovery.Port);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.DefaultVerbosity, runtimeConfiguration.Telemetry.DefaultVerbosity);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.ApplicationInsights.Verbosity, runtimeConfiguration.Telemetry.ApplicationInsights.Verbosity);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.ApplicationInsights.InstrumentationKey, runtimeConfiguration.Telemetry.ApplicationInsights.InstrumentationKey);

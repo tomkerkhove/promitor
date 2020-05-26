@@ -29,3 +29,6 @@ azureMonitor:
   logging:
     informationLevel: Headers
     isEnabled: true
+resourceDiscovery:
+  host: promitor.agents.resourcediscovery
+  port: 88

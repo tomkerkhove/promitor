@@ -70,6 +70,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
 
         [Theory]
         [InlineData("")]
+        [InlineData(" ")]
         [InlineData(null)]
         public void Validate_StatsDWithoutHost_Fails(string host)
         {

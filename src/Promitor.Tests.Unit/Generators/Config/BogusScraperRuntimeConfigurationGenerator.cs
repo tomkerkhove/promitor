@@ -70,14 +70,20 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
                 .RuleFor(sinkConfiguration => sinkConfiguration.PrometheusScrapingEndpoint, prometheusScrapingEndpointSinkConfiguration)
                 .Generate();
+            var resourceDiscovery = new Faker<ResourceDiscoveryConfiguration>()
+                .StrictMode(true)
+                .RuleFor(resourceDiscoveryConfiguration => resourceDiscoveryConfiguration.Host, faker => faker.Person.FirstName)
+                .RuleFor(resourceDiscoveryConfiguration => resourceDiscoveryConfiguration.Port, faker => faker.Random.Int(min: 1))
+                .Generate();
 
             var runtimeConfiguration = new ScraperRuntimeConfiguration
             {
-                Server = serverConfiguration,
                 MetricsConfiguration = metricsConfiguration,
+                MetricSinks = metricSinkConfiguration,
+                ResourceDiscovery = resourceDiscovery,
                 Prometheus = prometheusConfiguration,
-                Telemetry = telemetryConfiguration,
-                MetricSinks = metricSinkConfiguration
+                Server = serverConfiguration,
+                Telemetry = telemetryConfiguration
             };
 
             return runtimeConfiguration;
