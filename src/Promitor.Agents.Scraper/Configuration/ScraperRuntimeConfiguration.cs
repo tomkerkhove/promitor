@@ -11,7 +11,7 @@ namespace Promitor.Agents.Scraper.Configuration
         public AzureMonitorConfiguration AzureMonitor { get; set; } = new AzureMonitorConfiguration();
         public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
         public MetricSinkConfiguration MetricSinks { get; set; } = new MetricSinkConfiguration();
-        public PrometheusLegacyConfiguration Prometheus { get; set; } //= new PrometheusLegacyConfiguration();
+        public PrometheusLegacyConfiguration Prometheus { get; set; }
         public ResourceDiscoveryConfiguration ResourceDiscovery { get; set; }
     }
 }

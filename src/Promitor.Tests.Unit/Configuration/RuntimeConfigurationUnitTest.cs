@@ -148,6 +148,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var metricsDeclarationBasePath = _faker.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithPrometheusLegacyConfiguration()
                 .WithMetricsConfiguration(absolutePath: metricsDeclarationBasePath)
                 .GenerateAsync();
 
@@ -458,7 +459,7 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
-        public async Task RuntimeConfiguration_HasNoPrometheusConfigurationConfigured_UsesDefault()
+        public async Task RuntimeConfiguration_HasNoPrometheusConfigurationConfigured_DoesNotUseDefaults()
         {
             // Arrange
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
@@ -470,10 +471,7 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
-            Assert.NotNull(runtimeConfiguration.Prometheus);
-            Assert.NotNull(runtimeConfiguration.Prometheus.ScrapeEndpoint);
-            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
-            Assert.Equal(Defaults.Prometheus.MetricUnavailableValue, runtimeConfiguration.Prometheus.MetricUnavailableValue);
+            Assert.Null(runtimeConfiguration.Prometheus);
         }
 
         [Fact]
@@ -510,7 +508,6 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.ResourceDiscovery);
             Assert.NotNull(runtimeConfiguration.ResourceDiscovery.Port);
-            Assert.Equal(Defaults.Prometheus.ScrapeEndpointBaseUri, runtimeConfiguration.Prometheus.ScrapeEndpoint.BaseUriPath);
         }
 
         [Fact]
@@ -519,6 +516,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var bogusRuntimeConfiguration = BogusScraperRuntimeConfigurationGenerator.Generate();
             var configuration = await RuntimeConfigurationGenerator.WithRuntimeConfiguration(bogusRuntimeConfiguration)
+                .WithPrometheusLegacyConfiguration()
                 .GenerateAsync();
 
             // Act
