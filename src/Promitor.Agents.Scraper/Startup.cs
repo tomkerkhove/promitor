@@ -120,15 +120,18 @@ namespace Promitor.Agents.Scraper
                 openApiDescriptionBuilder.AppendLine($"<li>Legacy Prometheus scrape endpoint is exposed at <a href=\"./../..{legacyPrometheusUriPath}\" target=\"_blank\">{legacyPrometheusUriPath}</a></li>");
             }
 
-            if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
+            if (metricSinkConfiguration != null)
             {
-                var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
-                openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"./../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
-            }
+                if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
+                {
+                    var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
+                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"./../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
+                }
 
-            if (metricSinkConfiguration.Statsd != null)
-            {
-                openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
+                if (metricSinkConfiguration.Statsd != null)
+                {
+                    openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
+                }
             }
 
             return openApiDescriptionBuilder.ToString();
