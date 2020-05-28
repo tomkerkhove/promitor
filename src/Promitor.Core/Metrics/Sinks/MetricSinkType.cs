@@ -2,7 +2,7 @@
 {
     public enum MetricSinkType
     {
-        Prometheus,
+        PrometheusScrapingEndpoint,
         StatsD
     }
 }

@@ -30,7 +30,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
             _logger = logger;
         }
 
-        public MetricSinkType Type => MetricSinkType.StatsD;
+        public MetricSinkType Type => MetricSinkType.PrometheusScrapingEndpoint;
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
         {

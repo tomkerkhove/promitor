@@ -26,7 +26,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
-            var gauge = global::Prometheus.Client.Metrics.CreateGauge($"promitor_{name}", help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
+            var gauge = global::Prometheus.Client.Metrics.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
         }
     }
