@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
@@ -60,8 +61,7 @@ namespace Promitor.Agents.Scraper.Extensions
                     var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
                     var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
-
-                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}-{resource.GetResourceName()}";
+                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.ResourceGroupName}-{scrapeDefinition.PrometheusMetricDefinition.Name}-{resource.GetResourceName()}-{Guid.NewGuid()}";
 
                     services.AddScheduler(builder =>
                     {
