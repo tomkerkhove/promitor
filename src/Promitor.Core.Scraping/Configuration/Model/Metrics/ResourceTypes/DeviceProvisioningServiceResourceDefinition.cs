@@ -12,5 +12,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => DeviceProvisioningServiceName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

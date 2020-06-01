@@ -14,5 +14,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => Namespace;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => $"{Namespace}-{QueueName}";
     }
 }

@@ -24,5 +24,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 
         /// <inheritdoc />
         public override string GetResourceName() => AccountName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

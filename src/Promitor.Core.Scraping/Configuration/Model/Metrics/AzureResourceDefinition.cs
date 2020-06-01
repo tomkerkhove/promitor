@@ -38,5 +38,8 @@
 
         /// <inheritdoc />
         public abstract string GetResourceName();
+
+        /// <inheritdoc />
+        public abstract string GetUniqueName();
     }
 }

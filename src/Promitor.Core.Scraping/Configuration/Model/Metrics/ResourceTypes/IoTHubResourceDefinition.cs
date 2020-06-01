@@ -12,5 +12,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => IoTHubName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

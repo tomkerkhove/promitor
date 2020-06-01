@@ -13,6 +13,9 @@
         public string ResourceUri { get; }
 
         /// <inheritdoc />
-        public override string GetResourceName() => null;
+        public override string GetResourceName() => ResourceUri;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => $"{ResourceUri}";
     }
 }

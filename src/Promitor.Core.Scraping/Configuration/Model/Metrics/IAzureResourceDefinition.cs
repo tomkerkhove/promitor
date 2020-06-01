@@ -31,5 +31,10 @@
         ///     For an Azure SQL Database it should be the name of the DB, not the server
         /// </example>
         string GetResourceName();
+
+        /// <summary>
+        ///     Gets a unique name for the resource
+        /// </summary>
+        string GetUniqueName();
     }
 }
