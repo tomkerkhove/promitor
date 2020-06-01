@@ -61,7 +61,7 @@ namespace Promitor.Agents.Scraper.Extensions
                     var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
 
-                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}";
+                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}-{resource.GetResourceName()}";
 
                     services.AddScheduler(builder =>
                     {
