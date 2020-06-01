@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Arcus.Observability.Telemetry.Core;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceGraph;
 using Microsoft.Azure.Management.ResourceGraph.Models;
@@ -68,49 +69,64 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var graphClient = await GetOrCreateClient();
 
-            try
+            bool isSuccessfulDependency = false;
+            using (var dependencyMeasurement = DependencyMeasurement.Start())
             {
-                var queryRequest = new QueryRequest(targetSubscriptions, query);
-                var response = await graphClient.ResourcesAsync(queryRequest);
-
-                var foundResources = ParseQueryResults(response);
-
-                return foundResources;
-            }
-            catch (ErrorResponseException responseException)
-            {
-                if (responseException.Response != null)
+                try
                 {
-                    if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
-                    {
-                        var unauthorizedException = new UnauthorizedException(QueryApplicationId, targetSubscriptions);
-                        _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph");
-                        throw unauthorizedException;
-                    }
+                    var queryRequest = new QueryRequest(targetSubscriptions, query);
+                    var response = await graphClient.ResourcesAsync(queryRequest);
+                    isSuccessfulDependency = true;
 
-                    if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
+                    var foundResources = ParseQueryResults(response);
+
+                    return foundResources;
+                }
+                catch (ErrorResponseException responseException)
+                {
+                    if (responseException.Response != null)
                     {
-                        var response = JToken.Parse(responseException.Response.Content);
-                        var errorDetails = response["error"]?["details"];
-                        if (errorDetails != null)
+                        if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
                         {
-                            var errorCodes = new List<string>();
-                            foreach (var detailEntry in errorDetails)
-                            {
-                                errorCodes.Add(detailEntry["code"]?.ToString());
-                            }
+                            var unauthorizedException = new UnauthorizedException(QueryApplicationId, targetSubscriptions);
+                            _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph");
+                            throw unauthorizedException;
+                        }
 
-                            if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
+                        if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            var response = JToken.Parse(responseException.Response.Content);
+                            var errorDetails = response["error"]?["details"];
+                            if (errorDetails != null)
                             {
-                                var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(targetSubscriptions);
-                                _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
-                                throw invalidSubscriptionException;
+                                var errorCodes = new List<string>();
+                                foreach (var detailEntry in errorDetails)
+                                {
+                                    errorCodes.Add(detailEntry["code"]?.ToString());
+                                }
+
+                                if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
+                                {
+                                    var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(targetSubscriptions);
+                                    _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
+                                    throw invalidSubscriptionException;
+                                }
                             }
                         }
                     }
-                }
 
-                throw;
+                    throw;
+                }
+                finally
+                {
+                    var contextualInformation = new Dictionary<string, object>
+                    {
+                        {"Query", query},    
+                        {"Subscriptions", targetSubscriptions}
+                    };
+
+                    _logger.LogDependency("Azure Resource Graph", query,"Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                }
             }
         }
 
