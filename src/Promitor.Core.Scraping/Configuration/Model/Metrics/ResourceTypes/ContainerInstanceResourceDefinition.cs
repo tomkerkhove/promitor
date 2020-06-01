@@ -12,5 +12,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => ContainerGroup;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

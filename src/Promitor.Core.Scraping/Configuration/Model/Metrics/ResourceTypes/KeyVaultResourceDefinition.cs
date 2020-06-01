@@ -12,5 +12,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => VaultName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

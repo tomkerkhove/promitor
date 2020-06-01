@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
@@ -22,6 +24,7 @@ using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor.Configuration;
@@ -60,8 +63,7 @@ namespace Promitor.Agents.Scraper.Extensions
                     var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
                     var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
                     var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
-
-                    var jobName = $"{scrapeDefinition.SubscriptionId}-{scrapeDefinition.PrometheusMetricDefinition.Name}";
+                    var jobName = GenerateJobName(scrapeDefinition, resource);
 
                     services.AddScheduler(builder =>
                     {
@@ -85,6 +87,22 @@ namespace Promitor.Agents.Scraper.Extensions
             }
 
             return services;
+        }
+
+        private static string GenerateJobName(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, IAzureResourceDefinition resource)
+        {
+            var jobNameBuilder = new StringBuilder();
+            jobNameBuilder.Append(scrapeDefinition.SubscriptionId);
+            jobNameBuilder.Append("-");
+            jobNameBuilder.Append(scrapeDefinition.ResourceGroupName);
+            jobNameBuilder.Append("-");
+            jobNameBuilder.Append(scrapeDefinition.PrometheusMetricDefinition.Name);
+            jobNameBuilder.Append("-");
+            jobNameBuilder.Append(resource.GetUniqueName());
+            jobNameBuilder.Append("-");
+            jobNameBuilder.Append(Guid.NewGuid().ToString());
+
+            return jobNameBuilder.ToString();
         }
 
         /// <summary>

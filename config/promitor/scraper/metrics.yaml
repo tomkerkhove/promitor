@@ -59,6 +59,8 @@ metrics:
     resources:
     - namespace: promitor-messaging
       queueName: orders
+    - namespace: promitor-messaging
+      queueName: sales
     - namespace: promitor-messaging-other-subscription
       queueName: orders
       subscriptionId: 0329dd2a-59dc-4493-aa54-cb01cb027dc2

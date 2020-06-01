@@ -21,5 +21,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes
 
         /// <inheritdoc />
         public override string GetResourceName() => WebAppName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => $"{WebAppName}-{SlotName}";
     }
 }

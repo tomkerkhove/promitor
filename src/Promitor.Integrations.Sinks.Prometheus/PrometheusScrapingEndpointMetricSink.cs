@@ -42,7 +42,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
-                var metricValue = measuredMetric.Value ?? 0;
+                var metricValue = DetermineMetricMeasurement(measuredMetric);
                 var metricDefinition = _metricsDeclarationProvider.GetPrometheusDefinition(metricName);
 
                 var metricLabels = DetermineLabels(metricDefinition, scrapeResult, measuredMetric);
@@ -52,6 +52,12 @@ namespace Promitor.Integrations.Sinks.Prometheus
             }
 
             await Task.WhenAll(reportMetricTasks);
+        }
+
+        private double DetermineMetricMeasurement(MeasuredMetric scrapedMetricResult)
+        {
+            var metricUnavailableValue = _prometheusConfiguration.CurrentValue?.MetricUnavailableValue ?? Defaults.Prometheus.MetricUnavailableValue;
+            return scrapedMetricResult.Value ?? metricUnavailableValue;
         }
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)

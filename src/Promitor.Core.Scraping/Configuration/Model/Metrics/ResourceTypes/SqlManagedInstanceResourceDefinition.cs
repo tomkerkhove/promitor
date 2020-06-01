@@ -24,5 +24,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => InstanceName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }

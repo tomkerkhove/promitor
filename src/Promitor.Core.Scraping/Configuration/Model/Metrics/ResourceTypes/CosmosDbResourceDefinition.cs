@@ -12,5 +12,8 @@
 
         /// <inheritdoc />
         public override string GetResourceName() => DbName;
+
+        /// <inheritdoc />
+        public override string GetUniqueName() => GetResourceName();
     }
 }
