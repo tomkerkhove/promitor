@@ -60,10 +60,6 @@ stages:
        displayName: 'Determine ''{major}.{minor}'' version'
      - template: ./../templates/persist-variable.yml
        parameters:
-          currentVariableName: 'Release.Type'
-          persistedVariableName: 'Release.Type'
-     - template: ./../templates/persist-variable.yml
-       parameters:
           currentVariableName: 'Image.MajorMinorVersion'
           persistedVariableName: 'Image.MajorMinorVersion'
      - publish: $(Pipeline.Workspace)/variables
@@ -84,9 +80,6 @@ stages:
      - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - template: ./../templates/read-variable-on-linux.yml
-       parameters:
-        variableName: 'Release.Type'
      - task: DotNetCoreInstaller@0
        displayName: 'Install .NET SDK'
        inputs:
