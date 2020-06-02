@@ -12,6 +12,11 @@ data:
   runtime.yaml: |-
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
+  {{- if .Values.resourceDiscovery.enabled }}
+      resourceDiscovery:
+        host: {{ .Values.resourceDiscovery.host | quote }}
+        port: {{ .Values.resourceDiscovery.port }}
+  {{- end }}
       metricSinks:
   {{- if .Values.metricSinks.statsd.host }}
         statsd:
