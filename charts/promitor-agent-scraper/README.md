@@ -60,17 +60,20 @@ their default values.
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |
+| `resourceDiscovery.enabled`  | Indication whether or not resource discovery is required | `false`            |
+| `resourceDiscovery.host`  | DNS name or IP address of the Promitor Resource Discovery agent |             |
+| `resourceDiscovery.port`  | Port (UDP) address of the Promitor Resource Discovery agent | `80`            |
 | `metricSinks.statsd.host`  | DNS name or IP address of StatsD server |             |
 | `metricSinks.statsd.port`  | Port (UDP) address of StatsD server | `8125`            |
 | `metricSinks.statsd.metricPrefix`  | Prefix that will be added to every metric defined in the metric declaration |             |
 | `prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
-| `prometheus.enableMetricTimestamps`  | Indication wheter or not to include timestamp | `true`            |
-| `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found wheter or not to include timestamp | `NaN`            |
-| `prometheus.enableServiceDiscovery`  | Indication wheter or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
-| `telemetry.applicationInsights.enabled`  | Indication wheter or not to send telemetry to Azure Application Insights | `false`            |
+| `prometheus.enableMetricTimestamps`  | Indication whether or not to include timestamp | `true`            |
+| `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found whether or not to include timestamp | `NaN`            |
+| `prometheus.enableServiceDiscovery`  | Indication whether or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
+| `telemetry.applicationInsights.enabled`  | Indication whether or not to send telemetry to Azure Application Insights | `false`            |
 | `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
 | `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
-| `telemetry.containerLogs.enabled`  | Indication wheter or not to send telemetry to container logs | `true`            |
+| `telemetry.containerLogs.enabled`  | Indication whether or not to send telemetry to container logs | `true`            |
 | `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  |
 | `telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
 | `azureMetadata.tenantId`  | Id of Azure tenant |             |
@@ -88,7 +91,7 @@ their default values.
 | `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |
 | `secrets.appIdSecret`  | Name of the secret for Azure AD identity id | `azure-app-id`            |
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
-| `service.exposeExternally`  | Indication wheter or not to expose service externally | `false`            |
+| `service.exposeExternally`  | Indication whether or not to expose service externally | `false`            |
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
 | `service.labelType`  | Label to assign to your service | `infrastructure`            |

@@ -20,19 +20,23 @@ metricSinks:
     host: ""
     port: 8125
     metricPrefix: ""
+resourceDiscovery:
+  enabled: false
+  host: ""
+  port: 80
 prometheus:
   scrapeEndpointPath: /metrics
-  enableMetricTimestamps: True
+  enableMetricTimestamps: true
   metricUnavailableValue: NaN
-  enableServiceDiscovery: True
+  enableServiceDiscovery: true
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
-    enabled: False
+    enabled: false
     key: ""
     logLevel: ""
   containerLogs:
-    enabled: True
+    enabled: true
     logLevel: ""
 
 ## Metric Declaration YAML
@@ -61,7 +65,7 @@ metrics: []
 
 secrets:
   # To use your own secret, set createSecret to false and define the name/keys that your secret uses
-  createSecret: True
+  createSecret: true
   secretName: ""
   appIdSecret: azure-app-id
   appKeySecret: azure-app-key
