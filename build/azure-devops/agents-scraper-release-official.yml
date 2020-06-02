@@ -3,6 +3,28 @@ resources:
 - repo: self
 trigger: none
 pr: none
+
+parameters:
+- name: releaseType
+  displayName: Release Type
+  type: string
+  default: Full
+  values:
+  - Full
+  - Preview
+- name: imageVersion
+  displayName: Image Version
+  type: string
+  default: 0.1.0
+- name: chartVersion
+  displayName: Helm Chart Version
+  type: string
+  default: 0.1.0
+- name: githubReleaseTitle
+  displayName: GitHub Release Title
+  type: string
+  default: v$(Image.Version)
+
 variables:
   - template: ./variables/build.yml
   - name: 'Image.Name'
@@ -13,9 +35,13 @@ variables:
     value: '$(Build.BuildNumber)'
   - name: 'Helm.App.Version'
     value: '$(Image.Version)'
-  # Release.Title is configured in the build definition as settable at queue time
-  # Image.Version is configured in the build definition as settable at queue time
-  # Helm.Chart.Version is configured in the build definition as settable at queue time
+  - name: 'Image.Version'
+    value: '${{ parameters.imageVersion }}'
+  - name: 'Helm.Chart.Version'
+    value: '${{ parameters.chartVersion }}'
+  - name: 'Release.Title'
+    value: '${{ parameters.githubReleaseTitle }}'
+
 stages:
 - stage: Init
   displayName: Prepare Release
@@ -85,14 +111,15 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''latest'''
-        imageName: '$(Image.Name):latest'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''latest-$(OS.Name)'''
-        imageName: '$(Image.Name):latest-$(OS.Name)'
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+            imageDisplayName: '''latest'''
+            imageName: '$(Image.Name):latest'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+            imageDisplayName: '''latest-$(OS.Name)'''
+            imageName: '$(Image.Name):latest-$(OS.Name)'
    - job: BuildWindows
      displayName: Build Windows Docker image
      pool:
@@ -130,10 +157,11 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''latest-$(OS.Name)'''
-        imageName: '$(Image.Name):latest-$(OS.Name)'
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+            imageDisplayName: '''latest-$(OS.Name)'''
+            imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
@@ -148,44 +176,87 @@ stages:
      - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - task: GitHubRelease@0
-       displayName: 'Create GitHub Release'
-       inputs:
-         gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
-         repositoryName: tomkerkhove/promitor
-         action: Create
-         tagSource: manual
-         tag: '$(Release.TagName)'
-         title: '$(Release.Title)'
-         releaseNotesSource: input
-         isDraft: true
-         changeLogType: issueBased
-         releaseNotes: |
-          ### What's new?
-          Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
-          #### Deprecations
-          Here are a list of new deprecations and how to mitigate them:
-          - TBW _(Discussion [#]())_
-          #### Breaking Changes
-          Here are a list of breaking changes and how to mitigate them:
-          - TBW (#) - _Use new approach documented here_
-          ### Getting started
-          Running Promitor Scraper is super easy:
-          ```
-          docker run -d -p 8999:80 --name promitor-agent-scraper
-                            --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
-                            --env-file C:/Promitor/az-mon-auth.creds \
-                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                            tomkerkhove/promitor-agent-scraper:$(Image.Version)
-          ```
-          ### Docker Image information
-          New Docker image tags are available:
-          - `latest`, `latest-linux`, `latest-windows`
-          - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
-          - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
+     - ${{ if eq(parameters['releaseType'], 'Preview') }}:
+        - task: GitHubRelease@0
+          displayName: 'Create GitHub Pre-Release'
+          inputs:
+            gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+            repositoryName: tomkerkhove/promitor
+            action: Create
+            tagSource: manual
+            tag: '$(Release.TagName)'
+            title: '$(Release.Title)'
+            releaseNotesSource: input
+            isPreRelease: true
+            changeLogType: issueBased
+            changeLogCompareToRelease: 'lastFullRelease'
+            isDraft: true
+            releaseNotes: |
+              ### What's new?
+              Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
+              #### Deprecations
+              Here are a list of new deprecations and how to mitigate them:
+              - TBW _(Discussion [#]())_
+              #### Breaking Changes
+              Here are a list of breaking changes and how to mitigate them:
+              - TBW (#) - _Use new approach documented here_
+              ### Getting started
+              Running Promitor Scraper is super easy:
+              ```
+              docker run -d -p 8999:80 --name promitor-agent-scraper
+                                --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                                --env-file C:/Promitor/az-mon-auth.creds \
+                                --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                                tomkerkhove/promitor-agent-scraper:$(Image.Version)
+              ```
+              ### Docker Image information
+              New Docker image tags are available:
+              - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+              - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
 
-          Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
-          For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+              Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
+              For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - task: GitHubRelease@0
+          displayName: 'Create GitHub Pre-Release'
+          inputs:
+            gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+            repositoryName: tomkerkhove/promitor
+            action: Create
+            tagSource: manual
+            tag: '$(Release.TagName)'
+            title: '$(Release.Title)'
+            releaseNotesSource: input
+            changeLogType: issueBased
+            changeLogCompareToRelease: 'lastFullRelease'
+            isPreRelease: false
+            isDraft: true
+            releaseNotes: |
+              ### What's new?
+              Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
+              #### Deprecations
+              Here are a list of new deprecations and how to mitigate them:
+              - TBW _(Discussion [#]())_
+              #### Breaking Changes
+              Here are a list of breaking changes and how to mitigate them:
+              - TBW (#) - _Use new approach documented here_
+              ### Getting started
+              Running Promitor Scraper is super easy:
+              ```
+              docker run -d -p 8999:80 --name promitor-agent-scraper
+                                --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                                --env-file C:/Promitor/az-mon-auth.creds \
+                                --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
+                                tomkerkhove/promitor-agent-scraper:$(Image.Version)
+              ```
+              ### Docker Image information
+              New Docker image tags are available:
+              - `latest`, `latest-linux`, `latest-windows`
+              - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+              - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
+
+              Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
+              For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
 - stage: ReleaseHelm
   displayName: Release Helm Chart
   dependsOn: Build
