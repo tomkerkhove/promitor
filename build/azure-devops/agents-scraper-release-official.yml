@@ -4,6 +4,28 @@ resources:
 - repo: self
 trigger: none
 pr: none
+
+parameters:
+- name: releaseType
+  displayName: Release Type
+  type: string
+  default: Full
+  values:
+  - Full
+  - Preview
+- name: imageVersion
+  displayName: Image Version
+  type: string
+  default: 0.1.0
+- name: chartVersion
+  displayName: Helm Chart Version
+  type: string
+  default: 0.1.0
+- name: githubReleaseTitle
+  displayName: GitHub Release Title
+  type: string
+  default: v$(Image.Version)
+
 variables:
   - template: ./variables/build.yml
   - name: 'Image.Name'
@@ -14,9 +36,13 @@ variables:
     value: '$(Build.BuildNumber)'
   - name: 'Helm.App.Version'
     value: '$(Image.Version)'
-  # Release.Title is configured in the build definition as settable at queue time
-  # Image.Version is configured in the build definition as settable at queue time
-  # Helm.Chart.Version is configured in the build definition as settable at queue time
+  - name: 'Image.Version'
+    value: '${{ parameters.imageVersion }}'
+  - name: 'Helm.Chart.Version'
+    value: '${{ parameters.chartVersion }}'
+  - name: 'Release.Title'
+    value: '${{ parameters.githubReleaseTitle }}'
+
 stages:
 - stage: Init
   displayName: Prepare Release
@@ -26,16 +52,6 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-        Write-Host "Determining release type for for '$(Image.Version)'"
-        if($"$(Image.Version)".contains('-')) {
-            $releaseType="Preview"
-        }else {
-            $releaseType="Full"
-        }
-        Write-Host "Release type is '$releaseType'"
-        Write-Output ("##vso[task.setvariable variable=Release.Type;]$releaseType")
-       displayName: 'Determine release type'
      - powershell: |
         Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
         $index = "$(Image.Version)".IndexOf(".", 2);
@@ -103,7 +119,7 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-     - ${{ if eq(variables['Release.Type'], 'Full') }}:
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
         - template: ./../templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest'''
@@ -149,7 +165,7 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
         imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-     - ${{ if eq(variables['Release.Type'], 'Full') }}:
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
         - template: ./../templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
@@ -168,7 +184,7 @@ stages:
      - template: ./../templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - ${{ if eq(variables['Release.Type'], 'Preview') }}:
+     - ${{ if eq(parameters['releaseType'], 'Preview') }}:
         - task: GitHubRelease@0
           displayName: 'Create GitHub Pre-Release'
           inputs:
@@ -208,7 +224,7 @@ stages:
 
               Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
               For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
-     - ${{ if eq(variables['Release.Type'], 'Full') }}:
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
         - task: GitHubRelease@0
           displayName: 'Create GitHub Pre-Release'
           inputs:
