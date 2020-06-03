@@ -51,7 +51,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
 
             if (metric.Resources?.Any() == false && metric.ResourceCollections?.Any() == false)
             {
-                errorMessages.Add("No resource or resource collection is configured");
+                errorMessages.Add("No resource or resource collection is configured to be scraped");
             }
             else
             {
