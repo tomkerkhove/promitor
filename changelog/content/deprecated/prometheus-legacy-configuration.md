@@ -1,8 +1,8 @@
 ---
 title:
-subtitle: created on {{ now.Format "2006-01-02" }}
-date: 2020-05-14T12:00:00+01:00
-removal_date: 2019-07-07
+subtitle: created on {{ now.Format "2020-05-15" }}
+date: 2020-05-15T12:00:00+01:00
+removal_date: 2020-05-15
 weight:
 version:
 ---
