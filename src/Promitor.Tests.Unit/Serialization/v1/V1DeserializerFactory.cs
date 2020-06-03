@@ -23,6 +23,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                         new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance),
                         NullLogger<AzureMetricConfigurationDeserializer>.Instance),
                     new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),
+                    new AzureResourceCollectionDeserializer(NullLogger<AzureResourceCollectionDeserializer>.Instance),
                     new AzureResourceDeserializerFactory(new SecretDeserializer(NullLogger<SecretDeserializer>.Instance), new LoggerFactory()),
                     NullLogger<MetricDefinitionDeserializer>.Instance),
                 NullLogger<V1Deserializer>.Instance);

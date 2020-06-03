@@ -27,9 +27,11 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
             _resourceDeserializerFactory = new Mock<IAzureResourceDeserializerFactory>();
 
+            var resourceCollectionsDeserializer = new Mock<IDeserializer<AzureResourceCollectionDefinitionV1>>();
             _deserializer = new MetricDefinitionDeserializer(
                 _azureMetricConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
+                resourceCollectionsDeserializer.Object,
                 _resourceDeserializerFactory.Object,
                 NullLogger<MetricDefinitionDeserializer>.Instance);
         }
@@ -326,16 +328,52 @@ resources:
         }
 
         [Fact]
-        public void Deserialize_ResourcesNotSupplied_ReportsError()
+        public void Deserialize_ResourcesNotSupplied_Null()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceType: Generic");
 
-            // Act / Assert
-            YamlAssert.ReportsErrorForProperty(
-                _deserializer,
-                node,
-                "resources");
+            // Act
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            Assert.Null(definition.Resources);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceCollectionsSupplied_DoesNotReportWarning()
+        {
+            // Because we're handling deserializing the resources manually, we
+            // need to explicitly ignore the field to stop a warning being reported
+            // about an unknown field
+
+            // Arrange
+            const string yamlText =
+                @"resourceType: Generic
+resourceCollections:
+- name: sample-1
+- name: sample-2";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("resourceCollections"))), Times.Never);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceCollectionsNotSupplied_Null()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceType: Generic");
+
+            // Act
+            var definition = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            Assert.Null(definition.ResourceCollections);
         }
 
         [Fact]

@@ -42,6 +42,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public ResourceType ResourceType { get; set; }
 
         /// <summary>
+        /// Gets or sets the list of resource collections to discover resources with.
+        /// </summary>
+        public List<AzureResourceCollection> ResourceCollections { get; set; }
+
+        /// <summary>
         /// Gets or sets the list of resources to scrape.
         /// </summary>
         public List<IAzureResourceDefinition> Resources { get; set; }

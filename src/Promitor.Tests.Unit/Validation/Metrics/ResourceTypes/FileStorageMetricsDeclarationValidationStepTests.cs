@@ -114,11 +114,28 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void FileStorageMetricsDeclaration_ValidDeclarationWithTimeSpentInQueue_Succeeds()
+        public void FileStorageMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithFileStorageMetric(azureMetricName: AzureStorageConstants.Queues.Metrics.TimeSpentInQueue)
+                .WithFileStorageMetric(omitResource: true)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation was successful");
+        }
+
+        [Fact]
+        public void FileStorageMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithFileStorageMetric(omitResource: true, resourceCollectionName: "sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -128,6 +145,23 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
 
             // Assert
             Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+        }
+
+        [Fact]
+        public void FileStorageMetricsDeclaration_ValidDeclarationWithTimeSpentInQueue_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithFileStorageMetric()
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was successful");
         }
     }
 }

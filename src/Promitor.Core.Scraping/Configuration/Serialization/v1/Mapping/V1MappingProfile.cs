@@ -19,6 +19,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<ScrapingV1, Configuration.Model.Scraping>();
             CreateMap<AzureMetricConfigurationV1, AzureMetricConfiguration>();
             CreateMap<MetricAggregationV1, MetricAggregation>();
+            CreateMap<AzureResourceCollectionDefinitionV1, AzureResourceCollection>();
             CreateMap<SecretV1, Secret>();
 
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();

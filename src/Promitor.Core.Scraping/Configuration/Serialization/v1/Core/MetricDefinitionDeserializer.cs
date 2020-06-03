@@ -8,21 +8,26 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     public class MetricDefinitionDeserializer : Deserializer<MetricDefinitionV1>
     {
         private const string ResourcesTag = "resources";
+        private const string ResourceCollectionsTag = "resourceCollections";
+        private readonly IDeserializer<AzureResourceCollectionDefinitionV1> _azureResourceCollectionDeserializer;
         private readonly IAzureResourceDeserializerFactory _azureResourceDeserializerFactory;
 
         public MetricDefinitionDeserializer(IDeserializer<AzureMetricConfigurationV1> azureMetricConfigurationDeserializer,
             IDeserializer<ScrapingV1> scrapingDeserializer,
+            IDeserializer<AzureResourceCollectionDefinitionV1> azureResourceCollectionDeserializer,
             IAzureResourceDeserializerFactory azureResourceDeserializerFactory,
             ILogger<MetricDefinitionDeserializer> logger) : base(logger)
         {
+            _azureResourceCollectionDeserializer = azureResourceCollectionDeserializer;
             _azureResourceDeserializerFactory = azureResourceDeserializerFactory;
 
             MapRequired(definition => definition.Name);
             MapRequired(definition => definition.Description);
             MapRequired(definition => definition.ResourceType);
-            MapOptional(definition => definition.Labels);
             MapRequired(definition => definition.AzureMetricConfiguration, azureMetricConfigurationDeserializer);
+            MapOptional(definition => definition.Labels);
             MapOptional(definition => definition.Scraping, scrapingDeserializer);
+            IgnoreField(ResourceCollectionsTag);
             IgnoreField(ResourcesTag);
         }
 
@@ -49,6 +54,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 return;
             }
 
+            if (node.Children.TryGetValue(ResourceCollectionsTag, out var resourceCollectionNode))
+            {
+                metricDefinition.ResourceCollections = _azureResourceCollectionDeserializer.Deserialize((YamlSequenceNode)resourceCollectionNode, errorReporter);
+            }
+
             if (node.Children.TryGetValue(ResourcesTag, out var metricsNode))
             {
                 var resourceDeserializer = _azureResourceDeserializerFactory.GetDeserializerFor(metricDefinition.ResourceType.Value);
@@ -60,10 +70,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 {
                     errorReporter.ReportError(resourceTypeNode, $"Could not find a deserializer for resource type '{metricDefinition.ResourceType}'.");
                 }
-            }
-            else
-            {
-                errorReporter.ReportError(node, "'resources' is a required field but was not found.");
             }
         }
     }
