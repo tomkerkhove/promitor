@@ -58,31 +58,39 @@ namespace Promitor.Agents.Scraper.Extensions
 
             foreach (var metric in metrics.Metrics)
             {
-                foreach (var resource in metric.Resources)
+                if (metric.ResourceCollections?.Any() == true)
                 {
-                    var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-                    var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-                    var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
-                    var jobName = GenerateJobName(scrapeDefinition, resource);
+                    Console.WriteLine("Resource collections are not scraped yet.");
+                }
 
-                    services.AddScheduler(builder =>
+                if (metric.Resources != null)
+                {
+                    foreach (var resource in metric.Resources)
                     {
-                        builder.AddJob(jobServices =>
+                        var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
+                        var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+                        var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
+                        var jobName = GenerateJobName(scrapeDefinition, resource);
+
+                        services.AddScheduler(builder =>
                         {
-                            return new MetricScrapingJob(jobName, scrapeDefinition,
-                                metricSinkWriter,
-                                jobServices.GetService<IPrometheusMetricWriter>(),
-                                jobServices.GetService<MetricScraperFactory>(),
-                                azureMonitorClient,
-                                jobServices.GetService<ILogger<MetricScrapingJob>>());
-                        }, schedulerOptions =>
-                        {
-                            schedulerOptions.CronSchedule = scrapeDefinition.Scraping.Schedule;
-                            schedulerOptions.RunImmediately = true;
-                        },
-                        jobName: jobName);
-                        builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
-                    });
+                            builder.AddJob(jobServices =>
+                            {
+                                return new MetricScrapingJob(jobName, scrapeDefinition,
+                                    metricSinkWriter,
+                                    jobServices.GetService<IPrometheusMetricWriter>(),
+                                    jobServices.GetService<MetricScraperFactory>(),
+                                    azureMonitorClient,
+                                    jobServices.GetService<ILogger<MetricScrapingJob>>());
+                            }, schedulerOptions =>
+                            {
+                                schedulerOptions.CronSchedule = scrapeDefinition.Scraping.Schedule;
+                                schedulerOptions.RunImmediately = true;
+                            },
+                            jobName: jobName);
+                            builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
+                        });
+                    }
                 }
             }
 
@@ -129,6 +137,7 @@ namespace Promitor.Agents.Scraper.Extensions
             services.AddSingleton<IDeserializer<MetricDimensionV1>, MetricDimensionDeserializer>();
             services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();
             services.AddSingleton<IDeserializer<AzureMetricConfigurationV1>, AzureMetricConfigurationDeserializer>();
+            services.AddSingleton<IDeserializer<AzureResourceCollectionDefinitionV1>, AzureResourceCollectionDeserializer>();
             services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();
             services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
             services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();

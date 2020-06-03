@@ -115,6 +115,13 @@ namespace Promitor.Tests.Unit.Serialization.v1
                                 QueueName = "orders",
                                 ResourceGroupName = "promitor-demo-group"
                             }
+                        },
+                        ResourceCollections = new List<AzureResourceCollectionDefinitionV1>
+                        {
+                            new AzureResourceCollectionDefinitionV1
+                            {
+                                Name="example-resource-collection"
+                            }
                         }
                     }
                 }
@@ -171,6 +178,10 @@ namespace Promitor.Tests.Unit.Serialization.v1
             Assert.Equal("promitor-messaging", serviceBusQueueResource.Namespace);
             Assert.Equal("orders", serviceBusQueueResource.QueueName);
             Assert.Equal("promitor-demo-group", serviceBusQueueResource.ResourceGroupName);
+            Assert.NotNull(deserializedModel.Metrics.ElementAt(1).ResourceCollections);
+            Assert.Single(deserializedModel.Metrics.ElementAt(1).ResourceCollections);
+            var resourceCollection =deserializedModel.Metrics.ElementAt(1).ResourceCollections.ElementAt(0);
+            Assert.Equal("example-resource-collection", resourceCollection.Name);
         }
 
         [Fact]
@@ -215,6 +226,10 @@ namespace Promitor.Tests.Unit.Serialization.v1
                     Assert.Equal("orders", definition.QueueName);
                     Assert.Equal("promitor-demo-group", definition.ResourceGroupName);
                 });
+            Assert.NotNull(secondMetric.ResourceCollections);
+            Assert.Single(secondMetric.ResourceCollections);
+            var resourceCollection = secondMetric.ResourceCollections.First();
+            Assert.Equal("example-resource-collection", resourceCollection.Name);
         }
     }
 }
