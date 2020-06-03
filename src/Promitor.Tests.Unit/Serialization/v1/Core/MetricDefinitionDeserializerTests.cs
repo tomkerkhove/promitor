@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -18,7 +17,6 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly Mock<IDeserializer<AzureMetricConfigurationV1>> _azureMetricConfigurationDeserializer;
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
         private readonly Mock<IAzureResourceDeserializerFactory> _resourceDeserializerFactory;
-        private readonly Mock<IDeserializer<AzureResourceCollectionDefinitionV1>> _resourceCollectionsDeserializer;
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         private readonly MetricDefinitionDeserializer _deserializer;
@@ -27,13 +25,13 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         {
             _azureMetricConfigurationDeserializer = new Mock<IDeserializer<AzureMetricConfigurationV1>>();
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
-            _resourceCollectionsDeserializer = new Mock<IDeserializer<AzureResourceCollectionDefinitionV1>>();
             _resourceDeserializerFactory = new Mock<IAzureResourceDeserializerFactory>();
 
+            var resourceCollectionsDeserializer = new Mock<IDeserializer<AzureResourceCollectionDefinitionV1>>();
             _deserializer = new MetricDefinitionDeserializer(
                 _azureMetricConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
-                _resourceCollectionsDeserializer.Object,
+                resourceCollectionsDeserializer.Object,
                 _resourceDeserializerFactory.Object,
                 NullLogger<MetricDefinitionDeserializer>.Instance);
         }
