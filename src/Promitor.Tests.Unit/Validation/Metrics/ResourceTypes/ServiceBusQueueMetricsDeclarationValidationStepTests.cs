@@ -61,7 +61,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceInfo_Fails()
+        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -75,6 +75,23 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
 
             // Assert
             Assert.False(validationResult.IsSuccessful, "Validation was successful but should have failed");
+        }
+
+        [Fact]
+        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
 
         [Fact]

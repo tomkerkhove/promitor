@@ -69,169 +69,139 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return configurationSerializer.Serialize(metricsDeclaration);
         }
 
-        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus", string metricDescription = "Description for a metric", string metricDimension = "", string queueName = "promitor-queue", string serviceBusNamespace = "promitor-namespace", string azureMetricName = "Total", bool omitResource = false)
+        public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus",
+            string metricDescription = "Description for a metric",
+            string metricDimension = "",
+            string queueName = "promitor-queue",
+            string serviceBusNamespace = "promitor-namespace",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, metricDimension);
             var resource = new ServiceBusQueueResourceV1
             {
                 QueueName = queueName,
                 Namespace = serviceBusNamespace
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                ResourceType = ResourceType.ServiceBusQueue
-            };
-
-            if (omitResource == false)
-            {
-                metric.Resources = new List<AzureResourceDefinitionV1> { resource };
-            }
-
-            _metrics.Add(metric);
-
+            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource, metricDimension);
+            
             return this;
         }
 
-        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance", string metricDescription = "Description for a metric", string containerGroup = "promitor-group", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithContainerInstanceMetric(string metricName = "promitor-container-instance",
+            string metricDescription = "Description for a metric",
+            string containerGroup = "promitor-group",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new ContainerInstanceResourceV1
             {
                 ContainerGroup = containerGroup
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.ContainerInstance
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.ContainerInstance, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithContainerRegistryMetric(string metricName = "promitor-container-registry", string metricDescription = "Description for a metric", string registryName = "promitor-container-registry", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithContainerRegistryMetric(string metricName = "promitor-container-registry",
+            string metricDescription = "Description for a metric",
+            string registryName = "promitor-container-registry",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new ContainerRegistryResourceV1
             {
                 RegistryName = registryName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.ContainerRegistry
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.ContainerRegistry, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithCosmosDbMetric(string metricName = "promitor-cosmosdb", string metricDescription = "Description for a metric", string dbName = "promitor-cosmosdb", string azureMetricName = "TotalRequests")
+        public MetricsDeclarationBuilder WithCosmosDbMetric(string metricName = "promitor-cosmosdb",
+            string metricDescription = "Description for a metric",
+            string dbName = "promitor-cosmosdb",
+            string azureMetricName = "TotalRequests",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new CosmosDbResourceV1
             {
                 DbName = dbName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.CosmosDb
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.CosmosDb, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithAppPlanMetric(string metricName = "promitor-app-plan", string metricDescription = "Description for a metric", string appPlanName = "promitor-app-plan", string azureMetricName = "TotalRequests")
+        public MetricsDeclarationBuilder WithAppPlanMetric(string metricName = "promitor-app-plan",
+            string metricDescription = "Description for a metric",
+            string appPlanName = "promitor-app-plan",
+            string azureMetricName = "TotalRequests",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new AppPlanResourceV1
             {
                 AppPlanName = appPlanName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.AppPlan
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.AppPlan, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithApiManagementMetric(string metricName = "promitor-api-management", string metricDescription = "Description for a metric", string instanceName = "promitor-app-plan", string locationName = "West Europe", string azureMetricName = "TotalRequests")
+        public MetricsDeclarationBuilder WithApiManagementMetric(string metricName = "promitor-api-management",
+            string metricDescription = "Description for a metric",
+            string instanceName = "promitor-app-plan",
+            string locationName = "West Europe",
+            string azureMetricName = "TotalRequests",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new ApiManagementResourceV1
             {
                 InstanceName = instanceName,
                 LocationName = locationName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.ApiManagement
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.ApiManagement, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithFunctionAppMetric(string metricName = "promitor-fuction-app", string metricDescription = "Description for a metric", string functionAppName = "promitor-fuction-app", string azureMetricName = "TotalRequests")
+        public MetricsDeclarationBuilder WithFunctionAppMetric(string metricName = "promitor-fuction-app",
+            string metricDescription = "Description for a metric",
+            string functionAppName = "promitor-fuction-app",
+            string azureMetricName = "TotalRequests",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new FunctionAppResourceV1
             {
                 FunctionAppName = functionAppName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.FunctionApp
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.FunctionApp, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithStorageQueueMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string queueName = "promitor-queue", string accountName = "promitor-account", string sasToken = "?sig=promitor", string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount)
+        public MetricsDeclarationBuilder WithStorageQueueMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string queueName = "promitor-queue",
+            string accountName = "promitor-account",
+            string sasToken = "?sig=promitor",
+            string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount,
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var secret = new SecretV1
             {
                 RawValue = sasToken
@@ -244,196 +214,318 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 SasToken = secret
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.StorageQueue
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.StorageQueue, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithStorageAccountMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithStorageAccountMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string accountName = "promitor-account",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new StorageAccountResourceV1
             {
                 AccountName = accountName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.StorageAccount
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.StorageAccount, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithFileStorageMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithFileStorageMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string accountName = "promitor-account",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new FileStorageResourceV1
             {
                 AccountName = accountName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.FileStorage
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.FileStorage, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor", string metricDescription = "Description for a metric", string accountName = "promitor-account", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string accountName = "promitor-account",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new BlobStorageResourceV1
             {
                 AccountName = accountName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.BlobStorage
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.BlobStorage, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine", string metricDescription = "Description for a metric", string virtualMachineName = "promitor-virtual-machine-name", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine",
+            string metricDescription = "Description for a metric",
+            string virtualMachineName = "promitor-virtual-machine-name",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new VirtualMachineResourceV1
             {
                 VirtualMachineName = virtualMachineName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.VirtualMachine
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.VirtualMachine, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithWebAppMetric(string metricName = "promitor-web-app", string metricDescription = "Description for a metric", string webAppName = "promitor-web-app-name", string slotName = "production", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithWebAppMetric(string metricName = "promitor-web-app",
+            string metricDescription = "Description for a metric",
+            string webAppName = "promitor-web-app-name",
+            string slotName = "production",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new WebAppResourceV1
             {
                 WebAppName = webAppName,
                 SlotName = slotName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.WebApp
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.WebApp, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithVirtualMachineScaleSetMetric(string metricName = "promitor-virtual-machine-scale-set", string metricDescription = "Description for a metric", string scaleSetName = "promitor-scale-set-name", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithVirtualMachineScaleSetMetric(string metricName = "promitor-virtual-machine-scale-set",
+            string metricDescription = "Description for a metric",
+            string scaleSetName = "promitor-scale-set-name",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new VirtualMachineScaleSetResourceV1()
             {
                 ScaleSetName = scaleSetName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.VirtualMachineScaleSet
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.VirtualMachineScaleSet, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface", string metricDescription = "Description for a metric", string networkInterfaceName = "promitor-network-interface-name", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface",
+            string metricDescription = "Description for a metric",
+            string networkInterfaceName = "promitor-network-interface-name",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new NetworkInterfaceResourceV1
             {
                 NetworkInterfaceName = networkInterfaceName
             };
 
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.NetworkInterface
-            };
-
-            _metrics.Add(metric);
+            CreateAndAddMetricDefinition(ResourceType.NetworkInterface, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo", string metricDescription = "Description for a metric", string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging", string filter = "EntityName eq \'orders\'", string azureMetricName = "Total")
+        public MetricsDeclarationBuilder WithGenericMetric(string metricName = "foo",
+            string metricDescription = "Description for a metric",
+            string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging",
+            string filter = "EntityName eq \'orders\'",
+            string azureMetricName = "Total",
+            string resourceCollectionName = "",
+            bool omitResource = false)
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
             var resource = new GenericResourceV1
             {
                 ResourceUri = resourceUri,
                 Filter = filter
             };
 
+            CreateAndAddMetricDefinition(ResourceType.Generic, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis",
+            string metricDescription = "Description for a metric",
+            string cacheName = "promitor-redis",
+            string azureMetricName = "CacheHits",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new RedisCacheResourceV1
+            {
+                CacheName = cacheName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.RedisCache, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithPostgreSqlMetric(string metricName = "promitor-postgresql",
+            string metricDescription = "Description for a metric",
+            string serverName = "promitor-postgresql",
+            string azureMetricName = "cpu_percent",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new PostgreSqlResourceV1
+            {
+                ServerName = serverName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSqlDatabaseMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string serverName = "promitor-sql-server",
+            string databaseName = "promitor-db",
+            string metricDescription = "Metric description",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new SqlDatabaseResourceV1
+            {
+                ServerName = serverName,
+                DatabaseName = databaseName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SqlDatabase, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSqlServerMetric(
+            string metricName = "promitor-sql-server",
+            string azureMetricName = "cpu_percent",
+            string serverName = "promitor-sql-server",
+            string metricDescription = "Metric description",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new SqlServerResourceV1
+            {
+                ServerName = serverName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SqlServer, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSqlManagedInstanceMetric(
+            string metricName = "promitor-sql-managed-instance",
+            string azureMetricName = "cpu_percent",
+            string instanceName = "promitor-sql-instance",
+            string metricDescription = "Metric description",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new SqlManagedInstanceResourceV1
+            {
+                InstanceName = instanceName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SqlManagedInstance, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithIoTHubMetric(string metricName = "promitor-iot-hub",
+            string metricDescription = "Description for a metric",
+            string iotHubName = "promitor-iot-hub",
+            string azureMetricName = "devices.totalDevices",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new IoTHubResourceV1
+            {
+                IoTHubName = iotHubName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.IoTHub, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithDeviceProvisioningServiceMetric(string metricName = "promitor-dps",
+            string metricDescription = "Description for a metric",
+            string deviceProvisioningServiceName = "promitor-dps",
+            string azureMetricName = "AttestationAttempts",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new DeviceProvisioningServiceResourceV1
+            {
+                DeviceProvisioningServiceName = deviceProvisioningServiceName
+            };
+            
+            CreateAndAddMetricDefinition(ResourceType.DeviceProvisioningService, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithKeyVaultMetric(string metricName = "promitor-kv",
+            string metricDescription = "Description for a metric",
+            string vaultName = "promitor-kv",
+            string azureMetricName = "ServiceApiLatency",
+            string resourceCollectionName = "",
+            bool omitResource = false)
+        {
+            var resource = new KeyVaultResourceV1
+            {
+                VaultName = vaultName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.KeyVault, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceCollectionName, bool omitResource, string azureMetricName, AzureResourceDefinitionV1 resource, string metricDimension = null)
+        {
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, metricDimension);
             var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.Generic
+                ResourceType = resourceType
             };
 
-            _metrics.Add(metric);
+            if (omitResource == false)
+            {
+                metric.Resources = new List<AzureResourceDefinitionV1> { resource };
+            }
 
-            return this;
+            if (string.IsNullOrWhiteSpace(resourceCollectionName) == false)
+            {
+                var resourceCollection = new AzureResourceCollectionDefinitionV1 { Name = resourceCollectionName };
+                metric.ResourceCollections = new List<AzureResourceCollectionDefinitionV1>
+                {
+                    resourceCollection
+                };
+            }
+
+            _metrics.Add(metric);
         }
 
         private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName, string metricDimension = "")
@@ -456,196 +548,6 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             }
 
             return metricConfig;
-        }
-
-        public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis", string metricDescription = "Description for a metric", string cacheName = "promitor-redis", string azureMetricName = "CacheHits")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new RedisCacheResourceV1
-            {
-                CacheName = cacheName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.RedisCache
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithPostgreSqlMetric(string metricName = "promitor-postgresql", string metricDescription = "Description for a metric", string serverName = "promitor-postgresql", string azureMetricName = "cpu_percent")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new PostgreSqlResourceV1
-            {
-                ServerName = serverName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.PostgreSql
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithSqlDatabaseMetric(
-            string metricName = "promitor-sql-db",
-            string azureMetricName = "cpu_percent",
-            string serverName = "promitor-sql-server",
-            string databaseName = "promitor-db",
-            string metricDescription = "Metric description")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new SqlDatabaseResourceV1
-            {
-                ServerName = serverName,
-                DatabaseName = databaseName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.SqlDatabase
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithSqlServerMetric(
-            string metricName = "promitor-sql-server",
-            string azureMetricName = "cpu_percent",
-            string serverName = "promitor-sql-server",
-            string metricDescription = "Metric description")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new SqlServerResourceV1
-            {
-                ServerName = serverName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.SqlServer
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithSqlManagedInstanceMetric(
-            string metricName = "promitor-sql-managed-instance",
-            string azureMetricName = "cpu_percent",
-            string instanceName = "promitor-sql-instance",
-            string metricDescription = "Metric description")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new SqlManagedInstanceResourceV1
-            {
-                InstanceName = instanceName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.SqlManagedInstance
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithIoTHubMetric(string metricName = "promitor-iot-hub", string metricDescription = "Description for a metric", string iotHubName = "promitor-iot-hub", string azureMetricName = "devices.totalDevices")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new IoTHubResourceV1
-            {
-                IoTHubName = iotHubName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.IoTHub
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithDeviceProvisioningServiceMetric(string metricName = "promitor-dps", string metricDescription = "Description for a metric", string deviceProvisioningServiceName = "promitor-dps", string azureMetricName = "AttestationAttempts")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new DeviceProvisioningServiceResourceV1
-            {
-                DeviceProvisioningServiceName = deviceProvisioningServiceName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.DeviceProvisioningService
-            };
-
-            _metrics.Add(metric);
-
-            return this;
-        }
-
-        public MetricsDeclarationBuilder WithKeyVaultMetric(string metricName = "promitor-kv", string metricDescription = "Description for a metric", string vaultName = "promitor-kv", string azureMetricName = "ServiceApiLatency")
-        {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName);
-            var resource = new KeyVaultResourceV1
-            {
-                VaultName = vaultName
-            };
-
-            var metric = new MetricDefinitionV1
-            {
-                Name = metricName,
-                Description = metricDescription,
-                AzureMetricConfiguration = azureMetricConfiguration,
-                Resources = new List<AzureResourceDefinitionV1> { resource },
-                ResourceType = ResourceType.KeyVault
-            };
-
-            _metrics.Add(metric);
-
-            return this;
         }
     }
 }

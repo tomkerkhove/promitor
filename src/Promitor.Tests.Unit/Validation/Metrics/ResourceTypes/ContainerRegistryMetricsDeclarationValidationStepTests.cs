@@ -80,6 +80,23 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
+        public void ContainerRegistryMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithContainerRegistryMetric(omitResource: true)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation was successful");
+        }
+
+        [Fact]
         public void ContainerRegistryMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange

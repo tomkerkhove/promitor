@@ -59,5 +59,39 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
             // Assert
             Assert.False(validationResult.IsSuccessful, "Validation is not successful");
         }
+
+        [Fact]
+        public void PostgreSqlMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithPostgreSqlMetric(omitResource: true)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation is not successful");
+        }
+
+        [Fact]
+        public void PostgreSqlMetricsDeclaration_ValidDeclaration_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithPostgreSqlMetric()
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation is not successful");
+        }
     }
 }

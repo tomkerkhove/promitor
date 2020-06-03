@@ -94,6 +94,23 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
+        public void ApiManagementMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithApiManagementMetric(omitResource: true)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, "Validation was successful");
+        }
+
+        [Fact]
         public void ApiManagementMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
