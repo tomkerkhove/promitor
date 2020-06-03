@@ -99,7 +99,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithVirtualMachineScaleSetMetric(omitResource: true, resourceCollectionName: "sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

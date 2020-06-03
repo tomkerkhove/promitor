@@ -91,7 +91,24 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation was not successful");
+            Assert.False(validationResult.IsSuccessful, "Validation was successful");
+        }
+
+        [Fact]
+        public void NetworkInterfaceMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithNetworkInterfaceMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
         }
 
         [Fact]

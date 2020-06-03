@@ -146,5 +146,22 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
             // Assert
             Assert.False(validationResult.IsSuccessful, userMessage: "Validation was successful");
         }
+
+        [Fact]
+        public void BlobStorageMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithBlobStorageMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, userMessage: "Validation was not successful");
+        }
     }
 }

@@ -78,6 +78,23 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
+        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithSqlManagedInstanceMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful, "Validation is not successful");
+        }
+
+        [Fact]
         public void SqlManagedInstanceMetricsDeclaration_ValidDeclaration_Succeed()
         {
             // Arrange
