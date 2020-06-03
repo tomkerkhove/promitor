@@ -87,6 +87,11 @@ We are proud to have the following customer(s) running Promitor in production:
 ![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
 ![ResDiary](./media/logos/customers/resdiary.png)
 
+Learn more about how they are using Promitor:
+
+- ["Monitor Azure Resources using Promitor"](https://medium.com/resdiary-product-team/monitor-azure-resources-using-promitor-b3d8384867c1)
+ by ResDiary
+
 ## Thank you
 
 We'd like to thank all the services, tooling & NuGet packages that support us -
