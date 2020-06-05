@@ -59,6 +59,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <returns>The scrape definition.</returns>
         public ScrapeDefinition<IAzureResourceDefinition> CreateScrapeDefinition(IAzureResourceDefinition resource, AzureMetadata azureMetadata)
         {
+            // TODO: Verify if this logic is valid as we always use defaults? 🤔
             return new ScrapeDefinition<IAzureResourceDefinition>(
                 AzureMetricConfiguration,
                 PrometheusMetricDefinition,

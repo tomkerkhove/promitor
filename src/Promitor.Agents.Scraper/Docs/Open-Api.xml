@@ -49,30 +49,6 @@
             <param name="app">Application Builder</param>
             <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.ScheduleMetricScraping(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-                Defines to use the cron scheduler
-            </summary>
-            <param name="services">Collections of services in application</param>
-        </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
-            <summary>
-                Defines the dependencies that Promitor requires
-            </summary>
-            <param name="services">Collections of services in application</param>
-        </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-                Adds the required metric sinks
-            </summary>
-            <param name="services">Collections of services in application</param>
-            <param name="configuration">Configuration of the application</param>
-        </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-                Inject configuration
-            </summary>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.ObjectExtensions.Clone``1(``0)">
             <summary>
                 Clones an object without a reference, the ugly way.
@@ -102,6 +78,30 @@
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines the dependencies that Promitor requires
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Adds the required metric sinks
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="configuration">Configuration of the application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Inject configuration
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.SchedulingExtensions.ScheduleMetricScraping(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines to use the cron scheduler
+            </summary>
+            <param name="services">Collections of services in application</param>
         </member>
     </members>
 </doc>

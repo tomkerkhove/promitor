@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
@@ -55,6 +56,8 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            request.Headers.UserAgent.TryParseAdd("App/Promitor.Scraper");
+
             var response = await base.SendAsync(request, cancellationToken);
 
             await MeasureArmRateLimitingAsync(response);

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JustEat.StatsD;
+﻿using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
@@ -20,11 +15,9 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor.Configuration;
@@ -34,85 +27,11 @@ using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 // ReSharper disable once CheckNamespace
-namespace Promitor.Agents.Scraper.Extensions
+namespace Microsoft.Extensions.DependencyInjection
 {
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
-        /// <summary>
-        ///     Defines to use the cron scheduler
-        /// </summary>
-        /// <param name="services">Collections of services in application</param>
-        public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
-        {
-            var serviceProviderToCreateJobsWith = services.BuildServiceProvider();
-            var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
-            var metrics = metricsProvider.Get(applyDefaults: true);
-
-            var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
-            var metricSinkWriter = serviceProviderToCreateJobsWith.GetRequiredService<MetricSinkWriter>();
-            var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
-            var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
-            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IRuntimeMetricsCollector>();
-            var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
-
-            foreach (var metric in metrics.Metrics)
-            {
-                if (metric.ResourceCollections?.Any() == true)
-                {
-                    Console.WriteLine("Resource collections are not scraped yet.");
-                }
-
-                if (metric.Resources != null)
-                {
-                    foreach (var resource in metric.Resources)
-                    {
-                        var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-                        var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-                        var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
-                        var jobName = GenerateJobName(scrapeDefinition, resource);
-
-                        services.AddScheduler(builder =>
-                        {
-                            builder.AddJob(jobServices =>
-                            {
-                                return new MetricScrapingJob(jobName, scrapeDefinition,
-                                    metricSinkWriter,
-                                    jobServices.GetService<IPrometheusMetricWriter>(),
-                                    jobServices.GetService<MetricScraperFactory>(),
-                                    azureMonitorClient,
-                                    jobServices.GetService<ILogger<MetricScrapingJob>>());
-                            }, schedulerOptions =>
-                            {
-                                schedulerOptions.CronSchedule = scrapeDefinition.Scraping.Schedule;
-                                schedulerOptions.RunImmediately = true;
-                            },
-                            jobName: jobName);
-                            builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(sender, exceptionEventArgs, services);
-                        });
-                    }
-                }
-            }
-
-            return services;
-        }
-
-        private static string GenerateJobName(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, IAzureResourceDefinition resource)
-        {
-            var jobNameBuilder = new StringBuilder();
-            jobNameBuilder.Append(scrapeDefinition.SubscriptionId);
-            jobNameBuilder.Append("-");
-            jobNameBuilder.Append(scrapeDefinition.ResourceGroupName);
-            jobNameBuilder.Append("-");
-            jobNameBuilder.Append(scrapeDefinition.PrometheusMetricDefinition.Name);
-            jobNameBuilder.Append("-");
-            jobNameBuilder.Append(resource.GetUniqueName());
-            jobNameBuilder.Append("-");
-            jobNameBuilder.Append(Guid.NewGuid().ToString());
-
-            return jobNameBuilder.ToString();
-        }
-
         /// <summary>
         ///     Defines the dependencies that Promitor requires
         /// </summary>
@@ -216,16 +135,6 @@ namespace Promitor.Agents.Scraper.Extensions
             services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
 
             return services;
-        }
-
-        // ReSharper disable once UnusedParameter.Local
-        private static void UnobservedJobHandlerHandler(object sender, UnobservedTaskExceptionEventArgs e, IServiceCollection services)
-        {
-            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
-            var loggerInstance = (ILogger)logger?.ImplementationInstance;
-            loggerInstance?.LogCritical(e.Exception, "Unhandled job exception");
-
-            e.SetObserved();
         }
     }
 }
