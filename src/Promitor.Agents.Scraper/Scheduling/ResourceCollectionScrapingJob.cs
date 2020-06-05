@@ -33,7 +33,18 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var discoveredResources = await _resourceDiscoveryRepository.GetResourceCollectionAsync(ResourceCollectionName);
-                Logger.LogInformation("Discovered {ResourceCount} resources for resource collection {ResourceCollection}.", discoveredResources?.Count, ResourceCollectionName);
+                Logger.LogInformation("Discovered {ResourceCount} resources for resource collection {ResourceCollection}.", discoveredResources?.Count ?? 0, ResourceCollectionName);
+
+                if (discoveredResources == null)
+                {
+                    Logger.LogWarning("Discovered no resources for resource collection {ResourceCollection}.", ResourceCollectionName);
+                    return;
+                }
+
+                foreach (var discoveredResource in discoveredResources)
+                {
+                    Logger.LogDebug($"Scraping discovered resource {discoveredResource}");
+                }
             }
             catch (Exception exception)
             {
