@@ -77,13 +77,7 @@ namespace Promitor.Agents.Scraper
                 .UseRouting()
                 .UseMetricSinks(Configuration)
                 .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
-                .ExposeOpenApiUi() // New Swagger UI
-                .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
-                {
-                    swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", ApiName);
-                    swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor - Scraper API (OpenAPI 3.0)");
-                    swaggerUiOptions.ConfigureDefaultOptions(ApiName);
-                }, openApiOptions => openApiOptions.SerializeAsV2 = true) // Deprecated Swagger UI
+                .ExposeOpenApiUi()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
             UseSerilog(ComponentName, app.ApplicationServices);
         }
