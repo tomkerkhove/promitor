@@ -16,13 +16,11 @@ using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Promitor.Agents.Scraper
 {
     public class Startup : AgentStartup
     {
-        private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
         private readonly string _legacyPrometheusUriPath;
 
