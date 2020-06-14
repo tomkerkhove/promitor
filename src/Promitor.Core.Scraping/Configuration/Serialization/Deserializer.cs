@@ -89,6 +89,16 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return Deserialize(node, errorReporter);
         }
 
+        protected FieldDeserializationInfoBuilder<TObject, TReturn> Map<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression)
+        {
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
+
+            _fieldBuilders.Add(builder);
+
+            return builder;
+        }
+
         protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
             var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
