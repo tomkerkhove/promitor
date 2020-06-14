@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.Serialization;
 using GuardNet;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         where TObject: new()
     {
         private readonly HashSet<string> _ignoredFields = new HashSet<string>();
-        private readonly List<FieldDeserializationInfo> _fields = new List<FieldDeserializationInfo>();
+        private readonly List<IFieldDeserializationInfoBuilder> _fieldBuilders = new List<IFieldDeserializationInfoBuilder>();
 
         protected ILogger Logger { get; }
 
@@ -28,7 +28,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         public virtual TObject Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var result = new TObject();
-            var deserializationContext = new DeserializationContext<TObject>(_ignoredFields, _fields);
+            var fields = _fieldBuilders.Select(builder => builder.Build()).ToList();
+            var deserializationContext = new DeserializationContext<TObject>(_ignoredFields, fields);
 
             foreach (var child in node.Children)
             {
@@ -90,33 +91,46 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
         protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, true, default(TReturn), customMapperFunc));
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
+            builder.IsRequired();
+            builder.MapUsing(customMapperFunc);
+
+            _fieldBuilders.Add(builder);
         }
 
         protected void MapRequired<TReturn>(
             Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
             where TReturn: new()
         {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(
-                memberExpression.Member as PropertyInfo, true, default(TReturn), null, deserializer));
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
+            builder.IsRequired();
+            builder.MapUsingDeserializer(deserializer);
+
+            _fieldBuilders.Add(builder);
         }
         
         protected void MapOptional<TReturn>(
             Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
         {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, false, defaultValue, customMapperFunc));
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
+            builder.WithDefault(defaultValue);
+            builder.MapUsing(customMapperFunc);
+
+            _fieldBuilders.Add(builder);
         }
 
         protected void MapOptional<TReturn>(
             Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
             where TReturn: new()
         {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(
-                memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer));
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
+            builder.MapUsingDeserializer(deserializer);
+
+            _fieldBuilders.Add(builder);
         }
 
         protected void IgnoreField(string fieldName)
