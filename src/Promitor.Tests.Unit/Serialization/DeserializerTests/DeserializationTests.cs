@@ -261,18 +261,22 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
         {
             public RegistrationConfigDeserializer(IDeserializer childDeserializer) : base(NullLogger.Instance)
             {
-                MapRequired(t => t.Name);
-                MapRequired(t => t.Age);
-                MapRequired(t => t.Day);
-                MapOptional(t => t.NullableDay);
-                MapRequired(t => t.Classes);
-                MapOptional(t => t.Town);
-                MapOptional(t => t.Interval);
-                MapOptional(t => t.DefaultedInterval, defaultInterval);
-                MapOptional(t => t.NullableInterval);
-                MapOptional(t => t.InvertedProperty, false, InvertBooleanString);
-                MapRequired(t => t.Child, childDeserializer);
-                MapOptional(t => t.OptionalChild, childDeserializer);
+                Map(t => t.Name).IsRequired();
+                Map(t => t.Age).IsRequired();
+                Map(t => t.Day).IsRequired();
+                Map(t => t.NullableDay);
+                Map(t => t.Classes).IsRequired();
+                Map(t => t.Town);
+                Map(t => t.Interval);
+                Map(t => t.DefaultedInterval).WithDefault(defaultInterval);
+                Map(t => t.NullableInterval);
+                Map(t => t.InvertedProperty)
+                    .MapUsing(InvertBooleanString);
+                Map(t => t.Child)
+                    .IsRequired()
+                    .MapUsingDeserializer(childDeserializer);
+                Map(t => t.OptionalChild)
+                    .MapUsingDeserializer(childDeserializer);
             }
 
             private static object InvertBooleanString(string value, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

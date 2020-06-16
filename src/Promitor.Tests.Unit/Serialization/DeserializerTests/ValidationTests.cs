@@ -165,10 +165,10 @@ country: Scotland");
         {
             public TestDeserializer() : base(NullLogger.Instance)
             {
-                MapRequired(t => t.Name);
-                MapOptional(t => t.Age);
-                MapOptional(t => t.Day);
-                MapOptional(t => t.Interval);
+                Map(t => t.Name).IsRequired();
+                Map(t => t.Age);
+                Map(t => t.Day);
+                Map(t => t.Interval);
                 IgnoreField("customField");
             }
         }
