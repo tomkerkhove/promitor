@@ -10,7 +10,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         public AggregationDeserializer(ILogger<AggregationDeserializer> logger) : base(logger)
         {
-            MapOptional(aggregation => aggregation.Interval, defaultAggregationInterval);
+            Map(aggregation => aggregation.Interval)
+                .WithDefault(defaultAggregationInterval);
         }
     }
 }

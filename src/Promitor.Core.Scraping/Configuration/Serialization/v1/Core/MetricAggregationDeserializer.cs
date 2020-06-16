@@ -7,8 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         public MetricAggregationDeserializer(ILogger<MetricAggregationDeserializer> logger) : base(logger)
         {
-            MapRequired(aggregation => aggregation.Type);
-            MapOptional(aggregation => aggregation.Interval);
+            Map(aggregation => aggregation.Type)
+                .IsRequired();
+            Map(aggregation => aggregation.Interval);
         }
     }
 }
