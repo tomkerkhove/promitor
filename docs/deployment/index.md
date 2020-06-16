@@ -15,7 +15,7 @@ _For more information about advanced configuration, read our documentation [here
                            --env-file C:/Promitor/az-mon-auth.creds \
                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
                            --volume C:/Promitor/runtime.yaml:/config/runtime.yaml \
-                           tomkerkhove/promitor-agent-scraper:1.4.0
+                           tomkerkhove/promitor-agent-scraper:1.6.1
 ```
 
 ## Kubernetes
@@ -36,7 +36,7 @@ If all goes well you should be able to list all Promitor charts:
 ```shell
 ❯ helm search hub promitor
 URL                                                     CHART VERSION   APP VERSION     DESCRIPTION
-https://hub.helm.sh/charts/promitor/promitor-ag...      1.4.0           1.4.0           A Helm chart to deploy Promitor, an Azure Monit...
+https://hub.helm.sh/charts/promitor/promitor-ag...      1.6.0           1.6.1           A Helm chart to deploy Promitor, an Azure Monit...
 https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-PR920     0.0.0-PR920     A Helm chart to deploy Promitor, an Azure Monit...
 ```
 
