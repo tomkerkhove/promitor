@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public FileStorageDeserializer(ILogger<FileStorageDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.AccountName);
+            Map(resource => resource.AccountName)
+                .IsRequired();
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public IoTHubDeserializer(ILogger<IoTHubDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.IoTHubName);
+            Map(resource => resource.IoTHubName)
+                .IsRequired();
         }
     }
 }

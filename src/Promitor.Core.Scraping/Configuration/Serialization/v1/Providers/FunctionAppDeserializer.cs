@@ -7,8 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public FunctionAppDeserializer(ILogger<FunctionAppDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.FunctionAppName);
-            MapOptional(resource => resource.SlotName);
+            Map(resource => resource.FunctionAppName)
+                .IsRequired();
+            Map(resource => resource.SlotName);
         }
     }
 }

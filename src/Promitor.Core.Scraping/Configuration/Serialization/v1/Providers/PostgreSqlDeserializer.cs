@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public PostgreSqlDeserializer(ILogger<PostgreSqlDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.ServerName);
+            Map(resource => resource.ServerName)
+                .IsRequired();
         }
     }
 }

@@ -8,9 +8,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public StorageQueueDeserializer(IDeserializer<SecretV1> secretDeserializer, ILogger<StorageQueueDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.AccountName);
-            MapRequired(resource => resource.QueueName);
-            MapRequired(resource => resource.SasToken, secretDeserializer);
+            Map(resource => resource.AccountName)
+                .IsRequired();
+            Map(resource => resource.QueueName)
+                .IsRequired();
+            Map(resource => resource.SasToken)
+                .IsRequired()
+                .MapUsingDeserializer(secretDeserializer);
         }
     }
 }

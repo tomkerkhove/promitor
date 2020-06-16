@@ -14,7 +14,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public SqlManagedInstanceDeserializer(ILogger logger) : base(logger)
         {
-            MapRequired(resource => resource.InstanceName);
+            Map(resource => resource.InstanceName)
+                .IsRequired();
         }
     }
 }

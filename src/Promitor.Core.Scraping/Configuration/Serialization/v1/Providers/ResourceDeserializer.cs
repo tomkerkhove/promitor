@@ -12,8 +12,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         protected ResourceDeserializer(ILogger logger) : base(logger)
         {
-            MapOptional(resource => resource.SubscriptionId);
-            MapOptional(resource => resource.ResourceGroupName);
+            Map(resource => resource.SubscriptionId);
+            Map(resource => resource.ResourceGroupName);
         }
     }
 }

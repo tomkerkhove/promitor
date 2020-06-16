@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public BlobStorageDeserializer(ILogger<BlobStorageDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.AccountName);
+            Map(resource => resource.AccountName)
+                .IsRequired();
         }
     }
 }
