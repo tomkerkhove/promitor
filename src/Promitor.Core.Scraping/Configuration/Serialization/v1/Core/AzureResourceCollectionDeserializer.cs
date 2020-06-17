@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         public AzureResourceCollectionDeserializer(ILogger<AzureResourceCollectionDeserializer> logger) : base(logger)
         {
-            MapRequired(metadata => metadata.Name);
+            Map(metadata => metadata.Name)
+                .IsRequired();
         }
     }
 }
