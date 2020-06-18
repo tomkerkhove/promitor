@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public AppPlanDeserializer(ILogger<AppPlanDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.AppPlanName);
+            Map(resource => resource.AppPlanName)
+                .IsRequired();
         }
     }
 }

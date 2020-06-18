@@ -14,8 +14,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public SqlDatabaseDeserializer(ILogger logger) : base(logger)
         {
-            MapRequired(resource => resource.ServerName);
-            MapRequired(resource => resource.DatabaseName);
+            Map(resource => resource.ServerName)
+                .IsRequired();
+            Map(resource => resource.DatabaseName)
+                .IsRequired();
         }
     }
 }

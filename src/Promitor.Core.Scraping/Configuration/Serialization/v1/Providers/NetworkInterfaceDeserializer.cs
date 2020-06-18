@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public NetworkInterfaceDeserializer(ILogger<NetworkInterfaceDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.NetworkInterfaceName);
+            Map(resource => resource.NetworkInterfaceName)
+                .IsRequired();
         }
     }
 }

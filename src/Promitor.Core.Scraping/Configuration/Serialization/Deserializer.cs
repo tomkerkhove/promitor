@@ -99,50 +99,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return builder;
         }
 
-        protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
-        {
-            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
-            builder.SetProperty(accessorExpression);
-            builder.IsRequired();
-            builder.MapUsing(customMapperFunc);
-
-            _fieldBuilders.Add(builder);
-        }
-
-        protected void MapRequired<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
-            where TReturn: new()
-        {
-            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
-            builder.SetProperty(accessorExpression);
-            builder.IsRequired();
-            builder.MapUsingDeserializer(deserializer);
-
-            _fieldBuilders.Add(builder);
-        }
-        
-        protected void MapOptional<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
-        {
-            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
-            builder.SetProperty(accessorExpression);
-            builder.WithDefault(defaultValue);
-            builder.MapUsing(customMapperFunc);
-
-            _fieldBuilders.Add(builder);
-        }
-
-        protected void MapOptional<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
-            where TReturn: new()
-        {
-            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
-            builder.SetProperty(accessorExpression);
-            builder.MapUsingDeserializer(deserializer);
-
-            _fieldBuilders.Add(builder);
-        }
-
         protected void IgnoreField(string fieldName)
         {
             _ignoredFields.Add(fieldName);

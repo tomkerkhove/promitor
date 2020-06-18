@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public ContainerRegistryDeserializer(ILogger<ContainerRegistryDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.RegistryName);
+            Map(resource => resource.RegistryName)
+                .IsRequired();
         }
     }
 }

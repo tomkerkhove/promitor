@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public VirtualMachineDeserializer(ILogger<VirtualMachineDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.VirtualMachineName);
+            Map(resource => resource.VirtualMachineName)
+                .IsRequired();
         }
     }
 }
