@@ -146,3 +146,13 @@ metrics:
     resources:
     - appPlanName: promitor-app-plan
       resourceGroupName: promitor-sources
+  - name: azure_storage_files_capacity
+    description: "The average capacity used by files in the storage account"
+    resourceType: FileStorage
+    azureMetricConfiguration:
+      metricName: FileCapacity
+      aggregation:
+        type: Average
+    resources:
+    - accountName: promitor
+      resourceGroupName: promitor
