@@ -40,7 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Providers
 
             var config = _configurationSerializer.Deserialize(rawMetricsDeclaration, errorReporter);
 
-            if (applyDefaults)
+            if (!errorReporter.HasErrors && applyDefaults)
             {
                 foreach (var metric in config.Metrics)
                 {

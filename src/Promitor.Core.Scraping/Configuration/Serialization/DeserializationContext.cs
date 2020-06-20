@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Fastenshtein;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
 {
@@ -8,6 +9,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     /// </summary>
     public class DeserializationContext<TObject>
     {
+        /// <summary>
+        /// The max edit distance for us to consider a field as a suggestion
+        /// between a field name entered by a user, and the field names that
+        /// have been configured for the object.
+        /// </summary>
+        private const int MaxSuggestionDistance = 3;
+
         private readonly ISet<string> _ignoredFields;
         private readonly Dictionary<string, FieldDeserializationContext<TObject>> _fields;
 
@@ -56,6 +64,22 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         public bool TryGetField(string fieldName, out FieldDeserializationContext<TObject> field)
         {
             return _fields.TryGetValue(fieldName, out field);
+        }
+
+        /// <summary>
+        /// Returns a list of fields that are close enough to <paramref ref="fieldName" />
+        /// for us to suggest them as alternatives.
+        /// </summary>
+        /// <param name="fieldName">
+        /// The name of a field that doesn't exist that we want to find suggestions for.
+        /// </param>
+        public IReadOnlyCollection<string> GetSuggestions(string fieldName)
+        {
+            return _fields
+                .Select(field => field.Key)
+                .Union(_ignoredFields)
+                .Where(suggestion => Levenshtein.Distance(suggestion, fieldName) < MaxSuggestionDistance)
+                .ToList();
         }
     }
 }

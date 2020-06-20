@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -153,11 +153,42 @@ country: Scotland");
                 r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("name"))));
         }
 
+        [Fact]
+        public void Deserialize_UnknownField_ReturnsSuggestion()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(@"nmae: Promitor");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            var nameTagNode = node.Children.Single(c => c.Key.ToString() == "nmae").Key;
+            
+            _errorReporter.Verify(r => r.ReportWarning(nameTagNode, "Unknown field 'nmae'. Did you mean 'name'?"));
+        }
+
+        [Fact]
+        public void Deserialize_UnknownField_ReturnsMultipleSuggestions()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(@"dat: Monday");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            var nameTagNode = node.Children.Single(c => c.Key.ToString() == "dat").Key;
+            
+            _errorReporter.Verify(r => r.ReportWarning(nameTagNode, "Unknown field 'dat'. Did you mean 'day', 'date'?"));
+        }
+
         private class TestConfigObject
         {
             public string Name { get; set; }
             public int Age { get; set; }
             public DayOfWeek Day { get; set; }
+            public string Date { get; set; }
             public TimeSpan Interval { get; set; }
         }
 
@@ -168,6 +199,7 @@ country: Scotland");
                 Map(t => t.Name).IsRequired();
                 Map(t => t.Age);
                 Map(t => t.Day);
+                Map(t => t.Date);
                 Map(t => t.Interval);
                 IgnoreField("customField");
             }
