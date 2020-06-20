@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.FieldValidators;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization
@@ -88,7 +89,7 @@ namespace Promitor.Tests.Unit.Serialization
 
         private FieldDeserializationInfo CreateField(PropertyInfo propertyInfo)
         {
-            return new FieldDeserializationInfo(propertyInfo, false, null, null, null);
+            return new FieldDeserializationInfo(propertyInfo, false, null, null, null, new List<IFieldValidator>());
         }
 
         public class Person

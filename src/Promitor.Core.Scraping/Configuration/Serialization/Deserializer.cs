@@ -42,6 +42,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 {
                     fieldContext.SetValue(
                         result, GetFieldValue(child, fieldContext.DeserializationInfo, errorReporter));
+                    fieldContext.Validate(child, errorReporter);
                 }
                 else
                 {

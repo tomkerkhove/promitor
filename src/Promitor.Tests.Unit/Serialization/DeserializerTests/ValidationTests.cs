@@ -169,6 +169,21 @@ country: Scotland");
         }
 
         [Fact]
+        public void Deserialize_CronSyntaxInvalid_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("schedule: 12345");
+            var dayValueNode = node.Children.Single(c => c.Key.ToString() == "schedule").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                dayValueNode,
+                "'12345' is not a valid value for 'schedule'. The value must be a valid Cron expression.");
+        }
+
+        [Fact]
         public void Deserialize_UnknownField_ReturnsMultipleSuggestions()
         {
             // Arrange
@@ -190,6 +205,7 @@ country: Scotland");
             public DayOfWeek Day { get; set; }
             public string Date { get; set; }
             public TimeSpan Interval { get; set; }
+            public string Schedule { get; set; }
         }
 
         private class TestDeserializer: Deserializer<TestConfigObject>
@@ -201,6 +217,8 @@ country: Scotland");
                 Map(t => t.Day);
                 Map(t => t.Date);
                 Map(t => t.Interval);
+                Map(t => t.Schedule)
+                    .ValidateCronExpression();
                 IgnoreField("customField");
             }
         }
