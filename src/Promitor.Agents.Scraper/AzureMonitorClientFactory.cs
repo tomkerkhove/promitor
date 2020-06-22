@@ -35,7 +35,7 @@ namespace Promitor.Agents.Scraper
             }
 
             var azureMonitorClient = CreateNewAzureMonitorClient(cloud, tenantId, subscriptionId, metricSinkWriter, metricsCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-            _azureMonitorClients.Add(subscriptionId, azureMonitorClient);
+            _azureMonitorClients.TryAdd(subscriptionId, azureMonitorClient);
 
             return azureMonitorClient;
         }

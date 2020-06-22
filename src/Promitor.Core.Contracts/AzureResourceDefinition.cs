@@ -1,4 +1,6 @@
-﻿namespace Promitor.Core.Contracts
+﻿using Newtonsoft.Json;
+
+namespace Promitor.Core.Contracts
 {
     /// <summary>
     ///     Describes a resource in Azure that can be scraped. Inheriting classes can add whatever
@@ -13,7 +15,7 @@
         /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">Specify a resource group to scrape that defers from the default resource group.</param>
         /// <param name="resourceName">Name of the main resource</param>
-        protected AzureResourceDefinition(ResourceType resourceType, string subscriptionId, string resourceGroupName, string resourceName)
+        public AzureResourceDefinition(ResourceType resourceType, string subscriptionId, string resourceGroupName, string resourceName)
             : this(resourceType, subscriptionId, resourceGroupName, resourceName, resourceName)
         {
         }
@@ -26,7 +28,8 @@
         /// <param name="resourceGroupName">Specify a resource group to scrape that defers from the default resource group.</param>
         /// <param name="resourceName">Name of the main resource</param>
         /// <param name="uniqueName">Unique name for the resource.</param>
-        protected AzureResourceDefinition(ResourceType resourceType, string subscriptionId, string resourceGroupName, string resourceName, string uniqueName)
+        [JsonConstructor]
+        public AzureResourceDefinition(ResourceType resourceType, string subscriptionId, string resourceGroupName, string resourceName, string uniqueName)
         {
             UniqueName = uniqueName;
             ResourceName = resourceName;

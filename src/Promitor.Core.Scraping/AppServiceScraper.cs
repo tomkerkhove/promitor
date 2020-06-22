@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 // ReSharper disable All

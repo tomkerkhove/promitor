@@ -22,5 +22,19 @@
         ///     This enables you to do multi-resource group scraping with one configuration file.
         /// </summary>
         public string ResourceGroupName { get; }
+
+        /// <summary>
+        ///     Specify the name of the resource
+        /// </summary>
+        /// <remarks>This should return the name of the main resource</remarks>
+        /// <example>
+        ///     For an Azure SQL Database it should be the name of the DB, not the server
+        /// </example>
+        public string ResourceName { get; }
+
+        /// <summary>
+        ///     Specify a unique name for the resource.
+        /// </summary>
+        public string UniqueName { get; }
     }
 }

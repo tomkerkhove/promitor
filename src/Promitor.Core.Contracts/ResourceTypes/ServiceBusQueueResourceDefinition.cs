@@ -2,10 +2,10 @@
 {
     public class ServiceBusQueueResourceDefinition : AzureResourceDefinition
     {
-        public ServiceBusQueueResourceDefinition(string subscriptionId, string resourceGroupName, string ns, string queueName)
-            : base(ResourceType.ServiceBusQueue, subscriptionId, resourceGroupName, ns, $"{ns}-{queueName}")
+        public ServiceBusQueueResourceDefinition(string subscriptionId, string resourceGroupName, string serviceBusNamespace, string queueName)
+            : base(ResourceType.ServiceBusQueue, subscriptionId, resourceGroupName, serviceBusNamespace, $"{serviceBusNamespace}-{queueName}")
         {
-            Namespace = ns;
+            Namespace = serviceBusNamespace;
             QueueName = queueName;
         }
 

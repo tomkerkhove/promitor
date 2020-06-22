@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Promitor.Core.Scraping.Configuration.Model.Metrics
+namespace Promitor.Core.Contracts
 {
     public class Secret
     {

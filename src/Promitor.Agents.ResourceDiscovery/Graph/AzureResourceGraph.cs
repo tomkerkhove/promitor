@@ -63,6 +63,70 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return await QueryAsync(query, Subscriptions);
         }
 
+        public async Task<JObject> QueryAsync(string query)
+        {
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
+            var graphClient = await GetOrCreateClient();
+
+            bool isSuccessfulDependency = false;
+            using (var dependencyMeasurement = DependencyMeasurement.Start())
+            {
+                try
+                {
+                    var queryRequest = new QueryRequest(Subscriptions, query);
+                    var response = await graphClient.ResourcesAsync(queryRequest);
+                    isSuccessfulDependency = true;
+                    return response.Data as JObject;
+                }
+                catch (ErrorResponseException responseException)
+                {
+                    if (responseException.Response != null)
+                    {
+                        if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
+                        {
+                            var unauthorizedException = new UnauthorizedException(QueryApplicationId, Subscriptions);
+                            _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph");
+                            throw unauthorizedException;
+                        }
+
+                        if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            var response = JToken.Parse(responseException.Response.Content);
+                            var errorDetails = response["error"]?["details"];
+                            if (errorDetails != null)
+                            {
+                                var errorCodes = new List<string>();
+                                foreach (var detailEntry in errorDetails)
+                                {
+                                    errorCodes.Add(detailEntry["code"]?.ToString());
+                                }
+
+                                if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
+                                {
+                                    var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(Subscriptions);
+                                    _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
+                                    throw invalidSubscriptionException;
+                                }
+                            }
+                        }
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    var contextualInformation = new Dictionary<string, object>
+                    {
+                        {"Query", query},
+                        {"Subscriptions", Subscriptions}
+                    };
+
+                    _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                }
+            }
+        }
+
         public async Task<List<Resource>> QueryAsync(string query, List<string> targetSubscriptions)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
@@ -121,11 +185,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 {
                     var contextualInformation = new Dictionary<string, object>
                     {
-                        {"Query", query},    
+                        {"Query", query},
                         {"Subscriptions", targetSubscriptions}
                     };
 
-                    _logger.LogDependency("Azure Resource Graph", query,"Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                    _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
                 }
             }
         }

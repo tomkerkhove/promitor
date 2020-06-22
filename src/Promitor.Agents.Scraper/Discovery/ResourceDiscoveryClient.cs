@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Agents.Core.Serialization;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Discovery
 {
@@ -32,11 +33,12 @@ namespace Promitor.Agents.Scraper.Discovery
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<object>> GetAsync(string resourceCollectionName)
+        public async Task<List<ContainerRegistryResourceDefinition>> GetAsync(string resourceCollectionName)
         {
             var uri = $"/api/v1/resources/collections/{resourceCollectionName}/discovery";
             var rawResponse = await SendGetRequestAsync(uri);
-            var foundResources = JsonConvert.DeserializeObject<List<object>>(rawResponse);
+
+            var foundResources = JsonConvert.DeserializeObject<List<ContainerRegistryResourceDefinition>>(rawResponse);
             return foundResources;
         }
 

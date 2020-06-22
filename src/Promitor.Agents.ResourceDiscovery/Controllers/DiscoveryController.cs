@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GuardNet;
+using Microsoft.AspNetCore.Http;
 using Promitor.Agents.ResourceDiscovery.Repositories;
+using Promitor.Core.Contracts.ResourceTypes;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
@@ -29,6 +33,9 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
         [HttpGet("{resourceCollectionName}/discovery", Name = "Discovery_Get")]
+        [SwaggerResponse(200, type: typeof(List<ContainerRegistryResourceDefinition>))]
+        [SwaggerResponse(200, type: typeof(List<ApiManagementResourceDefinition>))]
+        //[ProducesResponseType(typeof(List<ContainerRegistryResourceDefinition>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get(string resourceCollectionName)
         {
             var foundResources = await _resourceRepository.GetResourcesAsync(resourceCollectionName);

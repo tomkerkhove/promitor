@@ -10,139 +10,35 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-  - name: promitor_demo_container_cpu
-    description: "The CPU of our containers in a container group."
-    resourceType: ContainerInstance
+  - name: azure_container_registry_total_pull_count_discovered
+    description: "Amount of images that were pulled from the container registry"
+    resourceType: ContainerRegistry
     azureMetricConfiguration:
-      metricName: CpuUsage
-      dimension:
-        name: containerName
+      metricName: TotalPullCount
       aggregation:
         type: Average
-    resources:
-    - containerGroup: promitor-container-group
-      resourceGroupName: promitor-sources
-  - name: promitor_demo_generic_queue_size
-    description: "Amount of active messages of the 'orders' queue (determined with Generic provider)"
-    resourceType: Generic
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-    resources:
-    - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
-      filter: EntityName eq 'orders'
-  - name: promitor_demo_generic_namespace_size
-    description: "Size of all queues in our Azure Service Bus namespace (determined with Generic provider)"
-    resourceType: Generic
-    scraping:
-      # Every 2 minutes
-      schedule: "0 */2 * ? * *"
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-    resources:
-      # filter is deliberately omitted given filter is optional
-    - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
-  - name: promitor_demo_servicebusqueue_queue_size_discovered
-    description: "Amount of active messages of the Service Bus queues"
-    resourceType: ServiceBusQueue
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-        # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
-        interval: 00:15:00
     resourceCollections:
-    - name: service-bus-landscape
-  - name: promitor_demo_servicebusqueue_queue_size
-    description: "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)"
-    resourceType: ServiceBusQueue
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-        # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
-        interval: 00:15:00
-    resources:
-    - namespace: promitor-messaging
-      queueName: orders
-    - namespace: promitor-messaging
-      queueName: sales
-    - namespace: promitor-messaging-other-subscription
-      queueName: orders
-      subscriptionId: 0329dd2a-59dc-4493-aa54-cb01cb027dc2
-      resourceGroupName: promitor-sources
-  - name: promitor_demo_azurestoragequeue_queue_size
-    description: "Approximate amount of messages in 'orders' queue (determined with StorageQueue provider)"
-    resourceType: StorageQueue
-    scraping:
-      # Every 2 minutes
-      schedule: "0 */2 * ? * *"
-    azureMetricConfiguration:
-      metricName: MessageCount
-      aggregation:
-        type: Total
-    resources:
-    - accountName: promitor
-      queueName: orders
-      sasToken:
-        rawValue: "?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwla&se=2022-08-07T00:16:01Z&st=2019-08-06T16:16:01Z&spr=https&sig=Ik4jprS89kGIFRM0qaQpXrv0ttP3pnlhmGQuYVQ7cbA%3D"
-  - name: promitor_demo_azurestoragequeue_queue_timespentinqueue
-    description: "Approximate amount of time that the oldest message has been in 'orders' queue (determined with StorageQueue provider)"
-    resourceType: StorageQueue
-    azureMetricConfiguration:
-      metricName: TimeSpentInQueue
-      aggregation:
-        type: Total
-    resources:
-    - accountName: promitor
-      queueName: orders
-      sasToken:
-        environmentVariable: SECRETS_STORAGEQUEUE_SAS
-  - name: promitor_demo_azuresqldb_dtu
-    description: "The DTU consumption percentage used by an Azure SQL Database."
-    resourceType: SqlDatabase
-    azureMetricConfiguration:
-      metricName: dtu_consumption_percent
-      aggregation:
-        type: Average
-    resources:
-    - serverName: promitor
-      databaseName: promitor-db-1
-  - name: promitor_demo_webapp_cpu
-    description: "Amount of CPU time used for an Azure Web App"
-    resourceType: WebApp
-    azureMetricConfiguration:
-      metricName: CpuTime
-      aggregation:
-        type: Total
-    resources:
-    - webAppName: promitor-web-app
-      resourceGroupName: promitor-sources
-    - webAppName: promitor-web-app
-      resourceGroupName: promitor-sources
-      slotName: staging
-  - name: promitor_demo_function_requests
-    description: "Amount of requests for an Azure Function App"
-    resourceType: FunctionApp
-    azureMetricConfiguration:
-      metricName: Requests
-      aggregation:
-        type: Total
-    resources:
-    - functionAppName: promitor-function-app
-      resourceGroupName: promitor-sources
-  - name: promitor_demo_appplan_percentage_cpu
-    description: "Average percentage of memory usage on an Azure App Plan"
-    resourceType: AppPlan
-    azureMetricConfiguration:
-      metricName: MemoryPercentage
-      aggregation:
-        type: Average
-    resources:
-    - appPlanName: promitor-app-plan
-      resourceGroupName: promitor-sources
+    - name: container-registry-landscape
+  # - name: promitor_demo_servicebusqueue_queue_size_discovered
+  #   description: "Amount of active messages of the Service Bus queues"
+  #   resourceType: ServiceBusQueue
+  #   azureMetricConfiguration:
+  #     metricName: ActiveMessages
+  #     aggregation:
+  #       type: Average
+  #       # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
+  #       interval: 00:15:00
+  #   resourceCollections:
+  #   - name: service-bus-landscape
+  # - name: promitor_demo_servicebusqueue_queue_size
+  #   description: "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)"
+  #   resourceType: ServiceBusQueue
+  #   azureMetricConfiguration:
+  #     metricName: ActiveMessages
+  #     aggregation:
+  #       type: Average
+  #       # Optionally override the default aggregation interval (metricDefaults.aggregation.interval)
+  #       interval: 00:15:00
+  #   resources:
+  #   - namespace: promitor-messaging
+  #     queueName: orders

@@ -4,6 +4,7 @@ using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Agents.Scraper.Validation.Factories;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
 {
