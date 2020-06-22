@@ -45,8 +45,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 }
                 else
                 {
-                    errorReporter.ReportWarning(
-                        child.Key, GetUnknownFieldWarningMessage(deserializationContext, child.Key.ToString()));
+                    var warningMessage = GetUnknownFieldWarningMessage(deserializationContext, child.Key.ToString());
+                    errorReporter.ReportWarning(child.Key, warningMessage);
                 }
             }
 
