@@ -43,26 +43,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _queryApplicationSecret = configuration["DISCOVERY_APPSECRET"];
         }
 
-        public async Task<List<Resource>> QueryAsync(string resourceType, ResourceCriteria criteria)
-        {
-            Guard.NotNullOrWhitespace(resourceType, nameof(resourceType));
-            Guard.NotNull(criteria, nameof(criteria));
-            Guard.NotNull(criteria.Subscriptions, nameof(criteria.Subscriptions));
-            Guard.NotNull(criteria.Regions, nameof(criteria.Regions));
-            Guard.NotNull(criteria.ResourceGroups, nameof(criteria.ResourceGroups));
-            Guard.NotNull(criteria.Tags, nameof(criteria.Tags));
-
-            var query = GraphQuery.ForResourceType(resourceType)
-                .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                .WithResourceGroupsWithName(criteria.ResourceGroups)
-                .WithinRegions(criteria.Regions)
-                .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name", "id")
-                .Build();
-
-            return await QueryAsync(query, Subscriptions);
-        }
-
         public async Task<JObject> QueryAsync(string query)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));

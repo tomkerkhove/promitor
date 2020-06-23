@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
+using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
@@ -10,6 +11,8 @@ using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
+using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
@@ -48,59 +51,55 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
                 return null;
             }
 
-            //var foundResources = await _azureResourceGraph.QueryAsync(resourceCollectionDefinition.Type, resourceCollectionDefinition.Criteria);
-
-            //var contextualInformation = new Dictionary<string, object>
-            //{
-            //    {"ResourceType",resourceCollectionDefinition.Type},
-            //    {"CollectionName",resourceCollectionName}
-            //};
-            //_logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
-
+            // 1. Create query per type
             var query = DefineQuery(resourceCollectionDefinition.Type, resourceCollectionDefinition.Criteria);
+
+            // 2. Run Query
             var unparsedResults = await _azureResourceGraph.QueryAsync(query);
+
+            // 3. Parse query results into resource
             var foundResources = ParseQueryResults(resourceCollectionDefinition.Type, unparsedResults);
+
+            var contextualInformation = new Dictionary<string, object>
+            {
+                {"ResourceType",resourceCollectionDefinition.Type},
+                {"CollectionName",resourceCollectionName}
+            };
+            _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
 
             return foundResources;
         }
 
-        private string DefineQuery(string resourceType, ResourceCriteria criteria)
+        private string DefineQuery(ResourceType resourceType, ResourceCriteria criteria)
         {
-            if (resourceType == "microsoft.containerregistry/registries")
+            switch (resourceType)
             {
-                return GraphQuery.ForResourceType(resourceType)
-                    .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                    .WithResourceGroupsWithName(criteria.ResourceGroups)
-                    .WithinRegions(criteria.Regions)
-                    .WithTags(criteria.Tags)
-                    .Project("subscriptionId", "resourceGroup", "type", "name", "id")
-                    .Build();
+                case ResourceType.ContainerRegistry:
+                    return ContainerRegistryDiscovery.DefineQuery(criteria);
+                case ResourceType.AppPlan:
+                    return AppPlanDiscovery.DefineQuery(criteria);
+                default:
+                    throw new NotSupportedException();
             }
-
-            return GraphQuery.ForResourceType(resourceType)
-                .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                .WithResourceGroupsWithName(criteria.ResourceGroups)
-                .WithinRegions(criteria.Regions)
-                .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name", "id")
-                .Build();
         }
 
-        private List<object> ParseQueryResults(string resourceType, JObject unparsedResults)
+        private List<object> ParseQueryResults(ResourceType resourceType, JObject unparsedResults)
         {
             var foundResources = new List<object>();
             var rows = unparsedResults["rows"];
             foreach (var row in rows)
             {
                 object resource;
-                if (resourceType == "microsoft.containerregistry/registries")
+                switch (resourceType)
                 {
-                    resource = new ContainerRegistryResourceDefinition(row[0].ToString(), row[1].ToString(), row[3].ToString());
-                }
-                else
-                {
-                    resource = new Resource(row[0].ToString(), row[1].ToString(), row[2].ToString(),
-                        row[3].ToString());
+                    case ResourceType.ContainerRegistry:
+                        resource = ContainerRegistryDiscovery.ParseQueryResults(row);
+                        break;
+                    case ResourceType.AppPlan:
+                        resource =AppPlanDiscovery.ParseQueryResults(row);
+                        break;
+                    default:
+                        throw new NotSupportedException();
                 }
 
                 foundResources.Add(resource);

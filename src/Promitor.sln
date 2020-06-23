@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{EE3B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discovery", "Discovery", "{33D4263D-DDDC-4ECC-BB25-834DE9979C7C}"
 	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\resource-discovery\resource-discovery-declaration.yaml = ..\config\promitor\resource-discovery\resource-discovery-declaration.yaml
 		..\config\promitor\resource-discovery\runtime.yaml = ..\config\promitor\resource-discovery\runtime.yaml
 	EndProjectSection
 EndProject

@@ -26,6 +26,7 @@
         ApiManagement = 21,
         IoTHub = 22,
         DeviceProvisioningService = 23,
-        KeyVault = 24
+        KeyVault = 24,
+        LogicApp=25
     }
 }
