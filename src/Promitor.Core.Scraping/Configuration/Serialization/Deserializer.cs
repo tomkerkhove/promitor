@@ -45,7 +45,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 }
                 else
                 {
-                    errorReporter.ReportWarning(child.Key, $"Unknown field '{child.Key}'.");
+                    var warningMessage = GetUnknownFieldWarningMessage(deserializationContext, child.Key.ToString());
+                    errorReporter.ReportWarning(child.Key, warningMessage);
                 }
             }
 
@@ -157,6 +158,29 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             }
 
             return null;
+        }
+        
+        /// <summary>
+        /// Gets the warning message to use when an invalid field name is found
+        /// in the configuration.
+        /// </summary>
+        /// <param name="deserializationContext">The deserialization context.</param>
+        /// <param name="fieldName">The unknown field.</param>
+        private static string GetUnknownFieldWarningMessage(DeserializationContext<TObject> deserializationContext, string fieldName)
+        {
+            var message = $"Unknown field '{fieldName}'.";
+            var suggestions = deserializationContext
+                .GetSuggestions(fieldName)
+                .Select(suggestion => $"'{suggestion}'")
+                .ToList();
+
+            if (suggestions.Any())
+            {
+                var formattedSuggestions = string.Join(", ", suggestions);
+                message += $" Did you mean {formattedSuggestions}?";
+            }
+
+            return message;
         }
     }
 }
