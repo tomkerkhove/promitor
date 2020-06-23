@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Linq;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
@@ -76,6 +77,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 {
                     errorReporter.ReportError(resourceTypeNode, $"Could not find a deserializer for resource type '{metricDefinition.ResourceType}'.");
                 }
+            }
+
+            if ((metricDefinition.Resources == null || !metricDefinition.Resources.Any()) &&
+                (metricDefinition.ResourceCollections == null || !metricDefinition.ResourceCollections.Any()))
+            {
+                errorReporter.ReportError(node, "Either 'resources' or 'resourceCollections' must be specified.");
             }
         }
     }
