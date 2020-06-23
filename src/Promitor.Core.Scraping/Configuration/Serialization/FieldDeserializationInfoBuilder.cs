@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using Promitor.Core.Scraping.Configuration.Serialization.FieldValidators;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
@@ -11,6 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
     /// </summary>
     public class FieldDeserializationInfoBuilder<TObject, TReturn> : IFieldDeserializationInfoBuilder
     {
+        private readonly List<IFieldValidator> _validators = new List<IFieldValidator>();
         private PropertyInfo _propertyInfo;
         private bool _isRequired;
         private object _defaultValue;
@@ -88,7 +90,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         public FieldDeserializationInfo Build()
         {
             return new FieldDeserializationInfo(
-                _propertyInfo, _isRequired, _defaultValue, _customMapperFunc, _deserializer);
+                _propertyInfo, _isRequired, _defaultValue, _customMapperFunc, _deserializer, _validators);
+        }
+
+        /// <summary>
+        /// Indicates that this field should be validated as a Cron expression.
+        /// </summary>
+        public void ValidateCronExpression()
+        {
+            _validators.Add(new CronExpressionValidator());
         }
     }
 }
