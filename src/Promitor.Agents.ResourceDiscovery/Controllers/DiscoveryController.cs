@@ -33,6 +33,8 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
         [HttpGet("{resourceCollectionName}/discovery", Name = "Discovery_Get")]
+
+        // TODO: Align
         [SwaggerResponse(200, type: typeof(List<ContainerRegistryResourceDefinition>))]
         [SwaggerResponse(200, type: typeof(List<ApiManagementResourceDefinition>))]
         //[ProducesResponseType(typeof(List<ContainerRegistryResourceDefinition>), StatusCodes.Status200OK)]

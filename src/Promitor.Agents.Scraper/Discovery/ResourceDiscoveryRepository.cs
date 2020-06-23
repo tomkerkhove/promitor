@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
+using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Discovery
@@ -16,7 +17,7 @@ namespace Promitor.Agents.Scraper.Discovery
             _resourceDiscoveryClient = resourceDiscoveryClient;
         }
 
-        public async Task<List<ContainerRegistryResourceDefinition>> GetResourceCollectionAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetResourceCollectionAsync(string resourceCollectionName)
         {
             Guard.NotNullOrWhitespace(resourceCollectionName,nameof(resourceCollectionName));
 

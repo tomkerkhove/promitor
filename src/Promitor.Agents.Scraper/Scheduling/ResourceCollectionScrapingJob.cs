@@ -99,7 +99,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_azureMetadata.Cloud, _azureMetadata.TenantId, discoveredResource.SubscriptionId, _metricSinkWriter, _runtimeMetricCollector, _configuration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
                     // Scrape resource
-                    var scrapeTask=ScrapeResourceAsync(discoveredResource, azureMonitorClient);
+                    var scrapeTask = ScrapeResourceAsync(discoveredResource, azureMonitorClient);
                     scrapeTasks.Add(scrapeTask);
                 }
 
