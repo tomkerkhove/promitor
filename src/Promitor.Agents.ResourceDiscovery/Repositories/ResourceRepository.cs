@@ -51,14 +51,16 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
                 return null;
             }
 
+            var resourceDiscovery = ResourceDiscoveryFactory.UseResourceDiscoveryFor(resourceCollectionDefinition.Type);
+
             // 1. Create query per type
-            var query = DefineQuery(resourceCollectionDefinition.Type, resourceCollectionDefinition.Criteria);
+            var query = resourceDiscovery.DefineQuery(resourceCollectionDefinition.Criteria);
 
             // 2. Run Query
             var unparsedResults = await _azureResourceGraph.QueryAsync(query);
 
             // 3. Parse query results into resource
-            var foundResources = ParseQueryResults(resourceCollectionDefinition.Type, unparsedResults);
+            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
 
             var contextualInformation = new Dictionary<string, object>
             {
@@ -66,44 +68,6 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
                 {"CollectionName",resourceCollectionName}
             };
             _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
-
-            return foundResources;
-        }
-
-        private string DefineQuery(ResourceType resourceType, ResourceCriteria criteria)
-        {
-            switch (resourceType)
-            {
-                case ResourceType.ContainerRegistry:
-                    return ContainerRegistryDiscovery.DefineQuery(criteria);
-                case ResourceType.AppPlan:
-                    return AppPlanDiscovery.DefineQuery(criteria);
-                default:
-                    throw new NotSupportedException();
-            }
-        }
-
-        private List<object> ParseQueryResults(ResourceType resourceType, JObject unparsedResults)
-        {
-            var foundResources = new List<object>();
-            var rows = unparsedResults["rows"];
-            foreach (var row in rows)
-            {
-                object resource;
-                switch (resourceType)
-                {
-                    case ResourceType.ContainerRegistry:
-                        resource = ContainerRegistryDiscovery.ParseQueryResults(row);
-                        break;
-                    case ResourceType.AppPlan:
-                        resource =AppPlanDiscovery.ParseQueryResults(row);
-                        break;
-                    default:
-                        throw new NotSupportedException();
-                }
-
-                foundResources.Add(resource);
-            }
 
             return foundResources;
         }

@@ -6,11 +6,11 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class ContainerRegistryDiscovery
+    public class ContainerRegistryDiscoveryQuery : ResourceDiscoveryQuery
     {
         public static string ResourceType = "microsoft.containerregistry/registries";
 
-        public static string DefineQuery(ResourceCriteria criteria)
+        public override string DefineQuery(ResourceCriteria criteria)
         {
             return GraphQuery.ForResourceType(ResourceType)
                 .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
@@ -21,7 +21,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
                 .Build();
         }
 
-        public static AzureResourceDefinition ParseQueryResults(JToken resultRowEntry)
+        public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
             
