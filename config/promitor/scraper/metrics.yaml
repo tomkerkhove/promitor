@@ -28,3 +28,12 @@ metrics:
         type: Average
     resourceCollections:
     - name: app-plan-landscape
+  - name: promitor_demo_webapp_cpu
+    description: "Amount of CPU time used for an Azure Web App"
+    resourceType: WebApp
+    azureMetricConfiguration:
+      metricName: CpuTime
+      aggregation:
+        type: Total
+    resourceCollections:
+    - name: web-apps-landscape

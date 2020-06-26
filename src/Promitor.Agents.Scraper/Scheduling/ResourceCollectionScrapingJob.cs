@@ -103,6 +103,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     scrapeTasks.Add(scrapeTask);
                 }
 
+                // TODO: What if an exception occurs, do the others still finish?
                 await Task.WhenAll(scrapeTasks);
             }
             catch (Exception exception)

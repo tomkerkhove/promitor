@@ -6,7 +6,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 {
     public class ResourceDiscoveryFactory
     {
-
         public static ResourceDiscoveryQuery UseResourceDiscoveryFor(ResourceType resourceType)
         {
             switch (resourceType)
@@ -15,6 +14,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AppPlanDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryDiscoveryQuery();
+                case ResourceType.WebApp:
+                    return new WebAppDiscoveryQuery();
                 default:
                     throw new NotSupportedException();
             }

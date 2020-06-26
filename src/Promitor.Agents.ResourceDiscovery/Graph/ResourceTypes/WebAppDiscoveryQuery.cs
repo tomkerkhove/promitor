@@ -1,4 +1,5 @@
-﻿using GuardNet;
+﻿using System.Linq;
+using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Query;
@@ -7,18 +8,19 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class ContainerRegistryDiscoveryQuery : ResourceDiscoveryQuery
+    public class WebAppDiscoveryQuery : ResourceDiscoveryQuery
     {
-        public static string ResourceType = "microsoft.containerregistry/registries";
+        public static string ResourceType = "microsoft.web/serverfarms";
 
         public override string DefineQuery(ResourceCriteria criteria)
         {
-            var query = GraphQueryBuilder.ForResourceType(ResourceType)
+            var query = GraphQueryBuilder.ForResourceType("microsoft.web/sites", "microsoft.web/sites/slots")
+                .Where("kind", Operator.DoesNotContain, "functionapp")
                 .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
                 .WithResourceGroupsWithName(criteria.ResourceGroups)
                 .WithinRegions(criteria.Regions)
                 .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name", "id")
+                .Project("subscriptionId", "resourceGroup", "type", "name")
                 .Build();
 
             return query;
@@ -27,8 +29,16 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
-            
-            var resource = new ContainerRegistryResourceDefinition(resultRowEntry[0].ToString(), resultRowEntry[1].ToString(), resultRowEntry[3].ToString());
+
+            var webAppName = resultRowEntry[3].ToString();
+            var slotName = "production";
+            if (webAppName.Contains("/"))
+            {
+                var webAppNameSegments = webAppName.Split("/");
+                webAppName = webAppNameSegments[0];
+                slotName = webAppNameSegments[1];
+            }
+            var resource = new WebAppResourceDefinition(resultRowEntry[0].ToString(), resultRowEntry[1].ToString(), webAppName, slotName);
             return resource;
         }
     }

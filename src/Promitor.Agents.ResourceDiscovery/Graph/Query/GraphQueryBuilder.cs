@@ -1,29 +1,76 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GuardNet;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace Promitor.Agents.ResourceDiscovery.Graph
+namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 {
-    public class GraphQuery
+    public class GraphQueryBuilder
     {
         private const string SubscriptionIdFieldName = "subscriptionId";
         private const string ResourceGroupFieldName = "resourceGroup";
         private const string RegionFieldName = "location";
 
         private readonly StringBuilder _queryBuilder;
-        public GraphQuery(string resourceType)
+        public GraphQueryBuilder(string resourceType)
+            :this(new []{resourceType})
+        {    
+        }
+
+        public GraphQueryBuilder(string[] resourceTypes)
         {
+            Guard.NotNull(resourceTypes,nameof(resourceTypes));
+            Guard.For<ArgumentException>(()=> resourceTypes.Length == 0, nameof(resourceTypes));
+
             _queryBuilder = new StringBuilder();
             _queryBuilder.AppendLine("Resources");
-            _queryBuilder.AppendLine($"| where type == '{resourceType}'");
+            _queryBuilder.AppendLine($"| where type == '{resourceTypes.First()}'");
+
+            foreach (var resourceType in resourceTypes.Skip(1))
+            {
+                _queryBuilder.AppendLine($" or type == '{resourceType}'");
+            }
+            
         }
 
-        public static GraphQuery ForResourceType(string resourceType)
+        public static GraphQueryBuilder ForResourceType(string resourceType)
         {
-            return new GraphQuery(resourceType);
+            return new GraphQueryBuilder(resourceType);
         }
 
-        public GraphQuery WithSubscriptionsWithIds(List<string> subscriptionIds)
+        public static GraphQueryBuilder ForResourceType(params string[] resourceTypes)
+        {
+            return new GraphQueryBuilder(resourceTypes);
+        }
+
+        public GraphQueryBuilder Where(string field, Operator @operator, string value)
+        {
+            var queryOperator = GetQueryOperator(@operator);
+            _queryBuilder.AppendLine($"| where {field} {queryOperator} '{value}'");
+
+            return this;
+        }
+
+        private string GetQueryOperator(Operator operatorToUse)
+        {
+            switch (operatorToUse)
+            {
+                case Operator.Equals:
+                    return "==";
+                case Operator.DoesNotEquals:
+                    return "!=";
+                case Operator.Contains:
+                    return "contains";
+                case Operator.DoesNotContain:
+                    return "!contains";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(operatorToUse), operatorToUse, null);
+            }
+        }
+
+        public GraphQueryBuilder WithSubscriptionsWithIds(List<string> subscriptionIds)
         {
             if (subscriptionIds == null || subscriptionIds.Any() == false)
             {
@@ -35,7 +82,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return this;
         }
 
-        public GraphQuery WithResourceGroupsWithName(List<string> resourceGroups)
+        public GraphQueryBuilder WithResourceGroupsWithName(List<string> resourceGroups)
         {
             if (resourceGroups == null || resourceGroups.Any() == false)
             {
@@ -47,7 +94,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return this;
         }
 
-        public GraphQuery WithinRegions(List<string> regions)
+        public GraphQueryBuilder WithinRegions(List<string> regions)
         {
             if (regions == null || regions.Any() == false)
             {
@@ -59,7 +106,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return this;
         }
 
-        public GraphQuery WithTags(Dictionary<string, string> tags)
+        public GraphQueryBuilder WithTags(Dictionary<string, string> tags)
         {
             if (tags == null || tags.Any() == false)
             {
@@ -71,7 +118,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return this;
         }
 
-        public GraphQuery Project(params string[] fields)
+        public GraphQueryBuilder Project(params string[] fields)
         {
             _queryBuilder.Append("| project ");
             for (int fieldCount = 0; fieldCount < fields.Length - 1; fieldCount++)
@@ -84,7 +131,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return this;
         }
 
-        public GraphQuery LimitTo(int limit)
+        public GraphQueryBuilder LimitTo(int limit)
         {
             _queryBuilder.AppendLine($"| limit {limit}");
             return this;

@@ -13,12 +13,14 @@ resourceCollections:
   type: ContainerRegistry
 - name: app-plan-landscape
   type: AppPlan
-- name: app-services-north-europe
+- name: web-apps-north-europe
   type: WebApp
   criteria:
     regions:
     - northeurope
-- name: app-services
+- name: web-apps-landscape
+  type: WebApp
+- name: web-apps
   type: WebApp
   criteria:
     regions:
@@ -27,7 +29,7 @@ resourceCollections:
 - criteria:
     resourceGroups:
     - promitor-sources
-  name: app-services-filtered
+  name: web-apps-filtered
   type: WebApp
 - criteria:
     tags:
