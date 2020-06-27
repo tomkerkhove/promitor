@@ -12,7 +12,6 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Health;
-using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
@@ -55,8 +54,6 @@ namespace Promitor.Agents.Scraper
                 healthCheckBuilder.AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded);
             }
 
-            ValidateRuntimeConfiguration(services);
-
             services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping();
         }
@@ -78,13 +75,6 @@ namespace Promitor.Agents.Scraper
                 .ExposeOpenApiUi()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
             UseSerilog(ComponentName, app.ApplicationServices);
-        }
-
-        private void ValidateRuntimeConfiguration(IServiceCollection services)
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            var runtimeValidator = serviceProvider.GetService<RuntimeValidator>();
-            runtimeValidator.Run();
         }
 
         protected override LoggerConfiguration FilterTelemetry(LoggerConfiguration loggerConfiguration)

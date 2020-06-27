@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Agents.Scraper.Validation.Exceptions;
 using Promitor.Agents.Scraper.Validation.Interfaces;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -39,15 +38,15 @@ namespace Promitor.Agents.Scraper.Validation
             };
         }
 
-        public void Run()
+        public bool Run()
         {
             _validationLogger.LogInformation("Starting validation of Promitor setup");
 
             var validationResults = RunValidationSteps();
-            ProcessValidationResults(validationResults);
+            return ProcessValidationResults(validationResults);
         }
 
-        private void ProcessValidationResults(List<ValidationResult> validationResults)
+        private bool ProcessValidationResults(List<ValidationResult> validationResults)
         {
             var failedValidationResults = validationResults.Where(result => result.IsSuccessful == false).ToList();
 
@@ -55,10 +54,11 @@ namespace Promitor.Agents.Scraper.Validation
             if (validationFailed)
             {
                 _validationLogger.LogCritical("Promitor is not configured correctly. Please fix validation issues and re-run.");
-                throw new ValidationFailedException(failedValidationResults);
+                return false;
             }
 
             _validationLogger.LogInformation("Promitor configuration is valid, we are good to go.");
+            return true;
         }
 
         private List<ValidationResult> RunValidationSteps()

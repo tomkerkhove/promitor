@@ -35,6 +35,27 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
+        <member name="T:Promitor.Agents.Scraper.ExitStatus">
+            <summary>
+            The different statuses that the agent scraper can exit with.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.Success">
+            <summary>
+            The application has run successfully.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.UnhandledException">
+            <summary>
+            An unhandled exception was thrown during host startup. This probably
+            indicates a bug in Promitor that should be reported.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.ValidationFailed">
+            <summary>
+            Validation failed, so Promitor can't start.
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Adds the required metric sinks
