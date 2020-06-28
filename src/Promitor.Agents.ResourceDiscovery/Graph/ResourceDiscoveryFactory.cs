@@ -14,6 +14,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AppPlanDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryDiscoveryQuery();
+                case ResourceType.FunctionApp:
+                    return new FunctionAppDiscoveryQuery();
                 case ResourceType.WebApp:
                     return new WebAppDiscoveryQuery();
                 default:

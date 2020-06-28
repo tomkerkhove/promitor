@@ -18,8 +18,10 @@ resourceCollections:
   criteria:
     regions:
     - northeurope
-- name: web-apps-landscape
+- name: web-app-landscape
   type: WebApp
+- name: function-app-landscape
+  type: FunctionApp
 - name: web-apps
   type: WebApp
   criteria:

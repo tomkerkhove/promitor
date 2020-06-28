@@ -28,7 +28,7 @@ metrics:
         type: Average
     resourceCollections:
     - name: app-plan-landscape
-  - name: promitor_demo_webapp_cpu
+  - name: promitor_demo_webapp_cpu_discovery
     description: "Amount of CPU time used for an Azure Web App"
     resourceType: WebApp
     azureMetricConfiguration:
@@ -36,4 +36,13 @@ metrics:
       aggregation:
         type: Total
     resourceCollections:
-    - name: web-apps-landscape
+    - name: web-app-landscape	
+  - name: promitor_demo_function_memory_discovery
+    description: "Average memory for an Azure Function App"	
+    resourceType: FunctionApp	
+    azureMetricConfiguration:	
+      metricName: MemoryWorkingSet	
+      aggregation:	
+        type: Average
+    resourceCollections:
+    - name: function-app-landscape
