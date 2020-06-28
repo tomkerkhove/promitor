@@ -38,27 +38,20 @@ namespace Promitor.Agents.Scraper.Validation
             };
         }
 
-        public bool Run()
+        /// <summary>
+        /// Checks whether Promitor's configuration is valid so that the application
+        /// can start running successfully.
+        /// </summary>
+        /// <returns>
+        /// true if the configuration is valid, false otherwise.
+        /// </returns>
+        public bool Validate()
         {
             _validationLogger.LogInformation("Starting validation of Promitor setup");
 
             var validationResults = RunValidationSteps();
-            return ProcessValidationResults(validationResults);
-        }
 
-        private bool ProcessValidationResults(List<ValidationResult> validationResults)
-        {
-            var failedValidationResults = validationResults.Where(result => result.IsSuccessful == false).ToList();
-
-            var validationFailed = failedValidationResults.Any();
-            if (validationFailed)
-            {
-                _validationLogger.LogCritical("Promitor is not configured correctly. Please fix validation issues and re-run.");
-                return false;
-            }
-
-            _validationLogger.LogInformation("Promitor configuration is valid, we are good to go.");
-            return true;
+            return validationResults.All(result => result.IsSuccessful);
         }
 
         private List<ValidationResult> RunValidationSteps()

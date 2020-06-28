@@ -19,6 +19,11 @@ namespace Promitor.Agents.Scraper
         /// <summary>
         /// Validation failed, so Promitor can't start.
         /// </summary>
-        ValidationFailed = 2
+        ValidationFailed = 2,
+
+        /// <summary>
+        /// The configuration folder environment variable has not been set.
+        /// </summary>
+        ConfigurationFolderNotSpecified = 3
     }
 }

@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Scraper.Validation;
@@ -22,16 +23,26 @@ namespace Promitor.Agents.Scraper
                 // Let's hook in a logger for start-up purposes.
                 ConfigureStartupLogging();
 
-                var host = CreateHostBuilder(args)
+                var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+                if (string.IsNullOrWhiteSpace(configurationFolder))
+                {
+                    Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
+                    return (int)ExitStatus.ConfigurationFolderNotSpecified;
+                }
+
+                var host = CreateHostBuilder(args, configurationFolder)
                     .Build();
                 
                 using (var scope = host.Services.CreateScope())
                 {
                     var validator = scope.ServiceProvider.GetRequiredService<RuntimeValidator>();
-                    if (!validator.Run())
+                    if (!validator.Validate())
                     {
+                        Log.Logger.Fatal("Promitor is not configured correctly. Please fix validation issues and re-run.");
                         return (int)ExitStatus.ValidationFailed;
                     }
+
+                    Log.Logger.Information("Promitor configuration is valid, we are good to go.");                    
                 }
 
                 host.Run();
@@ -40,7 +51,7 @@ namespace Promitor.Agents.Scraper
             }
             catch (Exception exception)
             {
-                Log.Fatal(exception, "Host terminated unexpectedly");
+                Log.Fatal(exception, "Promitor has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
                 return (int)ExitStatus.UnhandledException;
             }
             finally
@@ -54,9 +65,9 @@ namespace Promitor.Agents.Scraper
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args, string configurationFolder)
         {
-            IConfiguration configuration = BuildConfiguration();
+            IConfiguration configuration = BuildConfiguration(configurationFolder);
             ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
             IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration);
 
@@ -69,14 +80,8 @@ namespace Promitor.Agents.Scraper
             return serverConfiguration;
         }
 
-        private static IConfigurationRoot BuildConfiguration()
+        private static IConfigurationRoot BuildConfiguration(string configurationFolder)
         {
-            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-            if (string.IsNullOrWhiteSpace(configurationFolder))
-            {
-                throw new Exception("Unable to determine the configuration folder");
-            }
-
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
