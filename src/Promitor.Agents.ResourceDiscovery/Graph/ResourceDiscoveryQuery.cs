@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Core.Contracts;
@@ -7,13 +9,21 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 {
     public abstract class ResourceDiscoveryQuery
     {
-        public List<object> ParseQueryResults(JObject unparsedResults)
+        public List<AzureResourceDefinition> ParseQueryResults(JObject unparsedResults)
         {
-            var foundResources = new List<object>();
+            Guard.NotNull(unparsedResults, nameof(unparsedResults));
+
+            var foundResources = new List<AzureResourceDefinition>();
             var rows = unparsedResults["rows"];
+            // TODO: Is it null if a valid query returns 0 rows?
+            if (rows == null)
+            {
+                throw new Exception("No rows were found in the response");
+            }
+
             foreach (var row in rows)
             {
-                object resource = ParseResults(row);
+                var resource = ParseResults(row);
 
                 foundResources.Add(resource);
             }
