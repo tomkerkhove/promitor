@@ -1,4 +1,4 @@
-﻿namespace Promitor.Agents.ResourceDiscovery.Graph
+﻿namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 {
     public enum Operator
     {

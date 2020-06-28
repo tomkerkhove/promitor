@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GuardNet;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 {
@@ -32,7 +31,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             {
                 _queryBuilder.AppendLine($" or type == '{resourceType}'");
             }
-            
         }
 
         public static GraphQueryBuilder ForResourceType(string resourceType)

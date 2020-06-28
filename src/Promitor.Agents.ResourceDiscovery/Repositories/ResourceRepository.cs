@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
-using Promitor.Agents.ResourceDiscovery.Graph.Model;
-using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
 using Promitor.Core.Contracts;
-using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
@@ -41,7 +36,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
         ///     Get resources that are part of a given resource collection
         /// </summary>
         /// <param name="resourceCollectionName">Name of the resource collection</param>
-        public async Task<List<object>> GetResourcesAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceCollectionName)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceCollectionDefinition = resourceDeclaration.ResourceCollections.SingleOrDefault(collection => collection.Name.Equals(resourceCollectionName, StringComparison.InvariantCultureIgnoreCase));

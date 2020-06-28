@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using GuardNet;
 using Promitor.Core.Contracts;
-using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Discovery
 {

@@ -7,7 +7,7 @@ namespace Promitor.Agents.Core.Observability
     public class SerilogFactory
     {
         /// <summary>
-        ///     Transforms log level to Serilogs format
+        ///     Transforms log level to Serilog format
         /// </summary>
         /// <param name="logLevel">Specified log level</param>
         public static LogEventLevel DetermineSinkLogLevel(LogLevel? logLevel)
