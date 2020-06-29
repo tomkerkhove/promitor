@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GuardNet;
-using Microsoft.AspNetCore.Http;
 using Promitor.Agents.ResourceDiscovery.Repositories;
-using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
