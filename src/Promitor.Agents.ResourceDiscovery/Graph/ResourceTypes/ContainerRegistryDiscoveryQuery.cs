@@ -28,7 +28,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
             
-            var resource = new ContainerRegistryResourceDefinition(resultRowEntry[0].ToString(), resultRowEntry[1].ToString(), resultRowEntry[3].ToString());
+            var resource = new ContainerRegistryResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
             return resource;
         }
     }
