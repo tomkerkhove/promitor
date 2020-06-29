@@ -24,7 +24,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
 
             // Assert
             Assert.Equal(appDetails.AppName, functionAppName);
-            Assert.Equal(Defaults.AppServices.SlotName, appDetails.SlotName);
+            Assert.Equal(Promitor.Core.Defaults.AppServices.SlotName, appDetails.SlotName);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
 
             // Assert
             Assert.Equal(appDetails.AppName, webAppName);
-            Assert.Equal(Defaults.AppServices.SlotName, appDetails.SlotName);
+            Assert.Equal(Promitor.Core.Defaults.AppServices.SlotName, appDetails.SlotName);
         }
 
         [Fact]

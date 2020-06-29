@@ -28,7 +28,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
             var webAppName = resultRowEntry[3].ToString();
-            var appDetails = DetermineAppDetails(webAppName);
+                var appDetails = DetermineAppDetails(webAppName);
             
             var resource = new FunctionAppResourceDefinition(resultRowEntry[0].ToString(), resultRowEntry[1].ToString(), appDetails.AppName, appDetails.SlotName);
             return resource;

@@ -1,5 +1,4 @@
 ﻿using System;
-using Promitor.Core.Scraping;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
@@ -23,7 +22,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
                 return (nameSegments[0], nameSegments[1]);
             }
 
-            return (resourceName, Defaults.AppServices.SlotName);
+            return (resourceName, Promitor.Core.Defaults.AppServices.SlotName);
         }
     }
 }
