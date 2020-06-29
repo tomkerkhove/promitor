@@ -37,7 +37,7 @@ namespace Promitor.Core.Scraping
             var resourceUri = BuildResourceUriWithoutDeploymentSlot(subscriptionId, scrapeDefinition, resource);
 
             // Production slot should not be suffixed in resource URI
-            if (slotName != "production")
+            if (slotName != Defaults.AppServices.SlotName)
             {
                 resourceUri += $"/slots/{slotName}";
             }
@@ -58,7 +58,7 @@ namespace Promitor.Core.Scraping
 
         private static string DetermineSlotName(TResourceDefinition resource)
         {
-            return string.IsNullOrWhiteSpace(resource.SlotName) ? "production" : resource.SlotName;
+            return string.IsNullOrWhiteSpace(resource.SlotName) ? Defaults.AppServices.SlotName : resource.SlotName;
         }
     }
 }

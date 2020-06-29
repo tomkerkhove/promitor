@@ -1,18 +1,30 @@
-﻿namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
+﻿using System;
+using Promitor.Core.Scraping;
+
+namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public abstract class AppServiceResourceDiscoveryQuery : ResourceDiscoveryQuery
     {
-        private const string DefaultSlotName = "production";
-
-        public (string AppName, string SlotName) DetermineAppDetails(string appName)
+        public (string AppName, string SlotName) DetermineAppDetails(string resourceName)
         {
-            if (appName.Contains("/"))
+            if (resourceName.Contains("/"))
             {
-                var webAppNameSegments = appName.Split("/");
-                return (webAppNameSegments[0], webAppNameSegments[1]);
+                if (resourceName.EndsWith("/"))
+                {
+                    throw new NotSupportedException("No slot name was provided while the resource name ends with a \"/\"");
+                }
+
+                var nameSegments = resourceName.Split("/");
+                if (nameSegments.Length != 2)
+                {
+                    throw new NotSupportedException("Resource name can only contain 1 \"/\" in its name");
+
+                }
+
+                return (nameSegments[0], nameSegments[1]);
             }
 
-            return (appName, DefaultSlotName);
+            return (resourceName, Defaults.AppServices.SlotName);
         }
     }
 }
