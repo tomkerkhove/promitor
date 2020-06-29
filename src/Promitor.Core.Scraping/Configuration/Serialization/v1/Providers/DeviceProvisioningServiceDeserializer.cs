@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public DeviceProvisioningServiceDeserializer(ILogger<DeviceProvisioningServiceDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.DeviceProvisioningServiceName);
+            Map(resource => resource.DeviceProvisioningServiceName)
+                .IsRequired();
         }
     }
 }

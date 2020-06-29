@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Promitor.Core.Scraping.Configuration.Serialization.FieldValidators;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
@@ -20,7 +21,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// <param name="defaultValue">The default value to use for the field if not specified.</param>
         /// <param name="customMapperFunc">A custom function to use for getting the value of the field.</param>
         /// <param name="deserializer">A deserializer to use to deserialize the field.</param>
-        public FieldDeserializationInfo(PropertyInfo propertyInfo, bool isRequired, object defaultValue, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc, IDeserializer deserializer = null)
+        /// <param name="validators">Any custom validators to validate the field using.</param>
+        public FieldDeserializationInfo(
+            PropertyInfo propertyInfo,
+            bool isRequired,
+            object defaultValue,
+            Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc,
+            IDeserializer deserializer,
+            IReadOnlyCollection<IFieldValidator> validators)
         {
             YamlFieldName = GetName(propertyInfo);
             CustomMapperFunc = customMapperFunc;
@@ -28,6 +36,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             IsRequired = isRequired;
             DefaultValue = defaultValue;
             Deserializer = deserializer;
+            Validators = validators;
         }
 
         /// <summary>
@@ -59,6 +68,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// Gets a deserializer to use when deserializing the field.
         /// </summary>
         public IDeserializer Deserializer { get; }
+
+        /// <summary>
+        /// Gets the custom validators for the field.
+        /// </summary>
+        public IReadOnlyCollection<IFieldValidator> Validators { get; }
 
         private static string GetName(MemberInfo propertyInfo)
         {

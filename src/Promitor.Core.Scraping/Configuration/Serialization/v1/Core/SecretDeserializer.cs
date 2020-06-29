@@ -8,8 +8,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         public SecretDeserializer(ILogger<SecretDeserializer> logger) : base(logger)
         {
-            MapOptional(secret => secret.RawValue);
-            MapOptional(secret => secret.EnvironmentVariable);
+            Map(secret => secret.RawValue);
+            Map(secret => secret.EnvironmentVariable);
         }
 
         public override SecretV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)

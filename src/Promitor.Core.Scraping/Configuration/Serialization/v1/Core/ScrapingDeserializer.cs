@@ -7,7 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         public ScrapingDeserializer(ILogger<ScrapingDeserializer> logger) : base(logger)
         {
-            MapRequired(scraping => scraping.Schedule);
+            Map(scraping => scraping.Schedule)
+                .IsRequired()
+                .ValidateCronExpression();
         }
     }
 }

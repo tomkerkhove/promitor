@@ -35,6 +35,32 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
+        <member name="T:Promitor.Agents.Scraper.ExitStatus">
+            <summary>
+            The different statuses that the agent scraper can exit with.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.Success">
+            <summary>
+            The application has run successfully.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.UnhandledException">
+            <summary>
+            An unhandled exception was thrown during host startup. This probably
+            indicates a bug in Promitor that should be reported.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.ValidationFailed">
+            <summary>
+            Validation failed, so Promitor can't start.
+            </summary>
+        </member>
+        <member name="F:Promitor.Agents.Scraper.ExitStatus.ConfigurationFolderNotSpecified">
+            <summary>
+            The configuration folder environment variable has not been set.
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Adds the required metric sinks
@@ -78,6 +104,15 @@
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Validation.RuntimeValidator.Validate">
+            <summary>
+            Checks whether Promitor's configuration is valid so that the application
+            can start running successfully.
+            </summary>
+            <returns>
+            true if the configuration is valid, false otherwise.
+            </returns>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>

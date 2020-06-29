@@ -1,4 +1,6 @@
-﻿using GuardNet;
+﻿using System.Collections.Generic;
+using GuardNet;
+using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
 {
@@ -39,6 +41,19 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         {
             DeserializationInfo.PropertyInfo.SetValue(target, value);
             HasBeenSet = true;
+        }
+
+        /// <summary>
+        /// Runs any custom validators that have been defined for the field.
+        /// </summary>
+        /// <param name="fieldNodes">The pair of nodes defining the name of the field, and its value.</param>
+        /// <param name="errorReporter">Used to report any validation errors.</param>
+        public void Validate(KeyValuePair<YamlNode, YamlNode> fieldNodes, IErrorReporter errorReporter)
+        {
+            foreach (var validator in DeserializationInfo.Validators)
+            {
+                validator.Validate(fieldNodes.Value.ToString(), fieldNodes, errorReporter);
+            }
         }
 
         /// <summary>

@@ -14,8 +14,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public ApiManagementDeserializer(ILogger logger) : base(logger)
         {
-            MapRequired(resource => resource.InstanceName);
-            MapOptional(resource => resource.LocationName);
+            Map(resource => resource.InstanceName)
+                .IsRequired();
+            Map(resource => resource.LocationName);
         }
     }
 }

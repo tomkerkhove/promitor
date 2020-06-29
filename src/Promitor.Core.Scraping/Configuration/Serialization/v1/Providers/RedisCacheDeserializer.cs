@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public RedisCacheDeserializer(ILogger<RedisCacheDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.CacheName);
+            Map(resource => resource.CacheName)
+                .IsRequired();
         }
     }
 }

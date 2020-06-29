@@ -10,8 +10,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             IDeserializer<ScrapingV1> scrapingDeserializer,
             ILogger<MetricDefaultsDeserializer> logger) : base(logger)
         {
-            MapOptional(defaults => defaults.Aggregation, aggregationDeserializer);
-            MapRequired(defaults => defaults.Scraping, scrapingDeserializer);
+            Map(defaults => defaults.Aggregation)
+                .MapUsingDeserializer(aggregationDeserializer);
+            Map(defaults => defaults.Scraping)
+                .IsRequired()
+                .MapUsingDeserializer(scrapingDeserializer);
         }
     }
 }

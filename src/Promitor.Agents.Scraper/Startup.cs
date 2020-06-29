@@ -12,17 +12,14 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Health;
-using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Promitor.Agents.Scraper
 {
     public class Startup : AgentStartup
     {
-        private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
         private readonly string _legacyPrometheusUriPath;
 
@@ -57,8 +54,6 @@ namespace Promitor.Agents.Scraper
                 healthCheckBuilder.AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded);
             }
 
-            ValidateRuntimeConfiguration(services);
-
             services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping();
         }
@@ -77,22 +72,9 @@ namespace Promitor.Agents.Scraper
                 .UseRouting()
                 .UseMetricSinks(Configuration)
                 .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
-                .ExposeOpenApiUi() // New Swagger UI
-                .ExposeOpenApiUi(ApiName, swaggerUiOptions =>
-                {
-                    swaggerUiOptions.SwaggerEndpoint("/swagger/v1/swagger.json", ApiName);
-                    swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", "Promitor - Scraper API (OpenAPI 3.0)");
-                    swaggerUiOptions.ConfigureDefaultOptions(ApiName);
-                }, openApiOptions => openApiOptions.SerializeAsV2 = true) // Deprecated Swagger UI
+                .ExposeOpenApiUi()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
             UseSerilog(ComponentName, app.ApplicationServices);
-        }
-
-        private void ValidateRuntimeConfiguration(IServiceCollection services)
-        {
-            var serviceProvider = services.BuildServiceProvider();
-            var runtimeValidator = serviceProvider.GetService<RuntimeValidator>();
-            runtimeValidator.Run();
         }
 
         protected override LoggerConfiguration FilterTelemetry(LoggerConfiguration loggerConfiguration)

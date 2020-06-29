@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using Bogus;
 using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
-using Promitor.Core.Scraping;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Discovery.Query

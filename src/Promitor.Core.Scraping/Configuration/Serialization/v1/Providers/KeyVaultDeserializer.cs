@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public KeyVaultDeserializer(ILogger<KeyVaultDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.VaultName);
+            Map(resource => resource.VaultName)
+                .IsRequired();
         }
     }
 }

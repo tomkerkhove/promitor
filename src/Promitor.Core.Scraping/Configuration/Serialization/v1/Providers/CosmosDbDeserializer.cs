@@ -7,7 +7,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public CosmosDbDeserializer(ILogger<CosmosDbDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.DbName);
+            Map(resource => resource.DbName)
+                .IsRequired();
         }
     }
 }

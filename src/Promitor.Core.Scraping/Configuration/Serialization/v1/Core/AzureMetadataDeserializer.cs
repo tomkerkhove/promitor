@@ -10,10 +10,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     {
         public AzureMetadataDeserializer(ILogger<AzureMetadataDeserializer> logger) : base(logger)
         {
-            MapRequired(metadata => metadata.TenantId);
-            MapRequired(metadata => metadata.SubscriptionId);
-            MapRequired(metadata => metadata.ResourceGroupName);
-            MapOptional(metadata => metadata.Cloud, AzureEnvironment.AzureGlobalCloud, DetermineAzureCloud);
+            Map(metadata => metadata.TenantId)
+                .IsRequired();
+            Map(metadata => metadata.SubscriptionId)
+                .IsRequired();
+            Map(metadata => metadata.ResourceGroupName)
+                .IsRequired();
+            Map(metadata => metadata.Cloud)
+                .WithDefault(AzureEnvironment.AzureGlobalCloud)
+                .MapUsing(DetermineAzureCloud);
         }
 
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

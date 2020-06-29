@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -153,22 +153,72 @@ country: Scotland");
                 r => r.ReportError(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("name"))));
         }
 
+        [Fact]
+        public void Deserialize_UnknownField_ReturnsSuggestion()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(@"nmae: Promitor");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            var nameTagNode = node.Children.Single(c => c.Key.ToString() == "nmae").Key;
+            
+            _errorReporter.Verify(r => r.ReportWarning(nameTagNode, "Unknown field 'nmae'. Did you mean 'name'?"));
+        }
+
+        [Fact]
+        public void Deserialize_CronSyntaxInvalid_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("schedule: 12345");
+            var dayValueNode = node.Children.Single(c => c.Key.ToString() == "schedule").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsError(
+                _deserializer,
+                node,
+                dayValueNode,
+                "'12345' is not a valid value for 'schedule'. The value must be a valid Cron expression.");
+        }
+
+        [Fact]
+        public void Deserialize_UnknownField_ReturnsMultipleSuggestions()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(@"dat: Monday");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            var nameTagNode = node.Children.Single(c => c.Key.ToString() == "dat").Key;
+            
+            _errorReporter.Verify(r => r.ReportWarning(nameTagNode, "Unknown field 'dat'. Did you mean 'day', 'date'?"));
+        }
+
         private class TestConfigObject
         {
             public string Name { get; set; }
             public int Age { get; set; }
             public DayOfWeek Day { get; set; }
+            public string Date { get; set; }
             public TimeSpan Interval { get; set; }
+            public string Schedule { get; set; }
         }
 
         private class TestDeserializer: Deserializer<TestConfigObject>
         {
             public TestDeserializer() : base(NullLogger.Instance)
             {
-                MapRequired(t => t.Name);
-                MapOptional(t => t.Age);
-                MapOptional(t => t.Day);
-                MapOptional(t => t.Interval);
+                Map(t => t.Name).IsRequired();
+                Map(t => t.Age);
+                Map(t => t.Day);
+                Map(t => t.Date);
+                Map(t => t.Interval);
+                Map(t => t.Schedule)
+                    .ValidateCronExpression();
                 IgnoreField("customField");
             }
         }

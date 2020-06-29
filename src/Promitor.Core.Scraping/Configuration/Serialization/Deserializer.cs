@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.Serialization;
 using GuardNet;
 using Microsoft.Extensions.Logging;
@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         where TObject: new()
     {
         private readonly HashSet<string> _ignoredFields = new HashSet<string>();
-        private readonly List<FieldDeserializationInfo> _fields = new List<FieldDeserializationInfo>();
+        private readonly List<IFieldDeserializationInfoBuilder> _fieldBuilders = new List<IFieldDeserializationInfoBuilder>();
 
         protected ILogger Logger { get; }
 
@@ -28,7 +28,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         public virtual TObject Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var result = new TObject();
-            var deserializationContext = new DeserializationContext<TObject>(_ignoredFields, _fields);
+            var fields = _fieldBuilders.Select(builder => builder.Build()).ToList();
+            var deserializationContext = new DeserializationContext<TObject>(_ignoredFields, fields);
 
             foreach (var child in node.Children)
             {
@@ -41,10 +42,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
                 {
                     fieldContext.SetValue(
                         result, GetFieldValue(child, fieldContext.DeserializationInfo, errorReporter));
+                    fieldContext.Validate(child, errorReporter);
                 }
                 else
                 {
-                    errorReporter.ReportWarning(child.Key, $"Unknown field '{child.Key}'.");
+                    var warningMessage = GetUnknownFieldWarningMessage(deserializationContext, child.Key.ToString());
+                    errorReporter.ReportWarning(child.Key, warningMessage);
                 }
             }
 
@@ -88,35 +91,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return Deserialize(node, errorReporter);
         }
 
-        protected void MapRequired<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
+        protected FieldDeserializationInfoBuilder<TObject, TReturn> Map<TReturn>(Expression<Func<TObject, TReturn>> accessorExpression)
         {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, true, default(TReturn), customMapperFunc));
-        }
+            var builder = new FieldDeserializationInfoBuilder<TObject, TReturn>();
+            builder.SetProperty(accessorExpression);
 
-        protected void MapRequired<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
-            where TReturn: new()
-        {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(
-                memberExpression.Member as PropertyInfo, true, default(TReturn), null, deserializer));
-        }
-        
-        protected void MapOptional<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, TReturn defaultValue = default, Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc = null)
-        {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(memberExpression.Member as PropertyInfo, false, defaultValue, customMapperFunc));
-        }
+            _fieldBuilders.Add(builder);
 
-        protected void MapOptional<TReturn>(
-            Expression<Func<TObject, TReturn>> accessorExpression, IDeserializer deserializer)
-            where TReturn: new()
-        {
-            var memberExpression = (MemberExpression)accessorExpression.Body;
-            _fields.Add(new FieldDeserializationInfo(
-                memberExpression.Member as PropertyInfo, false, default(TReturn), null, deserializer));
+            return builder;
         }
 
         protected void IgnoreField(string fieldName)
@@ -177,6 +159,29 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             }
 
             return null;
+        }
+        
+        /// <summary>
+        /// Gets the warning message to use when an invalid field name is found
+        /// in the configuration.
+        /// </summary>
+        /// <param name="deserializationContext">The deserialization context.</param>
+        /// <param name="fieldName">The unknown field.</param>
+        private static string GetUnknownFieldWarningMessage(DeserializationContext<TObject> deserializationContext, string fieldName)
+        {
+            var message = $"Unknown field '{fieldName}'.";
+            var suggestions = deserializationContext
+                .GetSuggestions(fieldName)
+                .Select(suggestion => $"'{suggestion}'")
+                .ToList();
+
+            if (suggestions.Any())
+            {
+                var formattedSuggestions = string.Join(", ", suggestions);
+                message += $" Did you mean {formattedSuggestions}?";
+            }
+
+            return message;
         }
     }
 }

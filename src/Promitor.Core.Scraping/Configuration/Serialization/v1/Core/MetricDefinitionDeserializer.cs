@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+﻿using System.Linq;
+ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
@@ -21,12 +22,18 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             _azureResourceCollectionDeserializer = azureResourceCollectionDeserializer;
             _azureResourceDeserializerFactory = azureResourceDeserializerFactory;
 
-            MapRequired(definition => definition.Name);
-            MapRequired(definition => definition.Description);
-            MapRequired(definition => definition.ResourceType);
-            MapRequired(definition => definition.AzureMetricConfiguration, azureMetricConfigurationDeserializer);
-            MapOptional(definition => definition.Labels);
-            MapOptional(definition => definition.Scraping, scrapingDeserializer);
+            Map(definition => definition.Name)
+                .IsRequired();
+            Map(definition => definition.Description)
+                .IsRequired();
+            Map(definition => definition.ResourceType)
+                .IsRequired();
+            Map(definition => definition.AzureMetricConfiguration)
+                .IsRequired()
+                .MapUsingDeserializer(azureMetricConfigurationDeserializer);
+            Map(definition => definition.Labels);
+            Map(definition => definition.Scraping)
+                .MapUsingDeserializer(scrapingDeserializer);
             IgnoreField(ResourceCollectionsTag);
             IgnoreField(ResourcesTag);
         }
@@ -70,6 +77,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 {
                     errorReporter.ReportError(resourceTypeNode, $"Could not find a deserializer for resource type '{metricDefinition.ResourceType}'.");
                 }
+            }
+
+            if ((metricDefinition.Resources == null || !metricDefinition.Resources.Any()) &&
+                (metricDefinition.ResourceCollections == null || !metricDefinition.ResourceCollections.Any()))
+            {
+                errorReporter.ReportError(node, "Either 'resources' or 'resourceCollections' must be specified.");
             }
         }
     }

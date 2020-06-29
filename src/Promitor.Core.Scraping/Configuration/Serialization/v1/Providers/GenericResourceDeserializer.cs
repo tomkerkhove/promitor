@@ -7,8 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public GenericResourceDeserializer(ILogger<GenericResourceDeserializer> logger) : base(logger)
         {
-            MapRequired(resource => resource.ResourceUri);
-            MapOptional(resource => resource.Filter);
+            Map(resource => resource.ResourceUri)
+                .IsRequired();
+            Map(resource => resource.Filter);
         }
     }
 }

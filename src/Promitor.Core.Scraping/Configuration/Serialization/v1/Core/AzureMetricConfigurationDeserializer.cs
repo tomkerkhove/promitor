@@ -8,9 +8,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         public AzureMetricConfigurationDeserializer(IDeserializer<MetricDimensionV1> dimensionDeserializer, IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger<AzureMetricConfigurationDeserializer> logger)
             : base(logger)
         {
-            MapRequired(config => config.MetricName);
-            MapOptional(config => config.Dimension, dimensionDeserializer);
-            MapRequired(config => config.Aggregation, aggregationDeserializer);
+            Map(config => config.MetricName)
+                .IsRequired();
+            Map(config => config.Dimension)
+                .MapUsingDeserializer(dimensionDeserializer);
+            Map(config => config.Aggregation)
+                .IsRequired()
+                .MapUsingDeserializer(aggregationDeserializer);
         }
     }
 }
