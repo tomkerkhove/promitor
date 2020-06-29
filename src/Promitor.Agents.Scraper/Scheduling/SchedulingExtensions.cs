@@ -55,7 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     foreach (var resource in metric.Resources)
                     {
-                        ScheduleResourceScraping(services, resource, metrics, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, metric, startupLogger);
+                        ScheduleResourceScraping(resource, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
                     }
                 }
             }
@@ -63,11 +63,11 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        private static void ScheduleResourceScraping(IServiceCollection services, IAzureResourceDefinition resource, MetricsDeclaration metrics, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricDefinition metric, ILogger<Startup> logger)
+        private static void ScheduleResourceScraping(IAzureResourceDefinition resource, AzureMetadata azureMetadata, MetricDefinition metric, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,  ILogger<Startup> logger, IServiceCollection services)
         {
-            var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-            var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
+            var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId;
+            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(azureMetadata.Cloud, azureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+            var scrapeDefinition = metric.CreateScrapeDefinition(resource, azureMetadata);
             var jobName = GenerateResourceScrapingJobName(scrapeDefinition, resource);
 
             services.AddScheduler(builder =>
