@@ -15,7 +15,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var foundResources = new List<AzureResourceDefinition>();
             var rows = unparsedResults["rows"];
-            // TODO: Is it null if a valid query returns 0 rows?
             if (rows == null)
             {
                 throw new Exception("No rows were found in the response");
