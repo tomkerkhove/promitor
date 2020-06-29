@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Agents.Scraper.Validation.Exceptions;
 using Promitor.Agents.Scraper.Validation.Interfaces;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -39,26 +38,20 @@ namespace Promitor.Agents.Scraper.Validation
             };
         }
 
-        public void Run()
+        /// <summary>
+        /// Checks whether Promitor's configuration is valid so that the application
+        /// can start running successfully.
+        /// </summary>
+        /// <returns>
+        /// true if the configuration is valid, false otherwise.
+        /// </returns>
+        public bool Validate()
         {
             _validationLogger.LogInformation("Starting validation of Promitor setup");
 
             var validationResults = RunValidationSteps();
-            ProcessValidationResults(validationResults);
-        }
 
-        private void ProcessValidationResults(List<ValidationResult> validationResults)
-        {
-            var failedValidationResults = validationResults.Where(result => result.IsSuccessful == false).ToList();
-
-            var validationFailed = failedValidationResults.Any();
-            if (validationFailed)
-            {
-                _validationLogger.LogCritical("Promitor is not configured correctly. Please fix validation issues and re-run.");
-                throw new ValidationFailedException(failedValidationResults);
-            }
-
-            _validationLogger.LogInformation("Promitor configuration is valid, we are good to go.");
+            return validationResults.All(result => result.IsSuccessful);
         }
 
         private List<ValidationResult> RunValidationSteps()
