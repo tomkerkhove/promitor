@@ -18,7 +18,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
                 if (nameSegments.Length != 2)
                 {
                     throw new NotSupportedException("Resource name can only contain 1 \"/\" in its name");
-
                 }
 
                 return (nameSegments[0], nameSegments[1]);
