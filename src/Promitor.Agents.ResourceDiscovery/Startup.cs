@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Health;
 using Promitor.Agents.Scraper.Extensions;
@@ -29,7 +28,7 @@ namespace Promitor.Agents.ResourceDiscovery
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.UseWebApi(jsonOptions => jsonOptions.SerializerSettings.TypeNameHandling= TypeNameHandling.Objects)
+            services.UseWebApi()
                 .AddRuntimeConfiguration(Configuration)
                 .AddAzureResourceGraph(Configuration)
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)

@@ -19,7 +19,7 @@ namespace Promitor.Agents.Scraper.Extensions
         /// <summary>
         ///     Expose services as Web API
         /// </summary>
-        public static IServiceCollection UseWebApi(this IServiceCollection services, Action<MvcNewtonsoftJsonOptions> configureJsonOptions = null)
+        public static IServiceCollection UseWebApi(this IServiceCollection services)
         {
             services.AddRouting(options =>
                 {
@@ -42,8 +42,6 @@ namespace Promitor.Agents.Scraper.Extensions
                 {
                     jsonOptions.SerializerSettings.Converters.Add(new StringEnumConverter());
                     jsonOptions.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-
-                    configureJsonOptions?.Invoke(jsonOptions);
                 });
 
             return services;

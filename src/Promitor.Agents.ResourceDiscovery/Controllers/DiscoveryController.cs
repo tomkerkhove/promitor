@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GuardNet;
+using Newtonsoft.Json;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Core.Contracts;
+using Newtonsoft.Json.Converters;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
@@ -15,6 +17,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
     [Route("api/v1/resources/collections")]
     public class DiscoveryController : ControllerBase
     {
+        private readonly JsonSerializerSettings _serializerSettings;
         private readonly ResourceRepository _resourceRepository;
 
         /// <summary>
@@ -25,6 +28,12 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
             Guard.NotNull(resourceRepository, nameof(resourceRepository));
 
             _resourceRepository = resourceRepository;
+            _serializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+                _serializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
@@ -42,7 +51,11 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
                     return NotFound(new {Information = "No resource collection was found with specified name"});
                 }
 
-                return Ok(foundResources);
+                var serializedResources = JsonConvert.SerializeObject(foundResources, _serializerSettings);
+                
+                var response= Content(serializedResources, "application/json");
+                response.StatusCode = (int) HttpStatusCode.OK;
+                return response;
             }
             catch (ResourceTypeNotSupportedException resourceTypeNotSupportedException)
             {
