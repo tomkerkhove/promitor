@@ -28,7 +28,7 @@ telemetry:
 azureMonitor:
   logging:
     informationLevel: Headers
-    isEnabled: true
+    isEnabled: false
 resourceDiscovery:
   host: promitor.agents.resourcediscovery
   port: 88

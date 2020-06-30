@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Promitor.Core.Contracts;
+using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 
@@ -30,7 +31,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
-                .ForCtorParam("ns", o => o.MapFrom(s => s.Namespace));
+                .ForCtorParam("serviceBusNamespace", o => o.MapFrom(s => s.Namespace));
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();

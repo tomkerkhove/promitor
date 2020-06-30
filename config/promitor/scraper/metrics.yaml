@@ -146,3 +146,39 @@ metrics:
     resources:
     - appPlanName: promitor-app-plan
       resourceGroupName: promitor-sources
+  - name: azure_container_registry_total_pull_count_discovered
+    description: "Amount of images that were pulled from the container registry"
+    resourceType: ContainerRegistry
+    azureMetricConfiguration:
+      metricName: TotalPullCount
+      aggregation:
+        type: Average
+    resourceCollections:
+    - name: container-registry-landscape
+  - name: promitor_demo_appplan_percentage_cpu_discovered
+    description: "Average percentage of memory usage on an Azure App Plan"
+    resourceType: AppPlan
+    azureMetricConfiguration:
+      metricName: MemoryPercentage
+      aggregation:
+        type: Average
+    resourceCollections:
+    - name: app-plan-landscape
+  - name: promitor_demo_webapp_cpu_discovery
+    description: "Amount of CPU time used for an Azure Web App"
+    resourceType: WebApp
+    azureMetricConfiguration:
+      metricName: CpuTime
+      aggregation:
+        type: Total
+    resourceCollections:
+    - name: web-app-landscape
+  - name: promitor_demo_function_memory_discovery
+    description: "Average memory for an Azure Function App"
+    resourceType: FunctionApp
+    azureMetricConfiguration:
+      metricName: MemoryWorkingSet
+      aggregation:
+        type: Average
+    resourceCollections:
+    - name: function-app-landscape

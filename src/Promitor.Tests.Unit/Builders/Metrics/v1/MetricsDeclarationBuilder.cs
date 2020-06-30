@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;

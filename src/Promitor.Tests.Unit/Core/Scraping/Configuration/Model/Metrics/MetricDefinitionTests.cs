@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using Promitor.Core.Contracts;
+using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics

@@ -1,7 +1,7 @@
+﻿using Microsoft.Extensions.Logging;
+using Promitor.Core.Contracts;
 ﻿using System.Linq;
-using Microsoft.Extensions.Logging;
-using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core

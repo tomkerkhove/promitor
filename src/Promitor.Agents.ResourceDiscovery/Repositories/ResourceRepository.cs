@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
-using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
@@ -36,7 +36,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
         ///     Get resources that are part of a given resource collection
         /// </summary>
         /// <param name="resourceCollectionName">Name of the resource collection</param>
-        public async Task<List<Resource>> GetResourcesAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceCollectionName)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceCollectionDefinition = resourceDeclaration.ResourceCollections.SingleOrDefault(collection => collection.Name.Equals(resourceCollectionName, StringComparison.InvariantCultureIgnoreCase));
@@ -46,9 +46,18 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
                 return null;
             }
 
-            var foundResources = await _azureResourceGraph.QueryAsync(resourceCollectionDefinition.Type, resourceCollectionDefinition.Criteria);
+            var resourceDiscovery = ResourceDiscoveryFactory.UseResourceDiscoveryFor(resourceCollectionDefinition.Type);
 
-            var contextualInformation = new Dictionary<string,object>
+            // 1. Create query per type
+            var query = resourceDiscovery.DefineQuery(resourceCollectionDefinition.Criteria);
+
+            // 2. Run Query
+            var unparsedResults = await _azureResourceGraph.QueryAsync(query);
+
+            // 3. Parse query results into resource
+            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
+
+            var contextualInformation = new Dictionary<string, object>
             {
                 {"ResourceType",resourceCollectionDefinition.Type},
                 {"CollectionName",resourceCollectionName}

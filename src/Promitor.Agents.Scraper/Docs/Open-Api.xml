@@ -91,7 +91,7 @@
         </member>
         <member name="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator">
             <summary>
-            Validates <see cref="T:Promitor.Core.Scraping.Configuration.Model.Metrics.ResourceTypes.SqlDatabaseResourceDefinition" /> objects.
+            Validates <see cref="T:Promitor.Core.Contracts.ResourceTypes.SqlDatabaseResourceDefinition" /> objects.
             </summary>
         </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">

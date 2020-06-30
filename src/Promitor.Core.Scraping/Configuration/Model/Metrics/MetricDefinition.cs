@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 {

@@ -11,11 +11,13 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Agents.Core.Serialization;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Discovery
 {
     public class ResourceDiscoveryClient
     {
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects };
         private readonly IOptionsMonitor<ResourceDiscoveryConfiguration> _configuration;
         private readonly ILogger<ResourceDiscoveryClient> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -32,11 +34,12 @@ namespace Promitor.Agents.Scraper.Discovery
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<object>> GetAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetAsync(string resourceCollectionName)
         {
             var uri = $"/api/v1/resources/collections/{resourceCollectionName}/discovery";
             var rawResponse = await SendGetRequestAsync(uri);
-            var foundResources = JsonConvert.DeserializeObject<List<object>>(rawResponse);
+
+            var foundResources = JsonConvert.DeserializeObject<List<AzureResourceDefinition>>(rawResponse, _serializerSettings);
             return foundResources;
         }
 

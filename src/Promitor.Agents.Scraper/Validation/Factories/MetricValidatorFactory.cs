@@ -1,7 +1,7 @@
 ﻿using System;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Validation.Factories
 {

@@ -3,6 +3,7 @@ WORKDIR /src
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
+COPY Promitor.Core.Contracts/* Promitor.Core.Contracts/
 COPY Promitor.Core.Telemetry/* Promitor.Core.Telemetry/
 COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
 COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
+using Promitor.Agents.ResourceDiscovery.Graph.Query;
 
 namespace Promitor.Agents.ResourceDiscovery.Health
 {
@@ -32,7 +33,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
-            var query = GraphQuery.ForResourceType("microsoft.logic/workflows")
+            var query = GraphQueryBuilder.ForResourceType("microsoft.logic/workflows")
                 .Project("subscriptionId", "resourceGroup", "type", "name", "id")
                 .LimitTo(1)
                 .Build();

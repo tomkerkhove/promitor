@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CronScheduler.Extensions.Scheduler;
 using GuardNet;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;

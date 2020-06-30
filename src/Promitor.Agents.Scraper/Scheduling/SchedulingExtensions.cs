@@ -10,6 +10,7 @@ using Promitor.Agents.Scraper.Discovery;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
 using Promitor.Agents.Scraper.Scheduling;
+using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -46,7 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     foreach (var resourceCollection in metric.ResourceCollections)
                     {
-                        ScheduleResourceCollectionScraping(resourceCollection, metric, startupLogger, services);
+                        ScheduleResourceCollectionScraping(resourceCollection, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
                     }
                 }
 
@@ -54,7 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     foreach (var resource in metric.Resources)
                     {
-                        ScheduleResourceScraping(services, resource, metrics, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, metric, startupLogger);
+                        ScheduleResourceScraping(resource, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
                     }
                 }
             }
@@ -62,11 +63,11 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        private static void ScheduleResourceScraping(IServiceCollection services, IAzureResourceDefinition resource, MetricsDeclaration metrics, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricDefinition metric, ILogger<Startup> logger)
+        private static void ScheduleResourceScraping(IAzureResourceDefinition resource, AzureMetadata azureMetadata, MetricDefinition metric, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,  ILogger<Startup> logger, IServiceCollection services)
         {
-            var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? metrics.AzureMetadata.SubscriptionId : resource.SubscriptionId;
-            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(metrics.AzureMetadata.Cloud, metrics.AzureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
-            var scrapeDefinition = metric.CreateScrapeDefinition(resource, metrics.AzureMetadata);
+            var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId;
+            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(azureMetadata.Cloud, azureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+            var scrapeDefinition = metric.CreateScrapeDefinition(resource, azureMetadata);
             var jobName = GenerateResourceScrapingJobName(scrapeDefinition, resource);
 
             services.AddScheduler(builder =>
@@ -88,24 +89,32 @@ namespace Microsoft.Extensions.DependencyInjection
                 builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(jobName, exceptionEventArgs, services);
             });
 
-            logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.GetUniqueName(), scrapeDefinition.PrometheusMetricDefinition?.Name);
+            logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
         }
 
-        private static void ScheduleResourceCollectionScraping(AzureResourceCollection resourceCollection, MetricDefinition metricDefinition, ILogger<Startup> logger, IServiceCollection services)
+        private static void ScheduleResourceCollectionScraping(AzureResourceCollection resourceCollection, AzureMetadata azureMetadata, MetricDefinition metricDefinition, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, ILogger<Startup> logger, IServiceCollection services)
         {
             var jobName = GenerateResourceCollectionScrapingJobName(metricDefinition.PrometheusMetricDefinition?.Name, resourceCollection.Name);
             services.AddScheduler(builder =>
             {
                 builder.AddJob(jobServices =>
-                    {
-                        return new ResourceCollectionScrapingJob(jobName, resourceCollection.Name,
-                            jobServices.GetService<ResourceDiscoveryRepository>(),
-                            jobServices.GetService<ILogger<ResourceCollectionScrapingJob>>());
-                    }, schedulerOptions =>
-                    {
-                        schedulerOptions.CronSchedule = metricDefinition.Scraping.Schedule;
-                        schedulerOptions.RunImmediately = true;
-                    },
+                {
+                    return new ResourceCollectionScrapingJob(jobName, resourceCollection.Name, azureMetadata, metricDefinition,
+                        jobServices.GetService<ResourceDiscoveryRepository>(),
+                        metricSinkWriter,
+                        jobServices.GetService<IPrometheusMetricWriter>(),
+                        jobServices.GetService<MetricScraperFactory>(),
+                        azureMonitorClientFactory,
+                        runtimeMetricCollector,
+                        configuration,
+                        azureMonitorLoggingConfiguration,
+                        loggerFactory,
+                        jobServices.GetService<ILogger<ResourceCollectionScrapingJob>>());
+                }, schedulerOptions =>
+                {
+                    schedulerOptions.CronSchedule = metricDefinition.Scraping.Schedule;
+                    schedulerOptions.RunImmediately = true;
+                },
                     jobName: jobName);
                 builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(jobName, exceptionEventArgs, services);
             });
@@ -122,7 +131,7 @@ namespace Microsoft.Extensions.DependencyInjection
             jobNameBuilder.Append("-");
             jobNameBuilder.Append(scrapeDefinition.PrometheusMetricDefinition.Name);
             jobNameBuilder.Append("-");
-            jobNameBuilder.Append(resource.GetUniqueName());
+            jobNameBuilder.Append(resource.UniqueName);
             jobNameBuilder.Append("-");
             jobNameBuilder.Append(Guid.NewGuid().ToString());
 
@@ -147,7 +156,6 @@ namespace Microsoft.Extensions.DependencyInjection
             var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
             var loggerInstance = (ILogger) logger?.ImplementationInstance;
 
-            // TODO: Add job name
             loggerInstance?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
 
             exceptionEventArgs.SetObserved();

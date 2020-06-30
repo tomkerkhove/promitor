@@ -44,6 +44,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
+    <ProjectReference Include="..\Promitor.Core.Contracts\Promitor.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
   </ItemGroup>
 
 </Project>
