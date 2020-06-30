@@ -183,11 +183,15 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             }
 
             var rows = result["rows"];
+            if (rows == null)
+            {
+                throw new Exception("No rows were found in the query response");
+            }
+
             var foundResources = new List<Resource>();
             foreach (var row in rows)
             {
-                var resource = new Resource(row[0].ToString(), row[1].ToString(), row[2].ToString(),
-                    row[3].ToString());
+                var resource = new Resource(row[0]?.ToString(), row[1]?.ToString(), row[2]?.ToString(), row[3]?.ToString());
                 foundResources.Add(resource);
             }
 
