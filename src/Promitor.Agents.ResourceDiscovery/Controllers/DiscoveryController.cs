@@ -30,7 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
             _resourceRepository = resourceRepository;
             _serializerSettings = new JsonSerializerSettings
             {
-                NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Objects
             };
                 _serializerSettings.Converters.Add(new StringEnumConverter());
