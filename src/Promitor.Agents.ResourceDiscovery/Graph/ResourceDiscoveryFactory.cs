@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
 using Promitor.Core.Contracts;
 
@@ -16,10 +16,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.FunctionApp:
                     return new FunctionAppDiscoveryQuery();
+                case ResourceType.LogicApp:
+                    return new LogicAppDiscoveryQuery();
                 case ResourceType.WebApp:
                     return new WebAppDiscoveryQuery();
                 default:
-                    throw new NotSupportedException();
+                    throw new ResourceTypeNotSupportedException(resourceType);
             }
         }
     }

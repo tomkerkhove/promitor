@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GuardNet;
+using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Repositories;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
@@ -31,13 +34,20 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         [HttpGet("{resourceCollectionName}/discovery", Name = "Discovery_Get")]
         public async Task<IActionResult> Get(string resourceCollectionName)
         {
-            var foundResources = await _resourceRepository.GetResourcesAsync(resourceCollectionName);
-            if (foundResources == null)
+            try
             {
-                return NotFound(new { Information = "No resource collection was found with specified name" });
-            }
+                var foundResources = await _resourceRepository.GetResourcesAsync(resourceCollectionName);
+                if (foundResources == null)
+                {
+                    return NotFound(new {Information = "No resource collection was found with specified name"});
+                }
 
-            return Ok(foundResources);
+                return Ok(foundResources);
+            }
+            catch (ResourceTypeNotSupportedException resourceTypeNotSupportedException)
+            {
+                return StatusCode((int)HttpStatusCode.NotImplemented, new ResourceDiscoveryFailedDetails { Details=$"Resource type '{resourceTypeNotSupportedException.ResourceType}' for collection '{resourceCollectionName}' is not supported"});
+            }
         }
     }
 }
