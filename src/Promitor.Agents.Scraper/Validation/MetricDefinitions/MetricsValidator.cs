@@ -50,7 +50,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 errorMessages.Add("No metric name is configured");
             }
 
-            if (metric.Resources?.Any() == false && metric.ResourceCollections?.Any() == false)
+            if (metric.Resources?.Any() == false && metric.ResourceDiscoveryGroups?.Any() == false)
             {
                 errorMessages.Add("No resource or resource collection is configured to be scraped");
             }

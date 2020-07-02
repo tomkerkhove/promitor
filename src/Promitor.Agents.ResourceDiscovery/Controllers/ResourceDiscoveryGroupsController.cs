@@ -6,18 +6,18 @@ using Promitor.Agents.ResourceDiscovery.Configuration;
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
     /// <summary>
-    /// API endpoint to interact with resource collections
+    /// API endpoint to interact with resource discovery groups
     /// </summary>
     [ApiController]
-    [Route("api/v1/resources/collections")]
-    public class ResourceCollectionsController : ControllerBase
+    [Route("api/v1/resources/groups")]
+    public class ResourceDiscoveryGroupsController : ControllerBase
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
+        ///     Initializes a new instance of the <see cref="ResourceDiscoveryGroupsController" /> class.
         /// </summary>
-        public ResourceCollectionsController(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor)
+        public ResourceDiscoveryGroupsController(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor)
         {
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
 
@@ -25,14 +25,14 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         }
 
         /// <summary>
-        ///     Get Resource Collections
+        ///     Get Resource Discovery Groups
         /// </summary>
-        /// <remarks>Lists all available resource collections.</remarks>
-        [HttpGet(Name = "ResourceCollections_Get")]
+        /// <remarks>Lists all available resource discovery groups.</remarks>
+        [HttpGet(Name = "ResourceDiscoveryGroups_Get")]
         public IActionResult Get()
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
-            return Ok(resourceDeclaration.ResourceCollections);
+            return Ok(resourceDeclaration.ResourceDiscoveryGroups);
         }
     }
 }

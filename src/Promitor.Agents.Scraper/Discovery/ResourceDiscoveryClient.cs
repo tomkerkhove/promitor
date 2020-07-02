@@ -34,9 +34,9 @@ namespace Promitor.Agents.Scraper.Discovery
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<AzureResourceDefinition>> GetAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetAsync(string resourceDiscoveryGroupName)
         {
-            var uri = $"/api/v1/resources/collections/{resourceCollectionName}/discovery";
+            var uri = $"/api/v1/resources/collections/{resourceDiscoveryGroupName}/discovery";
             var rawResponse = await SendGetRequestAsync(uri);
 
             var foundResources = JsonConvert.DeserializeObject<List<AzureResourceDefinition>>(rawResponse, _serializerSettings);

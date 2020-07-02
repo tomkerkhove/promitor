@@ -45,7 +45,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <summary>
         /// Gets or sets the list of resource collections to discover resources with.
         /// </summary>
-        public List<AzureResourceCollection> ResourceCollections { get; set; }
+        public List<AzureResourceDiscoveryGroup> ResourceDiscoveryGroups { get; set; }
 
         /// <summary>
         /// Gets or sets the list of resources to scrape.

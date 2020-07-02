@@ -42,7 +42,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// <summary>
         /// The resource collections to be scraped.
         /// </summary>
-        public IReadOnlyCollection<AzureResourceCollectionDefinitionV1> ResourceCollections { get; set; }
+        public IReadOnlyCollection<AzureResourceDiscoveryGroupDefinitionV1> ResourceDiscoveryGroups { get; set; }
 
         /// <summary>
         /// The resources to be scraped.

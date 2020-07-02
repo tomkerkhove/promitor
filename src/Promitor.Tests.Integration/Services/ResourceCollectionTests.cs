@@ -10,29 +10,29 @@ using Xunit.Abstractions;
 namespace Promitor.Tests.Integration.Services
 {
     [Category("Integration")]
-    public class ResourceCollectionTests : IntegrationTest
+    public class ResourceDiscoveryGroupTests : IntegrationTest
     {
-        public ResourceCollectionTests(ITestOutputHelper testOutput)
+        public ResourceDiscoveryGroupTests(ITestOutputHelper testOutput)
           : base(testOutput)
         {
         }
 
         [Fact]
-        public async Task ResourceCollection_GetAll_ReturnsValidList()
+        public async Task ResourceDiscoveryGroup_GetAll_ReturnsValidList()
         {
             // Arrange
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetResourceCollectionsAsync();
+            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resourceCollections = JsonConvert.DeserializeObject<List<ResourceCollection>>(rawResponseBody);
-            Assert.NotNull(resourceCollections);
-            Assert.NotEmpty(resourceCollections);
+            var resourceDiscoveryGroups = JsonConvert.DeserializeObject<List<ResourceDiscoveryGroup>>(rawResponseBody);
+            Assert.NotNull(resourceDiscoveryGroups);
+            Assert.NotEmpty(resourceDiscoveryGroups);
         }
     }
 }

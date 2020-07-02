@@ -20,7 +20,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 
 namespace Promitor.Agents.Scraper.Scheduling
 {
-    public class ResourceCollectionScrapingJob : MetricScrapingJob, IScheduledJob
+    public class ResourceDiscoveryGroupScrapingJob : MetricScrapingJob, IScheduledJob
     {
         private readonly ResourceDiscoveryRepository _resourceDiscoveryRepository;
         private readonly MetricDefinition _metricDefinition;
@@ -35,15 +35,15 @@ namespace Promitor.Agents.Scraper.Scheduling
 
         private readonly MetricScraperFactory _metricScraperFactory;
 
-        public ResourceCollectionScrapingJob(string jobName, string resourceCollectionName, AzureMetadata azureMetadata, MetricDefinition metricDefinition, ResourceDiscoveryRepository resourceDiscoveryRepository,
+        public ResourceDiscoveryGroupScrapingJob(string jobName, string resourceDiscoveryGroupName, AzureMetadata azureMetadata, MetricDefinition metricDefinition, ResourceDiscoveryRepository resourceDiscoveryRepository,
             MetricSinkWriter metricSinkWriter,
             IPrometheusMetricWriter prometheusMetricWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClientFactory azureMonitorClientFactory, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,
-            ILogger<ResourceCollectionScrapingJob> logger)
+            ILogger<ResourceDiscoveryGroupScrapingJob> logger)
             : base(jobName, logger)
         {
-            Guard.NotNullOrWhitespace(resourceCollectionName, nameof(resourceCollectionName));
+            Guard.NotNullOrWhitespace(resourceDiscoveryGroupName, nameof(resourceDiscoveryGroupName));
             Guard.NotNull(resourceDiscoveryRepository, nameof(resourceDiscoveryRepository));
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
             Guard.NotNull(azureMetadata, nameof(azureMetadata));
@@ -57,7 +57,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
 
-            ResourceCollectionName = resourceCollectionName;
+            resourceDiscoveryGroupName = resourceDiscoveryGroupName;
 
             _azureMetadata = azureMetadata;
             _metricDefinition = metricDefinition;
@@ -74,20 +74,20 @@ namespace Promitor.Agents.Scraper.Scheduling
             _metricScraperFactory = metricScraperFactory;
         }
 
-        public string ResourceCollectionName { get; }
+        public string ResourceDiscoveryGroupName { get; }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            Logger.LogInformation("Scraping resource collection {ResourceCollection} - {Timestamp}", ResourceCollectionName, DateTimeOffset.UtcNow);
+            Logger.LogInformation("Scraping resource collection {ResourceDiscoveryGroup} - {Timestamp}", ResourceDiscoveryGroupName, DateTimeOffset.UtcNow);
 
             try
             {
-                var discoveredResources = await _resourceDiscoveryRepository.GetResourceCollectionAsync(ResourceCollectionName);
-                Logger.LogInformation("Discovered {ResourceCount} resources for resource collection {ResourceCollection}.", discoveredResources?.Count ?? 0, ResourceCollectionName);
+                var discoveredResources = await _resourceDiscoveryRepository.GetResourceDiscoveryGroupAsync(ResourceDiscoveryGroupName);
+                Logger.LogInformation("Discovered {ResourceCount} resources for resource collection {ResourceDiscoveryGroup}.", discoveredResources?.Count ?? 0, ResourceDiscoveryGroupName);
 
                 if (discoveredResources == null)
                 {
-                    Logger.LogWarning("Discovered no resources for resource collection {ResourceCollection}.", ResourceCollectionName);
+                    Logger.LogWarning("Discovered no resources for resource collection {ResourceDiscoveryGroup}.", ResourceDiscoveryGroupName);
                     return;
                 }
 
@@ -107,7 +107,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             }
             catch (Exception exception)
             {
-                Logger.LogCritical(exception, "Failed to scrape resource collection {ResourceCollection}: {Exception}", ResourceCollectionName, exception.Message);
+                Logger.LogCritical(exception, "Failed to scrape resource collection {ResourceDiscoveryGroup}: {Exception}", ResourceDiscoveryGroupName, exception.Message);
             }
         }
 

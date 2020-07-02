@@ -43,11 +43,11 @@ namespace Microsoft.Extensions.DependencyInjection
             var startupLogger = loggerFactory.CreateLogger<Startup>();
             foreach (var metric in metrics.Metrics)
             {
-                if (metric.ResourceCollections?.Any() == true)
+                if (metric.ResourceDiscoveryGroups?.Any() == true)
                 {
-                    foreach (var resourceCollection in metric.ResourceCollections)
+                    foreach (var resourceDiscoveryGroup in metric.ResourceDiscoveryGroups)
                     {
-                        ScheduleResourceCollectionScraping(resourceCollection, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
+                        ScheduleResourceDiscoveryGroupScraping(resourceDiscoveryGroup, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
                     }
                 }
 
@@ -92,14 +92,14 @@ namespace Microsoft.Extensions.DependencyInjection
             logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
         }
 
-        private static void ScheduleResourceCollectionScraping(AzureResourceCollection resourceCollection, AzureMetadata azureMetadata, MetricDefinition metricDefinition, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, ILogger<Startup> logger, IServiceCollection services)
+        private static void ScheduleResourceDiscoveryGroupScraping(AzureResourceDiscoveryGroup resourceDiscoveryGroup, AzureMetadata azureMetadata, MetricDefinition metricDefinition, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, ILogger<Startup> logger, IServiceCollection services)
         {
-            var jobName = GenerateResourceCollectionScrapingJobName(metricDefinition.PrometheusMetricDefinition?.Name, resourceCollection.Name);
+            var jobName = GenerateResourceDiscoveryGroupScrapingJobName(metricDefinition.PrometheusMetricDefinition?.Name, resourceDiscoveryGroup.Name);
             services.AddScheduler(builder =>
             {
                 builder.AddJob(jobServices =>
                 {
-                    return new ResourceCollectionScrapingJob(jobName, resourceCollection.Name, azureMetadata, metricDefinition,
+                    return new ResourceDiscoveryGroupScrapingJob(jobName, resourceDiscoveryGroup.Name, azureMetadata, metricDefinition,
                         jobServices.GetService<ResourceDiscoveryRepository>(),
                         metricSinkWriter,
                         jobServices.GetService<IPrometheusMetricWriter>(),
@@ -109,7 +109,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         configuration,
                         azureMonitorLoggingConfiguration,
                         loggerFactory,
-                        jobServices.GetService<ILogger<ResourceCollectionScrapingJob>>());
+                        jobServices.GetService<ILogger<ResourceDiscoveryGroupScrapingJob>>());
                 }, schedulerOptions =>
                 {
                     schedulerOptions.CronSchedule = metricDefinition.Scraping.Schedule;
@@ -119,7 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(jobName, exceptionEventArgs, services);
             });
 
-            logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceCollection} which will be reported as metric {MetricName}", jobName, resourceCollection.Name, metricDefinition.PrometheusMetricDefinition?.Name);
+            logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceDiscoveryGroup} which will be reported as metric {MetricName}", jobName, resourceDiscoveryGroup.Name, metricDefinition.PrometheusMetricDefinition?.Name);
         }
 
         private static string GenerateResourceScrapingJobName(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, IAzureResourceDefinition resource)
@@ -138,12 +138,12 @@ namespace Microsoft.Extensions.DependencyInjection
             return jobNameBuilder.ToString();
         }
 
-        private static string GenerateResourceCollectionScrapingJobName(string metricName, string resourceCollectionName)
+        private static string GenerateResourceDiscoveryGroupScrapingJobName(string metricName, string resourceDiscoveryGroupName)
         {
             var jobNameBuilder = new StringBuilder();
             jobNameBuilder.Append(metricName);
             jobNameBuilder.Append("-");
-            jobNameBuilder.Append(resourceCollectionName);
+            jobNameBuilder.Append(resourceDiscoveryGroupName);
             jobNameBuilder.Append("-");
             jobNameBuilder.Append(Guid.NewGuid().ToString());
 

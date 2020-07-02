@@ -14,7 +14,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
     /// API endpoint to discover Azure resources
     /// </summary>
     [ApiController]
-    [Route("api/v1/resources/collections")]
+    [Route("api/v1/resources/groups")]
     public class DiscoveryController : ControllerBase
     {
         private readonly JsonSerializerSettings _serializerSettings;
@@ -40,15 +40,15 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         ///     Discover Resources
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
-        [HttpGet("{resourceCollectionName}/discovery", Name = "Discovery_Get")]
-        public async Task<IActionResult> Get(string resourceCollectionName)
+        [HttpGet("{resourceDiscoveryGroup}/discovery", Name = "Discovery_Get")]
+        public async Task<IActionResult> Get(string resourceDiscoveryGroup)
         {
             try
             {
-                var foundResources = await _resourceRepository.GetResourcesAsync(resourceCollectionName);
+                var foundResources = await _resourceRepository.GetResourcesAsync(resourceDiscoveryGroup);
                 if (foundResources == null)
                 {
-                    return NotFound(new {Information = "No resource collection was found with specified name"});
+                    return NotFound(new {Information = "No resource discovery group was found with specified name"});
                 }
 
                 var serializedResources = JsonConvert.SerializeObject(foundResources, _serializerSettings);
@@ -59,7 +59,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
             }
             catch (ResourceTypeNotSupportedException resourceTypeNotSupportedException)
             {
-                return StatusCode((int)HttpStatusCode.NotImplemented, new ResourceDiscoveryFailedDetails { Details=$"Resource type '{resourceTypeNotSupportedException.ResourceType}' for collection '{resourceCollectionName}' is not supported"});
+                return StatusCode((int)HttpStatusCode.NotImplemented, new ResourceDiscoveryFailedDetails { Details=$"Resource type '{resourceTypeNotSupportedException.ResourceType}' for discovery group '{resourceDiscoveryGroup}' is not supported"});
             }
         }
     }
