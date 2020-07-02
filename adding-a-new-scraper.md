@@ -56,6 +56,10 @@ This requires the following steps:
 2. Hook your new scraper in our `MetricScraperFactory` which determines what scraper
   to use for the passed configuration.
 
+## Resource Discovery
+
+TODO
+
 <!-- markdownlint-enable -->
 
 ------------------------
