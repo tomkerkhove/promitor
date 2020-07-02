@@ -1,10 +1,5 @@
 server:
   httpPort: 88
-prometheus:
-  metricUnavailableValue: NaN
-  enableMetricTimestamps: true # true by default
-  scrapeEndpoint:
-    baseUriPath: /metrics-deprecated
 metricSinks:
   prometheusScrapingEndpoint:
     metricUnavailableValue: NaN

@@ -19,7 +19,6 @@ using Promitor.Agents.Scraper.Validation;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
-using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
@@ -44,7 +43,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<RuntimeValidator>();
-            services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
 

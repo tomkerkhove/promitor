@@ -15,7 +15,6 @@ using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor.Configuration;
 
 // ReSharper disable once CheckNamespace
@@ -76,7 +75,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         return new ResourceScrapingJob(jobName, scrapeDefinition,
                             metricSinkWriter,
-                            jobServices.GetService<IPrometheusMetricWriter>(),
                             jobServices.GetService<MetricScraperFactory>(),
                             azureMonitorClient,
                             jobServices.GetService<ILogger<ResourceScrapingJob>>());
@@ -102,7 +100,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     return new ResourceDiscoveryGroupScrapingJob(jobName, resourceDiscoveryGroup.Name, azureMetadata, metricDefinition,
                         jobServices.GetService<ResourceDiscoveryRepository>(),
                         metricSinkWriter,
-                        jobServices.GetService<IPrometheusMetricWriter>(),
                         jobServices.GetService<MetricScraperFactory>(),
                         azureMonitorClientFactory,
                         runtimeMetricCollector,

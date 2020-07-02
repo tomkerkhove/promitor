@@ -68,21 +68,6 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             Assert.False(validationResult.IsSuccessful);
         }
 
-        [Fact]
-        public void Validate_PrometheusScrapingEndpointHasSameBaseUriPathAsLegacyPrometheusConfiguration_Fails()
-        {
-            // Arrange
-            var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath = runtimeConfiguration.Value.Prometheus.ScrapeEndpoint.BaseUriPath;
-
-            // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
-            var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
-
-            // Assert
-            Assert.False(validationResult.IsSuccessful);
-        }
-
         private IOptions<ScraperRuntimeConfiguration> CreateRuntimeConfiguration()
         {
             var bogusRuntimeConfiguration = BogusScraperRuntimeConfigurationGenerator.Generate();

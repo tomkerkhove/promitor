@@ -21,19 +21,16 @@ namespace Promitor.Agents.Scraper
     public class Startup : AgentStartup
     {
         private const string ComponentName = "Promitor Scraper";
-        private readonly string _legacyPrometheusUriPath;
 
         public Startup(IConfiguration configuration)
             : base(configuration)
         {
-            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
-            _legacyPrometheusUriPath = runtimeConfiguration?.Prometheus?.ScrapeEndpoint?.BaseUriPath;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string openApiDescription = BuildOpenApiDescription(Configuration, _legacyPrometheusUriPath);
+            string openApiDescription = BuildOpenApiDescription(Configuration);
             services.AddHttpClient("Promitor Resource Discovery", client =>
             {
                 // Provide Promitor User-Agent
@@ -71,7 +68,6 @@ namespace Promitor.Agents.Scraper
                 .UseHttpCorrelation()
                 .UseRouting()
                 .UseMetricSinks(Configuration)
-                .AddPrometheusScraperMetricSink(_legacyPrometheusUriPath) // Deprecated and will be gone in 2.0
                 .ExposeOpenApiUi()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
             UseSerilog(ComponentName, app.ApplicationServices);
@@ -91,16 +87,12 @@ namespace Promitor.Agents.Scraper
             return standardConfiguration;
         }
 
-        private string BuildOpenApiDescription(IConfiguration configuration, string legacyPrometheusUriPath)
+        private string BuildOpenApiDescription(IConfiguration configuration)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
             var openApiDescriptionBuilder = new StringBuilder();
             openApiDescriptionBuilder.Append("Collection of APIs to manage the Promitor Scraper.\r\n\r\n");
             openApiDescriptionBuilder.AppendLine("Configured metric sinks are:\r\n");
-            if (string.IsNullOrWhiteSpace(legacyPrometheusUriPath) == false)
-            {
-                openApiDescriptionBuilder.AppendLine($"<li>Legacy Prometheus scrape endpoint is exposed at <a href=\"./../..{legacyPrometheusUriPath}\" target=\"_blank\">{legacyPrometheusUriPath}</a></li>");
-            }
 
             if (metricSinkConfiguration != null)
             {
