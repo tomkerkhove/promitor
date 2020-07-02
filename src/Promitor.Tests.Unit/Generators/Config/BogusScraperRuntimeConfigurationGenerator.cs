@@ -23,10 +23,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(metricConfiguration => metricConfiguration.AbsolutePath, faker => faker.System.DirectoryPath())
                 .Generate();
-            var scrapeEndpointConfiguration = new Faker<ScrapeEndpointConfiguration>()
-                .StrictMode(true)
-                .RuleFor(flagsConfiguration => flagsConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
-                .Generate();
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
                 .StrictMode(true)

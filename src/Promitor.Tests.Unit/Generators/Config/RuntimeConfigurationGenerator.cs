@@ -18,7 +18,6 @@ namespace Promitor.Tests.Unit.Generators.Config
     internal class RuntimeConfigurationGenerator
     {
         private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new ScraperRuntimeConfiguration();
-        private bool _isEnableMetricTimestampsInPrometheusSpecified;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
@@ -28,7 +27,6 @@ namespace Promitor.Tests.Unit.Generators.Config
         private RuntimeConfigurationGenerator(ScraperRuntimeConfiguration runtimeConfiguration)
         {
             _runtimeConfiguration = runtimeConfiguration;
-            _isEnableMetricTimestampsInPrometheusSpecified = true;
         }
 
         public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888)
@@ -72,7 +70,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 if (enableMetricsTimestamp != null)
                 {
                     prometheusSinkConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
-                    _isEnableMetricTimestampsInPrometheusSpecified = true;
                 }
             }
 
