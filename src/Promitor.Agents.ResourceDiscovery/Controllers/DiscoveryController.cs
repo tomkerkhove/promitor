@@ -40,7 +40,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         ///     Discover Resources
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
-        [HttpGet("{resourceDiscoveryGroup}/discovery", Name = "Discovery_Get")]
+        [HttpGet("{resourceDiscoveryGroup}/discover", Name = "Discovery_Get")]
         public async Task<IActionResult> Get(string resourceDiscoveryGroup)
         {
             try

@@ -57,7 +57,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
 
-            resourceDiscoveryGroupName = resourceDiscoveryGroupName;
+            ResourceDiscoveryGroupName = resourceDiscoveryGroupName;
 
             _azureMetadata = azureMetadata;
             _metricDefinition = metricDefinition;

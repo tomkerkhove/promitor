@@ -40,7 +40,7 @@ namespace Promitor.Tests.Integration
 
         public async Task<HttpResponseMessage> GetDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
         {
-            return await GetAsync($"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discovery");
+            return await GetAsync($"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discover");
         }
 
         private async Task<HttpResponseMessage> GetAsync(string uri)
