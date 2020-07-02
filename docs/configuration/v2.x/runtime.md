@@ -22,15 +22,14 @@ Here is a complete example of the runtime YAML:
 server:
   httpPort: 80 # Optional. Default: 80
 metricSinks:
+  prometheusScrapingEndpoint:
+    metricUnavailableValue: NaN # Optional. Default: NaN
+    enableMetricTimestamps: false # Optional. Default: true
+    baseUriPath: /metrics # Optional. Default: /metrics
   statsd:
     host: graphite
     port: 8125 # Optional. Default: 8125
     metricPrefix: promitor. # Optional. Default: None
-prometheus:
-  metricUnavailableValue: NaN # Optional. Default: NaN
-  enableMetricTimestamps: false # Optional. Default: true
-  scrapeEndpoint:
-    baseUriPath: /metrics # Optional. Default: /metrics
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml # Optional. Default: /config/metrics-declaration.yaml
 telemetry:
@@ -110,22 +109,6 @@ metricSinks:
     port: 8125
     metricPrefix: promitor.
 ```
-
-### Prometheus Scraping Endpoint - Legacy Configuration
-
-![Availability Badge](https://img.shields.io/badge/Will%20Be%20Removed%20In-v2.0-red.svg)
-
-For now, we still support configuring it by using the the old way of configuration:
-
-```yaml
-prometheus:
-  metricUnavailableValue: NaN # Optional. Default: NaN
-  enableMetricTimestamps: false # Optional. Default: true
-  scrapeEndpoint:
-    baseUriPath: /metrics # Optional. Default: /metrics
-```
-
-However, this approach is deprecated and will be removed in 2.0 so we recommend migrating to metric sink approach.
 
 ## Metric Configuration
 
