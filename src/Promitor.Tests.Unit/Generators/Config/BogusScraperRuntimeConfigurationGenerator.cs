@@ -27,12 +27,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .StrictMode(true)
                 .RuleFor(flagsConfiguration => flagsConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
                 .Generate();
-            var prometheusConfiguration = new Faker<PrometheusLegacyConfiguration>()
-                .StrictMode(true)
-                .RuleFor(promConfiguration => promConfiguration.ScrapeEndpoint, scrapeEndpointConfiguration)
-                .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
-                .RuleFor(promConfiguration => promConfiguration.EnableMetricTimestamps, faker => faker.Random.Bool())
-                .Generate();
 
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
                 .StrictMode(true)
@@ -81,7 +75,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 MetricsConfiguration = metricsConfiguration,
                 MetricSinks = metricSinkConfiguration,
                 ResourceDiscovery = resourceDiscovery,
-                Prometheus = prometheusConfiguration,
                 Server = serverConfiguration,
                 Telemetry = telemetryConfiguration
             };
