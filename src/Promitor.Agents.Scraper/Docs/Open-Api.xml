@@ -68,13 +68,6 @@
             <param name="app">Application Builder</param>
             <param name="configuration">Configuration of the scraper agent</param>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.AddPrometheusScraperMetricSink(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.String)">
-            <summary>
-                Add support for exposing a prometheus scraping endpoint
-            </summary>
-            <param name="app">Application Builder</param>
-            <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
-        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.ObjectExtensions.Clone``1(``0)">
             <summary>
                 Clones an object without a reference, the ugly way.

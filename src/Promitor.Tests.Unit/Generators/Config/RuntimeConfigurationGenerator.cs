@@ -18,7 +18,6 @@ namespace Promitor.Tests.Unit.Generators.Config
     internal class RuntimeConfigurationGenerator
     {
         private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new ScraperRuntimeConfiguration();
-        private bool _isEnableMetricTimestampsInPrometheusSpecified;
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
@@ -28,7 +27,6 @@ namespace Promitor.Tests.Unit.Generators.Config
         private RuntimeConfigurationGenerator(ScraperRuntimeConfiguration runtimeConfiguration)
         {
             _runtimeConfiguration = runtimeConfiguration;
-            _isEnableMetricTimestampsInPrometheusSpecified = true;
         }
 
         public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888)
@@ -72,7 +70,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 if (enableMetricsTimestamp != null)
                 {
                     prometheusSinkConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
-                    _isEnableMetricTimestampsInPrometheusSpecified = true;
                 }
             }
 
@@ -136,42 +133,6 @@ namespace Promitor.Tests.Unit.Generators.Config
             }
 
             _runtimeConfiguration.ResourceDiscovery = resourceDiscoveryConfiguration;
-
-            return this;
-        }
-
-        public RuntimeConfigurationGenerator WithPrometheusLegacyConfiguration(double? metricUnavailableValue = -1, bool? enableMetricsTimestamp = false, string scrapeEndpointBaseUri = "/scrape-endpoint")
-        {
-            PrometheusLegacyConfiguration prometheusLegacyConfiguration;
-            if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) && metricUnavailableValue == null)
-            {
-                prometheusLegacyConfiguration = null;
-            }
-            else
-            {
-                prometheusLegacyConfiguration = new PrometheusLegacyConfiguration();
-
-                if (string.IsNullOrWhiteSpace(scrapeEndpointBaseUri) == false)
-                {
-                    prometheusLegacyConfiguration.ScrapeEndpoint = new ScrapeEndpointConfiguration
-                    {
-                        BaseUriPath = scrapeEndpointBaseUri
-                    };
-                }
-
-                if (metricUnavailableValue != null)
-                {
-                    prometheusLegacyConfiguration.MetricUnavailableValue = (double) metricUnavailableValue;
-                }
-
-                if (enableMetricsTimestamp != null)
-                {
-                    prometheusLegacyConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
-                    _isEnableMetricTimestampsInPrometheusSpecified = true;
-                }
-            }
-
-            _runtimeConfiguration.Prometheus = prometheusLegacyConfiguration;
 
             return this;
         }
@@ -260,26 +221,6 @@ namespace Promitor.Tests.Unit.Generators.Config
                 configurationBuilder.AppendLine("resourceDiscovery:");
                 configurationBuilder.AppendLine($"  host: {_runtimeConfiguration?.ResourceDiscovery.Host}");
                 configurationBuilder.AppendLine($"  port: {_runtimeConfiguration?.ResourceDiscovery.Port}");
-            }
-
-            if (_runtimeConfiguration?.Prometheus != null)
-            {
-                configurationBuilder.AppendLine("prometheus:");
-                if (_runtimeConfiguration?.Prometheus.ScrapeEndpoint != null)
-                {
-                    configurationBuilder.AppendLine("  scrapeEndpoint:");
-                    configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.Prometheus.ScrapeEndpoint.BaseUriPath}");
-                }
-
-                if (_isEnableMetricTimestampsInPrometheusSpecified)
-                {
-                    configurationBuilder.AppendLine($"  enableMetricTimestamps: {_runtimeConfiguration.Prometheus.EnableMetricTimestamps}");
-                }
-
-                if (_runtimeConfiguration?.Prometheus.MetricUnavailableValue != null)
-                {
-                    configurationBuilder.AppendLine($"  metricUnavailableValue: {_runtimeConfiguration?.Prometheus.MetricUnavailableValue}");
-                }
             }
 
             if (_runtimeConfiguration?.MetricSinks != null)
