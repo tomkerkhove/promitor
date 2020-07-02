@@ -52,13 +52,19 @@ This requires the following steps:
 
 ## Scraping
 
+We'll add a new scraper that pulls the metrics from Azure Monitor:
+
 1. Implement a scraper, that inherits from `AzureMonitorScraper<TResourceDefinition>`, which will specify what resource to scrape with Azure Monitor.
 2. Hook your new scraper in our `MetricScraperFactory` which determines what scraper
   to use for the passed configuration.
 
 ## Resource Discovery
 
-TODO
+We'll add dynamic resource discovery support by using Azure Resource Graph:
+
+1. Implement a new discovery query that [create an Azure Resource Graph query](https://docs.microsoft.com/en-us/azure/governance/resource-graph/concepts/query-language).It should inherits from `ResourceDiscoveryQuery` and be located in `.\src\Promitor.Agents.ResourceDiscovery\Graph\ResourceTypes`
+2. Support the new resource type in `ResourceDiscoveryFactory`
+3. Add discovery support badge in scraper documentation page - `![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)`
 
 <!-- markdownlint-enable -->
 
