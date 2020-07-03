@@ -13,6 +13,8 @@ namespace Promitor.Agents.Scraper
 {
     public class Program : AgentProgram
     {
+        private const string RuntimeConfigFilename = "runtime.yaml";
+
         public static int Main(string[] args)
         {
             try
@@ -23,10 +25,10 @@ namespace Promitor.Agents.Scraper
                 ConfigureStartupLogging();
 
                 var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-                if (string.IsNullOrWhiteSpace(configurationFolder))
+                var configurationExitStatus = ValidateConfigurationExists(configurationFolder);
+                if (configurationExitStatus != null)
                 {
-                    Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
-                    return (int)ExitStatus.ConfigurationFolderNotSpecified;
+                    return (int)configurationExitStatus;
                 }
 
                 var host = CreateHostBuilder(args, configurationFolder)
@@ -50,7 +52,7 @@ namespace Promitor.Agents.Scraper
             }
             catch (Exception exception)
             {
-                Log.Fatal(exception, "Promitor has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
+                Log.Fatal(exception, "Promitor Scraper Agent has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
                 return (int)ExitStatus.UnhandledException;
             }
             finally
@@ -90,6 +92,24 @@ namespace Promitor.Agents.Scraper
                 .Build();
 
             return configuration;
+        }
+
+        private static ExitStatus? ValidateConfigurationExists(string configurationFolder)
+        {
+            if (string.IsNullOrWhiteSpace(configurationFolder))
+            {
+                Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
+                return ExitStatus.ConfigurationFolderNotSpecified;
+            }
+
+            var runtimeConfigPath = Path.Combine(configurationFolder, RuntimeConfigFilename);
+            if (!File.Exists(runtimeConfigPath))
+            {
+                Log.Logger.Fatal($"Unable to find runtime configuration at '{runtimeConfigPath}'");
+                return ExitStatus.ConfigurationFileNotFound;
+            }
+
+            return null;
         }
     }
 }
