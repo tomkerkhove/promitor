@@ -28,9 +28,9 @@ namespace Promitor.Tests.Integration
             _logger = logger;
         }
 
-        public async Task<HttpResponseMessage> GetResourceCollectionsAsync()
+        public async Task<HttpResponseMessage> GetResourceDiscoveryGroupsAsync()
         {
-            return await GetAsync("/api/v1/resources/collections");
+            return await GetAsync("/api/v1/resources/groups");
         }
 
         public async Task<HttpResponseMessage> GetHealthAsync()
@@ -38,9 +38,9 @@ namespace Promitor.Tests.Integration
             return await GetAsync("/api/v1/health");
         }
 
-        public async Task<HttpResponseMessage> GetDiscoveredResourcesAsync(string resourceCollectionName)
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
         {
-            return await GetAsync($"/api/v1/resources/collections/{resourceCollectionName}/discovery");
+            return await GetAsync($"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discover");
         }
 
         private async Task<HttpResponseMessage> GetAsync(string uri)

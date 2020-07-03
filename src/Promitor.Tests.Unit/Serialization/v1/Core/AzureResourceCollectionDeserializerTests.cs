@@ -6,13 +6,13 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class AzureResourceCollectionDeserializerTests
+    public class AzureResourceDiscoveryGroupDeserializerTests
     {
-        private readonly AzureResourceCollectionDeserializer _deserializer;
+        private readonly AzureResourceDiscoveryGroupDeserializer _deserializer;
 
-        public AzureResourceCollectionDeserializerTests()
+        public AzureResourceDiscoveryGroupDeserializerTests()
         {
-            _deserializer = new AzureResourceCollectionDeserializer(NullLogger<AzureResourceCollectionDeserializer>.Instance);
+            _deserializer = new AzureResourceDiscoveryGroupDeserializer(NullLogger<AzureResourceDiscoveryGroupDeserializer>.Instance);
         }
 
         [Fact]

@@ -9,17 +9,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
     public class MetricDefinitionDeserializer : Deserializer<MetricDefinitionV1>
     {
         private const string ResourcesTag = "resources";
-        private const string ResourceCollectionsTag = "resourceCollections";
-        private readonly IDeserializer<AzureResourceCollectionDefinitionV1> _azureResourceCollectionDeserializer;
+        private const string ResourceDiscoveryGroupsTag = "resourceDiscoveryGroups";
+        private readonly IDeserializer<AzureResourceDiscoveryGroupDefinitionV1> _azureResourceDiscoveryGroupDeserializer;
         private readonly IAzureResourceDeserializerFactory _azureResourceDeserializerFactory;
 
         public MetricDefinitionDeserializer(IDeserializer<AzureMetricConfigurationV1> azureMetricConfigurationDeserializer,
             IDeserializer<ScrapingV1> scrapingDeserializer,
-            IDeserializer<AzureResourceCollectionDefinitionV1> azureResourceCollectionDeserializer,
+            IDeserializer<AzureResourceDiscoveryGroupDefinitionV1> azureResourceDiscoveryGroupDeserializer,
             IAzureResourceDeserializerFactory azureResourceDeserializerFactory,
             ILogger<MetricDefinitionDeserializer> logger) : base(logger)
         {
-            _azureResourceCollectionDeserializer = azureResourceCollectionDeserializer;
+            _azureResourceDiscoveryGroupDeserializer = azureResourceDiscoveryGroupDeserializer;
             _azureResourceDeserializerFactory = azureResourceDeserializerFactory;
 
             Map(definition => definition.Name)
@@ -34,7 +34,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(definition => definition.Labels);
             Map(definition => definition.Scraping)
                 .MapUsingDeserializer(scrapingDeserializer);
-            IgnoreField(ResourceCollectionsTag);
+            IgnoreField(ResourceDiscoveryGroupsTag);
             IgnoreField(ResourcesTag);
         }
 
@@ -61,9 +61,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 return;
             }
 
-            if (node.Children.TryGetValue(ResourceCollectionsTag, out var resourceCollectionNode))
+            if (node.Children.TryGetValue(ResourceDiscoveryGroupsTag, out var resourceDiscoveryGroupNode))
             {
-                metricDefinition.ResourceCollections = _azureResourceCollectionDeserializer.Deserialize((YamlSequenceNode)resourceCollectionNode, errorReporter);
+                metricDefinition.ResourceDiscoveryGroups = _azureResourceDiscoveryGroupDeserializer.Deserialize((YamlSequenceNode)resourceDiscoveryGroupNode, errorReporter);
             }
 
             if (node.Children.TryGetValue(ResourcesTag, out var metricsNode))
@@ -80,9 +80,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             }
 
             if ((metricDefinition.Resources == null || !metricDefinition.Resources.Any()) &&
-                (metricDefinition.ResourceCollections == null || !metricDefinition.ResourceCollections.Any()))
+                (metricDefinition.ResourceDiscoveryGroups == null || !metricDefinition.ResourceDiscoveryGroups.Any()))
             {
-                errorReporter.ReportError(node, "Either 'resources' or 'resourceCollections' must be specified.");
+                errorReporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified.");
             }
         }
     }

@@ -5,6 +5,6 @@ namespace Promitor.Agents.ResourceDiscovery.Configuration
     public class ResourceDeclaration
     {
         public AzureLandscape AzureLandscape { get; set; }
-        public List<ResourceCollection> ResourceCollections { get; set; }
+        public List<ResourceDiscoveryGroup> ResourceDiscoveryGroups { get; set; }
     }
 }

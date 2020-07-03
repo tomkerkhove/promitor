@@ -54,7 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IDeserializer<MetricDimensionV1>, MetricDimensionDeserializer>();
             services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();
             services.AddSingleton<IDeserializer<AzureMetricConfigurationV1>, AzureMetricConfigurationDeserializer>();
-            services.AddSingleton<IDeserializer<AzureResourceCollectionDefinitionV1>, AzureResourceCollectionDeserializer>();
+            services.AddSingleton<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>, AzureResourceDiscoveryGroupDeserializer>();
             services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();
             services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
             services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();

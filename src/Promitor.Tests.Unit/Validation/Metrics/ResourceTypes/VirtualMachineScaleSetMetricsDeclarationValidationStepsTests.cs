@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void VirtualMachineScaleSetMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        public void VirtualMachineScaleSetMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -95,11 +95,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void VirtualMachineScaleSetMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        public void VirtualMachineScaleSetMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithVirtualMachineScaleSetMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithVirtualMachineScaleSetMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

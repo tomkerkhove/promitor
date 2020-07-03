@@ -75,7 +75,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string queueName = "promitor-queue",
             string serviceBusNamespace = "promitor-namespace",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new ServiceBusQueueResourceV1
@@ -84,7 +84,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 Namespace = serviceBusNamespace
             };
 
-            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource, metricDimension);
+            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource, metricDimension);
             
             return this;
         }
@@ -93,7 +93,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string containerGroup = "promitor-group",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new ContainerInstanceResourceV1
@@ -101,7 +101,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 ContainerGroup = containerGroup
             };
 
-            CreateAndAddMetricDefinition(ResourceType.ContainerInstance, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.ContainerInstance, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -110,7 +110,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string registryName = "promitor-container-registry",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new ContainerRegistryResourceV1
@@ -118,7 +118,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 RegistryName = registryName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.ContainerRegistry, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.ContainerRegistry, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -127,7 +127,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string dbName = "promitor-cosmosdb",
             string azureMetricName = "TotalRequests",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new CosmosDbResourceV1
@@ -135,7 +135,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 DbName = dbName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.CosmosDb, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.CosmosDb, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -144,7 +144,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string appPlanName = "promitor-app-plan",
             string azureMetricName = "TotalRequests",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new AppPlanResourceV1
@@ -152,7 +152,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 AppPlanName = appPlanName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.AppPlan, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.AppPlan, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -162,7 +162,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string instanceName = "promitor-app-plan",
             string locationName = "West Europe",
             string azureMetricName = "TotalRequests",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new ApiManagementResourceV1
@@ -171,7 +171,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 LocationName = locationName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.ApiManagement, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.ApiManagement, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -180,7 +180,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string functionAppName = "promitor-fuction-app",
             string azureMetricName = "TotalRequests",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new FunctionAppResourceV1
@@ -188,7 +188,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 FunctionAppName = functionAppName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.FunctionApp, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.FunctionApp, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -199,7 +199,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string accountName = "promitor-account",
             string sasToken = "?sig=promitor",
             string azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount,
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var secret = new SecretV1
@@ -214,7 +214,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 SasToken = secret
             };
 
-            CreateAndAddMetricDefinition(ResourceType.StorageQueue, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.StorageQueue, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -223,7 +223,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string accountName = "promitor-account",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new StorageAccountResourceV1
@@ -231,7 +231,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 AccountName = accountName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.StorageAccount, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.StorageAccount, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -240,7 +240,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string accountName = "promitor-account",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new FileStorageResourceV1
@@ -248,7 +248,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 AccountName = accountName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.FileStorage, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.FileStorage, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -257,7 +257,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string accountName = "promitor-account",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new BlobStorageResourceV1
@@ -265,7 +265,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 AccountName = accountName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.BlobStorage, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.BlobStorage, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -274,7 +274,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string virtualMachineName = "promitor-virtual-machine-name",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new VirtualMachineResourceV1
@@ -282,7 +282,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 VirtualMachineName = virtualMachineName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.VirtualMachine, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.VirtualMachine, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -292,7 +292,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string webAppName = "promitor-web-app-name",
             string slotName = "production",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new WebAppResourceV1
@@ -301,7 +301,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 SlotName = slotName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.WebApp, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.WebApp, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -310,7 +310,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string scaleSetName = "promitor-scale-set-name",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new VirtualMachineScaleSetResourceV1()
@@ -318,7 +318,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 ScaleSetName = scaleSetName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.VirtualMachineScaleSet, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.VirtualMachineScaleSet, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -327,7 +327,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string networkInterfaceName = "promitor-network-interface-name",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new NetworkInterfaceResourceV1
@@ -335,7 +335,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 NetworkInterfaceName = networkInterfaceName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.NetworkInterface, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.NetworkInterface, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -345,7 +345,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string resourceUri = "Microsoft.ServiceBus/namespaces/promitor-messaging",
             string filter = "EntityName eq \'orders\'",
             string azureMetricName = "Total",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new GenericResourceV1
@@ -354,7 +354,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 Filter = filter
             };
 
-            CreateAndAddMetricDefinition(ResourceType.Generic, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.Generic, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -363,7 +363,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string cacheName = "promitor-redis",
             string azureMetricName = "CacheHits",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new RedisCacheResourceV1
@@ -371,7 +371,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 CacheName = cacheName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.RedisCache, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.RedisCache, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -380,7 +380,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string serverName = "promitor-postgresql",
             string azureMetricName = "cpu_percent",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new PostgreSqlResourceV1
@@ -388,7 +388,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 ServerName = serverName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -399,7 +399,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string serverName = "promitor-sql-server",
             string databaseName = "promitor-db",
             string metricDescription = "Metric description",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new SqlDatabaseResourceV1
@@ -408,7 +408,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 DatabaseName = databaseName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.SqlDatabase, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.SqlDatabase, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -418,7 +418,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string azureMetricName = "cpu_percent",
             string serverName = "promitor-sql-server",
             string metricDescription = "Metric description",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new SqlServerResourceV1
@@ -426,7 +426,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 ServerName = serverName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.SqlServer, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.SqlServer, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -436,7 +436,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string azureMetricName = "cpu_percent",
             string instanceName = "promitor-sql-instance",
             string metricDescription = "Metric description",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new SqlManagedInstanceResourceV1
@@ -444,7 +444,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 InstanceName = instanceName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.SqlManagedInstance, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.SqlManagedInstance, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -453,7 +453,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string iotHubName = "promitor-iot-hub",
             string azureMetricName = "devices.totalDevices",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new IoTHubResourceV1
@@ -461,7 +461,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 IoTHubName = iotHubName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.IoTHub, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.IoTHub, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -470,7 +470,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string deviceProvisioningServiceName = "promitor-dps",
             string azureMetricName = "AttestationAttempts",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new DeviceProvisioningServiceResourceV1
@@ -478,7 +478,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 DeviceProvisioningServiceName = deviceProvisioningServiceName
             };
             
-            CreateAndAddMetricDefinition(ResourceType.DeviceProvisioningService, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.DeviceProvisioningService, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
@@ -487,7 +487,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string vaultName = "promitor-kv",
             string azureMetricName = "ServiceApiLatency",
-            string resourceCollectionName = "",
+            string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
             var resource = new KeyVaultResourceV1
@@ -495,12 +495,12 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 VaultName = vaultName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.KeyVault, metricName, metricDescription, resourceCollectionName, omitResource, azureMetricName, resource);
+            CreateAndAddMetricDefinition(ResourceType.KeyVault, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
 
-        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceCollectionName, bool omitResource, string azureMetricName, AzureResourceDefinitionV1 resource, string metricDimension = null)
+        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, AzureResourceDefinitionV1 resource, string metricDimension = null)
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, metricDimension);
             var metric = new MetricDefinitionV1
@@ -516,12 +516,12 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 metric.Resources = new List<AzureResourceDefinitionV1> { resource };
             }
 
-            if (string.IsNullOrWhiteSpace(resourceCollectionName) == false)
+            if (string.IsNullOrWhiteSpace(resourceDiscoveryGroupName) == false)
             {
-                var resourceCollection = new AzureResourceCollectionDefinitionV1 { Name = resourceCollectionName };
-                metric.ResourceCollections = new List<AzureResourceCollectionDefinitionV1>
+                var resourceDiscoveryGroup = new AzureResourceDiscoveryGroupDefinitionV1 { Name = resourceDiscoveryGroupName };
+                metric.ResourceDiscoveryGroups = new List<AzureResourceDiscoveryGroupDefinitionV1>
                 {
-                    resourceCollection
+                    resourceDiscoveryGroup
                 };
             }
 

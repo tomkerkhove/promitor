@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IoTHubMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -95,11 +95,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void IoTHubMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        public void IoTHubMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithIoTHubMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithIoTHubMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

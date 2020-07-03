@@ -61,7 +61,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -78,11 +78,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithSqlManagedInstanceMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithSqlManagedInstanceMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 

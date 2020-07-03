@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a resource collection that represent a collection of Azure resource that are automatically discovered and will be scraped.
     /// </summary>
-    public class AzureResourceCollectionDefinitionV1
+    public class AzureResourceDiscoveryGroupDefinitionV1
     {
         public string Name { get; set; }
     }

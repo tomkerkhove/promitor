@@ -35,21 +35,21 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
         /// <summary>
         ///     Get resources that are part of a given resource collection
         /// </summary>
-        /// <param name="resourceCollectionName">Name of the resource collection</param>
-        public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceCollectionName)
+        /// <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
+        public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
-            var resourceCollectionDefinition = resourceDeclaration.ResourceCollections.SingleOrDefault(collection => collection.Name.Equals(resourceCollectionName, StringComparison.InvariantCultureIgnoreCase));
-            if (resourceCollectionDefinition == null)
+            var resourceDiscoveryGroupDefinition = resourceDeclaration.ResourceDiscoveryGroups.SingleOrDefault(collection => collection.Name.Equals(resourceDiscoveryGroupName, StringComparison.InvariantCultureIgnoreCase));
+            if (resourceDiscoveryGroupDefinition == null)
             {
                 // No collection found so nothing to return
                 return null;
             }
 
-            var resourceDiscovery = ResourceDiscoveryFactory.UseResourceDiscoveryFor(resourceCollectionDefinition.Type);
+            var resourceDiscovery = ResourceDiscoveryFactory.UseResourceDiscoveryFor(resourceDiscoveryGroupDefinition.Type);
 
             // 1. Create query per type
-            var query = resourceDiscovery.DefineQuery(resourceCollectionDefinition.Criteria);
+            var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria);
 
             // 2. Run Query
             var unparsedResults = await _azureResourceGraph.QueryAsync(query);
@@ -59,8 +59,8 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
 
             var contextualInformation = new Dictionary<string, object>
             {
-                {"ResourceType",resourceCollectionDefinition.Type},
-                {"CollectionName",resourceCollectionName}
+                {"ResourceType",resourceDiscoveryGroupDefinition.Type},
+                {"CollectionName",resourceDiscoveryGroupName}
             };
             _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
 

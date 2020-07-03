@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void DeviceProvisioningServiceMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        public void DeviceProvisioningServiceMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -95,11 +95,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void DeviceProvisioningServiceMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        public void DeviceProvisioningServiceMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithDeviceProvisioningServiceMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithDeviceProvisioningServiceMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

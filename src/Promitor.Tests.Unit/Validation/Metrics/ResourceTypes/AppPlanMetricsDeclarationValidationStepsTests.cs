@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AppPlanMetricsDeclaration_DeclarationWithoutResourceAndResourceCollectionInfo_Fails()
+        public void AppPlanMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -95,11 +95,11 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void AppPlanMetricsDeclaration_DeclarationWithoutResourceButWithResourceCollectionInfo_Succeeds()
+        public void AppPlanMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithAppPlanMetric(omitResource: true, resourceCollectionName: "sample-collection")
+                .WithAppPlanMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

@@ -2,7 +2,7 @@
 
 namespace Promitor.Agents.ResourceDiscovery.Configuration
 {
-    public class ResourceCollection
+    public class ResourceDiscoveryGroup
     {
         public string Name { get; set; }
         public ResourceType Type { get; set; }

@@ -39,21 +39,21 @@
             <response code="200">API is healthy</response>
             <response code="503">API is unhealthy or in degraded state</response>
         </member>
-        <member name="T:Promitor.Agents.ResourceDiscovery.Controllers.ResourceCollectionsController">
+        <member name="T:Promitor.Agents.ResourceDiscovery.Controllers.ResourceDiscoveryGroupsController">
             <summary>
-            API endpoint to interact with resource collections
+            API endpoint to interact with resource discovery groups
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.ResourceCollectionsController.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration})">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.ResourceDiscoveryGroupsController.#ctor(Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration})">
             <summary>
-                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
+                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.ResourceDiscoveryGroupsController" /> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.ResourceCollectionsController.Get">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.ResourceDiscoveryGroupsController.Get">
             <summary>
-                Get Resource Collections
+                Get Resource Discovery Groups
             </summary>
-            <remarks>Lists all available resource collections.</remarks>
+            <remarks>Lists all available resource discovery groups.</remarks>
         </member>
         <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
             <summary>
@@ -75,7 +75,7 @@
             <summary>
                 Get resources that are part of a given resource collection
             </summary>
-            <param name="resourceCollectionName">Name of the resource collection</param>
+            <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
