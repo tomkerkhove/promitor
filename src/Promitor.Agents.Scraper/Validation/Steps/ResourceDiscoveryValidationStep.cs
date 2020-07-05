@@ -11,6 +11,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 {
     public class ResourceDiscoveryValidationStep : ValidationStep, IValidationStep
     {
+        private const string NoDiscoveryConfiguredError = "Resource discovery groups are defined in your metrics configuration, but resource discovery has not been configured in the runtime configuration. Please add a resource discovery configuration for Promitor Scraper runtime.";
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly ResourceDiscoveryConfiguration _configuration;
 
@@ -33,7 +34,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             {
                 if (doesDeclareResourceDiscoveryGroups)
                 {
-                    return ValidationResult.Failure(ComponentName, new List<string> {"No resource discovery is configured while discovery groups are defined to scrape"});
+                    return ValidationResult.Failure(ComponentName, new List<string> { NoDiscoveryConfiguredError });
                 }
 
                 return ValidationResult.Successful(ComponentName);
