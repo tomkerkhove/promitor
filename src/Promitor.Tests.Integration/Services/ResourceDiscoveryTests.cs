@@ -39,7 +39,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "no-filter";
-            const int expectedResourceCount = 10;
+            const int expectedResourceCount = 11;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -119,7 +119,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-subscriptions-scenario";
-            const int expectedResourceCount = 10;
+            const int expectedResourceCount = 11;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -199,7 +199,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 9;
+            const int expectedResourceCount = 10;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
