@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Core;
 using Serilog;
 
@@ -11,9 +12,6 @@ namespace Promitor.Agents.ResourceDiscovery
 {
     public class Program : AgentProgram
     {
-        private const string RuntimeConfigFilename = "runtime.yaml";
-        private const string ResourceDiscoveryFilename = "resource-discovery-declaration.yaml";
-
         public static int Main(string[] args)
         {
             try
@@ -24,10 +22,10 @@ namespace Promitor.Agents.ResourceDiscovery
                 ConfigureStartupLogging();
 
                 var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-                var configurationExitStatus = ValidateConfigurationExists(configurationFolder);
-                if (configurationExitStatus != null)
+                if (string.IsNullOrWhiteSpace(configurationFolder))
                 {
-                    return (int)configurationExitStatus;
+                    Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
+                    return (int)ExitStatus.ConfigurationFolderNotSpecified;
                 }
 
                 CreateHostBuilder(args, configurationFolder)
@@ -35,6 +33,11 @@ namespace Promitor.Agents.ResourceDiscovery
                     .Run();
 
                 return (int)ExitStatus.Success;
+            }
+            catch (ConfigurationFileNotFoundException exception)
+            {
+                Log.Logger.Fatal($"Unable to find a required configuration file at '{exception.Path}'");
+                return (int)ExitStatus.ConfigurationFileNotFound;
             }
             catch (Exception exception)
             {
@@ -73,37 +76,12 @@ namespace Promitor.Agents.ResourceDiscovery
                 new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddCommandLine(args)
-                    .AddYamlFile($"{configurationFolder}/{RuntimeConfigFilename}", optional: false, reloadOnChange: true)
-                    .AddYamlFile($"{configurationFolder}/{ResourceDiscoveryFilename}", optional: false, reloadOnChange: true)
+                    .AddRequiredYamlFile($"{configurationFolder}/runtime.yaml", reloadOnChange: true)
+                    .AddRequiredYamlFile($"{configurationFolder}/resource-discovery-declaration.yaml", reloadOnChange: true)
                     .AddEnvironmentVariables("PROMITOR_")
                     .Build();
 
             return configuration;
-        }
-
-        private static ExitStatus? ValidateConfigurationExists(string configurationFolder)
-        {
-            if (string.IsNullOrWhiteSpace(configurationFolder))
-            {
-                Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
-                return ExitStatus.ConfigurationFolderNotSpecified;
-            }
-
-            var runtimeConfigPath = Path.Combine(configurationFolder, RuntimeConfigFilename);
-            if (!File.Exists(runtimeConfigPath))
-            {
-                Log.Logger.Fatal($"Unable to find runtime configuration at '{runtimeConfigPath}'");
-                return ExitStatus.ConfigurationFileNotFound;
-            }
-
-            var resourceDiscoveryConfigPath = Path.Combine(configurationFolder, ResourceDiscoveryFilename);
-            if (!File.Exists(resourceDiscoveryConfigPath))
-            {
-                Log.Logger.Fatal($"Unable to find resource discovery configuration at '{resourceDiscoveryConfigPath}'");
-                return ExitStatus.ConfigurationFileNotFound;
-            }
-
-            return null;
         }
     }
 }

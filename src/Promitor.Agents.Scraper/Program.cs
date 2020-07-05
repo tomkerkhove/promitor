@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Scraper.Validation;
 using Promitor.Core;
 using Serilog;
@@ -13,8 +14,6 @@ namespace Promitor.Agents.Scraper
 {
     public class Program : AgentProgram
     {
-        private const string RuntimeConfigFilename = "runtime.yaml";
-
         public static int Main(string[] args)
         {
             try
@@ -25,10 +24,10 @@ namespace Promitor.Agents.Scraper
                 ConfigureStartupLogging();
 
                 var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-                var configurationExitStatus = ValidateConfigurationExists(configurationFolder);
-                if (configurationExitStatus != null)
+                if (string.IsNullOrWhiteSpace(configurationFolder))
                 {
-                    return (int)configurationExitStatus;
+                    Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
+                    return (int)ExitStatus.ConfigurationFolderNotSpecified;
                 }
 
                 var host = CreateHostBuilder(args, configurationFolder)
@@ -49,6 +48,11 @@ namespace Promitor.Agents.Scraper
                 host.Run();
 
                 return (int)ExitStatus.Success;
+            }
+            catch (ConfigurationFileNotFoundException exception)
+            {
+                Log.Logger.Fatal($"Unable to find a required configuration file at '{exception.Path}'");
+                return (int)ExitStatus.ConfigurationFileNotFound;
             }
             catch (Exception exception)
             {
@@ -85,31 +89,13 @@ namespace Promitor.Agents.Scraper
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddRequiredYamlFile($"{configurationFolder}/runtime.yaml", reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
                 .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
                 .Build();
 
             return configuration;
-        }
-
-        private static ExitStatus? ValidateConfigurationExists(string configurationFolder)
-        {
-            if (string.IsNullOrWhiteSpace(configurationFolder))
-            {
-                Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
-                return ExitStatus.ConfigurationFolderNotSpecified;
-            }
-
-            var runtimeConfigPath = Path.Combine(configurationFolder, RuntimeConfigFilename);
-            if (!File.Exists(runtimeConfigPath))
-            {
-                Log.Logger.Fatal($"Unable to find runtime configuration at '{runtimeConfigPath}'");
-                return ExitStatus.ConfigurationFileNotFound;
-            }
-
-            return null;
         }
     }
 }
