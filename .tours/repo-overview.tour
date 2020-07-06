@@ -33,5 +33,6 @@
       "directory": "src",
       "description": "### src\n\nThe `src` folder contains the C# code for Promitor."
     }
-  ]
+  ],
+  "isPrimary": true
 }
