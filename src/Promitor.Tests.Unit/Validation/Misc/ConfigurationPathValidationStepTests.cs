@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Runtime;
@@ -15,8 +16,9 @@ namespace Promitor.Tests.Unit.Validation.Misc
             // Arrange
             const string validConfigurationPath = "Invalid";
             var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = validConfigurationPath});
+
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions, NullLogger<ConfigurationPathValidationStep>.Instance);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
@@ -31,7 +33,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             var configOptions = Options.Create(new MetricsConfiguration {AbsolutePath = invalidConfigurationPath});
 
             // Act
-            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions);
+            var scrapingScheduleValidationStep = new ConfigurationPathValidationStep(configOptions, NullLogger<ConfigurationPathValidationStep>.Instance);
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert

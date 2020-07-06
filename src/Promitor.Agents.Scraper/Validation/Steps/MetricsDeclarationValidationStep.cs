@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -19,12 +18,8 @@ namespace Promitor.Agents.Scraper.Validation.Steps
     public class MetricsDeclarationValidationStep : ValidationStep, IValidationStep
     {
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
-
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider) : this(metricsDeclarationProvider, NullLogger.Instance)
-        {
-        }
-
-        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base( logger)
+        
+        public MetricsDeclarationValidationStep(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger<MetricsDeclarationValidationStep> logger) : base( logger)
         {
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }

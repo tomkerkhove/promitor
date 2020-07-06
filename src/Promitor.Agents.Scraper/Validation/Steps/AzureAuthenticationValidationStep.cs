@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -14,11 +13,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
         public string ComponentName { get; } = "Azure Authentication";
 
-        public AzureAuthenticationValidationStep(IConfiguration configuration) : this(configuration, NullLogger.Instance)
-        {
-        }
-
-        public AzureAuthenticationValidationStep(IConfiguration configuration, ILogger logger) : base(logger)
+        public AzureAuthenticationValidationStep(IConfiguration configuration, ILogger<AzureAuthenticationValidationStep> logger) : base(logger)
         {
             _configuration = configuration;
         }

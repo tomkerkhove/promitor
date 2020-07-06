@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Xunit;
@@ -25,7 +26,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -46,7 +47,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -67,7 +68,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -88,7 +89,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -109,7 +110,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -131,7 +132,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var config = CreateConfiguration(inMemoryConfiguration);
 
             // Act
-            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config);
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert

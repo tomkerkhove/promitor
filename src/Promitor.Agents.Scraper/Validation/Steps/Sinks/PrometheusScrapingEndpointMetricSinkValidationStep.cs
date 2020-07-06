@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
@@ -11,13 +10,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
     public class PrometheusScrapingEndpointMetricSinkValidationStep : ValidationStep, IValidationStep
     {
         private readonly IOptions<ScraperRuntimeConfiguration> _runtimeConfiguration;
-
-        public PrometheusScrapingEndpointMetricSinkValidationStep(IOptions<ScraperRuntimeConfiguration> runtimeConfiguration)
-            : this(runtimeConfiguration, NullLogger.Instance)
-        {
-        }
-
-        public PrometheusScrapingEndpointMetricSinkValidationStep(IOptions<ScraperRuntimeConfiguration> runtimeConfiguration, ILogger validationLogger)
+        public PrometheusScrapingEndpointMetricSinkValidationStep(IOptions<ScraperRuntimeConfiguration> runtimeConfiguration, ILogger<PrometheusScrapingEndpointMetricSinkValidationStep> validationLogger)
             : base(validationLogger)
         {
             _runtimeConfiguration = runtimeConfiguration;

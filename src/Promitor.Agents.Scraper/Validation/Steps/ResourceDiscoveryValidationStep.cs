@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
@@ -17,12 +16,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
         private readonly IOptions<ResourceDiscoveryConfiguration> _resourceDiscoveryConfiguration;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
 
-        public ResourceDiscoveryValidationStep(
-            IOptions<ResourceDiscoveryConfiguration> resourceDiscoveryResourceDiscoveryConfiguration,  IMetricsDeclarationProvider metricsDeclarationProvider) : this(resourceDiscoveryResourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger.Instance)
-        {
-        }
-
-        public ResourceDiscoveryValidationStep(IOptions<ResourceDiscoveryConfiguration> resourceDiscoveryResourceDiscoveryConfiguration, IMetricsDeclarationProvider metricsDeclarationProvider, ILogger logger) : base( logger)
+        public ResourceDiscoveryValidationStep(IOptions<ResourceDiscoveryConfiguration> resourceDiscoveryResourceDiscoveryConfiguration, IMetricsDeclarationProvider metricsDeclarationProvider, ILogger<ResourceDiscoveryValidationStep> logger) : base( logger)
         {
             _metricsDeclarationProvider = metricsDeclarationProvider;
             _resourceDiscoveryConfiguration = resourceDiscoveryResourceDiscoveryConfiguration;

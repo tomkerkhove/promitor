@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps;
@@ -30,7 +31,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
 
             // Act
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -46,7 +47,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
 
             // Act
             // ReSharper disable once ExpressionIsAlwaysNull
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -62,7 +63,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
 
             // Act
             // ReSharper disable once ExpressionIsAlwaysNull
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -78,7 +79,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             resourceDiscoveryConfiguration.Value.Port = -1;
 
             // Act
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -94,7 +95,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             resourceDiscoveryConfiguration.Value.Port = 0;
 
             // Act
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -113,7 +114,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             resourceDiscoveryConfiguration.Value.Host = host;
 
             // Act
-            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
