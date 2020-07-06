@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Core;
 using Serilog;
@@ -48,9 +49,14 @@ namespace Promitor.Agents.Scraper
 
                 return (int)ExitStatus.Success;
             }
+            catch (ConfigurationFileNotFoundException exception)
+            {
+                Log.Logger.Fatal($"Unable to find a required configuration file at '{exception.Path}'");
+                return (int)ExitStatus.ConfigurationFileNotFound;
+            }
             catch (Exception exception)
             {
-                Log.Fatal(exception, "Promitor has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
+                Log.Fatal(exception, "Promitor Scraper Agent has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
                 return (int)ExitStatus.UnhandledException;
             }
             finally
@@ -83,7 +89,7 @@ namespace Promitor.Agents.Scraper
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
+                .AddRequiredYamlFile($"{configurationFolder}/runtime.yaml", reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddEnvironmentVariables(prefix: "PROMITOR_") // Used for all environment variables for Promitor
                 .AddEnvironmentVariables(prefix: "PROMITOR_YAML_OVERRIDE_") // Used to overwrite runtime YAML
