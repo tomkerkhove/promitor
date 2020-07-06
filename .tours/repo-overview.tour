@@ -32,6 +32,10 @@
     {
       "directory": "src",
       "description": "### src\n\nThe `src` folder contains the C# code for Promitor."
+    },
+    {
+      "title": "Next Steps",
+      "description": "### Next Steps\n\nNow that you have an overview of how the repo is structured, maybe you'd like to check out one of the following tours:\n\n- [Project Overview].\n- [Add a new Scraper]."
     }
   ],
   "isPrimary": true

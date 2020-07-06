@@ -1,0 +1,609 @@
+{
+  "title": "Add a new Scraper",
+  "steps": [
+    {
+      "title": "Introduction",
+      "description": "### Introduction\n\nThis tour walks you through the steps involved in adding a new Scraper to Promitor. A Scraper defines how Promitor gets metrics from the Azure Monitor API for a particular type of resource (for example Load Balancers or SQL Databases).\n\nAlthough the [Generic Azure Resource](https://promitor.io/configuration/v1.x/metrics/generic-azure-resource) Scraper is provided to allow any type of resource to be scraped, adding a custom Scraper provides the following benefits:\n\n- It makes it easier for users to configure by allowing them to specify properties specific to that type of resource.\n- It allows us to provide more detailed information when reporting metrics, by labelling them with attributes that describe the resource (for example database and server names).\n\n**NOTE:** _before implementing a new scraping type, please open an [issue](https://github.com/tomkerkhove/promitor/issues) to discuss your scenario. If an issue already exists please comment on it to let us know you're planning on working on it._"
+    },
+    {
+      "title": "Checklist",
+      "description": "### Checklist\n\nAdding a scraper involves a number of steps, and this tour will take you through each step. Before you start, you'll need to know the following pieces of information:\n\n- The name of the type of resource you want to scrape.\n- The format of the Azure Resource Id that identifies the resource. (see below for more details).\n- The properties used to identify a specific resource, for example server and database name.\n\nAdding a new Scraper involves the following steps. It might be useful to copy this checklist so you can keep track of the steps you've completed:\n\n- [ ] Add your new resource type.\n- [ ] Create an `AzureResourceDefinition` implementation for your resource type, defining its internal model.\n- [ ] Create an `AzureResourceDefinitionV1` implementation for your resource type, defining its Yaml configuration format.\n- [ ] Implement a deserializer for your config model, and define how to map that to the runtime model.\n- [ ] Add runtime validation rules.\n- [ ] Implement a Scraper, defining how Promitor gets the metrics for your resource from Azure Monitor.\n- [ ] Add documentation about your new Scraper type.\n- [ ] Update the changelog.\n\n#### Azure Resource Ids\n\nAzure Resource Ids use the following format:\n\n```text\n/subscriptions/{guid}/resourceGroups/{resource-group-name}/{resource-provider-namespace}/{resource-type}/{resource-name}\n```\n\nWhen writing a Scraper, you are in charge of generating the correct resource Id based on user friendly configuration properties. You can typically find the resource Id on the _Properties_ page for a resource in the Azure Portal."
+    },
+    {
+      "file": "src/Promitor.Core.Contracts/ResourceType.cs",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 9
+        },
+        "end": {
+          "line": 6,
+          "character": 29
+        }
+      },
+      "description": "### Add a ResourceType\n\nThe first step is to add a new entry to the `ResourceType` enum."
+    },
+    {
+      "file": "src/Promitor.Core.Contracts/ResourceTypes/ServiceBusQueueResourceDefinition.cs",
+      "selection": {
+        "start": {
+          "line": 3,
+          "character": 18
+        },
+        "end": {
+          "line": 3,
+          "character": 51
+        }
+      },
+      "description": "### Add a ResourceDefinition\n\nNow add a new class inheriting from `AzureResourceDefinition`."
+    },
+    {
+      "file": "src/Promitor.Core.Contracts/ResourceTypes/ServiceBusQueueResourceDefinition.cs",
+      "selection": {
+        "start": {
+          "line": 5,
+          "character": 16
+        },
+        "end": {
+          "line": 5,
+          "character": 49
+        }
+      },
+      "description": "### ResourceDefinition Constructor\n\nYour constructor should accept any parameters required by the `base` constructor, along with a parameter for each individual property needed to identify the resource to scrape. In this case we've added `serviceBusNamespace` and `queueName` to define the particular queue we want to scrape."
+    },
+    {
+      "file": "src/Promitor.Core.Contracts/ResourceTypes/ServiceBusQueueResourceDefinition.cs",
+      "selection": {
+        "start": {
+          "line": 12,
+          "character": 9
+        },
+        "end": {
+          "line": 12,
+          "character": 41
+        }
+      },
+      "description": "### ResourceDefinition Properties\n\nAdd a property for each piece of information required to scrape your resource."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Model/ResourceTypes/ServiceBusQueueResourceV1.cs",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 18
+        },
+        "end": {
+          "line": 6,
+          "character": 43
+        }
+      },
+      "description": "### Add Configuration Model Object\n\nAdd a new implementation of `AzureResourceDefinitionV1` for your new resource type. The properties should match those you defined in the [previous step][#6]."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Providers/ServiceBusQueueDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 18
+        },
+        "end": {
+          "line": 6,
+          "character": 45
+        }
+      },
+      "description": "### Add a Deserializer\n\nAdd a new implementation of `ResourceDeserializer<TConfigType>` where `TConfigType` is the name of your configuration model class."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Providers/ServiceBusQueueDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 10,
+          "character": 13
+        },
+        "end": {
+          "line": 10,
+          "character": 48
+        }
+      },
+      "description": "### Map Config Properties\n\nAdd a call to `Map()` for each property you need to deserialize. The deserialization code automatically looks for Yaml fields with the same name as your property, but starting with a lowercase letter. For example, the `QueueName` property can be deserialized from this Yaml:\n\n```yaml\nqueueName: 'promitor-queue'\n```"
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Providers/ServiceBusQueueDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 17
+        },
+        "end": {
+          "line": 11,
+          "character": 30
+        }
+      },
+      "description": "### Identify Required Properties\n\nProperties are optional unless marked as required. If a property is marked as required, Promitor will display a validation error to the user if it isn't provided."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/AzureMetadataDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 20,
+          "character": 17
+        },
+        "end": {
+          "line": 20,
+          "character": 64
+        }
+      },
+      "description": "### Specify Default Values\n\nIf a field needs to have a certain default value when not specified, and the default isn't the default value for that type of object in .NET, you can provide an alternative default using `WithDefault()`."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/AzureMetadataDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 21,
+          "character": 17
+        },
+        "end": {
+          "line": 21,
+          "character": 47
+        }
+      },
+      "description": "### Custom Mapper\n\nIf you need to provide custom logic to deserialize a particular field you can do that with `MapUsing()`. This allows you to customise the deserialization process without using a child deserializer."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/MetricDefaultsDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 14,
+          "character": 17
+        },
+        "end": {
+          "line": 14,
+          "character": 63
+        }
+      },
+      "description": "### Using a Child Deserializer\n\nIf you need to deserialize a complex property rather than a simple field, you can tell the deserialization framework to use a child validator to perform the deserialization. You can pass a parameter of type `IDeserializer<TChild>` into your constructor, and the Dependency Injection framework will automatically provide it for you."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/ScrapingDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 12,
+          "character": 17
+        },
+        "end": {
+          "line": 12,
+          "character": 42
+        }
+      },
+      "description": "### Specific Validation\n\nThe deserialization framework supports performing more specific validation for certain types of fields. In this example, it's making sure that the `schedule` field contains a valid Cron expression, for example `5 4 * * *`. This helps us fail fast and provide more detailed error messages to users.\n\nFeel free to add other types of validation!"
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/SecretDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 21,
+          "character": 31
+        },
+        "end": {
+          "line": 21,
+          "character": 42
+        }
+      },
+      "description": "### Custom Errors\n\nAlthough the deserialization framework will automatically report errors for missing required fields, or warn about field names that don't exist, sometimes you need to take more control of the situation and report custom error messages. If you need to do that, override the `Deserialize()` method and use the `errorReporter` to report any errors or warnings.\n\nJust make sure you call `base.Deserialize()` to allow the standard deserialization code to run."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/MetricDefinitionDeserializer.cs",
+      "selection": {
+        "start": {
+          "line": 37,
+          "character": 13
+        },
+        "end": {
+          "line": 37,
+          "character": 52
+        }
+      },
+      "description": "### Ignoring Fields\n\nIn certain (rare) situations you might need to handle deserializing certain fields yourself. In this case you can tell the framework to ignore the field by calling `IgnoreField()`. This prevents it from warning about unknown fields."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Serialization/v1/Providers/ServiceBusQueueDeserializerTests.cs",
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 18
+        },
+        "end": {
+          "line": 11,
+          "character": 50
+        }
+      },
+      "description": "### Unit Testing your Deserializer\n\nAdd a new class inheriting from `ResourceDeserializerTest<TDeserializer>` where `TDeserializer` is the name of your deserializer class."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Serialization/v1/Providers/ServiceBusQueueDeserializerTests.cs",
+      "selection": {
+        "start": {
+          "line": 84,
+          "character": 69
+        },
+        "end": {
+          "line": 84,
+          "character": 87
+        }
+      },
+      "description": "### Override CreateDeserializer\n\nOverride `CreateDeserializer()`, returning a new copy of your deserializer. This allows us to run certain tests for every type of deserializer."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Serialization/v1/Providers/ServiceBusQueueDeserializerTests.cs",
+      "selection": {
+        "start": {
+          "line": 21,
+          "character": 21
+        },
+        "end": {
+          "line": 21,
+          "character": 64
+        }
+      },
+      "description": "### Verify Property Can Be Deserialized\n\nThis test shows an example of testing that a certain field can be deserialized successfully. It uses the utility methods in `YamlAssert` to hide most of the boilerplate."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Serialization/v1/Providers/ServiceBusQueueDeserializerTests.cs",
+      "selection": {
+        "start": {
+          "line": 31,
+          "character": 21
+        },
+        "end": {
+          "line": 31,
+          "character": 58
+        }
+      },
+      "description": "### Verify Property Can Be Absent\n\nThis test shows an example of ensuring that a particular property can be deserialized as null if it's not present in the Yaml."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Serialization/v1/Providers/ServiceBusQueueDeserializerTests.cs",
+      "selection": {
+        "start": {
+          "line": 40,
+          "character": 21
+        },
+        "end": {
+          "line": 40,
+          "character": 66
+        }
+      },
+      "description": "### Verify Errors Reported\n\nThis test shows an example of how to make sure an error is reported if a particular field isn't supplied."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Core/AzureResourceDeserializerFactory.cs",
+      "selection": {
+        "start": {
+          "line": 24,
+          "character": 17
+        },
+        "end": {
+          "line": 24,
+          "character": 51
+        }
+      },
+      "description": "### Register Deserializer with Factory\n\nUpdate the deserializer factory to return your new deserializer for your new resource type."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Mapping/V1MappingProfile.cs",
+      "selection": {
+        "start": {
+          "line": 33,
+          "character": 13
+        },
+        "end": {
+          "line": 33,
+          "character": 86
+        }
+      },
+      "description": "### Add AutoMapper Mapping\n\nAdd a mapping to allow AutoMapper to map between your configuration model, and the runtime model for your new resource type."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Configuration/Serialization/v1/Mapping/V1MappingProfile.cs",
+      "selection": {
+        "start": {
+          "line": 34,
+          "character": 17
+        },
+        "end": {
+          "line": 34,
+          "character": 87
+        }
+      },
+      "description": "### AutoMapper Constructor Mapping\n\nIn general you won't need to define any custom AutoMapper mappings, but occasionally you might need to. In this example, we're mapping the `Namespace` property on the configuration model to the `serviceBusNamespace` constructor parameter on the runtime model. This is required because `namespace` is a reserved word in C#, and can't be used as a parameter name."
+    },
+    {
+      "file": "src/Promitor.Agents.Scraper/Validation/MetricDefinitions/ResourceTypes/ServiceBusQueueMetricValidator.cs",
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 20
+        },
+        "end": {
+          "line": 11,
+          "character": 50
+        }
+      },
+      "description": "### Runtime Validation\n\nPromitor performs additional validation on all resource types after the runtime model has been deserialized to make sure that the runtime model is valid. This helps to ensure that everything is correct before we start scraping.\n\nAdd a new implementation of `IMetricValidator` for your new resource type."
+    },
+    {
+      "file": "src/Promitor.Agents.Scraper/Validation/MetricDefinitions/ResourceTypes/ServiceBusQueueMetricValidator.cs",
+      "selection": {
+        "start": {
+          "line": 15,
+          "character": 36
+        },
+        "end": {
+          "line": 15,
+          "character": 44
+        }
+      },
+      "description": "### Add Validation Rules\n\nThe `Validate()` method accepts a deserialized `MetricDefinition` object and returns a list of validation errors. If the object is valid, return an empty list."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Validation/Metrics/ResourceTypes/ServiceBusQueueMetricsDeclarationValidationStepTests.cs",
+      "selection": {
+        "start": {
+          "line": 10,
+          "character": 73
+        },
+        "end": {
+          "line": 10,
+          "character": 111
+        }
+      },
+      "description": "### Metric Validator Unit Tests\n\nAdd a new implementation of `MetricsDeclarationValidationStepsTests` for your new resource type. This should contain a test for each validation rule you added in the [previous step][#26]."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Validation/Metrics/ResourceTypes/ServiceBusQueueMetricsDeclarationValidationStepTests.cs",
+      "selection": {
+        "start": {
+          "line": 47,
+          "character": 21
+        },
+        "end": {
+          "line": 47,
+          "character": 85
+        }
+      },
+      "description": "### Verify Metric is Valid\n\nHere's an example of a test that checks that a particular metric configuration is valid."
+    },
+    {
+      "file": "src/Promitor.Tests.Unit/Validation/Metrics/ResourceTypes/ServiceBusQueueMetricsDeclarationValidationStepTests.cs",
+      "selection": {
+        "start": {
+          "line": 64,
+          "character": 21
+        },
+        "end": {
+          "line": 64,
+          "character": 117
+        }
+      },
+      "description": "### Verify Metric is Invalid\n\nHere's an example of a test ensuring validation fails if certain required fields are not provided."
+    },
+    {
+      "file": "src/Promitor.Agents.Scraper/Validation/Factories/MetricValidatorFactory.cs",
+      "selection": {
+        "start": {
+          "line": 16,
+          "character": 17
+        },
+        "end": {
+          "line": 16,
+          "character": 51
+        }
+      },
+      "description": "### Register Validator with Factory\n\nNow that you've created your validator, register it with the factory to allow Promitor to find it."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/ResourceTypes/ServiceBusQueueScraper.cs",
+      "selection": {
+        "start": {
+          "line": 8,
+          "character": 18
+        },
+        "end": {
+          "line": 8,
+          "character": 40
+        }
+      },
+      "description": "### Add a Scraper\n\nAdd a new implementation of `AzureMonitorScraper<TResourceDefinition>` for your new scraper type. The Scraper is the interface between Promitor and Azure Monitor, and converts the runtime model into the information needed to retrieve and report metrics about a particular resource."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/ResourceTypes/ServiceBusQueueScraper.cs",
+      "selection": {
+        "start": {
+          "line": 10,
+          "character": 30
+        },
+        "end": {
+          "line": 10,
+          "character": 49
+        }
+      },
+      "description": "### Resource URI\n\nOne of the main jobs of the Scraper is to build the Resource URI that can be used to query the Azure Monitor API. All resource URIs contain certain common pieces of information like the Subscription Id, the Resource Group name, and the ARM Provider name. In this case we're also adding the service bus namespace to the end."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/ResourceTypes/ServiceBusQueueScraper.cs",
+      "selection": {
+        "start": {
+          "line": 26,
+          "character": 13
+        },
+        "end": {
+          "line": 26,
+          "character": 78
+        }
+      },
+      "description": "### Add Custom Labels\n\nOne of the other things you can do with a custom scraper is provide additional labels to be added to any metrics for that resource. This can be useful to add additional metadata about the resource, for example server names, information about the parent resource, etc. In this case we're adding the Service Bus queue name as a label called `entity_name`."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/ResourceTypes/ServiceBusQueueScraper.cs",
+      "selection": {
+        "start": {
+          "line": 33,
+          "character": 13
+        },
+        "end": {
+          "line": 33,
+          "character": 70
+        }
+      },
+      "description": "### Metric Filters\n\nSometimes you might need to add a custom Azure Monitor filter in order to get the correct metrics. In this example we're adding a filter for the Service Bus queue name because it isn't part of the resource URI."
+    },
+    {
+      "file": "src/Promitor.Core.Scraping/Factories/MetricScraperFactory.cs",
+      "selection": {
+        "start": {
+          "line": 35,
+          "character": 17
+        },
+        "end": {
+          "line": 35,
+          "character": 51
+        }
+      },
+      "description": "### Register Scraper with Factory\n\nNow that you've defined your Scraper, let Promitor know about it by registering it in the `MetricScraperFactory`."
+    },
+    {
+      "title": "Finished Implementing Scraper",
+      "description": "### Finished Implementing Scraper\n\nCongratulations - you've now implemented all the code you need to scrape your new resource type!\n\nAt this point you should do some end to end testing of your new resource type by running the Scraper agent."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 6,
+          "character": 4
+        },
+        "end": {
+          "line": 6,
+          "character": 27
+        }
+      },
+      "description": "### Add Documentation\n\nNow that everything is working, you need to add some documentation to let the rest of the world know! To do that add a new markdown file using the same format as the other resource types. The file in this example is the source for the documentation that can be found at <https://promitor.io/configuration/v2.x/metrics/service-bus-queue>."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 8,
+          "character": 1
+        },
+        "end": {
+          "line": 8,
+          "character": 89
+        }
+      },
+      "description": "### Availability Badge\n\nThe availability badge lets users know what version of Promitor the scraper is available from."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 8,
+          "character": 89
+        },
+        "end": {
+          "line": 8,
+          "character": 201
+        }
+      },
+      "description": "### Resource Discovery Support Badge\n\nThe resource discovery support badge lets users know if this resource supports service discovery via the Resource Discovery Agent."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 10,
+          "character": 1
+        },
+        "end": {
+          "line": 16,
+          "character": 38
+        }
+      },
+      "description": "### Resource Overview\n\nProvide an overview of your new resource type here, explaining the type of resource it supports, the type name to use (in this case `ServiceBusQueue`), along with the fields that can be configured."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 20,
+          "character": 1
+        },
+        "end": {
+          "line": 22,
+          "character": 36
+        }
+      },
+      "description": "### Document Labels\n\nProvide a description of any custom labels your Scraper adds. Remove this section if your Scraper doesn't add any custom labels."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 24,
+          "character": 1
+        },
+        "end": {
+          "line": 26,
+          "character": 87
+        }
+      },
+      "description": "### Notes\n\nDocument any limitations or things that users should be aware of when using the Scraper."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",
+      "selection": {
+        "start": {
+          "line": 28,
+          "character": 1
+        },
+        "end": {
+          "line": 43,
+          "character": 4
+        }
+      },
+      "description": "### Yaml Example\n\nProvide an example of the Yaml required to configure your resource."
+    },
+    {
+      "file": "docs/configuration/v2.x/metrics/index.md",
+      "selection": {
+        "start": {
+          "line": 135,
+          "character": 1
+        },
+        "end": {
+          "line": 135,
+          "character": 47
+        }
+      },
+      "description": "### Add to Index Page\n\nAdd your new resource type to the metrics index page so that users can find it."
+    },
+    {
+      "file": "changelog/content/experimental/unreleased.md",
+      "selection": {
+        "start": {
+          "line": 11,
+          "character": 1
+        },
+        "end": {
+          "line": 11,
+          "character": 119
+        }
+      },
+      "description": "### Changelog Entry\n\nAdd your new resource type to the changelog. You can use the `added` tag to indicate that it's a new feature. Provide a link back to the GitHub issue for your new Scraper so that people can get more details about it if they want."
+    },
+    {
+      "title": "Thank You",
+      "description": "You've now successfully added a new Scraper to Promitor. Thanks for your contribution!\n\nAll you need to do now is push your changes to GitHub and raise a PR so that your new Scraper can be merged."
+    }
+  ]
+}
