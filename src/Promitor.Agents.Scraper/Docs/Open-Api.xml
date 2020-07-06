@@ -72,18 +72,15 @@
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
         </member>
-        <member name="M:Promitor.Agents.Scraper.Validation.RuntimeValidator.Validate">
-            <summary>
-            Checks whether Promitor's configuration is valid so that the application
-            can start running successfully.
-            </summary>
-            <returns>
-            true if the configuration is valid, false otherwise.
-            </returns>
-        </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines the dependencies that Promitor requires
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.ConfigureValidation(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Defines the validation for when Promitor starts up
             </summary>
             <param name="services">Collections of services in application</param>
         </member>

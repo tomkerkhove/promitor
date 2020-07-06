@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Promitor.Agents.Core.Validation;
 
 namespace Promitor.Agents.Scraper.Validation.Exceptions
 {

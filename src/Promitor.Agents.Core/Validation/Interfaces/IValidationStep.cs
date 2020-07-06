@@ -1,4 +1,4 @@
-﻿namespace Promitor.Agents.Scraper.Validation.Interfaces
+﻿namespace Promitor.Agents.Core.Validation.Interfaces
 {
     public interface IValidationStep
     {

@@ -1,41 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Promitor.Agents.Scraper.Configuration;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Agents.Scraper.Validation.Interfaces;
-using Promitor.Agents.Scraper.Validation.Steps;
-using Promitor.Agents.Scraper.Validation.Steps.Sinks;
-using Promitor.Core.Scraping.Configuration.Runtime;
+using Promitor.Agents.Core.Validation.Interfaces;
 
 #pragma warning disable 618
-namespace Promitor.Agents.Scraper.Validation
+namespace Promitor.Agents.Core.Validation
 {
     public class RuntimeValidator
     {
         private readonly ILogger _validationLogger;
         private readonly List<IValidationStep> _validationSteps;
 
-        public RuntimeValidator(
-            IOptions<ScraperRuntimeConfiguration> runtimeConfiguration,
-            IOptions<MetricsConfiguration> metricsConfiguration,
-            ILogger<RuntimeValidator> validatorLogger,
-            IMetricsDeclarationProvider scrapeConfigurationProvider,
-            IConfiguration configuration)
+        public RuntimeValidator(IEnumerable<IValidationStep> validationSteps,
+            ILogger<RuntimeValidator> validatorLogger)
         {
             _validationLogger = validatorLogger;
-
-            _validationSteps = new List<IValidationStep>
-            {
-                new ConfigurationPathValidationStep(metricsConfiguration, _validationLogger),
-                new AzureAuthenticationValidationStep(configuration, _validationLogger),
-                new MetricsDeclarationValidationStep(scrapeConfigurationProvider,  _validationLogger),
-                new ResourceDiscoveryValidationStep(runtimeConfiguration.Value.ResourceDiscovery, scrapeConfigurationProvider, _validationLogger),
-                new StatsDMetricSinkValidationStep(runtimeConfiguration,  _validationLogger),
-                new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration,  _validationLogger)
-            };
+            _validationSteps = validationSteps.ToList();
         }
 
         /// <summary>
