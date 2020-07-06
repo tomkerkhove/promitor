@@ -1,4 +1,4 @@
-namespace Promitor.Agents.Scraper
+namespace Promitor.Agents.Core
 {
     /// <summary>
     /// The different statuses that the agent scraper can exit with.
@@ -24,6 +24,11 @@ namespace Promitor.Agents.Scraper
         /// <summary>
         /// The configuration folder environment variable has not been set.
         /// </summary>
-        ConfigurationFolderNotSpecified = 3
+        ConfigurationFolderNotSpecified = 3,
+
+        /// <summary>
+        /// A required configuration file was not found.
+        /// </summary>
+        ConfigurationFileNotFound = 4
     }
 }
