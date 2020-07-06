@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Agents.Core.Validation;
+using Promitor.Agents.Core.Validation.Interfaces;
+using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Serialization.Yaml;
-using Promitor.Agents.Scraper.Validation.Interfaces;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
 using Promitor.Core.Contracts.ResourceTypes;
 

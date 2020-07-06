@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace Promitor.Agents.Scraper.Validation
+namespace Promitor.Agents.Core.Validation
 {
     public class ValidationResult
     {

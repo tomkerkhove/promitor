@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Promitor.Agents.Scraper.Validation.Steps
+namespace Promitor.Agents.Core.Validation.Steps
 {
     public class ValidationStep
     {

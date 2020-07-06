@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Core.Validation;
+using Promitor.Agents.Core.Validation.Interfaces;
+using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.Scraper.Configuration;
-using Promitor.Agents.Scraper.Validation.Interfaces;
 
 namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
 {

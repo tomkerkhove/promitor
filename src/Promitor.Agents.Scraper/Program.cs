@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
-using Promitor.Agents.Scraper.Validation;
+using Promitor.Agents.Core.Validation;
 using Promitor.Core;
 using Serilog;
 

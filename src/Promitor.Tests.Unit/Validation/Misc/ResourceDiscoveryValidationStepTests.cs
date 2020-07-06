@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -41,7 +42,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
-            ResourceDiscoveryConfiguration resourceDiscoveryConfiguration = null;
+            IOptions<ResourceDiscoveryConfiguration> resourceDiscoveryConfiguration = null;
 
             // Act
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -57,7 +58,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider(useDiscoveryGroup: true);
-            ResourceDiscoveryConfiguration resourceDiscoveryConfiguration = null;
+            IOptions<ResourceDiscoveryConfiguration> resourceDiscoveryConfiguration = null;
 
             // Act
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -74,7 +75,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
             var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
-            resourceDiscoveryConfiguration.Port = -1;
+            resourceDiscoveryConfiguration.Value.Port = -1;
 
             // Act
             var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
@@ -90,7 +91,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
             var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
-            resourceDiscoveryConfiguration.Port = 0;
+            resourceDiscoveryConfiguration.Value.Port = 0;
 
             // Act
             var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
@@ -109,7 +110,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
             var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
-            resourceDiscoveryConfiguration.Host = host;
+            resourceDiscoveryConfiguration.Value.Host = host;
 
             // Act
             var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider);
@@ -119,11 +120,11 @@ namespace Promitor.Tests.Unit.Validation.Misc
             Assert.False(validationResult.IsSuccessful);
         }
 
-        private ResourceDiscoveryConfiguration CreateRuntimeConfiguration()
+        private IOptions<ResourceDiscoveryConfiguration> CreateRuntimeConfiguration()
         {
             var bogusRuntimeConfiguration = BogusScraperRuntimeConfigurationGenerator.Generate();
 
-            return bogusRuntimeConfiguration.ResourceDiscovery;
+            return Options.Create(bogusRuntimeConfiguration.ResourceDiscovery);
         }
 
         private MetricsDeclarationProviderStub GetMetricDeclarationProvider(bool useDiscoveryGroup=false)

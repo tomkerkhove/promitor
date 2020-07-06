@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using Promitor.Agents.Scraper.Validation.Interfaces;
+using Promitor.Agents.Core.Validation;
+using Promitor.Agents.Core.Validation.Interfaces;
+using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Runtime;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
