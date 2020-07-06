@@ -2,6 +2,9 @@
 
 This guide walks you through the process of adding a new scraper type.
 
+You can use our code tour by using the [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)
+ extension for VS Code and/or use it in [GitHub Codespaces](https://github.com/features/codespaces).
+
 ------------------------
 
 :loudspeaker: _Before implementing a new scraping type, please open an issue to
