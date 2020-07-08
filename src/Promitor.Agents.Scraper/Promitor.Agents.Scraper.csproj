@@ -37,6 +37,7 @@
     <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="CronScheduler.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Flurl" Version="2.8.2" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="3.1.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />

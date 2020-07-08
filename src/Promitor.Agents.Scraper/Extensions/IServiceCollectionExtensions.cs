@@ -11,6 +11,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Temporary;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -47,6 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
+            services.AddSingleton<AtlassianStatuspage>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
@@ -97,6 +99,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 AddPrometheusMetricSink(services);
             }
+
+            services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
 
             services.TryAddSingleton<MetricSinkWriter>();
 
