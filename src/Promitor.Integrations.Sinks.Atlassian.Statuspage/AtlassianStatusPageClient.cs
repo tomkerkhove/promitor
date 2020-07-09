@@ -1,33 +1,47 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
+using GuardNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Promitor.Core;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 
-namespace Promitor.Agents.Scraper.Temporary
+namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 {
-    public class AtlassianStatuspage
+    public class AtlassianStatuspageClient
     {
-        private const string PageId = "y79z9b78ybgs";
         private const string ApiUrl = "https://api.statuspage.io/v1";
 
-        private readonly ILogger<AtlassianStatuspage> _logger;
+        private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
+        private readonly ILogger<AtlassianStatuspageClient> _logger;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
 
-        public AtlassianStatuspage(IHttpClientFactory clientFactory, ILogger<AtlassianStatuspage> logger)
+        public AtlassianStatuspageClient(IHttpClientFactory clientFactory, IConfiguration configuration, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageClient> logger)
         {
+            Guard.NotNull(clientFactory, nameof(clientFactory));
+            Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(logger, nameof(logger));
+            Guard.NotNull(sinkConfiguration, nameof(sinkConfiguration));
+            Guard.NotNull(sinkConfiguration.CurrentValue, nameof(sinkConfiguration.CurrentValue));
+
+            _sinkConfiguration = sinkConfiguration;
             _clientFactory = clientFactory;
+            _configuration = configuration;
             _logger = logger;
         }
 
-        public async Task ReportMetricAsync(string id, double value, string apiKey)
+        public async Task ReportMetricAsync(string id, double value)
         {
+            var pageId = _sinkConfiguration.CurrentValue.PageId;
+            var apiKey = _configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
             /// Docs: https://developer.statuspage.io/#operation/postPagesPageIdMetricsMetricIdData
             var requestUri = ApiUrl.AppendPathSegment("pages")
-                .AppendPathSegment(PageId)
+                .AppendPathSegment(pageId)
                 .AppendPathSegment("metrics")
                 .AppendPathSegment(id)
                 .AppendPathSegment("data");

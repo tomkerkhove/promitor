@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 
-namespace Promitor.Agents.Scraper.Temporary
+namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 {
     public class AtlassianStatuspageMetricSink : IMetricSink
     {
         private readonly ILogger<AtlassianStatuspageMetricSink> _logger;
-        private readonly AtlassianStatuspage _atlassianStatuspage;
+        private readonly AtlassianStatuspageClient _atlassianStatusPageClient;
+        private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
+
         public MetricSinkType Type { get; } = MetricSinkType.AtlassianStatuspage;
 
-        public AtlassianStatuspageMetricSink(AtlassianStatuspage atlassianStatuspage, ILogger<AtlassianStatuspageMetricSink> logger)
+        public AtlassianStatuspageMetricSink(AtlassianStatuspageClient atlassianStatusPageClient, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageMetricSink> logger)
         {
-            Guard.NotNull(atlassianStatuspage, nameof(atlassianStatuspage));
+            Guard.NotNull(atlassianStatusPageClient, nameof(atlassianStatusPageClient));
+            Guard.NotNull(sinkConfiguration, nameof(sinkConfiguration));
+            Guard.NotNull(sinkConfiguration.CurrentValue, nameof(sinkConfiguration.CurrentValue));
             Guard.NotNull(logger, nameof(logger));
 
-            _atlassianStatuspage = atlassianStatuspage;
+            _atlassianStatusPageClient = atlassianStatusPageClient;
+            _sinkConfiguration = sinkConfiguration;
             _logger = logger;
 
         }
@@ -48,10 +54,12 @@ namespace Promitor.Agents.Scraper.Temporary
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
-            if(metricName.Contains("arm")==false)
+            var systemMetricMapping = _sinkConfiguration.CurrentValue.SystemMetricMapping.SingleOrDefault(metricMapping => metricMapping.PromitorMetricName.Equals(metricName));
+            if(systemMetricMapping != null)
             {
-                await _atlassianStatuspage.ReportMetricAsync("nfkgnrwpn545", metricValue, "53dbaf1c-8551-48ef-81f9-481eb3ac64cb");
+                await _atlassianStatusPageClient.ReportMetricAsync(systemMetricMapping.Id, metricValue);
             }
+
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to Atlassian Statuspage", metricName, metricValue);
         }
     }
