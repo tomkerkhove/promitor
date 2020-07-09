@@ -78,7 +78,7 @@ In order to expose a Prometheus Scraping endpoint, you'll need to configure the 
 
 - `atlassianStatuspage.pageId` - Defines the id of the Atlassian Statuspage to report to.
 - `atlassianStatuspage.systemMetricMapping` - Defines a mapping of the scraped metric by Promitor and to which
- Atlassian Statuspage system metric it should be reported to.
+ Atlassian Statuspage system metric it should be reported to. Here's what we expect:
   - `id` - Id of the Atlassian Statuspage system metric
   - `promitorMetricName` - Name of the Promitor metric which needs to be reported
 
