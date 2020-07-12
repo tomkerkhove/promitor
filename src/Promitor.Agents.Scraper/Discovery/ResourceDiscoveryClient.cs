@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Agents.Core.Serialization;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Core;
 using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Discovery
@@ -84,7 +85,7 @@ namespace Promitor.Agents.Scraper.Discovery
 
         private HttpClient CreateHttpClient()
         {
-            var httpClient = _httpClientFactory.CreateClient("Promitor Resource Discovery");
+            var httpClient = _httpClientFactory.CreateClient(Http.Clients.ResourceDiscovery);
             httpClient.BaseAddress = new Uri($"http://{_configuration.CurrentValue.Host}:{_configuration.CurrentValue.Port}");
             return httpClient;
         }

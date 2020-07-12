@@ -28,7 +28,6 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
             _atlassianStatusPageClient = atlassianStatusPageClient;
             _sinkConfiguration = sinkConfiguration;
             _logger = logger;
-
         }
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)

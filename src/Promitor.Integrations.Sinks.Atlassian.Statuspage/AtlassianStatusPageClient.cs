@@ -14,6 +14,7 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 {
     public class AtlassianStatuspageClient
     {
+        private const string MetricRequestFormat = "{{\"data\": {{\"timestamp\": {0},\"value\": {1}}}}}";
         private const string ApiUrl = "https://api.statuspage.io/v1";
 
         private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
@@ -39,22 +40,22 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
         {
             var pageId = _sinkConfiguration.CurrentValue.PageId;
             var apiKey = _configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
-            /// Docs: https://developer.statuspage.io/#operation/postPagesPageIdMetricsMetricIdData
+            
+            // Docs: https://developer.statuspage.io/#operation/postPagesPageIdMetricsMetricIdData
             var requestUri = ApiUrl.AppendPathSegment("pages")
                 .AppendPathSegment(pageId)
                 .AppendPathSegment("metrics")
                 .AppendPathSegment(id)
                 .AppendPathSegment("data");
 
-            var time = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var measurementTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
-                Content = new StringContent($"{{\"data\": {{\"timestamp\": {time},\"value\": {value}}}}}", Encoding.UTF8, "application/json")
+                Content = new StringContent(string.Format(MetricRequestFormat, measurementTime, value), Encoding.UTF8, "application/json")
             };
             request.Headers.Add("Authorization", $"OAuth {apiKey}");
-            request.Headers.Add("User-Agent", "Sandbox");
 
-            var client = _clientFactory.CreateClient();
+            var client = _clientFactory.CreateClient(Http.Clients.AtlassianStatuspage);
 
             var response = await client.SendAsync(request);
 

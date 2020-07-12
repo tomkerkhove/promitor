@@ -55,7 +55,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.UserAgent.TryParseAdd("App/Promitor.Scraper");
+            request.Headers.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
 
             var response = await base.SendAsync(request, cancellationToken);
 
