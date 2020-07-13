@@ -31,6 +31,6 @@ resources:
 ```
 
 <!-- markdownlint-disable MD033 -->
-[&larr; back to metrics declarations](/configuration/v1.x/metrics)
+[&larr; back to metrics declarations](/configuration/v2.x/metrics)
 [&larr; back to introduction](/)
 <!-- markdownlint-enable -->
