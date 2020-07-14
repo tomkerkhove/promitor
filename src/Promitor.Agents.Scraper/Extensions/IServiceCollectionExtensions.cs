@@ -42,14 +42,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
-            services.AddTransient<ResourceDiscoveryClient>();
             services.AddTransient<ResourceDiscoveryRepository>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
-            services.AddSingleton<AtlassianStatuspageClient>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();

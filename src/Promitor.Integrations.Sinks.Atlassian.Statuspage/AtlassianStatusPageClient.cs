@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Flurl;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Core;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 
 namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
@@ -19,27 +18,23 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 
         private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
         private readonly ILogger<AtlassianStatuspageClient> _logger;
-        private readonly IHttpClientFactory _clientFactory;
-        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public AtlassianStatuspageClient(IHttpClientFactory clientFactory, IConfiguration configuration, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageClient> logger)
+        public AtlassianStatuspageClient(HttpClient httpClient, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageClient> logger)
         {
-            Guard.NotNull(clientFactory, nameof(clientFactory));
-            Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(httpClient, nameof(httpClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(sinkConfiguration, nameof(sinkConfiguration));
             Guard.NotNull(sinkConfiguration.CurrentValue, nameof(sinkConfiguration.CurrentValue));
 
             _sinkConfiguration = sinkConfiguration;
-            _clientFactory = clientFactory;
-            _configuration = configuration;
+            _httpClient = httpClient;
             _logger = logger;
         }
 
         public async Task ReportMetricAsync(string id, double value)
         {
             var pageId = _sinkConfiguration.CurrentValue.PageId;
-            var apiKey = _configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
             
             // Docs: https://developer.statuspage.io/#operation/postPagesPageIdMetricsMetricIdData
             var requestUri = ApiUrl.AppendPathSegment("pages")
@@ -51,13 +46,10 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
             var measurementTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
-                Content = new StringContent(string.Format(MetricRequestFormat, measurementTime, value), Encoding.UTF8, "application/json")
+                Content = new StringContent(string.Format(MetricRequestFormat, measurementTime, value), Encoding.UTF8, MediaTypeNames.Application.Json)
             };
-            request.Headers.Add("Authorization", $"OAuth {apiKey}");
 
-            var client = _clientFactory.CreateClient(Http.Clients.AtlassianStatuspage);
-
-            var response = await client.SendAsync(request);
+            var response = await _httpClient.SendAsync(request);
 
             if (response.IsSuccessStatusCode == false)
             {
