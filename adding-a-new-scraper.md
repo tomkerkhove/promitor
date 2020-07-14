@@ -2,6 +2,9 @@
 
 This guide walks you through the process of adding a new scraper type.
 
+You can use our code tour by using the [CodeTour](https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour)
+ extension for VS Code and/or use it in [GitHub Codespaces](https://github.com/features/codespaces).
+
 ------------------------
 
 :loudspeaker: _Before implementing a new scraping type, please open an issue to
@@ -16,7 +19,7 @@ discuss your scenario_
 2. Describe the resource for which you're scraping metrics by creating `<New-Type>ResourceDefinition`
   and inherit from
   `Promitor.Core.Scraping.Configuration.Model.Metrics.AzureResourceDefinition` -
-  this class should go in `.\src\Promitor.Core.Scraping\Configuration\Model\Metrics\ResourceTypes`.
+  this class should go in `.\src\Promitor.Core.Contracts\ResourceTypes`.
 3. Describe the resource configuration for which you're scraping metrics by creating
  `<New-Type>ResourceV1`
   and inherit from
@@ -27,7 +30,7 @@ discuss your scenario_
 5. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
   to handle your new resource type by returning a new instance of the Deserializer
   you created in the previous step.
-6. Update the `Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping.V1MappingProfile` to handle your new resource type by mapping the `<New-Type>ResourceV1` to `<New-Type>ResourceDefinition`
+6. Update the `Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping.V1MappingProfile` to handle your new resource type by mapping the `<New-Type>ResourceV1` to `<New-Type>ResourceDefinition` and annotating how to map it to `IAzureResourceDefinition`.
 7. Provide a unit test in `.\src\Promitor.Tests.Unit\Serialization\v1\Providers`
   that tests the deserialization based on our sample. Your test class must inherit
   from `ResourceDeserializerTest` to ensure the inherited functionality is tested.

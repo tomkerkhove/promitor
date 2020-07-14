@@ -1,0 +1,42 @@
+{
+  "title": "Repo Overview",
+  "steps": [
+    {
+      "title": "Welcome!",
+      "description": "### Welcome\n\nWelcome to Promitor's repository overview tour. This tour aims to give you an overview of the layout of the Promitor repository so you can start developing as quickly as possible."
+    },
+    {
+      "directory": "build",
+      "description": "### build\n\nThe build folder contains any files needed for Promitor's CI configuration. This includes the Azure DevOps pipelines used for validating PRs and building releases, along with other things like scripts used to publish Promitor to the Helm registry."
+    },
+    {
+      "directory": "changelog",
+      "description": "### changelog\n\nThe `changelog` folder contains the files needed to generate <https://changelog.promitor.io>. Information about new changes should be added to the `content` folder, which is split into the following sections:\n\n- `deprecated` - any deprecated functionality that we need to make users aware of.\n- `experimental` - any new changes that have not been released yet. This is typically where you should add information.\n- `released` - changes that are part of a stable release."
+    },
+    {
+      "directory": "charts",
+      "description": "### charts\n\nThe charts directory contains the [Helm](https://helm.sh/) chart for Promitor."
+    },
+    {
+      "directory": "config",
+      "description": "### config\n\nThe `config` directory contains example configuration files for Promitor, along with some related applications like Prometheus and Grafana."
+    },
+    {
+      "directory": "design",
+      "description": "### design\n\nThe `design` directory contains draw.io diagrams explaining the design of Promitor."
+    },
+    {
+      "directory": "docs",
+      "description": "### docs\n\nThe `docs` folder contains the content used to build <https://promitor.io>."
+    },
+    {
+      "directory": "src",
+      "description": "### src\n\nThe `src` folder contains the C# code for Promitor."
+    },
+    {
+      "title": "Next Steps",
+      "description": "### Next Steps\n\nNow that you have an overview of how the repo is structured, maybe you'd like to check out one of the following tours:\n\n- [Project Overview].\n- [Add a new Scraper]."
+    }
+  ],
+  "isPrimary": true
+}

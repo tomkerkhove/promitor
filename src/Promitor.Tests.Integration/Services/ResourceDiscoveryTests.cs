@@ -38,7 +38,7 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetAllPerResourceTypeWithoutFilters_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceDiscoveryGroupName = "no-filter";
+            const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
             const int expectedResourceCount = 11;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
