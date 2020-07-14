@@ -123,6 +123,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithLogicAppMetric(string metricName = "promitor-logic-apps-failed-runs",
+            string metricDescription = "Description for a metric",
+            string workflowName = "promitor-workflow",
+            string azureMetricName = "Total",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new LogicAppResourceV1
+            {
+                WorkflowName = workflowName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.LogicApp, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithCosmosDbMetric(string metricName = "promitor-cosmosdb",
             string metricDescription = "Description for a metric",
             string dbName = "promitor-cosmosdb",

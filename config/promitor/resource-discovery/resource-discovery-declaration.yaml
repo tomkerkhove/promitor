@@ -39,7 +39,7 @@ resourceDiscoveryGroups:
   name: logic-apps
   type: LogicApp
 # The following are used for integration testing:
-- name: no-filter
+- name: logic-apps-unfiltered
   type: LogicApp
 - name: one-resource-group-scenario
   type: LogicApp
