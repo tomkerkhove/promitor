@@ -76,15 +76,34 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string serviceBusNamespace = "promitor-namespace",
             string azureMetricName = "Total",
             string resourceDiscoveryGroupName = "",
-            bool omitResource = false)
+            bool omitResource = false,
+            List<string> queueNames = null)
         {
-            var resource = new ServiceBusQueueResourceV1
-            {
-                QueueName = queueName,
-                Namespace = serviceBusNamespace
-            };
+            var serviceBusQueueResources = new List<AzureResourceDefinitionV1>();
 
-            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource, metricDimension);
+            if (queueNames != null)
+            {
+                foreach (string queue in queueNames)
+                {
+                    var resource = new ServiceBusQueueResourceV1
+                    {
+                        QueueName = queue,
+                        Namespace = serviceBusNamespace
+                    };
+                    serviceBusQueueResources.Add(resource);
+                }
+            }
+            else
+            {
+                var resource = new ServiceBusQueueResourceV1
+                {
+                    QueueName = queueName,
+                    Namespace = serviceBusNamespace
+                };
+                serviceBusQueueResources.Add(resource);
+            }
+
+            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, serviceBusQueueResources, metricDimension);
             
             return this;
         }
@@ -519,6 +538,11 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, AzureResourceDefinitionV1 resource, string metricDimension = null)
         {
+            CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, new List<AzureResourceDefinitionV1> {resource}, metricDimension);
+        }
+
+        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, List<AzureResourceDefinitionV1> resources, string metricDimension = null)
+        {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, metricDimension);
             var metric = new MetricDefinitionV1
             {
@@ -530,7 +554,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
             if (omitResource == false)
             {
-                metric.Resources = new List<AzureResourceDefinitionV1> { resource };
+                metric.Resources = resources;
             }
 
             if (string.IsNullOrWhiteSpace(resourceDiscoveryGroupName) == false)

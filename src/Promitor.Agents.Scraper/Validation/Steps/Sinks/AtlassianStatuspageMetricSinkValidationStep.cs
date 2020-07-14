@@ -52,7 +52,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                 }
 
                 var metricsDeclaration = _metricsDeclarationProvider.Get(true);
-                // TODO: Validate for empty system metric or empty promitor metric
+                
                 foreach (var systemMetric in atlassianStatuspageConfiguration.SystemMetricMapping)
                 {
                     if (string.IsNullOrWhiteSpace(systemMetric.Id))
@@ -64,10 +64,22 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                         errorMessages.Add($"System metric mapping defined without specifying a Promitor metric name (System metric id: {systemMetric.Id})");
                     }
 
-                    var isAnyDefined = metricsDeclaration.Metrics.Any(metricDefinition => metricDefinition.PrometheusMetricDefinition.Name.Equals(systemMetric.PromitorMetricName));
-                    if (isAnyDefined == false)
+                    var matchingPromitorMetric = metricsDeclaration.Metrics.FirstOrDefault(metricDefinition => metricDefinition.PrometheusMetricDefinition.Name.Equals(systemMetric.PromitorMetricName));
+                    if (matchingPromitorMetric == null)
                     {
                         errorMessages.Add($"Statuspage metric Id '{systemMetric.Id}' is mapped to a metric called '{systemMetric.PromitorMetricName}', but no metric was found with that name");
+                    }
+                    else
+                    {
+                        if (matchingPromitorMetric.ResourceDiscoveryGroups?.Any() == true)
+                        {
+                            errorMessages.Add("Scraping with resource discovery is not supported");
+                        }
+
+                        if (matchingPromitorMetric.Resources?.Count > 1)
+                        {
+                            errorMessages.Add("Scraping multiple resources for one metric is not supported");
+                        }
                     }
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
 using Bogus;
@@ -261,6 +262,48 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
             var runtimeConfiguration = CreateRuntimeConfiguration(metricName: "other_metric");
+
+
+            // Act
+            var azureAuthenticationValidationStep = new AtlassianStatuspageMetricSinkValidationStep(runtimeConfiguration, metricsDeclarationProvider, NullLogger<AtlassianStatuspageMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful);
+        }
+
+        [Fact]
+        public void Validate_AtlassianStatuspageWithPromitorMetricUsingResourceDiscovery_Fails()
+        {
+            // Arrange
+            const string metricName = "my_metric";
+            const string resourceDiscoveryGroupName = "my_discovery_group";
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(resourceDiscoveryGroupName: resourceDiscoveryGroupName)
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+            var runtimeConfiguration = CreateRuntimeConfiguration(metricName);
+
+
+            // Act
+            var azureAuthenticationValidationStep = new AtlassianStatuspageMetricSinkValidationStep(runtimeConfiguration, metricsDeclarationProvider, NullLogger<AtlassianStatuspageMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful);
+        }
+
+        [Fact]
+        public void Validate_AtlassianStatuspagePromitorMetricScrapingMultipleResources_Fails()
+        {
+            // Arrange
+            const string metricName = "my_metric";
+            List<string> queueNames = new List<string> { "queue-1", "queue-2"};
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(queueNames: queueNames)
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+            var runtimeConfiguration = CreateRuntimeConfiguration(metricName);
 
 
             // Act
