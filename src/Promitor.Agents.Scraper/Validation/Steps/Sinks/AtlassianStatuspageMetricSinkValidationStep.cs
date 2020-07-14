@@ -57,7 +57,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                 {
                     if (string.IsNullOrWhiteSpace(systemMetric.Id))
                     {
-                        errorMessages.Add($"System metric mapping defined without specifying a system metric id (Promitor metric name: {systemMetric.PromitorMetricName}");
+                        errorMessages.Add($"System metric mapping defined without specifying a system metric id (Promitor metric name: {systemMetric.PromitorMetricName})");
                     }
                     if (string.IsNullOrWhiteSpace(systemMetric.PromitorMetricName))
                     {
