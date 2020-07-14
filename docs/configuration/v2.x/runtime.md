@@ -94,7 +94,10 @@ metricSinks:
       promitorMetricName: promitor_demo_appplan_percentage_cpu
 ```
 
-> :warning: Metric labels are not supported.
+> :warning: **As of today, metric labels, resource discovery and multi-resource scraping are not supported.**
+>  
+> This is because Promitor will report the different resource metrics to the same Atlassian metric which will mix metrics
+> which becomes confusing.
 
 ### Prometheus Scraping Endpoint
 
@@ -137,7 +140,9 @@ metricSinks:
     metricPrefix: promitor.
 ```
 
-> :warning: Metric labels are not supported.
+> :warning: **As of today, metric labels are not supported.**
+>  
+> Unfortunately, this is not supported in the specifiaction.
 
 ## Metric Configuration
 
