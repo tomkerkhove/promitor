@@ -182,3 +182,21 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
     - name: function-app-landscape
+  - name: azure_logic_apps_failed_run
+    description: "Total amount of failed runs for Azure Logic Apps"
+    resourceType: LogicApp
+    azureMetricConfiguration:
+      metricName: RunsFailed
+      aggregation:
+        type: Total
+    resources:
+    - workflowName: promitor-automation-github-ci-scraper
+  - name: azure_logic_apps_failed_run_discovery
+    description: "Total amount of failed runs for Azure Logic Apps"
+    resourceType: LogicApp
+    azureMetricConfiguration:
+      metricName: RunsFailed
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: logic-apps-unfiltered

@@ -23,31 +23,32 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<AzureResourceDiscoveryGroupDefinitionV1, AzureResourceDiscoveryGroup>();
             CreateMap<SecretV1, Secret>();
 
+            CreateMap<ApiManagementResourceV1, ApiManagementResourceDefinition>();
+            CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
+            CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
+            CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
             CreateMap<CosmosDbResourceV1, CosmosDbResourceDefinition>();
+            CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
+            CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
             CreateMap<GenericResourceV1, GenericAzureResourceDefinition>();
+            CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
+            CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
+            CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
                 .ForCtorParam("serviceBusNamespace", o => o.MapFrom(s => s.Namespace));
-            CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
-            CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
-            CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
-            CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
-            CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
-            CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
-            CreateMap<ApiManagementResourceV1, ApiManagementResourceDefinition>();
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
-            CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
-            CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
-            CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
-            CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
-            CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
+            CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
+            CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
+            CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
+            CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
 
             CreateMap<MetricDefinitionV1, PrometheusMetricDefinition>();
 
@@ -55,30 +56,31 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1));
 
             CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
+                .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
+                .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
+                .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
+                .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
+                .Include<FileStorageResourceV1, FileStorageResourceDefinition>()
+                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>()
                 .Include<GenericResourceV1, GenericAzureResourceDefinition>()
+                .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
+                .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
+                .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
-                .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
-                .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
                 .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>()
-                .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
-                .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
-                .Include<WebAppResourceV1, WebAppResourceDefinition>()
-                .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>()
-                .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
                 .Include<SqlServerResourceV1, SqlServerResourceDefinition>()
                 .Include<StorageAccountResourceV1, StorageAccountResourceDefinition>()
-                .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
-                .Include<FileStorageResourceV1, FileStorageResourceDefinition>()
-                .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
-                .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
-                .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>();
+                .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
+                .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
+                .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
+                .Include<WebAppResourceV1, WebAppResourceDefinition>();
         }
     }
 }
