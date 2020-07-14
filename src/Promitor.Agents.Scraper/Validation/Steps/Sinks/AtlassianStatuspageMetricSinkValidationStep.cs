@@ -67,7 +67,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                     var isAnyDefined = metricsDeclaration.Metrics.Any(metricDefinition => metricDefinition.PrometheusMetricDefinition.Name.Equals(systemMetric.PromitorMetricName));
                     if (isAnyDefined == false)
                     {
-                        errorMessages.Add($"No configured metrics '{systemMetric.PromitorMetricName}' was found while it is mapped to page with id {systemMetric.Id}");
+                        errorMessages.Add($"Statuspage metric Id '{systemMetric.Id}' is mapped to a metric called '{systemMetric.PromitorMetricName}', but no metric was found with that name");
                     }
                 }
             }
