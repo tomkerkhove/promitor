@@ -20,11 +20,11 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_RegistryNameSupplied_SetsRegistryName()
         {
-            const string ExpectedWorkflowName = "promitor-workflow";
+            const string expectedWorkflowName = "promitor-workflow";
             YamlAssert.PropertySet<LogicAppResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                $"workflowName: {ExpectedWorkflowName}",
-                ExpectedWorkflowName,
+                $"workflowName: {expectedWorkflowName}",
+                expectedWorkflowName,
                 c => c.WorkflowName);
         }
 
