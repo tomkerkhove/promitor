@@ -37,7 +37,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             var errorMessages = new List<string>();
             if (string.IsNullOrWhiteSpace(atlassianStatuspageConfiguration.PageId))
             {
-                errorMessages.Add("No id of Atlassian Status page is configured");
+                errorMessages.Add("No page id of Atlassian Status page is configured");
             }
 
             if (atlassianStatuspageConfiguration.SystemMetricMapping?.Any() != true)
