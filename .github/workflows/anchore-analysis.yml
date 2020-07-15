@@ -15,7 +15,7 @@ on:
     branches: [master]
 
 jobs:
-  Anchore-Build-Scan:
+  analyse_scraper:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout the code
