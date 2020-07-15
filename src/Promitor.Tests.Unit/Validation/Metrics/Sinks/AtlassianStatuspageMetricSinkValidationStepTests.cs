@@ -326,8 +326,8 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
 
             var systemMetricMapping = new Faker<SystemMetricMapping>()
                 .StrictMode(true)
-                .RuleFor(systemMetricMapping => systemMetricMapping.Id, faker => systemMetricId ?? faker.Person.FirstName)
-                .RuleFor(promConfiguration => promConfiguration.PromitorMetricName, faker => metricName?? faker.Person.FirstName)
+                .RuleFor(map => map.Id, faker => systemMetricId ?? faker.Person.FirstName)
+                .RuleFor(map => map.PromitorMetricName, faker => metricName?? faker.Person.FirstName)
                 .Generate();
 
             bogusRuntimeConfiguration.MetricSinks.AtlassianStatuspage.SystemMetricMapping.Add(systemMetricMapping);

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Bogus;
-using Castle.Components.DictionaryAdapter;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
