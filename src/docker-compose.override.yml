@@ -6,7 +6,7 @@ services:
       - "ASPNETCORE_ENVIRONMENT=Development"
       - "PROMITOR_INTERNAL_CONFIG_FOLDER=/config/"
       - "PROMITOR_DISCOVERY_APPID=67882a00-21d3-4ee7-b32a-430ea0768cd3"
-      - "PROMITOR_DISCOVERY_APPSECRET=_M6e4CNu]x2SSN0hUFobamWttPyVXl?-"
+      - "PROMITOR_DISCOVERY_APPSECRET=<hidden>"
     ports:
       - "777:88"
   promitor.agents.scraper:
@@ -14,8 +14,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - PROMITOR_INTERNAL_CONFIG_FOLDER=/config/
       - PROMITOR_AUTH_APPID=ceb249a3-44ce-4c90-8863-6776336f5b7e
-      - PROMITOR_AUTH_APPKEY=ZgLy6zYNh9SEmIl0B+rv+ZuQQ2wJyQi/tTXnp2Wp9PM=
+      - PROMITOR_AUTH_APPKEY=<hidden>
       - PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY=<hidden>
-      - "SECRETS_STORAGEQUEUE_SAS=?sv=2018-03-28&ss=bfqt&srt=sco&sp=rwla&se=2022-08-07T00:16:01Z&st=2019-08-06T16:16:01Z&spr=https&sig=Ik4jprS89kGIFRM0qaQpXrv0ttP3pnlhmGQuYVQ7cbA%3D"
+      - SECRETS_STORAGEQUEUE_SAS=<hidden>
     ports:
       - "888:88"
