@@ -305,4 +305,4 @@ docs/_site/*
 *.orig
 changelog/public/
 changelog/resources/_gen/
-#src/docker-compose.vs.debug.yml
+src/docker-compose.vs.debug.yml
