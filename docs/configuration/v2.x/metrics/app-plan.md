@@ -28,6 +28,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - appPlanName: promitor-app-plan
+resourceDiscoveryGroups:
+- name: app-plans-group
 ```
 
 <!-- markdownlint-disable MD033 -->
