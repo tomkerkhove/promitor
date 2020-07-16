@@ -18,6 +18,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new FunctionAppDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
+                case ResourceType.VirtualMachine:
+                    return new VirtualMachineDiscoveryQuery();
+                case ResourceType.VirtualMachineScaleSet:
+                    return new VirtualMachineScaleSetDiscoveryQuery();
                 case ResourceType.WebApp:
                     return new WebAppDiscoveryQuery();
                 default:

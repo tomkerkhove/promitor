@@ -11,7 +11,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     {
         public override string DefineQuery(ResourceCriteria criteria)
         {
-            var query = GraphQueryBuilder.ForResourceType("microsoft.web/sites", "microsoft.web/sites/slots")
+            var query = GraphQueryBuilder.ForResourceType(ResourceTypes)
                 .Where("kind", Operator.DoesNotContain, "functionapp")
                 .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
                 .WithResourceGroupsWithName(criteria.ResourceGroups)

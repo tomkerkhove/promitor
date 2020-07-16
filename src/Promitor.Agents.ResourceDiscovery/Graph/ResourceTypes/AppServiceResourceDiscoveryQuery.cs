@@ -4,6 +4,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public abstract class AppServiceResourceDiscoveryQuery : ResourceDiscoveryQuery
     {
+        public override string[] ResourceTypes => new[] { "microsoft.web/sites", "microsoft.web/sites/slots" };
+
         public (string AppName, string SlotName) DetermineAppDetails(string resourceName)
         {
             if (resourceName.Contains("/"))
