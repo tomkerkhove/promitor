@@ -76,6 +76,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IValidationStep, ResourceDiscoveryValidationStep>();
             services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
             services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, AtlassianStatuspageMetricSinkValidationStep>();
             services.AddTransient<RuntimeValidator>();
 
             return services;

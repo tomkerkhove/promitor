@@ -11,6 +11,10 @@ resourceDiscoveryGroups:
     - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
 - name: container-registry-landscape
   type: ContainerRegistry
+- name: virtual-machine-scale-sets
+  type: VirtualMachineScaleSet
+- name: virtual-machines
+  type: VirtualMachine
 - name: app-plan-landscape
   type: AppPlan
 - name: web-apps-north-europe

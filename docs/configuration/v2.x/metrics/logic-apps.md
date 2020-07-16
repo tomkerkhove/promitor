@@ -29,6 +29,8 @@ azureMetricConfiguration:
 resources:
 - workflowName: promitor-workflow-1
 - workflowName: promitor-workflow-2
+resourceDiscoveryGroups:
+- name: logic-apps-group
 ```
 
 <!-- markdownlint-disable MD033 -->

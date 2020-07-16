@@ -36,6 +36,8 @@ resources:
   slot: staging
 - webAppName: promitor-web-app
   slot: production
+resourceDiscoveryGroups:
+- name: web-app-group
 ```
 
 <!-- markdownlint-disable MD033 -->

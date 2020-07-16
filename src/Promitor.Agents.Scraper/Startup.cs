@@ -39,7 +39,7 @@ namespace Promitor.Agents.Scraper
                 // Provide Promitor User-Agent
                 client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
             });
-            services.AddHttpClient<AtlassianStatuspageClient>(client =>
+            services.AddHttpClient<IAtlassianStatuspageClient, AtlassianStatuspageClient>(client =>
             {
                 // Provide Promitor User-Agent
                 client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);

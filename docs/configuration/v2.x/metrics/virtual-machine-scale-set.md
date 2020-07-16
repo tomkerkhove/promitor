@@ -5,7 +5,7 @@ title: Azure Virtual Machine Scale Set (VMSS) Declaration
 
 ## Azure Virtual Machine Scale Set (VMSS)
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.2-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-No-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.2-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-red.svg)
 
 You can declare to scrape an Azure Virtual Machine Scale Set via the `VirtualMachineScaleSet` resource
 type.
@@ -30,6 +30,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - scaleSetName: promitor-virtual-machine-scale-set-1
+resourceDiscoveryGroups:
+- name: virtual-machine-scale-sets-group
 ```
 
 <!-- markdownlint-disable MD033 -->

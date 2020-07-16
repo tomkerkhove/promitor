@@ -33,6 +33,8 @@ azureMetricConfiguration:
     type: Total
 resources:
 - functionAppName: promitor-function-app
+resourceDiscoveryGroups:
+- name: functions-group
 ```
 
 <!-- markdownlint-disable MD033 -->

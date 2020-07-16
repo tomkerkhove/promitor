@@ -31,6 +31,8 @@ azureMetricConfiguration:
 resources:
 - registryName: promitor-1
 - registryName: promitor-2
+resourceDiscoveryGroups:
+- name: registry-group
 ```
 
 <!-- markdownlint-disable MD033 -->

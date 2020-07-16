@@ -5,15 +5,17 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class AppPlanDiscoveryQuery : ResourceDiscoveryQuery
+    public class VirtualMachineScaleSetDiscoveryQuery : ResourceDiscoveryQuery
     {
-        public override string[] ResourceTypes => new[] { "microsoft.web/serverfarms" };
+        public override string[] ResourceTypes => new[] { "microsoft.compute/virtualmachinescalesets" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
-            
-            var resource = new AppPlanResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
+
+            var vmss = resultRowEntry[3]?.ToString();
+
+            var resource = new VirtualMachineScaleSetResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), vmss);
             return resource;
         }
     }
