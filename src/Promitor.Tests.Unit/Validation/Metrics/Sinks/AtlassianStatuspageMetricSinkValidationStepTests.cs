@@ -263,7 +263,6 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
             var runtimeConfiguration = CreateRuntimeConfiguration(metricName: "other_metric");
 
-
             // Act
             var azureAuthenticationValidationStep = new AtlassianStatuspageMetricSinkValidationStep(runtimeConfiguration, metricsDeclarationProvider, NullLogger<AtlassianStatuspageMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
@@ -284,7 +283,6 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
             var runtimeConfiguration = CreateRuntimeConfiguration(metricName);
 
-
             // Act
             var azureAuthenticationValidationStep = new AtlassianStatuspageMetricSinkValidationStep(runtimeConfiguration, metricsDeclarationProvider, NullLogger<AtlassianStatuspageMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
@@ -304,7 +302,6 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
             var runtimeConfiguration = CreateRuntimeConfiguration(metricName);
-
 
             // Act
             var azureAuthenticationValidationStep = new AtlassianStatuspageMetricSinkValidationStep(runtimeConfiguration, metricsDeclarationProvider, NullLogger<AtlassianStatuspageMetricSinkValidationStep>.Instance);

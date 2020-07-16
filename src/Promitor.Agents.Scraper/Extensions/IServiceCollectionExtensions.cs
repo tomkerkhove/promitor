@@ -104,7 +104,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 AddAtlassianStatuspageMetricSink(services);
             }
 
-
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
