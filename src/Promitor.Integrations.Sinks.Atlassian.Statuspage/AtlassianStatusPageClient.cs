@@ -11,7 +11,7 @@ using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 
 namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 {
-    public class AtlassianStatuspageClient
+    public class AtlassianStatuspageClient : IAtlassianStatuspageClient
     {
         private const string MetricRequestFormat = "{{\"data\": {{\"timestamp\": {0},\"value\": {1}}}}}";
         private const string ApiUrl = "https://api.statuspage.io/v1";

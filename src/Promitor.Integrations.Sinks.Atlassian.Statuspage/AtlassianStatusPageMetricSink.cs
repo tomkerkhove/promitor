@@ -13,12 +13,12 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
     public class AtlassianStatuspageMetricSink : IMetricSink
     {
         private readonly ILogger<AtlassianStatuspageMetricSink> _logger;
-        private readonly AtlassianStatuspageClient _atlassianStatusPageClient;
+        private readonly IAtlassianStatuspageClient _atlassianStatusPageClient;
         private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
 
         public MetricSinkType Type { get; } = MetricSinkType.AtlassianStatuspage;
 
-        public AtlassianStatuspageMetricSink(AtlassianStatuspageClient atlassianStatusPageClient, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageMetricSink> logger)
+        public AtlassianStatuspageMetricSink(IAtlassianStatuspageClient atlassianStatusPageClient, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageMetricSink> logger)
         {
             Guard.NotNull(atlassianStatusPageClient, nameof(atlassianStatusPageClient));
             Guard.NotNull(sinkConfiguration, nameof(sinkConfiguration));
