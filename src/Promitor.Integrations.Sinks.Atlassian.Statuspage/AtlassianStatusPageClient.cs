@@ -34,6 +34,8 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 
         public async Task ReportMetricAsync(string id, double value)
         {
+            Guard.NotNullOrWhitespace(id, nameof(id));
+
             var pageId = _sinkConfiguration.CurrentValue.PageId;
             
             // Docs: https://developer.statuspage.io/#operation/postPagesPageIdMetricsMetricIdData

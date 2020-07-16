@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Bogus;
@@ -7,8 +6,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Metrics;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
-using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Tests.Unit.Generators;
+using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Metrics.Sinks
@@ -27,7 +26,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = _bogus.Lorem.Sentence();
             var metricValue = _bogus.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
-            var systemMetricConfigOptions = GetSinkConfiguration();
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -46,7 +45,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricValue = _bogus.Random.Double();
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
-            var systemMetricConfigOptions = GetSinkConfiguration();
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -61,7 +60,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             // Arrange
             var metricName = _bogus.Name.FirstName();
             var metricDescription = _bogus.Lorem.Sentence();
-            var systemMetricConfigOptions = GetSinkConfiguration();
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -80,7 +79,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricValue = _bogus.Random.Double();
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
-            var systemMetricConfigOptions = GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -103,7 +102,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
-            var systemMetricConfigOptions = GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -126,7 +125,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
-            var systemMetricConfigOptions = GetSinkConfiguration(promitorMetricName: promitorMetricName);
+            var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
@@ -135,21 +134,6 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
 
             // Assert
             atlassianStatuspageClientMock.Verify(mock => mock.ReportMetricAsync(systemMetricId, expectedDefaultValue), Times.Never);
-        }
-
-        private StubOptionsMonitor<AtlassianStatusPageSinkConfiguration> GetSinkConfiguration(string pageId = null, string systemMetricId = null, string promitorMetricName = null)
-        {
-            var systemMetricMapping = new Faker<SystemMetricMapping>()
-                .RuleFor(config => config.Id, fake => systemMetricId ?? fake.Name.FirstName())
-                .RuleFor(config => config.PromitorMetricName, fake => promitorMetricName ?? fake.Name.FirstName())
-                .Generate();
-
-            var sinkConfiguration = new Faker<AtlassianStatusPageSinkConfiguration>()
-                .RuleFor(config => config.PageId, fake => pageId ?? fake.Name.FirstName())
-                .RuleFor(config => config.SystemMetricMapping, fake => new List<SystemMetricMapping> {systemMetricMapping})
-                .Generate();
-
-            return new StubOptionsMonitor<AtlassianStatusPageSinkConfiguration>(sinkConfiguration);
         }
     }
 }
