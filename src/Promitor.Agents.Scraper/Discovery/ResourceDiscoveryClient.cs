@@ -11,32 +11,35 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Agents.Core.Serialization;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Discovery
 {
     public class ResourceDiscoveryClient
     {
+        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects };
         private readonly IOptionsMonitor<ResourceDiscoveryConfiguration> _configuration;
         private readonly ILogger<ResourceDiscoveryClient> _logger;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
 
-        public ResourceDiscoveryClient(IHttpClientFactory httpClientFactory, IOptionsMonitor<ResourceDiscoveryConfiguration> configuration, ILogger<ResourceDiscoveryClient> logger)
+        public ResourceDiscoveryClient(HttpClient httpClient, IOptionsMonitor<ResourceDiscoveryConfiguration> configuration, ILogger<ResourceDiscoveryClient> logger)
         {
-            Guard.NotNull(httpClientFactory, nameof(httpClientFactory));
+            Guard.NotNull(httpClient, nameof(httpClient));
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
             Guard.For<Exception>(() => configuration.CurrentValue.IsConfigured == false, "Resource Discovery is not configured");
             
             _logger = logger;
+            _httpClient = httpClient;
             _configuration = configuration;
-            _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<List<object>> GetAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetAsync(string resourceDiscoveryGroupName)
         {
-            var uri = $"/api/v1/resources/collections/{resourceCollectionName}/discovery";
+            var uri = $"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discover";
             var rawResponse = await SendGetRequestAsync(uri);
-            var foundResources = JsonConvert.DeserializeObject<List<object>>(rawResponse);
+
+            var foundResources = JsonConvert.DeserializeObject<List<AzureResourceDefinition>>(rawResponse, _serializerSettings);
             return foundResources;
         }
 
@@ -60,13 +63,13 @@ namespace Promitor.Agents.Scraper.Discovery
 
         private async Task<HttpResponseMessage> SendRequestToApiAsync(HttpRequestMessage request)
         {
-            var client = CreateHttpClient();
             using (var dependencyMeasurement = DependencyMeasurement.Start())
             {
                 HttpResponseMessage response = null;
                 try
                 {
-                    response = await client.SendAsync(request);
+                    _httpClient.BaseAddress = new Uri($"http://{_configuration.CurrentValue.Host}:{_configuration.CurrentValue.Port}");
+                    response = await _httpClient.SendAsync(request);
                     _logger.LogRequest(request, response, dependencyMeasurement.Elapsed);
 
                     return response;
@@ -77,13 +80,6 @@ namespace Promitor.Agents.Scraper.Discovery
                     _logger.LogHttpDependency(request, statusCode, dependencyMeasurement);
                 }
             }
-        }
-
-        private HttpClient CreateHttpClient()
-        {
-            var httpClient = _httpClientFactory.CreateClient("Promitor Resource Discovery");
-            httpClient.BaseAddress = new Uri($"http://{_configuration.CurrentValue.Host}:{_configuration.CurrentValue.Port}");
-            return httpClient;
         }
     }
 }

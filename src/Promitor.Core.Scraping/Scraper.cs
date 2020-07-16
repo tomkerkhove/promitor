@@ -4,6 +4,7 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -18,7 +19,6 @@ namespace Promitor.Core.Scraping
     public abstract class Scraper<TResourceDefinition> : IScraper<IAzureResourceDefinition>
       where TResourceDefinition : class, IAzureResourceDefinition
     {
-        private readonly IPrometheusMetricWriter _prometheusMetricWriter;
         private readonly MetricSinkWriter _metricSinkWriter;
         private readonly ILogger _logger;
 
@@ -31,7 +31,6 @@ namespace Promitor.Core.Scraping
 
             _logger = scraperConfiguration.Logger;
             _metricSinkWriter = scraperConfiguration.MetricSinkWriter;
-            _prometheusMetricWriter = scraperConfiguration.PrometheusMetricWriter;
 
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
         }
@@ -73,7 +72,6 @@ namespace Promitor.Core.Scraping
                 LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
 
                 await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
-                _prometheusMetricWriter.ReportMetric(scrapeDefinition.PrometheusMetricDefinition, scrapedMetricResult);
             }
             catch (ErrorResponseException errorResponseException)
             {

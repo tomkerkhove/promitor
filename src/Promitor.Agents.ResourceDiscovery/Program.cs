@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Core;
 using Serilog;
 
@@ -20,16 +21,28 @@ namespace Promitor.Agents.ResourceDiscovery
                 // Let's hook in a logger for start-up purposes.
                 ConfigureStartupLogging();
 
-                CreateHostBuilder(args)
+                var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+                if (string.IsNullOrWhiteSpace(configurationFolder))
+                {
+                    Log.Logger.Fatal($"Unable to determine the configuration folder. Please ensure that the '{EnvironmentVariables.Configuration.Folder}' environment variable is set");
+                    return (int)ExitStatus.ConfigurationFolderNotSpecified;
+                }
+
+                CreateHostBuilder(args, configurationFolder)
                     .Build()
                     .Run();
 
-                return 0;
+                return (int)ExitStatus.Success;
+            }
+            catch (ConfigurationFileNotFoundException exception)
+            {
+                Log.Logger.Fatal($"Unable to find a required configuration file at '{exception.Path}'");
+                return (int)ExitStatus.ConfigurationFileNotFound;
             }
             catch (Exception exception)
             {
-                Log.Fatal(exception, "Host terminated unexpectedly");
-                return 1;
+                Log.Fatal(exception, "Promitor Discovery Agent has encountered an unexpected error. Please open an issue at https://github.com/tomkerkhove/promitor/issues to let us know about it.");
+                return (int)ExitStatus.UnhandledException;
             }
             finally
             {
@@ -42,9 +55,9 @@ namespace Promitor.Agents.ResourceDiscovery
             Console.WriteLine(Constants.Texts.Welcome);
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args, string configurationFolder)
         {
-            IConfiguration configuration = BuildConfiguration(args);
+            IConfiguration configuration = BuildConfiguration(args, configurationFolder);
             ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
             IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration);
 
@@ -57,20 +70,14 @@ namespace Promitor.Agents.ResourceDiscovery
             return serverConfiguration;
         }
 
-        private static IConfiguration BuildConfiguration(string[] args)
+        private static IConfiguration BuildConfiguration(string[] args, string configurationFolder)
         {
-            var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
-            if (string.IsNullOrWhiteSpace(configurationFolder))
-            {
-                throw new Exception("Unable to determine the configuration folder");
-            }
-
             IConfigurationRoot configuration =
                 new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddCommandLine(args)
-                    .AddYamlFile($"{configurationFolder}/runtime.yaml", optional: false, reloadOnChange: true)
-                    .AddYamlFile($"{configurationFolder}/resource-discovery-declaration.yaml", optional: false, reloadOnChange: true)
+                    .AddRequiredYamlFile($"{configurationFolder}/runtime.yaml", reloadOnChange: true)
+                    .AddRequiredYamlFile($"{configurationFolder}/resource-discovery-declaration.yaml", reloadOnChange: true)
                     .AddEnvironmentVariables("PROMITOR_")
                     .Build();
 

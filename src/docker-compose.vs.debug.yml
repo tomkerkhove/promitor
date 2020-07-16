@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  promitor.agents.resourcediscovery:
+    environment:
+      - "PROMITOR_DISCOVERY_APPSECRET=<specify-for-local-dev>"
+  promitor.agents.scraper:
+    environment:
+      - PROMITOR_AUTH_APPKEY=<specify-for-local-dev>
+      - PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY=<specify-for-local-dev>
+      - "SECRETS_STORAGEQUEUE_SAS=<specify-for-local-dev>"

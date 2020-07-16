@@ -19,26 +19,14 @@ namespace Promitor.Agents.Scraper.Extensions
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
             if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusScraperMetricSink(app, metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath);
-            }
-
-            return app;
-        }
-
-        /// <summary>
-        ///     Add support for exposing a prometheus scraping endpoint
-        /// </summary>
-        /// <param name="app">Application Builder</param>
-        /// <param name="scrapeEndpointPath">Path where the scrape endpoint will be exposed</param>
-        public static IApplicationBuilder AddPrometheusScraperMetricSink(this IApplicationBuilder app, string scrapeEndpointPath)
-        {
-            if (string.IsNullOrWhiteSpace(scrapeEndpointPath) == false)
-            {
-                app.UsePrometheusServer(prometheusOptions =>
+                if (string.IsNullOrWhiteSpace(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath) == false)
                 {
-                    prometheusOptions.MapPath = scrapeEndpointPath;
-                    prometheusOptions.UseDefaultCollectors = false;
-                });
+                    app.UsePrometheusServer(prometheusOptions =>
+                    {
+                        prometheusOptions.MapPath = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
+                        prometheusOptions.UseDefaultCollectors = false;
+                    });
+                }
             }
 
             return app;

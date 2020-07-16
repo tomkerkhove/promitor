@@ -21,14 +21,14 @@ namespace Promitor.Tests.Integration.Services
         }
 
         [Fact]
-        public async Task ResourceDiscovery_GetForUnexistingResourceCollection_ReturnsNotFound()
+        public async Task ResourceDiscovery_GetForUnexistingResourceDiscoveryGroup_ReturnsNotFound()
         {
             // Arrange
-            string resourceCollectionName = _bogusGenerator.Lorem.Word();
+            string resourceDiscoveryGroupName = _bogusGenerator.Lorem.Word();
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -38,12 +38,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetAllPerResourceTypeWithoutFilters_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "no-filter";
-            const int expectedResourceCount = 8;
+            const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
+            const int expectedResourceCount = 11;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -58,12 +58,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnOneResourceGroup_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "one-resource-group-scenario";
+            const string resourceDiscoveryGroupName = "one-resource-group-scenario";
             const int expectedResourceCount = 3;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -78,12 +78,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnTwoResourceGroups_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "two-resource-group-scenario";
+            const string resourceDiscoveryGroupName = "two-resource-group-scenario";
             const int expectedResourceCount = 4;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -98,12 +98,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnOneSubscription_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "one-subscriptions-scenario";
+            const string resourceDiscoveryGroupName = "one-subscriptions-scenario";
             const int expectedResourceCount = 2;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -118,12 +118,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnTwoSubscriptions_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "two-subscriptions-scenario";
-            const int expectedResourceCount = 8;
+            const string resourceDiscoveryGroupName = "two-subscriptions-scenario";
+            const int expectedResourceCount = 11;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -138,12 +138,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnAppTag_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "one-tag-scenario";
+            const string resourceDiscoveryGroupName = "one-tag-scenario";
             const int expectedResourceCount = 3;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -158,12 +158,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnAppAndRegionTag_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "two-tag-scenario";
+            const string resourceDiscoveryGroupName = "two-tag-scenario";
             const int expectedResourceCount = 3;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -178,12 +178,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnOneRegion_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "one-region-scenario";
+            const string resourceDiscoveryGroupName = "one-region-scenario";
             const int expectedResourceCount = 1;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -198,12 +198,12 @@ namespace Promitor.Tests.Integration.Services
         public async Task ResourceDiscovery_GetWithFilterOnTwoRegions_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceCollectionName = "two-region-scenario";
-            const int expectedResourceCount = 7;
+            const string resourceDiscoveryGroupName = "two-region-scenario";
+            const int expectedResourceCount = 10;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceCollectionName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

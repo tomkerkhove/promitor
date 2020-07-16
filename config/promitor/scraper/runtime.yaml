@@ -1,10 +1,5 @@
 server:
   httpPort: 88
-prometheus:
-  metricUnavailableValue: NaN
-  enableMetricTimestamps: true # true by default
-  scrapeEndpoint:
-    baseUriPath: /metrics-deprecated
 metricSinks:
   prometheusScrapingEndpoint:
     metricUnavailableValue: NaN
@@ -14,6 +9,11 @@ metricSinks:
     host: graphite
     port: 8125
     metricPrefix: promitor.
+  atlassianStatuspage:
+    pageId: y79z9b78ybgs
+    systemMetricMapping:
+    - id: nfkgnrwpn545
+      promitorMetricName: promitor_demo_appplan_percentage_cpu
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
@@ -28,7 +28,7 @@ telemetry:
 azureMonitor:
   logging:
     informationLevel: Headers
-    isEnabled: true
+    isEnabled: false
 resourceDiscovery:
   host: promitor.agents.resourcediscovery
   port: 88

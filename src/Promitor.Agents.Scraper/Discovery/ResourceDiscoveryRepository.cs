@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Discovery
 {
@@ -15,11 +16,11 @@ namespace Promitor.Agents.Scraper.Discovery
             _resourceDiscoveryClient = resourceDiscoveryClient;
         }
 
-        public async Task<List<object>> GetResourceCollectionAsync(string resourceCollectionName)
+        public async Task<List<AzureResourceDefinition>> GetResourceDiscoveryGroupAsync(string resourceDiscoveryGroupName)
         {
-            Guard.NotNullOrWhitespace(resourceCollectionName,nameof(resourceCollectionName));
+            Guard.NotNullOrWhitespace(resourceDiscoveryGroupName,nameof(resourceDiscoveryGroupName));
 
-            var resources = await _resourceDiscoveryClient.GetAsync(resourceCollectionName);
+            var resources = await _resourceDiscoveryClient.GetAsync(resourceDiscoveryGroupName);
             return resources;
         }
     }

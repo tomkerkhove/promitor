@@ -43,24 +43,68 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _queryApplicationSecret = configuration["DISCOVERY_APPSECRET"];
         }
 
-        public async Task<List<Resource>> QueryAsync(string resourceType, ResourceCriteria criteria)
+        public async Task<JObject> QueryAsync(string query)
         {
-            Guard.NotNullOrWhitespace(resourceType, nameof(resourceType));
-            Guard.NotNull(criteria, nameof(criteria));
-            Guard.NotNull(criteria.Subscriptions, nameof(criteria.Subscriptions));
-            Guard.NotNull(criteria.Regions, nameof(criteria.Regions));
-            Guard.NotNull(criteria.ResourceGroups, nameof(criteria.ResourceGroups));
-            Guard.NotNull(criteria.Tags, nameof(criteria.Tags));
+            Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var query = GraphQuery.ForResourceType(resourceType)
-                .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                .WithResourceGroupsWithName(criteria.ResourceGroups)
-                .WithinRegions(criteria.Regions)
-                .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name", "id")
-                .Build();
+            var graphClient = await GetOrCreateClient();
 
-            return await QueryAsync(query, Subscriptions);
+            bool isSuccessfulDependency = false;
+            using (var dependencyMeasurement = DependencyMeasurement.Start())
+            {
+                try
+                {
+                    var queryRequest = new QueryRequest(Subscriptions, query);
+                    var response = await graphClient.ResourcesAsync(queryRequest);
+                    isSuccessfulDependency = true;
+                    return response.Data as JObject;
+                }
+                catch (ErrorResponseException responseException)
+                {
+                    if (responseException.Response != null)
+                    {
+                        if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
+                        {
+                            var unauthorizedException = new UnauthorizedException(QueryApplicationId, Subscriptions);
+                            _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph");
+                            throw unauthorizedException;
+                        }
+
+                        if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            var response = JToken.Parse(responseException.Response.Content);
+                            var errorDetails = response["error"]?["details"];
+                            if (errorDetails != null)
+                            {
+                                var errorCodes = new List<string>();
+                                foreach (var detailEntry in errorDetails)
+                                {
+                                    errorCodes.Add(detailEntry["code"]?.ToString());
+                                }
+
+                                if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
+                                {
+                                    var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(Subscriptions);
+                                    _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
+                                    throw invalidSubscriptionException;
+                                }
+                            }
+                        }
+                    }
+
+                    throw;
+                }
+                finally
+                {
+                    var contextualInformation = new Dictionary<string, object>
+                    {
+                        {"Query", query},
+                        {"Subscriptions", Subscriptions}
+                    };
+
+                    _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                }
+            }
         }
 
         public async Task<List<Resource>> QueryAsync(string query, List<string> targetSubscriptions)
@@ -121,11 +165,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 {
                     var contextualInformation = new Dictionary<string, object>
                     {
-                        {"Query", query},    
+                        {"Query", query},
                         {"Subscriptions", targetSubscriptions}
                     };
 
-                    _logger.LogDependency("Azure Resource Graph", query,"Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                    _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
                 }
             }
         }
@@ -139,11 +183,15 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             }
 
             var rows = result["rows"];
+            if (rows == null)
+            {
+                throw new Exception("No rows were found in the query response");
+            }
+
             var foundResources = new List<Resource>();
             foreach (var row in rows)
             {
-                var resource = new Resource(row[0].ToString(), row[1].ToString(), row[2].ToString(),
-                    row[3].ToString());
+                var resource = new Resource(row[0]?.ToString(), row[1]?.ToString(), row[2]?.ToString(), row[3]?.ToString());
                 foundResources.Add(resource);
             }
 

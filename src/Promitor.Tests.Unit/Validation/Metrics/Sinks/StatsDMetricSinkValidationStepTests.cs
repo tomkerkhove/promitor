@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -17,7 +18,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             var runtimeConfiguration = CreateRuntimeConfiguration();
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -32,7 +33,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.Statsd = null;
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -46,7 +47,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks = null;
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -61,7 +62,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.Statsd.Port = -1;
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -79,7 +80,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.Statsd.Host = host;
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
@@ -96,7 +97,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.Statsd.MetricPrefix = metricPrefix;
 
             // Act
-            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration);
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert

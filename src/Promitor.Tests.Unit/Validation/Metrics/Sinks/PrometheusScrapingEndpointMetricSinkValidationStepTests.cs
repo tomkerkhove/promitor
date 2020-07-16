@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -17,7 +18,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             var runtimeConfiguration = CreateRuntimeConfiguration();
 
             // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
+            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration, NullLogger<PrometheusScrapingEndpointMetricSinkValidationStep>.Instance);
             var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
 
             // Assert
@@ -32,7 +33,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.PrometheusScrapingEndpoint = null;
 
             // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
+            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration, NullLogger<PrometheusScrapingEndpointMetricSinkValidationStep>.Instance);
             var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
 
             // Assert
@@ -46,7 +47,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks = null;
 
             // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
+            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration, NullLogger<PrometheusScrapingEndpointMetricSinkValidationStep>.Instance);
             var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
 
             // Assert
@@ -61,22 +62,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.Sinks
             runtimeConfiguration.Value.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath = string.Empty;
 
             // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
-            var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
-
-            // Assert
-            Assert.False(validationResult.IsSuccessful);
-        }
-
-        [Fact]
-        public void Validate_PrometheusScrapingEndpointHasSameBaseUriPathAsLegacyPrometheusConfiguration_Fails()
-        {
-            // Arrange
-            var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath = runtimeConfiguration.Value.Prometheus.ScrapeEndpoint.BaseUriPath;
-
-            // Act
-            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration);
+            var prometheusScrapingEndpointMetricSinkValidationStep = new PrometheusScrapingEndpointMetricSinkValidationStep(runtimeConfiguration, NullLogger<PrometheusScrapingEndpointMetricSinkValidationStep>.Instance);
             var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
 
             // Assert

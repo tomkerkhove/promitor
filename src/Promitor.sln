@@ -52,8 +52,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scraper", "Scraper", "{EE3B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Discovery", "Discovery", "{33D4263D-DDDC-4ECC-BB25-834DE9979C7C}"
 	ProjectSection(SolutionItems) = preProject
+		..\config\promitor\resource-discovery\resource-discovery-declaration.yaml = ..\config\promitor\resource-discovery\resource-discovery-declaration.yaml
 		..\config\promitor\resource-discovery\runtime.yaml = ..\config\promitor\resource-discovery\runtime.yaml
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Core.Contracts", "Promitor.Core.Contracts\Promitor.Core.Contracts.csproj", "{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Promitor.Integrations.Sinks.Atlassian.Statuspage", "Promitor.Integrations.Sinks.Atlassian.Statuspage\Promitor.Integrations.Sinks.Atlassian.Statuspage.csproj", "{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +113,14 @@ Global
 		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE08087F-866D-42E2-BE25-0D09326DDE85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -129,6 +142,8 @@ Global
 		{AE08087F-866D-42E2-BE25-0D09326DDE85} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 		{EE3BDE48-B756-481F-B5BB-857569568878} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
 		{33D4263D-DDDC-4ECC-BB25-834DE9979C7C} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
+		{EE3568F2-BB20-4BD2-BD21-AE43E5B1EB77} = {05524B1B-9965-4E36-9626-A2823B8588AA}
+		{B30E58FF-47AD-41FC-94D2-DE4B9B6AD06B} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

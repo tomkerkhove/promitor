@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -18,6 +18,8 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
         private readonly Mock<IAzureResourceDeserializerFactory> _resourceDeserializerFactory;
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>> _resourceDiscoveryGroupDeserializer =
+            new Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>>();
 
         private readonly MetricDefinitionDeserializer _deserializer;
 
@@ -27,11 +29,10 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
             _resourceDeserializerFactory = new Mock<IAzureResourceDeserializerFactory>();
 
-            var resourceCollectionsDeserializer = new Mock<IDeserializer<AzureResourceCollectionDefinitionV1>>();
             _deserializer = new MetricDefinitionDeserializer(
                 _azureMetricConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
-                resourceCollectionsDeserializer.Object,
+                _resourceDiscoveryGroupDeserializer.Object,
                 _resourceDeserializerFactory.Object,
                 NullLogger<MetricDefinitionDeserializer>.Instance);
         }
@@ -341,7 +342,7 @@ resources:
         }
 
         [Fact]
-        public void Deserialize_ResourceCollectionsSupplied_DoesNotReportWarning()
+        public void Deserialize_ResourceDiscoveryGroupsSupplied_DoesNotReportWarning()
         {
             // Because we're handling deserializing the resources manually, we
             // need to explicitly ignore the field to stop a warning being reported
@@ -350,7 +351,7 @@ resources:
             // Arrange
             const string yamlText =
                 @"resourceType: Generic
-resourceCollections:
+resourceDiscoveryGroups:
 - name: sample-1
 - name: sample-2";
             var node = YamlUtils.CreateYamlNode(yamlText);
@@ -360,11 +361,11 @@ resourceCollections:
 
             // Assert
             _errorReporter.Verify(
-                r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("resourceCollections"))), Times.Never);
+                r => r.ReportWarning(It.IsAny<YamlNode>(), It.Is<string>(s => s.Contains("resourceDiscoveryGroups"))), Times.Never);
         }
 
         [Fact]
-        public void Deserialize_ResourceCollectionsNotSupplied_Null()
+        public void Deserialize_ResourceDiscoveryGroupsNotSupplied_Null()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceType: Generic");
@@ -373,7 +374,7 @@ resourceCollections:
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Null(definition.ResourceCollections);
+            Assert.Null(definition.ResourceDiscoveryGroups);
         }
 
         [Fact]
@@ -396,6 +397,117 @@ resources:
                 node,
                 node.Children["resourceType"],
                 "Could not find a deserializer for resource type 'Generic'.");
+        }
+
+        [Fact]
+        public void Deserialize_ResourcesAndCollectionNotSupplied_ReportsError()
+        {
+            // Either a static list of resources, or a resource collection must be
+            // specified for the metric to be valid
+
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceType: Generic");
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                reporter => reporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified."));
+        }
+
+        [Fact]
+        public void Deserialize_ResourcesSupplied_DoesNotReportError()
+        {
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resources:
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+
+            SetupResourceDeserializer(node, new List<AzureResourceDefinitionV1> { new AzureResourceDefinitionV1() });
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                reporter => reporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified."), Times.Never);
+        }
+
+        [Fact]
+        public void Deserialize_ResourcesEmpty_ReportsError()
+        {
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resources: []";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+
+            SetupResourceDeserializer(node, new List<AzureResourceDefinitionV1>());
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                reporter => reporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified."));
+        }
+
+        [Fact]
+        public void Deserialize_ResourceDiscoveryGroupsSupplied_DoesNotReportError()
+        {
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resourceDiscoveryGroups:
+- name: orders";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var resourceDiscoveryGroups = new List<AzureResourceDiscoveryGroupDefinitionV1>
+            {
+                new AzureResourceDiscoveryGroupDefinitionV1()
+            };
+            _resourceDiscoveryGroupDeserializer.Setup(
+                d => d.Deserialize(It.IsAny<YamlSequenceNode>(), It.IsAny<IErrorReporter>())).Returns(resourceDiscoveryGroups);
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                reporter => reporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified."), Times.Never);
+        }
+
+        [Fact]
+        public void Deserialize_ResourceDiscoveryGroupsEmpty_ReportsError()
+        {
+            // Arrange
+            const string yamlText =
+@"resourceType: Generic
+resourceDiscoveryGroups: []";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            _resourceDiscoveryGroupDeserializer.Setup(
+                d => d.Deserialize(It.IsAny<YamlSequenceNode>(), It.IsAny<IErrorReporter>())).Returns(new List<AzureResourceDiscoveryGroupDefinitionV1>());
+
+            // Act
+            _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            _errorReporter.Verify(
+                reporter => reporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified."));
+        }
+
+        private void SetupResourceDeserializer(YamlMappingNode node, IReadOnlyCollection<AzureResourceDefinitionV1> resources)
+        {
+            var resourceDeserializer = new Mock<IDeserializer<AzureResourceDefinitionV1>>();
+            _resourceDeserializerFactory.Setup(
+                f => f.GetDeserializerFor(It.IsAny<ResourceType>())).Returns(resourceDeserializer.Object);
+
+            resourceDeserializer.Setup(
+                    d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object))
+                .Returns(resources);
         }
     }
 }

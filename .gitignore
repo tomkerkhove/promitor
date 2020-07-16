@@ -301,6 +301,8 @@ docs/_site/*
 #MAC
 .DS_Store
 
+# Custom
 *.orig
 changelog/public/
 changelog/resources/_gen/
+src/docker-compose.vs.debug.yml

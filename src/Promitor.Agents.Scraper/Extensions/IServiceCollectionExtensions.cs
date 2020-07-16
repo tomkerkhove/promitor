@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Core.Validation;
+using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
@@ -15,12 +17,14 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Agents.Scraper.Validation;
+using Promitor.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
-using Promitor.Core.Scraping.Interfaces;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
@@ -38,13 +42,10 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
-            services.AddTransient<ResourceDiscoveryClient>();
             services.AddTransient<ResourceDiscoveryRepository>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
-            services.AddTransient<RuntimeValidator>();
-            services.AddTransient<IPrometheusMetricWriter, PrometheusMetricWriter>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
 
@@ -56,10 +57,26 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IDeserializer<MetricDimensionV1>, MetricDimensionDeserializer>();
             services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();
             services.AddSingleton<IDeserializer<AzureMetricConfigurationV1>, AzureMetricConfigurationDeserializer>();
-            services.AddSingleton<IDeserializer<AzureResourceCollectionDefinitionV1>, AzureResourceCollectionDeserializer>();
+            services.AddSingleton<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>, AzureResourceDiscoveryGroupDeserializer>();
             services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();
             services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
             services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();
+
+            return services;
+        }
+        /// <summary>
+        ///     Defines the validation for when Promitor starts up
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection ConfigureValidation(this IServiceCollection services)
+        {
+            services.AddTransient<IValidationStep, ConfigurationPathValidationStep>();
+            services.AddTransient<IValidationStep, AzureAuthenticationValidationStep>();
+            services.AddTransient<IValidationStep, MetricsDeclarationValidationStep>();
+            services.AddTransient<IValidationStep, ResourceDiscoveryValidationStep>();
+            services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
+            services.AddTransient<RuntimeValidator>();
 
             return services;
         }
@@ -82,6 +99,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 AddPrometheusMetricSink(services);
             }
 
+            if (metricSinkConfiguration?.AtlassianStatuspage != null)
+            {
+                AddAtlassianStatuspageMetricSink(services);
+            }
+
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
@@ -90,6 +112,11 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
+        }
+
+        private static void AddAtlassianStatuspageMetricSink(IServiceCollection services)
+        {
+            services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
@@ -127,7 +154,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<ResourceDiscoveryConfiguration>(configuration.GetSection("resourceDiscovery"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
-            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheus"));
+            services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
+            services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));

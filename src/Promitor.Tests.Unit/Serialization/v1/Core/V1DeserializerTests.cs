@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -34,16 +34,18 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_NoVersionSpecified_ThrowsException()
+        public void Deserialize_NoVersionSpecified_ReportsError()
         {
             // Arrange
-            var yamlNode = YamlUtils.CreateYamlNode("azureMetadata:");
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: '123'");
 
-            // Act
-            var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode, _errorReporter.Object));
-
-            // Assert
-            Assert.Equal("No 'version' element was found in the metrics config", exception.Message);
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                node,
+                "version");
         }
 
         [Fact]
@@ -60,16 +62,20 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_WrongVersionSpecified_ThrowsException()
+        public void Deserialize_WrongVersionSpecified_ReportsError()
         {
             // Arrange
             var yamlNode = YamlUtils.CreateYamlNode("version: v2");
+            var versionNode = yamlNode.Children
+                .FirstOrDefault(c => c.Key.ToString() == "version")
+                .Value;
 
             // Act
-            var exception = Assert.Throws<Exception>(() => _deserializer.Deserialize(yamlNode, _errorReporter.Object));
+            _deserializer.Deserialize(yamlNode, _errorReporter.Object);
 
             // Assert
-            Assert.Equal("A 'version' element with a value of 'v1' was expected but the value 'v2' was found", exception.Message);
+            _errorReporter.Verify(r => r.ReportError(
+                versionNode, "A 'version' element with a value of 'v1' was expected but the value 'v2' was found"));
         }
 
         [Fact]
@@ -83,7 +89,7 @@ azureMetadata:
             var yamlNode = YamlUtils.CreateYamlNode(config);
             var azureMetadata = new AzureMetadataV1();
             _metadataDeserializer.Setup(
-                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(azureMetadata);
+                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(azureMetadata);
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -98,7 +104,7 @@ azureMetadata:
             // Arrange
             var yamlNode = YamlUtils.CreateYamlNode("version: v1");
             _metadataDeserializer.Setup(
-                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new AzureMetadataV1());
+                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new AzureMetadataV1());
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -119,7 +125,7 @@ metricDefaults:
             var yamlNode = YamlUtils.CreateYamlNode(config);
             var metricDefaults = new MetricDefaultsV1();
             _defaultsDeserializer.Setup(
-                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(metricDefaults);
+                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(metricDefaults);
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -136,7 +142,7 @@ metricDefaults:
                 @"version: v1";
             var yamlNode = YamlUtils.CreateYamlNode(config);
             _defaultsDeserializer.Setup(
-                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new MetricDefaultsV1());
+                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new MetricDefaultsV1());
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);

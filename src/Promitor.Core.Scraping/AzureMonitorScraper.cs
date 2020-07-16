@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping
@@ -31,10 +32,9 @@ namespace Promitor.Core.Scraping
             var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
 
-            var instanceName = resourceDefinition.GetResourceName();
             var metricLabels = DetermineMetricLabels(resourceDefinition);
             
-            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, instanceName, resourceUri, foundMetricValue, metricLabels);
+            return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, foundMetricValue, metricLabels);
         }
 
         /// <summary>

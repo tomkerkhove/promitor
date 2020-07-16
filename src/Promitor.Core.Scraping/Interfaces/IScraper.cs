@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.Interfaces

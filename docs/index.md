@@ -56,6 +56,7 @@ and vote for features!
   - [What labels do we provide?](metrics/labels)
 - **Configuration**
   - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
+    - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
     - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
     - [StatsD](configuration/v1.x/runtime#statsd)
   - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)

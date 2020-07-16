@@ -1,0 +1,45 @@
+{
+  "title": "Project Overview",
+  "steps": [
+    {
+      "directory": "src/Promitor.Core",
+      "description": "### Promitor.Core\n\nThe `Promitor.Core` project contains utility code that can be used by any of the other projects, for example constants like environment variable names. Only add code to this project if it needs to be shared between multiple other projects, and definitely can't be placed anywhere more specific."
+    },
+    {
+      "directory": "src/Promitor.Agents.Core",
+      "description": "### Promitor.Agents.Core\n\nThis project contains any code shared by Promitor's *agents*. An *agent* is an executable application that runs to provide Promitor's functionality. The agents are the projects that you will run when developing for Promitor."
+    },
+    {
+      "directory": "src/Promitor.Agents.ResourceDiscovery",
+      "description": "### Promitor.Agents.ResourceDiscovery\n\nThe resource discovery agent is in charge of querying the Azure API for resources to get metrics for. This allows Promitor to provide a service discovery mechanism, allowing dynamically created resources to be monitored without requiring knowledge of all the resources up front."
+    },
+    {
+      "directory": "src/Promitor.Agents.Scraper",
+      "description": "### Promitor.Agents.Scraper\n\nThe scraper agent is in charge of retrieving Azure resource metrics via the Azure Monitor API. It can optionally use a hard-coded list of metrics defined in its metrics configuration file, or it can communicate with the resource discovery agent to dynamically find the resources to scrape."
+    },
+    {
+      "directory": "src/Promitor.Core.Scraping",
+      "description": "### Promitor.Core.Scraping\n\nThis project contains most of the code used to determine what resources to scrape, along with how to scrape them. This includes the internal model used to describe metrics and resources, the configuration model used to create this model from yaml configuration files, along with the code needed to get the metrics from Azure Monitor and report them."
+    },
+    {
+      "directory": "src/Promitor.Integrations.AzureMonitor",
+      "description": "### Promitor.Integrations.AzureMonitor\n\nThis project contains the code used to retrieve metrics from the Azure Monitor API. It's in charge of making the API requests, and converting the results into Promitor's internal representation for reporting."
+    },
+    {
+      "directory": "src/Promitor.Integrations.Sinks.Prometheus",
+      "description": "### Promitor.Integrations.Sinks.Prometheus\n\nThis project is in charge of reporting metrics to Prometheus by making them available in Prometheus's metrics format. These metrics are then available for Prometheus to scrape at the scraper agent's metrics endpoint (typically `/metrics`)."
+    },
+    {
+      "directory": "src/Promitor.Integrations.Sinks.Statsd",
+      "description": "### Promitor.Integrations.Sinks.Statsd\n\nThis project is in charge of reporting metrics to StatsD."
+    },
+    {
+      "directory": "src/Promitor.Tests.Integration",
+      "description": "### Promitor.Tests.Integration\n\nThis project contains Promitor's integration tests."
+    },
+    {
+      "directory": "src/Promitor.Tests.Unit",
+      "description": "### Promitor.Tests.Unit\n\nThis project contains Promitor's unit tests."
+    }
+  ]
+}
