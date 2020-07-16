@@ -5,6 +5,11 @@ namespace Promitor.Tests.Unit.Stubs
 {
     public class OptionsMonitorStub<TConfig> : IOptionsMonitor<TConfig>
     {
+        public OptionsMonitorStub(TConfig currentValue)
+        {
+            CurrentValue = currentValue;
+        }
+
         public TConfig Get(string name)
         {
             return CurrentValue;

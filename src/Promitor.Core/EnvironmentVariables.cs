@@ -12,5 +12,13 @@
             public const string ApplicationId = "AUTH_APPID";
             public const string ApplicationKey = "AUTH_APPKEY";
         }
+
+        public class Integrations
+        {
+            public class AtlassianStatuspage
+            {
+                public const string ApiKey = "ATLASSIAN_STATUSPAGE_APIKEY";
+            }
+        }
     }
 }

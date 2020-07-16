@@ -3,6 +3,7 @@
     public enum MetricSinkType
     {
         PrometheusScrapingEndpoint,
-        StatsD
+        StatsD,
+        AtlassianStatuspage
     }
 }

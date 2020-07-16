@@ -10,10 +10,13 @@ using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
+using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Health;
+using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Serilog;
 
 namespace Promitor.Agents.Scraper
@@ -31,10 +34,19 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             string openApiDescription = BuildOpenApiDescription(Configuration);
-            services.AddHttpClient("Promitor Resource Discovery", client =>
+            services.AddHttpClient<ResourceDiscoveryClient>(client =>
             {
                 // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.Add("User-Agent", "Promitor Scraper");
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
+            });
+            services.AddHttpClient<AtlassianStatuspageClient>(client =>
+            {
+                // Provide Promitor User-Agent
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
+
+                // Auth all requests
+                var apiKey = Configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
+                client.DefaultRequestHeaders.Add("Authorization", $"OAuth {apiKey}");
             });
 
             services.UseWebApi()

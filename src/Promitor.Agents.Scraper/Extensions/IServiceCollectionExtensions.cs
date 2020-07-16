@@ -23,6 +23,8 @@ using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage;
+using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
@@ -40,7 +42,6 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
-            services.AddTransient<ResourceDiscoveryClient>();
             services.AddTransient<ResourceDiscoveryRepository>();
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
@@ -98,6 +99,11 @@ namespace Microsoft.Extensions.DependencyInjection
                 AddPrometheusMetricSink(services);
             }
 
+            if (metricSinkConfiguration?.AtlassianStatuspage != null)
+            {
+                AddAtlassianStatuspageMetricSink(services);
+            }
+
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
@@ -106,6 +112,11 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
+        }
+
+        private static void AddAtlassianStatuspageMetricSink(IServiceCollection services)
+        {
+            services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
@@ -143,7 +154,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<ResourceDiscoveryConfiguration>(configuration.GetSection("resourceDiscovery"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
-            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("prometheus"));
+            services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheus"));
+            services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
+            services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));

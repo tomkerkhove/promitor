@@ -66,8 +66,38 @@ by providing the metric information to the configured sinks.
 
 As of today, we support the follow sinks:
 
+- **Atlassian Statuspage**
 - **Prometheus Scraping Endpoint**
 - **StatsD**
+
+### Atlassian Statuspage
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)
+
+In order to expose a Prometheus Scraping endpoint, you'll need to configure the sink:
+
+- `atlassianStatuspage.pageId` - Defines the id of the Atlassian Statuspage to report to.
+- `atlassianStatuspage.systemMetricMapping` - Defines a mapping of the scraped metric by Promitor and to which
+ Atlassian Statuspage system metric it should be reported to. Here's what we expect:
+  - `id` - Id of the Atlassian Statuspage system metric
+  - `promitorMetricName` - Name of the Promitor metric which needs to be reported
+
+Next to that, `PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY` environment variable is required which contains the API Key
+ for Atlassian Statuspage.
+
+```yaml
+metricSinks:
+  atlassianStatuspage:
+    pageId: XXX          # Mandatory
+    systemMetricMapping: # Mandatory to have at least one mapping
+    - id: ABC
+      promitorMetricName: promitor_demo_appplan_percentage_cpu
+```
+
+> :warning: **As of today, metric labels, resource discovery and multi-resource scraping are not supported.**
+>  
+> This is because Promitor will report the different resource metrics to the same Atlassian metric which will mix metrics
+> which becomes confusing.
 
 ### Prometheus Scraping Endpoint
 
@@ -109,6 +139,10 @@ metricSinks:
     port: 8125
     metricPrefix: promitor.
 ```
+
+> :warning: **As of today, metric labels are not supported.**
+>  
+> Unfortunately, this is not supported in the specifiaction.
 
 ## Metric Configuration
 
