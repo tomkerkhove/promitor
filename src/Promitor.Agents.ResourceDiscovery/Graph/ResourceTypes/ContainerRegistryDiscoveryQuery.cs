@@ -7,8 +7,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class ContainerRegistryDiscoveryQuery : ResourceDiscoveryQuery
     {
-        public static string ResourceType = "microsoft.containerregistry/registries";
         public override string[] ResourceTypes => new[] { "microsoft.containerregistry/registries" };
+        public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name", "id" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {

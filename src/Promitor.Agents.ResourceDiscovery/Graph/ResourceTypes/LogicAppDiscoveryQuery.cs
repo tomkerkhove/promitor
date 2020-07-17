@@ -8,6 +8,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     public class LogicAppDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.logic/workflows" };
+        public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name", "id" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {

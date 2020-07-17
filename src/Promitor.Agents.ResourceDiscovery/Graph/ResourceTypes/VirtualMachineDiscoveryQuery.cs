@@ -8,6 +8,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     public class VirtualMachineDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.compute/virtualmachines" };
+        public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {

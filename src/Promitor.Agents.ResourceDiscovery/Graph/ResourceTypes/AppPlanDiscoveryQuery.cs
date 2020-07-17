@@ -8,6 +8,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     public class AppPlanDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.web/serverfarms" };
+        public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {
