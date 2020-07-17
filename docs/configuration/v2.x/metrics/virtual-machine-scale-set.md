@@ -5,7 +5,7 @@ title: Azure Virtual Machine Scale Set (VMSS) Declaration
 
 ## Azure Virtual Machine Scale Set (VMSS)
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.2-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.2-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can declare to scrape an Azure Virtual Machine Scale Set via the `VirtualMachineScaleSet` resource
 type.
