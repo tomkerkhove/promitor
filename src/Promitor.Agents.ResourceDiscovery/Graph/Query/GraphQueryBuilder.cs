@@ -25,7 +25,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 
             _queryBuilder = new StringBuilder();
             _queryBuilder.AppendLine("Resources");
-            _queryBuilder.AppendLine($"| where type == '{resourceTypes.First()}'");
+            _queryBuilder.AppendLine($"| where type == tolower('{resourceTypes.First()}')");
 
             foreach (var resourceType in resourceTypes.Skip(1))
             {
