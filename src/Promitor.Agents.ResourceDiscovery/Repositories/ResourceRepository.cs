@@ -49,7 +49,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
             var resourceDiscovery = ResourceDiscoveryFactory.UseResourceDiscoveryFor(resourceDiscoveryGroupDefinition.Type);
 
             // 1. Create query per type
-            var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria);
+            var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria).Build();
 
             // 2. Run Query
             var unparsedResults = await _azureResourceGraph.QueryAsync(query);

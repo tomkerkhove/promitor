@@ -31,20 +31,20 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return foundResources;
         }
 
-        public virtual string DefineQuery(ResourceCriteria criteria)
+        public virtual GraphQueryBuilder DefineQuery(ResourceCriteria criteria)
         {
-            var query = GraphQueryBuilder.ForResourceType(ResourceTypes)
+            var graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceTypes)
                 .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
                 .WithResourceGroupsWithName(criteria.ResourceGroups)
                 .WithinRegions(criteria.Regions)
                 .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name", "id")
-                .Build();
+                .Project(ProjectedFieldNames);
 
-            return query;
+            return graphQueryBuilder;
         }
 
         public abstract string[] ResourceTypes { get; }
+        public abstract string[] ProjectedFieldNames { get; }
 
         public abstract AzureResourceDefinition ParseResults(JToken resultRowEntry);
     }

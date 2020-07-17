@@ -9,18 +9,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class FunctionAppDiscoveryQuery : AppServiceResourceDiscoveryQuery
     {
-        public override string DefineQuery(ResourceCriteria criteria)
+        public override GraphQueryBuilder DefineQuery(ResourceCriteria criteria)
         {
-            var query = GraphQueryBuilder.ForResourceType(ResourceTypes)
-                .Where("kind", Operator.Contains, "functionapp")
-                .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                .WithResourceGroupsWithName(criteria.ResourceGroups)
-                .WithinRegions(criteria.Regions)
-                .WithTags(criteria.Tags)
-                .Project("subscriptionId", "resourceGroup", "type", "name")
-                .Build();
+            var graphQueryBuilder = base.DefineQuery(criteria)
+                .Where("kind", Operator.Contains, "functionapp");
 
-            return query;
+            return graphQueryBuilder;
         }
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
