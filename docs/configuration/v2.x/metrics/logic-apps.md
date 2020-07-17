@@ -5,7 +5,7 @@ title: Azure Logic Apps Declaration
 
 ## Azure Logic Apps
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can declare to scrape an Azure Logic App via the `LogicApp`
 resource type.
