@@ -83,22 +83,11 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
     - name: storage-accounts
-  - name: azure_sql_server_dtu_consumption_percent_discovery
-    description: "The DTU consumption percentage used by an Azure SQL Server."
-    resourceType: SqlServer
-    azureMetricConfiguration:
-      metricName: dtu_used
-      dimension:
-        name: DatabaseResourceId
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-    - name: sql-servers
-  - name: azure_sql_database_dtu_consumption_percent_discovery
-    description: "The DTU consumption percentage used by an Azure SQL Database."
+  - name: azure_sql_database_cpu_percent_discovery
+    description: "The CPU percentage used by an Azure SQL Database."
     resourceType: SqlDatabase
     azureMetricConfiguration:
-      metricName: dtu_consumption_percent
+      metricName: cpu_percent
       aggregation:
         type: Average
     resourceDiscoveryGroups:
