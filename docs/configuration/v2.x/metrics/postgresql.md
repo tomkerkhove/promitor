@@ -5,7 +5,7 @@ title: Azure Database for PostgreSQL
 
 ## Azure Database for PostgreSQL
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-No-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can declare to scrape an Azure Database for PostgreSQL server via the `PostgreSql`
 resource type.
@@ -32,6 +32,8 @@ azureMetricConfiguration:
 resources:
 - serverName: Promitor-1
 - serverName: Promitor-2
+resourceDiscoveryGroups:
+- name: postgres-databases
 ```
 
 <!-- markdownlint-disable MD033 -->

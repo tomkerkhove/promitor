@@ -74,3 +74,50 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
     - name: logic-apps-unfiltered
+  - name: azure_storage_account_capacity_discovery
+    description: "The average capacity used in the storage account"
+    resourceType: StorageAccount
+    azureMetricConfiguration:
+      metricName: UsedCapacity
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: storage-accounts
+  - name: azure_sql_server_dtu_consumption_percent_discovery
+    description: "The DTU consumption percentage used by an Azure SQL Server."
+    resourceType: SqlServer
+    azureMetricConfiguration:
+      metricName: dtu_used
+      dimension:
+        name: DatabaseResourceId
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: sql-servers
+  - name: azure_sql_database_dtu_consumption_percent_discovery
+    description: "The DTU consumption percentage used by an Azure SQL Database."
+    resourceType: SqlDatabase
+    azureMetricConfiguration:
+      metricName: dtu_consumption_percent
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: sql-databases
+  - name: promitor_demo_azuresqlmanagedinstance_nodes_discovery
+    description: "The amount of nodes for an Azure SQL Managed Instance."
+    resourceType: SqlManagedInstance
+    azureMetricConfiguration:
+      metricName: virtual_core_count
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: sql-managed-instances
+  - name: azure_network_interface_bytes_received_rate_discovery
+    description: "Number of bytes the Network Interface sent"
+    resourceType: NetworkInterface
+    azureMetricConfiguration:
+      metricName: BytesReceivedRate
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: network-interfaces

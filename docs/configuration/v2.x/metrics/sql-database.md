@@ -5,7 +5,7 @@ title: Azure SQL Database Declaration
 
 ## Azure SQL Database
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-No-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can scrape an Azure SQL Database via the `SqlDatabase` resource type.
 
@@ -34,6 +34,8 @@ azureMetricConfiguration:
 resources:
 - serverName: promitor-sql-server
   databaseName: promitor-db
+resourceDiscoveryGroups:
+- name: sql-databases
 ```
 
 <!-- markdownlint-disable MD033 -->
