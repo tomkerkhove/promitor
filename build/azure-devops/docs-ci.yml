@@ -18,12 +18,12 @@ variables:
   Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
   Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
-- stage: Init
-  displayName: Prepare Build
+- stage: Lint
+  displayName: Lint
   dependsOn: []
   jobs:
-   - job: DetermineVersion
-     displayName: Determine Version
+   - job: Lint
+     displayName: Lint
      pool:
        vmImage: ubuntu-16.04
      steps:
