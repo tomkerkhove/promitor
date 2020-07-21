@@ -6,8 +6,8 @@ using AutoMapper;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Serialization.Enum;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
@@ -75,7 +75,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             var rawSpecVersion = mappingNode.Children[new YamlScalarNode("version")].ToString();
 
-            if (System.Enum.TryParse(typeof(SpecVersion), rawSpecVersion, true, out var specVersion) == false)
+            if (Enum.TryParse(typeof(SpecVersion), rawSpecVersion, true, out var specVersion) == false)
             {
                 throw new Exception($"Unable to determine version '{rawSpecVersion}' that was specified in the metric declaration");
             }

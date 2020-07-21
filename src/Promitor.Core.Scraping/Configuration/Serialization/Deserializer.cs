@@ -122,9 +122,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var propertyType = Nullable.GetUnderlyingType(fieldDeserializationInfo.PropertyInfo.PropertyType) ?? fieldDeserializationInfo.PropertyInfo.PropertyType;
             if (propertyType.IsEnum)
             {
-                var parseSucceeded = System.Enum.TryParse(
-                    propertyType, fieldNodePair.Value.ToString(), out var enumValue);
-
+                var parseSucceeded = Enum.TryParse(propertyType, fieldNodePair.Value.ToString(), out var enumValue);
                 if (!parseSucceeded)
                 {
                     errorReporter.ReportError(fieldNodePair.Value, $"'{fieldNodePair.Value}' is not a valid value for '{fieldNodePair.Key}'.");

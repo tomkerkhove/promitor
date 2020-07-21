@@ -4,10 +4,10 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Serialization;
-using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
+using Promitor.Core.Serialization.Enum;
 using Promitor.Integrations.AzureStorage;
 using Promitor.Tests.Unit.Serialization.v1;
 

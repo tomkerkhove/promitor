@@ -34,7 +34,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         {
             if (node.Children.TryGetValue(propertyName, out var propertyNode))
             {
-                return System.Enum.Parse<TEnum>(propertyNode.ToString());
+                return Enum.Parse<TEnum>(propertyNode.ToString());
             }
 
             return null;
