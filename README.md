@@ -68,8 +68,17 @@ free to [write me an email](mailto:kerkhove.tom@gmail.com) or [get listed as a u
 
 ## Thank you
 
-We'd like to thank all the services, tooling & NuGet packages that support us -
-[Thank you](https://promitor.io/thank-you)!
+We'd like to thank the following service(s) for supporting our open-source initiative!
+
+- **Netlify** allows us to provide previews of our documentation changes in our
+  pull requests that make it easier to review them.
+
+  <a href="https://www.netlify.com">
+    <img src="https://www.netlify.com/img/global/badges/netlify-color-bg.svg" alt="Deploys by Netlify" />
+  </a>
+
+But they are not the only one we'd like to thank! For a full list of services, tooling & NuGet packages that support us - Have a look at our 
+[Thank you](https://promitor.io/thank-you) page!
 
 ## License Information
 
