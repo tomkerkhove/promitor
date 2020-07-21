@@ -25,8 +25,9 @@ Health is currently indicated via the HTTP response status:
 - `200 OK` - The scraper is healthy
 - `503 Service Unavailable` - The scraper is unhealthy
 
-In the future, the endpoint will be more advanced by giving detailed status on
-dependencies as well.
+The endpoint provides more details on integration with following dependencies:
+
+- **Promitor Resource Discovery** (when configured)
 
 ## Azure Resource Manager API - Consumption & Throttling
 

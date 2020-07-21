@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Extensions;
-using Promitor.Agents.Scraper.Health;
 using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
@@ -57,13 +55,9 @@ namespace Promitor.Agents.Scraper
                 .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1);
 
-            var healthCheckBuilder = services.AddHealthChecks();
-            var resourceDiscoveryConfiguration = Configuration.GetSection("resourceDiscovery").Get<ResourceDiscoveryConfiguration>();
-            if (resourceDiscoveryConfiguration?.IsConfigured == true)
-            {
-                healthCheckBuilder.AddCheck<ResourceDiscoveryHealthCheck>("Promitor Resource Discovery", HealthStatus.Degraded);
-            }
-
+            services.AddHealthChecks()
+                   .AddResourceDiscoveryHealthCheck(Configuration);
+            
             services.UseMetricSinks(Configuration)
                 .ScheduleMetricScraping();
         }
