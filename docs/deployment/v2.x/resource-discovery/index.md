@@ -1,0 +1,8 @@
+---
+layout: default
+title: Deploying Promitor Resource Discovery
+---
+
+Here is an overview of how you can deploy Promitor Resource Discovery on your infrastructure, we support both Linux and Windows.
+
+[&larr; back](/)

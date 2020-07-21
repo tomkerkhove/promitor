@@ -1,22 +1,7 @@
 ---
 layout: default
-title: Deploying Promitor
+title: Deploying Promitor Scraper
 ---
-
-
-
-
-
-
-TODO: Redirect
-
-
-
-
-
-
-
-
 
 Here is an overview of how you can deploy Promitor on your infrastructure, we support both Linux and Windows.
 
