@@ -5,6 +5,7 @@ weight: 1
 version:
 ---
 
+- {{% tag added %}} Support for resource discovery ([docs](https://promitor.io/configuration/v2.x/resource-discovery))
 - {{% tag added %}} Support for scraping Azure Logic Apps ([docs](https://promitor.io/configuration/v2.x/metrics/logic-apps)
  | [#372](https://github.com/tomkerkhove/promitor/issues/314))
 - {{% tag added %}} New validation rule to ensure at least one resource or resource collection is configured to scrape
