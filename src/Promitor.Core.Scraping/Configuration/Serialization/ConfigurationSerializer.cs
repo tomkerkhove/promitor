@@ -6,8 +6,8 @@ using AutoMapper;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.Enum;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Serialization.Enum;
 using Promitor.Core.Serialization.Yaml;
 using YamlDotNet.RepresentationModel;
 
