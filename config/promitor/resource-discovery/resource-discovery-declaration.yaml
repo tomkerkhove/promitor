@@ -34,8 +34,9 @@ resourceDiscoveryGroups:
 - name: web-apps-north-europe
   type: WebApp
   criteria:
-    regions:
-    - northeurope
+    include:
+      regions:
+      - northeurope
 - name: web-app-landscape
   type: WebApp
 - name: function-app-landscape
@@ -62,8 +63,9 @@ resourceDiscoveryGroups:
 - name: one-resource-group-scenario
   type: LogicApp
   criteria:
-    resourceGroups:
-    - promitor-testing-resource-discovery-eu
+    include:
+      resourceGroups:
+      - promitor-testing-resource-discovery-eu
 - name: two-resource-group-scenario
   type: LogicApp
   criteria:

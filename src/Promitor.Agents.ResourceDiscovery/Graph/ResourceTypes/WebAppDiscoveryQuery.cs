@@ -9,7 +9,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class WebAppDiscoveryQuery : AppServiceResourceDiscoveryQuery
     {
-        public override GraphQueryBuilder DefineQuery(ResourceCriteria criteria)
+        public override GraphQueryBuilder DefineQuery(ResourceCriteriaDefinition criteria)
         {
             var graphQueryBuilder = base.DefineQuery(criteria)
                 .Where("kind", Operator.DoesNotContain, "functionapp");

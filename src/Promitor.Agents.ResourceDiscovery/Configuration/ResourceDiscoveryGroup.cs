@@ -6,6 +6,6 @@ namespace Promitor.Agents.ResourceDiscovery.Configuration
     {
         public string Name { get; set; }
         public ResourceType Type { get; set; }
-        public ResourceCriteria Criteria { get; set; } = new ResourceCriteria();
+        public ResourceCriteriaDefinition Criteria { get; set; } = new ResourceCriteriaDefinition();
     }
 }

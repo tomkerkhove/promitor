@@ -31,13 +31,16 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return foundResources;
         }
 
-        public virtual GraphQueryBuilder DefineQuery(ResourceCriteria criteria)
+        public virtual GraphQueryBuilder DefineQuery(ResourceCriteriaDefinition criteriaDefinition)
         {
+            Guard.NotNull(criteriaDefinition, nameof(criteriaDefinition));
+            Guard.NotNull(criteriaDefinition.Include, nameof(criteriaDefinition.Include));
+
             var graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceTypes)
-                .WithSubscriptionsWithIds(criteria.Subscriptions) // Filter on queried subscriptions defined in landscape
-                .WithResourceGroupsWithName(criteria.ResourceGroups)
-                .WithinRegions(criteria.Regions)
-                .WithTags(criteria.Tags)
+                .WithSubscriptionsWithIds(criteriaDefinition.Include.Subscriptions) // Filter on queried subscriptions defined in landscape
+                .WithResourceGroupsWithName(criteriaDefinition.Include.ResourceGroups)
+                .WithinRegions(criteriaDefinition.Include.Regions)
+                .WithTags(criteriaDefinition.Include.Tags)
                 .Project(ProjectedFieldNames);
 
             return graphQueryBuilder;
