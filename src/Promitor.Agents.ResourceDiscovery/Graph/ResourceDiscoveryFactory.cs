@@ -30,8 +30,18 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KeyVaultDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
+                case ResourceType.NetworkInterface:
+                    return new NetworkInterfaceDiscoveryQuery();
                 case ResourceType.RedisCache:
                     return new RedisCacheDiscoveryQuery();
+                case ResourceType.PostgreSql:
+                    return new PostgreSqlDiscoveryQuery();
+                case ResourceType.SqlDatabase:
+                    return new SqlDatabaseDiscoveryQuery();
+                case ResourceType.SqlManagedInstance:
+                    return new SqlManagedInstanceDiscoveryQuery();
+                case ResourceType.StorageAccount:
+                    return new StorageAccountDiscoveryQuery();
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineDiscoveryQuery();
                 case ResourceType.VirtualMachineScaleSet:

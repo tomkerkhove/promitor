@@ -5,7 +5,7 @@ title: Azure Network Interface Declaration
 
 ## Azure Network Interface
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-No-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can declare to scrape an [Azure Network Interface](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface)
 via the `NetworkInterface` resource type.
@@ -29,6 +29,8 @@ azureMetricConfiguration:
 resources:
 - networkInterfaceName: promitor-network-interface-1
 - networkInterfaceName: promitor-network-interface-2
+resourceDiscoveryGroups:
+- name: network-interfaces
 ```
 
 <!-- markdownlint-disable MD033 -->

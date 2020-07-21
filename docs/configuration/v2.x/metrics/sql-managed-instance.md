@@ -5,7 +5,7 @@ title: Azure SQL Managed Instance Declaration
 
 ## Azure SQL Managed Instance
 
-![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-No-red.svg)
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.1-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can scrape an Azure SQL Managed Instance via the `SqlManagedInstance`
  resource type.
@@ -28,6 +28,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - instanceName: promitor-sql-managed-instance
+resourceDiscoveryGroups:
+- name: sql-managed-instances
 ```
 
 <!-- markdownlint-disable MD033 -->
