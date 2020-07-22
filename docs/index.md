@@ -68,6 +68,7 @@ and vote for features!
   - [Configuration REST APIs](operations#configuration-rest-apis)
   - [Health](operations#health)
 - **Walkthroughs**
+  - [Migrate from Promitor Scraper 1.x to 2.x](/walkthrough/migrate-from-1.x-to-2.x)
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough)
 - [**Frequently asked questions (FAQs)**](/faq)
 
