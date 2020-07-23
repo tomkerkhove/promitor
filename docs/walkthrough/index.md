@@ -3,6 +3,8 @@ layout: default
 title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
 ---
 
+TODO: Redirect so we can move it to a better named file
+
 ## Introduction
 
 In this walkthrough, we'll set up a basic monitoring solution with Promitor,
