@@ -19,6 +19,11 @@ version:
 - {{% tag added %}} New validation rule to ensure declarative or dynamic discovery for metrics to scrape are configured
 - {{% tag changed %}} Handle validation failures on startup more gracefully. [#1113](https://github.com/tomkerkhove/promitor/issues/1113).
 - {{% tag changed %}} Improve time series handling to ensure finalized time series are reported
-- {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration))
-- {{% tag removed %}} Support for Swagger UI 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-ui-2-0))
-- {{% tag removed %}} Support for Swagger 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-2-0))
+- {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)
+ | [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
+- {{% tag removed %}} Support for Swagger UI 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-ui-2-0) |
+ [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
+- {{% tag removed %}} Support for Swagger 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-2-0) |
+ [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
+
+Learn how to migrate to 2.0 with our [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x).
