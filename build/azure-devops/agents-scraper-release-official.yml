@@ -120,48 +120,48 @@ stages:
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
-   - job: BuildWindows
-     displayName: Build Windows Docker image
-     pool:
-       vmImage: windows-2019
-     variables:
-       OS.Name: 'windows'
-     steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
-     - task: DotNetCoreCLI@2
-       displayName: 'Run Unit Tests'
-       inputs:
-        command: test
-        projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-scraper-image.yml
-       parameters:
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
-        buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
-        tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
-        os: '$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-     - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: ./../templates/push-docker-image.yml
-          parameters:
-            imageDisplayName: '''latest-$(OS.Name)'''
-            imageName: '$(Image.Name):latest-$(OS.Name)'
+  #  - job: BuildWindows
+  #    displayName: Build Windows Docker image
+  #    pool:
+  #      vmImage: windows-2019
+  #    variables:
+  #      OS.Name: 'windows'
+  #    steps:
+  #    - powershell: |
+  #       Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+  #       $index = "$(Image.Version)".IndexOf(".", 2);
+  #       $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+  #       Write-Host "Found version '$majorMinorVersion'"
+  #       Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+  #      displayName: 'Determine ''{major}.{minor}'' version'
+  #    - task: DotNetCoreInstaller@0
+  #      displayName: 'Install .NET SDK'
+  #      inputs:
+  #       version: '$(DotNet.SDK.Version)'
+  #    - task: DotNetCoreCLI@2
+  #      displayName: 'Run Unit Tests'
+  #      inputs:
+  #       command: test
+  #       projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
+  #    - template: ./../templates/build-scraper-image.yml
+  #      parameters:
+  #       imageName: '$(Image.TaggedName)-$(OS.Name)'
+  #       buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+  #       tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
+  #       os: '$(OS.Name)'
+  #    - template: ./../templates/push-docker-image.yml
+  #      parameters:
+  #       imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+  #       imageName: '$(Image.TaggedName)-$(OS.Name)'
+  #    - template: ./../templates/push-docker-image.yml
+  #      parameters:
+  #       imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+  #       imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+  #    - ${{ if eq(parameters['releaseType'], 'Full') }}:
+  #       - template: ./../templates/push-docker-image.yml
+  #         parameters:
+  #           imageDisplayName: '''latest-$(OS.Name)'''
+  #           imageName: '$(Image.Name):latest-$(OS.Name)'
 - stage: ReleaseGitHub
   displayName: Release on GitHub
   dependsOn: Build
