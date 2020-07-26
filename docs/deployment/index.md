@@ -8,8 +8,6 @@ Here is an overview of the Promitor agents you can deploy:
 - [Deploying Promitor Scraper](/scraper/)
 - [Deploying Promitor Resource Discovery](/resource-discovery/)
 
-TODO: How they work together
-
 ## Image Tagging Strategy
 
 Depending on your scenario you might need a different update cadence for Docker dependencies.
