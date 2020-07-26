@@ -17,8 +17,6 @@ for metric systems such as Atlassian Statuspage, Prometheus and StatsD.
 
 ## Running Promitor Scraper
 
-TODO: Use Helm here
-
 Running Promitor Scraper is super easy:
 
 ```shell
