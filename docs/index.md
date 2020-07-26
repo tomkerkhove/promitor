@@ -63,6 +63,7 @@ and vote for features!
     - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
     - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
     - [StatsD](configuration/v1.x/runtime#statsd)
+  - [Using automatic resource discovery](configuration/v2.x/resource-discovery)
   - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
   - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
   - [Runtime](configuration/v1.x/runtime)
