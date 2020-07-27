@@ -1,3 +1,4 @@
+version: v1
 azureLandscape:
   tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
   subscriptions:
