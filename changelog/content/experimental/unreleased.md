@@ -6,6 +6,7 @@ version:
 ---
 
 - {{% tag added %}} Support for resource discovery ([docs](https://promitor.io/configuration/v2.x/resource-discovery) |
+ [configuration](https://promitor.io/configuration/v2.x/resource-discovery) |
  [deployment](https://promitor.io/deployment/resource-discovery/deployment))
 - {{% tag added %}} Support for scraping Azure Logic Apps ([docs](https://promitor.io/configuration/v2.x/metrics/logic-apps)
  | [#372](https://github.com/tomkerkhove/promitor/issues/314))
