@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Core.Extensions;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {
@@ -210,7 +211,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
         private async Task<ResourceGraphClient> CreateClientAsync()
         {
-            var credentials = await Authentication.GetServiceClientCredentialsAsync("https://management.core.windows.net", QueryApplicationId, _queryApplicationSecret, TenantId);
+            var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureEnvironment();
+            var credentials = await Authentication.GetServiceClientCredentialsAsync(azureEnvironment.ManagementEndpoint, QueryApplicationId, _queryApplicationSecret, TenantId);
             return new ResourceGraphClient(credentials);
         }
     }
