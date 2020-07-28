@@ -4,6 +4,7 @@ azureLandscape:
   subscriptions:
   - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
   - 0f9d7fea-99e8-4768-8672-06a28514f77e
+  cloud: Global
 resourceDiscoveryGroups:
 - name: service-bus-landscape
   type: ServiceBusQueue

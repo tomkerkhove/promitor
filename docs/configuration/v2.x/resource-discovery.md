@@ -28,6 +28,7 @@ azureLandscape:
   - SUBSCRIPTON-ID-ABC
   - SUBSCRIPTON-ID-DEF
   - SUBSCRIPTON-ID-GHI
+  cloud: China
 resourceDiscoveryGroups:
 - name: container-registry-landscape
   type: ContainerRegistry
@@ -60,6 +61,7 @@ values are `v1`. *(Required)*
 
 - `azureLandscape.tenantId` - The id of the Azure tenant that will be queried. *(Required)*
 - `azureLandscape.subscriptions` - List of Azure subscriptions in the Azure tenant to discover resources in. *(Required)*
+- `azureLandscape.cloud` - The name of the Azure cloud to use. Options are `Global` (default), `China`, `UsGov` & `Germany`.
 
 ### Resource Discovery Groups
 
