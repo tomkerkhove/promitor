@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Serialization.Enum;
 using Xunit;
 using YamlDotNet.RepresentationModel;
 
@@ -20,13 +20,29 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_AzureCloudSupplied_SetsAzureCloud()
+        public void Deserialize_AzureCloudSuppliedWithUnspecified_SetsAzureChinaCloud()
+        {
+            var yamlNode = YamlUtils.CreateYamlNode(
+                $@"azureMetadata:
+    cloud: '{AzureCloud.Unspecified}'");
+            var azureMetadataNode = (YamlMappingNode)yamlNode.Children["azureMetadata"];
+            var errorNode = azureMetadataNode.Children["cloud"];
+
+            YamlAssert.ReportsError(
+                _deserializer,
+                azureMetadataNode,
+                errorNode,
+                "'Unspecified' is not a supported value for 'cloud'.");
+        }
+
+        [Fact]
+        public void Deserialize_AzureCloudSupplied_SetsAzureChinaCloud()
         {
             AzureEnvironment azureCloud = AzureEnvironment.AzureChinaCloud;
 
             var yamlText =
                 $@"azureMetadata:
-    cloud: '{AzureCloudsV1.China}'";
+    cloud: '{AzureCloud.China}'";
 
             YamlAssert.PropertySet(
                 _deserializer,
@@ -57,7 +73,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         public void Deserialize_InvalidAzureCloudSupplied_ReportsError()
         {
             var yamlNode = YamlUtils.CreateYamlNode(
-@"azureMetadata:
+                @"azureMetadata:
     cloud: invalid");
             var azureMetadataNode = (YamlMappingNode)yamlNode.Children["azureMetadata"];
             var errorNode = azureMetadataNode.Children["cloud"];
