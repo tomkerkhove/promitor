@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Extensions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Serialization.Enum;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
@@ -23,18 +26,16 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
-            if (System.Enum.TryParse<AzureCloudsV1>(rawAzureCloud, out var azureCloud))
+            if (Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
             {
-                switch (azureCloud)
+                try
                 {
-                    case AzureCloudsV1.Global:
-                        return AzureEnvironment.AzureGlobalCloud;
-                    case AzureCloudsV1.China:
-                        return AzureEnvironment.AzureChinaCloud;
-                    case AzureCloudsV1.Germany:
-                        return AzureEnvironment.AzureGermanCloud;
-                    case AzureCloudsV1.UsGov:
-                        return AzureEnvironment.AzureUSGovernment;
+                    var azureEnvironment = azureCloud.GetAzureEnvironment();
+                    return azureEnvironment;
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    errorReporter.ReportError(nodePair.Value, $"'{rawAzureCloud}' is not a supported value for 'cloud'.");
                 }
             }
             else
