@@ -72,6 +72,14 @@
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
         </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IHealthChecksBuilderExtensions.AddResourceDiscoveryHealthCheck(Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Add health check for integration with Promitor Resource Discovery
+            </summary>
+            <param name="healthChecksBuilder">Builder for adding health checks</param>
+            <param name="configuration">Configuration of Promitor</param>
+            <returns></returns>
+        </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines the dependencies that Promitor requires
