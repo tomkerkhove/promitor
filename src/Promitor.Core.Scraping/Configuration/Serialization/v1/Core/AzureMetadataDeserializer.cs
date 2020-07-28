@@ -26,7 +26,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
-            if (System.Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
+            if (Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
             {
                 try
                 {
