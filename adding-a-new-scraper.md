@@ -68,6 +68,7 @@ We'll add dynamic resource discovery support by using Azure Resource Graph:
 1. Implement a new discovery query that [create an Azure Resource Graph query](https://docs.microsoft.com/en-us/azure/governance/resource-graph/concepts/query-language).It should inherits from `ResourceDiscoveryQuery` and be located in `.\src\Promitor.Agents.ResourceDiscovery\Graph\ResourceTypes`
 2. Support the new resource type in `ResourceDiscoveryFactory`
 3. Add discovery support badge in scraper documentation page - `![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)`
+4. Add scraper to supported scrapers on resource discovery configuration documentation page `docs/configuration/v2.x/resource-discovery.md` in alphabetical order.
 
 <!-- markdownlint-enable -->
 
@@ -88,5 +89,5 @@ Please provide documentation on the following:
 2. What fields need to be configured and what they are for.
 3. An example configuration.
 
-This should be provided in a new file under `docs\configuration\v1.x\metrics` and be listed
-under the supported providers on `docs/configuration/v1.x/metrics/index.md` in alphabetical order.
+This should be provided in a new file under `docs\configuration\v2.x\metrics` and be listed
+under the supported providers on `docs/configuration/v2.x/metrics/index.md` in alphabetical order.

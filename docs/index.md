@@ -46,19 +46,24 @@ and vote for features!
 
 ## Documentation
 
-- **Deployment**
-  - [Running Promitor on Docker](deployment#docker)
-  - [Running Promitor on Kubernetes](deployment#kubernetes)
-  - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Metrics**
   - [General Declaration](configuration/v1.x/metrics)
   - [Supported Providers](configuration/v1.x/metrics#supported-azure-services)
   - [What labels do we provide?](metrics/labels)
+- **Deployment**
+  - [Overview](deployment)
+  - Scraper
+    - [Docker](deployment/scraper/#docker)
+    - [Kubernetes](deployment/scraper/#kubernetes)
+  - Resource Discovery
+    - [Docker](deployment/resource-discovery/#docker)
+  - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Configuration**
   - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
     - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
     - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
     - [StatsD](configuration/v1.x/runtime#statsd)
+  - [Using automatic resource discovery](configuration/v2.x/resource-discovery)
   - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
   - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
   - [Runtime](configuration/v1.x/runtime)
@@ -68,7 +73,8 @@ and vote for features!
   - [Configuration REST APIs](operations#configuration-rest-apis)
   - [Health](operations#health)
 - **Walkthroughs**
-  - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough)
+  - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
+  - [Migrate from Promitor Scraper 1.x to 2.x](/walkthrough/migrate-from-1.x-to-2.x)
 - [**Frequently asked questions (FAQs)**](/faq)
 
 ## Support

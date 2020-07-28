@@ -1,8 +1,10 @@
+version: v1
 azureLandscape:
   tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
   subscriptions:
   - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
   - 0f9d7fea-99e8-4768-8672-06a28514f77e
+  cloud: Global
 resourceDiscoveryGroups:
 - name: service-bus-landscape
   type: ServiceBusQueue

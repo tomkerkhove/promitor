@@ -10,8 +10,8 @@ file. This configuration defines the Azure metadata and all the metrics.
 
 As Promitor evolves we need to change the structure of our metrics declaration.
 
-`version: {version}` - **[REQUIRED]** Version of declaration that is used. Allowed
-values are `v1`.
+`version: {version}` - Version of declaration that is used. Allowed
+values are `v1`. *(Required)*
 
 ### Azure
 
@@ -23,10 +23,10 @@ values are `v1`.
 
 ### Metric Defaults
 
-- `metricDefaults.scraping.schedule` - **[REQUIRED]** A cron expression that controls
+- `metricDefaults.scraping.schedule` - A cron expression that controls
   the frequency of which all the configured metrics will be scraped from Azure Monitor.
   You can use [crontab-generator.org](https://crontab-generator.org/) to generate
-  a cron that fits your needs.
+  a cron that fits your needs. *(Required)*
 - `metricDefaults.aggregation.interval` - The default interval which defines over
   what period measurements of a metric should be aggregated.
   a cron that fits your needs.

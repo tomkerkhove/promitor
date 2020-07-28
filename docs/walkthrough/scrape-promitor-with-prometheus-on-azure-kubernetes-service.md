@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
+redirect_from:
+  - /walkthrough/
 ---
 
 ## Introduction
