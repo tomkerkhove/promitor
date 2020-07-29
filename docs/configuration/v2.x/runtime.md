@@ -41,6 +41,9 @@ telemetry:
     isEnabled: true # Optional. Default: true
     verbosity: trace # Optional. Default: N/A
   defaultVerbosity: error # Optional. Default: error
+resourceDiscovery:
+  host: promitor.agents.resourcediscovery # Optional. DNS name of Promitor Resource Discovery agent
+  port: 88 # Optional. Port of Promitor Resource Discovery agent
 ```
 
 _Note: Using Promitor v0.x? [Use environment variables](./../v0.x/) to configure
@@ -143,6 +146,24 @@ metricSinks:
 > :warning: **As of today, metric labels are not supported.**
 >  
 > Unfortunately, this is not supported in the specifiaction.
+
+## Using resource discovery
+
+Resource discovery can be used by integrating with Promitor Resource Discovery which allows you to scrape metrics by using
+ discovery groups.
+
+In order to enable this, resource discovery must be configured first:
+
+- `resourceDiscovery.host` - DNS name of Promitor Resource Discovery agent.
+- `resourceDiscovery.port` - Port of Promitor Resource Discovery agent.
+
+```yaml
+resourceDiscovery:
+  host: promitor.agents.resourcediscovery
+  port: 88 # Optional. Default: 80
+```
+
+To learn more about how Promitor Scraper and Promitor Resource Discovery work together, read [our documentation](./../../concepts/how-it-works).
 
 ## Metric Configuration
 

@@ -61,14 +61,17 @@ and vote for features!
     - [Docker](deployment/resource-discovery/#docker)
   - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Configuration**
-  - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
-    - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
-    - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
-    - [StatsD](configuration/v1.x/runtime#statsd)
-  - [Using automatic resource discovery](configuration/v2.x/resource-discovery)
-  - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
-  - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
-  - [Runtime](configuration/v1.x/runtime)
+  - Scraper
+    - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
+      - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
+      - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
+      - [StatsD](configuration/v1.x/runtime#statsd)
+    - [Using resource discovery](configuration/v2.x/runtime#using-resource-discovery)
+    - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
+    - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
+    - [Runtime](configuration/v1.x/runtime)
+  - Resource Discovery
+    - [Declaring resource discovery groups](configuration/v2.x/resource-discovery)
 - **Operations**
   - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
   - [Azure Monitor Integration](operations#azure-monitor-integration)
