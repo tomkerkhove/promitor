@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Resource Discovery
+title: Declaring resource discovery groups
 ---
 
 Promitor Resource Discovery allows you to declare the Azure landscape to explore and define resource discovery groups
