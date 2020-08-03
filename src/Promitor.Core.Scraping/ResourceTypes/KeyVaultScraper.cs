@@ -2,9 +2,7 @@
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
-// ReSharper disable All
-
-namespace Promitor.Core.Scraping
+namespace Promitor.Core.Scraping.ResourceTypes
 {
     /// <summary>
     /// Scrapes an Azure Key Vault
