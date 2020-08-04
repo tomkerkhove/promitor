@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
 namespace Promitor.Core.Scraping
 {
@@ -29,7 +30,7 @@ namespace Promitor.Core.Scraping
 
             var metricFilter = DetermineMetricFilter(resourceDefinition);
             var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
-            var dimensionName = scrapeDefinition.AzureMetricConfiguration.Dimension?.Name;
+            var dimensionName = DetermineMetricDimension(scrapeDefinition.AzureMetricConfiguration?.Dimension);
             var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
 
             var metricLabels = DetermineMetricLabels(resourceDefinition);
@@ -44,6 +45,15 @@ namespace Promitor.Core.Scraping
         protected virtual string DetermineMetricFilter(TResourceDefinition resourceDefinition)
         {
             return null;
+        }
+
+        /// <summary>
+        ///     Determines the dimension for a metric to use
+        /// </summary>
+        /// <param name="dimension">Provides information concerning the configured metric dimension.</param>
+        protected virtual string DetermineMetricDimension(MetricDimension dimension)
+        {
+            return dimension?.Name;
         }
 
         /// <summary>
