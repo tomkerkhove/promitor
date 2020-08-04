@@ -30,7 +30,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
             CreateMap<CosmosDbResourceV1, CosmosDbResourceDefinition>();
-            CreateMap<EventHubsResourceV1, EventHubResourceDefinition>();
+            CreateMap<EventHubsResourceV1, EventHubResourceDefinition>()
+                .ForCtorParam("eventHubsNamespace", o => o.MapFrom(s => s.Namespace));
             CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
             CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
             CreateMap<GenericResourceV1, GenericAzureResourceDefinition>();
