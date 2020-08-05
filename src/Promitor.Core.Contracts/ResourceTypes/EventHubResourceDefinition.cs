@@ -2,10 +2,10 @@
 {
     public class EventHubResourceDefinition : AzureResourceDefinition
     {
-        public EventHubResourceDefinition(string subscriptionId, string resourceGroupName, string eventHubsNamespace, string topicName)
-            : base(ResourceType.EventHubs, subscriptionId, resourceGroupName, eventHubsNamespace, $"{eventHubsNamespace}-{topicName}")
+        public EventHubResourceDefinition(string subscriptionId, string resourceGroupName, string @namespace, string topicName)
+            : base(ResourceType.EventHubs, subscriptionId, resourceGroupName, @namespace, $"{@namespace}-{topicName}")
         {
-            Namespace = eventHubsNamespace;
+            Namespace = @namespace;
             TopicName = topicName;
         }
 
