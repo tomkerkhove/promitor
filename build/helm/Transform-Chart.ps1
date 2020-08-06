@@ -18,7 +18,7 @@ echo "Changing name of chart to $chartName"
 ((Get-Content -path $chartName/Chart.yaml -Raw) -replace 'promitor-agent-scraper', $chartName) | Set-Content -Path $chartName/Chart.yaml
 
 echo "Changing image tag to $imageVersion"
-((Get-Content -path $chartName/values.yaml -Raw) -replace '1.0.0', $imageVersion) | Set-Content -Path $chartName/values.yaml
+((Get-Content -path $chartName/values.yaml -Raw) -replace 'latest', $imageVersion) | Set-Content -Path $chartName/values.yaml
 
 echo "Changing repo name to $imageName"
 ((Get-Content -path $chartName/values.yaml -Raw) -replace 'tomkerkhove/promitor-agent-scraper', $imageName) | Set-Content -Path $chartName/values.yaml
@@ -27,7 +27,7 @@ echo "Change name of chart in README to $chartName"
 ((Get-Content -path $chartName/README.md -Raw) -replace 'promitor-agent-scraper', $chartName) | Set-Content -Path $chartName/README.md
 
 echo "Change version of image in README to $imageVersion"
-((Get-Content -path $chartName/README.md -Raw) -replace '1.0.0', $imageVersion) | Set-Content -Path $chartName/README.md
+((Get-Content -path $chartName/README.md -Raw) -replace 'latest', $imageVersion) | Set-Content -Path $chartName/README.md
 
 echo "Outputting transformed content"
 Get-Content -path $chartName/Chart.yaml -Raw
