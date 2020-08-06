@@ -39,14 +39,14 @@ steps:
 - task: PowerShell@2
   displayName: 'Transform Helm Chart'
   inputs:
-  targetType: filePath
-  filePath: ./build/helm/Transform-Chart.ps1
-  arguments: '-chartName "${{ parameters.chartName }}" -imageName "$(Image.Name)" -imageTag "${{ parameters.appVersion }}"'
-  workingDirectory: 'charts'
+    targetType: filePath
+    filePath: ./build/helm/Transform-Chart.ps1
+    arguments: '-chartName "${{ parameters.chartName }}" -imageName "$(Image.Name)" -imageTag "${{ parameters.appVersion }}"'
+    workingDirectory: 'charts'
 - task: PowerShell@2
   displayName: 'Package Helm Chart'
   inputs:
-  targetType: filePath
-  filePath: ./build/helm/Package-Chart.ps1
-  arguments: '-chartName "${{ parameters.chartName }}" -chartVersion "${{ parameters.chartVersion }}" -appVersion "${{ parameters.appVersion }}"'
-  workingDirectory: 'charts'
+    targetType: filePath
+    filePath: ./build/helm/Package-Chart.ps1
+    arguments: '-chartName "${{ parameters.chartName }}" -chartVersion "${{ parameters.chartVersion }}" -appVersion "${{ parameters.appVersion }}"'
+    workingDirectory: 'charts'

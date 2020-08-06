@@ -28,8 +28,8 @@ steps:
 - task: AzureCLI@1
   displayName: 'Push Helm Chart to Azure Container Registry'
   inputs:
-  azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-  scriptLocation: inlineScript
-  inlineScript: |
-    az configure --defaults acr=${{ parameters.registryName }}
-    az acr helm push --name ${{ parameters.registryName }} charts/output/${{ parameters.chartName }}-${{ parameters.chartVersion }}.tgz --force
+    azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
+    scriptLocation: inlineScript
+    inlineScript: |
+      az configure --defaults acr=${{ parameters.registryName }}
+      az acr helm push --name ${{ parameters.registryName }} charts/output/${{ parameters.chartName }}-${{ parameters.chartVersion }}.tgz --force
