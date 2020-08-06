@@ -265,29 +265,19 @@ stages:
      displayName: Push Helm Chart to ACR
      pool:
        vmImage: ubuntu-16.04
+     variables:
+     - template: ./variables/helm.yml
      steps:
-     - task: HelmInstaller@0
-       inputs:
-        helmVersion: '2.9.1'
-     - task: PowerShell@2
-       displayName: 'Transform Helm Chart in CI Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
-        workingDirectory: 'charts'
-     - task: PowerShell@2
-       displayName: 'Package Helm Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/Package-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)" -appVersion "$(App.Version)"'
-        workingDirectory: 'charts'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-        scriptLocation: inlineScript
-        inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
+     - template: ./templates/lint-helm-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.Scraper.Name)'
+     - template: ./../templates/package-helm-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(App.Version)'
+     - template: ./../templates/push-helm-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'

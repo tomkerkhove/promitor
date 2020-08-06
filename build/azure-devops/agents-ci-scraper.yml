@@ -14,14 +14,13 @@ pr:
     - charts/promitor-agent-scraper/*
 variables:
   - template: ./variables/build.yml
+  - template: ./variables/helm.yml
   - name: Image.Name
     value: 'tomkerkhove/promitor-agent-scraper-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.Official.Name
-    value: 'promitor-agent-scraper'
   - name: Helm.Chart.CI.Name
     value: 'promitor-agent-scraper-ci'
 stages:
@@ -185,7 +184,7 @@ stages:
      - template: ./templates/lint-helm-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
-        chartName: '$(Helm.Chart.Official.Name)'
+        chartName: '$(Chart.Scraper.Name)'
 - stage: Helm3
   displayName: Helm Chart (3.x)
   dependsOn: Docker
@@ -206,33 +205,20 @@ stages:
      - template: ./templates/lint-helm-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
-        chartName: '$(Helm.Chart.Official.Name)'
-     - task: PowerShell@2
-       displayName: 'Transform Helm Chart in CI Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
-        workingDirectory: 'charts'
-     - task: PowerShell@2
-       displayName: 'Package Helm Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/Package-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)" -appVersion "$(App.Version)"'
-        workingDirectory: 'charts'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-        scriptLocation: inlineScript
-        inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz --force
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: PublishBuildArtifacts@1
-       displayName: 'Publish Helm Chart'
-       inputs:
-        PathtoPublish: charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz
-        ArtifactName: helm
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+        chartName: '$(Chart.Scraper.Name)'
+     - template: ./../templates/package-helm-chart.yml
+       parameters:
+        chartName: '$(Helm.Chart.CI.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(App.Version)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../templates/push-helm-chart.yml
+          parameters:
+            chartName: '$(Helm.Chart.CI.Name)'
+            chartVersion: '$(Helm.Chart.Version)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Helm Chart'
+          inputs:
+            PathtoPublish: charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz
+            ArtifactName: helm
