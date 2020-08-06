@@ -1,0 +1,52 @@
+parameters:
+  helmVersion: '$(Helm.Version)'
+  chartName: ''
+  chartVersion: ''
+  appVersion: ''
+
+steps:
+- bash: |
+    echo "Variable 'helmVersion' found with value '$HELM_VERSION'"
+    if [ -z "$HELM_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"helmVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'chartName' found with value '$CHART_NAME'"
+    if [ -z "$CHART_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"chartName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'chartVersion' found with value '$CHART_VERSION'"
+    if [ -z "$CHART_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"chartVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'appVersion' found with value '$APP_VERSION'"
+    if [ -z "$APP_VERSION" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"appVersion\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+  env:
+    HELM_VERSION: ${{ parameters.helmVersion }}
+    CHART_NAME: ${{ parameters.chartName }}
+    CHART_VERSION: ${{ parameters.chartVersion }}
+    APP_VERSION: ${{ parameters.appVersion }}
+  displayName: Check for required parameters in YAML template
+- task: HelmInstaller@1
+  displayName: 'Install Helm (${{ parameters.helmVersion }}'
+  inputs:
+    helmVersionToInstall: '${{ parameters.helmVersion }}'
+- task: PowerShell@2
+  displayName: 'Transform Helm Chart'
+  inputs:
+  targetType: filePath
+  filePath: ./build/helm/Transform-Chart.ps1
+  arguments: '-chartName "${{ parameters.chartName }}" -imageName "$(Image.Name)" -imageTag "${{ parameters.appVersion }}"'
+  workingDirectory: 'charts'
+- task: PowerShell@2
+  displayName: 'Package Helm Chart'
+  inputs:
+  targetType: filePath
+  filePath: ./build/helm/Package-Chart.ps1
+  arguments: '-chartName "${{ parameters.chartName }}" -chartVersion "${{ parameters.chartVersion }}" -appVersion "${{ parameters.appVersion }}"'
+  workingDirectory: 'charts'
