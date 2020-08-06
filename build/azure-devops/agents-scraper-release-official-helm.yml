@@ -1,13 +1,29 @@
 name: $(Helm.Chart.Version)
-resources:
-- repo: self
+
 trigger: none
 pr: none
+
+
+parameters:
+- name: appVersion
+  displayName: App Version
+  type: string
+  default: 0.1.0
+- name: chartVersion
+  displayName: Helm Chart Version
+  type: string
+  default: 0.1.0
+
 variables:
-  Release.TagName: 'helm-$(Helm.Chart.Version)'
-  Release.Title: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
-  # Helm.App.Version is configured in the build definition as settable at queue time
-  # Helm.Chart.Version is configured in the build definition as settable at queue time
+- name: 'Release.TagName'
+  value: 'helm-$(Helm.Chart.Version)'
+- name: 'Release.Title'
+  value: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
+- name: 'Helm.App.Version'
+  value: '${{ parameters.imageVersion }}'
+- name: 'Helm.Chart.Version'
+  value: '${{ parameters.chartVersion }}'
+  
 stages:
 - stage: ReleaseHelm
   displayName: Release Helm Chart
@@ -20,11 +36,20 @@ stages:
      - task: HelmInstaller@0
        inputs:
         helmVersion: '2.9.1'
-     - powershell: |
-        mkdir output/
-        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
+     - task: PowerShell@2
+       displayName: 'Transform Helm Chart in CI Chart'
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/Transform-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
+        workingDirectory: 'charts'
+     - task: PowerShell@2
        displayName: 'Package Helm Chart'
+       inputs:
+        targetType: filePath
+        filePath: ./build/helm/Package-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)" -appVersion "$(App.Version)"'
+        workingDirectory: 'charts'
      - task: AzureCLI@1
        displayName: 'Push Helm Chart to Azure Container Registry'
        inputs:

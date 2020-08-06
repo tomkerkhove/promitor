@@ -211,15 +211,15 @@ stages:
        displayName: 'Transform Helm Chart in CI Chart'
        inputs:
         targetType: filePath
-        filePath: ./build/helm/CI/Transform-Chart.ps1
+        filePath: ./build/helm/Transform-Chart.ps1
         arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(App.Version)"'
         workingDirectory: 'charts'
      - task: PowerShell@2
        displayName: 'Package Helm Chart'
        inputs:
         targetType: filePath
-        filePath: ./build/helm/CI/Package-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)"'
+        filePath: ./build/helm/Package-Chart.ps1
+        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)" -appVersion "$(App.Version)"'
         workingDirectory: 'charts'
      - task: AzureCLI@1
        displayName: 'Push Helm Chart to Azure Container Registry'
