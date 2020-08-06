@@ -1,6 +1,6 @@
 apiVersion: v1
 appVersion: "1.0"
-description: Promitor, an Azure Monitor scraper for Prometheus
+description: Promitor, Bringing Azure Monitor metrics where you need them.
 name: promitor-agent-scraper
 icon: https://raw.githubusercontent.com/tomkerkhove/promitor/master/docs/media/logos/promitor.png
 home: https://github.com/tomkerkhove/promitor
