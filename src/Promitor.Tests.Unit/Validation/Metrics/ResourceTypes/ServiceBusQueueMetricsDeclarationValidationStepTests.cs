@@ -132,7 +132,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutQueueName_Fails()
+        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutQueueName_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -145,7 +145,7 @@ namespace Promitor.Tests.Unit.Validation.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            Assert.True(validationResult.IsSuccessful, "Validation is successful");
         }
 
         [Fact]
