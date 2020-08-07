@@ -83,6 +83,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Determines the dimension for a metric to use
         /// </summary>
+        /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="dimension">Provides information concerning the configured metric dimension.</param>
         protected virtual string DetermineMetricDimension(TResourceDefinition resourceDefinition, MetricDimension dimension)
         {
