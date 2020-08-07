@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;
@@ -54,7 +54,8 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 return base.DetermineMetricDimension(resourceDefinition, dimension);
             }
 
-            // TODO: Log that we are ignoring
+            Logger.LogWarning("Using 'EntityName' dimension since no topic was configured.");
+
             return "EntityName";
         }
         

@@ -20,7 +20,6 @@ namespace Promitor.Core.Scraping
       where TResourceDefinition : class, IAzureResourceDefinition
     {
         private readonly MetricSinkWriter _metricSinkWriter;
-        private readonly ILogger _logger;
 
         /// <summary>
         ///     Constructor
@@ -29,9 +28,9 @@ namespace Promitor.Core.Scraping
         {
             Guard.NotNull(scraperConfiguration, nameof(scraperConfiguration));
 
-            _logger = scraperConfiguration.Logger;
             _metricSinkWriter = scraperConfiguration.MetricSinkWriter;
 
+            Logger = scraperConfiguration.Logger;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
         }
 
@@ -39,6 +38,11 @@ namespace Promitor.Core.Scraping
         ///     Client to interact with Azure Monitor
         /// </summary>
         protected AzureMonitorClient AzureMonitorClient { get; }
+
+        /// <summary>
+        ///     Provide logger to scraper
+        /// </summary>
+        protected ILogger Logger { get; }
 
         public async Task ScrapeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
         {
@@ -79,7 +83,7 @@ namespace Promitor.Core.Scraping
             }
             catch (Exception exception)
             {
-                _logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
+                Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
             }
         }
 
@@ -89,11 +93,11 @@ namespace Promitor.Core.Scraping
             {
                 if (measuredMetric.IsDimensional)
                 {
-                    _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension {DimensionValue} as part of {DimensionName} dimension with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValue, measuredMetric.DimensionName, aggregationInterval);
+                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension {DimensionValue} as part of {DimensionName} dimension with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValue, measuredMetric.DimensionName, aggregationInterval);
                 }
                 else
                 {
-                    _logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
+                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, aggregationInterval);
                 }
             }
         }
@@ -129,11 +133,11 @@ namespace Promitor.Core.Scraping
                 catch (Exception)
                 {
                     // do nothing. maybe a bad deserialization of json content. Just fallback on outer exception message.
-                    _logger.LogCritical(errorResponseException, "Failed to scrape resource for metric '{MetricName}'", metricName);
+                    Logger.LogCritical(errorResponseException, "Failed to scrape resource for metric '{MetricName}'", metricName);
                 }
             }
 
-            _logger.LogCritical(reason);
+            Logger.LogCritical(reason);
         }
 
         /// <summary>
