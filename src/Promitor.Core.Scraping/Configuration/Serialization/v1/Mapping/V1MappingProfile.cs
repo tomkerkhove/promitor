@@ -40,8 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
-            CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
-                .ForCtorParam("serviceBusNamespace", o => o.MapFrom(s => s.Namespace));
+            CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
