@@ -7,10 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public ServiceBusQueueDeserializer(ILogger<ServiceBusQueueDeserializer> logger) : base(logger)
         {
-            Map(resource => resource.QueueName)
-                .IsRequired();
             Map(resource => resource.Namespace)
                 .IsRequired();
+            Map(resource => resource.QueueName);
         }
     }
 }

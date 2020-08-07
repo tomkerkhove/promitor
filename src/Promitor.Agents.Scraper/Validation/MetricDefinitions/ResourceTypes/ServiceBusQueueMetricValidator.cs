@@ -31,11 +31,6 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
                 {
                     errorMessages.Add("No Service Bus Namespace is configured");
                 }
-
-                if (string.IsNullOrWhiteSpace(resourceDefinition.QueueName))
-                {
-                    errorMessages.Add("No queue name is configured");
-                }
             }
 
             return errorMessages;
