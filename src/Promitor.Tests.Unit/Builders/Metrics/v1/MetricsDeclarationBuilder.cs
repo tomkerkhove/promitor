@@ -142,6 +142,26 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithEventHubsMetric(string metricName = "promitor-event-hubs",
+            string metricDescription = "Description for a metric",
+            string metricDimension = "",
+            string topicName = "promitor-queue",
+            string eventHubsNamespace = "promitor-namespace",
+            string azureMetricName = "Total",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new EventHubsResourceV1
+            {
+                TopicName = topicName,
+                Namespace = eventHubsNamespace
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.EventHubs, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource, metricDimension);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithLogicAppMetric(string metricName = "promitor-logic-apps-failed-runs",
             string metricDescription = "Description for a metric",
             string workflowName = "promitor-workflow",

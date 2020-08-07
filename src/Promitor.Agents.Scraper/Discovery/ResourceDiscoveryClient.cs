@@ -76,8 +76,15 @@ namespace Promitor.Agents.Scraper.Discovery
                 }
                 finally
                 {
-                    var statusCode = response?.StatusCode ?? HttpStatusCode.InternalServerError;
-                    _logger.LogHttpDependency(request, statusCode, dependencyMeasurement);
+                    try
+                    {
+                        var statusCode = response?.StatusCode ?? HttpStatusCode.InternalServerError;
+                        _logger.LogHttpDependency(request, statusCode, dependencyMeasurement);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning("Failed to log HTTP dependency. Reason: {Message}", ex.Message);
+                    }
                 }
             }
         }

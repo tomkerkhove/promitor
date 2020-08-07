@@ -42,6 +42,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.DeviceProvisioningService:
                     var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
                     return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);
+                case ResourceType.EventHubs:
+                    var eventHubsLogger = _loggerFactory.CreateLogger<EventHubsDeserializer>();
+                    return new EventHubsDeserializer(eventHubsLogger);
                 case ResourceType.FileStorage:
                     var fileStorageLogger = _loggerFactory.CreateLogger<FileStorageDeserializer>();
                     return new FileStorageDeserializer(fileStorageLogger);

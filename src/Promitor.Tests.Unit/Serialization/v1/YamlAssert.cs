@@ -221,7 +221,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
         /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
         public static void ReportsErrorForProperty<TObject>(
             IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, string propertyName)
-            where TObject: new()
+            where TObject : new()
         {
             // Arrange
             var errorReporter = new ErrorReporter();
@@ -233,6 +233,28 @@ namespace Promitor.Tests.Unit.Serialization.v1
             var message = errorReporter.Messages.FirstOrDefault(m => ReferenceEquals(m.Node, yamlNode) && m.Message.Contains(propertyName));
             Assert.True(message != null, "Error message not found against specified yaml element.");
             Assert.Equal(MessageType.Error, message.MessageType);
+        }
+
+        /// <summary>
+        /// Checks that an error is reported for the specified property while deserializing the yaml.
+        /// </summary>
+        /// <param name="deserializer">The deserializer to use.</param>
+        /// <param name="yamlNode">The Yaml to deserialize.</param>
+        /// <param name="propertyName">The property that should have an error.</param>
+        /// <typeparam name="TObject">The type of object being deserialized.</typeparam>
+        public static void ReportsNoErrorForProperty<TObject>(
+            IDeserializer<TObject> deserializer, YamlMappingNode yamlNode, string propertyName)
+            where TObject : new()
+        {
+            // Arrange
+            var errorReporter = new ErrorReporter();
+
+            // Act
+            deserializer.Deserialize(yamlNode, errorReporter);
+
+            // Assert
+            var message = errorReporter.Messages.FirstOrDefault(m => ReferenceEquals(m.Node, yamlNode) && m.Message.Contains(propertyName));
+            Assert.False(message != null, "Error message not found against specified yaml element.");
         }
     }
 }

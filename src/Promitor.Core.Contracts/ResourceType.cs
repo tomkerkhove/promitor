@@ -27,6 +27,7 @@
         IoTHub = 22,
         DeviceProvisioningService = 23,
         KeyVault = 24,
-        LogicApp = 25
+        LogicApp = 25,
+        EventHubs = 26
     }
 }

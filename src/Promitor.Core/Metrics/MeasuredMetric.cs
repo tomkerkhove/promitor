@@ -15,7 +15,7 @@ namespace Promitor.Core.Metrics
         /// <summary>
         ///     Name of dimension for a metric
         /// </summary>
-        public string DimensionName { get; }
+        public string DimensionName { get; set; }
 
         /// <summary>
         ///     Name of dimension for a metric
