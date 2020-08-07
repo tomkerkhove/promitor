@@ -110,3 +110,12 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
     - name: network-interfaces
+  - name: azure_event_hubs_incoming_messages_discovery
+    description: "The number of incoming messages on an Azure Event Hub namespace"
+    resourceType: EventHubs
+    azureMetricConfiguration:
+      metricName: IncomingMessages
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: event-hubs-landscape

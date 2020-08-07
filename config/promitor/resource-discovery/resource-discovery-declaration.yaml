@@ -24,6 +24,8 @@ resourceDiscoveryGroups:
   type: CosmosDb
 - name: dps
   type: DeviceProvisioningService
+- name: event-hubs-landscape
+  type: EventHubs
 - name: iot-gateways
   type: IoTHub
 - name: key-vaults
