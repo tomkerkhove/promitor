@@ -26,9 +26,9 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
         public ValidationResult Run()
         {
-            var doesDeclareResourceDiscoveryGroups = DetermineIfDiscoveryGroupsAreDefined();
-            if (_resourceDiscoveryConfiguration == null)
+            if (_resourceDiscoveryConfiguration?.Value == null || _resourceDiscoveryConfiguration.Value.IsConfigured == false)
             {
+                var doesDeclareResourceDiscoveryGroups = DetermineIfDiscoveryGroupsAreDefined();
                 if (doesDeclareResourceDiscoveryGroups)
                 {
                     return ValidationResult.Failure(ComponentName, new List<string> { NoDiscoveryConfiguredError });
@@ -40,9 +40,9 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             var errorMessages = new List<string>();
             if (string.IsNullOrWhiteSpace(_resourceDiscoveryConfiguration.Value.Host))
             {
-                errorMessages.Add( "No host name for resource discovery was configured");
+                errorMessages.Add("No host name for resource discovery was configured");
             }
-
+            
             if (_resourceDiscoveryConfiguration.Value.Port <= 0)
             {
                 errorMessages.Add($"No valid port ({_resourceDiscoveryConfiguration.Value.Port}) for resource discovery was configured");
