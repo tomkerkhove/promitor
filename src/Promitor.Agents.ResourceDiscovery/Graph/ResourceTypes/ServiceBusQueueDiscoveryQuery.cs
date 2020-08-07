@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using GuardNet;
+﻿using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
