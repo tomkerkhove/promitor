@@ -21,9 +21,7 @@ The following scraper-specific metric label will be added:
 
 - `entity_name` - Name of the topic
 
-Notes:
-
-- We currently do not support `EntityPath` as a dimension due to internal limitations.
+> :warning: **As of today, `EntityPath` is not supported.**
 
 Example:
 
