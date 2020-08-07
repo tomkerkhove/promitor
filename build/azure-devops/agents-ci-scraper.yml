@@ -206,11 +206,12 @@ stages:
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
-     - template: ./../templates/package-helm-chart.yml
+     - template: ./../templates/package-preview-helm-chart.yml
        parameters:
         chartName: '$(Helm.Chart.CI.Name)'
         chartVersion: '$(Helm.Chart.Version)'
         appVersion: '$(App.Version)'
+        imageName: '$(Image.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../templates/push-helm-chart.yml
           parameters:
