@@ -103,15 +103,15 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}'''
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
         - template: ./../templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest'''
@@ -153,11 +153,11 @@ stages:
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: ./../templates/push-docker-image.yml
+          parameters:
+            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+            imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
         - template: ./../templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
