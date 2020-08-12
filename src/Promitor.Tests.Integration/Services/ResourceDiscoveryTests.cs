@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,7 +39,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 11;
+            const int expectedResourceCount = 13;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -119,7 +119,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-subscriptions-scenario";
-            const int expectedResourceCount = 11;
+            const int expectedResourceCount = 13;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -199,7 +199,7 @@ namespace Promitor.Tests.Integration.Services
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 10;
+            const int expectedResourceCount = 12;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
