@@ -24,6 +24,7 @@ version:
  queue name. [#529](https://github.com/tomkerkhove/promitor/issues/529).
 - {{% tag changed %}} Handle validation failures on startup more gracefully. [#1113](https://github.com/tomkerkhove/promitor/issues/1113).
 - {{% tag changed %}} Improve time series handling to ensure finalized time series are reported
+- {{% tag fixed %}} Ensure Prometheus metric sink does write timestamps [#1217](https://github.com/tomkerkhove/promitor/issues/1217).
 - {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)
  | [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
 - {{% tag removed %}} Support for Swagger UI 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-ui-2-0) |

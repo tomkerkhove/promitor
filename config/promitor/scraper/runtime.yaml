@@ -2,9 +2,9 @@ server:
   httpPort: 88
 metricSinks:
   prometheusScrapingEndpoint:
-    metricUnavailableValue: NaN
+    metricUnavailableValue: -1
     enableMetricTimestamps: true # true by default
-    baseUriPath: /metrics
+    baseUriPath: /scrape
   statsd:
     host: graphite
     port: 8125
