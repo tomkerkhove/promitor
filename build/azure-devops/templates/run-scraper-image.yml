@@ -1,7 +1,11 @@
 parameters:
   imageName: ''
-  containerName: 'promitor-ci'
+  containerName: ''
+  containerPort: ''
+  activeDirectoryAppId: ''
+  activeDirectoryAppSecret: ''
   volumes: 'promitor-ci'
+  networkName: ''
   os: ''
 
 steps:
@@ -16,9 +20,23 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"containerName\""
       echo "##vso[task.complete result=Failed;]"
     fi
+    echo "Variable 'containerPort' found with value '$CONTAINER_PORT'"
+    if [ -z "$CONTAINER_PORT" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"containerPort\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
     echo "Variable 'volumes' found with value '$VOLUMES'"
     if [ -z "$VOLUMES" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"volumes\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    echo "Variable 'activeDirectoryAppId' found with value '$APP_ID'"
+    if [ -z "$APP_ID" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"activeDirectoryAppId\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
+    if [ -z "$APP_SECRET" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"activeDirectoryAppSecret\""
       echo "##vso[task.complete result=Failed;]"
     fi
     echo "Variable 'os' found with value '$OS'"
@@ -29,19 +47,26 @@ steps:
   env:
     IMAGE_NAME: ${{ parameters.imageName }}
     CONTAINER_NAME: ${{ parameters.containerName }}
+    CONTAINER_PORT: ${{ parameters.containerPort }}
     VOLUMES: ${{ parameters.volumes }}
+    APP_ID: ${{ parameters.activeDirectoryAppId }}
+    APP_SECRET: ${{ parameters.activeDirectoryAppSecret }}
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
-- task: Docker@1
-  displayName: 'Run Scraper image as ''${{ parameters.containerName }}'' container on ${{ parameters.os }}'
-  inputs:
-    containerregistrytype: 'Container Registry'
-    dockerRegistryEndpoint: 'Docker Hub'
-    command: 'Run an image'
-    imageName: '${{ parameters.imageName }}'
-    containerName: '${{ parameters.containerName }}'
-    ports: '8999:80'
-    volumes: '${{ parameters.volumes }}'
-    envVars: |
-     PROMITOR_AUTH_APPID='$(Container.Env.AzureMonitor.Id)'
-     PROMITOR_AUTH_APPKEY='$(Container.Env.AzureMonitor.Key)'
+- powershell: |
+    $networkArgument = '';
+    if ('${{ parameters.networkName }}' -ne '') {
+      $networkArgument = '--network ${{ parameters.networkName }}';
+      Write-Host "Network command = $networkArgument"
+    } else {
+      Write-Host "No network name was provided"
+    }
+    Write-Host "##vso[task.setvariable variable=networkArgument]$networkArgument"
+  displayName: 'Determine if a network is required'
+- script: |
+      echo Mounting volumes: ${{ parameters.volumes }}
+      docker run -d -p ${{ parameters.containerPort }}:88 --name ${{ parameters.containerName }} $(networkArgument) --env PROMITOR_AUTH_APPID=${{ parameters.activeDirectoryAppId }} --env PROMITOR_AUTH_APPKEY=${{ parameters.activeDirectoryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
+      sleep 10
+      docker logs ${{ parameters.containerName }}
+  displayName: Run Scraper image as ${{ parameters.containerName }} container on ${{ parameters.os }}
+  failOnStderr: true

@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1.401 AS build
 WORKDIR /src
+ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
@@ -11,12 +12,12 @@ COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
 COPY Promitor.Integrations.Sinks.Atlassian.Statuspage/* Promitor.Integrations.Sinks.Atlassian.Statuspage/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
-RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app
+RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=$VERSION
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.7 as runtime
 WORKDIR /app
-ARG CONFIG_FOLDER="/config/"
-ENV PROMITOR_INTERNAL_CONFIG_FOLDER=$CONFIG_FOLDER
+ENV PROMITOR_CONFIG_FOLDER="/config/"
+
 COPY --from=build /src/app .
 
 ENTRYPOINT ["dotnet", "Promitor.Agents.Scraper.dll"]

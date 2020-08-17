@@ -25,14 +25,14 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create chart name and version as used by the chart label.
+    Create chart name and version as used by the chart label.
 */}}
 {{- define "promitor-agent-scraper.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Create secret name based on whether or not user defined it.
+    Create secret name based on whether or not user defined it.
 */}}
 {{- define "promitor-agent-scraper.secretname" -}}
 {{- if .Values.secrets.createSecret -}}
@@ -43,7 +43,7 @@ Create secret name based on whether or not user defined it.
 {{- end -}}
 
 {{/*
-Create service account name based on whether or not user defined it.
+    Create service account name based on whether or not user defined it.
 */}}
 {{- define "promitor-agent-scraper.serviceaccountname" -}}
 {{- if .Values.rbac.serviceAccount.create -}}

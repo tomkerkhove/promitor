@@ -1,13 +1,12 @@
-﻿using System.ComponentModel;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
+using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Promitor.Tests.Integration.Services
+namespace Promitor.Tests.Integration.Services.Scraper
 {
-    [Category("Integration")]
-    public class HealthTests : IntegrationTest
+    public class HealthTests : ScraperIntegrationTest
     {
         public HealthTests(ITestOutputHelper testOutput)
           : base(testOutput)
@@ -15,10 +14,10 @@ namespace Promitor.Tests.Integration.Services
         }
 
         [Fact]
-        public async Task Health_Get_ReturnsValidList()
+        public async Task Health_Get_ReturnsOk()
         {
             // Arrange
-            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+            var resourceDiscoveryClient = new ScraperClient(Configuration, Logger);
 
             // Act
             var response = await resourceDiscoveryClient.GetHealthAsync();

@@ -2,9 +2,10 @@ parameters:
   imageName: ''
   containerName: ''
   containerPort: ''
+  activeDirectoryAppId: ''
+  activeDirectoryAppSecret: ''
   volumes: ''
-  discoveryAppId: ''
-  discoveryAppSecret: ''
+  networkName: ''
   os: ''
 
 steps:
@@ -29,14 +30,13 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"volumes\""
       echo "##vso[task.complete result=Failed;]"
     fi
-    echo "Variable 'discoveryAppId' found with value '$DISCOVERY_APP_ID'"
+    echo "Variable 'activeDirectoryAppId' found with value '$DISCOVERY_APP_ID'"
     if [ -z "$DISCOVERY_APP_ID" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"discoveryAppId\""
+      echo "##vso[task.logissue type=error;]Missing template parameter \"activeDirectoryAppId\""
       echo "##vso[task.complete result=Failed;]"
     fi
-    echo "Variable 'discoveryAppSecret' found with value '$DISCOVERY_APP_SECRET'"
     if [ -z "$DISCOVERY_APP_SECRET" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"discoveryAppSecret\""
+      echo "##vso[task.logissue type=error;]Missing template parameter \"activeDirectoryAppSecret\""
       echo "##vso[task.complete result=Failed;]"
     fi
     echo "Variable 'os' found with value '$OS'"
@@ -49,14 +49,21 @@ steps:
     CONTAINER_NAME: ${{ parameters.containerName }}
     CONTAINER_PORT: ${{ parameters.containerPort }}
     VOLUMES: ${{ parameters.volumes }}
-    DISCOVERY_APP_ID: ${{ parameters.discoveryAppId }}
-    DISCOVERY_APP_SECRET: ${{ parameters.discoveryAppSecret }}
+    DISCOVERY_APP_ID: ${{ parameters.activeDirectoryAppId }}
+    DISCOVERY_APP_SECRET: ${{ parameters.activeDirectoryAppSecret }}
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
+- powershell: |
+    $networkArgument = '';
+    if ('${{ parameters.networkName }}' -ne '') {
+      $networkArgument = '--network ${{ parameters.networkName }}';
+      Write-Host "Network command = $networkArgument"
+    }
+    Write-Host "##vso[task.setvariable variable=networkArgument]$networkArgument"
+  displayName: 'Determine if a network is required'
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
-      echo App secret: ${{ parameters.discoveryAppSecret }}
-      docker run -d -p ${{ parameters.containerPort }}:88 --name ${{ parameters.containerName }} --env DISCOVERY_APPID=${{ parameters.discoveryAppId }} --env DISCOVERY_APPSECRET=${{ parameters.discoveryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
+      docker run -d -p ${{ parameters.containerPort }}:99 --name ${{ parameters.containerName }} $(networkArgument) --env DISCOVERY_APPID=${{ parameters.activeDirectoryAppId }} --env DISCOVERY_APPSECRET=${{ parameters.activeDirectoryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
       sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}

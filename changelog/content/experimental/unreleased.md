@@ -11,7 +11,7 @@ version:
 - {{% tag added %}} Support for scraping Azure Event Hubs ([docs](https://promitor.io/configuration/v2.x/metrics/event-hubs)
  | [#372](https://github.com/tomkerkhove/promitor/issues/69))
 - {{% tag added %}} Support for scraping Azure Logic Apps ([docs](https://promitor.io/configuration/v2.x/metrics/logic-apps)
- | [#372](https://github.com/tomkerkhove/promitor/issues/314))
+ | [#314](https://github.com/tomkerkhove/promitor/issues/314))
 - {{% tag added %}} New validation rule to ensure at least one resource or resource collection is configured to scrape
 - {{% tag added %}} Provide suggestions when unknown fields are found in the metrics config. [#1105](https://github.com/tomkerkhove/promitor/issues/1105).
 - {{% tag added %}} Add validation to ensure the scraping schedule is a valid Cron expression. [#1103](https://github.com/tomkerkhove/promitor/issues/1103).
@@ -20,6 +20,8 @@ version:
 - {{% tag added %}} Provide suggestions when unknown fields are found in the metrics config. [#1105](https://github.com/tomkerkhove/promitor/issues/1105).
 - {{% tag added %}} New validation rule to ensure the scraping schedule is a valid Cron expression. [#1103](https://github.com/tomkerkhove/promitor/issues/1103).
 - {{% tag added %}} New validation rule to ensure declarative or dynamic discovery for metrics to scrape are configured
+- {{% tag added %}} New System API endpoint giving runtime information ([docs](https://promitor.io/operations/#system)
+ | [#1208](https://github.com/tomkerkhove/promitor/issues/1208))
 - {{% tag changed %}} Provide capability to scrape all queues in Azure Service Bus, instead of having to declare the
  queue name. [#529](https://github.com/tomkerkhove/promitor/issues/529).
 - {{% tag changed %}} Handle validation failures on startup more gracefully. [#1113](https://github.com/tomkerkhove/promitor/issues/1113).

@@ -1,0 +1,6 @@
+steps:
+- powershell: |
+   rm $(Pipeline.Workspace)\s\config\promitor\resource-discovery\runtime.yaml
+   copy $(Pipeline.Workspace)\s\config\promitor\resource-discovery\ci-runtime.yaml $(Pipeline.Workspace)\s\config\promitor\resource-discovery\runtime.yaml
+   cat $(Pipeline.Workspace)\s\config\promitor\resource-discovery\runtime.yaml
+  displayName: 'Prepare Resource Discovery runtime config'

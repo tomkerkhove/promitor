@@ -1,0 +1,4 @@
+steps:
+- script: docker ps
+  displayName: 'Show running Docker containers'
+  failOnStderr: true

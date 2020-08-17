@@ -28,7 +28,7 @@ steps:
     OS: ${{ parameters.os }}
   displayName: Check for required parameters in YAML template
 - task: Docker@1
-  displayName: 'Build image (${{ parameters.os }})'
+  displayName: 'Build ${{ parameters.imageName }} image (${{ parameters.os }})'
   inputs:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker Hub'

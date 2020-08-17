@@ -55,6 +55,12 @@
             </summary>
             <remarks>Lists all available resource discovery groups.</remarks>
         </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.SystemController.Get">
+            <summary>
+                Get System Info
+            </summary>
+            <remarks>Provides information concerning the Promitor Resource Discovery Agent</remarks>
+        </member>
         <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
             <summary>
                 Response provided by Azure Resource Graph after running a query

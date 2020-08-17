@@ -35,6 +35,12 @@
             </summary>
             <remarks>Provides an indication about the health of the scraper</remarks>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Controllers.v1.SystemController.Get">
+            <summary>
+                Get System Info
+            </summary>
+            <remarks>Provides information concerning the Promitor Scraper Agent</remarks>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Adds the required metric sinks

@@ -92,7 +92,7 @@ stages:
      - template: ./../templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
-        buildArgs: ''
+        buildArgs: '--build-arg VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
      - template: ./../templates/push-docker-image.yml
@@ -146,7 +146,7 @@ stages:
      - template: ./../templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-        buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+        buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
      - template: ./../templates/push-docker-image.yml

@@ -70,6 +70,18 @@ Therefor we provide the following REST APIs:
 For security reasons, some sections of the configuration might be sanitized in
 the response to avoid leaking secrets.
 
+## System
+
+Promitor provides a basic system endpoint that provides information about itself such as its version.
+
+### Consuming the System endpoint
+
+You can check the status with a simple `GET`:
+
+```shell
+❯ curl -i -X GET "http://<uri>/api/v1/system"
+```
+
 ### Exploring our REST APIs
 
 We provide API documentation to make it easier for you to consume our REST APIs them:
