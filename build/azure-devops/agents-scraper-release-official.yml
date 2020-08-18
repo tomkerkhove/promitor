@@ -70,11 +70,11 @@ stages:
   variables:
   - group: 'Agent Authentication'
   - name: Container.Scraper.Name
-    value: 'promitor-scraper-agent'
+    value: 'promitor.scraper.agent'
   - name: Container.Scraper.Port
     value: 8999
   - name: Container.ResourceDiscovery.Name
-    value: 'promitor-agents-resourcediscovery'
+    value: 'promitor.agents.resourcediscovery'
   - name: Container.ResourceDiscovery.Port
     value: '999'
   - name: Container.Network.Name
