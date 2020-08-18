@@ -58,7 +58,7 @@ stages:
         Write-Host "Found version '$majorMinorVersion'"
         Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
        displayName: 'Determine ''{major}.{minor}'' version'
-     - template: templates/persist-variable.yml
+     - template: templates/utils/persist-variable.yml
        parameters:
           currentVariableName: 'Image.MajorMinorVersion'
           persistedVariableName: 'Image.MajorMinorVersion'
@@ -101,7 +101,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
@@ -128,7 +128,7 @@ stages:
      - template: ./templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
-     - template: templates/run-scraper-image.yml
+     - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
@@ -138,7 +138,7 @@ stages:
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: templates/run-discovery-image.yml
+     - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           containerName: '$(Container.ResourceDiscovery.Name)'
@@ -149,7 +149,7 @@ stages:
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
      - template: ./templates/docker/show-running-containers.yml
-     - template: templates/run-integration-tests.yml
+     - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -160,28 +160,28 @@ stages:
      - template: ./templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/push-docker-image.yml
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}'''
         imageName: '$(Image.TaggedName)'
-     - template: templates/push-docker-image.yml
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
           imageDisplayName: '''{major}.{minor}'''
           imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
           imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
           imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest'''
             imageName: '$(Image.Name):latest'
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -226,7 +226,7 @@ stages:
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
-     - template: templates/run-scraper-image.yml
+     - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
@@ -236,7 +236,7 @@ stages:
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: templates/run-discovery-image.yml
+     - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           containerName: '$(Container.ResourceDiscovery.Name)'
@@ -247,7 +247,7 @@ stages:
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
      - template: ./templates/docker/show-running-containers.yml
-     - template: templates/run-integration-tests.yml
+     - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -258,16 +258,16 @@ stages:
      - template: ./templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/push-docker-image.yml
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
             imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -282,7 +282,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - ${{ if eq(parameters['releaseType'], 'Preview') }}:

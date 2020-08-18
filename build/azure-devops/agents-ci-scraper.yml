@@ -35,8 +35,8 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/determine-pr-version.yml
-     - template: templates/persist-variable.yml
+        - template: templates/utils/determine-pr-version.yml
+     - template: templates/utils/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
         persistedVariableName: 'Image.Tag'
@@ -51,7 +51,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: templates/build-solution.yml
+     - template: templates/build/build-solution.yml
        parameters:
         dotnetVersion: '$(DotNet.SDK.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
@@ -71,7 +71,7 @@ stages:
      pool:
        vmImage: windows-2019
      steps:
-     - template: templates/run-code-quality.yml
+     - template: templates/quality/run-code-quality.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
 - stage: Test
@@ -84,7 +84,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: templates/run-unit-tests.yml
+     - template: templates/tests/run-unit-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
@@ -130,7 +130,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
@@ -156,7 +156,7 @@ stages:
      - template: ./templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
-     - template: templates/run-scraper-image.yml
+     - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
@@ -166,7 +166,7 @@ stages:
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: templates/run-discovery-image.yml
+     - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           containerName: '$(Container.ResourceDiscovery.Name)'
@@ -177,7 +177,7 @@ stages:
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
      - template: ./templates/docker/show-running-containers.yml
-     - template: templates/run-integration-tests.yml
+     - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -189,10 +189,10 @@ stages:
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName.OSAgnostic)'
    - job: DockerBuildWindows
@@ -205,11 +205,11 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: templates/read-variable-on-windows.yml
+     - template: templates/utils/read-variable-on-windows.yml
        parameters:
         variableName: 'Image.Tag'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/determine-pr-version.yml
+        - template: templates/utils/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: templates/build-scraper-image.yml
           parameters:
@@ -235,7 +235,7 @@ stages:
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
-     - template: templates/run-scraper-image.yml
+     - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
@@ -245,7 +245,7 @@ stages:
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: templates/run-discovery-image.yml
+     - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           containerName: '$(Container.ResourceDiscovery.Name)'
@@ -256,7 +256,7 @@ stages:
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
      - template: ./templates/docker/show-running-containers.yml
-     - template: templates/run-integration-tests.yml
+     - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
@@ -268,7 +268,7 @@ stages:
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
 - stage: Helm2
@@ -283,7 +283,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: ./templates/lint-helm-chart.yml
+     - template: ./templates/helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Helm.Chart.Official.Name)'
@@ -301,10 +301,10 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
-     - template: ./templates/lint-helm-chart.yml
+     - template: ./templates/helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Helm.Chart.Official.Name)'
