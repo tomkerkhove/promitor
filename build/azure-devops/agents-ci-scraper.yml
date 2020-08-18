@@ -24,18 +24,6 @@ variables:
     value: 'promitor-agent-scraper'
   - name: Helm.Chart.CI.Name
     value: 'promitor-agent-scraper-ci'
-  - name: Container.Scraper.Name
-    value: 'promitor-scraper-agent'
-  - name: Container.ResourceDiscovery.Name
-    value: 'promitor.agents.resourcediscovery'
-  - name: Container.ResourceDiscovery.Port
-    value: '999'
-  - name: Container.Network.Name
-    value: 'ci-network'
-  - name: Image.ResourceDiscovery.Name
-    value: 'local/promitor-resource-discovery:dev'
-  - name: App.Version
-    value: '0.0.0-$(Image.Tag)'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -117,6 +105,18 @@ stages:
     value: NOTUSED
   - name: Agent.ResourceDiscovery.Version
     value: NOTUSED
+  - name: Container.Scraper.Name
+    value: 'promitor.scraper.agent'
+  - name: Container.ResourceDiscovery.Name
+    value: 'promitor.agents.resourcediscovery'
+  - name: Container.ResourceDiscovery.Port
+    value: '999'
+  - name: Container.Network.Name
+    value: 'ci-network'
+  - name: Image.ResourceDiscovery.Name
+    value: 'local/promitor-resource-discovery:dev'
+  - name: App.Version
+    value: '0.0.0-$(Image.Tag)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -138,20 +138,20 @@ stages:
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - template: templates/build-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
      - template: ./templates/docker/create-network.yml
        parameters:
@@ -214,7 +214,7 @@ stages:
         - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              tags: '--tag promitor-agent-scraper-ci --tag promitor-agent-scraper-ci-non-pr'
              os: '$(OS.Name)'
      - template: templates/agents/prepare-scraper-ci-config.yml
@@ -223,12 +223,12 @@ stages:
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
      - template: templates/build-scraper-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
      - template: ./templates/docker/create-network.yml
