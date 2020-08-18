@@ -120,14 +120,14 @@ stages:
        parameters:
         variableName: 'Image.Tag'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/agents/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/agents/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
@@ -175,14 +175,14 @@ stages:
         - template: templates/utils/determine-pr-version.yml
      - template: templates/agents/prepare-discovery-ci-config.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/agents/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              buildArgs: 'VERSION="$(App.Version)"'
              tags: '--tag promitor-agent-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/agents/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'

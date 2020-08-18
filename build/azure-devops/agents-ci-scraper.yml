@@ -147,7 +147,7 @@ stages:
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic)'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
-     - template: templates/agents/build-discovery-image.yml
+     - template: templates/build-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
@@ -219,7 +219,7 @@ stages:
              os: '$(OS.Name)'
      - template: templates/agents/prepare-scraper-ci-config.yml
      - template: templates/agents/prepare-discovery-ci-config.yml
-     - template: templates/agents/build-discovery-image.yml
+     - template: templates/build-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
