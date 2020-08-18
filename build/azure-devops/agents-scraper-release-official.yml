@@ -132,7 +132,7 @@ stages:
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
-          imageName: '$(Image.TaggedName)'
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/scraper/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml'
           activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
@@ -230,7 +230,7 @@ stages:
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
-          imageName: '$(Image.TaggedName)'
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
           volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\:c:\config\'
           activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
