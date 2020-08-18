@@ -82,7 +82,7 @@ stages:
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
   - name: App.Version
-    value: '0.0.0-$(Image.Tag)'
+    value: '0.0.0-$(Image.Version)'
   - name: Agent.Scraper.Version
     value: $(App.Version)
   - name: Agent.Scraper.BaseUrl
