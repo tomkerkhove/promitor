@@ -116,14 +116,14 @@ stages:
      - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
-        buildArgs: '--build-arg VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
      - template: templates/build-discovery-image.yml
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
         tags: '--tag dev'
-        buildArgs: '--build-arg VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(App.Version)"'
         os: '$(OS.Name)'
      - template: ./templates/docker/create-network.yml
        parameters:
@@ -214,7 +214,7 @@ stages:
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
         tags: '--tag dev'
-        buildArgs: '--build-arg VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(App.Version)"'
         os: '$(OS.Name)'
      - template: templates/build-scraper-image.yml
        parameters:
