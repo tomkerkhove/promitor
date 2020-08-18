@@ -138,20 +138,20 @@ stages:
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - template: templates/build-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
      - template: ./templates/docker/create-network.yml
        parameters:
@@ -214,7 +214,7 @@ stages:
         - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             buildArgs: 'VERSION="$(App.Version)"'
              tags: '--tag promitor-agent-scraper-ci --tag promitor-agent-scraper-ci-non-pr'
              os: '$(OS.Name)'
      - template: templates/agents/prepare-scraper-ci-config.yml
@@ -223,12 +223,12 @@ stages:
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
           tags: '--tag dev'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
      - template: templates/build-scraper-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
-          buildArgs: '--build-arg VERSION="$(App.Version)"'
+          buildArgs: 'VERSION="$(App.Version)"'
           tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
      - template: ./templates/docker/create-network.yml

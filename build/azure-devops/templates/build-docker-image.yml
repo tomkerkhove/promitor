@@ -33,7 +33,7 @@ steps:
     containerregistrytype: 'Container Registry'
     dockerRegistryEndpoint: 'Docker Hub'
     dockerFile: ${{ parameters.dockerFile }}
-    arguments: '${{ parameters.tags }} ${{ parameters.buildArgs }} --no-cache'
+    arguments: '${{ parameters.tags }} --build-arg ${{ parameters.buildArgs }} --no-cache'
     useDefaultContext: false
     buildContext: ./src/
     imageName: '${{ parameters.imageName }}'
