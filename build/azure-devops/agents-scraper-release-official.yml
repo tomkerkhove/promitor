@@ -58,7 +58,7 @@ stages:
         Write-Host "Found version '$majorMinorVersion'"
         Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
        displayName: 'Determine ''{major}.{minor}'' version'
-     - template: ./../templates/persist-variable.yml
+     - template: templates/persist-variable.yml
        parameters:
           currentVariableName: 'Image.MajorMinorVersion'
           persistedVariableName: 'Image.MajorMinorVersion'
@@ -77,7 +77,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-linux.yml
+     - template: templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - task: DotNetCoreInstaller@0
@@ -89,34 +89,34 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
         buildArgs: '--build-arg VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
+     - template: templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}'''
         imageName: '$(Image.TaggedName)'
-     - template: ./../templates/push-docker-image.yml
+     - template: templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
           imageDisplayName: '''{major}.{minor}'''
           imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
           imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
           imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest'''
             imageName: '$(Image.Name):latest'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -143,22 +143,22 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
         buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
+     - template: templates/push-docker-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
             imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -173,7 +173,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-linux.yml
+     - template: templates/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - ${{ if eq(parameters['releaseType'], 'Preview') }}:
