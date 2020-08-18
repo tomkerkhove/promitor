@@ -113,7 +113,7 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: templates/agents/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
         buildArgs: 'VERSION="$(App.Version)"'
@@ -216,7 +216,7 @@ stages:
         tags: '--tag dev'
         buildArgs: 'VERSION="$(App.Version)"'
         os: '$(OS.Name)'
-     - template: templates/agents/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
         buildArgs: 'VERSION="$(App.Version)"'

@@ -134,14 +134,14 @@ stages:
        parameters:
         variableName: 'Image.Tag'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/agents/build-scraper-image.yml
+        - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/agents/build-scraper-image.yml
+        - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-scraper-ci --tag $(Image.TaggedName.OSAgnostic)'
@@ -211,7 +211,7 @@ stages:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/utils/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/agents/build-scraper-image.yml
+        - template: templates/build-scraper-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              buildArgs: 'VERSION="$(App.Version)"'
@@ -225,7 +225,7 @@ stages:
           tags: '--tag dev'
           buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
-     - template: templates/agents/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
           buildArgs: 'VERSION="$(App.Version)"'
