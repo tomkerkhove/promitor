@@ -1,0 +1,10 @@
+parameters:
+- name: containerName
+  displayName: Container Name
+  type: string
+
+steps:
+- script: docker logs ${{ parameters.containerName }}
+  displayName: Show ${{ parameters.containerName }} logs
+  failOnStderr: true
+  condition: always()

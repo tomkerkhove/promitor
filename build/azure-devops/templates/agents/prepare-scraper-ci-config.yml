@@ -1,0 +1,10 @@
+steps:
+- powershell: |
+   rm $(Pipeline.Workspace)\s\config\promitor\scraper\runtime.yaml
+   copy $(Pipeline.Workspace)\s\config\promitor\scraper\ci-runtime.yaml $(Pipeline.Workspace)\s\config\promitor\scraper\runtime.yaml
+   cat $(Pipeline.Workspace)\s\config\promitor\scraper\runtime.yaml
+  displayName: 'Prepare Scraper runtime config'
+- powershell: |
+   copy $(Pipeline.Workspace)\s\config\promitor\scraper\metrics.yaml $(Pipeline.Workspace)\s\config\promitor\scraper\metrics-declaration.yaml
+   cat $(Pipeline.Workspace)\s\config\promitor\scraper\metrics-declaration.yaml
+  displayName: 'Prepare Scraper metrics declaration config'

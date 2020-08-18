@@ -1,9 +1,15 @@
 parameters:
+  agentName: ''
   dotnetVersion: ''
   buildConfiguration: ''
 
 steps:
 - bash: |
+    echo "Variable 'agentName' found with value '$AGENT_NAME'"
+    if [ -z "$AGENT_NAME" ]; then
+      echo "##vso[task.logissue type=error;]Missing template parameter \"agentName\""
+      echo "##vso[task.complete result=Failed;]"
+    fi
     echo "Variable 'dotnetVersion' found with value '$DOTNET_VERSION'"
     if [ -z "$DOTNET_VERSION" ]; then
       echo "##vso[task.logissue type=error;]Missing template parameter \"dotnetVersion\""
@@ -15,6 +21,7 @@ steps:
       echo "##vso[task.complete result=Failed;]"
     fi
   env:
+    AGENT_NAME: ${{ parameters.agentName }}
     DOTNET_VERSION: ${{ parameters.dotnetVersion }}
     BUILD_CONFIG: ${{ parameters.buildConfiguration }}
   displayName: Check for required parameters in YAML template
@@ -39,4 +46,4 @@ steps:
   inputs:
     command: test
     projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
-    arguments: '--configuration ${{ parameters.buildConfiguration }}'
+    arguments: '--configuration ${{ parameters.buildConfiguration }} --filter "Agent=${{ parameters.agentName}}"'

@@ -1,0 +1,23 @@
+parameters:
+- name: networkName
+  displayName: Network Name
+  type: string
+- name: driverName
+  displayName: Network Name
+  type: string
+  default: bridge
+
+steps:
+- powershell: |
+    $networkArgument = '';
+    if ('${{ parameters.networkName }}' -ne '') {
+      $networkArgument = '--network ${{ parameters.networkName }}';
+      Write-Host "Network command = $networkArgument"
+    } else {
+      Write-Host "No network name was provided"
+    }
+    Write-Host "##vso[task.setvariable variable=networkArgument]$networkArgument"
+  displayName: 'Determine if a driver is required'
+- script: docker network create --driver ${{ parameters.driverName }} "${{ parameters.networkName }}"
+  displayName: Create ${{ parameters.networkName }} network
+  failOnStderr: true

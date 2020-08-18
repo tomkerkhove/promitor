@@ -8,6 +8,7 @@
     <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
     <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
     <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
+    <DockerfileBuildArguments>--build-arg VERSION=2.0.0</DockerfileBuildArguments>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

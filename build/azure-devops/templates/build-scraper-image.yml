@@ -7,8 +7,8 @@ parameters:
 steps:
 - template: ./build-docker-image.yml
   parameters:
-      dockerFile: './src/Promitor.Agents.Scraper/Dockerfile'
-      imageName: '${{ parameters.imageName }}'
-      buildArgs: '${{ parameters.buildArgs }}'
-      tags: '${{ parameters.tags }}'
-      os: '${{ parameters.os }}'
+    dockerFile: './src/Promitor.Agents.Scraper/Dockerfile.${{ parameters.os }}'
+    imageName: '${{ parameters.imageName }}'
+    buildArgs: '${{ parameters.buildArgs }}'
+    tags: '${{ parameters.tags }}'
+    os: '${{ parameters.os }}'

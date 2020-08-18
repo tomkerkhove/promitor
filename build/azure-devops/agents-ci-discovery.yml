@@ -1,4 +1,4 @@
-name: $(Date:yyyyMMdd)$(Rev:.r)
+name: $(Date:yyyyMMdd)$(Rev:r)
 resources:
 - repo: self
 trigger:
@@ -19,6 +19,8 @@ variables:
     value: '$(Image.Name):$(Tags.PR)'
   - name: Container.Name
     value: 'promitor-discovery-agent'
+  - name: App.Version
+    value: '0.0.0-$(Image.Tag)'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -30,11 +32,11 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/determine-pr-version.yml
-     - template: ./../templates/persist-variable.yml
+        - template: templates/determine-pr-version.yml
+     - template: templates/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
-        persistedVariableName: 'App.Version'
+        persistedVariableName: 'Image.Tag'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
 - stage: Build
@@ -46,7 +48,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: ./../templates/build-solution.yml
+     - template: templates/build-solution.yml
        parameters:
         dotnetVersion: '$(DotNet.SDK.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
@@ -66,7 +68,7 @@ stages:
      pool:
        vmImage: windows-2019
      steps:
-     - template: ./../templates/run-code-quality.yml
+     - template: templates/run-code-quality.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
 - stage: Test
@@ -79,7 +81,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: ./../templates/run-unit-tests.yml
+     - template: templates/run-unit-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
@@ -87,12 +89,21 @@ stages:
   displayName: Docker Image
   dependsOn: [Init]
   variables:
-    Image.TaggedName.OSAgnostic: '$(Image.Name):$(App.Version)'
-    Tags.PR: '$(App.Version)-$(OS.Name)'
-    Container.Port: 8888
-    Agent.ResourceDiscovery.BaseUrl: http://localhost:$(Container.Port)
-    Agent.Auth.AppId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
-    # Agent.Auth.AppSecret is added on the pipeline config
+  - group: 'Agent Authentication'
+  - name: Image.TaggedName.OSAgnostic
+    value: '$(Image.Name):$(Image.Tag)'
+  - name: Tags.PR
+    value: '$(Image.Tag)-$(OS.Name)'
+  - name: Container.Port
+    value: 8888
+  - name: Agent.ResourceDiscovery.BaseUrl
+    value: http://localhost:$(Container.Port)
+  - name: Agent.ResourceDiscovery.Version
+    value: $(App.Version)
+  - name: Agent.Scraper.BaseUrl
+    value: NOTUSED
+  - name: Agent.Scraper.Version
+    value: NOTUSED
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -105,47 +116,46 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-linux.yml
+     - template: templates/read-variable-on-linux.yml
        parameters:
-        variableName: 'App.Version'
+        variableName: 'Image.Tag'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: ./../templates/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
-     - template: ./../templates/run-discovery-image.yml
+     - template: templates/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
           containerName: '$(Container.Name)'
           containerPort: '$(Container.Port)'
-          volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/:/config/'
-          discoveryAppId: '$(Agent.Auth.AppId)'
-          discoveryAppSecret: '$(Agent.Auth.AppSecret)'
+          volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
-     - template: ./../templates/run-integration-tests.yml
+     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/run-integration-tests.yml
        parameters:
+        agentName: 'Resource Discovery'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - task: Bash@3
-       inputs:
-         targetType: 'inline'
-         script: |
-           docker logs $(Container.Name)
-         failOnStderr: true
-       displayName: Show $(Container.Name) logs
-       condition: always()
+     - template: ./templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName.OSAgnostic)'
    - job: DockerBuildWindows
@@ -158,46 +168,44 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-windows.yml
+     - template: templates/read-variable-on-windows.yml
        parameters:
-        variableName: 'App.Version'
+        variableName: 'Image.Tag'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/determine-pr-version.yml
+        - template: templates/determine-pr-version.yml
+     - template: templates/agents/prepare-discovery-ci-config.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: ./../templates/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+             buildArgs: 'VERSION="$(App.Version)"'
              tags: '--tag promitor-agent-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/build-discovery-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
              tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
-     - template: ./../templates/run-discovery-image.yml
+     - template: templates/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
           containerName: '$(Container.Name)'
           containerPort: '$(Container.Port)'
-          volumes: '$(System.DefaultWorkingDirectory)\config\promitor\resource-discovery\:c:\config\'
-          discoveryAppId: '$(Agent.Auth.AppId)'
-          discoveryAppSecret: '$(Agent.Auth.AppSecret)'
+          volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
-     - template: ./../templates/run-integration-tests.yml
+     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/run-integration-tests.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - task: PowerShell@2
-       displayName: Show $(Container.Name) logs
-       inputs:
-         targetType: 'inline'
-         script: |
-           docker logs $(Container.Name)
-         failOnStderr: true
-       condition: always()
+     - template: templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/push-docker-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
+using Version = Promitor.Core.Version;
 
 namespace Promitor.Integrations.AzureMonitor.RequestHandlers
 {
@@ -55,7 +56,9 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
+            string agentVersion = Version.Get();
+            var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
+            request.Headers.UserAgent.TryParseAdd(promitorUserAgent);
 
             var response = await base.SendAsync(request, cancellationToken);
 

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Promitor.Agents.ResourceDiscovery.Configuration;
+using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Promitor.Tests.Integration.Services
+namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 {
-    [Category("Integration")]
-    public class ResourceDiscoveryGroupTests : IntegrationTest
+    public class ResourceDiscoveryGroupTests : ResourceDiscoveryIntegrationTest
     {
         public ResourceDiscoveryGroupTests(ITestOutputHelper testOutput)
           : base(testOutput)

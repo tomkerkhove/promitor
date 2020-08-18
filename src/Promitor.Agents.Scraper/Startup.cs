@@ -16,6 +16,7 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Serilog;
+using Version = Promitor.Core.Version;
 
 namespace Promitor.Agents.Scraper
 {
@@ -31,16 +32,18 @@ namespace Promitor.Agents.Scraper
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string agentVersion = Version.Get();
+            var promitorUserAgent=UserAgent.Generate("Scraper", agentVersion);
             string openApiDescription = BuildOpenApiDescription(Configuration);
             services.AddHttpClient<ResourceDiscoveryClient>(client =>
             {
                 // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
             });
             services.AddHttpClient<IAtlassianStatuspageClient, AtlassianStatuspageClient>(client =>
             {
                 // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(Http.Headers.UserAgents.Scraper);
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
 
                 // Auth all requests
                 var apiKey = Configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];

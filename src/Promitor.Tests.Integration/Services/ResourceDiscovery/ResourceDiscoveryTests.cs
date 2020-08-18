@@ -1,17 +1,16 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using Newtonsoft.Json;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Promitor.Tests.Integration.Services
+namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 {
-    [Category("Integration")]
-    public class ResourceDiscoveryTests : IntegrationTest
+    public class ResourceDiscoveryTests : ResourceDiscoveryIntegrationTest
     {
         private readonly Faker _bogusGenerator = new Faker();
 
