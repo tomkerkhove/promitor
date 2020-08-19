@@ -9,7 +9,7 @@ parameters:
 steps:
 - template: install-sdk.yml
   parameters:
-    imageName: '${{ parameters.dotnetVersion }}'
+    dotnetVersion: '${{ parameters.dotnetVersion }}'
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
