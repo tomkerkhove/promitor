@@ -106,7 +106,7 @@ stages:
         variableName: 'Image.MajorMinorVersion'
      - template: templates/build/install-sdk.yml
        parameters:
-        imageName: '$(DotNet.SDK.Version)'
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
@@ -200,7 +200,7 @@ stages:
        displayName: 'Determine ''{major}.{minor}'' version'
      - template: templates/build/install-sdk.yml
        parameters:
-        imageName: '$(DotNet.SDK.Version)'
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
