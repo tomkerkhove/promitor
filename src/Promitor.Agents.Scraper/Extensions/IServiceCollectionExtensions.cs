@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Prometheus.Client;
+using Prometheus.Client.Abstractions;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -112,6 +114,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
+            services.AddSingleton<IMetricFactory, MetricFactory>(serviceProvider => new MetricFactory(Metrics.DefaultCollectorRegistry));
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
