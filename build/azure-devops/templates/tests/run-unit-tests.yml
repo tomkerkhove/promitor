@@ -5,11 +5,9 @@ parameters:
   type: string
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Install .Net Core Sdk (${{ parameters.dotnetVersion }})'
-  inputs:
-    packageType: 'sdk'
-    version: '${{ parameters.dotnetVersion }}'
+- template: ./../../build/install-sdk.yml
+  parameters:
+    dotnetVersion: '${{ parameters.dotnetVersion }}'
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
   inputs:
