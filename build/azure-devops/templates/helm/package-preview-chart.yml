@@ -23,7 +23,7 @@ steps:
     filePath: ./build/helm/Transform-Chart.ps1
     arguments: '-chartName "${{ parameters.chartName }}" -imageName "${{ parameters.imageName }}" -imageTag "${{ parameters.appVersion }}"'
     workingDirectory: 'charts'
-- template: ./../templates/helm/package-official-chart.yml
+- template: package-official-chart.yml
   parameters:
     chartName: '${{ parameters.chartName }}'
     chartVersion: '${{ parameters.chartVersion }}'

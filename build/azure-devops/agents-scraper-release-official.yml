@@ -118,7 +118,7 @@ stages:
         tags: '--tag dev'
         buildArgs: 'VERSION="$(App.Version)"'
         os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
      - template: templates/agents/run-scraper-image.yml
@@ -141,16 +141,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
@@ -208,7 +208,7 @@ stages:
         buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
@@ -232,16 +232,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
@@ -363,16 +363,16 @@ stages:
      variables:
      - template: ./variables/helm.yml
      steps:
-     - template: ./templates/lint-helm-chart.yml
+     - template: templates/lint-helm-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
-     - template: ./../templates/helm/package-official-chart.yml
+     - template: templates/helm/package-official-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'
         appVersion: '$(App.Version)'
-     - template: ./../templates/helm/push-chart.yml
+     - template: templates/helm/push-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'

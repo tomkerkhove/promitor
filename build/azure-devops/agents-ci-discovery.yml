@@ -142,13 +142,13 @@ stages:
           activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Resource Discovery'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
@@ -197,7 +197,7 @@ stages:
           activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Resource Discovery'
