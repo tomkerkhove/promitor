@@ -1,32 +1,18 @@
 parameters:
-  imageName: ''
-  dockerFile: './src/Promitor.Agents.Scraper/Dockerfile'
-  buildArgs: ''
-  tags: '--tag promitor-agent-scraper-ci'
-  os: ''
+- name: imageName
+  type: string
+- name: dockerFile
+  type: string
+- name: buildArgs
+  type: string
+  default: ''
+- name: tags
+  type: string
+  default: '--tag promitor-agent-scraper-ci'
+- name: os
+  type: string
 
 steps:
-- bash: |
-    echo "Variable 'imageName' found with value '$IMAGE_NAME'"
-    if [ -z "$IMAGE_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"imageName\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'dockerFile' found with value '$DOCKER_FILE'"
-    if [ -z "$DOCKER_FILE" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"dockerFile\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'os' found with value '$OS'"
-    if [ -z "$OS" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"os\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-  env:
-    IMAGE_NAME: ${{ parameters.imageName }}
-    DOCKER_FILE: ${{ parameters.dockerFile }}
-    OS: ${{ parameters.os }}
-  displayName: Check for required parameters in YAML template
 - task: Docker@1
   displayName: 'Build ${{ parameters.imageName }} image (${{ parameters.os }})'
   inputs:

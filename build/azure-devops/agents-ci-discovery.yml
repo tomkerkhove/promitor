@@ -32,7 +32,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/utils/determine-pr-version.yml
+        - template: templates/versioning/determine-pr-version.yml
      - template: templates/utils/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
@@ -172,7 +172,7 @@ stages:
        parameters:
         variableName: 'Image.Tag'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/utils/determine-pr-version.yml
+        - template: templates/versioning/determine-pr-version.yml
      - template: templates/agents/prepare-discovery-ci-config.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: templates/build-discovery-image.yml
@@ -200,6 +200,7 @@ stages:
      - template: ./templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
+        agentName: 'Resource Discovery'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml

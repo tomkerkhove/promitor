@@ -1,36 +1,19 @@
 parameters:
-  agentName: ''
-  dotnetVersion: ''
-  buildConfiguration: ''
+- name: agentName
+  type: string
+- name: dotnetVersion
+  type: string
+- name: buildConfiguration
+  type: string
 
 steps:
-- bash: |
-    echo "Variable 'agentName' found with value '$AGENT_NAME'"
-    if [ -z "$AGENT_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"agentName\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'dotnetVersion' found with value '$DOTNET_VERSION'"
-    if [ -z "$DOTNET_VERSION" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"dotnetVersion\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'buildConfiguration' found with value '$BUILD_CONFIG'"
-    if [ -z "$BUILD_CONFIG" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"buildConfiguration\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-  env:
-    AGENT_NAME: ${{ parameters.agentName }}
-    DOTNET_VERSION: ${{ parameters.dotnetVersion }}
-    BUILD_CONFIG: ${{ parameters.buildConfiguration }}
-  displayName: Check for required parameters in YAML template
-- task: DotNetCoreInstaller@0
-  displayName: 'Import .Net Core Sdk (${{ parameters.dotnetVersion }})'
+- task: UseDotNet@2
+  displayName: 'Install .Net Core Sdk (${{ parameters.dotnetVersion }})'
   inputs:
+    packageType: 'sdk'
     version: '${{ parameters.dotnetVersion }}'
 - task: replacetokens@3
-  displayName: Replace Tokens in Integration Test Configuration
+  displayName: Replace Tokens in Integration Test Configuration (${{ parameters.agentName }} Agent)
   inputs:
     rootDirectory: './src'
     targetFiles: '**/appsettings.json'
