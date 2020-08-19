@@ -51,13 +51,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
+     - template: templates/versioning/determine-major-minor-version.yml
      - template: templates/utils/persist-variable.yml
        parameters:
           currentVariableName: 'Image.MajorMinorVersion'
@@ -191,13 +185,7 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
+     - template: templates/versioning/determine-major-minor-version.yml
      - template: templates/build/install-sdk.yml
        parameters:
         dotnetVersion: '$(DotNet.SDK.Version)'
