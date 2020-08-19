@@ -1,8 +1,13 @@
 parameters:
-  helmVersion: '$(Helm.Version)'
-  chartName: ''
-  chartVersion: ''
-  appVersion: ''
+- name: helmVersion
+  type: string
+  default: '$(Helm.Version)'
+- name: chartName
+  type: string
+- name: chartVersion
+  type: string
+- name: appVersion
+  type: string
 
 steps:
 - bash: |

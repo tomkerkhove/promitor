@@ -21,8 +21,6 @@ variables:
     value: '$(Image.Name):$(Tags.PR)'
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.Official.Name
-    value: 'promitor-agent-scraper'
   - name: Helm.Chart.CI.Name
     value: 'promitor-agent-scraper-ci'
 stages:

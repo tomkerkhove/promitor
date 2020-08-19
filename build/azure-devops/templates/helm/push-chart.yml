@@ -1,30 +1,13 @@
 parameters:
-  chartName: ''
-  chartVersion: ''
-  registryName: 'promitor'
+- name: chartName
+  type: string
+- name: chartVersion
+  type: string
+- name: registryName
+  type: string
+  default: 'promitor'
 
 steps:
-- bash: |
-    echo "Variable 'chartName' found with value '$CHART_NAME'"
-    if [ -z "$CHART_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"chartName\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'chartVersion' found with value '$CHART_VERSION'"
-    if [ -z "$CHART_VERSION" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"chartVersion\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-    echo "Variable 'registryName' found with value '$REGISTRY_NAME'"
-    if [ -z "$REGISTRY_NAME" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"registryName\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
-  env:
-    CHART_NAME: ${{ parameters.chartName }}
-    CHART_VERSION: ${{ parameters.chartVersion }}
-    REGISTRY_NAME: ${{ parameters.registryName }}
-  displayName: Check for required parameters in YAML template
 - task: AzureCLI@1
   displayName: 'Push Helm Chart to Azure Container Registry'
   inputs:
