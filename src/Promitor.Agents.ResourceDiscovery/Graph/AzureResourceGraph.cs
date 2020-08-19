@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Core;
 using Promitor.Core.Extensions;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
@@ -213,7 +214,13 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         {
             var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureEnvironment();
             var credentials = await Authentication.GetServiceClientCredentialsAsync(azureEnvironment.ManagementEndpoint, QueryApplicationId, _queryApplicationSecret, TenantId);
-            return new ResourceGraphClient(credentials);
+            var resourceGraphClient= new ResourceGraphClient(credentials);
+
+            var version = Promitor.Core.Version.Get();
+            var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);
+            resourceGraphClient.UserAgent.TryParseAdd(promitorUserAgent);
+
+            return resourceGraphClient;
         }
     }
 }

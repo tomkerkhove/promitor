@@ -37,13 +37,13 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_QueueNameNotSupplied_ReportsError()
+        public void Deserialize_QueueNameNotSupplied_ReportsNoError()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
 
             // Act / Assert
-            YamlAssert.ReportsErrorForProperty(
+            YamlAssert.ReportsNoErrorForProperty(
                 _deserializer,
                 node,
                 "queueName");

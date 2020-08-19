@@ -8,10 +8,6 @@ azureLandscape:
 resourceDiscoveryGroups:
 - name: service-bus-landscape
   type: ServiceBusQueue
-  criteria:
-    include:
-      subscriptions:
-      - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
 - name: api-gateways
   type: ApiManagement
 - name: app-plan-landscape
@@ -24,6 +20,8 @@ resourceDiscoveryGroups:
   type: CosmosDb
 - name: dps
   type: DeviceProvisioningService
+- name: event-hubs-landscape
+  type: EventHubs
 - name: iot-gateways
   type: IoTHub
 - name: key-vaults

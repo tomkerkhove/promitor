@@ -110,3 +110,21 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
     - name: network-interfaces
+  - name: azure_event_hubs_incoming_messages_discovery
+    description: "The number of incoming messages on an Azure Event Hub namespace"
+    resourceType: EventHubs
+    azureMetricConfiguration:
+      metricName: IncomingMessages
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: event-hubs-landscape
+  - name: promitor_demo_servicebus_messagecount_discovered
+    description: "Average percentage of memory usage on an Azure App Plan"
+    resourceType: ServiceBusQueue
+    azureMetricConfiguration:
+      metricName: ActiveMessages
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: service-bus-landscape

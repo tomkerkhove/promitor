@@ -55,6 +55,6 @@ Here's a detailed overview:
 ![Agent internals](./../media/concepts/agent-internals.png)
 {: refdef}
 
-_(*) Resources are still discovered sychronoursly but this will be implemented in Promitor Resource Discovery v0.2._
+_(*) Resources are still discovered synchronously but this will be implemented in Promitor Resource Discovery v0.2._
 
 [&larr; back](/)

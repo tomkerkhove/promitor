@@ -77,6 +77,7 @@ and vote for features!
   - [Azure Monitor Integration](operations#azure-monitor-integration)
   - [Configuration REST APIs](operations#configuration-rest-apis)
   - [Health](operations#health)
+  - [System](operations#system)
 - **Walkthroughs**
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
   - [Migrate from Promitor Scraper 1.x to 2.x](/walkthrough/migrate-from-1.x-to-2.x)

@@ -30,6 +30,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
             CreateMap<CosmosDbResourceV1, CosmosDbResourceDefinition>();
+            CreateMap<EventHubsResourceV1, EventHubResourceDefinition>();
             CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
             CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
             CreateMap<GenericResourceV1, GenericAzureResourceDefinition>();
@@ -39,8 +40,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
-            CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
-                .ForCtorParam("serviceBusNamespace", o => o.MapFrom(s => s.Namespace));
+            CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
@@ -63,6 +63,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
                 .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
+                .Include<EventHubsResourceV1, EventHubResourceDefinition>()
                 .Include<FileStorageResourceV1, FileStorageResourceDefinition>()
                 .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>()
                 .Include<GenericResourceV1, GenericAzureResourceDefinition>()

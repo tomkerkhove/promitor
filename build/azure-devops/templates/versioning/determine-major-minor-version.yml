@@ -1,0 +1,8 @@
+steps:
+- powershell: |
+    Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
+    $index = "$(Image.Version)".IndexOf(".", 2);
+    $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
+    Write-Host "Found version '$majorMinorVersion'"
+    Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
+  displayName: 'Determine ''{major}.{minor}'' version'

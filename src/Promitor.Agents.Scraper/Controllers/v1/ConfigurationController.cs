@@ -29,9 +29,9 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         [HttpGet]
         [Route("metric-declaration")]
         [SwaggerOperation(OperationId = "Configuration_GetMetricDeclaration")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Configuration concerning the metrics to scrape",
-            Type = typeof(List<MetricDefinition>))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Configuration concerning the metrics to scrape", Type = typeof(List<MetricDefinition>))]
         [SwaggerResponse((int)HttpStatusCode.NoContent, Description = "No configured metrics were found to scrape")]
+        [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, Description = "Unable to process the request due to an server error")]
         public IActionResult GetMetricDeclaration()
         {
             var scrapeConfiguration = _metricsDeclarationProvider.Get(true);
@@ -45,8 +45,8 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         [HttpGet]
         [Route("runtime")]
         [SwaggerOperation(OperationId = "Configuration_GetRuntime")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Configuration concerning the runtime",
-            Type = typeof(ScraperRuntimeConfiguration))]
+        [SwaggerResponse((int)HttpStatusCode.OK, Description = "Configuration concerning the runtime", Type = typeof(ScraperRuntimeConfiguration))]
+        [SwaggerResponse((int)HttpStatusCode.ServiceUnavailable, Description = "Unable to process the request due to an server error")]
         public IActionResult GetRuntime()
         {
             var runtimeConfig = _runtimeConfiguration.CurrentValue.Clone();

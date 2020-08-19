@@ -4,7 +4,7 @@
     {
         public class Configuration
         {
-            public const string Folder = "PROMITOR_INTERNAL_CONFIG_FOLDER";
+            public const string Folder = "PROMITOR_CONFIG_FOLDER";
         }
 
         public class Authentication

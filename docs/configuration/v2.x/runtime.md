@@ -145,7 +145,7 @@ metricSinks:
 
 > :warning: **As of today, metric labels are not supported.**
 >  
-> Unfortunately, this is not supported in the specifiaction.
+> Unfortunately, this is not supported in the specification.
 
 ## Using resource discovery
 

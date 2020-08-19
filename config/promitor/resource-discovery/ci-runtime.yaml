@@ -1,0 +1,9 @@
+server:
+  httpPort: 99
+telemetry:
+  applicationInsights:
+    isEnabled: false
+  containerLogs:
+    isEnabled: true
+    verbosity: trace
+  defaultVerbosity: trace

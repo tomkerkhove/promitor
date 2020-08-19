@@ -39,7 +39,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
         }
 
         [Fact]
-        public void Validate_ResourceDiscoveryIsNotConfigured_Success()
+        public void Validate_ResourceDiscoveryConfigurationIsNotConfigured_Success()
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
@@ -55,7 +55,24 @@ namespace Promitor.Tests.Unit.Validation.Misc
         }
 
         [Fact]
-        public void Validate_ResourceDiscoveryIsNotConfiguredButMetricWithDiscoveryIsDefined_Fails()
+        public void Validate_ResourceDiscoveryHostIsNotConfigured_Success()
+        {
+            // Arrange
+            var metricsDeclarationProvider = GetMetricDeclarationProvider();
+            var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
+            resourceDiscoveryConfiguration.Value.Host = string.Empty;
+
+            // Act
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            Assert.True(validationResult.IsSuccessful);
+        }
+
+        [Fact]
+        public void Validate_ResourceDiscoveryConfigurationIsNotConfiguredButMetricWithDiscoveryIsDefined_Fails()
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider(useDiscoveryGroup: true);
@@ -71,7 +88,24 @@ namespace Promitor.Tests.Unit.Validation.Misc
         }
 
         [Fact]
-        public void Validate_StatsDWithNegativePort_Fails()
+        public void Validate_NoResourceDiscoveryHostIsNotConfiguredButMetricWithDiscoveryIsDefined_Fails()
+        {
+            // Arrange
+            var metricsDeclarationProvider = GetMetricDeclarationProvider(useDiscoveryGroup: true);
+            var resourceDiscoveryConfiguration = CreateRuntimeConfiguration();
+            resourceDiscoveryConfiguration.Value.Host = string.Empty;
+
+            // Act
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var azureAuthenticationValidationStep = new ResourceDiscoveryValidationStep(resourceDiscoveryConfiguration, metricsDeclarationProvider, NullLogger<ResourceDiscoveryValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful);
+        }
+
+        [Fact]
+        public void Validate_PortIsNegative_Fails()
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
@@ -87,7 +121,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
         }
 
         [Fact]
-        public void Validate_StatsDWithPortZero_Fails()
+        public void Validate_PortIsZero_Fails()
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
@@ -106,7 +140,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public void Validate_NoHostIsConfigured_Fails(string host)
+        public void Validate_NoHostIsConfigured_Succeeds(string host)
         {
             // Arrange
             var metricsDeclarationProvider = GetMetricDeclarationProvider();
@@ -118,7 +152,7 @@ namespace Promitor.Tests.Unit.Validation.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            Assert.True(validationResult.IsSuccessful);
         }
 
         private IOptions<ResourceDiscoveryConfiguration> CreateRuntimeConfiguration()

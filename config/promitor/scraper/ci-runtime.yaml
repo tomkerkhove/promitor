@@ -1,0 +1,20 @@
+server:
+  httpPort: 88
+metricSinks:
+  prometheusScrapingEndpoint:
+    metricUnavailableValue: NaN
+    enableMetricTimestamps: true # true by default
+    baseUriPath: /metrics
+metricsConfiguration:
+  absolutePath: /config/metrics-declaration.yaml
+telemetry:
+  containerLogs:
+    isEnabled: true
+    verbosity: trace
+  defaultVerbosity: trace
+azureMonitor:
+  logging:
+    isEnabled: false
+resourceDiscovery:
+  host: promitor.agents.resourcediscovery
+  port: 99

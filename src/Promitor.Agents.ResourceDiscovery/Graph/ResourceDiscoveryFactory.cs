@@ -22,6 +22,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new CosmosDbDiscoveryQuery();
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceDiscoveryQuery();
+                case ResourceType.EventHubs:
+                    return new EventHubsDiscoveryQuery();
                 case ResourceType.FunctionApp:
                     return new FunctionAppDiscoveryQuery();
                 case ResourceType.IoTHub:
@@ -36,6 +38,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new RedisCacheDiscoveryQuery();
                 case ResourceType.PostgreSql:
                     return new PostgreSqlDiscoveryQuery();
+                case ResourceType.ServiceBusQueue:
+                    return new ServiceBusQueueDiscoveryQuery();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseDiscoveryQuery();
                 case ResourceType.SqlManagedInstance:

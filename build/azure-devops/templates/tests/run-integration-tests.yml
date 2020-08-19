@@ -1,0 +1,30 @@
+parameters:
+- name: agentName
+  type: string
+- name: dotnetVersion
+  type: string
+- name: buildConfiguration
+  type: string
+
+steps:
+- template: ./../../build/install-sdk.yml
+  parameters:
+    dotnetVersion: '${{ parameters.dotnetVersion }}'
+- task: replacetokens@3
+  displayName: Replace Tokens in Integration Test Configuration (${{ parameters.agentName }} Agent)
+  inputs:
+    rootDirectory: './src'
+    targetFiles: '**/appsettings.json'
+    encoding: 'auto'
+    writeBOM: true
+    verbosity: 'detailed'
+    actionOnMissing: 'fail'
+    keepToken: false
+    tokenPrefix: '#{'
+    tokenSuffix: '}#'
+- task: DotNetCoreCLI@2
+  displayName: 'Run Integration Tests'
+  inputs:
+    command: test
+    projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
+    arguments: '--configuration ${{ parameters.buildConfiguration }} --filter "Agent=${{ parameters.agentName}}"'

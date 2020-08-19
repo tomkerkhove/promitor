@@ -51,14 +51,8 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
-     - template: ./../templates/persist-variable.yml
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/utils/persist-variable.yml
        parameters:
           currentVariableName: 'Image.MajorMinorVersion'
           persistedVariableName: 'Image.MajorMinorVersion'
@@ -67,6 +61,30 @@ stages:
 - stage: Build
   dependsOn: Init
   displayName: Build and Push Docker image
+  variables:
+  - group: 'Agent Authentication'
+  - name: Container.Scraper.Name
+    value: 'promitor.scraper.agent'
+  - name: Container.Scraper.Port
+    value: 8999
+  - name: Container.ResourceDiscovery.Name
+    value: 'promitor.agents.resourcediscovery'
+  - name: Container.ResourceDiscovery.Port
+    value: '999'
+  - name: Container.Network.Name
+    value: 'ci-network'
+  - name: Image.ResourceDiscovery.Name
+    value: 'local/promitor-resource-discovery:dev'
+  - name: App.Version
+    value: '0.0.0-$(Image.Version)'
+  - name: Agent.Scraper.Version
+    value: $(App.Version)
+  - name: Agent.Scraper.BaseUrl
+    value: http://localhost:$(Container.Scraper.Port)
+  - name: Agent.ResourceDiscovery.BaseUrl
+    value: http://localhost:$(Container.ResourceDiscovery.Port)
+  - name: Agent.ResourceDiscovery.Version
+    value: NOTUSED
   jobs:
    - job: BuildLinux
      displayName: Build Linux Docker image
@@ -77,46 +95,86 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-scraper-image.yml
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
-        buildArgs: ''
+        buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
+     - template: templates/build-discovery-image.yml
+       parameters:
+        imageName: '$(Image.ResourceDiscovery.Name)'
+        tags: '--tag dev'
+        buildArgs: 'VERSION="$(App.Version)"'
+        os: '$(OS.Name)'
+     - template: ./templates/docker/create-network.yml
+       parameters:
+        networkName: '$(Container.Network.Name)'
+     - template: templates/agents/run-scraper-image.yml
+       parameters:
+          containerName: '$(Container.Scraper.Name)'
+          containerPort: '$(Container.Scraper.Port)'
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+          volumes: '$(Pipeline.Workspace)/s/config/promitor/scraper/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml'
+          activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
+          networkName: '$(Container.Network.Name)'
+          os: '$(OS.Name)'
+     - template: templates/agents/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.ResourceDiscovery.Name)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
+          volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
+          networkName: '$(Container.Network.Name)'
+          os: '$(OS.Name)'
+     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/tests/run-integration-tests.yml
+       parameters:
+        agentName: 'Scraper'
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+     - template: ./templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.Scraper.Name)'
+     - template: ./templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.ResourceDiscovery.Name)'
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}'''
         imageName: '$(Image.TaggedName)'
-     - template: ./../templates/push-docker-image.yml
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}'''
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+        - template: templates/docker/push-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest'''
             imageName: '$(Image.Name):latest'
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -127,38 +185,75 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: ./../templates/build-scraper-image.yml
+     - template: templates/agents/prepare-scraper-ci-config.yml
+     - template: templates/agents/prepare-discovery-ci-config.yml
+     - template: templates/build-discovery-image.yml
+       parameters:
+        imageName: '$(Image.ResourceDiscovery.Name)'
+        tags: '--tag dev'
+        buildArgs: 'VERSION="$(App.Version)"'
+        os: '$(OS.Name)'
+     - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-        buildArgs: '--build-arg CONFIG_FOLDER="c:/config/"'
+        buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
+     - template: ./templates/docker/create-network.yml
+       parameters:
+        networkName: '$(Container.Network.Name)'
+        driverName: 'nat'
+     - template: templates/agents/run-scraper-image.yml
+       parameters:
+          containerName: '$(Container.Scraper.Name)'
+          containerPort: '$(Container.Scraper.Port)'
+          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+          volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\:c:\config\'
+          activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
+          networkName: '$(Container.Network.Name)'
+          os: '$(OS.Name)'
+     - template: templates/agents/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.ResourceDiscovery.Name)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
+          volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
+          networkName: '$(Container.Network.Name)'
+          os: '$(OS.Name)'
+     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/tests/run-integration-tests.yml
+       parameters:
+        agentName: 'Scraper'
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+     - template: ./templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.Scraper.Name)'
+     - template: ./templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.ResourceDiscovery.Name)'
+     - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-     - template: ./../templates/push-docker-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-        imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: ./../templates/push-docker-image.yml
+        - template: templates/docker/push-image.yml
+          parameters:
+            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+            imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.Name):latest-$(OS.Name)'
@@ -173,7 +268,7 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../templates/read-variable-on-linux.yml
+     - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
      - ${{ if eq(parameters['releaseType'], 'Preview') }}:
@@ -272,12 +367,12 @@ stages:
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
-     - template: ./../templates/package-helm-chart.yml
+     - template: ./../templates/helm/package-official-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'
         appVersion: '$(App.Version)'
-     - template: ./../templates/push-helm-chart.yml
+     - template: ./../templates/helm/push-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'

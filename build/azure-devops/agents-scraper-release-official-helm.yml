@@ -39,12 +39,12 @@ stages:
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
-     - template: ./../templates/package-helm-chart.yml
+     - template: ./../templates/helm/package-official-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'
         appVersion: '$(App.Version)'
-     - template: ./../templates/push-helm-chart.yml
+     - template: ./../templates/helm/push-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'
