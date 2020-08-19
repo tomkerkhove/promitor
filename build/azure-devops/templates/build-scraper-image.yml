@@ -3,6 +3,7 @@ parameters:
   type: string
 - name: dockerFile
   type: string
+  default: './src/Promitor.Agents.Scraper/Dockerfile.linux'
 - name: buildArgs
   type: string
   default: ''
