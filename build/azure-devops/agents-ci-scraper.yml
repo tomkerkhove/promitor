@@ -35,7 +35,7 @@ stages:
        vmImage: ubuntu-16.04
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/utils/determine-pr-version.yml
+        - template: templates/versioning/determine-pr-version.yml
      - template: templates/utils/persist-variable.yml
        parameters:
         currentVariableName: 'Build.BuildNumber'
@@ -209,7 +209,7 @@ stages:
        parameters:
         variableName: 'Image.Tag'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/utils/determine-pr-version.yml
+        - template: templates/versioning/determine-pr-version.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
         - template: templates/build-scraper-image.yml
           parameters:

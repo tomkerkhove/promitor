@@ -51,13 +51,7 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
+     - template: templates/versioning/determine-major-minor-version.yml
      - template: templates/utils/persist-variable.yml
        parameters:
           currentVariableName: 'Image.MajorMinorVersion'
@@ -104,10 +98,9 @@ stages:
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
@@ -192,17 +185,10 @@ stages:
      variables:
        OS.Name: 'windows'
      steps:
-     - powershell: |
-        Write-Host "Determining '{major}.{minor}' for '$(Image.Version)'"
-        $index = "$(Image.Version)".IndexOf(".", 2);
-        $majorMinorVersion = "$(Image.Version)".Substring(0, $index);
-        Write-Host "Found version '$majorMinorVersion'"
-        Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
-       displayName: 'Determine ''{major}.{minor}'' version'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
