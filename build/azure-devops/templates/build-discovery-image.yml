@@ -1,8 +1,16 @@
 parameters:
-  imageName: ''
-  buildArgs: ''
-  tags: '--tag promitor-agent-discovery-ci'
-  os: ''
+- name: imageName
+  type: string
+- name: dockerFile
+  type: string
+- name: buildArgs
+  type: string
+  default: ''
+- name: tags
+  type: string
+  default: '--tag promitor-agent-discovery-ci'
+- name: os
+  type: string
 
 steps:
 - template: docker/build-image.yml

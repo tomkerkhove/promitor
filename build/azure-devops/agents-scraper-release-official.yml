@@ -104,10 +104,9 @@ stages:
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/build/install-sdk.yml
+       parameters:
+        imageName: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
@@ -199,10 +198,9 @@ stages:
         Write-Host "Found version '$majorMinorVersion'"
         Write-Output ("##vso[task.setvariable variable=Image.MajorMinorVersion;]$majorMinorVersion")
        displayName: 'Determine ''{major}.{minor}'' version'
-     - task: DotNetCoreInstaller@0
-       displayName: 'Install .NET SDK'
-       inputs:
-        version: '$(DotNet.SDK.Version)'
+     - template: templates/build/install-sdk.yml
+       parameters:
+        imageName: '$(DotNet.SDK.Version)'
      - task: DotNetCoreCLI@2
        displayName: 'Run Unit Tests'
        inputs:
