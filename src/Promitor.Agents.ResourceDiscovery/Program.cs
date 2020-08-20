@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Extensions;
+using Promitor.Agents.Core.Validation;
 using Promitor.Core;
 using Serilog;
 
@@ -28,9 +30,22 @@ namespace Promitor.Agents.ResourceDiscovery
                     return (int)ExitStatus.ConfigurationFolderNotSpecified;
                 }
 
-                CreateHostBuilder(args, configurationFolder)
-                    .Build()
-                    .Run();
+                var host = CreateHostBuilder(args, configurationFolder)
+                    .Build();
+
+                using (var scope = host.Services.CreateScope())
+                {
+                    var validator = scope.ServiceProvider.GetRequiredService<RuntimeValidator>();
+                    if (!validator.Validate())
+                    {
+                        Log.Logger.Fatal("Promitor is not configured correctly. Please fix validation issues and re-run.");
+                        return (int)ExitStatus.ValidationFailed;
+                    }
+
+                    Log.Logger.Information("Promitor configuration is valid, we are good to go.");
+                }
+
+                host.Run();
 
                 return (int)ExitStatus.Success;
             }
