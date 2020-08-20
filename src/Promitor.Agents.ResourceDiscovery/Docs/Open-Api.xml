@@ -98,5 +98,10 @@
                 Add Azure Resource Graph integration
             </summary>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Extensions.IServiceCollectionExtensions.AddValidationRules(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Add validation rules
+            </summary>
+        </member>
     </members>
 </doc>

@@ -92,7 +92,7 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
-        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.ConfigureValidation(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddValidationRules(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines the validation for when Promitor starts up
             </summary>

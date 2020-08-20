@@ -5,8 +5,8 @@ services:
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
       - "PROMITOR_CONFIG_FOLDER=/config/"
-      - "PROMITOR_DISCOVERY_APPID=67882a00-21d3-4ee7-b32a-430ea0768cd3"
-      - "PROMITOR_DISCOVERY_APPSECRET=<hidden>"
+      - "PROMITOR_AUTH_APPID=67882a00-21d3-4ee7-b32a-430ea0768cd3"
+      - "PROMITOR_AUTH_APPKEY=<hidden>"
     ports:
       - "777:88"
   promitor.agents.scraper:

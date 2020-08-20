@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Configuration\v1\" />
-    <Folder Include="Validation\Steps\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

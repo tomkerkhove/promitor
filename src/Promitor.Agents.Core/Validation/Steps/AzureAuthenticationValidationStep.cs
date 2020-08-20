@@ -1,22 +1,23 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using GuardNet;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
-using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core;
 
-namespace Promitor.Agents.Scraper.Validation.Steps
+namespace Promitor.Agents.Core.Validation.Steps
 {
     public class AzureAuthenticationValidationStep : ValidationStep, IValidationStep
     {
         private readonly IConfiguration _configuration;
 
-        public string ComponentName { get; } = "Azure Authentication";
-
         public AzureAuthenticationValidationStep(IConfiguration configuration, ILogger<AzureAuthenticationValidationStep> logger) : base(logger)
         {
+            Guard.NotNull(configuration, nameof(configuration));
+
             _configuration = configuration;
         }
+
+        public string ComponentName { get; } = "Azure Authentication";
 
         public ValidationResult Run()
         {

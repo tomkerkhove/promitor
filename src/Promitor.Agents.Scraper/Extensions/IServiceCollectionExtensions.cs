@@ -7,6 +7,7 @@ using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
+using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
@@ -68,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
         ///     Defines the validation for when Promitor starts up
         /// </summary>
         /// <param name="services">Collections of services in application</param>
-        public static IServiceCollection ConfigureValidation(this IServiceCollection services)
+        public static IServiceCollection AddValidationRules(this IServiceCollection services)
         {
             services.AddTransient<IValidationStep, ConfigurationPathValidationStep>();
             services.AddTransient<IValidationStep, AzureAuthenticationValidationStep>();
