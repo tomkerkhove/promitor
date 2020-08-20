@@ -10,7 +10,6 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
-using Prometheus.Client;
 using Prometheus.Client.Abstractions;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -99,7 +98,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -125,7 +124,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Exactly(2));
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Exactly(2));
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Exactly(2));
             mocks.Gauge.Verify(mock => mock.Set(firstMetricValue), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(secondMetricValue), Times.Once());
@@ -159,8 +158,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) == false && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once);
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) == false && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once);
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => specified.Contains(dimensionValue) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once);
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => specified.Contains(dimensionValue) == false && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once);
             mocks.Gauge.Verify(mock => mock.Set(firstMetricValue), Times.Once());
@@ -187,7 +186,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -211,7 +210,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.Is<MetricFlags>(flag => flag.HasFlag(MetricFlags.IncludeTimestamp)==includeTimestampsInMetrics), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, includeTimestampsInMetrics, It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -239,7 +238,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.Is<MetricFlags>(flag => flag.HasFlag(MetricFlags.SuppressEmptySamples) == false), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(expectedMeasuredMetric), Times.Once());
         }
@@ -269,7 +268,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => specified.Contains(expectedDimensionName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => specified.Contains(dimensionValue) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -302,7 +301,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => specified.Contains(expectedFirstLabelName) && specified.Contains(expectedSecondLabelName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => specified.Contains(expectedFirstLabelName) && specified.Contains(expectedSecondLabelName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => specified.Contains(firstLabelValue) && specified.Contains(secondLabelValue) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -333,7 +332,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<MetricFlags>(), It.Is<string[]>(specified => specified.Contains(expectedLabelName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => specified.Contains(expectedLabelName) && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
             mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => specified.Contains(scrapeResultLabelValue) && specified.Contains(metricConfigLabelValue) == false && EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
@@ -381,7 +380,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
                 .Returns(gaugeMock.Object);
 
             var metricFactoryMock = new Mock<IMetricFactory>();
-            metricFactoryMock.Setup(factory => factory.CreateGauge(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<MetricFlags>(), It.IsAny<string[]>()))
+            metricFactoryMock.Setup(factory => factory.CreateGauge(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<string[]>()))
                              .Returns(gaugeMetricFamilyMock.Object);
 
             return (metricFactoryMock, gaugeMetricFamilyMock, gaugeMock);

@@ -2,7 +2,6 @@
 using System.Linq;
 using GuardNet;
 using Microsoft.Extensions.Options;
-using Prometheus.Client;
 using Prometheus.Client.Abstractions;
 using Promitor.Core.Metrics;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;

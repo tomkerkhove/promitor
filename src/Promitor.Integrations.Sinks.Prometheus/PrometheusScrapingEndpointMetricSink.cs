@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Prometheus.Client;
 using Prometheus.Client.Abstractions;
 using Promitor.Core;
 using Promitor.Core.Metrics;
@@ -80,13 +79,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
         private IMetricFamily<IGauge> CreateGauge(string metricName, string metricDescription, Dictionary<string, string> labels, bool enableMetricTimestamps)
         {
-            var metricFlags = MetricFlags.None;
-            if (enableMetricTimestamps)
-            {
-                metricFlags |= MetricFlags.IncludeTimestamp;
-            }
-
-            var gauge = _metricFactory.CreateGauge(metricName, metricDescription, metricFlags, labelNames: labels.Keys.ToArray());
+            var gauge = _metricFactory.CreateGauge(metricName, metricDescription, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             return gauge;
         }
 
