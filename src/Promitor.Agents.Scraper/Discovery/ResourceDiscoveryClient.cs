@@ -36,7 +36,7 @@ namespace Promitor.Agents.Scraper.Discovery
 
         public async Task<List<AzureResourceDefinition>> GetAsync(string resourceDiscoveryGroupName)
         {
-            var uri = $"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discover";
+            var uri = $"api/v1/resources/groups/{resourceDiscoveryGroupName}/discover";
             var rawResponse = await SendGetRequestAsync(uri);
 
             var foundResources = JsonConvert.DeserializeObject<List<AzureResourceDefinition>>(rawResponse, _serializerSettings);
@@ -45,14 +45,15 @@ namespace Promitor.Agents.Scraper.Discovery
 
         public async Task<HealthReport> GetHealthAsync()
         {
-            var rawResponse = await SendGetRequestAsync("/api/v1/health");
+            var rawResponse = await SendGetRequestAsync("api/v1/health");
             var healthReport = JsonConvert.DeserializeObject<HealthReport>(rawResponse, new HealthReportEntryConverter());
             return healthReport;
         }
 
-        private async Task<string> SendGetRequestAsync(string uri)
+        private async Task<string> SendGetRequestAsync(string uriPath)
         {
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, uri);
+            var url = ComposeUrl(uriPath);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url);
 
             var response = await SendRequestToApiAsync(request);
             response.EnsureSuccessStatusCode();
@@ -68,7 +69,6 @@ namespace Promitor.Agents.Scraper.Discovery
                 HttpResponseMessage response = null;
                 try
                 {
-                    _httpClient.BaseAddress = new Uri($"http://{_configuration.CurrentValue.Host}:{_configuration.CurrentValue.Port}");
                     response = await _httpClient.SendAsync(request);
                     _logger.LogRequest(request, response, dependencyMeasurement.Elapsed);
 
@@ -87,6 +87,11 @@ namespace Promitor.Agents.Scraper.Discovery
                     }
                 }
             }
+        }
+
+        private Uri ComposeUrl(string uriPath)
+        {
+            return new Uri($"http://{_configuration.CurrentValue.Host}:{_configuration.CurrentValue.Port}/{uriPath}");
         }
     }
 }

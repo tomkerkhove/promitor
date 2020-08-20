@@ -86,6 +86,21 @@
             <param name="configuration">Configuration of Promitor</param>
             <returns></returns>
         </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddResourceDiscoveryClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+                Add the Promitor Resource Discovery client
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="promitorUserAgent">User agent for Promitor</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddAtlassianStatuspageClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+                Add the Atlassian Statuspage client
+            </summary>
+            <param name="services">Collections of services in application</param>
+            <param name="promitorUserAgent">User agent for Promitor</param>
+            <param name="configuration">Configuration of the agent</param>
+        </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines the dependencies that Promitor requires

@@ -1,9 +1,9 @@
-﻿using JustEat.StatsD;
+﻿using GuardNet;
+using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client;
-using Prometheus.Client.Abstractions;
+using Prometheus.Client.DependencyInjection;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -13,17 +13,18 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Validation.Steps;
+using Promitor.Agents.Scraper.Validation.Steps.Sinks;
+using Promitor.Core;
+using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Agents.Scraper.Validation.Steps;
-using Promitor.Agents.Scraper.Validation.Steps.Sinks;
-using Promitor.Core.Metrics;
-using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
@@ -39,12 +40,56 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class IServiceCollectionExtensions
     {
         /// <summary>
+        ///     Add the Promitor Resource Discovery client
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        /// <param name="promitorUserAgent">User agent for Promitor</param>
+        public static IServiceCollection AddResourceDiscoveryClient(this IServiceCollection services, string promitorUserAgent)
+        {
+            Guard.NotNull(services, nameof(services));
+
+            services.AddHttpClient<ResourceDiscoveryClient>(client =>
+            {
+                // Provide Promitor User-Agent
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
+            });
+            services.AddTransient<ResourceDiscoveryRepository>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Add the Atlassian Statuspage client
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        /// <param name="promitorUserAgent">User agent for Promitor</param>
+        /// <param name="configuration">Configuration of the agent</param>
+        public static IServiceCollection AddAtlassianStatuspageClient(this IServiceCollection services, string promitorUserAgent, IConfiguration configuration)
+        {
+            Guard.NotNull(services, nameof(services));
+
+            services.AddHttpClient<IAtlassianStatuspageClient, AtlassianStatuspageClient>(client =>
+            {
+                // Provide Promitor User-Agent
+                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
+
+                // Auth all requests
+                var apiKey = configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
+                client.DefaultRequestHeaders.Add("Authorization", $"OAuth {apiKey}");
+            });
+            services.AddTransient<ResourceDiscoveryRepository>();
+
+            return services;
+        }
+
+        /// <summary>
         ///     Defines the dependencies that Promitor requires
         /// </summary>
         /// <param name="services">Collections of services in application</param>
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
-            services.AddTransient<ResourceDiscoveryRepository>();
+            Guard.NotNull(services, nameof(services));
+
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
@@ -66,6 +111,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return services;
         }
+
         /// <summary>
         ///     Defines the validation for when Promitor starts up
         /// </summary>
@@ -114,7 +160,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
-            services.AddSingleton<IMetricFactory, MetricFactory>(serviceProvider => new MetricFactory(Metrics.DefaultCollectorRegistry));
+            services.AddMetricFactory();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
