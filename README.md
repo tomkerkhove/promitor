@@ -37,7 +37,7 @@ Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVF
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We
 welcome bug reports, improvement suggestions and pull requests.
 
-Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/metrics/)?
+Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/v2.x/metrics/#supported-azure-services)?
 You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
 Information about making changes to Promitor can be found [here](development-guide.md).
