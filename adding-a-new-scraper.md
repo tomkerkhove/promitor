@@ -12,7 +12,9 @@ discuss your scenario_
 
 ------------------------
 
-## Configuration
+## Implementing a Scaler
+
+### Configuration
 
 <!-- markdownlint-disable MD013 -->
 1. Add your new scraping type to the `Promitor.Core.Scraping.Configuration.Model.ResourceType`.
@@ -38,7 +40,7 @@ discuss your scenario_
 Going forward in this guide, `TResourceDefinition` will refer to your newly created
 configuration type.
 
-## Validation
+### Validation
 
 For every scraper type we provide validation for the configuration so that Promitor
 fails to start up.
@@ -53,7 +55,7 @@ This requires the following steps:
   for the ResourceType you created in step #1 above.
 3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Tests.Unit\Validation\Metrics\ResourceTypes`
 
-## Scraping
+### Scraping
 
 We'll add a new scraper that pulls the metrics from Azure Monitor:
 
@@ -61,7 +63,7 @@ We'll add a new scraper that pulls the metrics from Azure Monitor:
 2. Hook your new scraper in our `MetricScraperFactory` which determines what scraper
   to use for the passed configuration.
 
-## Resource Discovery
+### Resource Discovery
 
 We'll add dynamic resource discovery support by using Azure Resource Graph:
 
@@ -91,3 +93,11 @@ Please provide documentation on the following:
 
 This should be provided in a new file under `docs\configuration\v2.x\metrics` and be listed
 under the supported providers on `docs/configuration/v2.x/metrics/index.md` in alphabetical order.
+
+## See It In Action
+
+Now that you are done, make sure you run Promitor locally so verify that it generates the correct metrics!
+
+When opening the pull request (PR), feel free to copy the generated Prometheus metrics for review.
+
+Learn how to run it in our [development guide](development-guide.md#running-promitor).
