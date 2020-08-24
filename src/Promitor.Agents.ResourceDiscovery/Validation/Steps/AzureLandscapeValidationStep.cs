@@ -43,7 +43,12 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
             {
                 if (_azureLandscape.Subscriptions.Distinct().Count() != _azureLandscape.Subscriptions.Count)
                 {
-                    errorMessages.Add($"Duplicate subscription ids were configured to query");
+                    errorMessages.Add("Duplicate subscription ids were configured to query");
+                }
+
+                if (_azureLandscape.Subscriptions.Any(string.IsNullOrWhiteSpace))
+                {
+                    errorMessages.Add("Empty subscription is configured to query");
                 }
             }
 

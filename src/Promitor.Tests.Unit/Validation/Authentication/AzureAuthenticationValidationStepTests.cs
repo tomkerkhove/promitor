@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core;
-using Promitor.Agents.Scraper.Validation.Steps;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Validation.Authentication
