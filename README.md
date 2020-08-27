@@ -27,8 +27,9 @@ All documentation is available on [promitor.io](https://promitor.io)
 
 We are proud to have the following customer(s) running Promitor in production:
 
-![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
 ![ResDiary](./docs/media/logos/customers/resdiary.png)
+![Vsoft](./docs/media/logos/customers/vsoft.png)
+![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
 
 Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
@@ -37,7 +38,7 @@ Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVF
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We
 welcome bug reports, improvement suggestions and pull requests.
 
-Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/metrics/)?
+Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/v2.x/metrics/#supported-azure-services)?
 You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
 Information about making changes to Promitor can be found [here](development-guide.md).

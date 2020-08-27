@@ -137,7 +137,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 
         public string Build()
         {
-            return _queryBuilder.ToString();
+            return _queryBuilder.ToString().Trim();
         }
 
         private void FilterByField(string fieldName, List<string> allowedValues)

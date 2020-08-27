@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using GuardNet;
 using Microsoft.Extensions.Options;
+using Prometheus.Client.Abstractions;
 using Promitor.Core.Metrics;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
@@ -8,10 +10,14 @@ namespace Promitor.Integrations.Sinks.Prometheus
 {
     public class RuntimeMetricsCollector : IRuntimeMetricsCollector
     {
+        private readonly IMetricFactory _metricFactory;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public RuntimeMetricsCollector(IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public RuntimeMetricsCollector(IMetricFactory metricFactory, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
+            Guard.NotNull(metricFactory, nameof(metricFactory));
+
+            _metricFactory = metricFactory;
             _prometheusConfiguration = prometheusConfiguration;
         }
 
@@ -26,7 +32,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
-            var gauge = global::Prometheus.Client.Metrics.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
+            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
         }
     }

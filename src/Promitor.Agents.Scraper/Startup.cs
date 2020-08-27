@@ -9,12 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
-using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Extensions;
 using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
-using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Serilog;
 using Version = Promitor.Core.Version;
 
@@ -33,24 +31,13 @@ namespace Promitor.Agents.Scraper
         public void ConfigureServices(IServiceCollection services)
         {
             string agentVersion = Version.Get();
-            var promitorUserAgent=UserAgent.Generate("Scraper", agentVersion);
-            string openApiDescription = BuildOpenApiDescription(Configuration);
-            services.AddHttpClient<ResourceDiscoveryClient>(client =>
-            {
-                // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
-            });
-            services.AddHttpClient<IAtlassianStatuspageClient, AtlassianStatuspageClient>(client =>
-            {
-                // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
 
-                // Auth all requests
-                var apiKey = Configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
-                client.DefaultRequestHeaders.Add("Authorization", $"OAuth {apiKey}");
-            });
+            var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
+            string openApiDescription = BuildOpenApiDescription(Configuration);
 
             services.UseWebApi()
+                .AddResourceDiscoveryClient(promitorUserAgent)
+                .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
