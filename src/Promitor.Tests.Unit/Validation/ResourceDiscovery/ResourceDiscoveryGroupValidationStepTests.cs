@@ -58,14 +58,14 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
         private static ResourceDiscoveryGroup GenerateResourceDiscoveryGroup(bool includeCriteria = true)
         {
             var criteria = includeCriteria ? GenerateCriteriaDefinition() : null;
-            var azureLandscape = new Faker<ResourceDiscoveryGroup>()
+            var resourceDiscoveryGroup = new Faker<ResourceDiscoveryGroup>()
                 .StrictMode(true)
                 .RuleFor(group => group.Name, faker => faker.Name.FirstName())
                 .RuleFor(group => group.Type, faker => faker.PickRandom<ResourceType>())
                 .RuleFor(group => group.Criteria, faker => criteria)
                 .Generate();
 
-            return azureLandscape;
+            return resourceDiscoveryGroup;
         }
 
         private static ResourceCriteriaDefinition GenerateCriteriaDefinition()
@@ -80,14 +80,14 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
 
         private static ResourceCriteria GenerateCriteria()
         {
-            var criteria = new Faker<ResourceCriteria>()
+            var resourceCriteria = new Faker<ResourceCriteria>()
                 .StrictMode(true)
                 .RuleFor(criteria => criteria.Subscriptions, faker => new List<string>{faker.Random.Guid().ToString(), faker.Random.Guid().ToString()})
                 .RuleFor(criteria => criteria.Tags, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } , { faker.Name.FirstName(), faker.Random.Guid().ToString() } })
                 .RuleFor(criteria => criteria.Regions, faker => new List<string> { faker.Random.Guid().ToString(), faker.Random.Guid().ToString() })
                 .RuleFor(criteria => criteria.ResourceGroups, faker => new List<string> { faker.Random.Guid().ToString(), faker.Random.Guid().ToString() })
                 .Generate();
-            return criteria;
+            return resourceCriteria;
         }
     }
 }
