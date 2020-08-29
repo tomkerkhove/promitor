@@ -25,7 +25,7 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
         public ValidationResult Run()
         {
             var errorMessages = new List<string>();
-            if (_resourceDiscoveryGroups == null || _resourceDiscoveryGroups.Any())
+            if (_resourceDiscoveryGroups == null || _resourceDiscoveryGroups.Any() == false)
             {
                 errorMessages.Add("No resource discovery groups were configured");
                 return ValidationResult.Failure(ComponentName, errorMessages);
@@ -37,9 +37,9 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
                 foreach (var discoveryGroup in uniqueDiscoveryGroups)
                 {
                     var duplicateEntryCount = _resourceDiscoveryGroups.Count(grp => grp.Name.Equals(discoveryGroup, StringComparison.InvariantCultureIgnoreCase));
-                    if (_resourceDiscoveryGroups == null || _resourceDiscoveryGroups.Any())
+                    if (duplicateEntryCount > 1)
                     {
-                        errorMessages.Add($"Duplicate resource discovery groups were configured with name '{discoveryGroup}'. ({duplicateEntryCount} groups found");
+                        errorMessages.Add($"Duplicate resource discovery groups were configured with name '{discoveryGroup}'. ({duplicateEntryCount} groups with same name found)");
                         return ValidationResult.Failure(ComponentName, errorMessages);
                     }
                 }

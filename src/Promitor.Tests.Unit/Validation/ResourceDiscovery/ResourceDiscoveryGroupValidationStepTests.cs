@@ -14,7 +14,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
     public class ResourceDiscoveryGroupValidationStepTests
     {
         [Fact]
-        public void Validate_ResourceDiscoveryGroupIsFullyConfigured_Success()
+        public void Validate_ResourceDiscoveryGroupsAreFullyConfigured_Success()
         {
             // Arrange
             var resourceDiscoveryGroupConfiguration = CreateResourceDiscoveryGroupConfiguration();
@@ -25,6 +25,21 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
 
             // Assert
             Assert.True(validationResult.IsSuccessful);
+        }
+
+        [Fact]
+        public void Validate_DuplicateResourceDiscoveryGroupNames_Fails()
+        {
+            // Arrange
+            var resourceDiscoveryGroupConfiguration = CreateResourceDiscoveryGroupConfiguration(resourceDiscoveryGroupAmount: 2);
+            resourceDiscoveryGroupConfiguration.Value[1].Name = resourceDiscoveryGroupConfiguration.Value[0].Name;
+
+            // Act
+            var resourceDiscoveryGroupValidationStep = new ResourceDiscoveryGroupValidationStep(resourceDiscoveryGroupConfiguration, NullLogger<ResourceDiscoveryGroupValidationStep>.Instance);
+            var validationResult = resourceDiscoveryGroupValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful);
         }
 
         private IOptions<List<ResourceDiscoveryGroup>> CreateResourceDiscoveryGroupConfiguration(int resourceDiscoveryGroupAmount = 2)
@@ -40,14 +55,39 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             return Options.Create(groups);
         }
 
-        private static ResourceDiscoveryGroup GenerateResourceDiscoveryGroup()
+        private static ResourceDiscoveryGroup GenerateResourceDiscoveryGroup(bool includeCriteria = true)
         {
+            var criteria = includeCriteria ? GenerateCriteriaDefinition() : null;
             var azureLandscape = new Faker<ResourceDiscoveryGroup>()
                 .StrictMode(true)
                 .RuleFor(group => group.Name, faker => faker.Name.FirstName())
                 .RuleFor(group => group.Type, faker => faker.PickRandom<ResourceType>())
+                .RuleFor(group => group.Criteria, faker => criteria)
                 .Generate();
+
             return azureLandscape;
+        }
+
+        private static ResourceCriteriaDefinition GenerateCriteriaDefinition()
+        {
+            var criteria = GenerateCriteria();
+            var criteriaDefinition = new Faker<ResourceCriteriaDefinition>()
+                .StrictMode(true)
+                .RuleFor(definition => definition.Include, faker => criteria)
+                .Generate();
+            return criteriaDefinition;
+        }
+
+        private static ResourceCriteria GenerateCriteria()
+        {
+            var criteria = new Faker<ResourceCriteria>()
+                .StrictMode(true)
+                .RuleFor(criteria => criteria.Subscriptions, faker => new List<string>{faker.Random.Guid().ToString(), faker.Random.Guid().ToString()})
+                .RuleFor(criteria => criteria.Tags, faker => new Dictionary<string, string> { { faker.Name.FirstName(), faker.Random.Guid().ToString() } , { faker.Name.FirstName(), faker.Random.Guid().ToString() } })
+                .RuleFor(criteria => criteria.Regions, faker => new List<string> { faker.Random.Guid().ToString(), faker.Random.Guid().ToString() })
+                .RuleFor(criteria => criteria.ResourceGroups, faker => new List<string> { faker.Random.Guid().ToString(), faker.Random.Guid().ToString() })
+                .Generate();
+            return criteria;
         }
     }
 }
