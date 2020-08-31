@@ -3,7 +3,6 @@ name: $(Helm.Chart.Version)
 trigger: none
 pr: none
 
-
 parameters:
 - name: appVersion
   displayName: App Version
