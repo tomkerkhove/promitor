@@ -25,7 +25,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            Assert.True(validationResult.IsSuccessful, $"Validation failed with following message {validationResult.Message}");
         }
 
         [Theory]
