@@ -9,7 +9,7 @@ fullnameOverride: ""
 image:
   repository: tomkerkhove/promitor-agent-scraper
   pullPolicy: Always
-  tag: 
+  tag:
 
 azureAuthentication:
   appId: ""
