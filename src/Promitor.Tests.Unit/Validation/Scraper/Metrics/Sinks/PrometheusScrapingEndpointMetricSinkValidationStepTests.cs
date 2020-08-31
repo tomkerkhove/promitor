@@ -67,7 +67,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = prometheusScrapingEndpointMetricSinkValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         private IOptions<ScraperRuntimeConfiguration> CreateRuntimeConfiguration()

@@ -44,7 +44,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -129,7 +129,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, userMessage: "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]

@@ -102,7 +102,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -162,7 +162,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -288,7 +288,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -308,7 +308,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         private IOptions<ScraperRuntimeConfiguration> CreateRuntimeConfiguration(string metricName, string pageId = null, string systemMetricId = null)

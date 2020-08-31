@@ -84,7 +84,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Theory]
