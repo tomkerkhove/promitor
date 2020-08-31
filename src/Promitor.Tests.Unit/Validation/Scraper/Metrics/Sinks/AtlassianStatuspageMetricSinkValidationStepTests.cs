@@ -43,7 +43,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
         [Fact]
         public void Validate_NoSinksConfigured_Success()
@@ -82,7 +82,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]

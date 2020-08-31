@@ -51,7 +51,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)

@@ -35,7 +35,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -152,7 +152,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         private IOptions<ResourceDiscoveryConfiguration> CreateRuntimeConfiguration()
