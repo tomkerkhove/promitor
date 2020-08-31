@@ -8,8 +8,8 @@ fullnameOverride: ""
 
 image:
   repository: tomkerkhove/promitor-agent-scraper
-  tag: latest
   pullPolicy: Always
+  tag: 
 
 azureAuthentication:
   appId: ""
