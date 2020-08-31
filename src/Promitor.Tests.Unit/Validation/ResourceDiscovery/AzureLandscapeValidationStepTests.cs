@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -25,7 +26,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, $"Validation failed with following message {validationResult.Message}");
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Theory]
@@ -109,11 +110,14 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
 
         private IOptions<AzureLandscape> CreateLandscapeConfiguration()
         {
+            var allAzureCloudValues = Enum.GetValues(typeof(AzureCloud));
+            var allowedAzureClouds = allAzureCloudValues.OfType<AzureCloud>().Where(entry => entry != AzureCloud.Unspecified).ToList();
+
             var azureLandscape = new Faker<AzureLandscape>()
                 .StrictMode(true)
                 .RuleFor(landscape => landscape.Subscriptions, faker => new List<string> { faker.Name.FirstName(), faker.Name.FirstName() })
                 .RuleFor(landscape => landscape.TenantId, faker => faker.Name.FirstName())
-                .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom<AzureCloud>())
+                .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom<AzureCloud>(allowedAzureClouds))
                 .Generate();
 
             return Options.Create(azureLandscape);
