@@ -22,11 +22,19 @@ namespace Promitor.Tests.Unit
         }
 
         /// <summary>
-        ///     Verifies validation was successful
+        ///     Verifies that validation was successful
         /// </summary>
         public static void ValidationIsSuccessful(ValidationResult validationResult)
         {
             True(validationResult.IsSuccessful, $"Validation was not successful. Reason: {validationResult.Message}");
+        }
+
+        /// <summary>
+        ///     Verifies that validation failed
+        /// </summary>
+        public static void ValidationFailed(ValidationResult validationResult)
+        {
+            False(validationResult.IsSuccessful, "Validation was successful");
         }
     }
 }

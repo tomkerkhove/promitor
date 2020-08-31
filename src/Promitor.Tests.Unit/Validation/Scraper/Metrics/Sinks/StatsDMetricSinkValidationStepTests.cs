@@ -22,7 +22,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
         [Fact]
         public void Validate_NoSinksConfigured_Success()
@@ -51,7 +51,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Theory]
@@ -84,7 +84,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Theory]
@@ -101,7 +101,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         private IOptions<ScraperRuntimeConfiguration> CreateRuntimeConfiguration()

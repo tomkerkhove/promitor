@@ -24,7 +24,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = resourceDiscoveryGroupValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = resourceDiscoveryGroupValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         private IOptions<List<ResourceDiscoveryGroup>> CreateResourceDiscoveryGroupConfiguration(int resourceDiscoveryGroupAmount = 2)

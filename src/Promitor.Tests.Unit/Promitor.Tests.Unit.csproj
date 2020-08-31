@@ -42,4 +42,10 @@
     <ProjectReference Include="..\Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Validation\Metrics\ResourceTypes\" />
+    <Folder Include="Validation\Metrics\Sinks\" />
+    <Folder Include="Validation\Misc\" />
+  </ItemGroup>
+
 </Project>

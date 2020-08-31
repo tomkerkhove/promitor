@@ -44,7 +44,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var validationResult = azureLandscapeValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful);
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         private IOptions<AzureLandscape> CreateLandscapeConfiguration()
