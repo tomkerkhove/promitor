@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
@@ -85,18 +86,18 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
         private Dictionary<string, string> DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
         {
-            var labels = new Dictionary<string, string>(scrapeResult.Labels.Select(label => new KeyValuePair<string, string>(label.Key.ToLower(), label.Value)));
+            var labels = new Dictionary<string, string>(scrapeResult.Labels.Select(label => new KeyValuePair<string, string>(label.Key.SanitizeForPrometheusLabelKey(), label.Value)));
 
             if (measuredMetric.IsDimensional)
             {
-                labels.Add(measuredMetric.DimensionName.ToLower(), measuredMetric.DimensionValue);
+                labels.Add(measuredMetric.DimensionName.SanitizeForPrometheusLabelKey(), measuredMetric.DimensionValue);
             }
 
             if (metricDefinition?.Labels?.Any() == true)
             {
                 foreach (var customLabel in metricDefinition.Labels)
                 {
-                    var customLabelKey = customLabel.Key.ToLower();
+                    var customLabelKey = customLabel.Key.SanitizeForPrometheusLabelKey();
                     if (labels.ContainsKey(customLabelKey))
                     {
                         _logger.LogWarning("Custom label {CustomLabelName} was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabelKey], customLabel.Value);
