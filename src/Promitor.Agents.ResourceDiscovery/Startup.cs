@@ -32,6 +32,7 @@ namespace Promitor.Agents.ResourceDiscovery
                 .AddRuntimeConfiguration(Configuration)
                 .AddAzureResourceGraph(Configuration)
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
+                .AddValidationRules()
                 .AddHttpCorrelation()
                 .AddHealthChecks()
                     .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);

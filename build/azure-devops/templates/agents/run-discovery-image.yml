@@ -63,7 +63,7 @@ steps:
   displayName: 'Determine if a network is required'
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
-      docker run -d -p ${{ parameters.containerPort }}:99 --name ${{ parameters.containerName }} $(networkArgument) --env DISCOVERY_APPID=${{ parameters.activeDirectoryAppId }} --env DISCOVERY_APPSECRET=${{ parameters.activeDirectoryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
+      docker run -d -p ${{ parameters.containerPort }}:99 --name ${{ parameters.containerName }} $(networkArgument) --env PROMITOR_AUTH_APPID=${{ parameters.activeDirectoryAppId }} --env PROMITOR_AUTH_APPKEY=${{ parameters.activeDirectoryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
       sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run Resource Discovery image as ${{ parameters.containerName }} container on ${{ parameters.os }}

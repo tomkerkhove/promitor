@@ -41,7 +41,7 @@ namespace Promitor.Agents.Scraper
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()
-                .ConfigureValidation()
+                .AddValidationRules()
                 .ConfigureYamlConfiguration(Configuration)
                 .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1);
 

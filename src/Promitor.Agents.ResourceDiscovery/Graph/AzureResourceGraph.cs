@@ -41,8 +41,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
 
-            QueryApplicationId = configuration["DISCOVERY_APPID"];
-            _queryApplicationSecret = configuration["DISCOVERY_APPSECRET"];
+            QueryApplicationId = configuration[EnvironmentVariables.Authentication.ApplicationId];
+            _queryApplicationSecret = configuration[EnvironmentVariables.Authentication.ApplicationKey];
         }
 
         public async Task<JObject> QueryAsync(string query)
