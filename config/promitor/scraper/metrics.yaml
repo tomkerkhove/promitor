@@ -129,6 +129,7 @@ metrics:
     resourceDiscoveryGroups:
     - name: service-bus-landscape
   - name: promitor_demo_app_insights
+    description: "Average dependency duration per dependency type"
     resourceType: Generic
     azureMetricConfiguration:
       metricName: dependencies/duration
