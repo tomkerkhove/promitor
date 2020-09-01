@@ -8,6 +8,6 @@
         /// <summary>
         /// The name of the Azure Express Route circuit to get metrics for.
         /// </summary>
-        public string ExpressRouteCircuitsName { get; set; }
+        public string ExpressRouteCircuitName { get; set; }
     }
 }
