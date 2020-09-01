@@ -7,7 +7,7 @@ title: Azure Express Route Circuit Declaration
 
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
-You can declare to scrape an Azure Express Route Circuits (without Peerings) via the `ExpressRouteCircuits` resource
+You can declare to scrape an Azure Express Route Circuit (without Peerings) via the `ExpressRouteCircuit` resource
 type.
 
 The following fields need to be provided:
