@@ -6,7 +6,7 @@
     public class ExpressRouteCircuitResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
-        /// The name of the express route circuits to get metrics for.
+        /// The name of the Azure Express Route circuit to get metrics for.
         /// </summary>
         public string ExpressRouteCircuitsName { get; set; }
     }
