@@ -35,6 +35,8 @@ variables:
     value: '$(Build.BuildNumber)'
   - name: 'Helm.App.Version'
     value: '$(Image.Version)'
+  - name: App.Version
+    value: '0.0.0-$(Image.Version)'
   - name: 'Image.Version'
     value: '${{ parameters.imageVersion }}'
   - name: 'Helm.Chart.Version'
@@ -75,8 +77,6 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
-  - name: App.Version
-    value: '0.0.0-$(Image.Version)'
   - name: Agent.Scraper.Version
     value: $(App.Version)
   - name: Agent.Scraper.BaseUrl
