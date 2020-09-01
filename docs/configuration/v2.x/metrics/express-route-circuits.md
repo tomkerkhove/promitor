@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Azure Express Route Circuits Declaration
+title: Azure Express Route Circuit Declaration
 ---
 
 ## Azure Express Route Circuits
