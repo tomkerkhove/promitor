@@ -363,7 +363,7 @@ stages:
      variables:
      - template: ./variables/helm.yml
      steps:
-     - template: templates/lint-helm-chart.yml
+     - template: templates/helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
