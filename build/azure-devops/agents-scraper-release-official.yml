@@ -35,8 +35,6 @@ variables:
     value: '$(Build.BuildNumber)'
   - name: 'Helm.App.Version'
     value: '$(Image.Version)'
-  - name: App.Version
-    value: '0.0.0-$(Image.Version)'
   - name: 'Image.Version'
     value: '${{ parameters.imageVersion }}'
   - name: 'Helm.Chart.Version'
@@ -371,7 +369,7 @@ stages:
        parameters:
         chartName: '$(Chart.Scraper.Name)'
         chartVersion: '$(Helm.Chart.Version)'
-        appVersion: '$(App.Version)'
+        appVersion: '$(Helm.App.Version)'
      - template: templates/helm/push-chart.yml
        parameters:
         chartName: '$(Chart.Scraper.Name)'
