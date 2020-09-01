@@ -1,7 +1,7 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes
 {
     /// <summary>
-    /// Contains the configuration required to scrape a express route circuits.
+    /// Contains the configuration required to scrape an Azure Express Route circuit.
     /// </summary>
     public class ExpressRouteCircuitsResourceV1 : AzureResourceDefinitionV1
     {
