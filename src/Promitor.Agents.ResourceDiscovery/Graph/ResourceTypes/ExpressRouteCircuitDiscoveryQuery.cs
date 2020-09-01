@@ -14,9 +14,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var expressRouteCircuitsName = resultRowEntry[3]?.ToString();
+            var expressRouteCircuitName = resultRowEntry[3]?.ToString();
             
-            var resource = new ExpressRouteCircuitResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), expressRouteCircuitsName);
+            var resource = new ExpressRouteCircuitResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), expressRouteCircuitName);
             return resource;
         }
     }

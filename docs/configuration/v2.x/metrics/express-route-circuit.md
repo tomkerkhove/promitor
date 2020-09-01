@@ -20,17 +20,17 @@ Example:
 
 ```yaml
 name: azure_express_route_percentage_arp_availability
-description: "Average percentage of arp availability on an Azure express route circuits"
-resourceType: ExpressRouteCircuits
+description: "Average percentage of arp availability on an Azure express route circuit"
+resourceType: ExpressRouteCircuit
 azureMetricConfiguration:
   metricName: ArpAvailability
   aggregation:
     type: Average
 resources:
-- expressRouteCircuitsName: promitor-express-route-circuits-1
-- expressRouteCircuitsName: promitor-express-route-circuits-2
+- expressRouteCircuitName: promitor-express-route-circuit-1
+- expressRouteCircuitName: promitor-express-route-circuit-2
 resourceDiscoveryGroups:
-- name: express-route-circuits-group
+- name: express-route-circuit-group
 ```
 
 <!-- markdownlint-disable MD033 -->

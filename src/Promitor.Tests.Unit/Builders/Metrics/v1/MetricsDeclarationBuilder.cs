@@ -163,7 +163,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithExpressRouteCircuitMetric(string metricName = "promitor-express-route-circuits",
+        public MetricsDeclarationBuilder WithExpressRouteCircuitMetric(string metricName = "promitor-express-route-circuit",
             string metricDescription = "Description for a metric",
             string expressRouteCircuitName = "promitor-express-route-circuit-name",
             string azureMetricName = "Percent",
