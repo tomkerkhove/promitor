@@ -8,6 +8,6 @@ namespace Promitor.Core.Contracts.ResourceTypes
             ExpressRouteCircuitsName = expressRouteCircuitsName;
         }
 
-        public string ExpressRouteCircuitsName { get; }
+        public string ExpressRouteCircuitName { get; }
     }
 }
