@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.ExpressRouteCircuitsName))
                 {
-                    yield return "No express route circuitse name is configured";
+                    yield return "No Azure Express Route circuit name is configured";
                 }
             }
         }
