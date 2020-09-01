@@ -95,6 +95,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure Cosmos DB](metrics/cosmos-db)
 - [Azure Database for PostgreSQL](metrics/postgresql)
 - [Azure Event Hubs](metrics/event-hubs)
+- [Azure Express Route Circuit](metrics/express-route-circuit)
 - [Azure Function App](metrics/function-app)
 - [Azure IoT Hub](metrics/iot-hub)
 - [Azure IoT Hub Device Provisioning Service (DPS)](metrics/iot-hub-device-provisioning-service)
