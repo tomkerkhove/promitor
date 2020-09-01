@@ -19,7 +19,7 @@ variables:
 - name: 'Release.Title'
   value: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
 - name: 'Helm.App.Version'
-  value: '${{ parameters.imageVersion }}'
+  value: '${{ parameters.appVersion }}'
 - name: 'Helm.Chart.Version'
   value: '${{ parameters.chartVersion }}'
   
