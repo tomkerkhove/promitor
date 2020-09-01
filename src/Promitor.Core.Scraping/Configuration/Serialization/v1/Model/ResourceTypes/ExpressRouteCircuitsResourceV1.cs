@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains the configuration required to scrape an Azure Express Route circuit.
     /// </summary>
-    public class ExpressRouteCircuitsResourceV1 : AzureResourceDefinitionV1
+    public class ExpressRouteCircuitResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
         /// The name of the express route circuits to get metrics for.
