@@ -22,6 +22,7 @@ version:
 - {{% tag added %}} New validation rule to ensure declarative or dynamic discovery for metrics to scrape are configured
 - {{% tag added %}} New System API endpoint giving runtime information ([docs](https://promitor.io/operations/#system)
  | [#1208](https://github.com/tomkerkhove/promitor/issues/1208))
+- {{% tag added %}} Provide capability to scrape metrics of Azure ExpressRoute circuit resources ([docs](https://promitor.io/configuration/v2.x/metrics/express-route-circuit) | [#1251](https://github.com/tomkerkhove/promitor/issues/1251).
 - {{% tag changed %}} Provide capability to scrape all queues in Azure Service Bus, instead of having to declare the
  queue name. [#529](https://github.com/tomkerkhove/promitor/issues/529).
 - {{% tag changed %}} Handle validation failures on startup more gracefully. [#1113](https://github.com/tomkerkhove/promitor/issues/1113).
