@@ -18,4 +18,4 @@ steps:
     mkdir output/
     helm package ${{ parameters.chartName }}/ --version ${{ parameters.chartVersion }} --app-version ${{ parameters.appVersion }} --destination output/
   workingDirectory: charts
-  displayName: 'Package Helm Chart'
+  displayName: 'Package Helm Chart v${{ parameters.chartVersion }} (App version ${{ parameters.appVersion }})'
