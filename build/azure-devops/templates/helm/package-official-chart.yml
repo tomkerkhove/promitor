@@ -1,0 +1,21 @@
+parameters:
+- name: helmVersion
+  type: string
+  default: '$(Helm.Version)'
+- name: chartName
+  type: string
+- name: chartVersion
+  type: string
+- name: appVersion
+  type: string
+
+steps:
+- task: HelmInstaller@1
+  displayName: 'Install Helm (${{ parameters.helmVersion }}'
+  inputs:
+    helmVersionToInstall: '${{ parameters.helmVersion }}'
+- powershell: |
+    mkdir output/
+    helm package ${{ parameters.chartName }}/ --version ${{ parameters.chartVersion }} --app-version ${{ parameters.appVersion }} --destination output/
+  workingDirectory: charts
+  displayName: 'Package Helm Chart v${{ parameters.chartVersion }} (App version ${{ parameters.appVersion }})'

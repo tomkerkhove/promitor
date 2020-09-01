@@ -75,8 +75,6 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
-  - name: App.Version
-    value: '0.0.0-$(Image.Version)'
   - name: Agent.Scraper.Version
     value: $(App.Version)
   - name: Agent.Scraper.BaseUrl
@@ -118,7 +116,7 @@ stages:
         tags: '--tag dev'
         buildArgs: 'VERSION="$(App.Version)"'
         os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
      - template: templates/agents/run-scraper-image.yml
@@ -141,16 +139,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
@@ -208,7 +206,7 @@ stages:
         buildArgs: 'VERSION="$(App.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
@@ -232,16 +230,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
@@ -360,20 +358,19 @@ stages:
      displayName: Push Helm Chart to ACR
      pool:
        vmImage: ubuntu-16.04
+     variables:
+     - template: ./variables/helm.yml
      steps:
-     - task: HelmInstaller@0
-       inputs:
-        helmVersion: '2.9.1'
-     - powershell: |
-        mkdir output/
-        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
-       displayName: 'Package Helm Chart'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-        scriptLocation: inlineScript
-        inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
+     - template: templates/helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.Scraper.Name)'
+     - template: templates/helm/package-official-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(Helm.App.Version)'
+     - template: templates/helm/push-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'

@@ -14,14 +14,15 @@ pr:
     - charts/promitor-agent-scraper/*
 variables:
   - template: ./variables/build.yml
+  - template: ./variables/helm.yml
   - name: Image.Name
     value: 'tomkerkhove/promitor-agent-scraper-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
-  - name: Helm.Chart.Version
+  - name: App.Version
     value: '0.0.0-$(Image.Tag)'
-  - name: Helm.Chart.Official.Name
-    value: 'promitor-agent-scraper'
+  - name: Helm.Chart.Version
+    value: '0.0.0-$(App.Version)'
   - name: Helm.Chart.CI.Name
     value: 'promitor-agent-scraper-ci'
 stages:
@@ -115,8 +116,6 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
-  - name: App.Version
-    value: '0.0.0-$(Image.Tag)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -153,7 +152,7 @@ stages:
           tags: '--tag dev'
           buildArgs: 'VERSION="$(App.Version)"'
           os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
      - template: templates/agents/run-scraper-image.yml
@@ -176,16 +175,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
@@ -231,7 +230,7 @@ stages:
           buildArgs: 'VERSION="$(App.Version)"'
           tags: '--tag promitor-agent-scraper-ci'
           os: '$(OS.Name)'
-     - template: ./templates/docker/create-network.yml
+     - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
@@ -255,16 +254,16 @@ stages:
           activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
-     - template: ./templates/docker/show-running-containers.yml
+     - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: ./templates/docker/show-container-logs.yml
+     - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
@@ -283,10 +282,10 @@ stages:
      pool:
        vmImage: ubuntu-16.04
      steps:
-     - template: ./templates/helm/lint-chart.yml
+     - template: templates/helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
-        chartName: '$(Helm.Chart.Official.Name)'
+        chartName: '$(Chart.Scraper.Name)'
 - stage: Helm3
   displayName: Helm Chart (3.x)
   dependsOn: Docker
@@ -304,36 +303,24 @@ stages:
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
-     - template: ./templates/helm/lint-chart.yml
+     - template: templates/helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
-        chartName: '$(Helm.Chart.Official.Name)'
-     - task: PowerShell@2
-       displayName: 'Transform Helm Chart in CI Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/CI/Transform-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -imageName "$(Image.Name)" -imageTag "$(Image.Tag)"'
-        workingDirectory: 'charts'
-     - task: PowerShell@2
-       displayName: 'Package Helm Chart'
-       inputs:
-        targetType: filePath
-        filePath: ./build/helm/CI/Package-Chart.ps1
-        arguments: '-chartName "$(Helm.Chart.CI.Name)" -chartVersion "$(Helm.Chart.Version)"'
-        workingDirectory: 'charts'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-        scriptLocation: inlineScript
-        inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz --force
-       condition: eq(variables['Build.Reason'], 'PullRequest')
-     - task: PublishBuildArtifacts@1
-       displayName: 'Publish Helm Chart'
-       inputs:
-        PathtoPublish: charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz
-        ArtifactName: helm
-       condition: eq(variables['Build.Reason'], 'PullRequest')
+        chartName: '$(Chart.Scraper.Name)'
+     - template: templates/helm/package-preview-chart.yml
+       parameters:
+        chartName: '$(Helm.Chart.CI.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(App.Version)'
+        imageName: '$(Image.Name)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: templates/helm/push-chart.yml
+          parameters:
+            chartName: '$(Helm.Chart.CI.Name)'
+            chartVersion: '$(Helm.Chart.Version)'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Helm Chart'
+          inputs:
+            PathtoPublish: charts/output/$(Helm.Chart.CI.Name)-$(Helm.Chart.Version).tgz
+            ArtifactName: helm

@@ -1,13 +1,28 @@
 name: $(Helm.Chart.Version)
-resources:
-- repo: self
+
 trigger: none
 pr: none
+
+parameters:
+- name: appVersion
+  displayName: App Version
+  type: string
+  default: 0.1.0
+- name: chartVersion
+  displayName: Helm Chart Version
+  type: string
+  default: 0.1.0
+
 variables:
-  Release.TagName: 'helm-$(Helm.Chart.Version)'
-  Release.Title: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
-  # Helm.App.Version is configured in the build definition as settable at queue time
-  # Helm.Chart.Version is configured in the build definition as settable at queue time
+- name: 'Release.TagName'
+  value: 'helm-$(Helm.Chart.Version)'
+- name: 'Release.Title'
+  value: 'Helm v$(Helm.Chart.Version) for Promitor Scraper v$(Helm.App.Version)'
+- name: 'Helm.App.Version'
+  value: '${{ parameters.appVersion }}'
+- name: 'Helm.Chart.Version'
+  value: '${{ parameters.chartVersion }}'
+  
 stages:
 - stage: ReleaseHelm
   displayName: Release Helm Chart
@@ -16,23 +31,22 @@ stages:
      displayName: Push Helm Chart to ACR
      pool:
        vmImage: ubuntu-16.04
+     variables:
+     - template: ./variables/helm.yml
      steps:
-     - task: HelmInstaller@0
-       inputs:
-        helmVersion: '2.9.1'
-     - powershell: |
-        mkdir output/
-        helm package promitor-agent-scraper/ --app-version $(Helm.App.Version) --version $(Helm.Chart.Version) --destination output/
-       workingDirectory: charts
-       displayName: 'Package Helm Chart'
-     - task: AzureCLI@1
-       displayName: 'Push Helm Chart to Azure Container Registry'
-       inputs:
-        azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
-        scriptLocation: inlineScript
-        inlineScript: |
-         az configure --defaults acr=promitor
-         az acr helm push --name promitor charts/output/promitor-agent-scraper-$(Helm.Chart.Version).tgz --force
+     - template: templates/helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.Scraper.Name)'
+     - template: templates/helm/package-official-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(Helm.App.Version)'
+     - template: templates/helm/push-chart.yml
+       parameters:
+        chartName: '$(Chart.Scraper.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
 
 - stage: ReleaseGitHub
   displayName: Release on GitHub

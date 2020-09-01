@@ -1,0 +1,30 @@
+parameters:
+- name: helmVersion
+  type: string
+  default: '$(Helm.Version)'
+- name: chartName
+  type: string
+- name: chartVersion
+  type: string
+- name: appVersion
+  type: string
+- name: imageName
+  type: string
+
+steps:
+- task: HelmInstaller@1
+  displayName: 'Install Helm (${{ parameters.helmVersion }}'
+  inputs:
+    helmVersionToInstall: '${{ parameters.helmVersion }}'
+- task: PowerShell@2
+  displayName: 'Transform Helm Chart'
+  inputs:
+    targetType: filePath
+    filePath: ./build/helm/Transform-Chart.ps1
+    arguments: '-chartName "${{ parameters.chartName }}" -imageName "${{ parameters.imageName }}" -imageTag "${{ parameters.appVersion }}"'
+    workingDirectory: 'charts'
+- template: package-official-chart.yml
+  parameters:
+    chartName: '${{ parameters.chartName }}'
+    chartVersion: '${{ parameters.chartVersion }}'
+    appVersion: '${{ parameters.appVersion }}'
