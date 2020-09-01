@@ -29,6 +29,6 @@
         KeyVault = 24,
         LogicApp = 25,
         EventHubs = 26,
-        ExpressRouteCircuits = 27
+        ExpressRouteCircuit = 27
     }
 }

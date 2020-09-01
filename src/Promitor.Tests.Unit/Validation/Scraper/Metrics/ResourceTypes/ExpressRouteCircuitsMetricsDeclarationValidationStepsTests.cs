@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class ExpressRouteCircuitsMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
+    public class ExpressRouteCircuitMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(azureMetricName: string.Empty)
+                .WithExpressRouteCircuitMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -24,15 +24,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(metricDescription: string.Empty)
+                .WithExpressRouteCircuitMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -41,15 +41,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(string.Empty)
+                .WithExpressRouteCircuitMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -58,15 +58,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutExpressRouteCircuitsName_Fails()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutExpressRouteCircuitName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(expressRouteCircuitsName: string.Empty)
+                .WithExpressRouteCircuitMetric(expressRouteCircuitName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -75,15 +75,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation is successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(omitResource: true)
+                .WithExpressRouteCircuitMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -92,15 +92,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.False(validationResult.IsSuccessful, "Validation was successful");
+            PromitorAssert.ValidationFailed(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void ExpressRouteCircuitMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithExpressRouteCircuitMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -109,15 +109,15 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
-        public void ExpressRouteCircuitsMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void ExpressRouteCircuitMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithExpressRouteCircuitsMetric()
+                .WithExpressRouteCircuitMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -126,7 +126,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             var validationResult = scrapingScheduleValidationStep.Run();
 
             // Assert
-            Assert.True(validationResult.IsSuccessful, "Validation was not successful");
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
     }
 }

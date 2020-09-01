@@ -3,11 +3,11 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class ExpressRouteCircuitsDeserializer : ResourceDeserializer<ExpressRouteCircuitsResourceV1>
+    public class ExpressRouteCircuitDeserializer : ResourceDeserializer<ExpressRouteCircuitResourceV1>
     {
-        public ExpressRouteCircuitsDeserializer(ILogger<ExpressRouteCircuitsDeserializer> logger) : base(logger)
+        public ExpressRouteCircuitDeserializer(ILogger<ExpressRouteCircuitDeserializer> logger) : base(logger)
         {
-            Map(resource => resource.ExpressRouteCircuitsName)
+            Map(resource => resource.ExpressRouteCircuitName)
                 .IsRequired();
         }
     }

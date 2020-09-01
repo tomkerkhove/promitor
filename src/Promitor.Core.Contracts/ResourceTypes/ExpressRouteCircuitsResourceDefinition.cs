@@ -1,11 +1,11 @@
 namespace Promitor.Core.Contracts.ResourceTypes
 {
-    public class ExpressRouteCircuitsResourceDefinition : AzureResourceDefinition
+    public class ExpressRouteCircuitResourceDefinition : AzureResourceDefinition
     {
-        public ExpressRouteCircuitsResourceDefinition(string subscriptionId, string resourceGroupName, string expressRouteCircuitsName)
-            : base(ResourceType.ExpressRouteCircuits, subscriptionId, resourceGroupName, expressRouteCircuitsName)
+        public ExpressRouteCircuitResourceDefinition(string subscriptionId, string resourceGroupName, string expressRouteCircuitName)
+            : base(ResourceType.ExpressRouteCircuit, subscriptionId, resourceGroupName, expressRouteCircuitName)
         {
-            ExpressRouteCircuitsName = expressRouteCircuitsName;
+            ExpressRouteCircuitName = expressRouteCircuitName;
         }
 
         public string ExpressRouteCircuitName { get; }

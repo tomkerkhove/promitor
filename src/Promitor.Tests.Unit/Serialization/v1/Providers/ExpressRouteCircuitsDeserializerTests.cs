@@ -8,36 +8,36 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ExpressRouteCircuitsDeserializerTests : ResourceDeserializerTest<ExpressRouteCircuitsDeserializer>
+    public class ExpressRouteCircuitDeserializerTests : ResourceDeserializerTest<ExpressRouteCircuitDeserializer>
     {
-        private readonly ExpressRouteCircuitsDeserializer _deserializer;
+        private readonly ExpressRouteCircuitDeserializer _deserializer;
 
-        public ExpressRouteCircuitsDeserializerTests()
+        public ExpressRouteCircuitDeserializerTests()
         {
-            _deserializer = new ExpressRouteCircuitsDeserializer(Logger);
+            _deserializer = new ExpressRouteCircuitDeserializer(Logger);
         }
 
         [Fact]
-        public void Deserialize_ExpressRouteCircuitsNameSupplied_SetsName()
+        public void Deserialize_ExpressRouteCircuitNameSupplied_SetsName()
         {
-            YamlAssert.PropertySet<ExpressRouteCircuitsResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<ExpressRouteCircuitResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                "expressRouteCircuitsName: promitor-express-route-circuit",
+                "expressRouteCircuitName: promitor-express-route-circuit",
                 "promitor-express-route-circuit",
-                r => r.ExpressRouteCircuitsName);
+                r => r.ExpressRouteCircuitName);
         }
 
         [Fact]
-        public void Deserialize_ExpressRouteCircuitsNameNotSupplied_Null()
+        public void Deserialize_ExpressRouteCircuitNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<ExpressRouteCircuitsResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<ExpressRouteCircuitResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
-                r => r.ExpressRouteCircuitsName);
+                r => r.ExpressRouteCircuitName);
         }
 
         [Fact]
-        public void Deserialize_ExpressRouteCircuitsNameNotSupplied_ReportsError()
+        public void Deserialize_ExpressRouteCircuitNameNotSupplied_ReportsError()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
@@ -46,12 +46,12 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             YamlAssert.ReportsErrorForProperty(
                 _deserializer,
                 node,
-                "expressRouteCircuitsName");
+                "expressRouteCircuitName");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ExpressRouteCircuitsDeserializer(Logger);
+            return new ExpressRouteCircuitDeserializer(Logger);
         }
     }
 }

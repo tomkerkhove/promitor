@@ -7,15 +7,15 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class ExpressRouteCircuitsMetricsValidator : IMetricValidator
+    internal class ExpressRouteCircuitMetricsValidator : IMetricValidator
     {
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ExpressRouteCircuitsResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ExpressRouteCircuitResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.ExpressRouteCircuitsName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.ExpressRouteCircuitName))
                 {
                     yield return "No Azure Express Route circuit name is configured";
                 }
