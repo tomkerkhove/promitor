@@ -36,7 +36,6 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
                 r => r.ExpressRouteCircuitsName);
         }
 
-        //[Fact (Skip = "fails..")]
         [Fact]
         public void Deserialize_ExpressRouteCircuitsNameNotSupplied_ReportsError()
         {
