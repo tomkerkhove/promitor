@@ -9,7 +9,7 @@ parameters:
 
 steps:
 - task: AzureCLI@1
-  displayName: 'Push Helm Chart ${{ parameters.chartName }} v${{ parameters.chartVersion }} to Azure Container Registry (App version ${{ parameters.appVersion }})'
+  displayName: 'Push Helm Chart ${{ parameters.chartName }} v${{ parameters.chartVersion }} to Azure Container Registry'
   inputs:
     azureSubscription: 'Visual Studio Enterprise (0f9d7fea-99e8-4768-8672-06a28514f77e)'
     scriptLocation: inlineScript
