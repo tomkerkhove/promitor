@@ -3,7 +3,7 @@ layout: default
 title: Azure Express Route Circuit Declaration
 ---
 
-## Azure Express Route Circuits
+## Azure Express Route Circuit
 
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
