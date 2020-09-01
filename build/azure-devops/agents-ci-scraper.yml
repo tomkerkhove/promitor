@@ -19,6 +19,8 @@ variables:
     value: 'tomkerkhove/promitor-agent-scraper-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
+  - name: App.Version
+    value: '0.0.0-$(Image.Tag)'
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
   - name: Helm.Chart.CI.Name
@@ -114,8 +116,6 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
-  - name: App.Version
-    value: '0.0.0-$(Image.Tag)'
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
