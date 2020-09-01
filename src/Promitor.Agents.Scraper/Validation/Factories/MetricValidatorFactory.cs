@@ -28,7 +28,7 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                 case ResourceType.EventHubs:
                     return new EventHubsMetricValidator();
                 case ResourceType.ExpressRouteCircuits:
-                    return new ExpressRouteCircuitsMetricsValidator();
+                    return new ExpressRouteCircuitMetricsValidator();
                 case ResourceType.FileStorage:
                     return new FileStorageMetricValidator();
                 case ResourceType.FunctionApp:
