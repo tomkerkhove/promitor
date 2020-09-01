@@ -20,15 +20,15 @@ metricSinks:
     host: ""
     port: 8125
     metricPrefix: ""
+  prometheusScrapingEndpoint:
+    baseUriPath: /metrics
+    enableMetricTimestamps: true
+    metricUnavailableValue: NaN
+    enableServiceDiscovery: true
 resourceDiscovery:
   enabled: false
   host: ""
   port: 80
-prometheus:
-  scrapeEndpointPath: /metrics
-  enableMetricTimestamps: true
-  metricUnavailableValue: NaN
-  enableServiceDiscovery: true
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:

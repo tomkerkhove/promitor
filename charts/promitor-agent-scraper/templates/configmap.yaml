@@ -29,9 +29,9 @@ data:
   {{- end }}
   {{- end }}
         prometheusScrapingEndpoint:
-          metricUnavailableValue: {{ .Values.prometheus.metricUnavailableValue | quote }}
-          enableMetricTimestamps: {{ .Values.prometheus.enableMetricTimestamps | quote }}
-          baseUriPath: {{ .Values.prometheus.scrapeEndpointPath | quote }}
+          metricUnavailableValue: {{ .Values.metricSinks.prometheusScrapingEndpoint.metricUnavailableValue | quote }}
+          enableMetricTimestamps: {{ .Values.metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps | quote }}
+          baseUriPath: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath | quote }}
       metricsConfiguration:
         absolutePath: /config/metrics-declaration.yaml
       telemetry:

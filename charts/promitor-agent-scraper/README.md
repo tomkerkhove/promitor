@@ -1,14 +1,14 @@
 # Promitor
 
-[Promitor](https://promitor.io/) is an Azure Monitor scraper for Prometheus providing
-a scraping endpoint for Prometheus that provides a configured subset of Azure
-Monitor metrics.
+[Promitor](https://promitor.io/) is an Azure Monitor scraper which makes
+ the metrics available for metric systems such as Atlassian Statuspage,
+  Prometheus and StatsD.
 
 ## TL;DR
 
 ```console
 helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
-helm install promitor/promitor-agent-scraper
+helm install promitor-agent-scraper promitor/promitor-agent-scraper
 ```
 
 ## Introduction
@@ -28,10 +28,11 @@ Service so that other Pods can consume it.
 To install the chart with the release name `promitor-agent-scraper`:
 
 ```console
-$ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
+$ helm install promitor-agent-scraper
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
-               --values /path/to/metric-declaration.yaml
+               --values /path/to/metric-declaration.yaml \
+               promitor/promitor-agent-scraper
 ```
 
 The command deploys Prometheus on the Kubernetes cluster with the specified metrics
@@ -66,10 +67,10 @@ their default values.
 | `metricSinks.statsd.host`  | DNS name or IP address of StatsD server |             |
 | `metricSinks.statsd.port`  | Port (UDP) address of StatsD server | `8125`            |
 | `metricSinks.statsd.metricPrefix`  | Prefix that will be added to every metric defined in the metric declaration |             |
-| `prometheus.scrapeEndpointPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
-| `prometheus.enableMetricTimestamps`  | Indication whether or not to include timestamp | `true`            |
-| `prometheus.metricUnavailableValue`  | Value to report in Prometheus when no metric was found whether or not to include timestamp | `NaN`            |
-| `prometheus.enableServiceDiscovery`  | Indication whether or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
+| `metricSinks.prometheusScrapingEndpoint.baseUriPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
+| `metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps`  | Indication whether or not to include timestamp | `true`            |
+| `metricSinks.prometheusScrapingEndpoint.metricUnavailableValue`  | Value to report in Prometheus when no metric was found whether or not to include timestamp | `NaN`            |
+| `metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery`  | Indication whether or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
 | `telemetry.applicationInsights.enabled`  | Indication whether or not to send telemetry to Azure Application Insights | `false`            |
 | `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
 | `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
