@@ -163,6 +163,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithExpressRouteCircuitMetric(string metricName = "promitor-express-route-circuit",
+            string metricDescription = "Description for a metric",
+            string expressRouteCircuitName = "promitor-express-route-circuit-name",
+            string azureMetricName = "Percent",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new ExpressRouteCircuitResourceV1
+            {
+                ExpressRouteCircuitName = expressRouteCircuitName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.ExpressRouteCircuit, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithLogicAppMetric(string metricName = "promitor-logic-apps-failed-runs",
             string metricDescription = "Description for a metric",
             string workflowName = "promitor-workflow",

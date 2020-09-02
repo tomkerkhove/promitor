@@ -28,6 +28,7 @@
         DeviceProvisioningService = 23,
         KeyVault = 24,
         LogicApp = 25,
-        EventHubs = 26
+        EventHubs = 26,
+        ExpressRouteCircuit = 27
     }
 }

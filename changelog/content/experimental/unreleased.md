@@ -11,6 +11,7 @@ version:
 - {{% tag added %}} Support for scraping Azure Event Hubs ([docs](https://promitor.io/configuration/v2.x/metrics/event-hubs)
  | [#372](https://github.com/tomkerkhove/promitor/issues/69))
 - {{% tag added %}} Support for scraping Azure Logic Apps ([docs](https://promitor.io/configuration/v2.x/metrics/logic-apps)
+- {{% tag added %}} Support for scraping Azure Express Route circuits ([docs](https://promitor.io/configuration/v2.x/metrics/express-route-circuit) | [#1251](https://github.com/tomkerkhove/promitor/issues/1251)).
  | [#314](https://github.com/tomkerkhove/promitor/issues/314))
 - {{% tag added %}} New validation rule to ensure at least one resource or resource collection is configured to scrape
 - {{% tag added %}} Provide suggestions when unknown fields are found in the metrics config. ([#1105](https://github.com/tomkerkhove/promitor/issues/1105)).
