@@ -121,7 +121,7 @@ service supported by Azure Monitor.
 We also provide a simplified way to scrape the following Azure resources:
 
 - [Azure API Management](api-management)
-- [Application Gateway](application-gateway)
+- [Azure Application Gateway](application-gateway)
 - [Azure App Plan](app-plan)
 - [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)
