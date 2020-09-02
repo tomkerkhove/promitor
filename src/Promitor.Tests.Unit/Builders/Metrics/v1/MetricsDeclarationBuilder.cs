@@ -166,7 +166,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithExpressRouteCircuitMetric(string metricName = "promitor-express-route-circuit",
             string metricDescription = "Description for a metric",
             string expressRouteCircuitName = "promitor-express-route-circuit-name",
-            string azureMetricName = "Percent",
+            string azureMetricName = "ArpAvailability",
             string resourceDiscoveryGroupName = "",
             bool omitResource = false)
         {
@@ -210,6 +210,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             };
 
             CreateAndAddMetricDefinition(ResourceType.CosmosDb, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithApplicationGatewayMetric(string metricName = "promitor-application-gateway",
+            string metricDescription = "Description for a metric",
+            string applicationGatewayName = "promitor-application-gateway-name",
+            string azureMetricName = "ApplicationGatewayTotalTime",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new ApplicationGatewayResourceV1
+            {
+                ApplicationGatewayName = applicationGatewayName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.ApplicationGateway, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
 
             return this;
         }
