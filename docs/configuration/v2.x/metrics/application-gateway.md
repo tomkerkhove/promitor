@@ -20,7 +20,7 @@ Example:
 
 ```yaml
 name: azure_application_gateway_milli_total_time
-description: "Average cilliseconds of total time on an Azure application gateway"
+description: "Average milliseconds of total time on an Azure application gateway"
 resourceType: ApplicationGateway
 azureMetricConfiguration:
   metricName: ApplicationGatewayTotalTime
