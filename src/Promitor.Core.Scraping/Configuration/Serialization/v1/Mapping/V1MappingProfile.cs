@@ -24,6 +24,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SecretV1, Secret>();
 
             CreateMap<ApiManagementResourceV1, ApiManagementResourceDefinition>();
+            CreateMap<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>();
             CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
@@ -58,6 +59,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
 
             CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
                 .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
+                .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
