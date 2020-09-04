@@ -102,6 +102,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure IoT Hub Device Provisioning Service (DPS)](metrics/iot-hub-device-provisioning-service)
 - [Azure Key Vault](metrics/key-vault)
 - [Azure Logic Apps](metrics/logic-apps)
+- [Azure Network Gateway](metrics/network-gateway)
 - [Azure Network Interface](metrics/network-interface)
 - [Azure Service Bus Queue](metrics/service-bus-queue)
 - [Azure SQL Database](metrics/sql-database)

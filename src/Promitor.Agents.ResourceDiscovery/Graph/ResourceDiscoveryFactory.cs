@@ -36,6 +36,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KeyVaultDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
+                case ResourceType.NetworkGateway:
+                    return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceDiscoveryQuery();
                 case ResourceType.RedisCache:
