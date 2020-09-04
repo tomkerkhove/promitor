@@ -43,6 +43,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KeyVaultMetricValidator();
                 case ResourceType.LogicApp:
                     return new LogicAppMetricValidator();
+                case ResourceType.NetworkGateway:
+                    return new NetworkGatewayMetricValidator();
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceMetricValidator();
                 case ResourceType.PostgreSql:

@@ -62,6 +62,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new IoTHubScraper(scraperConfiguration);
                 case ResourceType.KeyVault:
                     return new KeyVaultScraper(scraperConfiguration);
+                case ResourceType.NetworkGateway:
+                    return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.LogicApp:

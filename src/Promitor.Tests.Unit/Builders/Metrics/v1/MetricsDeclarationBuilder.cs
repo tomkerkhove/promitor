@@ -414,6 +414,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithNetworkGatewayMetric(string metricName = "promitor-network-gateway",
+            string metricDescription = "Description for a metric",
+            string networkGatewayName = "promitor-network-gateway-name",
+            string azureMetricName = "ExpressRouteGatewayPacketsPerSecond",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new NetworkGatewayResourceV1
+            {
+                NetworkGatewayName = networkGatewayName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.NetworkGateway, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithNetworkInterfaceMetric(string metricName = "promitor-network-interface",
             string metricDescription = "Description for a metric",
             string networkInterfaceName = "promitor-network-interface-name",
