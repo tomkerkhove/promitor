@@ -39,6 +39,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
+            CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
@@ -74,6 +75,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
+                .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()

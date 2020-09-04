@@ -30,6 +30,7 @@
         LogicApp = 25,
         EventHubs = 26,
         ExpressRouteCircuit = 27,
-        ApplicationGateway = 28
+        ApplicationGateway = 28,
+        NetworkGateway = 29
     }
 }
