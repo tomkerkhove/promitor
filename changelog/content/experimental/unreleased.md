@@ -14,7 +14,7 @@ version:
  | [#314](https://github.com/tomkerkhove/promitor/issues/314)).
 - {{% tag added %}} Support for scraping Azure Express Route circuits ([docs](https://promitor.io/configuration/v2.x/metrics/express-route-circuit) | [#1251](https://github.com/tomkerkhove/promitor/issues/1251)).
 - {{% tag added %}} Support for scraping Azure Application Gateway ([docs](https://promitor.io/configuration/v2.x/metrics/application-gateway) | [#1251](https://github.com/tomkerkhove/promitor/issues/313)).
-- {{% tag added %}} Support for scraping Azure Network Gateway ([docs](https://promitor.io/configuration/v2.x/metrics/network-gateway) | [#1251](https://github.com/tomkerkhove/promitor/issues/XXX)).
+- {{% tag added %}} Support for scraping Azure Network Gateway ([docs](https://promitor.io/configuration/v2.x/metrics/network-gateway) | [#1251](https://github.com/tomkerkhove/promitor/issues/1264)).
 - {{% tag added %}} New validation rule to ensure at least one resource or resource collection is configured to scrape
 - {{% tag added %}} Provide suggestions when unknown fields are found in the metrics config. ([#1105](https://github.com/tomkerkhove/promitor/issues/1105) | Contributed by [@adamconnelly](https://github.com/adamconnelly) 🎉).
 - {{% tag added %}} Add validation to ensure the scraping schedule is a valid Cron expression. ([#1103](https://github.com/tomkerkhove/promitor/issues/1103) | Contributed by [@adamconnelly](https://github.com/adamconnelly) 🎉).
