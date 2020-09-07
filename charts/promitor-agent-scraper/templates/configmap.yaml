@@ -1,4 +1,5 @@
 {{- $metrics := toYaml .Values.metrics -}}
+{{- $systemMetricMapping := toYaml .Values.metricSinks.atlassianStatuspage.systemMetricMapping -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -18,7 +19,7 @@ data:
         port: {{ .Values.resourceDiscovery.port }}
   {{- end }}
       metricSinks:
-  {{- if .Values.metricSinks.statsd.host }}
+  {{- if .Values.metricSinks.statsd.enabled }}
         statsd:
           host: {{ .Values.metricSinks.statsd.host | quote }}
   {{- if .Values.metricSinks.statsd.port }}
@@ -28,10 +29,18 @@ data:
           metricPrefix: {{ .Values.metricSinks.statsd.metricPrefix | quote }}
   {{- end }}
   {{- end }}
+  {{- if .Values.metricSinks.prometheusScrapingEndpoint.enabled }}
         prometheusScrapingEndpoint:
           metricUnavailableValue: {{ .Values.metricSinks.prometheusScrapingEndpoint.metricUnavailableValue | quote }}
           enableMetricTimestamps: {{ .Values.metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps | quote }}
           baseUriPath: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath | quote }}
+  {{- end }}
+  {{- if .Values.metricSinks.atlassianStatuspage.enabled }}
+        atlassianStatuspage:
+          pageId: {{ .Values.metricSinks.atlassianStatuspage.pageId | quote }}
+          systemMetricMapping:
+{{ tpl $systemMetricMapping . | indent 10 }}
+  {{- end }}
       metricsConfiguration:
         absolutePath: /config/metrics-declaration.yaml
       telemetry:

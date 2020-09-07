@@ -64,13 +64,19 @@ their default values.
 | `resourceDiscovery.enabled`  | Indication whether or not resource discovery is required | `false`            |
 | `resourceDiscovery.host`  | DNS name or IP address of the Promitor Resource Discovery agent |             |
 | `resourceDiscovery.port`  | Port (UDP) address of the Promitor Resource Discovery agent | `80`            |
-| `metricSinks.statsd.host`  | DNS name or IP address of StatsD server |             |
-| `metricSinks.statsd.port`  | Port (UDP) address of StatsD server | `8125`            |
-| `metricSinks.statsd.metricPrefix`  | Prefix that will be added to every metric defined in the metric declaration |             |
+| `metricSinks.atlassianStatuspage.enabled`  | Indication whether or not metrics should be emitted to a StatsD server | `false`|
+| `metricSinks.atlassianStatuspage.pageId`  | Id of Atlassian Statuspage page |             |
+| `metricSinks.atlassianStatuspage.apiKey`  | API key of Atlassian Statuspage page |             |
+| `metricSinks.atlassianStatuspage.systemMetricMapping`  | Mapping of the Atlassian Statuspage system metrics and Promitor metrics. Learn how to configure it [below](#atlassian-statuspage).| `8125`            |
+| `metricSinks.prometheusScrapingEndpoint.enabled`  | Indication whether or not metrics should be exposed as a Prometheus scraping endpoint | `true`|
 | `metricSinks.prometheusScrapingEndpoint.baseUriPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
 | `metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps`  | Indication whether or not to include timestamp | `true`            |
 | `metricSinks.prometheusScrapingEndpoint.metricUnavailableValue`  | Value to report in Prometheus when no metric was found whether or not to include timestamp | `NaN`            |
 | `metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery`  | Indication whether or not service discovery with annotations should be enabled ([docs](https://github.com/helm/charts/tree/master/stable/prometheus#scraping-pod-metrics-via-annotations)) | `true`            |
+| `metricSinks.statsd.enabled`  | Indication whether or not metrics should be emitted to a StatsD server | `false`|
+| `metricSinks.statsd.host`  | DNS name or IP address of StatsD server |             |
+| `metricSinks.statsd.port`  | Port (UDP) address of StatsD server | `8125`            |
+| `metricSinks.statsd.metricPrefix`  | Prefix that will be added to every metric defined in the metric declaration |             |
 | `telemetry.applicationInsights.enabled`  | Indication whether or not to send telemetry to Azure Application Insights | `false`            |
 | `telemetry.applicationInsights.logLevel`  | Minimum level of logging for Azure Application Insights |             |
 | `telemetry.applicationInsights.key`  | Application Insights instrumentation key |             |
@@ -116,3 +122,15 @@ be provided while installing the chart. For example,
 ```console
 helm install promitor/promitor-agent-scraper --name promitor-agent-scraper -f values.yaml
 ```
+
+### Atlassian Statuspage
+
+You can easily provide system metric mapping between Atlassian Statuspage system metrics and Promitor metrics.
+
+```yaml
+systemMetricMapping: []
+- id: <atlassian-statuspage-system-metric-id>
+  promitorMetricName: <promitor-metric-name>
+```
+
+This defines which Promitor metric should be reported as a given Atlassian Statuspage system metrics.
