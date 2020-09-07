@@ -8,6 +8,7 @@
 
 ```console
 helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+helm repo update
 helm install promitor-agent-scraper promitor/promitor-agent-scraper
 ```
 
@@ -64,7 +65,7 @@ their default values.
 | `resourceDiscovery.enabled`  | Indication whether or not resource discovery is required | `false`            |
 | `resourceDiscovery.host`  | DNS name or IP address of the Promitor Resource Discovery agent |             |
 | `resourceDiscovery.port`  | Port (UDP) address of the Promitor Resource Discovery agent | `80`            |
-| `metricSinks.atlassianStatuspage.enabled`  | Indication whether or not metrics should be emitted to a StatsD server | `false`|
+| `metricSinks.atlassianStatuspage.enabled` | Indication whether or not metrics should be emitted to a StatsD server | `false`|
 | `metricSinks.atlassianStatuspage.pageId`  | Id of Atlassian Statuspage page |             |
 | `metricSinks.atlassianStatuspage.apiKey`  | API key of Atlassian Statuspage page |             |
 | `metricSinks.atlassianStatuspage.systemMetricMapping`  | Mapping of the Atlassian Statuspage system metrics and Promitor metrics. Learn how to configure it [below](#atlassian-statuspage).| `8125`            |
@@ -108,7 +109,7 @@ Specify each parameter using the `--set key=value[,key=value]` argument to
 `helm install`. For example:
 
 ```console
-$ helm install promitor/promitor-agent-scraper --name promitor-agent-scraper \
+$ helm install promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
                --set azureMetadata.tenantId='<azure-tenant-id>' \
@@ -120,7 +121,7 @@ Alternatively, a YAML file that specifies the values for the above parameters ca
 be provided while installing the chart. For example,
 
 ```console
-helm install promitor/promitor-agent-scraper --name promitor-agent-scraper -f values.yaml
+helm install promitor-agent-scraper promitor/promitor-agent-scraper -f values.yaml
 ```
 
 ### Atlassian Statuspage
