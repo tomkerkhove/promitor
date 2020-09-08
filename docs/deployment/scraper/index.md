@@ -60,10 +60,6 @@ azureMetadata:
 
 runtime:
   metricSinks:
-    prometheusScrapingEndpoint:
-      enabled: true
-      baseUriPath: /metrics
-      enableMetricTimestamps: True
     atlassianStatuspage:
       enabled: true
       pageId: "ABC"

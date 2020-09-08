@@ -29,11 +29,10 @@ Service so that other Pods can consume it.
 To install the chart with the release name `promitor-agent-scraper`:
 
 ```console
-$ helm install promitor-agent-scraper
+$ helm install promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
-               --values /path/to/metric-declaration.yaml \
-               promitor/promitor-agent-scraper
+               --values /path/to/metric-declaration.yaml
 ```
 
 The command deploys Prometheus on the Kubernetes cluster with the specified metrics
@@ -44,7 +43,7 @@ declaration, for more information see [our documentation](https://promitor.io/de
 To uninstall/delete the `promitor-agent-scraper` deployment:
 
 ```console
-helm delete promitor-agent-scraper
+helm uninstall promitor-agent-scraper
 ```
 
 The command removes all the Kubernetes components associated with the chart and
@@ -68,7 +67,7 @@ their default values.
 | `metricSinks.atlassianStatuspage.enabled` | Indication whether or not metrics should be emitted to a StatsD server | `false`|
 | `metricSinks.atlassianStatuspage.pageId`  | Id of Atlassian Statuspage page |             |
 | `metricSinks.atlassianStatuspage.apiKey`  | API key of Atlassian Statuspage page |             |
-| `metricSinks.atlassianStatuspage.systemMetricMapping`  | Mapping of the Atlassian Statuspage system metrics and Promitor metrics. Learn how to configure it [below](#atlassian-statuspage).| `8125`            |
+| `metricSinks.atlassianStatuspage.systemMetricMapping`  | Mapping of the Atlassian Statuspage system metrics and Promitor metrics. Learn how to configure it [below](#atlassian-statuspage).| None            |
 | `metricSinks.prometheusScrapingEndpoint.enabled`  | Indication whether or not metrics should be exposed as a Prometheus scraping endpoint | `true`|
 | `metricSinks.prometheusScrapingEndpoint.baseUriPath`  | Path where the scraping endpoint for Prometheus is being exposed | `/metrics`            |
 | `metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps`  | Indication whether or not to include timestamp | `true`            |
