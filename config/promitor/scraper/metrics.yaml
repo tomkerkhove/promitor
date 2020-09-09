@@ -128,7 +128,7 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
     - name: service-bus-landscape
-  - name: promitor_demo_app_insights
+  - name: promitor_demo_app_insights_dependency_duration
     description: "Average dependency duration per dependency type"
     resourceType: Generic
     azureMetricConfiguration:
@@ -140,3 +140,14 @@ metrics:
     resources:
     - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
       resourceGroupName: docker-hub-metrics
+  - name: promitor_demo_app_insights_dependency_duration_200_OK
+    description: "Average dependency duration per dependency type"
+    resourceType: Generic
+    azureMetricConfiguration:
+      metricName: dependencies/duration
+      aggregation:
+        type: Average
+    resources:
+    - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
+      resourceGroupName: docker-hub-metrics
+      filter: dependency/resultCode eq '200'
