@@ -31,6 +31,12 @@ Install the Promitor Chart repository:
 ❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
 ```
 
+Refresh your local Chart repositories:
+
+```shell
+❯ helm repo update
+```
+
 If all goes well you should be able to list all Promitor charts:
 
 ```shell
@@ -54,13 +60,21 @@ azureMetadata:
 
 runtime:
   metricSinks:
+    atlassianStatuspage:
+      enabled: true
+      pageId: "ABC"
+      systemMetricMapping:
+      - id: nfkgnrwpn545
+        promitorMetricName: promitor_demo_appplan_percentage_cpu
+    prometheusScrapingEndpoint:
+      enabled: true
+      baseUriPath: /metrics
+      enableMetricTimestamps: True
     statsd:
+      enabled: true
       host: graphite
       port: 8125
       metricPrefix: poc.promitor.
-  prometheus:
-    scrapeEndpointPath: /metrics
-    enableMetricTimestamps: True
   telemetry:
     applicationInsights:
       enabled: True
@@ -85,7 +99,7 @@ If you have a `metric-declaration.yaml` file, you can create a basic deployment
 with this command:
 
 ```shell
-❯ helm install --name promitor-agent-scraper promitor/promitor-agent-scraper \
+❯ helm install promitor-agent-scraper promitor/promitor-agent-scraper \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
                --values /path/to/helm-configuration.yaml

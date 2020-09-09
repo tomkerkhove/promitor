@@ -29,6 +29,7 @@
         KeyVault = 24,
         LogicApp = 25,
         EventHubs = 26,
-        ExpressRouteCircuit = 27
+        ExpressRouteCircuit = 27,
+        ApplicationGateway = 28
     }
 }

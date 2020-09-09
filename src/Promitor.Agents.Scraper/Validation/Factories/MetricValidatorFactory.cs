@@ -13,6 +13,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
             {
                 case ResourceType.ApiManagement:
                     return new ApiManagementMetricValidator();
+                case ResourceType.ApplicationGateway:
+                    return new ApplicationGatewayMetricValidator();
                 case ResourceType.AppPlan:
                     return new AppPlanMetricValidator();
                 case ResourceType.BlobStorage:

@@ -28,7 +28,6 @@ we're monitoring.
   - [Create an AKS Cluster](#create-an-aks-cluster)
 - **[Cluster Setup](#cluster-setup)**
   - [Get credentials](#get-credentials)
-  - [Set up Helm and Tiller](#set-up-helm-and-tiller)
 - **[Deploy Promitor and Prometheus](#deploy-promitor-and-prometheus)**
   - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
   - [Deploy Promitor to your cluster using Helm](#deploy-promitor-to-your-cluster-using-helm)
@@ -155,48 +154,6 @@ as your current context for all `kubectl` commands.
 Verify your credentials and check that your cluster is up and running with
 `kubectl get nodes`.
 
-### Set up Helm and Tiller
-
-You'll use Helm to install Tiller, the server-side component of Helm. For clusters
-with RBAC (Role-Based Access Control, which is enabled by default on AKS clusters),
-you'll need to set up a service account for Tiller.
-
-Create a file called `helm-rbac.yaml` with the following:
-
-```YAML
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: tiller
-  namespace: kube-system
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: tiller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: tiller
-    namespace: kube-system
-```
-
-Create the service account and role binding specified in the above file with the
-`kubectl apply` command:
-
-```bash
-kubectl apply -f helm-rbac.yaml
-```
-
-Then deploy Tiller into your AKS cluster using the `helm init` command:
-
-```bash
-helm init --service-account tiller
-```
-
 ## Deploy Promitor and Prometheus
 
 ### Create a metrics declaration for Promitor
@@ -238,13 +195,13 @@ To deploy, we'll first add the Promitor chart repository to helm:
 
 ```bash
 helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+helm repo update
 ```
 
 With this repository added, we can deploy Promitor:
 
 ```bash
-helm install promitor/promitor-agent-scraper \
-  --name promitor-agent-scraper \
+helm install promitor-agent-scraper promitor/promitor-agent-scraper \
   --values your/path/to/metric-declaration.yaml
 ```
 
@@ -342,7 +299,7 @@ Grafana's chart has a few default values you may not want long term - persistant
 storage is disabled and admin username/password is randomly generated - but for
 our sample the out-of-the-box install will work.
 
-Run `helm install stable/grafana --name grafana` and you should see output that
+Run `helm install grafana stable/grafana` and you should see output that
 includes this command:
 
 ```shell

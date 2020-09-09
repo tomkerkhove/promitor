@@ -34,6 +34,8 @@ namespace Promitor.Core.Scraping.Factories
             {
                 case ResourceType.ApiManagement:
                     return new ApiManagementScraper(scraperConfiguration);
+                case ResourceType.ApplicationGateway:
+                    return new ApplicationGatewayScraper(scraperConfiguration);
                 case ResourceType.AppPlan:
                     return new AppPlanScraper(scraperConfiguration);
                 case ResourceType.BlobStorage:

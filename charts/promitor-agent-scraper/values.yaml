@@ -15,8 +15,21 @@ azureAuthentication:
   appId: ""
   appKey: ""
 metricSinks:
-  useStatsd: false
+  atlassianStatuspage:
+    enabled: false
+    pageId: ""
+    apiKey: ""
+    systemMetricMapping: []
+    # - id: <atlassian-statuspage-system-metric-id>
+    #   promitorMetricName: <promitor-metric-name>
+  prometheusScrapingEndpoint:
+    enabled: true
+    baseUriPath: /metrics
+    enableMetricTimestamps: true
+    metricUnavailableValue: NaN
+    enableServiceDiscovery: true
   statsd:
+    enabled: false
     host: ""
     port: 8125
     metricPrefix: ""
@@ -24,11 +37,6 @@ resourceDiscovery:
   enabled: false
   host: ""
   port: 80
-prometheus:
-  scrapeEndpointPath: /metrics
-  enableMetricTimestamps: true
-  metricUnavailableValue: NaN
-  enableServiceDiscovery: true
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
@@ -70,6 +78,7 @@ secrets:
   appIdSecret: azure-app-id
   appKeySecret: azure-app-key
   appInsightsSecret: azure-appinsights-key
+  atlassianStatuspageApiKey: atlassian-statuspage-apikey
 
 service:
   exposeExternally: False
