@@ -1,9 +1,11 @@
-﻿using GuardNet;
+﻿using System;
+using GuardNet;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core.Configuration.Server;
 using Serilog;
+using Version = Promitor.Core.Version;
 
 namespace Promitor.Agents.Core
 {
@@ -51,10 +53,22 @@ namespace Promitor.Agents.Core
         /// </summary>
         protected static void ConfigureStartupLogging()
         {
+            string agentVersion = Version.Get();
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
+                .Enrich.WithProperty("Version", agentVersion)
                 .WriteTo.Console()
                 .CreateLogger();
+        }
+
+        /// <summary>
+        ///     Welcome our users and boot up!
+        /// </summary>
+        protected static void Welcome()
+        {
+            string agentVersion = Version.Get();
+            Console.WriteLine(Constants.Texts.Welcome);
+            Log.Logger.Information($"Booting up Promitor v{agentVersion} - Thank you for using Promitor!");
         }
     }
 }

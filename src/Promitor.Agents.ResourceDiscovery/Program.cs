@@ -18,10 +18,10 @@ namespace Promitor.Agents.ResourceDiscovery
         {
             try
             {
-                Welcome();
-
                 // Let's hook in a logger for start-up purposes.
                 ConfigureStartupLogging();
+
+                Welcome();
 
                 var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
                 if (string.IsNullOrWhiteSpace(configurationFolder))
@@ -63,11 +63,6 @@ namespace Promitor.Agents.ResourceDiscovery
             {
                 Log.CloseAndFlush();
             }
-        }
-
-        private static void Welcome()
-        {
-            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args, string configurationFolder)

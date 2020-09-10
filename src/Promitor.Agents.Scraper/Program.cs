@@ -9,7 +9,6 @@ using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Core;
 using Serilog;
-using Constants = Promitor.Agents.Core.Constants;
 
 namespace Promitor.Agents.Scraper
 {
@@ -19,10 +18,10 @@ namespace Promitor.Agents.Scraper
         {
             try
             {
-                Welcome();
-
                 // Let's hook in a logger for start-up purposes.
                 ConfigureStartupLogging();
+
+                Welcome();
 
                 var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
                 Log.Logger.Information($"Using configuration folder '{configurationFolder}'");
@@ -65,11 +64,6 @@ namespace Promitor.Agents.Scraper
             {
                 Log.CloseAndFlush();
             }
-        }
-
-        private static void Welcome()
-        {
-            Console.WriteLine(Constants.Texts.Welcome);
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args, string configurationFolder)
