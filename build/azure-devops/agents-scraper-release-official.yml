@@ -76,7 +76,7 @@ stages:
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
   - name: Agent.Scraper.Version
-    value: $(App.Version)
+    value: $(Image.Version)
   - name: Agent.Scraper.BaseUrl
     value: http://localhost:$(Container.Scraper.Port)
   - name: Agent.ResourceDiscovery.BaseUrl
@@ -107,14 +107,14 @@ stages:
      - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)'
-        buildArgs: 'VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(Image.Version)"'
         tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
      - template: templates/build-discovery-image.yml
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
         tags: '--tag dev'
-        buildArgs: 'VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(Image.Version)"'
         os: '$(OS.Name)'
      - template: templates/docker/create-network.yml
        parameters:
@@ -198,12 +198,12 @@ stages:
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
         tags: '--tag dev'
-        buildArgs: 'VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(Image.Version)"'
         os: '$(OS.Name)'
      - template: templates/build-scraper-image.yml
        parameters:
         imageName: '$(Image.TaggedName)-$(OS.Name)'
-        buildArgs: 'VERSION="$(App.Version)"'
+        buildArgs: 'VERSION="$(Image.Version)"'
         tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         os: '$(OS.Name)'
      - template: templates/docker/create-network.yml
