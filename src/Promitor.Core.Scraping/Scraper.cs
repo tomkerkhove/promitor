@@ -118,16 +118,13 @@ namespace Promitor.Core.Scraping
                     var definition = new { error = new { code = "", message = "" } };
                     var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
 
-                    if (jsonError.error != null)
+                    if (!string.IsNullOrEmpty(jsonError.error.message))
                     {
-                        if (!string.IsNullOrEmpty(jsonError.error.message))
-                        {
-                            reason = $"{jsonError.error.code}: {jsonError.error.message}";
-                        }
-                        else if (!string.IsNullOrEmpty(jsonError.error.code))
-                        {
-                            reason = $"{jsonError.error.code}";
-                        }
+                        reason = $"{jsonError.error.code}: {jsonError.error.message}";
+                    }
+                    else if (!string.IsNullOrEmpty(jsonError.error.code))
+                    {
+                        reason = $"{jsonError.error.code}";
                     }
                 }
                 catch (Exception)
