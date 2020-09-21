@@ -14,7 +14,7 @@ The following fields need to be provided:
 
 - `networkGatewayName` - The name of the Azure Network Gateway
 
-All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftnetworknetworkgateways).
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftnetworkvirtualnetworkgateways).
 
 Example:
 
