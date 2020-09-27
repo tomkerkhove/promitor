@@ -3,11 +3,12 @@ parameters:
   chartVersion: ''
   appVersion: ''
   imageName: ''
+  dependsOn: ''
 
 stages:
 - stage: Helm3
   displayName: Helm Chart (3.x)
-  dependsOn: Docker
+  dependsOn: [${{ parameters.dependsOn }}]
   variables:
     Helm.Version: '3.0.0'
   jobs:
@@ -19,13 +20,13 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../../utils/read-variable-on-linux.yml
-       parameters:
-        variableName: 'Image.Tag'
+    #  - template: ./../../utils/read-variable-on-linux.yml
+    #    parameters:
+    #     variableName: 'Image.Tag'
      - template: ./../../helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'
-        chartName: '$(Chart.Scraper.Name)'
+        chartName: '${{ parameters.chartName }}'
      - template: ./../../helm/package-preview-chart.yml
        parameters:
         chartName: '${{ parameters.chartName }}'
