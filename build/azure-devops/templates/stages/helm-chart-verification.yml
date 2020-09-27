@@ -17,6 +17,6 @@ stages:
      steps:
      - download: current
        artifact: variables
-     - template: ./../../templates/utils/read-variable-on-linux.yml
+     - template: ./../../utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
