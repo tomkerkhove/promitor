@@ -8,7 +8,7 @@ parameters:
 stages:
 - stage: Helm3
   displayName: Helm Chart (3.x)
-  dependsOn: [${{ parameters.dependsOn }}]
+  dependsOn: ${{ parameters.dependsOn }}
   variables:
     Helm.Version: '3.0.0'
   jobs:
