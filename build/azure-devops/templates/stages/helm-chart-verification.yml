@@ -1,6 +1,8 @@
-# parameters:
-#   name: ''
-#   testFile: ''
+parameters:
+  chartName: ''
+  chartVersion: ''
+  appVersion: ''
+  imageName: ''
 
 stages:
 - stage: Helm3
@@ -20,3 +22,24 @@ stages:
      - template: ./../../utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
+     - template: ./../../helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.Scraper.Name)'
+     - template: ./../../helm/package-preview-chart.yml
+       parameters:
+        chartName: '${{ parameters.chartName }}'
+        chartVersion: '${{ parameters.chartVersion }}'
+        appVersion: '${{ parameters.appVersion }}'
+        imageName: '${{ parameters.imageName }}'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../../helm/push-chart.yml
+          parameters:
+            chartName: '${{ parameters.chartName }}'
+            chartVersion: '${{ parameters.chartVersion }}'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Helm Chart'
+          inputs:
+            PathtoPublish: charts/output/${{ parameters.chartName }}-${{ parameters.chartVersion }}.tgz
+            ArtifactName: helm
