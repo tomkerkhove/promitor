@@ -24,7 +24,7 @@ variables:
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
   - name: Helm.Chart.CI.Name
-    value: 'promitor-agent-resource-discovery-ci'
+    value: 'promitor-agent-resource-discovery'
 stages:
 - stage: Init
   displayName: Prepare Build

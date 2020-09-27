@@ -20,9 +20,10 @@ stages:
      steps:
      - download: current
        artifact: variables
-    #  - template: ./../../utils/read-variable-on-linux.yml
-    #    parameters:
-    #     variableName: 'Image.Tag'
+     # TODO: Move this to step to pass as "pre-run step"
+     - template: ./../../utils/read-variable-on-linux.yml
+       parameters:
+        variableName: 'Image.Tag'
      - template: ./../../helm/lint-chart.yml
        parameters:
         helmVersion: '$(Helm.Version)'

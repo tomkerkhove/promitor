@@ -7,7 +7,7 @@ parameters:
 
 steps:
 - task: HelmInstaller@1
-  displayName: 'Install Helm (${{ parameters.helmVersion }}'
+  displayName: 'Install Helm (${{ parameters.helmVersion }})'
   inputs:
     helmVersionToInstall: '${{ parameters.helmVersion }}'
 - powershell: |
