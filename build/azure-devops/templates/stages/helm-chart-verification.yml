@@ -1,0 +1,22 @@
+# parameters:
+#   name: ''
+#   testFile: ''
+
+stages:
+- stage: Helm3
+  displayName: Helm Chart (3.x)
+  dependsOn: Docker
+  variables:
+    Helm.Version: '3.0.0'
+  jobs:
+   - job: Helm3_x
+     displayName: Helm 3.x - Lint, Package & Push Chart
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - download: current
+       artifact: variables
+     - template: templates/utils/read-variable-on-linux.yml
+       parameters:
+        variableName: 'Image.Tag'
