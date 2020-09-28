@@ -23,7 +23,7 @@ variables:
     value: '0.0.0-$(Image.Tag)'
   - name: Helm.Chart.Version
     value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.CI.Name
+  - name: Helm.Chart.Name
     value: 'promitor-agent-scraper'
 stages:
 - stage: Init
@@ -288,7 +288,7 @@ stages:
         chartName: '$(Chart.Scraper.Name)'
 - template: templates/stages/helm-chart-verification.yml
   parameters:
-    chartName: '$(Helm.Chart.CI.Name)'
+    chartName: '$(Helm.Chart.Name)'
     chartVersion: '$(Helm.Chart.Version)'
     appVersion: '$(App.Version)'
     imageName: '$(Image.Name)'

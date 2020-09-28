@@ -34,6 +34,7 @@ stages:
         chartVersion: '${{ parameters.chartVersion }}'
         appVersion: '${{ parameters.appVersion }}'
         imageName: '${{ parameters.imageName }}'
+        transformedChartName: '${{ parameters.chartName }}-ci'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../../helm/push-chart.yml
           parameters:
