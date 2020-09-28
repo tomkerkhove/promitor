@@ -1,0 +1,73 @@
+{{- $metrics := toYaml .Values.metrics -}}
+{{- $systemMetricMapping := toYaml .Values.metricSinks.atlassianStatuspage.systemMetricMapping -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-map-{{ template "promitor-agent-resource-discovery.fullname" . }}
+  labels:
+    app: {{ template "promitor-agent-resource-discovery.name" . }}
+    chart: {{ template "promitor-agent-resource-discovery.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+data:
+  runtime.yaml: |-
+      server:
+        httpPort: {{ .Values.service.targetPort | quote }}
+  {{- if .Values.resourceDiscovery.enabled }}
+      resourceDiscovery:
+        host: {{ .Values.resourceDiscovery.host | quote }}
+        port: {{ .Values.resourceDiscovery.port }}
+  {{- end }}
+      metricSinks:
+  {{- if .Values.metricSinks.statsd.enabled }}
+        statsd:
+          host: {{ .Values.metricSinks.statsd.host | quote }}
+  {{- if .Values.metricSinks.statsd.port }}
+          port: {{ .Values.metricSinks.statsd.port | quote }}
+  {{- end }}
+  {{- if .Values.metricSinks.statsd.metricPrefix }}
+          metricPrefix: {{ .Values.metricSinks.statsd.metricPrefix | quote }}
+  {{- end }}
+  {{- end }}
+  {{- if .Values.metricSinks.prometheusScrapingEndpoint.enabled }}
+        prometheusScrapingEndpoint:
+          metricUnavailableValue: {{ .Values.metricSinks.prometheusScrapingEndpoint.metricUnavailableValue | quote }}
+          enableMetricTimestamps: {{ .Values.metricSinks.prometheusScrapingEndpoint.enableMetricTimestamps | quote }}
+          baseUriPath: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath | quote }}
+  {{- end }}
+  {{- if .Values.metricSinks.atlassianStatuspage.enabled }}
+        atlassianStatuspage:
+          pageId: {{ .Values.metricSinks.atlassianStatuspage.pageId | quote }}
+          systemMetricMapping:
+{{ tpl $systemMetricMapping . | indent 10 }}
+  {{- end }}
+      metricsConfiguration:
+        absolutePath: /config/metrics-declaration.yaml
+      telemetry:
+        applicationInsights:
+  {{- if .Values.telemetry.applicationInsights.key }}
+          instrumentationKey: {{ .Values.telemetry.applicationInsights.key | quote }}
+  {{- end }}
+          isEnabled: {{ .Values.telemetry.applicationInsights.enabled | quote }}
+  {{- if .Values.telemetry.applicationInsights.logLevel }}
+          verbosity: {{ .Values.telemetry.applicationInsights.logLevel | quote }}
+  {{- end }}
+        containerLogs:
+          isEnabled: {{ .Values.telemetry.containerLogs.enabled | quote }}
+  {{- if .Values.telemetry.containerLogs.logLevel  }}
+          verbosity: {{ .Values.telemetry.containerLogs.logLevel | quote }}
+  {{- end }}
+        defaultVerbosity: {{ .Values.telemetry.defaultLogLevel | quote  }}
+  metrics-declaration.yaml: |-
+    version: v1
+    azureMetadata:
+      tenantId: {{ .Values.azureMetadata.tenantId }}
+      subscriptionId: {{ .Values.azureMetadata.subscriptionId }}
+      resourceGroupName: {{ .Values.azureMetadata.resourceGroupName }}
+    metricDefaults:
+      aggregation:
+        interval: {{ .Values.metricDefaults.aggregation.interval }}
+      scraping:
+        schedule: {{ .Values.metricDefaults.scraping.schedule | quote }}
+    metrics:
+{{ tpl $metrics . | indent 4 }}

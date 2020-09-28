@@ -4,6 +4,8 @@ parameters:
   default: '$(Helm.Version)'
 - name: chartName
   type: string
+- name: transformedChartName
+  type: string
 - name: chartVersion
   type: string
 - name: appVersion
@@ -21,7 +23,7 @@ steps:
   inputs:
     targetType: filePath
     filePath: ./build/helm/Transform-Chart.ps1
-    arguments: '-chartName "${{ parameters.chartName }}" -imageName "${{ parameters.imageName }}" -imageTag "${{ parameters.appVersion }}"'
+    arguments: '-chartName "${{ parameters.chartName }}" -transformedChartName "${{ parameters.transformedChartName }}" -imageName "${{ parameters.imageName }}" -imageTag "${{ parameters.appVersion }}"'
     workingDirectory: 'charts'
 - template: package-official-chart.yml
   parameters:

@@ -1,0 +1,48 @@
+parameters:
+  chartName: ''
+  chartVersion: ''
+  appVersion: ''
+  imageName: ''
+  dependsOn: ''
+
+stages:
+- stage: Helm3
+  displayName: Helm Chart (3.x)
+  dependsOn: ${{ parameters.dependsOn }}
+  variables:
+    Helm.Version: '3.0.0'
+  jobs:
+   - job: Helm3_x
+     displayName: Helm 3.x - Lint, Package & Push Chart
+     condition: succeeded()
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - download: current
+       artifact: variables
+     # TODO: Move this to step to pass as "pre-run step"
+     - template: ./../../utils/read-variable-on-linux.yml
+       parameters:
+        variableName: 'Image.Tag'
+     - template: ./../../helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '${{ parameters.chartName }}'
+     - template: ./../../helm/package-preview-chart.yml
+       parameters:
+        chartName: '${{ parameters.chartName }}'
+        chartVersion: '${{ parameters.chartVersion }}'
+        appVersion: '${{ parameters.appVersion }}'
+        imageName: '${{ parameters.imageName }}'
+        transformedChartName: '${{ parameters.chartName }}-ci'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - template: ./../../helm/push-chart.yml
+          parameters:
+            chartName: '${{ parameters.chartName }}'
+            chartVersion: '${{ parameters.chartVersion }}'
+     - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Helm Chart'
+          inputs:
+            PathtoPublish: charts/output/${{ parameters.chartName }}-${{ parameters.chartVersion }}.tgz
+            ArtifactName: helm
