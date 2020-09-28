@@ -287,7 +287,7 @@ stages:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.Scraper.Name)'
 - template: templates/stages/helm-chart-verification.yml
-  parameters:  
+  parameters:
     chartName: '$(Helm.Chart.CI.Name)'
     chartVersion: '$(Helm.Chart.Version)'
     appVersion: '$(App.Version)'

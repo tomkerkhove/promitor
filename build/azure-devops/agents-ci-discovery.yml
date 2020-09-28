@@ -215,7 +215,7 @@ stages:
           parameters:
               imageName: '$(Image.TaggedName)'
 - template: templates/stages/helm-chart-verification.yml
-  parameters:  
+  parameters:
     chartName: '$(Helm.Chart.CI.Name)'
     chartVersion: '$(Helm.Chart.Version)'
     appVersion: '$(App.Version)'
