@@ -73,9 +73,8 @@ namespace Promitor.Agents.Core
         {
             return loggerConfiguration.Enrich.FromLogContext()
                                       .Enrich.WithComponentName(componentName)
-                                      .Enrich.WithVersion();
-                                      // TODO: Re-enable when fixed
-                                      //.Enrich.WithHttpCorrelationInfo(serviceProvider);
+                                      .Enrich.WithVersion()
+                                      .Enrich.WithHttpCorrelationInfo(serviceProvider);
         }
 
         /// <summary>
