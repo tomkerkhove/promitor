@@ -49,6 +49,7 @@ Learn more about our support options [here](https://github.com/tomkerkhove/promi
 
 Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/tomkerkhove/).
 
+[![Karl Ots](./media/supporters/karlgots.jpg)](https://github.com/karlgots)
 [![Sam Vanhoutte](./media/supporters/samvanhoutte.png)](https://github.com/samvanhoutte)
 
 ## Security
