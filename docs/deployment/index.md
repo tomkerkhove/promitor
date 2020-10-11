@@ -5,8 +5,8 @@ title: Deploying Promitor
 
 Here is an overview of the Promitor agents you can deploy:
 
-- [Deploying Promitor Scraper](/scraper/)
-- [Deploying Promitor Resource Discovery](/resource-discovery/)
+- [Deploying Promitor Scraper](scraper/)
+- [Deploying Promitor Resource Discovery](resource-discovery/)
 
 ## Image Tagging Strategy
 
