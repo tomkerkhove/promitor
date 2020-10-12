@@ -4,14 +4,19 @@ parameters:
   default: '$(Helm.Version)'
 - name: chartName
   type: string
+  default: ''
 - name: transformedChartName
   type: string
+  default: ''
 - name: chartVersion
   type: string
+  default: ''
 - name: appVersion
   type: string
+  default: ''
 - name: imageName
   type: string
+  default: ''
 
 steps:
 - task: HelmInstaller@1
@@ -27,6 +32,6 @@ steps:
     workingDirectory: 'charts'
 - template: package-official-chart.yml
   parameters:
-    chartName: '${{ parameters.chartName }}'
+    chartName: '${{ parameters.transformedChartName }}'
     chartVersion: '${{ parameters.chartVersion }}'
     appVersion: '${{ parameters.appVersion }}'
