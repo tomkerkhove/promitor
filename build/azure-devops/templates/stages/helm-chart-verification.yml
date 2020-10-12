@@ -11,6 +11,7 @@ stages:
   dependsOn: ${{ parameters.dependsOn }}
   variables:
     Helm.Version: '3.0.0'
+    Helm.Chart.TransformedName: '${{ parameters.chartName }}-ci'
   jobs:
    - job: Helm3_x
      displayName: Helm 3.x - Lint, Package & Push Chart
@@ -34,15 +35,15 @@ stages:
         chartVersion: '${{ parameters.chartVersion }}'
         appVersion: '${{ parameters.appVersion }}'
         imageName: '${{ parameters.imageName }}'
-        transformedChartName: '${{ parameters.chartName }}-ci'
+        transformedChartName: '$(Helm.Chart.TransformedName)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: ./../../helm/push-chart.yml
           parameters:
-            chartName: '${{ parameters.chartName }}'
+            chartName: '$(Helm.Chart.TransformedName)'
             chartVersion: '${{ parameters.chartVersion }}'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - task: PublishBuildArtifacts@1
           displayName: 'Publish Helm Chart'
           inputs:
-            PathtoPublish: charts/output/${{ parameters.chartName }}-${{ parameters.chartVersion }}.tgz
+            PathtoPublish: charts/output/$(Helm.Chart.TransformedName)-${{ parameters.chartVersion }}.tgz
             ArtifactName: helm
