@@ -10,6 +10,8 @@ pr:
   paths:
     include:
     - src/*
+    - charts/promitor-agent-resource-discovery/*
+    - build/azure-devops/templates/*
     - build/azure-devops/agents-ci-discovery.yml
 variables:
   - template: ./variables/build.yml
