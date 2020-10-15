@@ -1,0 +1,55 @@
+# Blob Storage API requests, data, latency and availability metrics
+#
+# Add items to 'metrics' in your Promitor scraping agent configuration,
+# first replacing ACCOUNT_NAME with your Storage Account name.
+#
+# See documentation for additional supported metrics and dimensions:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftstoragestorageaccountsblobservices
+metrics:
+  - name: azure_storage_blob_transactions
+    description: "Total API requests"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: Transactions
+      dimension:
+        name: ResponseType
+      aggregation:
+        type: Total
+    resources:
+    - accountName: ACCOUNT_NAME
+  - name: azure_storage_blob_ingress
+    description: "Incoming data in bytes"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: Ingress
+      aggregation:
+        type: Total
+    resources:
+    - accountName: ACCOUNT_NAME
+  - name: azure_storage_blob_egress
+    description: "Outgoing data in bytes"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: Egress
+      aggregation:
+        type: Total
+    resources:
+    - accountName: ACCOUNT_NAME
+  - name: azure_storage_blob_success_server_latency
+    description: "Average server latency of successful requests"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: SuccessServerLatency
+      aggregation:
+        type: Average
+    resources:
+    - accountName: ACCOUNT_NAME
+  - name: azure_storage_blob_availability
+    description: "Storage service availability"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: Availability
+      aggregation:
+        type: Average
+    resources:
+    - accountName: ACCOUNT_NAME
