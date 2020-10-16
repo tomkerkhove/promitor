@@ -12,8 +12,8 @@ image:
   tag:
 
 azureAuthentication:
-  appId: 
-  appKey: 
+  appId:
+  appKey:
 
 telemetry:
   defaultLogLevel: "Error"
@@ -28,7 +28,7 @@ telemetry:
 ## Metric Declaration YAML
 azureLandscape:
   cloud: Global
-  tenantId: 
+  tenantId:
   subscriptionIds: []
 
 resourceDiscoveryGroups: []
