@@ -59,6 +59,10 @@ their default values.
 | `image.repository`  | Repository which provides the image | `tomkerkhove/promitor-agent-resource-discovery` |
 | `image.tag`  | Tag of image to use | None, chart app version is used by default            |
 | `image.pullPolicy`  | Policy to pull image | `Always`            |
+| `azureLandscape.cloud`  | Azure Cloud to discover resources in. Options are `Global` (default), `China`, `UsGov` & `Germany` | `Global`            |
+| `azureLandscape.tenantId`  | Id of Azure tenant to discover resources in |             |
+| `azureLandscape.subscriptionIds`  | List of Azure subscription ids to discover resources in | `[]`            |
+| `resourceDiscoveryGroups`  | List of resource discovery groups to configured following the [resource discovery declaration docs](https://promitor.io/configuration/v2.x/resource-discovery) |        |
 | `azureAuthentication.appId`  | Id of the Azure AD entity to authenticate with |             |
 | `azureAuthentication.appKey`  | Secret of the Azure AD entity to authenticate with |             |
 | `telemetry.applicationInsights.enabled`  | Indication whether or not to send telemetry to Azure Application Insights | `false`            |
@@ -67,10 +71,6 @@ their default values.
 | `telemetry.containerLogs.enabled`  | Indication whether or not to send telemetry to container logs | `true`            |
 | `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  |
 | `telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
-| `azureMetadata.tenantId`  | Id of Azure tenant |             |
-| `azureMetadata.subscriptionId`  | Id of Azure subscription |             |
-| `azureMetadata.resourceGroupName`  | Name of resource group | `promitor`            |
-| `metrics`  | List of metrics to scrape configured following the [metric declaration docs](https://promitor.io/configuration/metrics/) |        |
 | `rbac.create` | If true, create & use RBAC resources | `true` |
 | `rbac.podSecurityPolicyEnabled` | Create pod security policy resources | `false` |
 | `rbac.serviceAccount.create` | Create service account resource | `true` |
@@ -93,8 +93,8 @@ Specify each parameter using the `--set key=value[,key=value]` argument to
 $ helm install promitor-agent-resource-discovery promitor/promitor-agent-resource-discovery \
                --set azureAuthentication.appId='<azure-ad-app-id>' \
                --set azureAuthentication.appKey='<azure-ad-app-key>' \
-               --set azureMetadata.tenantId='<azure-tenant-id>' \
-               --set azureMetadata.subscriptionId='<azure-subscription-id>' \
+               --set azureLandscape.tenantId='<azure-tenant-id>' \
+               --set azureLandscape.subscriptionId='<azure-subscription-id>' \
                --values C:\Promitor\metric-declaration.yaml
 ```
 
