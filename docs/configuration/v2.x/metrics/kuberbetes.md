@@ -1,0 +1,36 @@
+---
+layout: default
+title: Azure Kubernetes Service Declaration
+---
+
+## Azure Kubernetes Service
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
+
+You can declare to scrape an Azure Kubernetes Service (AKS)
+via the `Kubernetes` resource type.
+
+The following fields need to be provided:
+
+- `clusterName` - The name of the Azure Kubernetes Service
+
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftcontainerservicemanagedclusters).
+
+Example:
+
+```yaml
+name: azure_kubernetes_available_cpu_cores
+description: "Available CPU cores in cluster"
+resourceType: Kubernetes
+azureMetricConfiguration:
+  metricName: kube_node_status_allocatable_cpu_cores
+  aggregation:
+    type: Average
+resources:
+- clusterName: promitor-aks
+```
+
+<!-- markdownlint-disable MD033 -->
+[&larr; back to metrics declarations](/configuration/v2.x/metrics)<br />
+[&larr; back to introduction](/)
+<!-- markdownlint-enable -->

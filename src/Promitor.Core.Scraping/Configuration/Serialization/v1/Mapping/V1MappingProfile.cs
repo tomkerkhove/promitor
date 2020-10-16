@@ -38,6 +38,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<GenericResourceV1, GenericAzureResourceDefinition>();
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
+            CreateMap<KubernetesResourceV1, KubernetesResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
@@ -74,6 +75,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<GenericResourceV1, GenericAzureResourceDefinition>()
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
+                .Include<KubernetesResourceV1, KubernetesResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
