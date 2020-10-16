@@ -32,10 +32,10 @@ namespace Promitor.Agents.Core.Serialization
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JToken token = JToken.Load(reader);
-
-            var healthStatus = token["status"].ToObject<HealthStatus>();
+            
+            var healthStatus = token["status"]?.ToObject<HealthStatus>() ?? HealthStatus.Degraded;
             var description = token["description"]?.ToObject<string>();
-            var duration = token["duration"].ToObject<TimeSpan>();
+            var duration = token["duration"]?.ToObject<TimeSpan>() ?? TimeSpan.Zero;
             var exception = token["exception"]?.ToObject<Exception>();
             var data = token["data"]?.ToObject<Dictionary<string, object>>();
             var readOnlyDictionary = new ReadOnlyDictionary<string, object>(data ?? new Dictionary<string, object>());
