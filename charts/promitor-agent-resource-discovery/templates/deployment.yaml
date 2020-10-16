@@ -53,13 +53,6 @@ spec:
               secretKeyRef:
                   name: {{ template "promitor-agent-resource-discovery.secretname" . }}
                   key: {{ .Values.secrets.appKeySecret }}
-  {{- if .Values.metricSinks.atlassianStatuspage.apiKey }}
-          - name: PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY
-            valueFrom:
-              secretKeyRef:
-                  name: {{ template "promitor-agent-resource-discovery.secretname" . }}
-                  key: {{ .Values.secrets.atlassianStatuspageApiKey }}
-  {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:

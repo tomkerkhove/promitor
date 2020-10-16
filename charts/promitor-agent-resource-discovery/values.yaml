@@ -14,29 +14,7 @@ image:
 azureAuthentication:
   appId: ""
   appKey: ""
-metricSinks:
-  atlassianStatuspage:
-    enabled: false
-    pageId: ""
-    apiKey: ""
-    systemMetricMapping: []
-    # - id: <atlassian-statuspage-system-metric-id>
-    #   promitorMetricName: <promitor-metric-name>
-  prometheusScrapingEndpoint:
-    enabled: true
-    baseUriPath: /metrics
-    enableMetricTimestamps: true
-    metricUnavailableValue: NaN
-    enableServiceDiscovery: true
-  statsd:
-    enabled: false
-    host: ""
-    port: 8125
-    metricPrefix: ""
-resourceDiscovery:
-  enabled: false
-  host: ""
-  port: 80
+
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
@@ -52,11 +30,6 @@ azureMetadata:
   tenantId: ""
   subscriptionId: ""
   resourceGroupName: promitor
-metricDefaults:
-  aggregation:
-    interval: 00:05:00
-  scraping:
-    schedule: "*/5 * * * *"
 metrics: []
 # Sample metric configuration below
 #   - name: demo_queue_size

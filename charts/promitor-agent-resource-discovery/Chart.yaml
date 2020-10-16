@@ -1,6 +1,6 @@
 apiVersion: v2
-version: 0.2.0
-appVersion: 1.0.0
+version: 0.1.0
+appVersion: 0.1.0
 type: application
 name: promitor-agent-resource-discovery
 description: Promitor, bringing Azure Monitor metrics where you need them.

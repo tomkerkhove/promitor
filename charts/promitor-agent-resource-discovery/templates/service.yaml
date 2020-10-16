@@ -8,12 +8,6 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     type: {{ .Values.service.labelType }}
-{{- if .Values.metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery }}
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath | quote }}
-    prometheus.io/port: {{ .Values.service.targetPort | quote }}
-{{- end }}
 spec:
 {{- if .Values.service.exposeExternally }}
   type: LoadBalancer
