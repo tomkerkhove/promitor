@@ -44,10 +44,7 @@ spec:
               protocol: TCP
           env:
           - name: PROMITOR_AUTH_APPID
-            valueFrom:
-              secretKeyRef:
-                  name: {{ template "promitor-agent-resource-discovery.secretname" . }}
-                  key: {{ .Values.secrets.appIdSecret }}
+            value: {{ .Values.secrets.appIdSecret }}
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
