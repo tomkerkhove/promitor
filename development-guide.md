@@ -124,5 +124,5 @@ by accident.
 To build the Docker image, run the following command from the `/src` directory:
 
 ```shell
-docker build . --file .\Promitor.Agents.Scraper\Dockerfile.linux --tag promitor --no-cache
+docker build . --file .\Promitor.Agents.Scraper\Dockerfile.linux --tag local/promitor-agent-scraper --build-arg VERSION=2.0.0 --no-cache
 ```
