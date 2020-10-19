@@ -93,7 +93,7 @@ namespace Promitor.Core.Scraping.Factories
                 case ResourceType.WebApp:
                     return new WebAppScraper(scraperConfiguration);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("ResourceType", metricDefinitionResourceType, "Matching scraper not found");
             }
         }
     }
