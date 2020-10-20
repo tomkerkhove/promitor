@@ -3,9 +3,9 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 {
-    public class KubernetesDeserializer : ResourceDeserializer<KubernetesResourceV1>
+    public class KubernetesServiceDeserializer : ResourceDeserializer<KubernetesServiceResourceV1>
     {
-        public KubernetesDeserializer(ILogger<KubernetesDeserializer> logger) : base(logger)
+        public KubernetesServiceDeserializer(ILogger<KubernetesServiceDeserializer> logger) : base(logger)
         {
             Map(resource => resource.ClusterName)
                 .IsRequired();

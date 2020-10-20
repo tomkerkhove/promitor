@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class KubernetesMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class KubernetesServiceMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(azureMetricName: string.Empty)
+                .WithKubernetesServiceMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -28,11 +28,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(metricDescription: string.Empty)
+                .WithKubernetesServiceMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -45,11 +45,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(string.Empty)
+                .WithKubernetesServiceMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -62,11 +62,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutClusterName_Fails()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutClusterName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(clusterName: string.Empty)
+                .WithKubernetesServiceMetric(clusterName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -79,11 +79,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(omitResource: true)
+                .WithKubernetesServiceMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -96,11 +96,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void KubernetesServiceMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithKubernetesServiceMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -113,11 +113,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KubernetesMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void KubernetesServiceMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKubernetesMetric()
+                .WithKubernetesServiceMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

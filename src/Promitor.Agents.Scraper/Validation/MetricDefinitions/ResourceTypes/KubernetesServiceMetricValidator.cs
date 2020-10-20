@@ -7,17 +7,17 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class KubernetesMetricValidator : IMetricValidator
+    internal class KubernetesServiceMetricValidator : IMetricValidator
     {
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<KubernetesResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<KubernetesServiceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.ClusterName))
                 {
-                    yield return "No Azure Kubernetes Service name is configured";
+                    yield return "No Azure Kubernetes Service cluster name is configured";
                 }
             }
         }

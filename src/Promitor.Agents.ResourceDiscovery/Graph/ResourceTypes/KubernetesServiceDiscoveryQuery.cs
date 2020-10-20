@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class KubernetesDiscoveryQuery : ResourceDiscoveryQuery
+    public class KubernetesServiceDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "Microsoft.ContainerService/managedClusters" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name" };
@@ -14,7 +14,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var resource = new KubernetesResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
+            var resource = new KubernetesServiceResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
             return resource;
         }
     }

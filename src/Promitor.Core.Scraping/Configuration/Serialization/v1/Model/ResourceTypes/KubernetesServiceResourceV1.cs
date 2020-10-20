@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains the configuration required to scrape an Azure Kubernetes Service.
     /// </summary>
-    public class KubernetesResourceV1 : AzureResourceDefinitionV1
+    public class KubernetesServiceResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
         /// The name of the Azure Kubernetes Service to get metrics for.
