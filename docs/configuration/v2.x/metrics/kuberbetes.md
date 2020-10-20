@@ -8,7 +8,7 @@ title: Azure Kubernetes Service Declaration
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
 
 You can declare to scrape an Azure Kubernetes Service (AKS)
-via the `Kubernetes` resource type.
+via the `KubernetesService` resource type.
 
 The following fields need to be provided:
 
@@ -21,7 +21,7 @@ Example:
 ```yaml
 name: azure_kubernetes_available_cpu_cores
 description: "Available CPU cores in cluster"
-resourceType: Kubernetes
+resourceType: KubernetesService
 azureMetricConfiguration:
   metricName: kube_node_status_allocatable_cpu_cores
   aggregation:
