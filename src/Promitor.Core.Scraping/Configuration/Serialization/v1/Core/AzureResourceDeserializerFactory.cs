@@ -67,8 +67,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     var keyVaultLogger = _loggerFactory.CreateLogger<KeyVaultDeserializer>();
                     return new KeyVaultDeserializer(keyVaultLogger);
                 case ResourceType.KubernetesService:
-                    var KubernetesServiceLogger = _loggerFactory.CreateLogger<KubernetesServiceDeserializer>();
-                    return new KubernetesServiceDeserializer(KubernetesServiceLogger);
+                    var kubernetesServiceLogger = _loggerFactory.CreateLogger<KubernetesServiceDeserializer>();
+                    return new KubernetesServiceDeserializer(kubernetesServiceLogger);
                 case ResourceType.LogicApp:
                     var logicAppLogger = _loggerFactory.CreateLogger<LogicAppDeserializer>();
                     return new LogicAppDeserializer(logicAppLogger);
