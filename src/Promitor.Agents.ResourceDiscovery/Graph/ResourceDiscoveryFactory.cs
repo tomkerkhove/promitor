@@ -34,6 +34,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new IoTHubDiscoveryQuery();
                 case ResourceType.KeyVault:
                     return new KeyVaultDiscoveryQuery();
+                case ResourceType.KubernetesService:
+                    return new KubernetesServiceDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
                 case ResourceType.NetworkGateway:

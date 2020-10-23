@@ -31,6 +31,7 @@
         EventHubs = 26,
         ExpressRouteCircuit = 27,
         ApplicationGateway = 28,
-        NetworkGateway = 29
+        NetworkGateway = 29,
+        KubernetesService = 30
     }
 }

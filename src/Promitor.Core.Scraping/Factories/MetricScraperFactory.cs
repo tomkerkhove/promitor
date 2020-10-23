@@ -62,6 +62,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new IoTHubScraper(scraperConfiguration);
                 case ResourceType.KeyVault:
                     return new KeyVaultScraper(scraperConfiguration);
+                case ResourceType.KubernetesService:
+                    return new KubernetesServiceScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
@@ -91,7 +93,7 @@ namespace Promitor.Core.Scraping.Factories
                 case ResourceType.WebApp:
                     return new WebAppScraper(scraperConfiguration);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("metricDefinitionResourceType", metricDefinitionResourceType, "Matching scraper not found");
             }
         }
     }

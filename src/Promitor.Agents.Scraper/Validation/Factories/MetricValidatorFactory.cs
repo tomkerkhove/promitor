@@ -41,6 +41,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new IoTHubMetricValidator();
                 case ResourceType.KeyVault:
                     return new KeyVaultMetricValidator();
+                case ResourceType.KubernetesService:
+                    return new KubernetesServiceMetricValidator();
                 case ResourceType.LogicApp:
                     return new LogicAppMetricValidator();
                 case ResourceType.NetworkGateway:
