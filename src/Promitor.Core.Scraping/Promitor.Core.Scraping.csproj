@@ -20,7 +20,7 @@
     <PackageReference Include="Cronos" Version="0.7.0" />
     <PackageReference Include="Guard.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.15.0" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.34.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.35.0" />
     <PackageReference Include="Prometheus.Client" Version="4.2.0" />
     <PackageReference Include="YamlDotNet" Version="8.1.2" />
   </ItemGroup>
