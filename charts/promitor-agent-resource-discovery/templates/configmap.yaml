@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-map-{{ template "promitor-agent-resource-discovery.fullname" . }}
+  name: config-map-{{ template "promitor-agent-resource-discovery.name" . }}
   labels:
     app: {{ template "promitor-agent-resource-discovery.name" . }}
     chart: {{ template "promitor-agent-resource-discovery.chart" . }}
@@ -32,7 +32,7 @@ data:
     version: v1
     azureLandscape:
       tenantId: {{ .Values.azureLandscape.tenantId }}
-      subscriptionIds:
+      subscriptions:
 {{ tpl $subscriptionIds . | indent 6 }}
       cloud: {{ .Values.azureLandscape.cloud }}
     resourceDiscoveryGroups:

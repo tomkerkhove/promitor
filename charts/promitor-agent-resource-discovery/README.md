@@ -77,8 +77,7 @@ their default values.
 | `rbac.serviceAccount.name` | Service account name to use if create is false. If create is true, a name is generated using the fullname template | `default` |
 | `rbac.serviceAccount.annotations` | Service account annotations| `{}` |
 | `resources`  | Pod resource requests & limits |    `{}`    |
-| `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |
-| `secrets.appIdSecret`  | Name of the secret for Azure AD identity id | `azure-app-id`            |
+| `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |   |
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
 | `service.exposeExternally`  | Indication whether or not to expose service externally | `false`            |
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
