@@ -220,7 +220,7 @@ stages:
   parameters:
     chartName: '$(Helm.Chart.CI.Name)'
     chartVersion: '$(Helm.Chart.Version)'
-    valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-helm.yaml'
+    valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
     appVersion: '$(App.Version)'
     imageName: '$(Image.Name)'
     dependsOn: 'Docker'
