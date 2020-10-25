@@ -6,6 +6,7 @@ parameters:
   type: string
 - name: valuesFile
   type: string
+  default: ''
 
 steps:
 - task: HelmInstaller@1
