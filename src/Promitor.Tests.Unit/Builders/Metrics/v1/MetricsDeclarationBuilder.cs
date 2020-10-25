@@ -608,6 +608,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithKubernetesServiceMetric(string metricName = "promitor-aks",
+            string metricDescription = "Description for a metric",
+            string clusterName = "promitor-aks",
+            string azureMetricName = "kube_node_status_condition",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new KubernetesServiceResourceV1
+            {
+                ClusterName = clusterName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.KubernetesService, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, AzureResourceDefinitionV1 resource, string metricDimension = null)
         {
             CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, new List<AzureResourceDefinitionV1> {resource}, metricDimension);

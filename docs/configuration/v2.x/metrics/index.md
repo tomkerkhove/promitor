@@ -134,6 +134,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure IoT Hub](iot-hub)
 - [Azure IoT Hub Device Provisioning Service (DPS)](iot-hub-device-provisioning-service)
 - [Azure Key Vault](key-vault)
+- [Azure Kubernetes Service](kubernetes)
 - [Azure Logic Apps](logic-apps)
 - [Azure Network Gateway](network-gateway)
 - [Azure Network Interface](network-interface)
