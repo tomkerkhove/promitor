@@ -1,9 +1,19 @@
 parameters:
-  chartName: ''
-  chartVersion: ''
-  appVersion: ''
-  imageName: ''
-  dependsOn: ''
+- name: chartName
+  type: string
+  default: '$(Helm.Version)'
+- name: chartVersion
+  type: string
+- name: appVersion
+  type: string
+- name: valuesFile
+  type: string
+  default: ''
+- name: imageName
+  type: string
+- name: dependsOn
+  type: string
+  default: ''
 
 stages:
 - stage: Helm3
@@ -29,6 +39,7 @@ stages:
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '${{ parameters.chartName }}'
+        valuesFile: '${{ parameters.valuesFile }}'
      - template: ./../../helm/package-preview-chart.yml
        parameters:
         chartName: '${{ parameters.chartName }}'
