@@ -16,7 +16,7 @@ pr:
 variables:
   - template: ./variables/build.yml
   - name: Image.Name
-    value: 'tomkerkhove/promitor-agent-discovery-ci'
+    value: 'tomkerkhove/promitor-agent-resource-discovery-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
   - name: Container.Name
@@ -129,14 +129,14 @@ stages:
         - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-discovery-ci'
+             tags: '--tag promitor-agent-resource-discovery-ci'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             tags: '--tag promitor-agent-resource-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
@@ -185,13 +185,13 @@ stages:
           parameters:
              imageName: '$(Image.TaggedName)'
              buildArgs: 'VERSION="$(App.Version)"'
-             tags: '--tag promitor-agent-discovery-ci'
+             tags: '--tag promitor-agent-resource-discovery-ci'
              os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/build-discovery-image.yml
           parameters:
              imageName: '$(Image.TaggedName)'
-             tags: '--tag promitor-agent-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             tags: '--tag promitor-agent-resource-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
              buildArgs: 'VERSION="$(App.Version)"'
              os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml

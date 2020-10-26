@@ -13,7 +13,7 @@ Here is an overview of how you can deploy Promitor Resource Discovery on your in
                          --env-file C:/Promitor/promitor-discovery-auth.creds   \
                          --volume C:/Promitor/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml   \
                          --volume C:/Promitor/resource-discovery-runtime.yaml:/config/runtime.yaml   \
-                         tomkerkhove/promitor-agent-discovery:0.1.0-preview-1
+                         tomkerkhove/promitor-agent-resource-discovery:0.1.0-preview-1
 ```
 
 ## Kubernetes

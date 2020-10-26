@@ -7,7 +7,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: tomkerkhove/promitor-agent-discovery
+  repository: tomkerkhove/promitor-agent-resource-discovery
   pullPolicy: Always
   tag:
 
