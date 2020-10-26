@@ -13,8 +13,8 @@ steps:
   displayName: 'Install Helm (${{ parameters.helmVersion }})'
   inputs:
     helmVersionToInstall: '${{ parameters.helmVersion }}'
-- powershell: |	
-    $valuesFileParameter = '';	
+- powershell: |
+    $valuesFileParameter = '';
     if ('${{ parameters.valuesFile }}' -ne '') {	
       $valuesFileParameter = '--values ${{ parameters.valuesFile }}';
       Write-Host "Values File parameter = $valuesFileParameter"
