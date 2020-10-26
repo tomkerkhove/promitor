@@ -7,36 +7,14 @@ nameOverride: ""
 fullnameOverride: ""
 
 image:
-  repository: tomkerkhove/promitor-agent-resource-discovery
+  repository: tomkerkhove/promitor-agent-discovery
   pullPolicy: Always
   tag:
 
 azureAuthentication:
-  appId: ""
-  appKey: ""
-metricSinks:
-  atlassianStatuspage:
-    enabled: false
-    pageId: ""
-    apiKey: ""
-    systemMetricMapping: []
-    # - id: <atlassian-statuspage-system-metric-id>
-    #   promitorMetricName: <promitor-metric-name>
-  prometheusScrapingEndpoint:
-    enabled: true
-    baseUriPath: /metrics
-    enableMetricTimestamps: true
-    metricUnavailableValue: NaN
-    enableServiceDiscovery: true
-  statsd:
-    enabled: false
-    host: ""
-    port: 8125
-    metricPrefix: ""
-resourceDiscovery:
-  enabled: false
-  host: ""
-  port: 80
+  appId:
+  appKey:
+
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
@@ -48,44 +26,44 @@ telemetry:
     logLevel: ""
 
 ## Metric Declaration YAML
-azureMetadata:
-  tenantId: ""
-  subscriptionId: ""
-  resourceGroupName: promitor
-metricDefaults:
-  aggregation:
-    interval: 00:05:00
-  scraping:
-    schedule: "*/5 * * * *"
-metrics: []
-# Sample metric configuration below
-#   - name: demo_queue_size
-#     description: "Amount of active messages of the 'myqueue' queue (determined with ServiceBusQueue provider)"
-#     resourceType: ServiceBusQueue
-#     azureMetricConfiguration:
-#       metricName: ActiveMessages
-#       aggregation:
-#         type: Total
-#         interval: 00:15:00
-#     resources:
-#       - namespace: promitor-messaging
-#         queueName: orders
+azureLandscape:
+  cloud: Global
+  tenantId:
+  subscriptionIds: []
+
+resourceDiscoveryGroups: []
+# Sample resource discovery group configuration below
+# - name: logic-apps-landscape
+#   type: LogicApp
+#   criteria: <-- Optional, can have one or more of the criterias below
+#     include:
+#       subscriptionIds:
+#       - SUBSCRIPTON-ID-ABC
+#       - SUBSCRIPTON-ID-GHI
+#       resourceGroups:
+#       - promitor-resource-group-1
+#       - promitor-resource-group-2
+#       tags:
+#         app: promitor
+#         region: europe
+#       regions:
+#       - northeurope
+#       - westeurope
 
 secrets:
   # To use your own secret, set createSecret to false and define the name/keys that your secret uses
   createSecret: true
   secretName: ""
-  appIdSecret: azure-app-id
   appKeySecret: azure-app-key
-  appInsightsSecret: azure-appinsights-key
-  atlassianStatuspageApiKey: atlassian-statuspage-apikey
 
 service:
-  exposeExternally: False
   port: 8888
   targetPort: 88
   labelType: infrastructure
   selectorType: runtime
+  loadBalancer:
+    dnsPrefix:
+    enabled: false
 
 resources: {}
   # limits:
@@ -113,5 +91,5 @@ rbac:
 
     ## The name of the service account to use if create is false
     ## If create is true, a name is generated using the fullname template
-    name: default
+    name: promitor-resource-discovery
     annotations: {}

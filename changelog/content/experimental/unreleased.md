@@ -31,6 +31,8 @@ version:
  queue name. ([#529](https://github.com/tomkerkhove/promitor/issues/529)).
 - {{% tag changed %}} Handle validation failures on startup more gracefully. ([#1113](https://github.com/tomkerkhove/promitor/issues/1113) | Contributed by [@adamconnelly](https://github.com/adamconnelly) 🎉).
 - {{% tag changed %}} Improve time series handling to ensure finalized time series are reported
+- {{% tag changed %}} `service.exposeExternally` is renamed to `service.loadBalancer.enabled` in Promitor Agent Helm chart
+- {{% tag changed %}} Default name for `rbac.serviceAccount.name` is now `promitor-scraper` in Promitor Agent Helm chart
 - {{% tag fixed %}} Ensure Prometheus metric sink does write timestamps ([#1217](https://github.com/tomkerkhove/promitor/issues/1217)).
 - {{% tag fixed %}} Dimensions with `/` in name are now supported by replacing it with `_` for Prometheus metric sink ([#1248](https://github.com/tomkerkhove/promitor/issues/1248)).
 - {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "promitor-agent-scraper.fullname" . }}
+  name: {{ template "promitor-agent-scraper.name" . }}
   labels:
     app: {{ template "promitor-agent-scraper.name" . }}
     chart: {{ template "promitor-agent-scraper.chart" . }}
@@ -63,7 +63,7 @@ spec:
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
-          - name: config-volume-{{ template "promitor-agent-scraper.fullname" . }}
+          - name: config-volume-{{ template "promitor-agent-scraper.name" . }}
             mountPath: /config/
           livenessProbe:
             httpGet:
@@ -74,6 +74,6 @@ spec:
               path: /api/v1/health
               port: http
       volumes:
-        - name: config-volume-{{ template "promitor-agent-scraper.fullname" . }}
+        - name: config-volume-{{ template "promitor-agent-scraper.name" . }}
           configMap:
-            name: config-map-{{ template "promitor-agent-scraper.fullname" . }}
+            name: config-map-{{ template "promitor-agent-scraper.name" . }}

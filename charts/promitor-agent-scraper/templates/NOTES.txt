@@ -9,10 +9,10 @@ kubectl port-forward --namespace {{ .Release.Namespace }} $POD_NAME 8080:{{ .Val
 
 cat > promitor-scrape-config.yaml <<EOF
 extraScrapeConfigs: |
-  - job_name: {{ template "promitor-agent-scraper.fullname" . }}
+  - job_name: {{ template "promitor-agent-scraper.name" . }}
     metrics_path: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath }}
     static_configs:
       - targets:
-        - {{ template "promitor-agent-scraper.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+        - {{ template "promitor-agent-scraper.name" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
 EOF
 helm install stable/prometheus -f promitor-scrape-config.yaml

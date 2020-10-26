@@ -7,14 +7,14 @@ metadata:
     chart: {{ template "promitor-agent-scraper.chart" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-  name: {{ template "promitor-agent-scraper.fullname" . }}
+  name: {{ template "promitor-agent-scraper.name" . }}
 rules:
   - apiGroups:
     - policy
     resources:
     - podsecuritypolicies
     resourceNames:
-    - {{ template "promitor-agent-scraper.fullname" . }}
+    - {{ template "promitor-agent-scraper.name" . }}
     verbs:
     - use
 {{- end -}}

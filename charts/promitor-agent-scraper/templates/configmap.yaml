@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: config-map-{{ template "promitor-agent-scraper.fullname" . }}
+  name: config-map-{{ template "promitor-agent-scraper.name" . }}
   labels:
     app: {{ template "promitor-agent-scraper.name" . }}
     chart: {{ template "promitor-agent-scraper.chart" . }}

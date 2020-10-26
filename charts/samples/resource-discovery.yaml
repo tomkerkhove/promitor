@@ -1,0 +1,132 @@
+version: v1
+azureLandscape:
+  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  subscriptions:
+  - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+  - 0f9d7fea-99e8-4768-8672-06a28514f77e
+  - 0f9d7fea-99e8-4768-8672-06a28514f77e
+  - 0f9d7fea-99e8-4768-8672-06a28514f77e
+  cloud: Global
+resourceDiscoveryGroups:
+- name: service-bus-landscape
+  type: ServiceBusQueue
+- name: api-gateways
+  type: ApiManagement
+- name: app-plan-landscape
+  type: AppPlan
+- name: container-instances
+  type: ContainerInstance
+- name: container-registry-landscape
+  type: ContainerRegistry
+- name: cosmos-accounts
+  type: CosmosDb
+- name: dps
+  type: DeviceProvisioningService
+- name: event-hubs-landscape
+  type: EventHubs
+- name: iot-gateways
+  type: IoTHub
+- name: key-vaults
+  type: KeyVault
+- name: network-interfaces
+  type: NetworkInterface
+- name: postgres-databases
+  type: PostgreSql
+- name: redis-caches
+  type: RedisCache
+- name: sql-databases
+  type: SqlDatabase
+- name: sql-managed-instances
+  type: SqlManagedInstance
+- name: sql-servers
+  type: SqlServer
+- name: storage-accounts
+  type: StorageAccount
+- name: virtual-machines
+  type: VirtualMachine
+- name: virtual-machine-scale-sets
+  type: VirtualMachineScaleSet
+- name: web-apps-north-europe
+  type: WebApp
+  criteria:
+    include:
+      regions:
+      - northeurope
+- name: web-app-landscape
+  type: WebApp
+- name: function-app-landscape
+  type: FunctionApp
+- name: web-apps
+  type: WebApp
+  criteria:
+    include:
+      regions:
+      - northeurope
+      - westeurope
+- name: web-apps-filtered
+  type: WebApp
+  criteria:
+    include:
+      resourceGroups:
+      - promitor-sources
+- name: logic-apps
+  type: LogicApp
+  criteria:
+    include:
+      tags:
+        app: promitor-sample
+# The following are used for integration testing:
+- name: logic-apps-unfiltered
+  type: LogicApp
+- name: one-resource-group-scenario
+  type: LogicApp
+  criteria:
+    include:
+      resourceGroups:
+      - promitor-testing-resource-discovery-eu
+- name: two-resource-group-scenario
+  type: LogicApp
+  criteria:
+    include:
+      resourceGroups:
+      - promitor-testing-resource-discovery-eu
+      - promitor-testing-resource-discovery-us
+- name: one-subscriptions-scenario
+  type: LogicApp
+  criteria:
+    include:
+      subscriptions:
+      - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+- name: two-subscriptions-scenario
+  type: LogicApp
+  criteria:
+    include:
+      subscriptions:
+      - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+      - 0f9d7fea-99e8-4768-8672-06a28514f77e
+- name: one-tag-scenario
+  type: LogicApp
+  criteria:
+    include:
+      tags:
+        app: promitor-resource-discovery-tests
+- name: two-tag-scenario
+  type: LogicApp
+  criteria:
+    include:
+      tags:
+        app: promitor-resource-discovery-tests
+        region: europe
+- name: one-region-scenario
+  type: LogicApp
+  criteria:
+    include:
+      regions:
+      - northeurope
+- name: two-region-scenario
+  type: LogicApp
+  criteria:
+    include:
+      regions:
+      - northeurope
+      - westeurope

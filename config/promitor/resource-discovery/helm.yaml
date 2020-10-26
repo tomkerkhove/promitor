@@ -1,0 +1,32 @@
+azureAuthentication:
+  appId: 67882a00-21d3-4ee7-b32a-430ea0768cd3
+  appKey: <hidden>
+azureLandscape:
+  cloud: Global
+  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  subscriptionIds:
+  - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+  - 0f9d7fea-99e8-4768-8672-06a28514f77e
+resourceDiscoveryGroups:
+- name: service-bus-landscape
+  type: ServiceBusQueue
+- name: api-gateways
+  type: ApiManagement
+- name: app-plan-landscape
+  type: AppPlan
+- name: container-instances
+  type: ContainerInstance
+- name: container-registry-landscape
+  type: ContainerRegistry
+- name: cosmos-accounts
+  type: CosmosDb
+- name: dps
+  type: DeviceProvisioningService
+- name: event-hubs-landscape
+  type: EventHubs
+service:
+  loadBalancer:
+    dnsPrefix: promitor-resource-discovery
+    enabled: true
+telemetry:
+  defaultLogLevel: information

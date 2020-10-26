@@ -4,6 +4,9 @@ parameters:
   default: '$(Helm.Version)'
 - name: chartName
   type: string
+- name: valuesFile
+  type: string
+  default: ''
 
 steps:
 - task: HelmInstaller@1
@@ -11,6 +14,14 @@ steps:
   inputs:
     helmVersionToInstall: '${{ parameters.helmVersion }}'
 - powershell: |
-    helm lint ${{ parameters.chartName }}/ --strict
+    $valuesFileParameter = '';
+    if ('${{ parameters.valuesFile }}' -ne '') {
+      $valuesFileParameter = '--values ${{ parameters.valuesFile }}';
+      Write-Host "Values File parameter = $valuesFileParameter"
+    }
+    Write-Host "##vso[task.setvariable variable=valuesFileParameter]$valuesFileParameter"
+  displayName: 'Determine version/version-suffix commands'
+- powershell: |
+    helm lint ${{ parameters.chartName }}/ --strict  $(valuesFileParameter)
   workingDirectory: charts
   displayName: 'Lint ''${{ parameters.chartName }}'' Helm Chart'

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "promitor-agent-resource-discovery.fullname" . }}
+  name: {{ template "promitor-agent-resource-discovery.name" . }}
   labels:
     app: {{ template "promitor-agent-resource-discovery.name" . }}
     chart: {{ template "promitor-agent-resource-discovery.chart" . }}
@@ -44,26 +44,16 @@ spec:
               protocol: TCP
           env:
           - name: PROMITOR_AUTH_APPID
-            valueFrom:
-              secretKeyRef:
-                  name: {{ template "promitor-agent-resource-discovery.secretname" . }}
-                  key: {{ .Values.secrets.appIdSecret }}
+            value: {{ .Values.azureAuthentication.appId }}
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:
                   name: {{ template "promitor-agent-resource-discovery.secretname" . }}
                   key: {{ .Values.secrets.appKeySecret }}
-  {{- if .Values.metricSinks.atlassianStatuspage.apiKey }}
-          - name: PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY
-            valueFrom:
-              secretKeyRef:
-                  name: {{ template "promitor-agent-resource-discovery.secretname" . }}
-                  key: {{ .Values.secrets.atlassianStatuspageApiKey }}
-  {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
           volumeMounts:
-          - name: config-volume-{{ template "promitor-agent-resource-discovery.fullname" . }}
+          - name: config-volume-{{ template "promitor-agent-resource-discovery.name" . }}
             mountPath: /config/
           livenessProbe:
             httpGet:
@@ -74,6 +64,6 @@ spec:
               path: /api/v1/health
               port: http
       volumes:
-        - name: config-volume-{{ template "promitor-agent-resource-discovery.fullname" . }}
+        - name: config-volume-{{ template "promitor-agent-resource-discovery.name" . }}
           configMap:
-            name: config-map-{{ template "promitor-agent-resource-discovery.fullname" . }}
+            name: config-map-{{ template "promitor-agent-resource-discovery.name" . }}
