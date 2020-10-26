@@ -24,3 +24,9 @@ resourceDiscoveryGroups:
   type: DeviceProvisioningService
 - name: event-hubs-landscape
   type: EventHubs
+service:
+  loadBalancer:
+    dnsPrefix: promitor-resource-discovery
+    enabled: true
+telemetry:
+  defaultLogLevel: information

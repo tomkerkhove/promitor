@@ -74,12 +74,13 @@ their default values.
 | `rbac.create` | If true, create & use RBAC resources | `true` |
 | `rbac.podSecurityPolicyEnabled` | Create pod security policy resources | `false` |
 | `rbac.serviceAccount.create` | Create service account resource | `true` |
-| `rbac.serviceAccount.name` | Service account name to use if create is false. If create is true, a name is generated using the fullname template | `default` |
+| `rbac.serviceAccount.name` | Service account name to use if create is false. If create is true, a name is generated using the fullname template | `promitor-resource-discovery` |
 | `rbac.serviceAccount.annotations` | Service account annotations| `{}` |
 | `resources`  | Pod resource requests & limits |    `{}`    |
 | `secrets.createSecret`  | Indication if you want to bring your own secret level of logging | `true`            |   |
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
-| `service.exposeExternally`  | Indication whether or not to expose service externally | `false`            |
+| `service.loadbalancer.enabled`  | Indication whether or not to expose service externally through a load balancer | `false`            |
+| `service.loadbalancer.dnsPrefix`  | Prefix for DNS name to expose the service on using `<name>.<location>.cloudapp.azure.com` format. This setting is specific to Azure Kubernetes Service ([docs](https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service)) | ``            |
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
 | `service.labelType`  | Label to assign to your service | `infrastructure`            |

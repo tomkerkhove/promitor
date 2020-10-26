@@ -7,11 +7,11 @@ metadata:
     chart: {{ template "promitor-agent-resource-discovery.chart" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-  name: {{ template "promitor-agent-resource-discovery.fullname" . }}
+  name: {{ template "promitor-agent-resource-discovery.name" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "promitor-agent-resource-discovery.fullname" . }}
+  name: {{ template "promitor-agent-resource-discovery.name" . }}
 subjects:
   - kind: ServiceAccount
     name: {{ template "promitor-agent-resource-discovery.serviceaccountname" . }}

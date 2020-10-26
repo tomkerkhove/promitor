@@ -8,8 +8,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     type: {{ .Values.service.labelType }}
+{{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.dnsPrefix }}
+{{- end }}
 spec:
-{{- if .Values.service.exposeExternally }}
+{{- if .Values.service.loadBalancer.enabled }}
   type: LoadBalancer
 {{- else }}
   type: ClusterIP
