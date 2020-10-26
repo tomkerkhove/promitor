@@ -15,7 +15,7 @@ steps:
     helmVersionToInstall: '${{ parameters.helmVersion }}'
 - powershell: |
     $valuesFileParameter = '';
-    if ('${{ parameters.valuesFile }}' -ne '') {	
+    if ('${{ parameters.valuesFile }}' -ne '') {
       $valuesFileParameter = '--values ${{ parameters.valuesFile }}';
       Write-Host "Values File parameter = $valuesFileParameter"
     }
