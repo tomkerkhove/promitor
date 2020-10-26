@@ -80,11 +80,13 @@ secrets:
   atlassianStatuspageApiKey: atlassian-statuspage-apikey
 
 service:
-  exposeExternally: False
   port: 8888
   targetPort: 88
   labelType: infrastructure
   selectorType: runtime
+  loadBalancer:
+    dnsPrefix:
+    enabled: false
 
 resources: {}
   # limits:
@@ -112,5 +114,5 @@ rbac:
 
     ## The name of the service account to use if create is false
     ## If create is true, a name is generated using the fullname template
-    name: default
+    name: promitor-scraper
     annotations: {}

@@ -7,11 +7,11 @@ metadata:
     chart: {{ template "promitor-agent-scraper.chart" . }}
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
-  name: {{ template "promitor-agent-scraper.fullname" . }}
+  name: {{ template "promitor-agent-scraper.name" . }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "promitor-agent-scraper.fullname" . }}
+  name: {{ template "promitor-agent-scraper.name" . }}
 subjects:
   - kind: ServiceAccount
     name: {{ template "promitor-agent-scraper.serviceaccountname" . }}
