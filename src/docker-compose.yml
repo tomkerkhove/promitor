@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   promitor.agents.resourcediscovery:
-    image: tomkerkhove/promitor-agent-discovery
+    image: tomkerkhove/promitor-agent-resource-discovery
     build:
       context: .
       dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile.linux

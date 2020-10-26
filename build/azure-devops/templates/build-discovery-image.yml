@@ -9,7 +9,7 @@ parameters:
   default: ''
 - name: tags
   type: string
-  default: '--tag promitor-agent-discovery-ci'
+  default: '--tag promitor-agent-resource-discovery-ci'
 - name: os
   type: string
 
