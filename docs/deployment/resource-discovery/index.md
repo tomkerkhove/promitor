@@ -5,6 +5,8 @@ title: Deploying Promitor Resource Discovery
 
 Here is an overview of how you can deploy Promitor Resource Discovery on your infrastructure, we support both Linux and Windows.
 
+You can learn more about our Helm chart on [artifacthub.io](https://artifacthub.io/packages/helm/promitor/promitor-agent-resource-discovery).
+
 ## Docker
 
 ```shell
@@ -39,17 +41,47 @@ If all goes well you should be able to list all Promitor charts:
 
 ```shell
 ❯ helm search hub promitor
-URL                                                     CHART VERSION   APP VERSION     DESCRIPTION
-https://hub.helm.sh/charts/promitor/promitor-ag...      1.6.0           1.6.1           A Helm chart to deploy Promitor, an Azure Monit...
-https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-PR920     0.0.0-PR920     A Helm chart to deploy Promitor, an Azure Monit...
+URL                                                     CHART VERSION           APP VERSION     DESCRIPTION
+https://hub.helm.sh/charts/promitor/promitor-ag...      2.0.0-preview-3         2.0.0-preview-3 Promitor, bringing Azure Monitor metrics where ...
+https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-pr997             0.0.0-pr997     A Helm chart to deploy Promitor, an Azure Monit...
+https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-0.0.0-pr1326      0.0.0-pr1326    Promitor, bringing Azure Monitor metrics where ...
 ```
 
 ### Using our Helm Chart
 
-To use this, you will need to provide parameters [via `--set` or `--values`](https://helm.sh/docs/using_helm/#customizing-the-chart-before-installing).
-Included here are the values that correspond with the local environment variables.
-In addition to these, you will need a metric declaration file as described in
-[Metric Declaration](/configuration/metrics).
+You can easily install our Resource Discovery Agent as following:
+
+```shell
+❯ helm install promitor-agent-resource-discovery promitor/promitor-agent-resource-discovery \
+               --set azureAuthentication.appId='<azure-ad-app-id>' \
+               --set azureAuthentication.appKey='<azure-ad-app-key>' \
+               --values /path/to/helm-configuration.yaml
+```
+
+Next to Azure authentication, a [resource discovery declaration](http://localhost:4000/configuration/v2.x/resource-discovery)
+ must be provided through `--values`.
+
+Here is an example of resource discovery declaration which you can pass:
+
+```yaml
+azureLandscape:
+  cloud: Global
+  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  subscriptionIds:
+  - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
+resourceDiscoveryGroups:
+- name: api-gateways
+  type: ApiManagement
+```
+
+Our Helm chart provides a variety of configuration options which you can explore in
+ our [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-agent-resource-discovery/values.yaml).
+to see all configurable values.
+
+#### Sample configuration
+
+Want to get started easily? Here's a sample configuration to spin up the Resource Discovery agent which will be publicly
+ exposed outside of the cluster on promitor-resource-discovery-sample.westeurope.cloudapp.azure.com:8888/api/docs/index.html.
 
 ```yaml
 azureAuthentication:
@@ -80,23 +112,12 @@ resourceDiscoveryGroups:
   type: EventHubs
 service:
   loadBalancer:
-    dnsPrefix: promitor-resource-discovery
+    dnsPrefix: promitor-resource-discovery-sample
     enabled: true
 telemetry:
   defaultLogLevel: information
 ```
 
-Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-agent-resource-discovery/values.yaml)
-to see all configurable values.
-
-If you have a `metric-declaration.yaml` file, you can create a basic deployment
-with this command:
-
-```shell
-❯ helm install promitor-agent-scraper promitor/promitor-agent-scraper \
-               --set azureAuthentication.appId='<azure-ad-app-id>' \
-               --set azureAuthentication.appKey='<azure-ad-app-key>' \
-               --values /path/to/helm-configuration.yaml
-```
+You can easily deploy it by passing the file through `--values` during installation.
 
 [&larr; back](/)
