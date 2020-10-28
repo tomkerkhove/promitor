@@ -59,6 +59,7 @@ and vote for features!
     - [Kubernetes](deployment/scraper/#kubernetes)
   - Resource Discovery
     - [Docker](deployment/resource-discovery/#docker)
+    - [Kubernetes](deployment/resource-discovery/#kubernetes)
   - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Configuration**
   - Scraper
