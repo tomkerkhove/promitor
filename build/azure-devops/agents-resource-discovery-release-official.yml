@@ -30,7 +30,7 @@ parameters:
   default: Promitor Resource Discovery v$(Image.Version)
 - name: createGithubRelease
   displayName: Create GitHub Release
-  type: bool
+  type: boolean
   default: true
 
 variables:
