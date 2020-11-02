@@ -23,10 +23,6 @@ parameters:
 - name: githubReleaseTitle
   displayName: GitHub Release Title
   type: string
-  default: v$(Image.Version)
-- name: githubReleaseTitle
-  displayName: GitHub Release Title
-  type: string
   default: Promitor Resource Discovery v$(Image.Version)
 - name: createGithubRelease
   displayName: Create GitHub Release
