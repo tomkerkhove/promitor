@@ -1,0 +1,5 @@
+variables:
+- name: Image.Scraper.Name
+  value: 'tomkerkhove/promitor-agent-scraper'
+- name: Image.ResourceDiscovery.Name
+  value: 'tomkerkhove/promitor-agent-resource-discovery'

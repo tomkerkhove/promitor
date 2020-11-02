@@ -1,3 +1,7 @@
 variables:
-  Helm.Version: '3.3.0'
-  Chart.Scraper.Name: 'promitor-agent-scraper'
+- name: Helm.Version
+  value: '3.3.0'
+- name: Chart.Scraper.Name
+  value: 'promitor-agent-scraper'
+- name: Chart.ResourceDiscovery.Name
+  value: 'promitor-agent-resource-discovery'

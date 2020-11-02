@@ -23,7 +23,7 @@ parameters:
 - name: githubReleaseTitle
   displayName: GitHub Release Title
   type: string
-  default: v$(Image.Version)
+  default: Promitor Scraper v$(Image.Version)
 
 variables:
   - template: ./variables/build.yml
