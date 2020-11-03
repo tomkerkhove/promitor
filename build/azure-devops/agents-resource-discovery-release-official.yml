@@ -66,14 +66,18 @@ stages:
   displayName: Build and Push Docker image
   variables:
   - group: 'Agent Authentication'
-  - name: Container.Name
+  - name: Container.Scraper.Name
+    value: 'promitor.scraper.agent'
+  - name: Container.Scraper.Port
+    value: 8999
+  - name: Container.ResourceDiscovery.Name
     value: 'promitor.agents.resourcediscovery'
-  - name: Container.Port
+  - name: Container.ResourceDiscovery.Port
     value: '999'
-  - name: Container.Network.Name
-    value: 'ci-network'
-  - name: Agent.BaseUrl
-    value: http://localhost:$(Container.Port)
+  - name: Agent.Scraper.BaseUrl
+    value: http://localhost:$(Container.Scraper.Port)
+  - name: Agent.ResourceDiscovery.BaseUrl
+    value: http://localhost:$(Container.ResourceDiscovery.Port)
   - name: Agent.Version
     value: NOTUSED
   jobs:
@@ -106,8 +110,8 @@ stages:
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
-          containerName: '$(Container.Name)'
-          containerPort: '$(Container.Port)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
           activeDirectoryAppId: '$(Agent.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Auth.AppSecret)'
@@ -120,7 +124,7 @@ stages:
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
        parameters:
-        containerName: '$(Container.Name)'
+        containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}'''
@@ -172,8 +176,8 @@ stages:
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
-          containerName: '$(Container.Name)'
-          containerPort: '$(Container.Port)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
           activeDirectoryAppId: '$(Agent.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Auth.AppSecret)'
@@ -186,7 +190,7 @@ stages:
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
        parameters:
-        containerName: '$(Container.Name)'
+        containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/docker/push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
