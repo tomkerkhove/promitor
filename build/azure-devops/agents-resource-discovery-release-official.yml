@@ -78,8 +78,10 @@ stages:
     value: http://localhost:$(Container.Scraper.Port)
   - name: Agent.ResourceDiscovery.BaseUrl
     value: http://localhost:$(Container.ResourceDiscovery.Port)
-  - name: Agent.Version
+  - name: Agent.Scraper.Version
     value: NOTUSED
+  - name: Agent.ResourceDiscovery.Version
+    value: $(Image.Version)
   jobs:
    - job: BuildLinux
      displayName: Build Linux Docker image
