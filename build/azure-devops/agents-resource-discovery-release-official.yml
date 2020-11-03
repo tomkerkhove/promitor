@@ -177,7 +177,7 @@ stages:
         os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
        parameters:
-          imageName: '$(Image.ResourceDiscovery.Name)'
+          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
           containerName: '$(Container.ResourceDiscovery.Name)'
           containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
