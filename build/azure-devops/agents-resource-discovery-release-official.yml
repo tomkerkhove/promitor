@@ -106,7 +106,7 @@ stages:
      - template: templates/build-discovery-image.yml
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
-        tags: '--tag dev'
+        tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         buildArgs: 'VERSION="$(Image.Version)"'
         os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
@@ -172,7 +172,7 @@ stages:
      - template: templates/build-discovery-image.yml
        parameters:
         imageName: '$(Image.ResourceDiscovery.Name)'
-        tags: '--tag dev'
+        tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
         buildArgs: 'VERSION="$(Image.Version)"'
         os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
