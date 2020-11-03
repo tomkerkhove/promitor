@@ -113,8 +113,8 @@ stages:
           containerName: '$(Container.ResourceDiscovery.Name)'
           containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
-          activeDirectoryAppId: '$(Agent.Auth.AppId)'
-          activeDirectoryAppSecret: '$(Agent.Auth.AppSecret)'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
      - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
@@ -179,8 +179,8 @@ stages:
           containerName: '$(Container.ResourceDiscovery.Name)'
           containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
-          activeDirectoryAppId: '$(Agent.Auth.AppId)'
-          activeDirectoryAppSecret: '$(Agent.Auth.AppSecret)'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
           os: '$(OS.Name)'
      - template: templates/docker/show-running-containers.yml
      - template: templates/tests/run-integration-tests.yml
