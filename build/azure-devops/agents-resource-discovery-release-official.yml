@@ -320,6 +320,7 @@ stages:
        parameters:
         helmVersion: '$(Helm.Version)'
         chartName: '$(Chart.ResourceDiscovery.Name)'
+        valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
      - template: templates/helm/package-official-chart.yml
        parameters:
         chartName: '$(Chart.ResourceDiscovery.Name)'
