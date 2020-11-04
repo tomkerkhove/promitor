@@ -44,27 +44,7 @@ variables:
     value: '$(Build.BuildNumber)'
   - name: 'Helm.App.Version'
     value: '$(Image.Version)'
-
-stages:
-- stage: Init
-  displayName: Prepare Release
-  jobs:
-   - job: DetermineVersion
-     displayName: Determine Version
-     pool:
-       vmImage: ubuntu-16.04
-     steps:
-     - template: templates/versioning/determine-major-minor-version.yml
-     - template: templates/utils/persist-variable.yml
-       parameters:
-          currentVariableName: 'Image.MajorMinorVersion'
-          persistedVariableName: 'Image.MajorMinorVersion'
-     - publish: $(Pipeline.Workspace)/variables
-       artifact: variables
-- stage: Build
-  dependsOn: Init
-  displayName: Build and Push Docker image
-  variables:
+  # Required for all our build stages
   - group: 'Agent Authentication'
   - name: Container.Scraper.Name
     value: 'promitor.scraper.agent'
@@ -82,13 +62,34 @@ stages:
     value: NOTUSED
   - name: Agent.ResourceDiscovery.Version
     value: $(Image.Version)
+
+stages:
+- stage: Init
+  displayName: Prepare Release
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/utils/persist-variable.yml
+       parameters:
+          currentVariableName: 'Image.MajorMinorVersion'
+          persistedVariableName: 'Image.MajorMinorVersion'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: BuildLinux
+  dependsOn: Init
+  displayName: Linux Docker image
+  pool:
+    vmImage: ubuntu-16.04
+  variables:
+  - name: OS.Name
+    value: 'linux'
   jobs:
    - job: BuildLinux
      displayName: Build Linux Docker image
-     pool:
-       vmImage: ubuntu-16.04
-     variables:
-       OS.Name: 'linux'
      steps:
      - download: current
        artifact: variables
@@ -152,12 +153,17 @@ stages:
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+- stage: BuildWindows
+  dependsOn: Init
+  displayName: Windows Docker image
+  pool:
+    vmImage: windows-2019
+  variables:
+  - name: OS.Name
+    value: 'windows'
+  jobs:
    - job: BuildWindows
      displayName: Build Windows Docker image
-     pool:
-       vmImage: windows-2019
-     variables:
-       OS.Name: 'windows'
      steps:
      - template: templates/versioning/determine-major-minor-version.yml
      - template: templates/build/install-sdk.yml
@@ -206,11 +212,35 @@ stages:
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
-
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  dependsOn: [BuildLinux, BuildWindows]
+  jobs:
+   - job: PushHelmChart
+     displayName: Push Helm Chart to ACR
+     pool:
+       vmImage: ubuntu-16.04
+     variables:
+     - template: ./variables/helm.yml
+     steps:
+     - template: templates/helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
+     - template: templates/helm/package-official-chart.yml
+       parameters:
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(Helm.App.Version)'
+     - template: templates/helm/push-chart.yml
+       parameters:
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub
-    dependsOn: Build
+    dependsOn: ReleaseHelm
     jobs:
     - job: CreateRelease
       displayName: Create Release
@@ -305,28 +335,3 @@ stages:
 
                 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-resource-discovery).<br />
                 For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
-- stage: ReleaseHelm
-  displayName: Release Helm Chart
-  dependsOn: Build
-  jobs:
-   - job: PushHelmChart
-     displayName: Push Helm Chart to ACR
-     pool:
-       vmImage: ubuntu-16.04
-     variables:
-     - template: ./variables/helm.yml
-     steps:
-     - template: templates/helm/lint-chart.yml
-       parameters:
-        helmVersion: '$(Helm.Version)'
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
-     - template: templates/helm/package-official-chart.yml
-       parameters:
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        chartVersion: '$(Helm.Chart.Version)'
-        appVersion: '$(Helm.App.Version)'
-     - template: templates/helm/push-chart.yml
-       parameters:
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        chartVersion: '$(Helm.Chart.Version)'
