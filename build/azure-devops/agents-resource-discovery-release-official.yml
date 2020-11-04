@@ -1,0 +1,337 @@
+name: $(Image.Version)
+resources:
+- repo: self
+trigger: none
+pr: none
+
+parameters:
+- name: releaseType
+  displayName: Release Type
+  type: string
+  default: Full
+  values:
+  - Full
+  - Preview
+- name: imageVersion
+  displayName: Image Version
+  type: string
+  default: 0.1.0
+- name: chartVersion
+  displayName: Helm Chart Version
+  type: string
+  default: 0.1.0
+- name: githubReleaseTitle
+  displayName: GitHub Release Title
+  type: string
+  default: Promitor Resource Discovery v$(Image.Version)
+- name: createGithubRelease
+  displayName: Create GitHub Release
+  type: boolean
+  default: true
+
+variables:
+  - template: ./variables/build.yml
+  - template: ./variables/containers.yml
+  - name: 'Image.Version'
+    value: '${{ parameters.imageVersion }}'
+  - name: 'Helm.Chart.Version'
+    value: '${{ parameters.chartVersion }}'
+  - name: 'Release.Title'
+    value: '${{ parameters.githubReleaseTitle }}'
+  - name: 'Image.TaggedName'
+    value: '$(Image.ResourceDiscovery.Name):$(Image.Version)'
+  - name: 'Release.TagName'
+    value: '$(Build.BuildNumber)'
+  - name: 'Helm.App.Version'
+    value: '$(Image.Version)'
+  # Required for all our build stages
+  - group: 'Agent Authentication'
+  - name: Container.Scraper.Name
+    value: 'promitor.scraper.agent'
+  - name: Container.Scraper.Port
+    value: 8999
+  - name: Container.ResourceDiscovery.Name
+    value: 'promitor.agents.resourcediscovery'
+  - name: Container.ResourceDiscovery.Port
+    value: '999'
+  - name: Agent.Scraper.BaseUrl
+    value: http://localhost:$(Container.Scraper.Port)
+  - name: Agent.ResourceDiscovery.BaseUrl
+    value: http://localhost:$(Container.ResourceDiscovery.Port)
+  - name: Agent.Scraper.Version
+    value: NOTUSED
+  - name: Agent.ResourceDiscovery.Version
+    value: $(Image.Version)
+
+stages:
+- stage: Init
+  displayName: Prepare Release
+  jobs:
+   - job: DetermineVersion
+     displayName: Determine Version
+     pool:
+       vmImage: ubuntu-16.04
+     steps:
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/utils/persist-variable.yml
+       parameters:
+          currentVariableName: 'Image.MajorMinorVersion'
+          persistedVariableName: 'Image.MajorMinorVersion'
+     - publish: $(Pipeline.Workspace)/variables
+       artifact: variables
+- stage: BuildLinux
+  dependsOn: Init
+  displayName: Linux Docker image
+  pool:
+    vmImage: ubuntu-16.04
+  variables:
+  - name: OS.Name
+    value: 'linux'
+  jobs:
+   - job: BuildLinux
+     displayName: Build Linux Docker image
+     steps:
+     - download: current
+       artifact: variables
+     - template: templates/utils/read-variable-on-linux.yml
+       parameters:
+        variableName: 'Image.MajorMinorVersion'
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
+     - template: templates/build-discovery-image.yml
+       parameters:
+        imageName: '$(Image.TaggedName)'
+        tags: '--tag $(Image.ResourceDiscovery.Name):latest --tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+        buildArgs: 'VERSION="$(Image.Version)"'
+        os: '$(OS.Name)'
+     - template: templates/agents/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.ResourceDiscovery.Name)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
+          volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
+          os: '$(OS.Name)'
+     - template: templates/docker/show-running-containers.yml
+     - template: templates/tests/run-integration-tests.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+     - template: templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.ResourceDiscovery.Name)'
+     - template: templates/docker/push-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}'''
+        imageName: '$(Image.TaggedName)'
+     - template: templates/docker/push-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: templates/docker/push-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}'''
+          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)'
+        - template: templates/docker/push-image.yml
+          parameters:
+          imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/push-image.yml
+          parameters:
+            imageDisplayName: '''latest'''
+            imageName: '$(Image.ResourceDiscovery.Name):latest'
+        - template: templates/docker/push-image.yml
+          parameters:
+            imageDisplayName: '''latest-$(OS.Name)'''
+            imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+- stage: BuildWindows
+  dependsOn: Init
+  displayName: Windows Docker image
+  pool:
+    vmImage: windows-2019
+  variables:
+  - name: OS.Name
+    value: 'windows'
+  jobs:
+   - job: BuildWindows
+     displayName: Build Windows Docker image
+     steps:
+     - template: templates/versioning/determine-major-minor-version.yml
+     - template: templates/build/install-sdk.yml
+       parameters:
+        dotnetVersion: '$(DotNet.SDK.Version)'
+     - task: DotNetCoreCLI@2
+       displayName: 'Run Unit Tests'
+       inputs:
+        command: test
+        projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
+     - template: templates/agents/prepare-discovery-ci-config.yml
+     - template: templates/build-discovery-image.yml
+       parameters:
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+        tags: '--tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+        buildArgs: 'VERSION="$(Image.Version)"'
+        os: '$(OS.Name)'
+     - template: templates/agents/run-discovery-image.yml
+       parameters:
+          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+          containerName: '$(Container.ResourceDiscovery.Name)'
+          containerPort: '$(Container.ResourceDiscovery.Port)'
+          volumes: '$(Pipeline.Workspace)\s\config\promitor\resource-discovery\:c:\config\'
+          activeDirectoryAppId: '$(Agent.ResourceDiscovery.Auth.AppId)'
+          activeDirectoryAppSecret: '$(Agent.ResourceDiscovery.Auth.AppSecret)'
+          os: '$(OS.Name)'
+     - template: templates/docker/show-running-containers.yml
+     - template: templates/tests/run-integration-tests.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        dotnetVersion: '$(DotNet.Sdk.Version)'
+        buildConfiguration: '$(DotNet.Configuration)'
+     - template: templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.ResourceDiscovery.Name)'
+     - template: templates/docker/push-image.yml
+       parameters:
+        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
+        imageName: '$(Image.TaggedName)-$(OS.Name)'
+     - ${{ if eq(parameters['releaseType'], 'Full') }}:
+        - template: templates/docker/push-image.yml
+          parameters:
+            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/push-image.yml
+          parameters:
+            imageDisplayName: '''latest-$(OS.Name)'''
+            imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+- stage: ReleaseHelm
+  displayName: Release Helm Chart
+  dependsOn: [BuildLinux, BuildWindows]
+  jobs:
+   - job: PushHelmChart
+     displayName: Push Helm Chart to ACR
+     pool:
+       vmImage: ubuntu-16.04
+     variables:
+     - template: ./variables/helm.yml
+     steps:
+     - template: templates/helm/lint-chart.yml
+       parameters:
+        helmVersion: '$(Helm.Version)'
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
+     - template: templates/helm/package-official-chart.yml
+       parameters:
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+        appVersion: '$(Helm.App.Version)'
+     - template: templates/helm/push-chart.yml
+       parameters:
+        chartName: '$(Chart.ResourceDiscovery.Name)'
+        chartVersion: '$(Helm.Chart.Version)'
+- ${{ if eq(parameters['createGitHubRelease'], true) }}:
+  - stage: ReleaseGitHub
+    displayName: Release on GitHub
+    dependsOn: ReleaseHelm
+    jobs:
+    - job: CreateRelease
+      displayName: Create Release
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      - download: current
+        artifact: variables
+      - template: templates/utils/read-variable-on-linux.yml
+        parameters:
+          variableName: 'Image.MajorMinorVersion'
+      - ${{ if eq(parameters['releaseType'], 'Preview') }}:
+          - task: GitHubRelease@0
+            displayName: 'Create GitHub Pre-Release'
+            inputs:
+              gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+              repositoryName: tomkerkhove/promitor
+              action: Create
+              tagSource: manual
+              tag: '$(Release.TagName)'
+              title: '$(Release.Title)'
+              releaseNotesSource: input
+              isPreRelease: true
+              changeLogType: issueBased
+              changeLogCompareToRelease: 'lastFullRelease'
+              isDraft: true
+              releaseNotes: |
+                ### What's new?
+                Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
+                #### Deprecations
+                Here are a list of new deprecations and how to mitigate them:
+                - TBW _(Discussion [#]())_
+                #### Breaking Changes
+                Here are a list of breaking changes and how to mitigate them:
+                - TBW (#) - _Use new approach documented here_
+                ### Getting started
+                Running Promitor Resource Discovery is super easy:
+                ```
+                docker run -d -p 9999:80 --name promitor-agent-resource-discovery   \
+                                  --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                                  --env-file C:/Promitor/promitor-discovery-auth.creds   \
+                                  --volume C:/Promitor/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml   \
+                                  --volume C:/Promitor/resource-discovery-runtime.yaml:/config/runtime.yaml   \
+                                  tomkerkhove/promitor-agent-resource-discovery:$(Image.Version)
+                ```
+                ### Docker Image information
+                New Docker image tags are available:
+                - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+                - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
+
+                Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-resource-discovery).<br />
+                For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+      - ${{ if eq(parameters['releaseType'], 'Full') }}:
+          - task: GitHubRelease@0
+            displayName: 'Create GitHub Pre-Release'
+            inputs:
+              gitHubConnection: 'Tom Kerkhove (GitHub - OAuth)'
+              repositoryName: tomkerkhove/promitor
+              action: Create
+              tagSource: manual
+              tag: '$(Release.TagName)'
+              title: '$(Release.Title)'
+              releaseNotesSource: input
+              changeLogType: issueBased
+              changeLogCompareToRelease: 'lastFullRelease'
+              isPreRelease: false
+              isDraft: true
+              releaseNotes: |
+                ### What's new?
+                Here are some important things you should know, for a full list see [changelog.promitor.io](https://changelog.promitor.io/).
+                #### Deprecations
+                Here are a list of new deprecations and how to mitigate them:
+                - TBW _(Discussion [#]())_
+                #### Breaking Changes
+                Here are a list of breaking changes and how to mitigate them:
+                - TBW (#) - _Use new approach documented here_
+                ### Getting started
+                Running Promitor Resource Discovery is super easy:
+                ```
+                docker run -d -p 9999:80 --name promitor-agent-resource-discovery   \
+                                  --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
+                                  --env-file C:/Promitor/promitor-discovery-auth.creds   \
+                                  --volume C:/Promitor/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml   \
+                                  --volume C:/Promitor/resource-discovery-runtime.yaml:/config/runtime.yaml   \
+                                  tomkerkhove/promitor-agent-resource-discovery:$(Image.Version)
+                ```
+                ### Docker Image information
+                New Docker image tags are available:
+                - `latest`, `latest-linux`, `latest-windows`
+                - `$(Image.Version)`, `$(Image.Version)-linux`, `$(Image.Version)-windows`
+                - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
+
+                Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-resource-discovery).<br />
+                For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
