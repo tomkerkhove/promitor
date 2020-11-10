@@ -44,6 +44,10 @@ Here's an overview of how they work together:
 ![Promitor Scraper with resource discovery](./../media/concepts/how-it-works-with-discovery.png)
 {: refdef}
 
+You can easily start discovering resources automatically:
+
+1. Declare
+
 ## What components do agents provide?
 
 Every Promitor agent provides a REST API which which you can integrate and uses background jobs to acquire the data
