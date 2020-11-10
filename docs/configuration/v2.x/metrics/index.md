@@ -48,6 +48,7 @@ Every metric that is being declared needs to define the following fields:
 - `resources` - An array of one or more resources to get metrics for. The fields
   required vary depending on the `resourceType` being created, and are documented
   for each resource.
+- `resourceDiscoveryGroups` An arror of one or more resource discovery groups that will be used to automatically discover all resources through Promitor Resource Discovery. For every found resource, it will get the metrics and report them. Learn more on resource discovery, in [our documentation](https://promitor.io/concepts/how-it-works#using-resource-discovery)
 
 All resources provide the capability to override the default Azure metadata:
 
@@ -111,6 +112,8 @@ metrics:
         queueName: orders
         resourceGroupName: promitor-dev
         subscriptionId: ABC
+    resourceDiscoveryGroups:
+    - name: service-bus-landscape
 ```
 
 ## Supported Azure Services
