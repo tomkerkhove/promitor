@@ -26,8 +26,10 @@ azureMetricConfiguration:
   aggregation:
     type: Count
 resources:
-- dbName: cognitiveanalytics-1
-- dbName: cognitiveanalytics-2
+- dbName: cosmos-database-1
+- dbName: cosmos-database-2
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: cosmos-db-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

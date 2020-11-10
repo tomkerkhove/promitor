@@ -35,6 +35,8 @@ azureMetricConfiguration:
 resources:
 - cacheName: Promitor-1
 - cacheName: Promitor-2
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: redis-cache-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

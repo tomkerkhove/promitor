@@ -29,6 +29,8 @@ azureMetricConfiguration:
 resources:
 - deviceProvisioningServiceName: promitor-1
 - deviceProvisioningServiceName: promitor-2
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: iot-hub-dps-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

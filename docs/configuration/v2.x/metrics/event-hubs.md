@@ -38,6 +38,8 @@ resources:
   topicName: orders
 - namespace: promitor-messaging
   topicName: sales
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: event-hubs-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

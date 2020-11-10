@@ -36,8 +36,8 @@ resources:
   slot: staging
 - webAppName: promitor-web-app
   slot: production
-resourceDiscoveryGroups:
-- name: web-app-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: web-app-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

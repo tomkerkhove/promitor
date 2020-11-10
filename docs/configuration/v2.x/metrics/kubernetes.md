@@ -28,6 +28,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - clusterName: promitor-aks
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: kubernetes-service-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

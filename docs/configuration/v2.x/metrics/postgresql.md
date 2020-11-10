@@ -32,8 +32,8 @@ azureMetricConfiguration:
 resources:
 - serverName: Promitor-1
 - serverName: Promitor-2
-resourceDiscoveryGroups:
-- name: postgres-databases
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: postgres-database-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

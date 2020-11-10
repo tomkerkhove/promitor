@@ -29,8 +29,8 @@ azureMetricConfiguration:
 resources:
 - virtualMachineName: promitor-virtual-machine-1
 - virtualMachineName: promitor-virtual-machine-2
-resourceDiscoveryGroups:
-- name: virtual-machine-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: virtual-machine-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

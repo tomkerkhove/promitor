@@ -34,8 +34,8 @@ azureMetricConfiguration:
 resources:
 - serverName: promitor-sql-server
   databaseName: promitor-db
-resourceDiscoveryGroups:
-- name: sql-databases
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: sql-database-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

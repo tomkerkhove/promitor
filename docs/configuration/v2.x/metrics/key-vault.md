@@ -29,6 +29,8 @@ azureMetricConfiguration:
 resources:
 - vaultName: promitor-1
 - vaultName: promitor-2
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: key-vault-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

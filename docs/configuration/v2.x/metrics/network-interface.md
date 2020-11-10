@@ -29,8 +29,8 @@ azureMetricConfiguration:
 resources:
 - networkInterfaceName: promitor-network-interface-1
 - networkInterfaceName: promitor-network-interface-2
-resourceDiscoveryGroups:
-- name: network-interfaces
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: network-interfaces-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

@@ -31,6 +31,8 @@ resources:
 - applicationGatewayName: promitor-application-gateway-2
 resourceDiscoveryGroups:
 - name: application-gateway-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: application-gateway-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

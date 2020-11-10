@@ -28,8 +28,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - appPlanName: promitor-app-plan
-resourceDiscoveryGroups:
-- name: app-plans-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: app-plans-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->
