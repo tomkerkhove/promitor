@@ -30,8 +30,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - scaleSetName: promitor-virtual-machine-scale-set-1
-resourceDiscoveryGroups:
-- name: virtual-machine-scale-sets-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: virtual-machine-scale-sets-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

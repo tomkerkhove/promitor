@@ -33,6 +33,8 @@ resources:
 - registryName: promitor-2
 resourceDiscoveryGroups:
 - name: registry-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: container-registry-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

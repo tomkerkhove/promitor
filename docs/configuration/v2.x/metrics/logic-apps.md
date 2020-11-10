@@ -29,8 +29,8 @@ azureMetricConfiguration:
 resources:
 - workflowName: promitor-workflow-1
 - workflowName: promitor-workflow-2
-resourceDiscoveryGroups:
-- name: logic-apps-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: logic-apps-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

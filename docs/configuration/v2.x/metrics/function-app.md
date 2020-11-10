@@ -33,8 +33,8 @@ azureMetricConfiguration:
     type: Total
 resources:
 - functionAppName: promitor-function-app
-resourceDiscoveryGroups:
-- name: functions-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: function-app-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

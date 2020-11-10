@@ -30,6 +30,8 @@ resources:
 - instanceName: promitor-sql-managed-instance
 resourceDiscoveryGroups:
 - name: sql-managed-instances
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: sql-managed-instances-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

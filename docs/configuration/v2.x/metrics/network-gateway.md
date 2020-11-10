@@ -31,6 +31,8 @@ resources:
 - networkGatewayName: promitor-network-gateway-2
 resourceDiscoveryGroups:
 - name: network-gateway-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: network-gateway-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

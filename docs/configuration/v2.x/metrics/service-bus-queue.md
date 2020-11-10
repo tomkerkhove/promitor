@@ -38,6 +38,8 @@ resources:
   queueName: orders
 - namespace: promitor-messaging
   queueName: items
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: service-bus-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

@@ -43,6 +43,8 @@ azureMetricConfiguration:
     type: Average
 resources:
 - instanceName: promitor-api-gateway
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: api-management-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

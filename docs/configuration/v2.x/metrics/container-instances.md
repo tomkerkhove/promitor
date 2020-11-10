@@ -29,6 +29,8 @@ azureMetricConfiguration:
 resources:
 - containerGroup: promitor-container-instance-1
 - containerGroup: promitor-container-instance-2
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: container-instances-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->

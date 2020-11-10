@@ -29,8 +29,8 @@ azureMetricConfiguration:
 resources:
 - expressRouteCircuitName: promitor-express-route-circuit-1
 - expressRouteCircuitName: promitor-express-route-circuit-2
-resourceDiscoveryGroups:
-- name: express-route-circuit-group
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: express-route-circuit-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->
