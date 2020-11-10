@@ -33,10 +33,11 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
 
 ## Features
 
-- Automatically scrapes Azure Monitor metrics (single and multi-dimensional) across various subscription & resource groups based on metrics-as-code or resource discovery
+- Automatically scrapes Azure Monitor metrics (single and multi-dimensional) across various subscription &
+ resource groups
 - Automatically pushes metrics to systems such as Atlassian Statuspage, Prometheus and StatsD
+- Easy to declare metrics to scrape via metrics-as-code or automatically discover resources
 - Built-in support for a variety of Azure services ([overview](configuration/v1.x/metrics#supported-azure-services))
-- Easy to declare metrics to scrape via YAML & APIs
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to container logs & Azure Application Insights
 - Available for Linux & Windows runtimes

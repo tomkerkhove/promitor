@@ -46,7 +46,10 @@ Here's an overview of how they work together:
 
 You can easily start discovering resources automatically:
 
-1. Declare
+1. Declare resource discovery groups ([link](./../configuration/v2.x/resource-discovery))
+2. Deploy Promitor Resource Discovery ([link](./../deployment/resource-discovery))
+3. Configure Promitor Scraper to use resource discovery ([link](./../configuration/v2.x/runtime#using-resource-discovery))
+4. Deploy Promitor Scraper ([link](./../deployment/scraper))
 
 ## What components do agents provide?
 
