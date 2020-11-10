@@ -1,8 +1,6 @@
 ---
 layout: default
 title: Authentication with Microsoft Azure
-redirect_from:
-  - /configuration/v2.x/azure-monitor/
 ---
 
 Here is an overview of how you configure how Promitor to authenticate to Microsoft Azure.
