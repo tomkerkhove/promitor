@@ -3,9 +3,17 @@ layout: default
 title: Authentication with Microsoft Azure
 ---
 
-Here is an overview of how you configure how Promitor to authenticate to Microsoft Azure.
+This document describes the Promitor agents, what Microsoft Azure services they are consuming and what the
+ minimal required permissions are that every entity requires to be functional.
 
-## Authentication with Azure Monitor
+Here is an overview of our agents and integrations:
+
+| Azure Integration    | Promitor Scraper | Promitor Resource Discovery |
+|:---------------------|:----------------:|:---------------------------:|
+| Azure Monitor        | ✅               | ❌                         |
+| Azure Resource Graph | ❌               | ✅                         |
+
+## Required permissions for Azure Monitor
 
 Authentication with Azure Monitor is fully integrated with Azure AD. In order to
 use Promitor, you'll need to [create an Azure AD Application](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application),
@@ -21,7 +29,7 @@ This information can be found on the newly created AD Application as documented 
 The entity in the Azure AD needs to have `Monitoring Reader` permission on the
 resource group that will be queried. More information can be found [here](https://docs.microsoft.com/en-us/azure/monitoring-and-diagnostics/monitoring-roles-permissions-security).
 
-## Authentication with Azure Resource Graph
+## Required permissions for Azure Resource Graph
 
 Authentication with Azure Monitor is fully integrated with Azure AD. In order to
 use Promitor, you'll need to [create an Azure AD Application](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application),
