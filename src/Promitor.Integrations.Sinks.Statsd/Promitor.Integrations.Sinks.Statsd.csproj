@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RuntimeFrameworkVersion>3.1.9</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.10</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JustEat.StatsD" Version="4.1.0" />
+    <PackageReference Include="JustEat.StatsD" Version="4.2.0" />
   </ItemGroup>
 
   <ItemGroup>
