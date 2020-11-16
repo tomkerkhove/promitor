@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Runtime Configuration
+title: Scraper Runtime Configuration
 ---
 
-This article covers an overview of all the knobs that you can tweak to align the
+This article covers an overview of all the knobs that you can tweak to align the Scraper
 runtime with your needs.
 
-Promitor runtime is configured by mounting the configuration to a volume.
+Promitor Scraper runtime is configured by mounting the configuration to a volume.
 
 Depending on the operating system, it need to be available on :
 

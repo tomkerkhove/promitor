@@ -66,15 +66,22 @@ and vote for features!
 - **Configuration**
   - Scraper
     - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
-      - [Atlassian Statuspage](configuration/v2.x/runtime#atlassian-statuspage)
+      - [Atlassian Statuspage](configuration/v2.x/runtime/scraper#atlassian-statuspage)
       - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
       - [StatsD](configuration/v1.x/runtime#statsd)
-    - [Using resource discovery](configuration/v2.x/runtime#using-resource-discovery)
-    - [Authentication with Azure Monitor](configuration/v1.x/azure-monitor)
+    - [Using resource discovery](configuration/v2.x/runtime/scraper#using-resource-discovery)
+    - [Authentication with Azure Monitor](configuration/v2.x/azure-authentication#authentication-with-azure-monitor)
     - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
     - [Runtime](configuration/v1.x/runtime)
   - Resource Discovery
+    - [Configuring Runtime](configuration/v2.x/runtime/resource-discovery)
+    - [Authentication with Azure Resource Graph](configuration/v2.x/azure-authentication#authentication-with-azure-resource-graph)
     - [Declaring resource discovery groups](configuration/v2.x/resource-discovery)
+- **Security**
+  - [Authentication with Microsoft Azure](configuration/v2.x/azure-authentication)
+    - [Overview of Azure integrations](configuration/v2.x/azure-authentication#overview)
+    - [Required permissions for Azure Monitor](configuration/v2.x/azure-authentication#required-permissions-for-azure-monitor)
+    - [Required permissions for Azure Resource Graph](configuration/v2.x/azure-authentication#required-permissions-for-azure-resource-graph)
 - **Operations**
   - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
   - [Azure Monitor Integration](operations#azure-monitor-integration)
