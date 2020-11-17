@@ -2,12 +2,9 @@
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: Role
 metadata:
-  labels:
-    app: {{ template "promitor-agent-resource-discovery.name" . }}
-    chart: {{ template "promitor-agent-resource-discovery.chart" . }}
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
   name: {{ template "promitor-agent-resource-discovery.name" . }}
+  labels:
+    {{- include "promitor-agent-resource-discovery.labels" . | nindent 4 }}
 rules:
   - apiGroups:
     - policy
