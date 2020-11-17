@@ -26,4 +26,4 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
   selector:
-    {{- include "promitor-agent-resource-discovery.selectorLabels" . | nindent 4 }}
+    {{- include "promitor-agent-scraper.selectorLabels" . | nindent 4 }}
