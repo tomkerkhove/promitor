@@ -63,10 +63,12 @@ namespace Promitor.Agents.Scraper
             app.UseExceptionHandling()
                 .UseRequestTracking()
                 .UseHttpCorrelation()
+                .UseVersionMiddleware()
                 .UseRouting()
                 .UseMetricSinks(Configuration)
                 .ExposeOpenApiUi()
                 .UseEndpoints(endpoints => endpoints.MapControllers());
+
             UseSerilog(ComponentName, app.ApplicationServices);
         }
 

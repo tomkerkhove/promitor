@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Promitor.Agents.Core;
 using Promitor.Agents.Core.Contracts;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
@@ -32,6 +34,8 @@ namespace Promitor.Tests.Integration.Services.Scraper
             var systemInfo = JsonConvert.DeserializeObject<SystemInfo>(rawPayload);
             Assert.NotNull(systemInfo);
             Assert.Equal(expectedVersion, systemInfo.Version);
+            Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
+            Assert.Equal(expectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
         }
     }
 }
