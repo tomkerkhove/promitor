@@ -55,18 +55,22 @@ spec:
           volumeMounts:
           - name: config-volume-{{ template "promitor-agent-resource-discovery.name" . }}
             mountPath: /config/
+  {{- if .Values.health.liveness.enabled }}
           livenessProbe:
             httpGet:
               path: /api/v1/health
               port: http
             initialDelaySeconds: {{ .Values.health.liveness.delay }}
             periodSeconds: {{ .Values.health.liveness.interval }}
+  {{- end }}
+  {{- if .Values.health.readiness.enabled }}
           readinessProbe:
             httpGet:
               path: /api/v1/health
               port: http
             initialDelaySeconds: {{ .Values.health.readiness.delay }}
             periodSeconds: {{ .Values.health.readiness.interval }}
+  {{- end }}
       volumes:
         - name: config-volume-{{ template "promitor-agent-resource-discovery.name" . }}
           configMap:
