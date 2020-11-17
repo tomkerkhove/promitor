@@ -69,10 +69,14 @@ spec:
             httpGet:
               path: /api/v1/health
               port: http
+            initialDelaySeconds: {{ .Values.health.liveness.delay }}
+            periodSeconds: {{ .Values.health.liveness.interval }}
           readinessProbe:
             httpGet:
               path: /api/v1/health
               port: http
+            initialDelaySeconds: {{ .Values.health.readiness.delay }}
+            periodSeconds: {{ .Values.health.readiness.interval }}
       volumes:
         - name: config-volume-{{ template "promitor-agent-scraper.name" . }}
           configMap:
