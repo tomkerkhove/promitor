@@ -41,5 +41,6 @@ version:
  [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
 - {{% tag removed %}} Support for Swagger 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-2-0) |
  [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
+- {{% tag removed %}} `service.labelType` & `service.selectorType` are no longer available in Promitor Scraper Helm chart
 
 Learn how to migrate to 2.0 with our [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x).
