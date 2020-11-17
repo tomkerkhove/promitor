@@ -59,8 +59,6 @@ secrets:
 service:
   port: 8888
   targetPort: 88
-  labelType: infrastructure
-  selectorType: runtime
   loadBalancer:
     dnsPrefix:
     enabled: false

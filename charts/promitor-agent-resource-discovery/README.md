@@ -83,8 +83,6 @@ their default values.
 | `service.loadbalancer.dnsPrefix`  | Prefix for DNS name to expose the service on using `<name>.<location>.cloudapp.azure.com` format. This setting is specific to Azure Kubernetes Service ([docs](https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service)) | ``            |
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
-| `service.labelType`  | Label to assign to your service | `infrastructure`            |
-| `service.selectorType`  | Selector type to use for the service | `runtime`            |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to
 `helm install`. For example:
