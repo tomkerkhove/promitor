@@ -65,6 +65,16 @@ service:
     dnsPrefix:
     enabled: false
 
+health:
+  readiness:
+    enabled: true
+    delay: 5
+    interval: 5
+  liveness:
+    enabled: true
+    delay: 5
+    interval: 30
+
 resources: {}
   # limits:
   #  cpu: 100m
