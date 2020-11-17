@@ -57,7 +57,7 @@ secrets:
   appKeySecret: azure-app-key
 
 service:
-  port: 8888
+  port: 8889
   targetPort: 88
   loadBalancer:
     dnsPrefix:
