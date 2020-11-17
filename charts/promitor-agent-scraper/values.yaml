@@ -89,15 +89,15 @@ service:
     enabled: false
 
 health:
-  readiness: 
+  readiness:
     enabled: true
     delay: 5
     interval: 5
-  liveness: 
+  liveness:
     enabled: true
     delay: 5
     interval: 30
-    
+
 resources: {}
   # limits:
   #  cpu: 100m
