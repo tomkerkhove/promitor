@@ -49,6 +49,7 @@ namespace Promitor.Agents.ResourceDiscovery
             app.UseExceptionHandling();
             app.UseRequestTracking();
             app.UseHttpCorrelation();
+            app.UseVersionMiddleware();
             app.UseRouting();
 
             app.ExposeOpenApiUi(ApiName);

@@ -26,6 +26,7 @@ version:
 - {{% tag added %}} New validation rule to ensure declarative or dynamic discovery for metrics to scrape are configured
 - {{% tag added %}} New System API endpoint giving runtime information ([docs](https://promitor.io/operations/#system)
  | [#1208](https://github.com/tomkerkhove/promitor/issues/1208))
+- {{% tag added %}} Provide `X-Version` response header for API endpoints ([#1209](https://github.com/tomkerkhove/promitor/issues/1209))
 - {{% tag added %}} Provide capability to tweak liveness/readines probes in Helm charts ([#1350](https://github.com/tomkerkhove/promitor/issues/1350))
 - {{% tag changed %}} Show Promitor version during startup
 - {{% tag changed %}} Provide capability to scrape all queues in Azure Service Bus, instead of having to declare the

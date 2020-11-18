@@ -1,4 +1,5 @@
 ﻿using System;
+using Promitor.Agents.Core.Middleware;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -8,6 +9,16 @@ namespace Microsoft.AspNetCore.Builder
     // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
+        /// <summary>
+        ///     Adds middleware to automatically add the version in our responses
+        /// </summary>
+        public static IApplicationBuilder UseVersionMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<AgentVersionMiddleware>();
+
+            return app;
+        }
+
         /// <summary>
         ///     Add support for Open API with API explorer
         /// </summary>

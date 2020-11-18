@@ -9,5 +9,7 @@ namespace Promitor.Tests.Integration.Services.Scraper
         public ScraperIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
         }
+
+        public string ExpectedVersion => Configuration["Agents:Scraper:Expectations:Version"];
     }
 }

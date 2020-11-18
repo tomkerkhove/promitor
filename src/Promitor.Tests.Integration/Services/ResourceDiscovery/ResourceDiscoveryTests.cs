@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Bogus;
 using Newtonsoft.Json;
+using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
@@ -31,6 +33,24 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
+            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
+        }
+
+        [Fact]
+        public async Task ResourceDiscovery_SuccessfulCall_ReturnsVersionHeader()
+        {
+            // Arrange
+            const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
+            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
         }
 
         [Fact]

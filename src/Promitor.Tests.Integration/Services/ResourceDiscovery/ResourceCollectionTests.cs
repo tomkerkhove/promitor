@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
@@ -32,6 +34,21 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var resourceDiscoveryGroups = JsonConvert.DeserializeObject<List<ResourceDiscoveryGroup>>(rawResponseBody);
             Assert.NotNull(resourceDiscoveryGroups);
             Assert.NotEmpty(resourceDiscoveryGroups);
+        }
+
+        [Fact]
+        public async Task ResourceDiscoveryGroup_SuccessfulCall_ReturnsVersionHeader()
+        {
+            // Arrange
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsAsync();
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
+            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
         }
     }
 }
