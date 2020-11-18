@@ -21,7 +21,6 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task System_GetInfo_ReturnsOk()
         {
             // Arrange
-            var expectedVersion = Configuration["Agents:ResourceDiscovery:Expectations:Version"];
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -33,9 +32,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.NotEmpty(rawPayload);
             var systemInfo = JsonConvert.DeserializeObject<SystemInfo>(rawPayload);
             Assert.NotNull(systemInfo);
-            Assert.Equal(expectedVersion, systemInfo.Version);
+            Assert.Equal(ExpectedVersion, systemInfo.Version);
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
-            Assert.Equal(expectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
+            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
         }
     }
 }

@@ -9,5 +9,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public ResourceDiscoveryIntegrationTest(ITestOutputHelper testOutput) : base(testOutput)
         {
         }
+
+        public string ExpectedVersion => Configuration["Agents:ResourceDiscovery:Expectations:Version"];
     }
 }

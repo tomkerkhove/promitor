@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -47,6 +48,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
+            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
         }
     }
 }
