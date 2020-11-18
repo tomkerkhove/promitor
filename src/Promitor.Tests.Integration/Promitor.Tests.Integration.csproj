@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Agents.ResourceDiscovery\Promitor.Agents.ResourceDiscovery.csproj" />
+    <ProjectReference Include="..\Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj" />
   </ItemGroup>
 
   <ItemGroup>

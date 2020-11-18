@@ -15,6 +15,7 @@ pr:
     - build/azure-devops/agents-ci-scraper.yml
 variables:
   - template: ./variables/build.yml
+  - template: ./variables/tests.yml
   - template: ./variables/helm.yml
   - name: Image.Name
     value: 'tomkerkhove/promitor-agent-scraper-ci'

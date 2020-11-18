@@ -11,6 +11,7 @@ namespace Promitor.Tests.Integration.Clients
 {
     public class AgentClient
     {
+        protected IConfiguration Configuration { get; }
         protected HttpClient HttpClient { get; }
         protected string AgentName{ get; }
         protected ILogger Logger { get; }
@@ -23,11 +24,12 @@ namespace Promitor.Tests.Integration.Clients
             var baseUrl = configuration[baseUrlConfigKey];
             logger.LogInformation("Base URL for {AgentName} is '{Url}'", agentName, baseUrl);
 
-            AgentName = agentName;
             HttpClient = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
             };
+            Configuration = configuration;
+            AgentName = agentName;
             Logger = logger;
         }
 
