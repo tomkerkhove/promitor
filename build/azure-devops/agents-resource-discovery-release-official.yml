@@ -30,6 +30,7 @@ parameters:
   default: true
 
 variables:
+  - template: ./variables/tests.yml
   - template: ./variables/build.yml
   - template: ./variables/containers.yml
   - name: 'Image.Version'

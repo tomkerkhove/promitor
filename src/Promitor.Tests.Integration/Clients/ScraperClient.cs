@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Promitor.Tests.Integration.Clients
 {
-    public class ScraperClient: AgentClient
+    public class ScraperClient : AgentClient
     {
         public ScraperClient(IConfiguration configuration, ILogger logger)
         :base("Scraper", "Agents:Scraper:BaseUrl", configuration,logger)
@@ -24,7 +24,8 @@ namespace Promitor.Tests.Integration.Clients
 
         public async Task<HttpResponseMessage> ScrapeAsync()
         {
-            return await GetAsync("/scrape");
+            var scrapeUri = Configuration["Agents:Scraper:Prometheus:ScrapeUri"];
+            return await GetAsync($"/{scrapeUri}");
         }
     }
 }

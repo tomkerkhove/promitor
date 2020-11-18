@@ -26,6 +26,7 @@ parameters:
   default: Promitor Scraper v$(Image.Version)
 
 variables:
+  - template: ./variables/tests.yml
   - template: ./variables/build.yml
   - name: 'Image.Name'
     value: 'tomkerkhove/promitor-agent-scraper'

@@ -14,6 +14,7 @@ parameters:
   default: 0.1.0
 
 variables:
+- template: ./variables/tests.yml
 - name: 'Release.TagName'
   value: 'helm-$(Helm.Chart.Version)'
 - name: 'Release.Title'
