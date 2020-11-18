@@ -3,11 +3,7 @@ kind: Service
 metadata:
   name: {{ template "promitor-agent-scraper.name" . }}
   labels:
-    app: {{ template "promitor-agent-scraper.name" . }}
-    chart: {{ template "promitor-agent-scraper.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    type: {{ .Values.service.labelType }}
+    {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 {{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
   annotations:
     service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.dnsPrefix }}
@@ -30,6 +26,4 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
   selector:
-    app: {{ template "promitor-agent-scraper.name" . }}
-    release: {{ .Release.Name }}
-    type: {{ .Values.service.selectorType }}
+    {{- include "promitor-agent-scraper.selectorLabels" . | nindent 4 }}

@@ -81,7 +81,7 @@ to see all configurable values.
 #### Sample configuration
 
 Want to get started easily? Here's a sample configuration to spin up the Resource Discovery agent which will be publicly
- exposed outside of the cluster on promitor-resource-discovery-sample.westeurope.cloudapp.azure.com:8888/api/docs/index.html.
+ exposed outside of the cluster on promitor-resource-discovery-sample.westeurope.cloudapp.azure.com:8889/api/docs/index.html.
 
 ```yaml
 azureAuthentication:

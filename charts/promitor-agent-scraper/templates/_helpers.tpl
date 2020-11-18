@@ -32,6 +32,26 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+    Common labels
+*/}}
+{{- define "promitor-agent-scraper.labels" -}}
+helm.sh/chart: {{ include "promitor-agent-scraper.chart" . }}
+{{ include "promitor-agent-scraper.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
+    Selector labels
+*/}}
+{{- define "promitor-agent-scraper.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "promitor-agent-scraper.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
     Create secret name based on whether or not user defined it.
 */}}
 {{- define "promitor-agent-scraper.secretname" -}}

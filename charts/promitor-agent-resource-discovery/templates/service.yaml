@@ -3,11 +3,7 @@ kind: Service
 metadata:
   name: {{ template "promitor-agent-resource-discovery.name" . }}
   labels:
-    app: {{ template "promitor-agent-resource-discovery.name" . }}
-    chart: {{ template "promitor-agent-resource-discovery.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    type: {{ .Values.service.labelType }}
+    {{- include "promitor-agent-resource-discovery.labels" . | nindent 4 }}
 {{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
   annotations:
     service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.dnsPrefix }}
@@ -24,6 +20,4 @@ spec:
       targetPort: {{ .Values.service.targetPort }}
       protocol: TCP
   selector:
-    app: {{ template "promitor-agent-resource-discovery.name" . }}
-    release: {{ .Release.Name }}
-    type: {{ .Values.service.selectorType }}
+    {{- include "promitor-agent-resource-discovery.selectorLabels" . | nindent 4 }}

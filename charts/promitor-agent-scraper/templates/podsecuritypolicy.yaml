@@ -4,10 +4,7 @@ kind: PodSecurityPolicy
 metadata:
   name: {{ template "promitor-agent-scraper.name" . }}
   labels:
-    app: {{ template "promitor-agent-scraper.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 spec:
   # Prevents running in privileged mode
   privileged: false

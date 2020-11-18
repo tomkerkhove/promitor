@@ -3,10 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "promitor-agent-scraper.name" . }}
   labels:
-    app: {{ template "promitor-agent-scraper.name" . }}
-    chart: {{ template "promitor-agent-scraper.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
@@ -16,15 +13,11 @@ spec:
       maxUnavailable: 1
   selector:
     matchLabels:
-      app: {{ template "promitor-agent-scraper.name" . }}
-      release: {{ .Release.Name }}
-      type: {{ .Values.service.selectorType }}
+      {{- include "promitor-agent-scraper.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ template "promitor-agent-scraper.name" . }}
-        release: {{ .Release.Name }}
-        type: {{ .Values.service.selectorType }}
+        {{- include "promitor-agent-scraper.selectorLabels" . | nindent 8 }}
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- if .Values.secrets.createSecret }}

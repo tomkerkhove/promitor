@@ -101,7 +101,7 @@ stages:
   - name: Tags.PR
     value: '$(Image.Tag)-$(OS.Name)'
   - name: Container.Port
-    value: 8888
+    value: 8889
   - name: Agent.ResourceDiscovery.BaseUrl
     value: http://localhost:$(Container.Port)
   - name: Agent.ResourceDiscovery.Version

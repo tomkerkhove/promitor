@@ -5,10 +5,7 @@ kind: ConfigMap
 metadata:
   name: config-map-{{ template "promitor-agent-resource-discovery.name" . }}
   labels:
-    app: {{ template "promitor-agent-resource-discovery.name" . }}
-    chart: {{ template "promitor-agent-resource-discovery.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "promitor-agent-resource-discovery.labels" . | nindent 4 }}
 data:
   runtime.yaml: |-
       server:
