@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Contracts;
 using Promitor.Tests.Integration.Clients;
+using Promitor.Tests.Integration.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -34,7 +34,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.NotNull(systemInfo);
             Assert.Equal(ExpectedVersion, systemInfo.Version);
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
-            Assert.Equal(ExpectedVersion, response.Headers.GetValues(HttpHeaders.AgentVersion).First());
+            Assert.Equal(ExpectedVersion, response.Headers.GetFirstOrDefaultHeaderValue(HttpHeaders.AgentVersion));
         }
     }
 }
