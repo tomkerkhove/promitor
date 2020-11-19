@@ -3,6 +3,7 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: {{ template "promitor-agent-scraper.name" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 spec:

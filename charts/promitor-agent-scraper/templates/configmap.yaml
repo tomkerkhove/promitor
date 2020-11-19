@@ -4,6 +4,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: config-map-{{ template "promitor-agent-scraper.name" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 data:
