@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "promitor-agent-resource-discovery.name" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-resource-discovery.labels" . | nindent 4 }}
 spec:

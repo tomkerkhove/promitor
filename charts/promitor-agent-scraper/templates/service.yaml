@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ template "promitor-agent-scraper.name" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
 {{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
