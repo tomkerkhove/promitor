@@ -82,7 +82,7 @@ namespace Promitor.Integrations.AzureMonitor
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName, "No time series was found");
+                throw new MetricInformationNotFoundException(metricName,metricDimension, "No time series was found");
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
@@ -159,8 +159,7 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetric;
         }
 
-        private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries,
-            DateTime recordDateTime)
+        private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
                 .OrderByDescending(metricValue => metricValue.TimeStamp)
