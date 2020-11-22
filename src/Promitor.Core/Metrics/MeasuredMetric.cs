@@ -66,7 +66,21 @@ namespace Promitor.Core.Metrics
             Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
 
             var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);
-            return new MeasuredMetric(value, dimensionName, dimensionValue.Value);
+            return CreateForDimension(value, dimensionName, dimensionValue.Value);
+        }
+
+        /// <summary>
+        /// Create a measured metric for a given dimension
+        /// </summary>
+        /// <param name="value">Measured metric value</param>
+        /// <param name="dimensionName">Name of dimension that is being scraped</param>
+        /// <param name="dimensionValue">Value of the dimension that is being scraped</param>
+        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, string dimensionValue)
+        {
+            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
+            Guard.NotNullOrWhitespace(dimensionValue, nameof(dimensionValue));
+
+            return new MeasuredMetric(value, dimensionName, dimensionValue);
         }
     }
 }

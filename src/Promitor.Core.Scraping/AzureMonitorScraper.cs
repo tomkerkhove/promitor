@@ -53,7 +53,9 @@ namespace Promitor.Core.Scraping
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
                 Logger.LogWarning("No metric information found for metric {MetricName} with dimension {MetricDimension}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimension, metricsNotFoundException.Details);
-                measuredMetrics.Add(MeasuredMetric.CreateWithoutDimension(null));
+                
+                var measuredMetric = string.IsNullOrWhiteSpace(dimensionName) ? MeasuredMetric.CreateWithoutDimension(null) : MeasuredMetric.CreateForDimension(null, dimensionName, "unknown");
+                measuredMetrics.Add(measuredMetric);
             }
 
             // Provide more metric labels, if we need to
