@@ -10,6 +10,7 @@ Here are a list of questions you may have:
 - [Is scraping multiple subscriptions supported?](#is-scraping-multiple-subscriptions-supported)
 - [Are multi-dimensional metrics supported?](#are-multi-dimensional-metrics-supported)
 - [Why does Azure Blob & File Storage only report account-level information?](#why-does-azure-blob--file-storage-only-report-account-level-information)
+- [Why does my multi-dimensional metric report label value `unknown` with Prometheus?](#why-does-my-multi-dimensional-metric-report-label-value-unknown-with-prometheus)
 
 ## What Azure clouds are supported?
 
@@ -51,5 +52,12 @@ Azure Monitor currently only provides account-level metrics which we can serve.
 
 As part of [#450](https://github.com/tomkerkhove/promitor/issues/450) &
  [#446](https://github.com/tomkerkhove/promitor/issues/446) we plan to provide the capability to have more granular information.
+
+## Why does my multi-dimensional metric report label value `unknown` with Prometheus?
+
+When Promitor is unable to find a metric for a multi-dimensional metric, it will report `unknown` for the dimension
+ label given it was not able to determine what the dimension value is due to the lack of metrics.
+
+You can read more about it in our [Prometheus sink documentation](/configuration/v2.x/runtime/scraper/#what-happens-when-metrics-are-unavailable-for-multi-dimensional-metrics).
 
 [&larr; back](/)
