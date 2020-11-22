@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Integrations.AzureMonitor.Exceptions;
 using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
 namespace Promitor.Core.Scraping
@@ -42,14 +44,25 @@ namespace Promitor.Core.Scraping
             // Determine the metric dimension to use, if any
             var dimensionName = DetermineMetricDimension(resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
 
-            // Query Azure Monitor for metrics
-            var foundMetricValue = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
+            List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
+            try
+            {
+                // Query Azure Monitor for metrics
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
+            }
+            catch (MetricInformationNotFoundException metricsNotFoundException)
+            {
+                Logger.LogWarning("No metric information found for metric {MetricName} with dimension {MetricDimension}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimension, metricsNotFoundException.Details);
+                
+                var measuredMetric = string.IsNullOrWhiteSpace(dimensionName) ? MeasuredMetric.CreateWithoutDimension(null) : MeasuredMetric.CreateForDimension(null, dimensionName, "unknown");
+                measuredMetrics.Add(measuredMetric);
+            }
 
             // Provide more metric labels, if we need to
             var metricLabels = DetermineMetricLabels(resourceDefinition);
 
             // Enrich measured metrics, in case we need to
-            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionName, foundMetricValue);
+            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionName, measuredMetrics);
 
             // We're done!
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);

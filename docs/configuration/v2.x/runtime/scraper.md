@@ -124,6 +124,16 @@ metricSinks:
     baseUriPath: /metrics # Optional. Default: /metrics
 ```
 
+#### What happens when metrics are unavailable for multi-dimensional metrics?
+
+Promitor allows you to use dimension in metrics so that it will report all values.
+
+For example, when scraping an Azure Event Hub namespace you can report the same metric for every entity inside the namespace.
+
+When Promitor reports the metric it will always add a label which clarifies the subresource. However; when it cannot find
+ a metric for that dimension it will keep on reporting the metric, but with value `unknown` given it cannot determine
+  the name of the dimension.
+
 ### StatsD
 
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v1.6-green.svg)
