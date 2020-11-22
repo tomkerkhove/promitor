@@ -46,6 +46,8 @@ Here is an overview of the services that are so kind to support us:
 
 We are using the following GitHub Apps:
 
+- [Semantic Pull Requests](https://github.com/apps/semantic-pull-requests) - Ensure PRs are using a
+consistent approach.
 - [Task list completed](https://github.com/marketplace/task-list-completed) -
   Ensures all task lists in our PRs are completed.
 - [Triage New Issues](https://github.com/apps/triage-new-issues) - Automatically
