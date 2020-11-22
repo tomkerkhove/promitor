@@ -37,6 +37,9 @@ version:
 - {{% tag changed %}} Default name for `rbac.serviceAccount.name` is now `promitor-scraper` in Promitor Agent Helm chart
 - {{% tag fixed %}} Ensure Prometheus metric sink does write timestamps ([#1217](https://github.com/tomkerkhove/promitor/issues/1217)).
 - {{% tag fixed %}} Dimensions with `/` in name are now supported by replacing it with `_` for Prometheus metric sink ([#1248](https://github.com/tomkerkhove/promitor/issues/1248)).
+- {{% tag fixed %}} (Multi-Dimensional) Metrics that do not have a value/time series are not reported correctly in
+ Prometheus metric sink with `metricSinks.prometheusScrapingEndpoint.metricUnavailableValue` ([#1197](https://github.com/tomkerkhove/promitor/issues/1197)
+  | [FAQ](https://promitor.io/faq#why-does-my-multi-dimensional-metric-report-label-value-unknown-with-prometheus)).
 - {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)
  | [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
 - {{% tag removed %}} Support for Swagger UI 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-ui-2-0) |
