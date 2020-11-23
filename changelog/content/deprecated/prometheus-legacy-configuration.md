@@ -23,8 +23,10 @@ Because of that we are removing support for the "legacy" Prometheus configuratio
 We've added support for Prometheus metric sink while maintaining the legacy approach until
  it's being removed.
 
+**Announcement:** [GitHub Issue](https://github.com/tomkerkhove/promitor/issues/1032)
+
 **Impact:** Migration is required - Prometheus legacy configuration will no longer be available.
 
 **Alternative:** Use our new [metric sink concept](https://promitor.io/configuration/v1.x/runtime#prometheus-scraping-endpoint).
 
-**Discussion:** [GitHub Issue #1032](https://github.com/tomkerkhove/promitor/issues/1032)
+**Discussion:** [GitHub Discussions](https://github.com/tomkerkhove/promitor/discussions/1372)

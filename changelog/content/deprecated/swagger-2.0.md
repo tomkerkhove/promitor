@@ -1,4 +1,5 @@
 ---
+title:
 subtitle: created on {{ now.Format "2020-01-07" }}
 date: 2018-09-02T20:46:47+02:00
 removal_date: 2020-01-07
@@ -17,8 +18,10 @@ with 3.0 instead of 2.0.
 We've added support for OpenAPI 3.0 in Promitor v1.1 next to Swagger 2.0 so you
 can migrate to it before we remove 2.0 in Promitor v2.0.
 
+**Announcement:** [GitHub Issue](https://github.com/tomkerkhove/promitor/issues/782)
+
 **Impact:** Migration is required - API documentation will no longer be available.
 
 **Alternative:** Use API documentation provided in OpenAPI v3.0 format.
 
-**Discussion:** [GitHub Issue #782](https://github.com/tomkerkhove/promitor/issues/782)
+**Discussion:** [GitHub Discussions](https://github.com/tomkerkhove/promitor/discussions/1374)

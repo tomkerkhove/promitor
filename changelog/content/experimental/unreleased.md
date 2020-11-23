@@ -42,6 +42,8 @@ version:
   | [FAQ](https://promitor.io/faq#why-does-my-multi-dimensional-metric-report-label-value-unknown-with-prometheus)).
 - {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)
  | [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
+- {{% tag removed %}} Support for Helm 2.0 ([deprecation notice](https://changelog.promitor.io/#helm-2-0) |
+ [Helm migration guide](https://helm.sh/docs/topics/v2_v3_migration/))
 - {{% tag removed %}} Support for Swagger UI 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-ui-2-0) |
  [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
 - {{% tag removed %}} Support for Swagger 2.0 ([deprecation notice](https://changelog.promitor.io/#swagger-2-0) |
