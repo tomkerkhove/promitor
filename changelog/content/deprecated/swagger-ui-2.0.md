@@ -18,8 +18,10 @@ with 3.0 instead of 2.0.
 We've added support for OpenAPI 3.0 in Promitor v1.1 next to Swagger 2.0 along with
 OpenAPI UI 3.0.
 
+**Announcement:** [GitHub Issue](https://github.com/tomkerkhove/promitor/issues/781)
+
 **Impact:** Migration is required - Swagger UI 2.0 will no longer be available.
 
 **Alternative:** Use OpenAPI UI 3.0.
 
-**Discussion:** [GitHub Issue #781](https://github.com/tomkerkhove/promitor/issues/781)
+**Discussion:** [GitHub Discussions](https://github.com/tomkerkhove/promitor/discussions/1373)

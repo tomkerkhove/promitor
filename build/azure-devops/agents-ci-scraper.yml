@@ -272,22 +272,6 @@ stages:
         - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-- stage: Helm2
-  displayName: Helm Chart (2.x)
-  dependsOn: Docker
-  jobs:
-   - job: Helm2_x
-     displayName: Helm 2.x - Lint
-     condition: succeeded()
-     variables:
-       Helm.Version: '2.9.1'
-     pool:
-       vmImage: ubuntu-16.04
-     steps:
-     - template: templates/helm/lint-chart.yml
-       parameters:
-        helmVersion: '$(Helm.Version)'
-        chartName: '$(Chart.Scraper.Name)'
 - template: templates/stages/helm-chart-verification.yml
   parameters:
     chartName: '$(Helm.Chart.Name)'
