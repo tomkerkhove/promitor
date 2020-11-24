@@ -21,7 +21,7 @@ The following scraper-specific metric label will be added:
 
 - `entity_name` - Name of the queue
 
-> :warning: **As of today, `EntityPath` as a dimension is not supported.**
+> :warning: **As of today, it is not supported to combine `queueName` with `EntityPath` as a dimension.**
 
 Example:
 
