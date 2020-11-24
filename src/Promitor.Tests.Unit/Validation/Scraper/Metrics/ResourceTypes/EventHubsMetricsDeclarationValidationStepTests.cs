@@ -28,7 +28,24 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void EventHubsMetricsDeclaration_UseEntityNameAsDimension_Blocked()
+        public void EventHubsMetricsDeclaration_UseEntityNameDimensionWithoutTopicName_Succeeded()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithEventHubsMetric(metricDimension: "EntityName", topicName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var metricsDeclarationValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = metricsDeclarationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
+        public void EventHubsMetricsDeclaration_UseEntityNameDimensionWithTopicName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()

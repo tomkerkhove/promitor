@@ -10,7 +10,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
     internal class EventHubsMetricValidator : IMetricValidator
     {
-        private const string UnsupportedEntityDimension = "EntityName";
+        private const string EntityNameDimension = "EntityName";
 
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
@@ -19,17 +19,18 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             var errorMessages = new List<string>();
 
             var configuredDimension = metricDefinition.AzureMetricConfiguration?.Dimension?.Name;
-            if (string.IsNullOrWhiteSpace(configuredDimension) == false
-                && configuredDimension.Equals(UnsupportedEntityDimension, StringComparison.InvariantCultureIgnoreCase))
-            {
-                errorMessages.Add($"Dimension '{UnsupportedEntityDimension}' is not supported");
-            }
+            var isEntityNameDimensionConfigured = string.IsNullOrWhiteSpace(configuredDimension) == false && configuredDimension.Equals(EntityNameDimension, StringComparison.InvariantCultureIgnoreCase);
 
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<EventHubResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.Namespace))
                 {
                     errorMessages.Add("No Azure Event Hubs Namespace is configured");
+                }
+
+                if (isEntityNameDimensionConfigured && string.IsNullOrWhiteSpace(resourceDefinition.TopicName) == false)
+                {
+                    errorMessages.Add($"Topic name is configured while '{EntityNameDimension}' dimension is configured as well. We only support one or the other.");
                 }
             }
 
