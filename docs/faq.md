@@ -6,6 +6,7 @@ title: Frequently asked questions (FAQs)
 Here are a list of questions you may have:
 
 - [Are multi-dimensional metrics supported?](#are-multi-dimensional-metrics-supported)
+- [How does Promitor handle deleted resources?](#how-does-promitor-handle-deleted-resources)
 - [Is scraping multiple subscriptions supported?](#is-scraping-multiple-subscriptions-supported)
 - [What Azure clouds are supported?](#what-azure-clouds-are-supported)
 - [Why does Azure Blob & File Storage only report account-level information?](#why-does-azure-blob--file-storage-only-report-account-level-information)
@@ -25,6 +26,26 @@ our ['Metric Configuration' page](/configuration/v1.x/metrics/#metrics).
 However, you can only use it with metrics in Azure Monitor that support this,
 for a complete overview we recommend reading the
 [official documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported).
+
+## How does Promitor handle deleted resources?
+
+The approach depends if you are using declarative metrics or resource discovery but we highly recommend to
+ **enable Prometheus metric timestamps** in [our runtime configuration](/configuration/v2.x/runtime/scraper/#prometheus-scraping-endpoint)
+  to indicate how old the metric is.
+
+### When using declarative metrics
+
+Promitor will scrape all resources that are configured and report the metrics accordingly. If that resource is deleted,
+ we will **still serve the metrics as long as we can until it is no longer available and exceptions will be thrown**.
+
+We **recommend to update the metrics declaration when a resource is deleted** to avoid polluting logs.
+
+### When using resource discovery
+
+Promitor will automatically discover all matching resources which means that **it will automatically scrape metrics for
+ new/removed resources**.
+
+Removed resources will immediately stop being scraped by Promitor, but still be reported in Prometheus scrape endpoint.
 
 ## Is scraping multiple subscriptions supported?
 
