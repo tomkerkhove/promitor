@@ -26,7 +26,7 @@ docker run -d -p 8999:80 --name promitor-agent-scraper \
                          --env-file C:/Promitor/az-mon-auth.creds \
                          --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
                          --volume C:/Promitor/runtime.yaml:/config/runtime.yaml \
-                         tomkerkhove/promitor-agent-scraper:1.6.1
+                         tomkerkhove/promitor-agent-scraper:2.0.0-rc
 ```
 
 Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).
@@ -37,7 +37,7 @@ Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/p
  resource groups
 - Automatically pushes metrics to systems such as Atlassian Statuspage, Prometheus and StatsD
 - Easy to declare metrics to scrape via metrics-as-code or automatically discover resources
-- Built-in support for a variety of Azure services ([overview](configuration/v1.x/metrics#supported-azure-services))
+- Built-in support for a variety of Azure services ([overview](configuration/v2.x/metrics#supported-azure-services))
 - Easily deployable via Docker & Kubernetes
 - Sends telemetry to container logs & Azure Application Insights
 - Available for Linux & Windows runtimes
@@ -51,8 +51,8 @@ and vote for features!
 - **[How It Works](concepts/how-it-works)**
   - [Resource Discovery](concepts/how-it-works#using-resource-discovery)
 - **Metrics**
-  - [General Declaration](configuration/v1.x/metrics)
-  - [Supported Providers](configuration/v1.x/metrics#supported-azure-services)
+  - [General Declaration](configuration/v2.x/metrics)
+  - [Supported Providers](configuration/v2.x/metrics#supported-azure-services)
   - [What labels do we provide?](metrics/labels)
 - **Deployment**
   - [Overview](deployment)
@@ -65,17 +65,17 @@ and vote for features!
   - [Image Tagging Strategy](deployment#image-tagging-strategy)
 - **Configuration**
   - Scraper
-    - [Overview of metric sinks](configuration/v1.x/runtime#metric-sinks)
+    - [Overview of metric sinks](configuration/v2.x/runtime/scraper#metric-sinks)
       - [Atlassian Statuspage](configuration/v2.x/runtime/scraper#atlassian-statuspage)
-      - [Prometheus Scraping Endpoint](configuration/v1.x/runtime#prometheus-scraping-endpoint)
-      - [StatsD](configuration/v1.x/runtime#statsd)
+      - [Prometheus Scraping Endpoint](configuration/v2.x/runtime/scraper#prometheus-scraping-endpoint)
+      - [StatsD](configuration/v2.x/runtime/scraper#statsd)
     - [Using resource discovery](configuration/v2.x/runtime/scraper#using-resource-discovery)
-    - [Authentication with Azure Monitor](configuration/v2.x/azure-authentication#authentication-with-azure-monitor)
-    - [Logging & External Providers](configuration/v1.x/runtime#telemetry)
-    - [Runtime](configuration/v1.x/runtime)
+    - [Authentication with Azure Monitor](configuration/v2.x/azure-authentication)
+    - [Logging & External Providers](configuration/v2.x/runtime/scraper#telemetry)
+    - [Runtime](configuration/v2.x/runtime/scraper)
   - Resource Discovery
     - [Configuring Runtime](configuration/v2.x/runtime/resource-discovery)
-    - [Authentication with Azure Resource Graph](configuration/v2.x/azure-authentication#authentication-with-azure-resource-graph)
+    - [Authentication with Azure Resource Graph](configuration/v2.x/azure-authentication)
     - [Declaring resource discovery groups](configuration/v2.x/resource-discovery)
 - **Security**
   - [Authentication with Microsoft Azure](configuration/v2.x/azure-authentication)
