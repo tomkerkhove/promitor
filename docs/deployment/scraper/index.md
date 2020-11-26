@@ -17,7 +17,7 @@ _For more information about advanced configuration, read our documentation [here
                            --env-file C:/Promitor/az-mon-auth.creds \
                            --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
                            --volume C:/Promitor/runtime.yaml:/config/runtime.yaml \
-                           tomkerkhove/promitor-agent-scraper:1.6.1
+                           tomkerkhove/promitor-agent-scraper:2.0.0-rc
 ```
 
 ## Kubernetes
