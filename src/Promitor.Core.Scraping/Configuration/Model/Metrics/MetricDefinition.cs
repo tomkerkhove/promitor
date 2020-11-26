@@ -60,14 +60,18 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <returns>The scrape definition.</returns>
         public ScrapeDefinition<IAzureResourceDefinition> CreateScrapeDefinition(IAzureResourceDefinition resource, AzureMetadata azureMetadata)
         {
-            // TODO: Verify if this logic is valid as we always use defaults? 🤔
-            return new ScrapeDefinition<IAzureResourceDefinition>(
+            var subscriptionId = string.IsNullOrEmpty(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId;
+            var resourceGroupName = string.IsNullOrEmpty(resource.ResourceGroupName) ? azureMetadata.ResourceGroupName : resource.ResourceGroupName;
+
+            var output =  new ScrapeDefinition<IAzureResourceDefinition>(
                 AzureMetricConfiguration,
                 PrometheusMetricDefinition,
                 Scraping,
                 resource,
-                string.IsNullOrEmpty(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId,
-                string.IsNullOrEmpty(resource.ResourceGroupName) ? azureMetadata.ResourceGroupName : resource.ResourceGroupName);
+                subscriptionId,
+                resourceGroupName);
+
+            return output;
         }
     }
 }
