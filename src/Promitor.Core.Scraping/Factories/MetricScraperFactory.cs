@@ -74,8 +74,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
                     return new RedisCacheScraper(scraperConfiguration);
-                case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueScraper(scraperConfiguration);
+                case ResourceType.ServiceBusNamespace:
+                    return new ServiceBusNamespaceScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseScraper(scraperConfiguration);
                 case ResourceType.SqlManagedInstance:

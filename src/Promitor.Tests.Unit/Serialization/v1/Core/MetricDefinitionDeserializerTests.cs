@@ -100,8 +100,8 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         {
             YamlAssert.PropertySet(
                 _deserializer,
-                "resourceType: ServiceBusQueue",
-                ResourceType.ServiceBusQueue,
+                "resourceType: ServiceBusNamespace",
+                ResourceType.ServiceBusNamespace,
                 d => d.ResourceType);
         }
 

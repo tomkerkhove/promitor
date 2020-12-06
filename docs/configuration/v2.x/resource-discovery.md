@@ -105,7 +105,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure Logic Apps](metrics/logic-apps)
 - [Azure Network Gateway](metrics/network-gateway)
 - [Azure Network Interface](metrics/network-interface)
-- [Azure Service Bus Queue](metrics/service-bus-queue)
+- [Azure Service Bus Namespace](metrics/service-bus-namespace)
 - [Azure SQL Database](metrics/sql-database)
 - [Azure SQL Managed Instance](metrics/sql-managed-instance)
 - [Azure Storage (Account)](metrics/storage-account)

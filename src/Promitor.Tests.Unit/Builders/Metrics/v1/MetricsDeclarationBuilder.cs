@@ -73,6 +73,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string metricDescription = "Description for a metric",
             string metricDimension = "",
             string queueName = "promitor-queue",
+            string topicName = "",
             string serviceBusNamespace = "promitor-namespace",
             string azureMetricName = "Total",
             string resourceDiscoveryGroupName = "",
@@ -86,7 +87,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             {
                 foreach (string queue in queueNames)
                 {
-                    var resource = new ServiceBusQueueResourceV1
+                    var resource = new ServiceBusNamespaceResourceV1
                     {
                         QueueName = queue,
                         Namespace = serviceBusNamespace
@@ -96,15 +97,16 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             }
             else
             {
-                var resource = new ServiceBusQueueResourceV1
+                var resource = new ServiceBusNamespaceResourceV1
                 {
                     QueueName = queueName,
+                    TopicName = topicName,
                     Namespace = serviceBusNamespace
                 };
                 serviceBusQueueResources.Add(resource);
             }
 
-            CreateAndAddMetricDefinition(ResourceType.ServiceBusQueue, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, serviceBusQueueResources, metricDimension, labels);
+            CreateAndAddMetricDefinition(ResourceType.ServiceBusNamespace, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, serviceBusQueueResources, metricDimension, labels);
             
             return this;
         }

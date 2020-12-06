@@ -8,19 +8,19 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class ServiceBusQueueDeserializerTests : ResourceDeserializerTest<ServiceBusQueueDeserializer>
+    public class ServiceBusNamespaceDeserializerTests : ResourceDeserializerTest<ServiceBusNamespaceDeserializer>
     {
-        private readonly ServiceBusQueueDeserializer _deserializer;
+        private readonly ServiceBusNamespaceDeserializer _deserializer;
 
-        public ServiceBusQueueDeserializerTests()
+        public ServiceBusNamespaceDeserializerTests()
         {
-            _deserializer = new ServiceBusQueueDeserializer(Logger);
+            _deserializer = new ServiceBusNamespaceDeserializer(Logger);
         }
 
         [Fact]
         public void Deserialize_QueueNameSupplied_SetsQueueName()
         {
-            YamlAssert.PropertySet<ServiceBusQueueResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<ServiceBusNamespaceResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "queueName: promitor-queue",
                 "promitor-queue",
@@ -30,7 +30,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_QueueNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<ServiceBusQueueResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<ServiceBusNamespaceResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.QueueName);
@@ -52,7 +52,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_NamespaceSupplied_SetsNamespace()
         {
-            YamlAssert.PropertySet<ServiceBusQueueResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<ServiceBusNamespaceResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "namespace: promitor-sb",
                 "promitor-sb",
@@ -62,7 +62,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_NamespaceNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<ServiceBusQueueResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<ServiceBusNamespaceResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.Namespace);
@@ -83,7 +83,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new ServiceBusQueueDeserializer(Logger);
+            return new ServiceBusNamespaceDeserializer(Logger);
         }
     }
 }

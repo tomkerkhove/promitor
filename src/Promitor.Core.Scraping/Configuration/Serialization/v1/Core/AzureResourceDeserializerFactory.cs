@@ -84,9 +84,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.RedisCache:
                     var redisCacheLogger = _loggerFactory.CreateLogger<RedisCacheDeserializer>();
                     return new RedisCacheDeserializer(redisCacheLogger);
-                case ResourceType.ServiceBusQueue:
-                    var serviceBusLogger = _loggerFactory.CreateLogger<ServiceBusQueueDeserializer>();
-                    return new ServiceBusQueueDeserializer(serviceBusLogger);
+                case ResourceType.ServiceBusNamespace:
+                    var serviceBusLogger = _loggerFactory.CreateLogger<ServiceBusNamespaceDeserializer>();
+                    return new ServiceBusNamespaceDeserializer(serviceBusLogger);
                 case ResourceType.SqlDatabase:
                     var sqlDatabaseLogger = _loggerFactory.CreateLogger<SqlDatabaseDeserializer>();
                     return new SqlDatabaseDeserializer(sqlDatabaseLogger);

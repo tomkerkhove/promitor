@@ -38,6 +38,33 @@ For more information, we recommend reading our
  [documentation](https://promitor.io/configuration/v2.x/runtime/scraper#prometheus-scraping-endpoint) concerning our Prometheus
   Scraping endpoint.
 
+## Migrate from Azure Service Bus Queue scraper to our new Azure Service Bus Namespace scraper
+
+Since Azure Service Bus Queue scraper allows you to report metrics for all entities we decided to change the resource
+ type from `ServiceBusQueue` to `ServiceBusNamespace` since it will also report metrics for topics, and not only queues.
+
+For example:
+
+```yaml
+name: azure_service_bus_queue_active_messages
+description: "The number of active messages on a service bus queue"
+resourceType: ServiceBusNamespace
+azureMetricConfiguration:
+  metricName: ActiveMessages
+  aggregation:
+    type: Total
+resources:
+- namespace: promitor-messaging
+  # queueName: orders <-- Optionally specify the queue name to filter on
+  # topicName: sales <-- Optionally specify the queue name to filter on
+resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
+- name: service-bus-landscape
+```
+
+For more information, we recommend reading our
+ [documentation](https://promitor.io/configuration/v2.x/metrics/service-bus-namespace)
+  concerning our Azure Service Bus Namespace scraper.
+
 ## Migrate to OpenAPI 3.0 & UI
 
 All Promitor APIs have been migrated from Swagger to OpenAPI 3.0 specification.
