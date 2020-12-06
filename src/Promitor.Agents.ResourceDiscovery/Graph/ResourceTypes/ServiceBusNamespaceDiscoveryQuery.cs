@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class ServiceBusQueueDiscoveryQuery : ResourceDiscoveryQuery
+    public class ServiceBusNamespaceDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.servicebus/namespaces" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name" };
@@ -14,7 +14,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var resource = new ServiceBusQueueResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString(), string.Empty);
+            var resource = new ServiceBusNamespaceResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString(), string.Empty, string.Empty);
             return resource;
         }
     }

@@ -8,7 +8,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class ServiceBusQueueMetricValidator : IMetricValidator
+    internal class ServiceBusNamespaceMetricValidator : IMetricValidator
     {
         private const string EntityNameDimension = "EntityName";
 
@@ -21,7 +21,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             var configuredDimension = metricDefinition.AzureMetricConfiguration?.Dimension?.Name;
             var isEntityNameDimensionConfigured = string.IsNullOrWhiteSpace(configuredDimension) == false && configuredDimension.Equals(EntityNameDimension, StringComparison.InvariantCultureIgnoreCase);
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusQueueResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusNamespaceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.Namespace))
                 {
@@ -31,6 +31,16 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
                 if (isEntityNameDimensionConfigured && string.IsNullOrWhiteSpace(resourceDefinition.QueueName) == false)
                 {
                     errorMessages.Add($"Queue name is configured while '{EntityNameDimension}' dimension is configured as well. We only support one or the other.");
+                }
+
+                if (isEntityNameDimensionConfigured && string.IsNullOrWhiteSpace(resourceDefinition.TopicName) == false)
+                {
+                    errorMessages.Add($"Topic name is configured while '{EntityNameDimension}' dimension is configured as well. We only support one or the other.");
+                }
+
+                if (string.IsNullOrWhiteSpace(resourceDefinition.QueueName) == false && string.IsNullOrWhiteSpace(resourceDefinition.TopicName) == false)
+                {
+                    errorMessages.Add($"Queue & topic name are both configured while we only support one or the other.");
                 }
             }
 

@@ -70,7 +70,7 @@ Additionally, the following fields are optional:
 
 ### Example
 
-Here is an example of how you can scrape two Azure Service Bus queues in different
+Here is an example of how you can scrape two Azure Service Bus queues  in different
 resource groups, one in the `promitor` resource group and one on the `promitor-dev`
 resource group:
 
@@ -93,7 +93,7 @@ metricDefaults:
 metrics:
   - name: azure_service_bus_active_messages
     description: "The number of active messages on a service bus queue."
-    resourceType: ServiceBusQueue
+    resourceType: ServiceBusNamespace
     labels:
       app: promitor
       tier: messaging
@@ -143,7 +143,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Logic Apps](logic-apps)
 - [Azure Network Gateway](network-gateway)
 - [Azure Network Interface](network-interface)
-- [Azure Service Bus Queue](service-bus-queue)
+- [Azure Service Bus Namespace](service-bus-namespace)
 - [Azure SQL Database](sql-database)
 - [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure SQL Server](sql-server)

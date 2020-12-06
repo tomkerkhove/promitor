@@ -8,10 +8,10 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class ServiceBusQueueMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
+    public class ServiceBusNamespaceMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -28,7 +28,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_UseEntityNameDimensionAndQueueName_Fails()
+        public void ServiceBusNamespaceMetricsDeclaration_UseEntityNameDimensionAndQueueName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -45,7 +45,24 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_UseAllowedDimension_Succeeded()
+        public void ServiceBusNamespaceMetricsDeclaration_UseEntityNameDimensionAndTopicName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(queueName: string.Empty, topicName: "test-topic", metricDimension: "EntityName")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void ServiceBusNamespaceMetricsDeclaration_UseAllowedDimension_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -62,7 +79,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_UseEntityNameDimension_Succeeded()
+        public void ServiceBusNamespaceMetricsDeclaration_UseEntityNameDimension_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -79,7 +96,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -96,7 +113,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -113,7 +130,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -132,7 +149,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [Fact]
         public void
 
-            ServiceBusQueuesMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+            ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -149,7 +166,24 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutQueueName_Succeeded()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithQueueAndTopicName_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(queueName:"test-queue",topicName: "test-topic")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutQueueName_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -166,7 +200,24 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_DeclarationWithoutServiceBusNamespace_Fails()
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutTopicName_Succeeded()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithServiceBusMetric(topicName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
+        public void ServiceBusNamespaceMetricsDeclaration_DeclarationWithoutServiceBusNamespace_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -183,7 +234,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ServiceBusQueuesMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void ServiceBusNamespaceMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()

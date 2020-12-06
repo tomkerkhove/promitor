@@ -9,7 +9,9 @@ version:
  [configuration](https://promitor.io/configuration/v2.x/resource-discovery) |
  [deployment](https://promitor.io/deployment/resource-discovery/deployment))
 - {{% tag added %}} Support for scraping Azure Event Hubs ([docs](https://promitor.io/configuration/v2.x/metrics/event-hubs)
- | [#372](https://github.com/tomkerkhove/promitor/issues/69))
+ | [#69](https://github.com/tomkerkhove/promitor/issues/69))
+- {{% tag added %}} Support for scraping Azure Service Bus Namespace ([docs](https://promitor.io/configuration/v2.x/metrics/service-bus-namespace)
+ | [#1392](https://github.com/tomkerkhove/promitor/issues/1392))
 - {{% tag added %}} Support for scraping Azure Logic Apps ([docs](https://promitor.io/configuration/v2.x/metrics/logic-apps)
  | [#314](https://github.com/tomkerkhove/promitor/issues/314)).
 - {{% tag added %}} Support for scraping Azure Express Route circuits ([docs](https://promitor.io/configuration/v2.x/metrics/express-route-circuit) | [#1251](https://github.com/tomkerkhove/promitor/issues/1251) | Contributed by [@bluepixbe](https://github.com/bluepixbe) 🎉).
@@ -41,6 +43,8 @@ version:
 - {{% tag fixed %}} (Multi-Dimensional) Metrics that do not have a value/time series are not reported correctly in
  Prometheus metric sink with `metricSinks.prometheusScrapingEndpoint.metricUnavailableValue` ([#1197](https://github.com/tomkerkhove/promitor/issues/1197)
   | [FAQ](https://promitor.io/faq#why-does-my-multi-dimensional-metric-report-label-value-unknown-with-prometheus)).
+- {{% tag removed %}} Support for scraping Azure Service Bus Queue, use
+ [Azure Service Bus Namespace scraper](https://promitor.io/configuration/v2.x/metrics/service-bus-namespace) instead
 - {{% tag removed %}} Support for Prometheus legacy configuration ([deprecation notice](https://changelog.promitor.io/#prometheus-legacy-configuration)
  | [migration guide](https://promitor.io/walkthrough/migrate-from-1.x-to-2.x))
 - {{% tag removed %}} Support for Helm 2.0 ([deprecation notice](https://changelog.promitor.io/#helm-2-0) |

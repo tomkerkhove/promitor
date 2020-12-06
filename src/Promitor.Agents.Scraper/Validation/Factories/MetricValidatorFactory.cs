@@ -53,8 +53,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new PostgreSqlMetricValidator();
                 case ResourceType.RedisCache:
                     return new RedisCacheMetricValidator();
-                case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueMetricValidator();
+                case ResourceType.ServiceBusNamespace:
+                    return new ServiceBusNamespaceMetricValidator();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseMetricValidator();
                 case ResourceType.SqlManagedInstance:

@@ -46,8 +46,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new RedisCacheDiscoveryQuery();
                 case ResourceType.PostgreSql:
                     return new PostgreSqlDiscoveryQuery();
-                case ResourceType.ServiceBusQueue:
-                    return new ServiceBusQueueDiscoveryQuery();
+                case ResourceType.ServiceBusNamespace:
+                    return new ServiceBusNamespaceDiscoveryQuery();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseDiscoveryQuery();
                 case ResourceType.SqlManagedInstance:

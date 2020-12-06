@@ -7,7 +7,7 @@ azureLandscape:
   cloud: Global
 resourceDiscoveryGroups:
 - name: service-bus-landscape
-  type: ServiceBusQueue
+  type: ServiceBusNamespace
 - name: api-gateways
   type: ApiManagement
 - name: app-plan-landscape

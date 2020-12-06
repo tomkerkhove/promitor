@@ -44,7 +44,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
-            CreateMap<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>();
+            CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
@@ -81,7 +81,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
-                .Include<ServiceBusQueueResourceV1, ServiceBusQueueResourceDefinition>()
+                .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
                 .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>()
                 .Include<SqlServerResourceV1, SqlServerResourceDefinition>()

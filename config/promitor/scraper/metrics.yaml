@@ -121,7 +121,7 @@ metrics:
     - name: event-hubs-landscape
   - name: promitor_demo_servicebus_messagecount_discovered
     description: "Average percentage of memory usage on an Azure App Plan"
-    resourceType: ServiceBusQueue
+    resourceType: ServiceBusNamespace
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:

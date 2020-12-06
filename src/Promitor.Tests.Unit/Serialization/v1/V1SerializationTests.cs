@@ -92,8 +92,8 @@ namespace Promitor.Tests.Unit.Serialization.v1
                     new MetricDefinitionV1
                     {
                         Name = "promitor_demo_servicebusqueue_queue_size",
-                        Description = "Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)",
-                        ResourceType = ResourceType.ServiceBusQueue,
+                        Description = "Amount of active messages of the 'orders' queue (determined with ServiceBusNamespace provider)",
+                        ResourceType = ResourceType.ServiceBusNamespace,
                         AzureMetricConfiguration = new AzureMetricConfigurationV1
                         {
                             MetricName = "ActiveMessages",
@@ -109,7 +109,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                         },
                         Resources = new List<AzureResourceDefinitionV1>
                         {
-                            new ServiceBusQueueResourceV1
+                            new ServiceBusNamespaceResourceV1
                             {
                                 Namespace = "promitor-messaging",
                                 QueueName = "orders",
@@ -167,14 +167,14 @@ namespace Promitor.Tests.Unit.Serialization.v1
 
             // Check second metric
             Assert.Equal("promitor_demo_servicebusqueue_queue_size", deserializedModel.Metrics.ElementAt(1).Name);
-            Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)", deserializedModel.Metrics.ElementAt(1).Description);
-            Assert.Equal(ResourceType.ServiceBusQueue, deserializedModel.Metrics.ElementAt(1).ResourceType);
+            Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusNamespace provider)", deserializedModel.Metrics.ElementAt(1).Description);
+            Assert.Equal(ResourceType.ServiceBusNamespace, deserializedModel.Metrics.ElementAt(1).ResourceType);
             Assert.Null(deserializedModel.Metrics.ElementAt(1).Labels);
             Assert.Equal(TimeSpan.FromMinutes(15), deserializedModel.Metrics.ElementAt(1).AzureMetricConfiguration.Aggregation.Interval);
             Assert.Equal("5 4 3 2 1", deserializedModel.Metrics.ElementAt(1).Scraping.Schedule);
 
             Assert.Single(deserializedModel.Metrics.ElementAt(1).Resources);
-            var serviceBusQueueResource = Assert.IsType<ServiceBusQueueResourceV1>(deserializedModel.Metrics.ElementAt(1).Resources.ElementAt(0));
+            var serviceBusQueueResource = Assert.IsType<ServiceBusNamespaceResourceV1>(deserializedModel.Metrics.ElementAt(1).Resources.ElementAt(0));
             Assert.Equal("promitor-messaging", serviceBusQueueResource.Namespace);
             Assert.Equal("orders", serviceBusQueueResource.QueueName);
             Assert.Equal("promitor-demo-group", serviceBusQueueResource.ResourceGroupName);
@@ -215,13 +215,13 @@ namespace Promitor.Tests.Unit.Serialization.v1
                 });
 
             var secondMetric = runtimeModel.Metrics.ElementAt(1);
-            Assert.Equal(ResourceType.ServiceBusQueue, secondMetric.ResourceType);
+            Assert.Equal(ResourceType.ServiceBusNamespace, secondMetric.ResourceType);
             Assert.Equal("promitor_demo_servicebusqueue_queue_size", secondMetric.PrometheusMetricDefinition.Name);
-            Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusQueue provider)", secondMetric.PrometheusMetricDefinition.Description);
+            Assert.Equal("Amount of active messages of the 'orders' queue (determined with ServiceBusNamespace provider)", secondMetric.PrometheusMetricDefinition.Description);
             Assert.Collection(secondMetric.Resources,
                 r =>
                 {
-                    var definition = Assert.IsType<ServiceBusQueueResourceDefinition>(r);
+                    var definition = Assert.IsType<ServiceBusNamespaceResourceDefinition>(r);
                     Assert.Equal("promitor-messaging", definition.Namespace);
                     Assert.Equal("orders", definition.QueueName);
                     Assert.Equal("promitor-demo-group", definition.ResourceGroupName);
