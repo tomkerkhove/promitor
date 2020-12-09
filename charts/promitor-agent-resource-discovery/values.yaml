@@ -60,8 +60,9 @@ service:
   port: 8889
   targetPort: 88
   loadBalancer:
-    dnsPrefix:
     enabled: false
+    azure:
+      dnsPrefix:
 
 health:
   readiness:

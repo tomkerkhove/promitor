@@ -5,9 +5,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
-{{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
+{{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadbalancer.azure.dnsPrefix) }}
   annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.dnsPrefix }}
+    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadbalancer.azure.dnsPrefix }}
 {{- end }}
 {{- if .Values.metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery }}
   annotations:
