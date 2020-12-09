@@ -5,15 +5,19 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-scraper.labels" . | nindent 4 }}
-{{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadbalancer.azure.dnsPrefix) }}
+{{- if or (.Values.service.loadBalancer.enabled) (.Values.metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery) }}
   annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadbalancer.azure.dnsPrefix }}
-{{- end }}
-{{- if .Values.metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery }}
-  annotations:
+  {{- if .Values.service.loadBalancer.azure.dnsPrefix }}
+    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.azure.dnsPrefix }}
+  {{- end }}
+  {{- if .Values.service.loadBalancer.azure.exposeInternally }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  {{- end }}
+  {{- if .Values.metricSinks.prometheusScrapingEndpoint.enableServiceDiscovery }}
     prometheus.io/scrape: "true"
     prometheus.io/path: {{ .Values.metricSinks.prometheusScrapingEndpoint.baseUriPath | quote }}
     prometheus.io/port: {{ .Values.service.targetPort | quote }}
+  {{- end }}
 {{- end }}
 spec:
 {{- if .Values.service.loadBalancer.enabled }}
