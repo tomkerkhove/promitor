@@ -31,6 +31,7 @@ version:
  | [#1208](https://github.com/tomkerkhove/promitor/issues/1208))
 - {{% tag added %}} Provide `X-Version` response header for API endpoints ([#1209](https://github.com/tomkerkhove/promitor/issues/1209))
 - {{% tag added %}} Provide capability to tweak liveness/readines probes in Helm charts ([#1350](https://github.com/tomkerkhove/promitor/issues/1350))
+- {{% tag added %}} Provide capability to expose endpoints through an internal load balancer (AKS) in Helm charts ([#1402](https://github.com/tomkerkhove/promitor/issues/1402))
 - {{% tag changed %}} Show Promitor version during startup
 - {{% tag changed %}} Provide capability to scrape all queues in Azure Service Bus, instead of having to declare the
  queue name. ([#529](https://github.com/tomkerkhove/promitor/issues/529)).
