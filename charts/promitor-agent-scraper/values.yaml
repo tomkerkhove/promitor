@@ -33,10 +33,12 @@ metricSinks:
     host: ""
     port: 8125
     metricPrefix: ""
+    
 resourceDiscovery:
   enabled: false
   host: ""
   port: 80
+
 telemetry:
   defaultLogLevel: "Error"
   applicationInsights:
@@ -46,6 +48,10 @@ telemetry:
   containerLogs:
     enabled: true
     logLevel: ""
+
+runtime:
+  api:
+    prefix:
 
 ## Metric Declaration YAML
 azureMetadata:

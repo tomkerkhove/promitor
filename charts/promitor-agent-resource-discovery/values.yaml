@@ -25,6 +25,10 @@ telemetry:
     enabled: true
     logLevel: ""
 
+runtime:
+  api:
+    prefix:
+
 ## Metric Declaration YAML
 azureLandscape:
   cloud: Global

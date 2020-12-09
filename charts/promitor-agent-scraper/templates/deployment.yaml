@@ -37,6 +37,10 @@ spec:
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
           env:
+        {{- if .Values.runtime.api.prefix }}
+          - name: PROMITOR_RUNTIME_API_PREFIX
+            value: {{ .Values.runtime.api.prefix }}
+        {{- end }}
           - name: PROMITOR_AUTH_APPID
             valueFrom:
               secretKeyRef:

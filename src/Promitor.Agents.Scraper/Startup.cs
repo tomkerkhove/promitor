@@ -66,7 +66,7 @@ namespace Promitor.Agents.Scraper
                 .UseVersionMiddleware()
                 .UseRouting()
                 .UseMetricSinks(Configuration)
-                .ExposeOpenApiUi()
+                .ExposeOpenApiUi(Configuration)
                 .UseEndpoints(endpoints => endpoints.MapControllers());
 
             UseSerilog(ComponentName, app.ApplicationServices);

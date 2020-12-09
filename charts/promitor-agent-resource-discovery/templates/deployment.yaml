@@ -39,6 +39,10 @@ spec:
           env:
           - name: PROMITOR_AUTH_APPID
             value: {{ .Values.azureAuthentication.appId }}
+        {{- if .Values.runtime.api.prefix }}
+          - name: PROMITOR_RUNTIME_API_PREFIX
+            value: {{ .Values.runtime.api.prefix }}
+        {{- end }}
           - name: PROMITOR_AUTH_APPKEY
             valueFrom:
               secretKeyRef:

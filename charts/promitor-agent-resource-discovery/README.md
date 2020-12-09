@@ -71,6 +71,7 @@ their default values.
 | `telemetry.containerLogs.enabled`  | Indication whether or not to send telemetry to container logs | `true`            |
 | `telemetry.containerLogs.logLevel`  | Minimum level of logging for container logs |  |
 | `telemetry.defaultLogLevel`  | Minimum level of logging for all telemetry sinks, unless specified otherwise | `Error`            |
+| `runtime.api.prefix`  | Prefix of API being used to expose Promitor endpoints behind a reverse proxy. For example, when exposing `/api/docs` through `explore.promitor.io/resource-discovery/apis/docs` you should configure `resource-discovery/apis`. | |
 | `rbac.create` | If true, create & use RBAC resources | `true` |
 | `rbac.podSecurityPolicyEnabled` | Create pod security policy resources | `false` |
 | `rbac.serviceAccount.create` | Create service account resource | `true` |

@@ -89,6 +89,7 @@ their default values.
 | `metricDefaults.aggregation.interval`  | Default interval which defines over what period measurements of a metric should be aggregated | `00:05:00`            |
 | `metricDefaults.scraping.schedule`  | Cron expression that controls the fequency in which all the configured metrics will be scraped from Azure Monitor | `*/5 * * * *`            |
 | `metrics`  | List of metrics to scrape configured following the [metric declaration docs](https://promitor.io/configuration/metrics/) |        |
+| `runtime.api.prefix`  | Prefix of API being used to expose Promitor endpoints behind a reverse proxy. For example, when exposing `/api/docs` through `explore.promitor.io/scraper/apis/docs` you should configure `scraper/apis`. | |
 | `rbac.create` | If true, create & use RBAC resources | `true` |
 | `rbac.podSecurityPolicyEnabled` | Create pod security policy resources | `false` |
 | `rbac.serviceAccount.create` | Create service account resource | `true` |
