@@ -87,6 +87,7 @@ their default values.
 | `secrets.appKeySecret`  | Name of the secret for Azure AD identity secret | `azure-app-key`            |
 | `service.loadbalancer.enabled`  | Indication whether or not to expose service externally through a load balancer | `false`            |
 | `service.loadbalancer.azure.dnsPrefix`  | Prefix for DNS name to expose the service on using `<name>.<location>.cloudapp.azure.com` format. This setting is specific to Azure Kubernetes Service ([docs](https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service)) | ``            |
+| `service.loadbalancer.azure.exposeInternally`  | To restrict access to Promitor by exposing it through an internal load balancer. This setting is specific to Azure Kubernetes Service ([docs](https://docs.microsoft.com/en-us/azure/aks/internal-lb)) | `false`            |
 | `service.port`  | Port on service for other pods to talk to | `8889`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
 
