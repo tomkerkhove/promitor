@@ -5,9 +5,16 @@ metadata:
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "promitor-agent-resource-discovery.labels" . | nindent 4 }}
-{{- if and (.Values.service.loadBalancer.enabled) (.Values.service.loadBalancer.dnsPrefix) }}
+{{- if .Values.service.loadBalancer.enabled }}
+{{- if or (.Values.service.loadBalancer.azure.dnsPrefix) (.Values.service.loadBalancer.azure.exposeInternally) }}
   annotations:
-    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.dnsPrefix }}
+  {{- if .Values.service.loadBalancer.azure.dnsPrefix }}
+    service.beta.kubernetes.io/azure-dns-label-name: {{ .Values.service.loadBalancer.azure.dnsPrefix }}
+  {{- end }}
+  {{- if .Values.service.loadBalancer.azure.exposeInternally }}
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  {{- end }}
+{{- end }}
 {{- end }}
 spec:
 {{- if .Values.service.loadBalancer.enabled }}

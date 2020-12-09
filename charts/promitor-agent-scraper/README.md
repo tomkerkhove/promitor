@@ -107,7 +107,8 @@ their default values.
 | `service.port`  | Port on service for other pods to talk to | `8888`            |
 | `service.targetPort`  | Port on container to serve traffic | `88`            |
 | `service.loadbalancer.enabled`  | Indication whether or not to expose service externally through a load balancer | `false`            |
-| `service.loadbalancer.dnsPrefix`  | **[Azure Kubernetes Service only]** Prefix for DNS name to expose the service on using `<name>.<location>.cloudapp.azure.com` format. ([docs](https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service)) | ``            |
+| `service.loadbalancer.azure.dnsPrefix`  | **[Azure Kubernetes Service only]** Prefix for DNS name to expose the service on using `<name>.<location>.cloudapp.azure.com` format. ([docs](https://docs.microsoft.com/en-us/azure/aks/static-ip#apply-a-dns-label-to-the-service)) | ``            |
+| `service.loadbalancer.azure.exposeInternally`  | To restrict access to Promitor by exposing it through an internal load balancer. This setting is specific to Azure Kubernetes Service ([docs](https://docs.microsoft.com/en-us/azure/aks/internal-lb)) | `false`            |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to
 `helm install`. For example:
