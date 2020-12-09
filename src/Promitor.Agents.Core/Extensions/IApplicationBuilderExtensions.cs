@@ -40,16 +40,17 @@ namespace Microsoft.AspNetCore.Builder
 
             if (openApiUiConfigurationAction == null)
             {
-                var apiBasePath = configuration.GetValue(EnvironmentVariables.API.Prefix, defaultValue: string.Empty);
+                var apiBasePath = configuration.GetValue(EnvironmentVariables.Api.Prefix, defaultValue: string.Empty);
                 if (apiBasePath.StartsWith("/") == false)
                 {
                     apiBasePath = $"/{apiBasePath}";
                 }
+
                 var openApiEndpoint = apiBasePath.EndsWith("/") ? $"{apiBasePath}{OpenApiEndpointPath}" : $"{apiBasePath}/{OpenApiEndpointPath}";
                 openApiUiConfigurationAction = swaggerUiOptions =>
                 {
                     swaggerUiOptions.ConfigureDefaultOptions(apiName);
-                    swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", apiName);
+                    swaggerUiOptions.SwaggerEndpoint(openApiEndpoint, apiName);
                     swaggerUiOptions.RoutePrefix = "api/docs";
                 };
             }

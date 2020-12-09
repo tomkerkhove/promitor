@@ -2,10 +2,11 @@
 {
     public class EnvironmentVariables
     {
-        public class API
+        public class Api
         {
             public const string Prefix = "RUNTIME_API_PREFIX";
         }
+
         public class Configuration
         {
             public const string Folder = "PROMITOR_CONFIG_FOLDER";
