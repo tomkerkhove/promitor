@@ -85,7 +85,7 @@ service:
   loadBalancer:
     enabled: false
     azure:
-      dnsPrefix: 
+      dnsPrefix:
       exposeInternally: false
 
 health:
