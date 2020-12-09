@@ -33,7 +33,7 @@ metricSinks:
     host: ""
     port: 8125
     metricPrefix: ""
-    
+
 resourceDiscovery:
   enabled: false
   host: ""
