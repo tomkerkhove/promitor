@@ -52,7 +52,7 @@ namespace Promitor.Agents.ResourceDiscovery
             app.UseVersionMiddleware();
             app.UseRouting();
 
-            app.ExposeOpenApiUi(Configuration, ApiName);
+            app.ExposeOpenApiUi(ApiName);
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             UseSerilog(ComponentName, app.ApplicationServices);

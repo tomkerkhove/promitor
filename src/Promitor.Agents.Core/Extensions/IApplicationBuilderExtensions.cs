@@ -1,7 +1,5 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 using Promitor.Agents.Core.Middleware;
-using Promitor.Core;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -21,17 +19,14 @@ namespace Microsoft.AspNetCore.Builder
             return app;
         }
 
-        private const string OpenApiEndpointPath = "api/v1/docs.json";
-
         /// <summary>
         ///     Add support for Open API with API explorer
         /// </summary>
         /// <param name="app">Application Builder</param>
-        /// <param name="configuration">Configuration of the application</param>
         /// <param name="apiName">Name of API</param>
         /// <param name="openApiUiConfigurationAction">Action to configure Open API UI</param>
         /// <param name="openApiConfigurationAction">Action to configure Open API</param>
-        public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, IConfiguration configuration, string apiName = null, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
+        public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, string apiName = null, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
         {
             if (openApiConfigurationAction == null)
             {
@@ -40,17 +35,11 @@ namespace Microsoft.AspNetCore.Builder
 
             if (openApiUiConfigurationAction == null)
             {
-                var apiBasePath = configuration.GetValue(EnvironmentVariables.Api.Prefix, defaultValue: string.Empty);
-                if (apiBasePath.StartsWith("/") == false)
-                {
-                    apiBasePath = $"/{apiBasePath}";
-                }
-
-                var openApiEndpoint = apiBasePath.EndsWith("/") ? $"{apiBasePath}{OpenApiEndpointPath}" : $"{apiBasePath}/{OpenApiEndpointPath}";
                 openApiUiConfigurationAction = swaggerUiOptions =>
                 {
                     swaggerUiOptions.ConfigureDefaultOptions(apiName);
-                    swaggerUiOptions.SwaggerEndpoint(openApiEndpoint, apiName);
+                    swaggerUiOptions.SwaggerEndpoint("./v1/docs.json", "./v1/docs.json");
+                    swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", "../v1/docs.json");
                     swaggerUiOptions.RoutePrefix = "api/docs";
                 };
             }
