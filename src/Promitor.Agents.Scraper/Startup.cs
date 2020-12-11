@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
@@ -54,7 +55,7 @@ namespace Promitor.Agents.Scraper
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -66,7 +67,7 @@ namespace Promitor.Agents.Scraper
                 .UseHttpCorrelation()
                 .UseVersionMiddleware()
                 .UseRouting()
-                .UseMetricSinks(Configuration)
+                .UseMetricSinks(Configuration, logger)
                 .ExposeOpenApiUi(ApiName)
                 .UseEndpoints(endpoints => endpoints.MapControllers());
 
@@ -99,7 +100,7 @@ namespace Promitor.Agents.Scraper
                 if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
                 {
                     var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
-                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"./../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
+                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"../{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
                 }
 
                 if (metricSinkConfiguration.Statsd != null)

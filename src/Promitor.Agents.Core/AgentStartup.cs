@@ -20,7 +20,7 @@ namespace Promitor.Agents.Core
         ///     Constructor
         /// </summary>
         /// <param name="configuration">Configuration of the application</param>
-        public AgentStartup(IConfiguration configuration)
+        protected AgentStartup(IConfiguration configuration)
         {
             Guard.NotNull(configuration, nameof(configuration));
 
