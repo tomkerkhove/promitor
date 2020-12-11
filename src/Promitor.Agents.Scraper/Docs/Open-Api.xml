@@ -41,12 +41,13 @@
             </summary>
             <remarks>Provides information concerning the Promitor Scraper Agent</remarks>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Promitor.Agents.Scraper.Extensions.IApplicationBuilderExtensions.UseMetricSinks(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Startup})">
             <summary>
                 Adds the required metric sinks
             </summary>
             <param name="app">Application Builder</param>
             <param name="configuration">Configuration of the scraper agent</param>
+            <param name="logger"></param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.ObjectExtensions.Clone``1(``0)">
             <summary>
