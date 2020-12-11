@@ -26,7 +26,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="apiName">Name of API</param>
         /// <param name="openApiUiConfigurationAction">Action to configure Open API UI</param>
         /// <param name="openApiConfigurationAction">Action to configure Open API</param>
-        public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, string apiName = null, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
+        public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, string apiName, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
         {
             if (openApiConfigurationAction == null)
             {
@@ -38,7 +38,7 @@ namespace Microsoft.AspNetCore.Builder
                 openApiUiConfigurationAction = swaggerUiOptions =>
                 {
                     swaggerUiOptions.ConfigureDefaultOptions(apiName);
-                    swaggerUiOptions.SwaggerEndpoint("/api/v1/docs.json", apiName);
+                    swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
                     swaggerUiOptions.RoutePrefix = "api/docs";
                 };
             }

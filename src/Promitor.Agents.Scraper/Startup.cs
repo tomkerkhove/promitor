@@ -20,6 +20,7 @@ namespace Promitor.Agents.Scraper
 {
     public class Startup : AgentStartup
     {
+        private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
 
         public Startup(IConfiguration configuration)
@@ -66,7 +67,7 @@ namespace Promitor.Agents.Scraper
                 .UseVersionMiddleware()
                 .UseRouting()
                 .UseMetricSinks(Configuration)
-                .ExposeOpenApiUi()
+                .ExposeOpenApiUi(ApiName)
                 .UseEndpoints(endpoints => endpoints.MapControllers());
 
             UseSerilog(ComponentName, app.ApplicationServices);
