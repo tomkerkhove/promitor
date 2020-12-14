@@ -100,7 +100,7 @@ namespace Promitor.Agents.Scraper
                 if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
                 {
                     var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
-                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"../{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
+                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"../../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
                 }
 
                 if (metricSinkConfiguration.Statsd != null)
