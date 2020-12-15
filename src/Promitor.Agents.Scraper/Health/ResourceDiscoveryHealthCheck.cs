@@ -23,7 +23,6 @@ namespace Promitor.Agents.Scraper.Health
             try
             {
                 var resourceDiscoveryHealthReport = await _resourceDiscoveryClient.GetHealthAsync();
-
                 if (resourceDiscoveryHealthReport.Status == HealthStatus.Healthy)
                 {
                     return HealthCheckResult.Healthy("Successfully contacted Promitor Resource Discovery");
