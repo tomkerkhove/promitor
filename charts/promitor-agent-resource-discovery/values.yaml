@@ -14,6 +14,9 @@ image:
 azureAuthentication:
   appId:
   appKey:
+cache:
+  enabled: true
+  durationInMinutes: 5
 
 telemetry:
   defaultLogLevel: "Error"

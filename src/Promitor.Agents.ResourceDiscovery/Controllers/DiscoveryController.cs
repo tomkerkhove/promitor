@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using GuardNet;
 using Newtonsoft.Json;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
-using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Core.Contracts;
 using Newtonsoft.Json.Converters;
+using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {
@@ -18,12 +18,12 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
     public class DiscoveryController : ControllerBase
     {
         private readonly JsonSerializerSettings _serializerSettings;
-        private readonly ResourceRepository _resourceRepository;
+        private readonly IResourceRepository _resourceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscoveryController"/> class.
         /// </summary>
-        public DiscoveryController(ResourceRepository resourceRepository)
+        public DiscoveryController(IResourceRepository resourceRepository)
         {
             Guard.NotNull(resourceRepository, nameof(resourceRepository));
 
@@ -33,7 +33,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
                 NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Objects
             };
-                _serializerSettings.Converters.Add(new StringEnumConverter());
+            _serializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
