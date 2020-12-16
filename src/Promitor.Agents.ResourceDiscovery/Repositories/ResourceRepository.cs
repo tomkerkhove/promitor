@@ -8,11 +8,12 @@ using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
+using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
-    public class ResourceRepository
+    public class ResourceRepository : IResourceRepository
     {
         private readonly AzureResourceGraph _azureResourceGraph;
         private readonly ILogger<ResourceRepository> _logger;
@@ -36,7 +37,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
         ///     Get resources that are part of a given resource collection
         /// </summary>
         /// <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
-        public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
+        public virtual async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceDiscoveryGroupDefinition = resourceDeclaration.ResourceDiscoveryGroups.SingleOrDefault(collection => collection.Name.Equals(resourceDiscoveryGroupName, StringComparison.InvariantCultureIgnoreCase));

@@ -11,6 +11,9 @@ data:
   runtime.yaml: |-
       server:
         httpPort: {{ .Values.service.targetPort | quote }}
+      cache:
+        enabled: {{ .Values.cache.enabled | quote }}
+        durationInMinutes: {{ .Values.cache.durationInMinutes | quote }}
       telemetry:
         applicationInsights:
   {{- if .Values.telemetry.applicationInsights.key }}

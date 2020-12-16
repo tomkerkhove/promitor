@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Promitor.Agents.Core;
+using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Health;
 using Promitor.Agents.Scraper.Extensions;
 
@@ -29,6 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery
         public void ConfigureServices(IServiceCollection services)
         {
             services.UseWebApi()
+                .AddMemoryCache()
                 .AddRuntimeConfiguration(Configuration)
                 .AddAzureResourceGraph(Configuration)
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)

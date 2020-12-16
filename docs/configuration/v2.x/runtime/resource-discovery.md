@@ -21,6 +21,9 @@ Here is a complete example of the runtime YAML:
 ```yaml
 server:
   httpPort: 80 # Optional. Default: 80
+cache:
+  enabled: true # Optional. Default: true
+  durationInMinutes: 5 # Optional. Default: 5
 telemetry:
   applicationInsights:
     instrumentationKey: ABC # Optional. Note: Required to be specified when turned on
@@ -43,6 +46,23 @@ Example:
 ```yaml
 server:
   httpPort: 80 # Optional. Default: 80
+```
+
+## Cache
+
+The Promitor runtime allows you to cache discovered resources to optimize for performance and avoid hitting Azure throttling.
+
+You can configure how the cache should behave:
+
+- `cache.enabled` - Indication whether or not discovered resources should be cached in-memory. _(default true)_
+- `cache.durationInMinutes` - Amount of minutes to cache discovered resources. _(default 5)_
+
+Example:
+
+```yaml
+cache:
+  enabled: true # Optional. Default: true
+  durationInMinutes: 5 # Optional. Default: 5
 ```
 
 ## Telemetry
