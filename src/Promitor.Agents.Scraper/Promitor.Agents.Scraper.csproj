@@ -36,7 +36,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-    <PackageReference Include="CronScheduler.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="CronScheduler.AspNetCore" Version="3.0.1" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="4.1.1" />
     <PackageReference Include="Prometheus.Client.DependencyInjection" Version="0.2.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
