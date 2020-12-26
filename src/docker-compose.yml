@@ -18,6 +18,42 @@ services:
       dockerfile: Promitor.Agents.Scraper/Dockerfile.linux
       args:
         VERSION: 0.1.2
+    links:
+      - graphite
     volumes:
       - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
       - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+    - 9090:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+    - ./../config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+    - promitor.agents.scraper
+  graphite:
+    image: graphiteapp/graphite-statsd
+    restart: always
+    ports:
+      - 2000:80
+      - 2003:2003
+      - 2004:2004
+      - 2023:2023
+      - 2024:2024
+      - 8125:8125/udp
+      - 8126:8126
+  grafana:
+    image: grafana/grafana
+    links:
+      - prometheus
+      - graphite
+    ports:
+      - 3000:3000
+    volumes:
+      - ./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml
+      - ./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml
+      - ./../config/grafana/dashboard-config.json:/var/lib/grafana/dashboards/promitor.json
+      - ./../config/grafana/grafana.ini:/etc/grafana/grafana.ini
