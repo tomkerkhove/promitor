@@ -92,12 +92,12 @@
             </summary>
             <param name="queryResponse">Response provided by Azure Resource Graph after running a query</param>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.CachedResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.CacheConfiguration},Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Repositories.CachedResourceRepository})">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.CachedResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.CacheConfiguration})">
             <summary>
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository})">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Interfaces.IAzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Repositories.ResourceRepository})">
             <summary>
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
             </summary>

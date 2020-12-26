@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
+using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Core.Contracts;
 
@@ -15,14 +16,14 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
     public class ResourceRepository : IResourceRepository
     {
-        private readonly AzureResourceGraph _azureResourceGraph;
+        private readonly IAzureResourceGraph _azureResourceGraph;
         private readonly ILogger<ResourceRepository> _logger;
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
         /// </summary>
-        public ResourceRepository(AzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<ResourceRepository> logger)
+        public ResourceRepository(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<ResourceRepository> logger)
         {
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
             Guard.NotNull(azureResourceGraph, nameof(azureResourceGraph));
@@ -53,7 +54,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
             var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria).Build();
 
             // 2. Run Query
-            var unparsedResults = await _azureResourceGraph.QueryAsync(query);
+            var unparsedResults = await _azureResourceGraph.QueryAsync(resourceDiscoveryGroupName, query);
 
             // 3. Parse query results into resource
             var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
