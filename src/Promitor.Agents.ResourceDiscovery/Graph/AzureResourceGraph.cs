@@ -86,7 +86,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             var retryPolicy = Policy.Handle<ErrorResponseException>(ex => ex.Response?.StatusCode == HttpStatusCode.Unauthorized)
                 .RetryAsync(retryCount: 3, OnRetryAsync);
 
-
             return await retryPolicy.ExecuteAsync(async () =>
             {
                 var graphClient = await GetOrCreateClient();
