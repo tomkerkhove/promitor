@@ -102,11 +102,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     }
                     catch (ErrorResponseException responseException)
                     {
-                        // TODO: Remove
-                        _logger.LogInformation($"Exception message - {responseException.Message}");
-                        _logger.LogInformation($"Exception response - {JsonConvert.SerializeObject(responseException.Response)}");
-                        _logger.LogInformation($"Using secret - '{_queryApplicationSecret}'");
-
                         if (responseException.Response != null)
                         {
                             if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
@@ -167,15 +162,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             var errorResponseException = (ErrorResponseException) exception;
             
             var response = JToken.Parse(errorResponseException.Response.Content);
-            _logger.LogInformation($"Response content - {response}");
             var errorCode = response["error"]?["code"]?.ToString();
-            // TODO: Remove
-            _logger.LogInformation($"Error - {response["error"]}");
-            _logger.LogInformation($"Error code - {errorCode}");
             if (string.IsNullOrWhiteSpace(errorCode) == false && errorCode.Equals("ExpiredAuthenticationToken", StringComparison.InvariantCultureIgnoreCase))
             {
-                // TODO: Remove
-                _logger.LogInformation($"Renewing connection");
                 await OpenConnectionAsync();
             }
         }
