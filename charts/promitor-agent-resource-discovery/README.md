@@ -79,9 +79,11 @@ their default values.
 | `rbac.serviceAccount.name` | Service account name to use if create is false. If create is true, a name is generated using the fullname template | `promitor-resource-discovery` |
 | `rbac.serviceAccount.annotations` | Service account annotations| `{}` |
 | `health.readiness.enabled`  | Indication if readiness probes should be used | `true`            |   |
+| `health.readiness.verifyDependencies`  | Indication if readiness probes should verify if Promitor can interat with external dependencies. Do note that this will contact all dependencies which can have performance impact, cause throttling or cascading failures when consumed very often. | `false`            |   |
 | `health.readiness.delay`  | Amount of seconds to wait before probing the container to verify if it's ready | `5`            |   |
 | `health.readiness.interval`  | Amount of seconds to wait before probing the container again to verify if it's ready after the last attempt | `5`            |   |
 | `health.liveness.enabled`  | Indication if liveness probes should be used | `true`            |   |
+| `health.liveness.verifyDependencies`  | Indication if liveness probes should verify if Promitor can interat with external dependencies. Do note that this will contact all dependencies which can have performance impact, cause throttling or cascading failures when consumed very often. | `false`            |   |
 | `health.liveness.delay`  | Amount of seconds to wait before probing the container to verify if it's still alive | `5`            |   |
 | `health.liveness.interval`  | Amount of seconds to wait before probing the container again to verify if it's still alive after the last attempt | `30`            |   |
 | `resources`  | Pod resource requests & limits |    `{}`    |

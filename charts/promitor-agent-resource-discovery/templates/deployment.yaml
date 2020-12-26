@@ -52,15 +52,15 @@ spec:
   {{- if .Values.health.liveness.enabled }}
           livenessProbe:
             httpGet:
-              path: /api/v1/health
-              port: http
+              path: /api/v1/health?includeDependencies={{ .Values.health.liveness.verifyDependencies }}
+              port: http 
             initialDelaySeconds: {{ .Values.health.liveness.delay }}
             periodSeconds: {{ .Values.health.liveness.interval }}
   {{- end }}
   {{- if .Values.health.readiness.enabled }}
           readinessProbe:
             httpGet:
-              path: /api/v1/health
+              path: /api/v1/health?includeDependencies={{ .Values.health.readiness.verifyDependencies }}
               port: http
             initialDelaySeconds: {{ .Values.health.readiness.delay }}
             periodSeconds: {{ .Values.health.readiness.interval }}
