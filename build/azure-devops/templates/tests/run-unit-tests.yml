@@ -12,5 +12,6 @@ steps:
   displayName: 'dotnet test'
   inputs:
     command: test
+    includeNuGetOrg: true
     projects: 'src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj'
     arguments: '--configuration ${{ parameters.buildConfiguration }}'
