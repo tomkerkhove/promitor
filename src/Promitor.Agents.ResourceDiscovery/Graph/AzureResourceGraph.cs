@@ -145,6 +145,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                         var contextualInformation = new Dictionary<string, object>
                         {
                             {"Query", query},
+                            {"QueryName", queryName},
                             {"Subscriptions", targetSubscriptions}
                         };
 

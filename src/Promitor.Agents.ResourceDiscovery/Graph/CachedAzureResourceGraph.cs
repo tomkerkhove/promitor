@@ -18,7 +18,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         private readonly IAzureResourceGraph _azureResourceGraph;
         private readonly IMemoryCache _memoryCache;
 
-        public CachedAzureResourceGraph(IAzureResourceGraph azureResourceGraph, IMemoryCache memoryCache, IOptionsMonitor<CacheConfiguration> cacheConfiguration, ILogger<CachedAzureResourceGraph> logger)
+        public CachedAzureResourceGraph(IAzureResourceGraph azureResourceGraph, IMemoryCache memoryCache, IOptionsMonitor<CacheConfiguration> cacheConfiguration)
         {
             Guard.NotNull(cacheConfiguration, nameof(cacheConfiguration));
             Guard.NotNull(azureResourceGraph, nameof(azureResourceGraph));
