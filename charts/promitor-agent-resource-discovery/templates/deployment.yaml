@@ -53,7 +53,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /api/v1/health?includeDependencies={{ .Values.health.liveness.verifyDependencies }}
-              port: http 
+              port: http
             initialDelaySeconds: {{ .Values.health.liveness.delay }}
             periodSeconds: {{ .Values.health.liveness.interval }}
   {{- end }}
