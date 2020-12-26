@@ -29,11 +29,18 @@
             </summary>
             <remarks>Provides the runtime configuration</remarks>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Controllers.v1.HealthController.Get">
+        <member name="M:Promitor.Agents.Scraper.Controllers.v1.HealthController.Get(System.Boolean)">
             <summary>
                 Get Health
             </summary>
-            <remarks>Provides an indication about the health of the scraper</remarks>
+            <remarks>Provides an indication about the health of the API.</remarks>
+            <param name="includeDependencies">
+                Indication whether or not dependencies integration should be verified.
+                Do note that this will contact all dependencies which can have performance impact or cascading failures when
+                consumed very often.
+            </param>
+            <response code="200">API is healthy</response>
+            <response code="503">API is unhealthy or in degraded state</response>
         </member>
         <member name="M:Promitor.Agents.Scraper.Controllers.v1.SystemController.Get">
             <summary>
