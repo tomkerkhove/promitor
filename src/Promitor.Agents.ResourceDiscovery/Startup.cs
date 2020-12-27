@@ -15,7 +15,7 @@ namespace Promitor.Agents.ResourceDiscovery
     {
         private const string ApiName = "Promitor - Resource Discovery API";
         private const string ApiDescription = "Collection of APIs to provide automatic resource discovery for scraping resources with Promitor Scraper";
-        private const string ComponentName = "Promitor Resource Discovery (Cached)";
+        private const string ComponentName = "Promitor Resource Discovery";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Startup" /> class.
