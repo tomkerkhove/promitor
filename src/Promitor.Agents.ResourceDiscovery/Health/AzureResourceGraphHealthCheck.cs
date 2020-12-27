@@ -8,8 +8,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
-using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
+using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Query;
 
 namespace Promitor.Agents.ResourceDiscovery.Health
@@ -18,9 +18,9 @@ namespace Promitor.Agents.ResourceDiscovery.Health
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
         private readonly ILogger<AzureResourceGraphHealthCheck> _logger;
-        private readonly AzureResourceGraph _azureResourceGraph;
+        private readonly IAzureResourceGraph _azureResourceGraph;
 
-        public AzureResourceGraphHealthCheck(AzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<AzureResourceGraphHealthCheck> logger)
+        public AzureResourceGraphHealthCheck(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<AzureResourceGraphHealthCheck> logger)
         {
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
             Guard.NotNull(azureResourceGraph, nameof(azureResourceGraph));
@@ -58,7 +58,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
         private static Dictionary<string, object> GenerateMetadata(List<HealthProbeResult> healthProbeResults)
         {
             var healthResultMetadata = new Dictionary<string, object>();
-            healthProbeResults.ForEach(result => healthResultMetadata.Add($"Subscription '{result.Subscription}'", new {result.IsSuccessful, Message = result.Description }));
+            healthProbeResults.ForEach(result => healthResultMetadata.Add($"Subscription {result.Subscription}", new {result.IsSuccessful, Message = result.Description }));
 
             return healthResultMetadata;
         }
@@ -80,7 +80,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
         {
             try
             {
-                await _azureResourceGraph.QueryAsync(query, new List<string> { subscription });
+                await _azureResourceGraph.QueryForResourcesAsync($"health-probe-{subscription}", query, new List<string> { subscription });
                 return new HealthProbeResult(subscription, isSuccessful: true, "Successfully queried resources via Azure Resource Graph");
             }
             catch (UnauthorizedException unauthorizedException)

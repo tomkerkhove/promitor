@@ -9,6 +9,7 @@ using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph;
+using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
@@ -41,11 +42,13 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             services.Configure<ResourceDeclaration>(configuration);
             services.Configure<AzureLandscape>(configuration.GetSection("azureLandscape"));
             services.Configure<List<ResourceDiscoveryGroup>>(configuration.GetSection("resourceDiscoveryGroups"));
-            services.AddTransient<AzureResourceGraph>();
+            services.AddTransient<IAzureResourceGraph, AzureResourceGraph>();
+            services.AddTransient<ICachedAzureResourceGraph, CachedAzureResourceGraph>();
 
-            var isCacheEnabled = configuration.GetValue<bool>("cache:enabled");
+            var isCacheEnabled = configuration.GetValue<bool>("cache:enabled", defaultValue: true);
             if (isCacheEnabled)
             {
+                services.AddTransient<ResourceRepository>();
                 services.AddTransient<IResourceRepository, CachedResourceRepository>();
             }
             else
