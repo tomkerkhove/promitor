@@ -71,10 +71,12 @@ service:
 health:
   readiness:
     enabled: true
+    verifyDependencies: false
     delay: 5
     interval: 5
   liveness:
     enabled: true
+    verifyDependencies: false
     delay: 5
     interval: 30
 
