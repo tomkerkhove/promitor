@@ -28,4 +28,6 @@ steps:
     command: test
     includeNuGetOrg: true
     projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
+    feedsToUse: 'config'
+    nugetConfigPath: 'src/NuGet.config'
     arguments: '--configuration ${{ parameters.buildConfiguration }} --filter "Agent=${{ parameters.agentName}}"'
