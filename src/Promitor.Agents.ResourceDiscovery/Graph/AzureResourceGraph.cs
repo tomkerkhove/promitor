@@ -10,7 +10,6 @@ using Microsoft.Azure.Management.ResourceGraph.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Polly;
 using Promitor.Agents.ResourceDiscovery.Configuration;
