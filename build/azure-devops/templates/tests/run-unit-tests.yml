@@ -9,7 +9,7 @@ steps:
   parameters:
     dotnetVersion: '${{ parameters.dotnetVersion }}'
 - task: DotNetCoreCLI@2
-  displayName: 'dotnet test'
+  displayName: 'Run unit tests'
   inputs:
     command: test
     includeNuGetOrg: true
