@@ -1,1 +1,0 @@
-Promitor Resource Discovery is up and running!

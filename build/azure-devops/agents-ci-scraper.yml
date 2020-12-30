@@ -10,23 +10,17 @@ pr:
   paths:
     include:
     - src/*
-    - charts/promitor-agent-scraper/*
     - build/azure-devops/templates/*
     - build/azure-devops/agents-ci-scraper.yml
 variables:
   - template: ./variables/build.yml
   - template: ./variables/tests.yml
-  - template: ./variables/helm.yml
   - name: Image.Name
     value: 'tomkerkhove/promitor-agent-scraper-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
   - name: App.Version
     value: '0.0.0-$(Image.Tag)'
-  - name: Helm.Chart.Version
-    value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.Name
-    value: 'promitor-agent-scraper'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -272,10 +266,3 @@ stages:
         - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-- template: templates/stages/helm-chart-verification.yml
-  parameters:
-    chartName: '$(Helm.Chart.Name)'
-    chartVersion: '$(Helm.Chart.Version)'
-    appVersion: '$(App.Version)'
-    imageName: '$(Image.Name)'
-    dependsOn: 'Docker'

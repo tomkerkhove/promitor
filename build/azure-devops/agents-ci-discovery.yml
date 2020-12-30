@@ -10,7 +10,6 @@ pr:
   paths:
     include:
     - src/*
-    - charts/promitor-agent-resource-discovery/*
     - build/azure-devops/templates/*
     - build/azure-devops/agents-ci-discovery.yml
 variables:
@@ -24,10 +23,6 @@ variables:
     value: 'promitor-discovery-agent'
   - name: App.Version
     value: '0.0.0-$(Image.Tag)'
-  - name: Helm.Chart.Version
-    value: '0.0.0-$(App.Version)'
-  - name: Helm.Chart.CI.Name
-    value: 'promitor-agent-resource-discovery'
 stages:
 - stage: Init
   displayName: Prepare Build
@@ -217,11 +212,3 @@ stages:
         - template: templates/docker/push-image.yml
           parameters:
               imageName: '$(Image.TaggedName)'
-- template: templates/stages/helm-chart-verification.yml
-  parameters:
-    chartName: '$(Helm.Chart.CI.Name)'
-    chartVersion: '$(Helm.Chart.Version)'
-    valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
-    appVersion: '$(App.Version)'
-    imageName: '$(Image.Name)'
-    dependsOn: 'Docker'
