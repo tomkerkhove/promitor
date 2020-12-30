@@ -16,10 +16,6 @@ parameters:
   displayName: Image Version
   type: string
   default: 0.1.0
-- name: chartVersion
-  displayName: Helm Chart Version
-  type: string
-  default: 0.1.0
 - name: githubReleaseTitle
   displayName: GitHub Release Title
   type: string
@@ -34,12 +30,8 @@ variables:
     value: '$(Image.Name):$(Image.Version)'
   - name: 'Release.TagName'
     value: '$(Build.BuildNumber)'
-  - name: 'Helm.App.Version'
-    value: '$(Image.Version)'
   - name: 'Image.Version'
     value: '${{ parameters.imageVersion }}'
-  - name: 'Helm.Chart.Version'
-    value: '${{ parameters.chartVersion }}'
   - name: 'Release.Title'
     value: '${{ parameters.githubReleaseTitle }}'
 
@@ -351,27 +343,3 @@ stages:
 
               Docker image is available on [Docker Hub](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/).<br />
               For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
-- stage: ReleaseHelm
-  displayName: Release Helm Chart
-  dependsOn: Build
-  jobs:
-   - job: PushHelmChart
-     displayName: Push Helm Chart to ACR
-     pool:
-       vmImage: ubuntu-16.04
-     variables:
-     - template: ./variables/helm.yml
-     steps:
-     - template: templates/helm/lint-chart.yml
-       parameters:
-        helmVersion: '$(Helm.Version)'
-        chartName: '$(Chart.Scraper.Name)'
-     - template: templates/helm/package-official-chart.yml
-       parameters:
-        chartName: '$(Chart.Scraper.Name)'
-        chartVersion: '$(Helm.Chart.Version)'
-        appVersion: '$(Helm.App.Version)'
-     - template: templates/helm/push-chart.yml
-       parameters:
-        chartName: '$(Chart.Scraper.Name)'
-        chartVersion: '$(Helm.Chart.Version)'

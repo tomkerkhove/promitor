@@ -16,10 +16,6 @@ parameters:
   displayName: Image Version
   type: string
   default: 0.1.0
-- name: chartVersion
-  displayName: Helm Chart Version
-  type: string
-  default: 0.1.0
 - name: githubReleaseTitle
   displayName: GitHub Release Title
   type: string
@@ -35,16 +31,12 @@ variables:
   - template: ./variables/containers.yml
   - name: 'Image.Version'
     value: '${{ parameters.imageVersion }}'
-  - name: 'Helm.Chart.Version'
-    value: '${{ parameters.chartVersion }}'
   - name: 'Release.Title'
     value: '${{ parameters.githubReleaseTitle }}'
   - name: 'Image.TaggedName'
     value: '$(Image.ResourceDiscovery.Name):$(Image.Version)'
   - name: 'Release.TagName'
     value: '$(Build.BuildNumber)'
-  - name: 'Helm.App.Version'
-    value: '$(Image.Version)'
   # Required for all our build stages
   - group: 'Agent Authentication'
   - name: Container.Scraper.Name
@@ -213,35 +205,10 @@ stages:
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
             imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
-- stage: ReleaseHelm
-  displayName: Release Helm Chart
-  dependsOn: [BuildLinux, BuildWindows]
-  jobs:
-   - job: PushHelmChart
-     displayName: Push Helm Chart to ACR
-     pool:
-       vmImage: ubuntu-16.04
-     variables:
-     - template: ./variables/helm.yml
-     steps:
-     - template: templates/helm/lint-chart.yml
-       parameters:
-        helmVersion: '$(Helm.Version)'
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        valuesFile: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/helm.yaml'
-     - template: templates/helm/package-official-chart.yml
-       parameters:
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        chartVersion: '$(Helm.Chart.Version)'
-        appVersion: '$(Helm.App.Version)'
-     - template: templates/helm/push-chart.yml
-       parameters:
-        chartName: '$(Chart.ResourceDiscovery.Name)'
-        chartVersion: '$(Helm.Chart.Version)'
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub
-    dependsOn: ReleaseHelm
+    dependsOn: Build
     jobs:
     - job: CreateRelease
       displayName: Create Release

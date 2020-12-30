@@ -15,8 +15,6 @@ variables:
   DotNet.Configuration: 'release'
   Image.Name: 'tomkerkhove/promitor-agent-scraper-ci'
   Image.TaggedName: '$(Image.Name):$(Build.BuildNumber)'
-  Helm.Chart.Version: '0.0.0-$(Build.BuildNumber)'
-  Helm.Chart.Name: 'promitor-agent-scraper-ci'
 stages:
 - stage: Lint
   displayName: Lint
