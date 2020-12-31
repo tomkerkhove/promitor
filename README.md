@@ -10,7 +10,7 @@
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Pulls"></a>
 <a href="https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master" rel="nofollow"><img src="https://img.shields.io/azure-devops/build/tomkerkhove/promitor/50/master.svg?label=Scraper%20Agent%20-%20CI&style=flat-square" alt="Build Status"></a>
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Stars"></a>
-<a href="https://www.codefactor.io/repository/github/tomkerkhove/promitor" rel="nofollow"><img src="https://www.codefactor.io/repository/github/tomkerkhove/promitor/badge" alt="CodeFactor"></a>
+<a href="https://artifacthub.io/packages/search?repo=promitor" rel="nofollow"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/promitor&style=flat-square" alt="Artifact Hub"></a>
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
 </p>
 
