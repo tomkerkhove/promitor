@@ -7,15 +7,11 @@
     },
     {
       "directory": "build",
-      "description": "### build\n\nThe build folder contains any files needed for Promitor's CI configuration. This includes the Azure DevOps pipelines used for validating PRs and building releases, along with other things like scripts used to publish Promitor to the Helm registry."
+      "description": "### build\n\nThe build folder contains any files needed for Promitor's CI configuration. This includes the Azure DevOps pipelines used for validating PRs, building releases and more."
     },
     {
       "directory": "changelog",
       "description": "### changelog\n\nThe `changelog` folder contains the files needed to generate <https://changelog.promitor.io>. Information about new changes should be added to the `content` folder, which is split into the following sections:\n\n- `deprecated` - any deprecated functionality that we need to make users aware of.\n- `experimental` - any new changes that have not been released yet. This is typically where you should add information.\n- `released` - changes that are part of a stable release."
-    },
-    {
-      "directory": "charts",
-      "description": "### charts\n\nThe charts directory contains the [Helm](https://helm.sh/) chart for Promitor."
     },
     {
       "directory": "config",

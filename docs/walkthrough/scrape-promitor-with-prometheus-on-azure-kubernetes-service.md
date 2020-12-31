@@ -194,7 +194,7 @@ metrics:
 To deploy, we'll first add the Promitor chart repository to helm:
 
 ```bash
-helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+helm repo add promitor https://charts.promitor.io/
 helm repo update
 ```
 

@@ -28,7 +28,7 @@ Kubernetes cluster.
 Install the Promitor Chart repository:
 
 ```shell
-❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+❯ helm repo add promitor https://charts.promitor.io/
 ```
 
 Refresh your local Chart repositories:
@@ -43,8 +43,6 @@ If all goes well you should be able to list all Promitor charts:
 ❯ helm search hub promitor
 URL                                                     CHART VERSION           APP VERSION     DESCRIPTION
 https://hub.helm.sh/charts/promitor/promitor-ag...      2.0.0-preview-3         2.0.0-preview-3 Promitor, bringing Azure Monitor metrics where ...
-https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-pr997             0.0.0-pr997     A Helm chart to deploy Promitor, an Azure Monit...
-https://hub.helm.sh/charts/promitor/promitor-ag...      0.0.0-0.0.0-pr1326      0.0.0-pr1326    Promitor, bringing Azure Monitor metrics where ...
 ```
 
 ### Using our Helm Chart
