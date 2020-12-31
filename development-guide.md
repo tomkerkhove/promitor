@@ -13,7 +13,6 @@ The promitor repository is made up of a number of different directories:
 - `/.vscode` - contains shared configuration files for [VS Code](https://code.visualstudio.com/).
 - `/build` - contains the configuration files for Promitor's CI process.
 - `/changelog` - contains the source code for building <https://changelog.promitor.io>
-- `/charts` - contains Promitor's [Helm](https://helm.sh/) chart.
 - `/config` - contains the configuration to run Promitor locally or in the CI
 - `/deploy` - contains the automation that is being used to manage Promitor, such
   as the automated updates concerning new Docker images in a pull request.
@@ -24,27 +23,8 @@ The promitor repository is made up of a number of different directories:
 
 ## Helm Chart
 
-The code for Promitor's Helm chart can be found in [charts/promitor-agent-scraper](charts/promitor-agent-scraper).
-
-To work on the Helm chart, you need the following tools:
-
-- [Helm](https://helm.sh).
-- A working Kubernetes cluster. For local development you can use [Docker Desktop](https://www.docker.com/products/docker-desktop)
-  which has an option to install a local cluster for you, or a tool such as [Minikube](https://github.com/kubernetes/minikube)
-   or [kind](https://kind.sigs.k8s.io/).
-
-The chart's README contains information about how to install the chart in your Kubernetes
-cluster. For local development, you can substitute the relative path to the chart
-instead of using the chart name, for example:
-
-```shell
-helm install --name promitor-agent-scraper ./charts/promitor-agent-scraper \
-  --set azureAuthentication.appId='<azure-ad-app-id>' \
-  ...
-```
-
-Please follow Helm's [Best Practices](https://helm.sh/docs/chart_best_practices/#the-chart-best-practices-guide)
-when developing the chart.
+The code for Promitor's Helm chart can be found on [promitor/charts](https://github.com/promitor/charts) which is also
+ hosting the Helm chart registry.
 
 ## Documentation
 

@@ -30,7 +30,7 @@ Kubernetes cluster.
 Install the Promitor Chart repository:
 
 ```shell
-❯ helm repo add promitor https://promitor.azurecr.io/helm/v1/repo
+❯ helm repo add promitor https://charts.promitor.io/
 ```
 
 Refresh your local Chart repositories:
