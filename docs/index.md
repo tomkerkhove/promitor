@@ -63,6 +63,7 @@ and vote for features!
     - [Docker](deployment/resource-discovery/#docker)
     - [Kubernetes](deployment/resource-discovery/#kubernetes)
   - [Image Tagging Strategy](deployment#image-tagging-strategy)
+  - [Migrate to our new Helm chart registry](/deployment/migrate-to-new-helm-registry)
 - **Configuration**
   - Scraper
     - [Overview of metric sinks](configuration/v2.x/runtime/scraper#metric-sinks)
