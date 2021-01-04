@@ -58,7 +58,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 29;
+            const int expectedResourceCount = 19;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -138,7 +138,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-subscriptions-scenario";
-            const int expectedResourceCount = 29;
+            const int expectedResourceCount = 19;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -218,7 +218,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 28;
+            const int expectedResourceCount = 18;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
