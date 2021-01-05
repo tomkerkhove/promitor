@@ -293,7 +293,7 @@ stages:
                                 --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                                 --env-file C:/Promitor/az-mon-auth.creds \
                                 --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                                tomkerkhove/promitor-agent-scraper:$(Image.Version)
+                                ghcr.io/tomkerkhove/promitor-agent-scraper:$(Image.Version)
               ```
               ### Docker Image information
               New Docker image tags are available:
@@ -333,7 +333,7 @@ stages:
                                 --env PROMITOR_AUTH_APPID='<azure-ad-app-id>'   \
                                 --env-file C:/Promitor/az-mon-auth.creds \
                                 --volume C:/Promitor/metrics-declaration.yaml:/config/metrics-declaration.yaml \
-                                tomkerkhove/promitor-agent-scraper:$(Image.Version)
+                                ghcr.io/tomkerkhove/promitor-agent-scraper:$(Image.Version)
               ```
               ### Docker Image information
               New Docker image tags are available:
