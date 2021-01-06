@@ -159,12 +159,12 @@ stages:
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
         - template: templates/docker/push-image.yml
           parameters:
-          imageDisplayName: '''{major}.{minor}'''
-          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+            imageDisplayName: '''{major}.{minor}'''
+            imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
         - template: templates/docker/push-image.yml
           parameters:
-          imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+            imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
         - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest'''
