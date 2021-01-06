@@ -208,7 +208,7 @@ stages:
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub
-    dependsOn: Build
+    dependsOn: [BuildLinux,BuildWindows]
     jobs:
     - job: CreateRelease
       displayName: Create Release
