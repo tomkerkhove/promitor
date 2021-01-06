@@ -132,12 +132,12 @@ stages:
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
         - template: templates/docker/push-image.yml
           parameters:
-          imageDisplayName: '''{major}.{minor}'''
-          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)'
+            imageDisplayName: '''{major}.{minor}'''
+            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)'
         - template: templates/docker/push-image.yml
           parameters:
-          imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-          imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
+            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
         - template: templates/docker/push-image.yml
           parameters:
             imageDisplayName: '''latest'''
@@ -208,7 +208,7 @@ stages:
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub
-    dependsOn: Build
+    dependsOn: [BuildLinux,BuildWindows]
     jobs:
     - job: CreateRelease
       displayName: Create Release
