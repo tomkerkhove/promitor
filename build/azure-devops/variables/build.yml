@@ -1,3 +1,3 @@
 variables:
-  DotNet.Sdk.Version: '3.1.404'
+  DotNet.Sdk.Version: '3.1.405'
   DotNet.Configuration: 'release'
