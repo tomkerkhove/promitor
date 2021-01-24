@@ -64,6 +64,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
                 .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
+                .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()

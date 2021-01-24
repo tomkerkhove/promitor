@@ -21,7 +21,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             const string automationAccountName = "promitor-automation";
             YamlAssert.PropertySet<AutomationAccountResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                $"automationAccountName: {automationAccountName}",
+                $"accountName: {automationAccountName}",
                 automationAccountName,
                 r => r.AccountName);
         }
