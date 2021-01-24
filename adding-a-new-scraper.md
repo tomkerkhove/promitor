@@ -53,7 +53,7 @@ This requires the following steps:
   the validation inputs, steps, and outputs typical of validator implementation.
 2. Add construction and usage of this validator to `.\src\Promitor.Agents.Scraper\Validation\Factories\MetricValidatorFactory.cs`
   for the ResourceType you created in step #1 above.
-3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Tests.Unit\Validation\Metrics\ResourceTypes`
+3. Provide a unit test for every validation rule that was added in `.\src\Promitor.Tests.Unit\Validation\Scraper\Metrics\ResourceTypes`
 
 ### Scraping
 
