@@ -7,10 +7,11 @@
         /// </summary>
         /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
-        /// <param name="automationAccountName">The name of the Azure Automation account resource.</param>
-        public AutomationAccountResourceDefinition(string subscriptionId, string resourceGroupName, string automationAccountName)
-        : base(ResourceType.AutomationAccount, subscriptionId, resourceGroupName, automationAccountName)
+        /// <param name="accountName">The name of the Azure Automation account resource.</param>
+        public AutomationAccountResourceDefinition(string subscriptionId, string resourceGroupName, string accountName)
+            : base(ResourceType.AutomationAccount, subscriptionId, resourceGroupName, accountName)
         {
+            AccountName = accountName;
         }
 
         /// <summary>
