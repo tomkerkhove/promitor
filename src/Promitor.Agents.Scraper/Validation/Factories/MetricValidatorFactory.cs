@@ -17,6 +17,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ApplicationGatewayMetricValidator();
                 case ResourceType.AppPlan:
                     return new AppPlanMetricValidator();
+                case ResourceType.AutomationAccount:
+                    return new AutomationAccountMetricValidator();
                 case ResourceType.BlobStorage:
                     return new BlobStorageMetricValidator();
                 case ResourceType.ContainerInstance:

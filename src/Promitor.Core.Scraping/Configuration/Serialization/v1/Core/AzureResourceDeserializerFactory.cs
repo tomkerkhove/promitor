@@ -30,7 +30,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.AppPlan:
                     var appPlanLogger = _loggerFactory.CreateLogger<AppPlanDeserializer>();
                     return new AppPlanDeserializer(appPlanLogger);
-                case ResourceType.Automation:
+                case ResourceType.AutomationAccount:
                     var automationLogger = _loggerFactory.CreateLogger<AutomationAccountDeserializer>();
                     return new AutomationAccountDeserializer(automationLogger);
                 case ResourceType.BlobStorage:

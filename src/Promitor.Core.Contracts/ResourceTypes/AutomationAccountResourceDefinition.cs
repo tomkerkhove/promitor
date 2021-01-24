@@ -9,13 +9,13 @@
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="automationAccountName">The name of the Azure Automation account resource.</param>
         public AutomationAccountResourceDefinition(string subscriptionId, string resourceGroupName, string automationAccountName)
-        : base(ResourceType.Automation, subscriptionId, resourceGroupName, automationAccountName)
+        : base(ResourceType.AutomationAccount, subscriptionId, resourceGroupName, automationAccountName)
         {
         }
 
         /// <summary>
-        ///     The name of the Azure Automation account to get metrics for.
+        ///     The name of the Azure Automation Account account to get metrics for.
         /// </summary>
-        public string AutomationAccountName { get; }
+        public string AccountName { get; }
     }
 }

@@ -269,6 +269,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithAutomationAccountMetric(string metricName = "promitor-automation-metrics",
+            string metricDescription = "Description for a metric",
+            string accountName = "promitor-automation-account",
+            string azureMetricName = "TotalJob",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new AutomationAccountResourceV1
+            {
+                AccountName = accountName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.AutomationAccount, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithFunctionAppMetric(string metricName = "promitor-fuction-app",
             string metricDescription = "Description for a metric",
             string functionAppName = "promitor-fuction-app",

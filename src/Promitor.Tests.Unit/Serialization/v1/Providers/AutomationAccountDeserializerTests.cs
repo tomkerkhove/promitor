@@ -23,7 +23,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 $"automationAccountName: {automationAccountName}",
                 automationAccountName,
-                r => r.AutomationAccountName);
+                r => r.AccountName);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             YamlAssert.PropertyNull<AutomationAccountResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
-                r => r.AutomationAccountName);
+                r => r.AccountName);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

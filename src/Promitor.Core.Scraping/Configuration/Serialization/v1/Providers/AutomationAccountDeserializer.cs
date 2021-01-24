@@ -11,7 +11,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         /// <param name="logger">The logger.</param>
         public AutomationAccountDeserializer(ILogger logger) : base(logger)
         {
-            Map(resource => resource.AutomationAccountName)
+            Map(resource => resource.AccountName)
                 .IsRequired();
         }
     }

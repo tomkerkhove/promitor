@@ -5,6 +5,6 @@
         /// <summary>
         /// The name of the Azure Automation account to get metrics for.
         /// </summary>
-        public string AutomationAccountName { get; set; }
+        public string AccountName { get; set; }
     }
 }
