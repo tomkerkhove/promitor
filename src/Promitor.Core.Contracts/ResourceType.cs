@@ -32,6 +32,7 @@
         ExpressRouteCircuit = 27,
         ApplicationGateway = 28,
         NetworkGateway = 29,
-        KubernetesService = 30
+        KubernetesService = 30,
+        Automation = 31
     }
 }

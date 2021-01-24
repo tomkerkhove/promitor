@@ -26,6 +26,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<ApiManagementResourceV1, ApiManagementResourceDefinition>();
             CreateMap<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>();
             CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
+            CreateMap<AutomationAccountResourceV1, AutomationAccountResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
