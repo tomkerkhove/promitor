@@ -16,6 +16,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new ApplicationGatewayDiscoveryQuery();
                 case ResourceType.AppPlan:
                     return new AppPlanDiscoveryQuery();
+                case ResourceType.Automation:
+                    return new AutomationAccountResourceDiscoveryQuery();
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
