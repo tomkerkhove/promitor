@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class ApiManagementMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class AutomationAccountMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(azureMetricName: string.Empty)
+                .WithAutomationAccountMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -28,11 +28,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutLocationName_Succeeds()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(locationName: string.Empty)
+                .WithAutomationAccountMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -45,28 +45,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(metricDescription: string.Empty)
-                .Build(Mapper);
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
-
-            // Act
-            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
-            var validationResult = scrapingScheduleValidationStep.Run();
-
-            // Assert
-            PromitorAssert.ValidationIsSuccessful(validationResult);
-        }
-
-        [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutMetricName_Fails()
-        {
-            // Arrange
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(string.Empty)
+                .WithAutomationAccountMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -79,11 +62,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutInstanceName_Fails()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutInstanceName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(instanceName: string.Empty)
+                .WithAutomationAccountMetric(accountName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -96,11 +79,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(omitResource: true)
+                .WithAutomationAccountMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -113,11 +96,28 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithRunbookNameForUnsupportedMetric_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithAutomationAccountMetric(runbookName: "example-runbook", azureMetricName: "unsupported")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void AutomationAccountMetricsDeclaration_DeclarationWithRunbookNameWithSupportedMetric_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAutomationAccountMetric(runbookName: "example-runbook", azureMetricName: "TotalJob")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -130,11 +130,28 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void ApiManagementMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void AutomationAccountMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithApiManagementMetric()
+                .WithAutomationAccountMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
+        public void AutomationAccountMetricsDeclaration_ValidDeclaration_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAutomationAccountMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

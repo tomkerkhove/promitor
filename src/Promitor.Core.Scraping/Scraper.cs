@@ -4,6 +4,7 @@ using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -115,17 +116,18 @@ namespace Promitor.Core.Scraping
             {
                 try
                 {
-                    var definition = new { error = new { code = "", message = "" } };
-                    var jsonError = JsonConvert.DeserializeAnonymousType(errorResponseException.Response.Content, definition);
-
-                    if (!string.IsNullOrEmpty(jsonError.error.message))
+                    var rawResponse = errorResponseException.Response.Content;
+                    var parsedResponse = JToken.Parse(rawResponse);
+                    ScrapeError scrapeError;
+                    if (string.IsNullOrWhiteSpace(parsedResponse["error"]?.ToString()) == false)
                     {
-                        reason = $"{jsonError.error.code}: {jsonError.error.message}";
+                        scrapeError = JsonConvert.DeserializeObject<ScrapeError>(parsedResponse["error"]?.ToString());
                     }
-                    else if (!string.IsNullOrEmpty(jsonError.error.code))
+                    else
                     {
-                        reason = $"{jsonError.error.code}";
+                        scrapeError = JsonConvert.DeserializeObject<ScrapeError>(errorResponseException.Response.Content);
                     }
+                    reason = ComposeErrorReason(scrapeError);
                 }
                 catch (Exception)
                 {
@@ -135,6 +137,21 @@ namespace Promitor.Core.Scraping
             }
 
             Logger.LogCritical(reason);
+        }
+
+        private static string ComposeErrorReason(ScrapeError scrapeError)
+        {
+            string reason = string.Empty;
+            if (!string.IsNullOrEmpty(scrapeError.Message))
+            {
+                reason = $"{scrapeError.Code}: {scrapeError.Message}";
+            }
+            else if (!string.IsNullOrEmpty(scrapeError.Code))
+            {
+                reason = $"{scrapeError.Code}";
+            }
+
+            return reason;
         }
 
         /// <summary>

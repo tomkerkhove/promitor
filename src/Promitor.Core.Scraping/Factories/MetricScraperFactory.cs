@@ -38,6 +38,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ApplicationGatewayScraper(scraperConfiguration);
                 case ResourceType.AppPlan:
                     return new AppPlanScraper(scraperConfiguration);
+                case ResourceType.AutomationAccount:
+                    return new AutomationAccountScraper(scraperConfiguration);
                 case ResourceType.BlobStorage:
                     return new BlobStorageScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:

@@ -12,6 +12,8 @@ resourceDiscoveryGroups:
   type: ApiManagement
 - name: app-plan-landscape
   type: AppPlan
+- name: automation-accounts
+  type: AutomationAccount
 - name: container-instances
   type: ContainerInstance
 - name: container-registry-landscape
