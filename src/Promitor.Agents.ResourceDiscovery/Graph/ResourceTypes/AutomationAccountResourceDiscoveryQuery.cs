@@ -13,7 +13,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var resource = new AutomationAccountResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
+            var runbookName = string.Empty; // We don't use location since we want all info
+            var resource = new AutomationAccountResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString(), runbookName);
             return resource;
         }
     }

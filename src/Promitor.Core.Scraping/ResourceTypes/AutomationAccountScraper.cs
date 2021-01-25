@@ -1,4 +1,5 @@
-﻿using Promitor.Core.Contracts;
+﻿using System.Collections.Generic;
+using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
@@ -19,6 +20,28 @@ namespace Promitor.Core.Scraping.ResourceTypes
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, AutomationAccountResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
+        }
+
+        protected override string DetermineMetricFilter(AutomationAccountResourceDefinition resourceDefinition)
+        {
+            if (string.IsNullOrWhiteSpace(resourceDefinition.RunbookName))
+            {
+                return base.DetermineMetricFilter(resourceDefinition);
+            }
+
+            return $"Runbook eq '{resourceDefinition.RunbookName}'";
+        }
+
+        protected override Dictionary<string, string> DetermineMetricLabels(AutomationAccountResourceDefinition resourceDefinition)
+        {
+            var labels = base.DetermineMetricLabels(resourceDefinition);
+
+            if (string.IsNullOrWhiteSpace(resourceDefinition.RunbookName) == false)
+            {
+                labels.Add("runbook_name", resourceDefinition.RunbookName);
+            }
+
+            return labels;
         }
     }
 }

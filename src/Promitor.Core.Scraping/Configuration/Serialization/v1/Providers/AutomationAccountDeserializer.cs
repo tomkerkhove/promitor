@@ -13,6 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
             Map(resource => resource.AccountName)
                 .IsRequired();
+            Map(resource => resource.RunbookName);
         }
     }
 }
