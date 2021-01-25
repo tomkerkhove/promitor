@@ -178,10 +178,4 @@ namespace Promitor.Core.Scraping
         /// <returns>Uri of Azure resource</returns>
         protected abstract string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resource);
     }
-
-    public class ScrapeError
-    {
-        public string Code { get; set; }
-        public string Message { get; set; }
-    }
 }
