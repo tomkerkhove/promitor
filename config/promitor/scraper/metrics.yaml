@@ -187,3 +187,15 @@ metrics:
     resources:
     - resourceGroupName: promitor-sources
       accountName: promitor-sandbox
+  - name: promitor_demo_automation_job_count
+    description: "Amount of jobs per Azure Automation account"
+    resourceType: AutomationAccount
+    azureMetricConfiguration:
+      metricName: TotalJob
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: automation-accounts
+    resources:
+    - resourceGroupName: promitor-sources
+      accountName: promitor-sandbox
