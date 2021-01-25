@@ -8,6 +8,7 @@
         /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
         /// <param name="resourceGroupName">The name of the resource group the server is in.</param>
         /// <param name="accountName">The name of the Azure Automation account resource.</param>
+        /// <param name="runbookName">The name of the runbook in your Azure Automation Account account to get metrics for.</param>
         public AutomationAccountResourceDefinition(string subscriptionId, string resourceGroupName, string accountName, string runbookName)
             : base(ResourceType.AutomationAccount, subscriptionId, resourceGroupName, accountName, $"{accountName}-{runbookName}")
         {
