@@ -1,0 +1,71 @@
+# Virtual Machine Scale Set (VMSS) CPU, disk and network usage metrics
+#
+# Add items to 'metrics' in your Promitor scraping agent configuration,
+# first replacing SCALESET_NAME with your VMSS name.
+#
+# See documentation for additional supported metrics and dimensions:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftcomputevirtualmachinescalesets
+metrics:
+  - name: azure_vmss_percentage_cpu_average
+    description: "CPU usage percentage (Avg)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Percentage CPU
+      aggregation:
+        type: Average
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_disk_read_bytes
+    description: "Bytes read from disk (Total)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Disk Read Bytes
+      aggregation:
+        type: Total
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_disk_write_bytes
+    description: "Bytes written to disk (Total)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Disk Write Bytes
+      aggregation:
+        type: Total
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_inbound_flows
+    description: "Current inbound network flows (Sum)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Inbound Flows
+      aggregation:
+        type: Sum
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_outbound_flows
+    description: "Current outbound network flows (Sum)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Outbound Flows
+      aggregation:
+        type: Sum
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_network_in_total
+    description: "Bytes received (Sum)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Network In Total
+      aggregation:
+        type: Sum
+    resources:
+    - scaleSetName: SCALESET_NAME
+  - name: azure_vmss_network_out_total
+    description: "Bytes transmitted (Sum)"
+    resourceType: VirtualMachineScaleSet
+    azureMetricConfiguration:
+      metricName: Network Out Total
+      aggregation:
+        type: Sum
+    resources:
+    - scaleSetName: SCALESET_NAME

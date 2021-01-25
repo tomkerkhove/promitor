@@ -1,0 +1,71 @@
+# Cosmos DB usage, RUs consumption, latency and availability metrics
+#
+# Add items to 'metrics' in your Promitor scraping agent configuration,
+# first replacing DATABASE_NAME with your Cosmos DB account name.
+#
+# See documentation for additional supported metrics and dimensions:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftdocumentdbdatabaseaccounts
+metrics:
+  - name: azure_cosmos_db_data_usage
+    description: "Total data usage reported at 5 minutes granularity"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: DataUsage
+      aggregation:
+        type: Total
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_index_usage
+    description: "Total index usage reported at 5 minutes granularity"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: IndexUsage
+      aggregation:
+        type: Total
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_normalized_ru_consumption
+    description: "Maximum RU consumption percentage per minute"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: NormalizedRUConsumption
+      aggregation:
+        type: Maximum
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_server_side_latency
+    description: "Average server latency of API requests"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: ServerSideLatency
+      aggregation:
+        type: Average
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_service_availability
+    description: "Account requests availability"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: ServiceAvailability
+      aggregation:
+        type: Average
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_total_request_units
+    description: "Request Units consumed"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: TotalRequestUnits
+      aggregation:
+        type: Total
+    resources:
+    - dbName: DATABASE_NAME
+  - name: azure_cosmos_db_total_requests
+    description: "Number of requests made"
+    resourceType: CosmosDb
+    azureMetricConfiguration:
+      metricName: TotalRequests
+      aggregation:
+        type: Count
+    resources:
+    - dbName: DATABASE_NAME
