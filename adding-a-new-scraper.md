@@ -16,7 +16,11 @@ discuss your scenario_
 
 ### Configuration
 
+<!-- markdownlint-disable MD006 -->
+<!-- markdownlint-disable MD007 -->
 <!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD029 -->
+<!-- markdownlint-disable MD032 -->
 1. Add your new scraping type to the `Promitor.Core.Scraping.Configuration.Model.ResourceType`.
 2. Describe the resource for which you're scraping metrics by creating `<New-Type>ResourceDefinition`
   and inherit from
@@ -32,7 +36,9 @@ discuss your scenario_
 5. Update `Promitor.Core.Scraping.Configuration.v1.Core.AzureResourceDeserializerFactory`
   to handle your new resource type by returning a new instance of the Deserializer
   you created in the previous step.
-6. Update the `Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping.V1MappingProfile` to handle your new resource type by mapping the `<New-Type>ResourceV1` to `<New-Type>ResourceDefinition` and annotating how to map it to `IAzureResourceDefinition`.
+6. Update the `Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping.V1MappingProfile` so that it:
+  - Is able to map your new resource type by mapping the `<New-Type>ResourceV1` to `<New-Type>ResourceDefinition`
+  - Annotate how to map it with `IAzureResourceDefinition` (include).
 7. Provide a unit test in `.\src\Promitor.Tests.Unit\Serialization\v1\Providers`
   that tests the deserialization based on our sample. Your test class must inherit
   from `ResourceDeserializerTest` to ensure the inherited functionality is tested.
