@@ -1,0 +1,35 @@
+# Key Vault latency, saturation and availability metrics
+#
+# Add items to 'metrics' in your Promitor scraping agent configuration,
+# first replacing VAULT_NAME with your Key Vault name.
+#
+# See documentation for additional supported metrics and dimensions:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftkeyvaultvaults
+metrics:
+  - name: azure_keyvault_service_api_latency
+    description: "Average server latency of all requests"
+    resourceType: KeyVault
+    azureMetricConfiguration:
+      metricName: ServiceApiLatency
+      aggregation:
+        type: Average
+    resources:
+    - vaultName: VAULT_NAME
+  - name: azure_keyvault_saturation_shoebox
+    description: "Vault capacity used"
+    resourceType: KeyVault
+    azureMetricConfiguration:
+      metricName: SaturationShoebox
+      aggregation:
+        type: Average
+    resources:
+    - vaultName: VAULT_NAME
+  - name: azure_keyvault_availability
+    description: "Vault requests availability"
+    resourceType: KeyVault
+    azureMetricConfiguration:
+      metricName: Availability
+      aggregation:
+        type: Average
+    resources:
+    - vaultName: VAULT_NAME
