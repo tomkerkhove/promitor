@@ -96,6 +96,40 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
+        public void AutomationAccountMetricsDeclaration_DeclarationWithRunbookNameForUnsupportedMetric_Fails()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAutomationAccountMetric(runbookName: "example-runbook", azureMetricName: "unsupported")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void AutomationAccountMetricsDeclaration_DeclarationWithRunbookNameWithSupportedMetric_Succeeds()
+        {
+            // Arrange
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithAutomationAccountMetric(runbookName: "example-runbook", azureMetricName: "TotalJob")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
         public void AutomationAccountMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
