@@ -1,4 +1,4 @@
-name: Bug Report
+name: Bug Report v2
 about: File a bug report
 title: "[Bug]: "
 labels: "bug, triage"
