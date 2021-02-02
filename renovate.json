@@ -7,7 +7,6 @@
   "ignoreDeps":[],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{configDescription}}}{{{footer}}}",
   "packageRules": [
     {
       "datasources": ["docker"],
@@ -17,7 +16,8 @@
   ],
   "extends": [
     "config:base",
-    "default:pinDigestsDisabled"
+    "default:pinDigestsDisabled",
+    "default:disablePrControls"
   ],
   "nuget": {
     "enabled": true
