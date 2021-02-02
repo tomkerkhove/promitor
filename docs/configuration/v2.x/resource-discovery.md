@@ -90,6 +90,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure API Management](metrics/api-management)
 - [Azure Application Gateway](metrics/application-gateway)
 - [Azure App Plan](metrics/app-plan)
+- [Azure Automation](metrics/automation-account)
 - [Azure Cache for Redis](metrics/redis-cache)
 - [Azure Container Instances](metrics/container-instances)
 - [Azure Container Registry](metrics/container-registry)
