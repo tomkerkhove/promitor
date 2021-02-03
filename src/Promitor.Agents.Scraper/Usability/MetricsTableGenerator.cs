@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Emit;
 using GuardNet;
 using Humanizer;
 using Promitor.Agents.Core.Usability;
@@ -9,7 +8,6 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Spectre.Console;
-using Spectre.Console.Rendering;
 
 namespace Promitor.Agents.Scraper.Usability
 {
@@ -62,7 +60,7 @@ namespace Promitor.Agents.Scraper.Usability
                 }
 
                 string labels = "None";
-                if (metric?.PrometheusMetricDefinition?.Labels?.Any() == true)
+                if (metric.PrometheusMetricDefinition?.Labels?.Any() == true)
                 {
                     labels = string.Empty;
 
@@ -71,9 +69,11 @@ namespace Promitor.Agents.Scraper.Usability
                         labels += $"- {label.Key}: {label.Value}{Environment.NewLine}";
                     }
                 }
-                
-                asciiTable.AddRow(metric.PrometheusMetricDefinition?.Name, metric.ResourceType.Humanize(LetterCasing.Title),
-                    labels, metric.AzureMetricConfiguration?.MetricName, configuredResources, configuredResourceDiscoveryGroups);
+
+                var outputMetricName = metric.PrometheusMetricDefinition?.Name ?? string.Empty;
+                var azureMetricName = metric.AzureMetricConfiguration?.MetricName ?? string.Empty;
+
+                asciiTable.AddRow(outputMetricName, metric.ResourceType.Humanize(LetterCasing.Title), labels, azureMetricName, configuredResources, configuredResourceDiscoveryGroups);
             }
 
             AnsiConsole.Render(asciiTable);

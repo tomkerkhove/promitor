@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GuardNet;
 using Humanizer;
 using Microsoft.Extensions.Options;
@@ -26,6 +27,20 @@ namespace Promitor.Agents.ResourceDiscovery.Usability
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             PlotAzureMetadataInAsciiTable(resourceDeclaration.AzureLandscape);
+            PlotResourceDiscoveryGroupsInAsciiTable(resourceDeclaration.ResourceDiscoveryGroups);
+        }
+
+        private void PlotResourceDiscoveryGroupsInAsciiTable(List<ResourceDiscoveryGroup> resourceDiscoveryGroups)
+        {
+            var asciiTable = CreateResourceDiscoveryGroupsAsciiTable();
+
+            foreach (var resourceDiscoveryGroup in resourceDiscoveryGroups)
+            {
+                var isInclusionCriteriaConfigured = resourceDiscoveryGroup.Criteria.Include != null ? "Yes" : "No";
+                asciiTable.AddRow(resourceDiscoveryGroup.Name, resourceDiscoveryGroup.Type.Humanize(LetterCasing.Title), isInclusionCriteriaConfigured);
+            }
+
+            AnsiConsole.Render(asciiTable);
         }
 
         private void PlotAzureMetadataInAsciiTable(AzureLandscape azureLandscape)
@@ -37,6 +52,18 @@ namespace Promitor.Agents.ResourceDiscovery.Usability
             asciiTable.AddRow(azureLandscape.TenantId, azureLandscape.Cloud.Humanize(LetterCasing.Title), rawSubscriptions);
 
             AnsiConsole.Render(asciiTable);
+        }
+
+        private Table CreateResourceDiscoveryGroupsAsciiTable()
+        {
+            var asciiTable = CreateAsciiTable("Resource Discovery Groups");
+
+            // Add some columns
+            asciiTable.AddColumn("Name");
+            asciiTable.AddColumn("Resource Type");
+            asciiTable.AddColumn("Is Include Criteria Configured?");
+
+            return asciiTable;
         }
 
         private Table CreateAzureMetadataAsciiTable()

@@ -9,7 +9,6 @@ using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Core;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Serilog;
 
 namespace Promitor.Agents.Scraper

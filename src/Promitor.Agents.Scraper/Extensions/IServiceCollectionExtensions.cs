@@ -111,7 +111,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
             services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();
 
-
             return services;
         }
 
