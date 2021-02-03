@@ -40,6 +40,7 @@ namespace Promitor.Agents.Scraper
             services.UseWebApi()
                 .AddResourceDiscoveryClient(promitorUserAgent)
                 .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
+                .AddUsability()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()

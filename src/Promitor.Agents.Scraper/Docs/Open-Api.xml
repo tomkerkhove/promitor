@@ -63,6 +63,11 @@
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Usability.MetricsTableGenerator.PlotOverviewInAsciiTable">
+            <summary>
+                Plots all configured metric information into an ASCII table
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces.IMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <summary>
                 Validates a specific metric definition
@@ -112,6 +117,12 @@
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.DefineDependencies(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Defines the dependencies that Promitor requires
+            </summary>
+            <param name="services">Collections of services in application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddUsability(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Adds usability
             </summary>
             <param name="services">Collections of services in application</param>
         </member>

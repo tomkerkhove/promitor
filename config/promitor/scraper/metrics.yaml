@@ -13,6 +13,8 @@ metrics:
   - name: promitor_demo_appplan_percentage_cpu
     description: "Average percentage of memory usage on an Azure App Plan"
     resourceType: AppPlan
+    labels:
+      app: promitor
     azureMetricConfiguration:
       metricName: MemoryPercentage
       aggregation:

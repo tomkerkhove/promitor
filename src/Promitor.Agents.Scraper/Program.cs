@@ -7,7 +7,9 @@ using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
+using Promitor.Agents.Scraper.Usability;
 using Promitor.Core;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Serilog;
 
 namespace Promitor.Agents.Scraper
@@ -43,7 +45,9 @@ namespace Promitor.Agents.Scraper
                         return (int)ExitStatus.ValidationFailed;
                     }
 
-                    Log.Logger.Information("Promitor configuration is valid, we are good to go.");                    
+                    Log.Logger.Information("Promitor configuration is valid, we are good to go.");
+
+                    PlotConfiguredMetrics(scope);
                 }
 
                 host.Run();
@@ -92,6 +96,13 @@ namespace Promitor.Agents.Scraper
                 .Build();
 
             return configuration;
+        }
+
+        private static void PlotConfiguredMetrics(IServiceScope scope)
+        {
+            var metricsTableGenerator = scope.ServiceProvider.GetRequiredService<MetricsTableGenerator>();
+            Log.Logger.Information("Here's an overview of what was configured:");
+            metricsTableGenerator.PlotOverviewInAsciiTable();
         }
     }
 }

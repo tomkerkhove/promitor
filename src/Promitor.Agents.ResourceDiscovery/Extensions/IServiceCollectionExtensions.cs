@@ -12,6 +12,7 @@ using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
@@ -68,6 +69,16 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             services.AddTransient<IValidationStep, ResourceDiscoveryGroupValidationStep>();
             services.AddTransient<IValidationStep, AzureAuthenticationValidationStep>();
             services.AddTransient<RuntimeValidator>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Add usability
+        /// </summary>
+        public static IServiceCollection AddUsability(this IServiceCollection services)
+        {
+            services.AddTransient<DiscoveryGroupTableGenerator>();
 
             return services;
         }
