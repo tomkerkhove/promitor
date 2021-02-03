@@ -1,5 +1,5 @@
 parameters:
-  registryEndpoint: 'Docker Hub'
+  registryEndpoint: 'GitHub Container Registry'
   imageDisplayName: ''
   imageName: ''
 
