@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Validation.Interfaces;
+using Spectre.Console;
 
 #pragma warning disable 618
 namespace Promitor.Agents.Core.Validation
@@ -43,29 +44,48 @@ namespace Promitor.Agents.Core.Validation
 
             var totalValidationSteps = _validationSteps.Count;
             var validationResults = new List<ValidationResult>();
+            
+            // Create a table
+            var asciiTable = CreateAsciiTable();
 
             for (var currentValidationStep = 1; currentValidationStep <= totalValidationSteps; currentValidationStep++)
             {
                 var validationStep = _validationSteps[currentValidationStep - 1];
-                var validationResult = RunValidationStep(validationStep, currentValidationStep, totalValidationSteps);
+                var validationResult = RunValidationStep(validationStep, asciiTable);
                 validationResults.Add(validationResult);
             }
+
+            AnsiConsole.Render(asciiTable);
 
             return validationResults;
         }
 
-        private ValidationResult RunValidationStep(IValidationStep validationStep, int currentStep, int totalSteps)
+        private static Table CreateAsciiTable()
         {
-            _validationLogger.LogInformation("Start Validation step {currentStep}/{totalSteps}: {validationStepName}", currentStep, totalSteps, validationStep.ComponentName);
+            var asciiTable = new Table
+            {
+                Border = TableBorder.HeavyEdge
+            };
 
+            // Add some columns
+            asciiTable.AddColumn("Name");
+            asciiTable.AddColumn("Outcome");
+            asciiTable.AddColumn("Details");
+            asciiTable.Caption("Validation");
+
+            return asciiTable;
+        }
+
+        private ValidationResult RunValidationStep(IValidationStep validationStep, Table asciiTable)
+        {
             var validationResult = validationStep.Run();
             if (validationResult.IsSuccessful)
             {
-                _validationLogger.LogInformation("Validation step {currentStep}/{totalSteps} succeeded", currentStep, totalSteps);
+                asciiTable.AddRow(validationStep.ComponentName, "Success", "Everything is well-configured.");
             }
             else
             {
-                _validationLogger.LogWarning("Validation step {currentStep}/{totalSteps} failed. Error(s): {validationMessage}", currentStep, totalSteps, validationResult.Message);
+                asciiTable.AddRow(validationStep.ComponentName, "Failed", $"Validation failed:\r\n{validationResult.Message}");
             }
 
             return validationResult;

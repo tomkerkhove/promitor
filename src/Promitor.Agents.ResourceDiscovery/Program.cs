@@ -7,6 +7,7 @@ using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
+using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Core;
 using Serilog;
 
@@ -43,6 +44,7 @@ namespace Promitor.Agents.ResourceDiscovery
                     }
 
                     Log.Logger.Information("Promitor configuration is valid, we are good to go.");
+                    PlotConfiguredDiscoveryGroups(scope);
                 }
 
                 host.Run();
@@ -92,6 +94,13 @@ namespace Promitor.Agents.ResourceDiscovery
                     .Build();
 
             return configuration;
+        }
+
+        private static void PlotConfiguredDiscoveryGroups(IServiceScope scope)
+        {
+            var metricsTableGenerator = scope.ServiceProvider.GetRequiredService<DiscoveryGroupTableGenerator>();
+            Log.Logger.Information("Here's an overview of what was configured:");
+            metricsTableGenerator.PlotOverviewInAsciiTable();
         }
     }
 }
