@@ -6,3 +6,4 @@ version:
 
 - {{% tag added %}} Support for scraping Azure Automation account ([docs](https://promitor.io/configuration/v2.x/metrics/automation-account)
  | [#352](https://github.com/tomkerkhove/promitor/issues/352))
+- {{% tag changed %}} Provide better usability in terms of startup and configuration insights ([#1474](https://github.com/tomkerkhove/promitor/issues/1474))
