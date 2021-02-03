@@ -79,6 +79,10 @@ Here is an overview of the NuGet packages that we rely on:
   - Swagger tools for documenting API's built on ASP.NET Core
 - [Prometheus.Client](https://github.com/PrometheusClientNet/Prometheus.Client)
   - .NET client for prometheus.io
+- [spectre.console](https://github.com/spectresystems/spectre.console) - A library that makes it easier to create
+ beautiful console applications.
+- [Humanizer](https://github.com/Humanizr/Humanizer) - Humanizer meets all your .NET needs for manipulating and
+ displaying strings, enums, dates, times, timespans, numbers and quantities
 - [YamlDotNet](https://github.com/aaubry/YamlDotNet) - .NET library for YAML
 - [Guard.NET](https://github.com/george-pancescu/Guard) - Library that facilitates
   runtime checks of code and allows to define preconditions and invariants within
