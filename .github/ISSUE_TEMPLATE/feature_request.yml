@@ -1,0 +1,17 @@
+name: Feature request 🧭
+about: Suggest an idea for this project
+labels: "feature-request"
+assignees: tomkerkhove
+issue_body: true
+inputs:
+- type: textarea
+  attributes:
+    label: Proposal
+    description: "What would you like to have as a feature"
+    placeholder: "A clear and concise description of what you want to happen."
+- type: input
+  attributes:
+    label: Contact Details
+    description: How can we get in touch with you if we need more info?
+    required: false
+    placeholder: ex. email@example.com
