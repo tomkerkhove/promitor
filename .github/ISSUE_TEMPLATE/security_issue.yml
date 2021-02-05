@@ -7,8 +7,8 @@ inputs:
 - type: textarea
   attributes:
     label: Report
-    description: "What is the vulnerability and how does it affect Promitor?
-    placeholder: "A clear and concise description of how the security issue affects this project"
+    description: What is the vulnerability and how does it affect Promitor?
+    placeholder: A clear and concise description of how the security issue affects this project
 - type: input
   attributes:
     label: Vulnerability Information
