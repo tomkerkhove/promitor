@@ -31,14 +31,14 @@ inputs:
       3.
       ...
     required: true
-- type: dropdown
+- type: multi_select
   attributes:
     label: Component
     description: What Promitor agent are you having issues with?
     required: true
     choices:
-    - Scraper
     - Resource Discovery
+    - Scraper
 - type: input
   attributes:
     label: Version
@@ -60,7 +60,7 @@ inputs:
     label: Logs
     description: "Provide logs of our component, if you can share them"
     value: |
-      ```yaml
+      ```shell
       example
       ```
     required: false
