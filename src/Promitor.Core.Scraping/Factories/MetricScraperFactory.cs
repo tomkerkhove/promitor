@@ -56,6 +56,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ExpressRouteCircuitScraper(scraperConfiguration);
                 case ResourceType.FileStorage:
                     return new FileStorageScraper(scraperConfiguration);
+                case ResourceType.FrontDoor:
+                    return new FrontDoorScraper(scraperConfiguration);
                 case ResourceType.FunctionApp:
                     return new FunctionAppScraper(scraperConfiguration);
                 case ResourceType.Generic:

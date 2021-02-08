@@ -35,6 +35,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ExpressRouteCircuitMetricsValidator();
                 case ResourceType.FileStorage:
                     return new FileStorageMetricValidator();
+                case ResourceType.FrontDoor:
+                    return new FrontDoorMetricValidator();
                 case ResourceType.FunctionApp:
                     return new FunctionAppMetricValidator();
                 case ResourceType.Generic:
