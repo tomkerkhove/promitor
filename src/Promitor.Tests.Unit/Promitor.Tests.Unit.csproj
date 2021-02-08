@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Bogus" Version="32.1.1" />
+    <PackageReference Include="Bogus" Version="33.0.1" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.1.20200127.214830" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
