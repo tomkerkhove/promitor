@@ -19,18 +19,17 @@ All supported metrics are documented in the official [Azure Monitor documentatio
 Example:
 
 ```yaml
-name: azure_express_route_percentage_arp_availability
-description: "Average percentage of arp availability on an Azure express route circuit"
+name: promitor_demo_frontdoor_backend_health
+description: "Health percentage for backends in Azure Front Door"
 resourceType: FrontDoor
 azureMetricConfiguration:
-  metricName: ArpAvailability
+  metricName: BackendHealthPercentage
   aggregation:
     type: Average
 resources:
-- expressRouteCircuitName: promitor-express-route-circuit-1
-- expressRouteCircuitName: promitor-express-route-circuit-2
+- name: promitor-landscape
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
-- name: express-route-circuit-landscape
+- name: front-door-landscape
 ```
 
 <!-- markdownlint-disable MD033 -->
