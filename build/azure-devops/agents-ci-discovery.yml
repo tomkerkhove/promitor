@@ -16,7 +16,7 @@ variables:
   - template: ./variables/build.yml
   - template: ./variables/tests.yml
   - name: Image.Name
-    value: 'tomkerkhove/promitor-agent-resource-discovery-ci'
+    value: 'ghcr.io/tomkerkhove/promitor-agent-resource-discovery-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
   - name: Container.Name

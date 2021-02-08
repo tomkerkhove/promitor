@@ -81,6 +81,11 @@
                 Add validation rules
             </summary>
         </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddUsability(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+                Add usability
+            </summary>
+        </member>
         <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
             <summary>
                 Response provided by Azure Resource Graph after running a query
@@ -111,6 +116,11 @@
         <member name="M:Promitor.Agents.ResourceDiscovery.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Startup" /> class.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Usability.DiscoveryGroupTableGenerator.PlotOverviewInAsciiTable">
+            <summary>
+                Plots all configured information into an ASCII table
             </summary>
         </member>
     </members>

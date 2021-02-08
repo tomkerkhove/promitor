@@ -29,7 +29,7 @@ variables:
   - template: ./variables/tests.yml
   - template: ./variables/build.yml
   - name: 'Image.Name'
-    value: 'tomkerkhove/promitor-agent-scraper'
+    value: 'ghcr.io/tomkerkhove/promitor-agent-scraper'
   - name: 'Image.TaggedName'
     value: '$(Image.Name):$(Image.Version)'
   - name: 'Release.TagName'

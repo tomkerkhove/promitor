@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
-using Promitor.Core.Serialization.Yaml;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
-using Promitor.Core.Contracts.ResourceTypes;
+using ValidationResult = Promitor.Agents.Core.Validation.ValidationResult;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
 {
@@ -41,8 +39,6 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             {
                 return ValidationResult.Failure(ComponentName, "Errors were found while deserializing the metric configuration.");
             }
-
-            LogMetricsDeclaration(metricsDeclaration);
 
             var validationErrors = new List<string>();
             var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
@@ -75,27 +71,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
                 }
             }
         }
-
-        private void LogMetricsDeclaration(MetricsDeclaration metricsDeclaration)
-        {
-            metricsDeclaration.Metrics.ForEach(SanitizeStorageQueueDeclaration);
-
-            var serializer = YamlSerialization.CreateSerializer();
-            var rawDeclaration = serializer.Serialize(metricsDeclaration);
-            Logger.LogInformation("Following metrics configuration was configured:\n{Configuration}", rawDeclaration);
-        }
-
-        private void SanitizeStorageQueueDeclaration(MetricDefinition metricDefinition)
-        {
-            foreach (var storageQueueDeclaration in metricDefinition.Resources.OfType<StorageQueueResourceDefinition>())
-            {
-                if (string.IsNullOrWhiteSpace(storageQueueDeclaration.SasToken.RawValue) == false)
-                {
-                    storageQueueDeclaration.SasToken.RawValue = "***";
-                }
-            }
-        }
-
+        
         private static IEnumerable<string> ValidateMetricDefaults(MetricDefaults metricDefaults)
         {
             if (string.IsNullOrWhiteSpace(metricDefaults.Scraping?.Schedule))

@@ -10,7 +10,7 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
-using Prometheus.Client.Abstractions;
+using Prometheus.Client;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.Sinks.Prometheus;

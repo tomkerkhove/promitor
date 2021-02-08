@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Prometheus.Client.Abstractions;
+using Prometheus.Client;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;

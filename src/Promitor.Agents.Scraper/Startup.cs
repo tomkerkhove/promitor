@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,6 +39,7 @@ namespace Promitor.Agents.Scraper
             services.UseWebApi()
                 .AddResourceDiscoveryClient(promitorUserAgent)
                 .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
+                .AddUsability()
                 .AddHttpCorrelation()
                 .AddAutoMapper(typeof(V1MappingProfile).Assembly)
                 .DefineDependencies()

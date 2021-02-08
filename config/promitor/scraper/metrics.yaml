@@ -13,6 +13,8 @@ metrics:
   - name: promitor_demo_appplan_percentage_cpu
     description: "Average percentage of memory usage on an Azure App Plan"
     resourceType: AppPlan
+    labels:
+      app: promitor
     azureMetricConfiguration:
       metricName: MemoryPercentage
       aggregation:
@@ -151,3 +153,39 @@ metrics:
     - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
       resourceGroupName: docker-hub-metrics
       filter: dependency/resultCode eq '200'
+  - name: promitor_demo_automation_job_count
+    description: "Amount of jobs per Azure Automation account"
+    resourceType: AutomationAccount
+    azureMetricConfiguration:
+      metricName: TotalJob
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: automation-accounts
+    resources:
+    - resourceGroupName: promitor-sources
+      accountName: promitor-sandbox
+  - name: promitor_demo_automation_update_deployment_runs
+    description: "Amount of jobs per Azure Automation account"
+    resourceType: AutomationAccount
+    azureMetricConfiguration:
+      metricName: TotalUpdateDeploymentRuns
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: automation-accounts
+    resources:
+    - resourceGroupName: promitor-sources
+      accountName: promitor-sandbox
+  - name: promitor_demo_automation_update_deployment_machine_runs
+    description: "Amount of jobs per Azure Automation account"
+    resourceType: AutomationAccount
+    azureMetricConfiguration:
+      metricName: TotalUpdateDeploymentMachineRuns
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+    - name: automation-accounts
+    resources:
+    - resourceGroupName: promitor-sources
+      accountName: promitor-sandbox

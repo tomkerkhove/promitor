@@ -14,6 +14,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Core;
@@ -109,6 +110,17 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IAzureResourceDeserializerFactory, AzureResourceDeserializerFactory>();
             services.AddSingleton<IDeserializer<MetricAggregationV1>, MetricAggregationDeserializer>();
             services.AddSingleton<IDeserializer<SecretV1>, SecretDeserializer>();
+
+            return services;
+        }
+
+        /// <summary>
+        ///     Adds usability
+        /// </summary>
+        /// <param name="services">Collections of services in application</param>
+        public static IServiceCollection AddUsability(this IServiceCollection services)
+        {
+            services.AddTransient<MetricsTableGenerator>();
 
             return services;
         }

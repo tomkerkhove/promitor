@@ -26,6 +26,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
         }
+
         [Fact]
         public void ApiManagementMetricsDeclaration_DeclarationWithoutLocationName_Succeeds()
         {

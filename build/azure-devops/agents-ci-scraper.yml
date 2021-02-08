@@ -16,7 +16,7 @@ variables:
   - template: ./variables/build.yml
   - template: ./variables/tests.yml
   - name: Image.Name
-    value: 'tomkerkhove/promitor-agent-scraper-ci'
+    value: 'ghcr.io/tomkerkhove/promitor-agent-scraper-ci'
   - name: Image.TaggedName
     value: '$(Image.Name):$(Tags.PR)'
   - name: App.Version

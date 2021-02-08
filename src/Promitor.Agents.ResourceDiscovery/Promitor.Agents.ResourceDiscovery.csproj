@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>3.1.10</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.11</RuntimeFrameworkVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
     <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
@@ -36,7 +36,7 @@
     <PackageReference Include="Microsoft.Azure.Management.ResourceGraph" Version="2.0.0" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.6.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.9" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.12" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
     <PackageReference Include="Polly" Version="7.2.1" />
   </ItemGroup>
@@ -48,7 +48,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
     <ProjectReference Include="..\Promitor.Core.Contracts\Promitor.Core.Contracts.csproj" />
-    <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
   </ItemGroup>
 
 </Project>
