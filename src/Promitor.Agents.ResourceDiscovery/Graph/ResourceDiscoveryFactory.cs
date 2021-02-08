@@ -30,6 +30,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new EventHubsDiscoveryQuery();
                 case ResourceType.ExpressRouteCircuit:
                     return new ExpressRouteCircuitDiscoveryQuery();
+                case ResourceType.FrontDoor:
+                    return new FrontDoorDiscoveryQuery();
                 case ResourceType.FunctionApp:
                     return new FunctionAppDiscoveryQuery();
                 case ResourceType.IoTHub:

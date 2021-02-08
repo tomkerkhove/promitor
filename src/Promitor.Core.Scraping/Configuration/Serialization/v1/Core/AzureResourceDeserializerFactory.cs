@@ -57,6 +57,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.FileStorage:
                     var fileStorageLogger = _loggerFactory.CreateLogger<FileStorageDeserializer>();
                     return new FileStorageDeserializer(fileStorageLogger);
+                case ResourceType.FrontDoor:
+                    var frontDoorDeserializer = _loggerFactory.CreateLogger<FrontDoorDeserializer>();
+                    return new FrontDoorDeserializer(frontDoorDeserializer);
                 case ResourceType.FunctionApp:
                     var functionAppLogger = _loggerFactory.CreateLogger<FunctionAppDeserializer>();
                     return new FunctionAppDeserializer(functionAppLogger);
