@@ -25,11 +25,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
 
             _queryBuilder = new StringBuilder();
             _queryBuilder.AppendLine("Resources");
-            _queryBuilder.AppendLine($"| where type == tolower('{resourceTypes.First()}')");
+            _queryBuilder.AppendLine($"| where type =~ '{resourceTypes.First()}'");
 
             foreach (var resourceType in resourceTypes.Skip(1))
             {
-                _queryBuilder.AppendLine($" or type == '{resourceType}'");
+                _queryBuilder.AppendLine($" or type =~ '{resourceType}'");
             }
         }
 
@@ -56,7 +56,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             switch (operatorToUse)
             {
                 case Operator.Equals:
-                    return "==";
+                    return "=~";
                 case Operator.DoesNotEquals:
                     return "!=";
                 case Operator.Contains:
@@ -145,10 +145,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             _queryBuilder.Append("| where ");
             for (int counter = 0; counter < allowedValues.Count - 1; counter++)
             {
-                _queryBuilder.Append($"{fieldName} == '{allowedValues[counter]}' or ");
+                _queryBuilder.Append($"{fieldName} =~ '{allowedValues[counter]}' or ");
             }
 
-            _queryBuilder.AppendLine($"{fieldName} == '{allowedValues.Last()}'");
+            _queryBuilder.AppendLine($"{fieldName} =~ '{allowedValues.Last()}'");
         }
 
         private void FilterByTags(Dictionary<string,string> allowedTags)

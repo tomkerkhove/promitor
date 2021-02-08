@@ -24,6 +24,8 @@ resourceDiscoveryGroups:
   type: DeviceProvisioningService
 - name: event-hubs-landscape
   type: EventHubs
+- name: front-door-landscape
+  type: FrontDoor
 - name: iot-gateways
   type: IoTHub
 - name: key-vaults
@@ -63,7 +65,7 @@ resourceDiscoveryGroups:
       regions:
       - northeurope
       - westeurope
-- name: web-apps-filtered
+- name: web-apps-in-resource-group
   type: WebApp
   criteria:
     include:
@@ -84,6 +86,12 @@ resourceDiscoveryGroups:
     include:
       resourceGroups:
       - promitor-testing-resource-discovery-eu
+- name: one-resource-group-scenario-wiht-other-casing
+  type: LogicApp
+  criteria:
+    include:
+      resourceGroups:
+      - PROMITOR-testing-resource-discovery-eu
 - name: two-resource-group-scenario
   type: LogicApp
   criteria:
