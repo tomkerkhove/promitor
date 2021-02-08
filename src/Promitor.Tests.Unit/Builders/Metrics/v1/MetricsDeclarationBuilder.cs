@@ -365,6 +365,23 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithFrontDoorMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string name = "BackendHealthPercentage",
+            string azureMetricName = "Total",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new FrontDoorResourceV1
+            {
+                Name = name
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.FrontDoor, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor",
             string metricDescription = "Description for a metric",
             string accountName = "promitor-account",
