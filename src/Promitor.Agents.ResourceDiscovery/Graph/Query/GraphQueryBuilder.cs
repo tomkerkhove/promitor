@@ -56,7 +56,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             switch (operatorToUse)
             {
                 case Operator.Equals:
-                    return "=~";
+                    return "==";
                 case Operator.DoesNotEquals:
                     return "!=";
                 case Operator.Contains:
