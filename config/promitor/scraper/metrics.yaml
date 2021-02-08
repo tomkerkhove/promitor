@@ -10,6 +10,17 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
+  - name: promitor_demo_frontdoor_backend_health
+    description: "Average percentage of memory usage on an Azure App Plan"
+    resourceType: FrontDoor
+    labels:
+      app: promitor
+    azureMetricConfiguration:
+      metricName: BackendHealthPercentage
+      aggregation:
+        type: Average
+    resources:
+    - name: promitor-app-plan
   - name: promitor_demo_appplan_percentage_cpu
     description: "Average percentage of memory usage on an Azure App Plan"
     resourceType: AppPlan
@@ -189,3 +200,30 @@ metrics:
     resources:
     - resourceGroupName: promitor-sources
       accountName: promitor-sandbox
+  - name: promitor_demo_frontdoor_backend_health_per_backend
+    description: "Health percentage for a backed in Azure Front Door"
+    resourceType: FrontDoor
+    labels:
+      app: promitor
+    azureMetricConfiguration:
+      metricName: BackendHealthPercentage
+      dimension:
+        name: Backend
+      aggregation:
+        type: Average
+    resources:
+    - name: promitor-landscape
+      resourceGroupName: promitor-landscape
+  - name: promitor_demo_frontdoor_backend_health_per_backend_pool
+    description: "Health percentage for a backed in Azure Front Door"
+    resourceType: FrontDoor
+    labels:
+      app: promitor
+    azureMetricConfiguration:
+      metricName: BackendHealthPercentage
+      dimension:
+        name: BackendPool
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: front-door-landscape

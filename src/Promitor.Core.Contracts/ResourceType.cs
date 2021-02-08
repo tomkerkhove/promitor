@@ -33,6 +33,7 @@
         ApplicationGateway = 28,
         NetworkGateway = 29,
         KubernetesService = 30,
-        AutomationAccount = 31
+        AutomationAccount = 31,
+        FrontDoor = 32
     }
 }

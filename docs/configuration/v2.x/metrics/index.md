@@ -135,6 +135,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Database for PostgreSQL](postgresql)
 - [Azure Event Hubs](event-hubs)
 - [Azure Express Route Circuit](express-route-circuit)
+- [Azure Front Door](front-door)
 - [Azure Function App](function-app)
 - [Azure IoT Hub](iot-hub)
 - [Azure IoT Hub Device Provisioning Service (DPS)](iot-hub-device-provisioning-service)

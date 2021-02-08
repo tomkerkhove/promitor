@@ -35,6 +35,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<EventHubsResourceV1, EventHubResourceDefinition>();
             CreateMap<ExpressRouteCircuitResourceV1, ExpressRouteCircuitResourceDefinition>();
             CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
+            CreateMap<FrontDoorResourceV1, FrontDoorResourceDefinition>();
             CreateMap<FunctionAppResourceV1, FunctionAppResourceDefinition>();
             CreateMap<GenericResourceV1, GenericAzureResourceDefinition>();
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
@@ -73,6 +74,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<EventHubsResourceV1, EventHubResourceDefinition>()
                 .Include<ExpressRouteCircuitResourceV1, ExpressRouteCircuitResourceDefinition>()
                 .Include<FileStorageResourceV1, FileStorageResourceDefinition>()
+                .Include<FrontDoorResourceV1, FrontDoorResourceDefinition>()
                 .Include<FunctionAppResourceV1, FunctionAppResourceDefinition>()
                 .Include<GenericResourceV1, GenericAzureResourceDefinition>()
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
