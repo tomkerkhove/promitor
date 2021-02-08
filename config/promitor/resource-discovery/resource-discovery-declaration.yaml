@@ -24,6 +24,8 @@ resourceDiscoveryGroups:
   type: DeviceProvisioningService
 - name: event-hubs-landscape
   type: EventHubs
+- name: front-door-landscape
+  type: FrontDoor
 - name: iot-gateways
   type: IoTHub
 - name: key-vaults
