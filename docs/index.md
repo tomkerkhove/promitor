@@ -110,7 +110,7 @@ Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/ch
 We are proud to have the following customer(s) running Promitor in production:
 
 ![ResDiary](./media/logos/customers/resdiary.png)
-![Trynz](./docs/media/logos/customers/trynz.png)
+![Trynz](./media/logos/customers/trynz.png)
 ![Vsoft](./media/logos/customers/vsoft.png)
 ![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
 
