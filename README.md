@@ -28,6 +28,7 @@ All documentation is available on [promitor.io](https://promitor.io)
 We are proud to have the following customer(s) running Promitor in production:
 
 ![ResDiary](./docs/media/logos/customers/resdiary.png)
+![Trynz](./docs/media/logos/customers/trynz.png)
 ![Vsoft](./docs/media/logos/customers/vsoft.png)
 ![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
 
