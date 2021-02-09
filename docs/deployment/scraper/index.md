@@ -93,7 +93,7 @@ metrics:
         type: Average
 ```
 
-Check the [full values file](https://github.com/tomkerkhove/promitor/blob/master/charts/promitor-agent-scraper/values.yaml)
+Check the [full values file](https://github.com/promitor/charts/blob/main/promitor-agent-scraper/values.yaml)
 to see all configurable values.
 
 If you have a `metric-declaration.yaml` file, you can create a basic deployment
