@@ -54,6 +54,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new ServiceBusNamespaceDiscoveryQuery();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseDiscoveryQuery();
+                case ResourceType.SqlElasticPool:
+                    return new SqlElasticPoolDiscoveryQuery();
                 case ResourceType.SqlManagedInstance:
                     return new SqlManagedInstanceDiscoveryQuery();
                 case ResourceType.StorageAccount:
