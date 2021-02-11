@@ -94,6 +94,26 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         }
 
         [Fact]
+        public async Task ResourceDiscovery_GetWithFilterOnOneResourceGroupWithDifferentCasing_ReturnsExpectedAmount()
+        {
+            // Arrange
+            const string resourceDiscoveryGroupName = "one-resource-group-scenario-wiht-other-casing";
+            const int expectedResourceCount = 3;
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesAsync(resourceDiscoveryGroupName);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var rawResponseBody = await response.Content.ReadAsStringAsync();
+            Assert.NotEmpty(rawResponseBody);
+            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            Assert.NotNull(resources);
+            Assert.Equal(expectedResourceCount, resources.Count);
+        }
+
+        [Fact]
         public async Task ResourceDiscovery_GetWithFilterOnTwoResourceGroups_ReturnsExpectedAmount()
         {
             // Arrange
