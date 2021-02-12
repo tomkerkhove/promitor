@@ -82,6 +82,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ServiceBusNamespaceScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseScraper(scraperConfiguration);
+                case ResourceType.SqlElasticPool:
+                    return new SqlElasticPoolScraper(scraperConfiguration);
                 case ResourceType.SqlManagedInstance:
                     return new SqlManagedInstanceScraper(scraperConfiguration);
                 case ResourceType.SqlServer:

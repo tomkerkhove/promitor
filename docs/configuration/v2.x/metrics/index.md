@@ -146,6 +146,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Namespace](service-bus-namespace)
 - [Azure SQL Database](sql-database)
+- [Azure SQL Elastic Pool](sql-elastic-pool)
 - [Azure SQL Managed Instance](sql-managed-instance)
 - [Azure SQL Server](sql-server)
 - [Azure Storage (Account)](storage-account)

@@ -559,6 +559,26 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithSqlElasticPoolMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string serverName = "promitor-sql-server",
+            string poolName = "promitor-elastic-pool",
+            string metricDescription = "Metric description",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new SqlElasticPoolResourceV1
+            {
+                ServerName = serverName,
+                PoolName = poolName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SqlElasticPool, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithSqlServerMetric(
             string metricName = "promitor-sql-server",
             string azureMetricName = "cpu_percent",
