@@ -59,7 +59,7 @@ All resources provide the capability to override the default Azure metadata:
 
 Additionally, the following fields are optional:
 
-- `azureMetricConfiguration.dimension.Name` - The name of the dimension that should
+- `azureMetricConfiguration.dimension.name` - The name of the dimension that should
    be used to scrape a multi-dimensional metric in Azure Monitor.
   - ☝ *Promitor simply acts as a proxy and will not validate if it's supported or
      not, we recommend verifying that the dimension is supported in the
