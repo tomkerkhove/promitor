@@ -96,6 +96,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.SqlDatabase:
                     var sqlDatabaseLogger = _loggerFactory.CreateLogger<SqlDatabaseDeserializer>();
                     return new SqlDatabaseDeserializer(sqlDatabaseLogger);
+                case ResourceType.SqlElasticPool:
+                    var sqlElasticPoolLogger = _loggerFactory.CreateLogger<SqlElasticPoolDeserializer>();
+                    return new SqlElasticPoolDeserializer(sqlElasticPoolLogger);
                 case ResourceType.SqlManagedInstance:
                     var sqlManagedInstanceLogger = _loggerFactory.CreateLogger<SqlManagedInstanceDeserializer>();
                     return new SqlManagedInstanceDeserializer(sqlManagedInstanceLogger);

@@ -48,6 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
+            CreateMap<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>();
             CreateMap<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>();
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
@@ -87,6 +88,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
+                .Include<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>()
                 .Include<SqlManagedInstanceResourceV1, SqlManagedInstanceResourceDefinition>()
                 .Include<SqlServerResourceV1, SqlServerResourceDefinition>()
                 .Include<StorageAccountResourceV1, StorageAccountResourceDefinition>()
