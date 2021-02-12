@@ -34,6 +34,7 @@
         NetworkGateway = 29,
         KubernetesService = 30,
         AutomationAccount = 31,
-        FrontDoor = 32
+        FrontDoor = 32,
+        SqlElasticPool = 33
     }
 }

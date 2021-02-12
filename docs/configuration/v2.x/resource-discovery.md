@@ -109,6 +109,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure Network Interface](metrics/network-interface)
 - [Azure Service Bus Namespace](metrics/service-bus-namespace)
 - [Azure SQL Database](metrics/sql-database)
+- [Azure SQL Elastic Pool](metrics/sql-elastic-pool)
 - [Azure SQL Managed Instance](metrics/sql-managed-instance)
 - [Azure Storage (Account)](metrics/storage-account)
 - [Azure Virtual Machine](metrics/virtual-machine)

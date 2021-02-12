@@ -83,6 +83,14 @@
         <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
             <inheritdoc />
         </member>
+        <member name="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlElasticPoolMetricValidator">
+            <summary>
+            Validates <see cref="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlElasticPoolMetricValidator" /> objects.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlElasticPoolMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <inheritdoc />
+        </member>
         <member name="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator">
             <summary>
             Validates <see cref="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlManagedInstanceMetricValidator" /> objects.
