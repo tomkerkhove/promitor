@@ -9,7 +9,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     {
         private const string ServerSectionInResourceUri = "servers/";
 
-        protected virtual string GetServerNameFromResourceUri(JToken resourceUri)
+        public virtual string GetServerNameFromResourceUri(JToken resourceUri)
         {
             Guard.NotNull(resourceUri, nameof(resourceUri));
             var rawResourceUri = resourceUri.ToString();

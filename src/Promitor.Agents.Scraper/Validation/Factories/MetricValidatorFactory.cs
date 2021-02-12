@@ -61,6 +61,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ServiceBusNamespaceMetricValidator();
                 case ResourceType.SqlDatabase:
                     return new SqlDatabaseMetricValidator();
+                case ResourceType.SqlElasticPool:
+                    return new SqlElasticPoolMetricValidator();
                 case ResourceType.SqlManagedInstance:
                     return new SqlManagedInstanceMetricValidator();
                 case ResourceType.SqlServer:

@@ -40,6 +40,8 @@ resourceDiscoveryGroups:
   type: SqlDatabase
 - name: sql-managed-instances
   type: SqlManagedInstance
+- name: sql-elastic-pools
+  type: SqlElasticPool
 - name: sql-servers
   type: SqlServer
 - name: storage-accounts
