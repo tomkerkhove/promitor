@@ -35,6 +35,9 @@
         KubernetesService = 30,
         AutomationAccount = 31,
         FrontDoor = 32,
-        SqlElasticPool = 33
+        SqlElasticPool = 33,
+        SynapseApacheSparkPool = 34,
+        SynapseSqlPool = 35,
+        SynapseWorkspace = 36
     }
 }

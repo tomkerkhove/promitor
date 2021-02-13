@@ -60,6 +60,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new SqlManagedInstanceDiscoveryQuery();
                 case ResourceType.StorageAccount:
                     return new StorageAccountDiscoveryQuery();
+                case ResourceType.SynapseApacheSparkPool:
+                    return new SynapseApacheSparkPoolDiscoveryQuery();
+                case ResourceType.SynapseSqlPool:
+                    return new SynapseSqlPoolDiscoveryQuery();
+                case ResourceType.SynapseWorkspace:
+                    return new SynapseWorkspaceDiscoveryQuery();
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineDiscoveryQuery();
                 case ResourceType.VirtualMachineScaleSet:
