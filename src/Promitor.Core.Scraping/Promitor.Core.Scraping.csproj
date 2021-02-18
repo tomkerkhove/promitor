@@ -19,7 +19,7 @@
     <PackageReference Include="Fastenshtein" Version="1.0.0.5" />
     <PackageReference Include="Cronos" Version="0.7.0" />
     <PackageReference Include="Guard.Net" Version="1.2.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.16.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.17.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.37.0" />
     <PackageReference Include="Prometheus.Client" Version="4.3.0" />
     <PackageReference Include="YamlDotNet" Version="9.1.4" />
