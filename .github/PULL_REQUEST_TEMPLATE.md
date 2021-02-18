@@ -1,3 +1,4 @@
+<!-- markdownlint-disable -->
 <!-- For new scrapers, make sure to follow https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md
 
 When implementing a new scraper; these tasks are completed:
@@ -5,6 +6,7 @@ When implementing a new scraper; these tasks are completed:
 - [ ] Implement validation
 - [ ] Implement scraping
 - [ ] Implement resource discovery
+- [ ] Provide unit tests
 - [ ] Test end-to-end
 - [ ] Document scraper
 - [ ] Add entry to changelog
@@ -27,3 +29,5 @@ promitor_ratelimit_arm{tenant_id="T",subscription_id="SUB",app_id="APP"} 11996 1
  -->
 
 Fixes #
+
+<!-- markdownlint-enable -->
