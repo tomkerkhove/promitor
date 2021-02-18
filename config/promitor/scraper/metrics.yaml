@@ -249,3 +249,30 @@ metrics:
       type: Average
   resourceDiscoveryGroups:
   - name: sql-elastic-pools
+- name: promitor_demo_synapse_apache_spark_apps_ended
+  description: "Amount of apps ended running on Apache Spark pool in Azure Synapse"
+  resourceType: SynapseApacheSparkPool
+  azureMetricConfiguration:
+    metricName: BigDataPoolApplicationsEnded
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: synapse-apache-spark-pools
+- name: promitor_demo_synapse_sql_pool_dwu_limit
+  description: "Amount of DWUs defined as limit for SQL pool in Azure Synapse"
+  resourceType: SynapseSqlPool
+  azureMetricConfiguration:
+    metricName: DWULimit
+    aggregation:
+      type: Maximum
+  resourceDiscoveryGroups:
+  - name: synapse-sql-pools
+- name: promitor_demo_synapse_workspace_builtin_sql_processed_bytes
+  description: "Amount of bytes processed in Azure Synapse workspace"
+  resourceType: SynapseWorkspace
+  azureMetricConfiguration:
+    metricName: BuiltinSqlPoolDataProcessedBytes
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: synapse-workspaces
