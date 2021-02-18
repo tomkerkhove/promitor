@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
@@ -44,6 +45,23 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 .Project(ProjectedFieldNames);
 
             return graphQueryBuilder;
+        }
+        
+        /// <summary>
+        /// Gets the name of the parent resource from a resource URI
+        /// </summary>
+        /// <param name="resourceIdentifier">Identifier to split on, ie servers/ for Azure SQL DB to get the server name</param>
+        /// <param name="resourceUri">Uri of the child resource</param>
+        /// <returns>Name of the parent resource</returns>
+        public virtual string GetParentResourceNameFromResourceUri(string resourceIdentifier, JToken resourceUri)
+        {
+            Guard.NotNull(resourceUri, nameof(resourceUri));
+            var rawResourceUri = resourceUri.ToString();
+            Guard.For<ArgumentException>(() => string.IsNullOrWhiteSpace(rawResourceUri), nameof(resourceUri));
+
+            var positionOfServersSection = rawResourceUri.LastIndexOf(resourceIdentifier, StringComparison.InvariantCultureIgnoreCase) + resourceIdentifier.Length;
+            var sqlResourceDetailsParts = rawResourceUri.Substring(positionOfServersSection).Split("/");
+            return sqlResourceDetailsParts.FirstOrDefault();
         }
 
         public abstract string[] ResourceTypes { get; }

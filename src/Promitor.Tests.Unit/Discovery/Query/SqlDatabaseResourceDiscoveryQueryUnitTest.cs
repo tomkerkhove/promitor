@@ -10,6 +10,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
     public class SqlDatabaseResourceDiscoveryQueryUnitTest
     {
         private readonly Faker _faker = new Faker();
+        private const string ServerSectionInResourceUri = "servers/";
 
         [Fact]
         public void GetServerNameFromResourceUri_ValidResourceUri_GetsServerName()
@@ -20,7 +21,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
             var sqlDatabaseDiscoveryQuery = new SqlDatabaseDiscoveryQuery();
 
             // Act
-            var foundServerName = sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri);
+            var foundServerName = sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(ServerSectionInResourceUri, resourceUri);
 
             // Assert
             Assert.Equal(serverName, foundServerName);
@@ -35,7 +36,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri));
+            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(ServerSectionInResourceUri, resourceUri));
         }
 
         [Fact]
@@ -46,7 +47,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
             var sqlDatabaseDiscoveryQuery = new SqlDatabaseDiscoveryQuery();
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri));
+            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(ServerSectionInResourceUri, resourceUri));
         }
     }
 }

@@ -53,6 +53,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
+            CreateMap<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>();
+            CreateMap<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>();
+            CreateMap<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
             CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
@@ -93,6 +96,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<SqlServerResourceV1, SqlServerResourceDefinition>()
                 .Include<StorageAccountResourceV1, StorageAccountResourceDefinition>()
                 .Include<StorageQueueResourceV1, StorageQueueResourceDefinition>()
+                .Include<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>()
+                .Include<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>()
+                .Include<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
                 .Include<WebAppResourceV1, WebAppResourceDefinition>();

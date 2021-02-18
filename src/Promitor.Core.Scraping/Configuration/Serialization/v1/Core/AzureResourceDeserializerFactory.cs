@@ -111,6 +111,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.StorageQueue:
                     var storageQueueLogger = _loggerFactory.CreateLogger<StorageQueueDeserializer>();
                     return new StorageQueueDeserializer(_secretDeserializer, storageQueueLogger);
+                case ResourceType.SynapseApacheSparkPool:
+                    var synapseApacheSparkPoolLogger = _loggerFactory.CreateLogger<SynapseApacheSparkPoolDeserializer>();
+                    return new SynapseApacheSparkPoolDeserializer(synapseApacheSparkPoolLogger);
+                case ResourceType.SynapseSqlPool:
+                    var synapseSqlPoolLogger = _loggerFactory.CreateLogger<SynapseSqlPoolDeserializer>();
+                    return new SynapseSqlPoolDeserializer(synapseSqlPoolLogger);
+                case ResourceType.SynapseWorkspace:
+                    var synapseWorkspaceLogger = _loggerFactory.CreateLogger<SynapseWorkspaceDeserializer>();
+                    return new SynapseWorkspaceDeserializer(synapseWorkspaceLogger);
                 case ResourceType.VirtualMachine:
                     var virtualMachineLogger = _loggerFactory.CreateLogger<VirtualMachineDeserializer>();
                     return new VirtualMachineDeserializer(virtualMachineLogger);

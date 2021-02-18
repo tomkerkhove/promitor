@@ -1,6 +1,7 @@
 ﻿using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
+using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {

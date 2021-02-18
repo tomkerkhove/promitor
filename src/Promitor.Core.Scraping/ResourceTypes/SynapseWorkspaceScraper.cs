@@ -25,12 +25,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         protected override Dictionary<string, string> DetermineMetricLabels(SynapseWorkspaceResourceDefinition resourceDefinition)
         {
             var metricLabels = base.DetermineMetricLabels(resourceDefinition);
-            if (metricLabels.ContainsKey("name"))
-            {
-                metricLabels.Remove("name");
-            }
 
-            // TODO: Do we use workspace name or name as all others?
             metricLabels.TryAdd("workspace_name", resourceDefinition.WorkspaceName);
 
             return metricLabels;
