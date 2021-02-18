@@ -5,6 +5,7 @@ When implementing a new scraper; these tasks are completed:
 - [ ] Implement validation
 - [ ] Implement scraping
 - [ ] Implement resource discovery
+- [ ] Provide unit tests
 - [ ] Test end-to-end
 - [ ] Document scraper
 - [ ] Add entry to changelog
