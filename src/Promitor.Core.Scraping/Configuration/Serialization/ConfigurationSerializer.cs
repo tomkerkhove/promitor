@@ -53,7 +53,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             var rootNode = (YamlMappingNode)document.RootNode;
 
             var specVersion = DetermineDeclarationSpecVersion(rootNode);
-            _logger.LogInformation("Metrics declaration is using spec version {SpecVersion}", specVersion);
+            _logger.LogTrace("Metrics declaration is using spec version {SpecVersion}", specVersion);
 
             switch (specVersion)
             {

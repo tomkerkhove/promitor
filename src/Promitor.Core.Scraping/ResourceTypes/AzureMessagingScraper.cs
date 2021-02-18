@@ -47,7 +47,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 return base.DetermineMetricDimension(resourceDefinition, dimension);
             }
 
-            Logger.LogWarning("Using 'EntityName' dimension since no topic was configured.");
+            Logger.LogTrace("Using 'EntityName' dimension since no topic was configured.");
 
             return "EntityName";
         }
