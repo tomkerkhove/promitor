@@ -19,7 +19,7 @@ metricsConfiguration:
 telemetry:
   applicationInsights:
     instrumentationKey: ABC
-    isEnabled: true
+    isEnabled: false
     verbosity: warning
   containerLogs:
     isEnabled: true
