@@ -3,7 +3,7 @@ about: Create a report to help us improve
 labels: "bug"
 assignees: tomkerkhove
 issue_body: true
-body:
+inputs:
 - type: textarea
   attributes:
     label: Report
@@ -13,16 +13,14 @@ body:
   attributes:
     label: Expected Behavior
     description: What did you expect to happen?
-    placeholder: What did you expect to happen?
-  validations:
     required: true
+    placeholder: What did you expect to happen?
 - type: textarea
   attributes:
     label: Actual Behavior
     description: Also tell us, what did you see is happen?
-    placeholder: Tell us what you see that is happening
-  validations:
     required: true
+    placeholder: Tell us what you see that is happening
 - type: textarea
   attributes:
     label: Steps to Reproduce the Problem
@@ -32,23 +30,19 @@ body:
       2.
       3.
       ...
-  validations:
     required: true
-- type: dropdown
+- type: multi_select
   attributes:
     label: Component
     description: What Promitor agent are you having issues with?
-    multiple: true
-    options:
+    required: true
+    choices:
     - Resource Discovery
     - Scraper
-  validations:
-    required: true
 - type: input
   attributes:
     label: Version
     description: What version are you running?
-  validations:
     required: true
 - type: textarea
   attributes:
@@ -60,8 +54,7 @@ body:
       ```yaml
       # Add your scraping configuration here
       ```
-  validations:
-    required: false
+    required: false    
 - type: textarea
   attributes:
     label: Logs
@@ -70,25 +63,22 @@ body:
       ```shell
       example
       ```
-  validations:
     required: false
 - type: dropdown
   attributes:
     label: Platform
     description: Where is your cluster running?
-    options:
+    required: false
+    choices:
     - Alibaba Cloud
     - Amazon Web Services
     - Google Cloud
     - Microsoft Azure
     - Red Hat OpenShift
     - Other
-  validations:
-    required: false
 - type: input
   attributes:
     label: Contact Details
     description: How can we get in touch with you if we need more info?
-    placeholder: ex. email@example.com
-  validations:
     required: false
+    placeholder: ex. email@example.com
