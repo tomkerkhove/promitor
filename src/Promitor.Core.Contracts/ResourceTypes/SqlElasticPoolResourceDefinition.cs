@@ -1,7 +1,7 @@
 namespace Promitor.Core.Contracts.ResourceTypes
 {
     /// <summary>
-    /// Represents an Azure Azure SQL Elastic Pool resource.
+    /// Represents an Azure SQL Elastic Pool resource.
     /// </summary>
     public class SqlElasticPoolResourceDefinition : AzureResourceDefinition
     {

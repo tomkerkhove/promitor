@@ -92,6 +92,12 @@ namespace Promitor.Core.Scraping.Factories
                     return new StorageAccountScraper(scraperConfiguration);
                 case ResourceType.StorageQueue:
                     return new StorageQueueScraper(scraperConfiguration);
+                case ResourceType.SynapseApacheSparkPool:
+                    return new SynapseApacheSparkPoolScraper(scraperConfiguration);
+                case ResourceType.SynapseSqlPool:
+                    return new SynapseSqlPoolScraper(scraperConfiguration);
+                case ResourceType.SynapseWorkspace:
+                    return new SynapseWorkspaceScraper(scraperConfiguration);
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.VirtualMachineScaleSet:

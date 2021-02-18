@@ -3,9 +3,7 @@ server:
 telemetry:
   applicationInsights:
     instrumentationKey: ABC
-    isEnabled: true
-    verbosity: warning
+    isEnabled: false
   containerLogs:
     isEnabled: true
-    verbosity: trace
-  defaultVerbosity: trace
+  defaultVerbosity: information
