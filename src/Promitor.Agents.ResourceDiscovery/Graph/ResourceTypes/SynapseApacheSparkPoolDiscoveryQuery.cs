@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using GuardNet;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
