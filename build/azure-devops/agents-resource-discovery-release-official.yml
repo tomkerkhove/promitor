@@ -36,7 +36,7 @@ variables:
   - name: 'Image.TaggedName'
     value: '$(Image.ResourceDiscovery.Name):$(Image.Version)'
   - name: 'Release.TagName'
-    value: '$(Build.BuildNumber)'
+    value: 'ResourceDiscovery-v$(Build.BuildNumber)'
   # Required for all our build stages
   - group: 'Agent Authentication'
   - name: Container.Scraper.Name
