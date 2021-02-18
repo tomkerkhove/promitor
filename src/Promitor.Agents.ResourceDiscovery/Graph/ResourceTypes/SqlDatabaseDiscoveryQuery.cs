@@ -8,7 +8,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class SqlDatabaseDiscoveryQuery : ResourceDiscoveryQuery
     {
-        private const string ServerSectionInResourceUri = "servers/";
+        public const string ServerSectionInResourceUri = "servers/";
         public override string[] ResourceTypes => new[] { "microsoft.sql/servers/databases" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name", "id" };
 

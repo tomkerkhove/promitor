@@ -8,7 +8,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class SynapseSqlPoolDiscoveryQuery : ResourceDiscoveryQuery
     {
-        private const string WorkspaceSectionInResourceUri = "workspaces/";
+        public const string WorkspaceSectionInResourceUri = "workspaces/";
         public override string[] ResourceTypes => new[] { "microsoft.synapse/workspaces/sqlpools" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name", "id" };
 
