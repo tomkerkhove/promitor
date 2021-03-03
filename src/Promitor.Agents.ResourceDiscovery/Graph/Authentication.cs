@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
 

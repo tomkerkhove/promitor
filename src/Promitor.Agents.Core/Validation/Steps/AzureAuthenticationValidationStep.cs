@@ -21,16 +21,30 @@ namespace Promitor.Agents.Core.Validation.Steps
 
         public ValidationResult Run()
         {
-            var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-            if (string.IsNullOrWhiteSpace(applicationId))
-            {
-                return ValidationResult.Failure(ComponentName, "No application id was specified for Azure authentication");
-            }
+            var useManagedIdentity = _configuration.GetValue<string>(EnvironmentVariables.Authentication.UseManagedIdentity, "0") == "1";
 
-            var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-            if (string.IsNullOrWhiteSpace(applicationKey))
+            if (useManagedIdentity)
             {
-                return ValidationResult.Failure(ComponentName, "No application key was specified for Azure authentication");
+                var managedIdentityId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
+                this.Logger.LogInformation("Promitor configured to use a managed identity");
+
+                if (!string.IsNullOrWhiteSpace(managedIdentityId))
+                    this.Logger.LogInformation($"Promitor will use a user managed identity id:{managedIdentityId}");
+                else
+                    this.Logger.LogInformation($"Promitor will use the system assigned identity");
+            }
+            else
+            {
+                var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
+                this.Logger.LogInformation("Promitor configured to use a service principal");
+                this.Logger.LogInformation($"Promitor service principal id:{applicationId}");
+
+                if (string.IsNullOrWhiteSpace(applicationId))
+                    return ValidationResult.Failure(ComponentName, "No application id was specified for Azure authentication");
+
+                var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+                if (string.IsNullOrWhiteSpace(applicationKey))
+                    return ValidationResult.Failure(ComponentName, "No application key was specified for Azure authentication");
             }
 
             return ValidationResult.Successful(ComponentName);

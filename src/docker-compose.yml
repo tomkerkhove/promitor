@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   promitor.agents.resourcediscovery:
-    image: ghcr.io/tomkerkhove/promitor-agent-resource-discovery
+    #image: ghcr.io/tomkerkhove/promitor-agent-resource-discovery
+    image: spertus.azurecr.io/promitor-agent-resource-discovery
     build:
       context: .
       dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile.linux
@@ -12,7 +13,8 @@ services:
       - ./../config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
       - ./../config/promitor/resource-discovery/runtime.yaml:/config/runtime.yaml
   promitor.agents.scraper:
-    image: ghcr.io/tomkerkhove/promitor-agent-scraper
+    #image: ghcr.io/tomkerkhove/promitor-agent-scraper
+    image: spertus.azurecr.io/promitor-agent-scraper
     build:
       context: .
       dockerfile: Promitor.Agents.Scraper/Dockerfile.linux

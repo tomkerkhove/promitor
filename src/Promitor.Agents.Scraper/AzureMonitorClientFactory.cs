@@ -43,17 +43,21 @@ namespace Promitor.Agents.Scraper
         private static AzureMonitorClient CreateNewAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             var azureCredentials = DetermineAzureCredentials(configuration);
-            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
+            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials.UseManagedIdentity, azureCredentials.ManagedIdentityId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
             return azureMonitorClient;
         }
 
         private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
         {
+            var useManagedIdentity = configuration.GetValue<string>(EnvironmentVariables.Authentication.UseManagedIdentity, "0") == "1";
             var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
+            var managedIdentityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
             var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
 
             return new AzureCredentials
             {
+                UseManagedIdentity = useManagedIdentity,
+                ManagedIdentityId = managedIdentityId,
                 ApplicationId = applicationId,
                 Secret = applicationKey
             };

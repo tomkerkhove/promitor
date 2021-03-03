@@ -33,22 +33,29 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureCloud">Name of the Azure cloud to interact with</param>
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
+        /// <param name="useManagedIdentity">Determines if we need to use Managed Identity instead of Service Principal</param>
+        /// <param name="managedIdentityId">Id of the Azure managed identity used to authenticate with Azure Monitor</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, bool useManagedIdentity, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
+
+            if (!useManagedIdentity)
+            {
+                Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+                Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+            }
+
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
-            Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-            Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, useManagedIdentity, managedIdentityId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
         }
 
         /// <summary>
@@ -82,7 +89,7 @@ namespace Promitor.Integrations.AzureMonitor
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName,metricDimension, "No time series was found");
+                throw new MetricInformationNotFoundException(metricName, metricDimension, "No time series was found");
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
@@ -96,7 +103,7 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
-            
+
                 var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                 measuredMetrics.Add(measuredMetric);
             }
@@ -217,12 +224,25 @@ namespace Promitor.Integrations.AzureMonitor
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, bool useManagedIdentity, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
         {
-            var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
+            AzureCredentials credentials;
+
+            if (useManagedIdentity && !string.IsNullOrEmpty(managedIdentityId))
+            {
+                credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+            }
+            else if (useManagedIdentity)
+            {
+                credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
+            }
+            else
+            {
+                credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
+            }
 
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
-            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, useManagedIdentity, managedIdentityId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
 
             var azureClientConfiguration = Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);

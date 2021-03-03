@@ -33,11 +33,16 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// <param name="metricSinkWriter">Metrics writer to all sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, string applicationId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
+        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, bool useManagedIdentity, string managedIdentityId, string applicationId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
-            Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+
+            if (!useManagedIdentity)
+            {
+                Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+            }
+
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(metricsCollector, nameof(metricsCollector));
             Guard.NotNull(logger, nameof(logger));
@@ -46,12 +51,29 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             _metricSinkWriter = metricSinkWriter;
             _metricsCollector = metricsCollector;
 
-            _metricLabels = new Dictionary<string, string>
+            if (useManagedIdentity)
             {
-                {"tenant_id", tenantId},
-                {"subscription_id", subscriptionId},
-                {"app_id", applicationId}
-            };
+                managedIdentityId = string.IsNullOrEmpty(managedIdentityId) ? "System Assigned Identity" : managedIdentityId;
+                
+                _metricLabels = new Dictionary<string, string>
+                {
+                    {"tenant_id", tenantId},
+                    {"subscription_id", subscriptionId},
+                    {"use_mi", useManagedIdentity.ToString()},
+                    {"mi_id", managedIdentityId},
+                };
+            }
+            else
+            {
+                _metricLabels = new Dictionary<string, string>
+                {
+                    {"tenant_id", tenantId},
+                    {"subscription_id", subscriptionId},
+                    {"use_mi", useManagedIdentity.ToString()},
+                    {"app_id", applicationId},
+                };
+
+            }
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
