@@ -138,7 +138,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-subscriptions-scenario";
-            const int expectedResourceCount = 2;
+            const int expectedResourceCount = 1;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
