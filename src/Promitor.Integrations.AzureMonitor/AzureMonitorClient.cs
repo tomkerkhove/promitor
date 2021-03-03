@@ -82,7 +82,7 @@ namespace Promitor.Integrations.AzureMonitor
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName,metricDimension, "No time series was found");
+                throw new MetricInformationNotFoundException(metricName,"No time series was found", metricDimension);
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
