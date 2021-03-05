@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Prometheus.Client.DependencyInjection;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -217,6 +218,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<ResourceDiscoveryConfiguration>(configuration.GetSection("resourceDiscovery"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
             services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheusScrapingEndpoint"));
             services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
             services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));

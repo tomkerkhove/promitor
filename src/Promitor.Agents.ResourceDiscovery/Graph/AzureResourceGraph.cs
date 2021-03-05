@@ -54,7 +54,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
-            Guard.NotNull(authenticationConfiguration, nameof(authenticationConfiguration));
+            // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.
+            // If not, we should use a default value
+            if (authenticationConfiguration == null)
+            {
+                authenticationConfiguration = new AuthenticationConfiguration();
+            }
 
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;

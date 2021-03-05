@@ -51,6 +51,14 @@ namespace Promitor.Agents.Scraper
         private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
         {
             var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
+
+            // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.
+            // If not, we should use a default value
+            if (authenticationConfiguration == null)
+            {
+                authenticationConfiguration = new AuthenticationConfiguration();
+            }
+
             var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             var managedIdentityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
             var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);

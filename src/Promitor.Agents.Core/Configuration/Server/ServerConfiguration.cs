@@ -3,6 +3,5 @@
     public class ServerConfiguration
     {
         public int HttpPort { get; set; } = Defaults.Server.HttpPort;
-
     }
 }

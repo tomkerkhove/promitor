@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -29,6 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             services.Configure<CacheConfiguration>(configuration.GetSection("cache"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
 

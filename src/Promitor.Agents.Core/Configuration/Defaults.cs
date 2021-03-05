@@ -13,7 +13,6 @@ namespace Promitor.Agents.Core.Configuration
         public static class Server
         {
             public static int HttpPort { get; } = 80;
-
         }
         
         public class Telemetry
