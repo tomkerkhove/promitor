@@ -11,8 +11,7 @@
         {
             public const string ApplicationId = "AUTH_APPID";
             public const string ApplicationKey = "AUTH_APPKEY";
-            public const string ManagedIdentityId = "AUTH_MIID";
-            public const string UseManagedIdentity = "AUTH_USE_MI";
+            public const string ManagedIdentityId = "AUTH_UAMI";
         }
 
         public class Integrations

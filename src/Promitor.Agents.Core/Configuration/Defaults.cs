@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core.Configuration.Server;
 
 namespace Promitor.Agents.Core.Configuration
 {
@@ -7,6 +8,8 @@ namespace Promitor.Agents.Core.Configuration
         public static class Server
         {
             public static int HttpPort { get; } = 80;
+
+            public static AuthenticationMode Authentication { get; } = AuthenticationMode.ServicePrincipal;
         }
         
         public class Telemetry

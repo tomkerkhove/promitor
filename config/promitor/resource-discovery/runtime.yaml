@@ -1,5 +1,6 @@
 server:
   httpPort: 88
+  authentication: managedIdentity
 telemetry:
   applicationInsights:
     instrumentationKey: ABC

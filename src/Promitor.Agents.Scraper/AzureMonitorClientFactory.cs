@@ -3,6 +3,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
@@ -43,20 +44,20 @@ namespace Promitor.Agents.Scraper
         private static AzureMonitorClient CreateNewAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             var azureCredentials = DetermineAzureCredentials(configuration);
-            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials.UseManagedIdentity, azureCredentials.ManagedIdentityId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
+            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials.AuthenticationMode, azureCredentials.ManagedIdentityId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
             return azureMonitorClient;
         }
 
         private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
         {
-            var useManagedIdentity = configuration.GetValue<string>(EnvironmentVariables.Authentication.UseManagedIdentity, "0") == "1";
+            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
             var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             var managedIdentityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
             var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
 
             return new AzureCredentials
             {
-                UseManagedIdentity = useManagedIdentity,
+                AuthenticationMode = serverConfiguration.Authentication,
                 ManagedIdentityId = managedIdentityId,
                 ApplicationId = applicationId,
                 Secret = applicationKey

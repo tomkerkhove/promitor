@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
   </ItemGroup>
 

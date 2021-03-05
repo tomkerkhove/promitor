@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
@@ -29,16 +30,17 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// </summary>
         /// <param name="tenantId">Id of the tenant that is being interacted with via Azure Resource Manager</param>
         /// <param name="subscriptionId">Id of the subscription that is being interacted with via Azure Resource Manager</param>
+        /// <param name="authenticationMode">Authentication mode used to authenticate the service to Azure. Can be Managed Identity or Service Principal</param>
         /// <param name="applicationId">Id of the application that is being used to interact with Azure Resource Manager</param>
         /// <param name="metricSinkWriter">Metrics writer to all sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, bool useManagedIdentity, string managedIdentityId, string applicationId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
+        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
 
-            if (!useManagedIdentity)
+            if (authenticationMode == AuthenticationMode.ServicePrincipal)
             {
                 Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
             }
@@ -51,29 +53,20 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             _metricSinkWriter = metricSinkWriter;
             _metricsCollector = metricsCollector;
 
-            if (useManagedIdentity)
-            {
-                managedIdentityId = string.IsNullOrEmpty(managedIdentityId) ? "System Assigned Identity" : managedIdentityId;
-                
-                _metricLabels = new Dictionary<string, string>
-                {
-                    {"tenant_id", tenantId},
-                    {"subscription_id", subscriptionId},
-                    {"use_mi", useManagedIdentity.ToString()},
-                    {"mi_id", managedIdentityId},
-                };
-            }
-            else
-            {
-                _metricLabels = new Dictionary<string, string>
-                {
-                    {"tenant_id", tenantId},
-                    {"subscription_id", subscriptionId},
-                    {"use_mi", useManagedIdentity.ToString()},
-                    {"app_id", applicationId},
-                };
+            string id = applicationId;
 
+            if (authenticationMode == AuthenticationMode.ManagedIdentity)
+            {
+                id = string.IsNullOrEmpty(managedIdentityId) ? "system-assigned-identity" : managedIdentityId;
             }
+
+            _metricLabels = new Dictionary<string, string>
+            {
+                {"tenant_id", tenantId},
+                {"subscription_id", subscriptionId},
+                {"authentication", authenticationMode.ToString()},
+                {"authentication_id", id},
+            };
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
