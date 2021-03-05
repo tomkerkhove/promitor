@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Polly;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
@@ -27,10 +27,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
         private readonly ILogger<AzureResourceGraph> _logger;
         private readonly string _queryApplicationSecret;
-        private readonly AuthenticationMode _queryAuthenticationMode = Core.Configuration.Defaults.Server.Authentication;
+        private readonly AuthenticationMode _queryAuthenticationMode;
 
         private ResourceGraphClient _graphClient;
-
 
         /// <summary>
         /// Gets the Service Principal Id used to authenticate the service. If QueryApplicationId QueryManagedIdentityId are Null, the System Assigned Identity will be used
@@ -53,14 +52,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
 
-            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
+            var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
-            Guard.NotNull(serverConfiguration, nameof(serverConfiguration));
+            Guard.NotNull(authenticationConfiguration, nameof(authenticationConfiguration));
 
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
 
-            _queryAuthenticationMode = serverConfiguration.Authentication;
+            _queryAuthenticationMode = authenticationConfiguration.Mode;
 
             if (_queryAuthenticationMode == AuthenticationMode.ServicePrincipal)
             {

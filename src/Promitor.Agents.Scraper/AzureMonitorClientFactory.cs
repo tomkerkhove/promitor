@@ -3,7 +3,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
@@ -50,14 +50,14 @@ namespace Promitor.Agents.Scraper
 
         private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
         {
-            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
+            var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
             var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             var managedIdentityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
             var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
 
             return new AzureCredentials
             {
-                AuthenticationMode = serverConfiguration.Authentication,
+                AuthenticationMode = authenticationConfiguration.Mode,
                 ManagedIdentityId = managedIdentityId,
                 ApplicationId = applicationId,
                 Secret = applicationKey

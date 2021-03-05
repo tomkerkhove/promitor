@@ -1,10 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.Rest;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {
@@ -49,7 +47,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 resource += ".default";
             }
 
-            var accessToken = await tokenCredential.GetTokenAsync(new TokenRequestContext(scopes: new string[] { resource }), default);
+            var accessToken = await tokenCredential.GetTokenAsync(new TokenRequestContext(scopes: new [] { resource }), default);
 
             return new TokenCredentials(accessToken.Token);
         }

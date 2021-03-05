@@ -86,7 +86,7 @@
                 Add usability
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Authentication.GetTokenCredentialsAsync(System.String,System.String,Promitor.Agents.Core.Configuration.Server.AuthenticationMode,System.String,System.String,System.String)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Authentication.GetTokenCredentialsAsync(System.String,System.String,Promitor.Agents.Core.Configuration.Authentication.AuthenticationMode,System.String,System.String,System.String)">
             <summary>
             Gets a valid token using a Service Principal or a Managed Identity
             </summary>

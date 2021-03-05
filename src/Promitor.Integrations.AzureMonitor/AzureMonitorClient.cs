@@ -18,7 +18,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -34,7 +34,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureCloud">Name of the Azure cloud to interact with</param>
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
-        /// <param name="useManagedIdentity">Determines if we need to use Managed Identity instead of Service Principal</param>
+        /// <param name="authenticationMode">Determines which mode to use to authenticate: Managed Identity or Service Principal</param>
         /// <param name="managedIdentityId">Id of the Azure managed identity used to authenticate with Azure Monitor</param>
         /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
         /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>

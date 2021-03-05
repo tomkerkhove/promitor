@@ -1,4 +1,4 @@
-﻿using Promitor.Agents.Core.Configuration.Server;
+﻿using Promitor.Agents.Core.Configuration.Authentication;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {

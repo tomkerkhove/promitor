@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
@@ -31,6 +31,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// <param name="tenantId">Id of the tenant that is being interacted with via Azure Resource Manager</param>
         /// <param name="subscriptionId">Id of the subscription that is being interacted with via Azure Resource Manager</param>
         /// <param name="authenticationMode">Authentication mode used to authenticate the service to Azure. Can be Managed Identity or Service Principal</param>
+        /// <param name="managedIdentityId">Id of the Azure managed identity used to authenticate with Azure Monitor</param>
         /// <param name="applicationId">Id of the application that is being used to interact with Azure Resource Manager</param>
         /// <param name="metricSinkWriter">Metrics writer to all sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>

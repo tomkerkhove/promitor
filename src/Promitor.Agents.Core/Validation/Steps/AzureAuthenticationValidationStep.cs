@@ -1,7 +1,7 @@
 ﻿using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Configuration.Server;
+using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Core;
 
@@ -22,11 +22,11 @@ namespace Promitor.Agents.Core.Validation.Steps
 
         public ValidationResult Run()
         {
-            var serverConfiguration = _configuration.GetSection("server").Get<ServerConfiguration>();
+            var authenticationConfiguration = _configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
-            Guard.NotNull(serverConfiguration, nameof(serverConfiguration));
+            Guard.NotNull(authenticationConfiguration, nameof(authenticationConfiguration));
 
-            if (serverConfiguration.Authentication == AuthenticationMode.ManagedIdentity)
+            if (authenticationConfiguration.Mode == AuthenticationMode.ManagedIdentity)
             {
                 var managedIdentityId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
                 this.Logger.LogInformation("Promitor configured to use a managed identity");
@@ -36,7 +36,7 @@ namespace Promitor.Agents.Core.Validation.Steps
                 else
                     this.Logger.LogInformation($"Promitor will use the system assigned identity");
             }
-            else if (serverConfiguration.Authentication == AuthenticationMode.ServicePrincipal)
+            else if (authenticationConfiguration.Mode == AuthenticationMode.ServicePrincipal)
             {
                 var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
                 this.Logger.LogInformation("Promitor configured to use a service principal");
