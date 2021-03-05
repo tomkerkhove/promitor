@@ -52,8 +52,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             var accessToken = await tokenCredential.GetTokenAsync(new TokenRequestContext(scopes: new string[] { resource }), default);
 
             return new TokenCredentials(accessToken.Token);
-
         }
-
     }
 }

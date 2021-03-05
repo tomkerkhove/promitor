@@ -22,11 +22,9 @@ namespace Promitor.Agents.Core.Validation.Steps
 
         public ValidationResult Run()
         {
-
             var serverConfiguration = _configuration.GetSection("server").Get<ServerConfiguration>();
 
             Guard.NotNull(serverConfiguration, nameof(serverConfiguration));
-
 
             if (serverConfiguration.Authentication == AuthenticationMode.ManagedIdentity)
             {
@@ -54,7 +52,6 @@ namespace Promitor.Agents.Core.Validation.Steps
             else
             {
                 return ValidationResult.Failure(ComponentName, "Mode used for authentication in server configuration is not valid. Valid values are: 'ServicePrincipal' or 'ManagedIdentity'");
-
             }
 
             return ValidationResult.Successful(ComponentName);
