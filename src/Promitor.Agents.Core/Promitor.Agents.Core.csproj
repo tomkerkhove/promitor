@@ -14,15 +14,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="2.0.0" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="2.0.0" />
-    <PackageReference Include="Arcus.WebApi.Logging" Version="1.1.0" />
+    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="2.0.1" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="2.0.1" />
+    <PackageReference Include="Arcus.WebApi.Logging" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.1.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Spectre.Console" Version="0.37.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />

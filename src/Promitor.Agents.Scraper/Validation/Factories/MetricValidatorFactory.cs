@@ -71,6 +71,12 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new StorageAccountMetricValidator();
                 case ResourceType.StorageQueue:
                     return new StorageQueueMetricValidator();
+                case ResourceType.SynapseApacheSparkPool:
+                    return new SynapseApacheSparkPoolMetricValidator();
+                case ResourceType.SynapseSqlPool:
+                    return new SynapseSqlPoolMetricValidator();
+                case ResourceType.SynapseWorkspace:
+                    return new SynapseWorkspaceMetricValidator();
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetMetricValidator();
                 case ResourceType.VirtualMachine:

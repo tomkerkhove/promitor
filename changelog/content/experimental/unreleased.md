@@ -6,38 +6,8 @@ version:
 
 #### Scraper
 
-- {{% tag added %}} Support for scraping Azure Automation account ([docs](https://promitor.io/configuration/v2.x/metrics/automation-account)
- | [#352](https://github.com/tomkerkhove/promitor/issues/352))
-- {{% tag added %}} Support for scraping Azure Front Door account ([docs](https://promitor.io/configuration/v2.x/metrics/front-door)
- | [#343](https://github.com/tomkerkhove/promitor/issues/343))
-- {{% tag added %}} Support for scraping Azure SQL Elastic Pool ([docs](https://promitor.io/configuration/v2.x/metrics/sql-elastic-pool)
- | [#319](https://github.com/tomkerkhove/promitor/issues/319))
-- {{% tag added %}} Support Prometheus Operator in Helm chart ([PR #31](https://github.com/promitor/charts/pull/31))
-- {{% tag added %}} Support for affinity in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for priority class name in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for additional pod labels in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for security context in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for node selector in Helm chart ([PR #26](https://github.com/promitor/charts/pull/26))
-- {{% tag added %}} Support for tolerances in Helm chart ([PR #26](https://github.com/promitor/charts/pull/26))
-- {{% tag added %}} Support Prometheus Operator in Helm chart ([PR #31](https://github.com/promitor/charts/pull/31))
-- {{% tag changed %}} Provide better usability in terms of startup and configuration insights ([#1474](https://github.com/tomkerkhove/promitor/issues/1474))
-- {{% tag changed %}} Provide more control over probes in Helm chart ([PR #3°](https://github.com/promitor/charts/pull/30))
+None.
 
 #### Resource Discovery
 
-- {{% tag added %}} Support for discovering Azure Automation resources ([docs](https://promitor.io/configuration/v2.x/metrics/automation-account)
- | [#352](https://github.com/tomkerkhove/promitor/issues/352))
-- {{% tag added %}} Support for discovering Azure Front Door resources ([docs](https://promitor.io/configuration/v2.x/metrics/front-door)
- | [#343](https://github.com/tomkerkhove/promitor/issues/343))
-- {{% tag added %}} Support for scraping Azure SQL Elastic Pool ([docs](https://promitor.io/configuration/v2.x/metrics/sql-elastic-pool)
- | [#319](https://github.com/tomkerkhove/promitor/issues/319))
-- {{% tag added %}} Support for affinity in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for priority class name in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for additional pod labels in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for security context in Helm chart ([PR #30](https://github.com/promitor/charts/pull/30))
-- {{% tag added %}} Support for node selector in Helm chart ([PR #26](https://github.com/promitor/charts/pull/26))
-- {{% tag added %}} Support for tolerances in Helm chart ([PR #26](https://github.com/promitor/charts/pull/26))
-- {{% tag changed %}} Provide better usability in terms of startup and configuration insights ([#1474](https://github.com/tomkerkhove/promitor/issues/1474))
-- {{% tag changed %}} Provide more control over probes in Helm chart ([PR #3°](https://github.com/promitor/charts/pull/30))
-- {{% tag changed %}} Rename `azureLandscape.subscriptionIds` to `azureLandscape.subscriptionIds` in Helm chart to avoid confusion ([PR #29](https://github.com/promitor/charts/pull/29))
-- {{% tag fixed %}} Provide case-invarient lookups for resource group filtering ([#1492](https://github.com/tomkerkhove/promitor/issues/1492))
+None.

@@ -33,7 +33,7 @@ variables:
   - name: 'Image.TaggedName'
     value: '$(Image.Name):$(Image.Version)'
   - name: 'Release.TagName'
-    value: '$(Build.BuildNumber)'
+    value: 'Scraper-v$(Build.BuildNumber)'
   - name: 'Image.Version'
     value: '${{ parameters.imageVersion }}'
   - name: 'Release.Title'

@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/tomkerkhove/promitor#readme",
   "devDependencies": {
-    "husky": "5.0.9",
+    "husky": "5.1.3",
     "lint-staged": "10.5.4",
-    "markdownlint-cli": "0.26.0"
+    "markdownlint-cli": "0.27.1"
   },
   "lint-staged": {
     "*.md": [

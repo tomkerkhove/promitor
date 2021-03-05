@@ -3,7 +3,7 @@ about: Report security vulnerability impacting users
 labels: security
 assignees: tomkerkhove
 issue_body: true
-inputs:
+body:
 - type: textarea
   attributes:
     label: Report
@@ -13,33 +13,40 @@ inputs:
   attributes:
     label: Vulnerability Information
     description: Are there official sources listing the vulnerability? For example, the National Vulnurability Database or similar.
+  validations:
     required: false
-- type: multi_select
+- type: dropdown
   attributes:
     label: Affected Component(s)
     description: What Promitor components are impacted?
-    required: true
-    choices:
+    multiple: true
+    options:
     - Resource Discovery
     - Scraper
+  validations:
+    required: true
 - type: input
   attributes:
     label: Affected Version(s)
     description: What version(s) are impacted?
+  validations:
     required: true
 - type: textarea
   attributes:
     label: Vulnerability Migitation
     description: "What are the options to mitigate the vulnerability?"
+  validations:
     required: false
 - type: textarea
   attributes:
     label: Vulnerability Fix
     description: "What are the options to patch the vulnerability?"
+  validations:
     required: false
 - type: input
   attributes:
     label: Contact Details
     description: How can we get in touch with you if we need more info?
-    required: false
     placeholder: ex. email@example.com
+  validations:
+    required: false

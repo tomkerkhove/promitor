@@ -615,6 +615,64 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithSynapseApacheSparkPoolMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string workspaceName = "promitor-synapse-workspace",
+            string poolName = "promitor-synapse-apache-spark-pool",
+            string metricDescription = "Metric description",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new SynapseApacheSparkPoolResourceV1
+            {
+                WorkspaceName = workspaceName,
+                PoolName = poolName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SynapseApacheSparkPool, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSynapseSqlPoolMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string workspaceName = "promitor-synapse-workspace",
+            string poolName = "promitor-synapse-sql-pool",
+            string metricDescription = "Metric description",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new SynapseSqlPoolResourceV1
+            {
+                WorkspaceName = workspaceName,
+                PoolName = poolName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SynapseSqlPool, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSynapseWorkspaceMetric(
+            string metricName = "promitor-sql-db",
+            string azureMetricName = "cpu_percent",
+            string workspaceName = "promitor-synapse-workspace",
+            string metricDescription = "Metric description",
+            string resourceDiscoveryGroupName = "",
+            bool omitResource = false)
+        {
+            var resource = new SynapseWorkspaceResourceV1
+            {
+                WorkspaceName = workspaceName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SynapseWorkspace, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithIoTHubMetric(string metricName = "promitor-iot-hub",
             string metricDescription = "Description for a metric",
             string iotHubName = "promitor-iot-hub",

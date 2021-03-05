@@ -46,6 +46,12 @@ resourceDiscoveryGroups:
   type: SqlServer
 - name: storage-accounts
   type: StorageAccount
+- name: synapse-apache-spark-pools
+  type: SynapseApacheSparkPool
+- name: synapse-sql-pools
+  type: SynapseSqlPool
+- name: synapse-workspaces
+  type: SynapseWorkspace
 - name: virtual-machines
   type: VirtualMachine
 - name: virtual-machine-scale-sets

@@ -12,7 +12,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
         private readonly Faker _faker = new Faker();
 
         [Fact]
-        public void GetServerNameFromResourceUri_ValidResourceUri_GetsServerName()
+        public void GetParentResourceNameFromResourceUri_ValidResourceUri_GetsServerName()
         {
             // Arrange
             var serverName = _faker.Name.FirstName();
@@ -20,14 +20,14 @@ namespace Promitor.Tests.Unit.Discovery.Query
             var sqlDatabaseDiscoveryQuery = new SqlDatabaseDiscoveryQuery();
 
             // Act
-            var foundServerName = sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri);
+            var foundServerName = sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(SqlDatabaseDiscoveryQuery.ServerSectionInResourceUri, resourceUri);
 
             // Assert
             Assert.Equal(serverName, foundServerName);
         }
 
         [Fact]
-        public void GetServerNameFromResourceUri_NoResourceUri_ThrowsArgumentException()
+        public void GetParentResourceNameFromResourceUri_NoResourceUri_ThrowsArgumentException()
         {
             // Arrange
             string resourceUri = null;
@@ -35,18 +35,18 @@ namespace Promitor.Tests.Unit.Discovery.Query
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
-            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri));
+            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(SqlDatabaseDiscoveryQuery.ServerSectionInResourceUri, resourceUri));
         }
 
         [Fact]
-        public void GetServerNameFromResourceUri_EmptyResourceUri_ThrowsArgumentException()
+        public void GetParentResourceNameFromResourceUri_EmptyResourceUri_ThrowsArgumentException()
         {
             // Arrange
             var resourceUri = string.Empty;
             var sqlDatabaseDiscoveryQuery = new SqlDatabaseDiscoveryQuery();
 
             // Act & Assert
-            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetServerNameFromResourceUri(resourceUri));
+            Assert.Throws<ArgumentException>(() => sqlDatabaseDiscoveryQuery.GetParentResourceNameFromResourceUri(SqlDatabaseDiscoveryQuery.ServerSectionInResourceUri, resourceUri));
         }
     }
 }
