@@ -1,6 +1,6 @@
 server:
   httpPort: 88
-authentication: 
+authentication:
   mode: managedIdentity
 telemetry:
   applicationInsights:
