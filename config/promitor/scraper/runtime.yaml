@@ -1,6 +1,7 @@
 server:
   httpPort: 88
-  authentication: managedIdentity
+authentication: 
+  mode: managedIdentity
 metricSinks:
   prometheusScrapingEndpoint:
     metricUnavailableValue: -1
