@@ -62,6 +62,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         {
             string agentVersion = Version.Get();
             var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
+            request.Headers.UserAgent.Clear();
             request.Headers.UserAgent.TryParseAdd(promitorUserAgent);
 
             var response = await base.SendAsync(request, cancellationToken);

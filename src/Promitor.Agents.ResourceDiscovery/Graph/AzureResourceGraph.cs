@@ -276,6 +276,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var version = Promitor.Core.Version.Get();
             var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);
+            resourceGraphClient.UserAgent.Clear();
             resourceGraphClient.UserAgent.TryParseAdd(promitorUserAgent);
 
             return resourceGraphClient;
