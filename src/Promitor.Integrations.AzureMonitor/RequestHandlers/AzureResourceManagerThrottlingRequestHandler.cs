@@ -41,11 +41,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
 
-            if (authenticationMode == AuthenticationMode.ServicePrincipal)
-            {
-                Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-            }
-
+ 
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(metricsCollector, nameof(metricsCollector));
             Guard.NotNull(logger, nameof(logger));
@@ -54,19 +50,13 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             _metricSinkWriter = metricSinkWriter;
             _metricsCollector = metricsCollector;
 
-            string id = applicationId;
-
-            if (authenticationMode == AuthenticationMode.ManagedIdentity)
-            {
-                id = string.IsNullOrEmpty(managedIdentityId) ? "system-assigned-identity" : managedIdentityId;
-            }
-
+            string id = DetermineApplicationId(authenticationMode, managedIdentityId, applicationId);
+  
             _metricLabels = new Dictionary<string, string>
             {
                 {"tenant_id", tenantId},
                 {"subscription_id", subscriptionId},
-                {"authentication", authenticationMode.ToString()},
-                {"authentication_id", id},
+                {"app_id", id},
             };
         }
 
@@ -98,6 +88,29 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                 await _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
                 _metricsCollector.SetGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
             }
+        }
+
+        private string DetermineApplicationId(AuthenticationMode authenticationMode, string managedIdentityId, string applicationId)
+        {
+            string id;
+
+            switch (authenticationMode)
+            {
+                case AuthenticationMode.ServicePrincipal:
+                    Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+                    id = applicationId;
+                    break;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
+                    id = managedIdentityId;
+                    break;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                default:
+                    id = "system-assigned-identity";
+                    break;
+            }
+
+            return id;
         }
 
         private void LogArmThrottling()

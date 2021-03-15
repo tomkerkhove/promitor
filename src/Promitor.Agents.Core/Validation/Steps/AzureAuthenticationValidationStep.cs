@@ -28,35 +28,40 @@ namespace Promitor.Agents.Core.Validation.Steps
             // If not, we should use a default value
             if (authenticationConfiguration == null)
             {
+                Logger.LogWarning($"Promitor needs an authentication mode. You can choose ServicePrincipal or UserAssignedManagedIdentity or SystemAssignedManagedIdentity. Since no values has been specified, ServicePrincipal will be used by Promitor to authenticate to Azure");
                 authenticationConfiguration = new AuthenticationConfiguration();
             }
 
-            if (authenticationConfiguration.Mode == AuthenticationMode.ManagedIdentity)
+            switch (authenticationConfiguration.Mode)
             {
-                var managedIdentityId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
-                this.Logger.LogInformation("Promitor configured to use a managed identity");
+                case AuthenticationMode.ServicePrincipal:
+                    var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
 
-                if (!string.IsNullOrWhiteSpace(managedIdentityId))
-                    this.Logger.LogInformation($"Promitor will use a user managed identity id:{managedIdentityId}");
-                else
-                    this.Logger.LogInformation($"Promitor will use the system assigned identity");
-            }
-            else if (authenticationConfiguration.Mode == AuthenticationMode.ServicePrincipal)
-            {
-                var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-                this.Logger.LogInformation("Promitor configured to use a service principal");
-                this.Logger.LogInformation($"Promitor will use the service principal id:{applicationId}");
+                    if (string.IsNullOrWhiteSpace(applicationId))
+                    {
+                        return ValidationResult.Failure(ComponentName, "No service principal application id was specified for Azure authentication");
+                    }
 
-                if (string.IsNullOrWhiteSpace(applicationId))
-                    return ValidationResult.Failure(ComponentName, "No service principal application id was specified for Azure authentication");
+                    var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+                    if (string.IsNullOrWhiteSpace(applicationKey))
+                        return ValidationResult.Failure(ComponentName, "No service principal application key was specified for Azure authentication");
 
-                var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-                if (string.IsNullOrWhiteSpace(applicationKey))
-                    return ValidationResult.Failure(ComponentName, "No service principal application key was specified for Azure authentication");
-            }
-            else
-            {
-                return ValidationResult.Failure(ComponentName, "Mode used for authentication in server configuration is not valid. Valid values are: 'ServicePrincipal' or 'ManagedIdentity'");
+                    Logger.LogInformation($"Promitor is configured to use a service principal (key:{applicationId})");
+
+                    break;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    var managedIdentityId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
+
+                    if (string.IsNullOrWhiteSpace(managedIdentityId))
+                    {
+                        return ValidationResult.Failure(ComponentName, "No user managed identity key was specified for Azure authentication");
+                    }
+
+                    Logger.LogInformation($"Promitor is configured to use a user managed identity (key:{managedIdentityId})");
+                    break;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                    Logger.LogInformation("Promitor configured to use a system assigned identity");
+                    break;
             }
 
             return ValidationResult.Successful(ComponentName);

@@ -45,13 +45,6 @@ namespace Promitor.Integrations.AzureMonitor
         public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
-
-            if (authenticationMode == AuthenticationMode.ServicePrincipal)
-            {
-                Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-                Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
-            }
-
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
@@ -227,21 +220,7 @@ namespace Promitor.Integrations.AzureMonitor
 
         private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
         {
-            AzureCredentials credentials;
-
-            if (authenticationMode == AuthenticationMode.ManagedIdentity && !string.IsNullOrEmpty(managedIdentityId))
-            {
-                credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
-            }
-            else if (authenticationMode == AuthenticationMode.ManagedIdentity)
-            {
-                credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
-            }
-            else
-            {
-                credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
-            }
-
+            var credentials = CreateAzureAuthentication(azureCloud, tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, applicationSecret);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
             var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
 
@@ -261,6 +240,30 @@ namespace Promitor.Integrations.AzureMonitor
             return azureClientConfiguration
                 .Authenticate(credentials)
                 .WithSubscription(subscriptionId);
+        }
+
+        private AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret)
+        {
+            AzureCredentials credentials;
+
+            switch (authenticationMode)
+            {
+                case AuthenticationMode.ServicePrincipal:
+                    Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
+                    Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+                    credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
+                    break;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
+                    credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+                    break;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                default:
+                    credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
+                    break;
+            }
+
+            return credentials;
         }
     }
 }

@@ -3,6 +3,7 @@
     public enum AuthenticationMode
     {
         ServicePrincipal = 0,
-        ManagedIdentity = 1,
+        UserAssignedManagedIdentity = 1,
+        SystemAssignedManagedIdentity = 2,
     }
 }
