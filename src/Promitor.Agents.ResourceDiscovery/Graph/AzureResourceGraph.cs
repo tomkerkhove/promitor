@@ -82,8 +82,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     Guard.NotNullOrWhitespace(QueryManagedIdentityId, nameof(EnvironmentVariables.Authentication.ManagedIdentityId));
 
                     break;
-                default:
-                    break;
             }
         }
 
