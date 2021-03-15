@@ -6,8 +6,12 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Support for managed identity authentication
+ ([docs](https://promitor.io/configuration/v2.x/azure-authentication#supported-authentication-mechanisms) | [#444](https://github.com/tomkerkhove/promitor/issues/444)
+ | Contributed by [@Mimetis](https://github.com/Mimetis) 🎉)
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Support for managed identity authentication
+ ([docs](https://promitor.io/configuration/v2.x/azure-authentication#supported-authentication-mechanisms) | [#444](https://github.com/tomkerkhove/promitor/issues/444)
+ | Contributed by [@Mimetis](https://github.com/Mimetis) 🎉)
