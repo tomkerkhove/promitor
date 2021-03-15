@@ -23,7 +23,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 case AuthenticationMode.UserAssignedManagedIdentity:
                     tokenCredential = new ManagedIdentityCredential(managedIdentityId);
                     break;
-                case AuthenticationMode.SystemAssignedManagedIdentity:
                 default:
                     tokenCredential = new DefaultAzureCredential();
                     break;

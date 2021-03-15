@@ -82,7 +82,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     Guard.NotNullOrWhitespace(QueryManagedIdentityId, nameof(EnvironmentVariables.Authentication.ManagedIdentityId));
 
                     break;
-                case AuthenticationMode.SystemAssignedManagedIdentity:
                 default:
                     break;
             }
@@ -162,7 +161,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                                         _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph using the User Managed Identity");
 
                                         break;
-                                    case AuthenticationMode.SystemAssignedManagedIdentity:
                                     default:
                                         unauthorizedException = new UnauthorizedException("System Assigned Identity", targetSubscriptions);
 

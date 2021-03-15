@@ -40,8 +40,6 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
-
- 
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(metricsCollector, nameof(metricsCollector));
             Guard.NotNull(logger, nameof(logger));
@@ -104,7 +102,6 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                     Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
                     id = managedIdentityId;
                     break;
-                case AuthenticationMode.SystemAssignedManagedIdentity:
                 default:
                     id = "system-assigned-identity";
                     break;

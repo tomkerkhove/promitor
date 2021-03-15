@@ -83,7 +83,7 @@ namespace Promitor.Integrations.AzureMonitor
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName,"No time series was found", metricDimension);
+                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimension);
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
@@ -220,7 +220,7 @@ namespace Promitor.Integrations.AzureMonitor
 
         private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
         {
-            var credentials = CreateAzureAuthentication(azureCloud, tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, applicationSecret);
+            var credentials = CreateAzureAuthentication(azureCloud, tenantId, authenticationMode, managedIdentityId, applicationId, applicationSecret);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
             var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
 
@@ -242,7 +242,7 @@ namespace Promitor.Integrations.AzureMonitor
                 .WithSubscription(subscriptionId);
         }
 
-        private AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret)
+        private AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret)
         {
             AzureCredentials credentials;
 
@@ -257,7 +257,6 @@ namespace Promitor.Integrations.AzureMonitor
                     Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
                     credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
                     break;
-                case AuthenticationMode.SystemAssignedManagedIdentity:
                 default:
                     credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
                     break;
