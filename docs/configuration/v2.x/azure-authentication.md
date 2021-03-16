@@ -34,7 +34,6 @@ For details how to configure the authentication, we recommend reading our agent 
 
 Every agent needs to be configured with the following environment variables:
 
-- **PROMITOR_AUTH_APPID** - Id of the Azure AD entity to authenticate with
 - **PROMITOR_AUTH_APPKEY** - Secret of the Azure AD entity to authenticate with
 
 ### Managed Identity Authentication
