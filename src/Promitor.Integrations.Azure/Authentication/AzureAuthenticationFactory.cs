@@ -7,14 +7,20 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Rest;
+using Promitor.Core;
 using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Integrations.Azure.Authentication
 {
     public class AzureAuthenticationFactory
     {
+        /// <summary>
+        /// Get the configured authentication info for Microsoft Azure
+        /// </summary>
+        /// <param name="configuration">Application configuration</param>
         public static AzureAuthenticationInfo GetConfiguredAzureAuthentication(IConfiguration configuration)
         {
+            // TODO: Unit test
             var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
             // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.
@@ -24,52 +30,93 @@ namespace Promitor.Integrations.Azure.Authentication
                 authenticationConfiguration = new AuthenticationConfiguration();
             }
 
-            var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
             var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-            var identityId = authenticationConfiguration.IdentityId;
 
+            string identityId = authenticationConfiguration.IdentityId;
+            if (authenticationConfiguration.Mode == AuthenticationMode.ServicePrincipal)
+            {
+                if (string.IsNullOrWhiteSpace(identityId))
+                {
+                    // Use environment variable for backwards compatibility
+                    // TODO: Deprecate this
+                    identityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
+                }
+
+                if (string.IsNullOrWhiteSpace(identityId))
+                {
+                    throw new AuthenticationException("No identity was configured for service principle authentication");
+                }
+            }
+            else if (authenticationConfiguration.Mode == AuthenticationMode.UserAssignedManagedIdentity)
+            {
+                if (string.IsNullOrWhiteSpace(identityId))
+                {
+                    throw new AuthenticationException("No identity was configured for user-assigned managed identity");
+                }
+            }
+            
             return new AzureAuthenticationInfo
             {
                 Mode = authenticationConfiguration.Mode,
-                IdentityId = managedIdentityId,
-                IdentityId = applicationId,
+                IdentityId = identityId,
                 Secret = applicationKey
             };
         }
 
-        public AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationConfiguration azureCredentials)
+        public static AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
         {
             AzureCredentials credentials;
 
-            switch (azureCredentials.AuthenticationMode)
+            switch (azureCredentials.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                    if (string.IsNullOrWhiteSpace(azureCredentials.IdentityId))
-                    {
-                        throw new AuthenticationException("No identity was configured for service principle authentication");
-                    }
-                    if (string.IsNullOrWhiteSpace(azureCredentials.Secret))
-                    {
-                        throw new AuthenticationException("No identity was configured for service principle authentication");
-                    }
-                    credentials = _azureCredentialsFactory.FromServicePrincipal(azureCredentials.IdentityId, azureCredentials.Secret, tenantId, azureCloud);
+                    credentials = GetServicePrincipleCredentials(azureCloud, tenantId, azureCredentials, azureCredentialsFactory);
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
-                    credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+                    credentials = GetUserAssignedManagedIdentityCredentials(azureCloud, tenantId, azureCredentials, azureCredentialsFactory);
                     break;
                 default:
-                    credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
+                    credentials = GetSystemAssignedManagedIdentityCredentials(azureCloud, tenantId, azureCredentialsFactory);
                     break;
             }
 
             return credentials;
         }
 
+        private static AzureCredentials GetSystemAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureCredentialsFactory azureCredentialsFactory)
+        {
+            return azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
+        }
+
+        private static AzureCredentials GetServicePrincipleCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
+        {
+            if (string.IsNullOrWhiteSpace(azureCredentials.IdentityId))
+            {
+                throw new AuthenticationException("No identity was configured for service principle authentication");
+            }
+
+            if (string.IsNullOrWhiteSpace(azureCredentials.Secret))
+            {
+                throw new AuthenticationException("No identity was configured for service principle authentication");
+            }
+
+            return azureCredentialsFactory.FromServicePrincipal(azureCredentials.IdentityId, azureCredentials.Secret, tenantId, azureCloud);
+        }
+
+        private static AzureCredentials GetUserAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
+        {
+            if (string.IsNullOrWhiteSpace(azureCredentials.IdentityId))
+            {
+                throw new AuthenticationException("No identity was configured for user-assigned managed identity");
+            }
+
+            return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(azureCredentials.IdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+        }
+
         /// <summary>
         ///     Gets a valid token using a Service Principal or a Managed Identity
         /// </summary>
-        public async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo)
+        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo)
         {
             Guard.NotNullOrWhitespace(resource, nameof(resource));
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));

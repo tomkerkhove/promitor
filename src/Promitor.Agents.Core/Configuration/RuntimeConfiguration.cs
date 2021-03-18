@@ -1,6 +1,6 @@
-﻿using Promitor.Agents.Core.Configuration.Authentication;
-using Promitor.Agents.Core.Configuration.Server;
+﻿using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.Core.Configuration
 {

@@ -1,9 +1,10 @@
 ﻿using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Core;
+using Promitor.Integrations.Azure.Authentication;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.Core.Validation.Steps
 {
@@ -32,11 +33,11 @@ namespace Promitor.Agents.Core.Validation.Steps
                 authenticationConfiguration = new AuthenticationConfiguration();
             }
 
+            // TODO: Simplify
             switch (authenticationConfiguration.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
                     var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-
                     if (string.IsNullOrWhiteSpace(applicationId))
                     {
                         return ValidationResult.Failure(ComponentName, "No service principal application id was specified for Azure authentication");
@@ -44,17 +45,18 @@ namespace Promitor.Agents.Core.Validation.Steps
 
                     var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
                     if (string.IsNullOrWhiteSpace(applicationKey))
+                    { 
                         return ValidationResult.Failure(ComponentName, "No service principal application key was specified for Azure authentication");
+                    }
 
                     Logger.LogInformation($"Promitor is configured to use a service principal (key:{applicationId})");
 
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    var managedIdentityId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
-
+                    var managedIdentityId = authenticationConfiguration.IdentityId;
                     if (string.IsNullOrWhiteSpace(managedIdentityId))
                     {
-                        return ValidationResult.Failure(ComponentName, "No user managed identity key was specified for Azure authentication");
+                        return ValidationResult.Failure(ComponentName, "No user-assigned managed identity id was specified for Azure authentication");
                     }
 
                     Logger.LogInformation($"Promitor is configured to use a user managed identity (key:{managedIdentityId})");

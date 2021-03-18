@@ -86,19 +86,9 @@
                 Add usability
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Authentication.GetTokenCredentialsAsync(System.String,System.String,Promitor.Agents.Core.Configuration.Authentication.AuthenticationMode,System.String,System.String,System.String)">
+        <member name="P:Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph.QueryIdentityId">
             <summary>
-            Gets a valid token using a Service Principal or a Managed Identity
-            </summary>
-        </member>
-        <member name="P:Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph.QueryApplicationId">
-            <summary>
-            Gets the Service Principal Id used to authenticate the service. If QueryApplicationId QueryManagedIdentityId are Null, the System Assigned Identity will be used
-            </summary>
-        </member>
-        <member name="P:Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph.QueryManagedIdentityId">
-            <summary>
-            Gets the User Managed Identity Id used to authenticate the service. If QueryApplicationId QueryManagedIdentityId are Null, the System Assigned Identity will be used
+            The identity id that is used to run queries
             </summary>
         </member>
         <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
