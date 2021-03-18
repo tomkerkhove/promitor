@@ -3,11 +3,9 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Agents.Core.Configuration.Authentication;
-using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor;
 using Promitor.Integrations.AzureMonitor.Configuration;
 
@@ -43,33 +41,9 @@ namespace Promitor.Agents.Scraper
 
         private static AzureMonitorClient CreateNewAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
-            var azureCredentials = DetermineAzureCredentials(configuration);
-            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials.AuthenticationMode, azureCredentials.ManagedIdentityId, azureCredentials.ApplicationId, azureCredentials.Secret, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
+            var azureCredentials = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
+            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
             return azureMonitorClient;
-        }
-
-        private static AzureCredentials DetermineAzureCredentials(IConfiguration configuration)
-        {
-            var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
-
-            // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.
-            // If not, we should use a default value
-            if (authenticationConfiguration == null)
-            {
-                authenticationConfiguration = new AuthenticationConfiguration();
-            }
-
-            var applicationId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-            var managedIdentityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ManagedIdentityId);
-            var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-
-            return new AzureCredentials
-            {
-                AuthenticationMode = authenticationConfiguration.Mode,
-                ManagedIdentityId = managedIdentityId,
-                ApplicationId = applicationId,
-                Secret = applicationKey
-            };
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Promitor.Agents.Core.Configuration.Authentication
+﻿namespace Promitor.Integrations.Azure.Authentication
 {
     public enum AuthenticationMode
     {

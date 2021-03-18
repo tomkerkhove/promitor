@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Core\Promitor.Core.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.Azure\Promitor.Integrations.Azure.csproj" />
   </ItemGroup>
 
 </Project>
