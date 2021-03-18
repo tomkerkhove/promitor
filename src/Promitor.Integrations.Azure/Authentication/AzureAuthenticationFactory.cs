@@ -63,6 +63,51 @@ namespace Promitor.Integrations.Azure.Authentication
             };
         }
 
+        /// <summary>
+        ///     Gets a valid token using a Service Principal or a Managed Identity
+        /// </summary>
+        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo)
+        {
+            Guard.NotNullOrWhitespace(resource, nameof(resource));
+            Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
+            Guard.NotNull(authenticationInfo, nameof(authenticationInfo));
+
+            TokenCredential tokenCredential;
+
+            switch (authenticationInfo.Mode)
+            {
+                case AuthenticationMode.ServicePrincipal:
+                    tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret);
+                    break;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId);
+                    break;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                    tokenCredential = new ManagedIdentityCredential();
+                    break;
+                default:
+                    tokenCredential = new DefaultAzureCredential();
+                    break;
+            }
+
+            // When you reaching an endpoint, using an impersonate identity, the only endpoint available is always '/.default'
+            // MSAL add the './default' string to your resource request behind the scene.
+            // We have to do it here, since we are at a lower level(and we are not using MSAL; by the way)
+            if (!resource.ToLowerInvariant().EndsWith("/.default"))
+            {
+                if (!resource.EndsWith("/"))
+                {
+                    resource += "/";
+                }
+
+                resource += ".default";
+            }
+
+            var accessToken = await tokenCredential.GetTokenAsync(new TokenRequestContext(new[] { resource }), default);
+
+            return new TokenCredentials(accessToken.Token);
+        }
+
         public static AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
         {
             AzureCredentials credentials;
@@ -111,51 +156,6 @@ namespace Promitor.Integrations.Azure.Authentication
             }
 
             return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(azureCredentials.IdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
-        }
-
-        /// <summary>
-        ///     Gets a valid token using a Service Principal or a Managed Identity
-        /// </summary>
-        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo)
-        {
-            Guard.NotNullOrWhitespace(resource, nameof(resource));
-            Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
-            Guard.NotNull(authenticationInfo, nameof(authenticationInfo));
-
-            TokenCredential tokenCredential;
-
-            switch (authenticationInfo.Mode)
-            {
-                case AuthenticationMode.ServicePrincipal:
-                    tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret);
-                    break;
-                case AuthenticationMode.UserAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId);
-                    break;
-                case AuthenticationMode.SystemAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential();
-                    break;
-                default:
-                    tokenCredential = new DefaultAzureCredential();
-                    break;
-            }
-
-            // When you reaching an endpoint, using an impersonate identity, the only endpoint available is always '/.default'
-            // MSAL add the './default' string to your resource request behind the scene.
-            // We have to do it here, since we are at a lower level(and we are not using MSAL; by the way)
-            if (!resource.ToLowerInvariant().EndsWith("/.default"))
-            {
-                if (!resource.EndsWith("/"))
-                {
-                    resource += "/";
-                }
-
-                resource += ".default";
-            }
-
-            var accessToken = await tokenCredential.GetTokenAsync(new TokenRequestContext(new[] { resource }), default);
-
-            return new TokenCredentials(accessToken.Token);
         }
     }
 }
