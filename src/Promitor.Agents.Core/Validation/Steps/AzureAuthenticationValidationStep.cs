@@ -34,6 +34,7 @@ namespace Promitor.Agents.Core.Validation.Steps
             }
 
             // TODO: Simplify
+            // TODO: Add tests
             switch (authenticationConfiguration.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
