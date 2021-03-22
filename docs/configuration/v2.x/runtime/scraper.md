@@ -327,7 +327,7 @@ azureMonitor:
     isEnabled: false # Optional. Default: false
 ```
 
-_Note: All telemetry is emitted as verbose so you have to make sure `telemetry` is configured correctly._
+_Note: All telemetry is emitted as `trace` so you have to make sure `telemetry` is configured correctly._
 
 ## Overriding configuration with environment variables
 
