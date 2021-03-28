@@ -46,6 +46,11 @@ namespace Promitor.Integrations.Azure.Authentication
                 {
                     throw new AuthenticationException("No identity was configured for service principle authentication");
                 }
+
+                if (string.IsNullOrWhiteSpace(applicationKey))
+                {
+                    throw new AuthenticationException("No identity secret was configured for service principle authentication");
+                }
             }
             else if (authenticationConfiguration.Mode == AuthenticationMode.UserAssignedManagedIdentity)
             {
