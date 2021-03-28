@@ -20,7 +20,6 @@ namespace Promitor.Integrations.Azure.Authentication
         /// <param name="configuration">Application configuration</param>
         public static AzureAuthenticationInfo GetConfiguredAzureAuthentication(IConfiguration configuration)
         {
-            // TODO: Add negative unit tests
             var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
             // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.

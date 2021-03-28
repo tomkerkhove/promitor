@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Security;
 using System.Security.Authentication;
 using Microsoft.Extensions.Configuration;
 using Promitor.Core;
@@ -96,6 +95,69 @@ namespace Promitor.Tests.Unit.Azure
             Assert.Equal(expectedAuthenticationMode, authenticationInfo.Mode);
             Assert.Equal(expectedIdentityId, authenticationInfo.IdentityId);
             Assert.Equal(expectedSecret, authenticationInfo.Secret);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithInvalidIdentityInYamlConfiguration_Fails(string identityId)
+        {
+            // Arrange
+            var expectedSecret = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {ConfigurationKeys.Authentication.IdentityId, identityId},
+                {EnvironmentVariables.Authentication.ApplicationKey, expectedSecret},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithInvalidIdentityInLegacyConfiguration_Fails(string identityId)
+        {
+            // Arrange
+            var expectedSecret = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {EnvironmentVariables.Authentication.ApplicationId, identityId},
+                {EnvironmentVariables.Authentication.ApplicationKey, expectedSecret},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithInvalidSecret_Fails(string identitySecret)
+        {
+            // Arrange
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},
+                {EnvironmentVariables.Authentication.ApplicationKey, identitySecret},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
         }
 
         [Fact]
