@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
-using Newtonsoft.Json;
 using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Core;
 using Promitor.Integrations.Azure.Authentication;
@@ -14,9 +13,6 @@ namespace Promitor.Tests.Unit.Validation.Authentication
     [Category("Unit")]
     public class AzureAuthenticationValidationStepTests
     {
-        private const string IdentityIdConfigKey = "authentication:IdentityId";
-        private const string AuthenticationModeConfigKey = "authentication:Mode";
-
         [Fact]
         public void ServicePrinciple_IdentityIdInYamlIsValid_Succeeds()
         {
@@ -25,7 +21,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validApplicationKey = Guid.NewGuid().ToString();
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey, validApplicationId},
+                {ConfigurationKeys.Authentication.IdentityId, validApplicationId},
                 {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -47,7 +43,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var inMemoryConfiguration = new Dictionary<string, string>
             {
                 {EnvironmentVariables.Authentication.ApplicationId, invalidApplicationId},
-                {IdentityIdConfigKey, invalidApplicationId},
+                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
                 {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -68,7 +64,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validApplicationKey = Guid.NewGuid().ToString();
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey, invalidApplicationId},
+                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
                 {EnvironmentVariables.Authentication.ApplicationKey, validApplicationKey},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -215,8 +211,8 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validApplicationId = Guid.NewGuid().ToString();
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey,validApplicationId},
-                {AuthenticationModeConfigKey, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
+                {ConfigurationKeys.Authentication.IdentityId,validApplicationId},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
 
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -236,8 +232,8 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var invalidApplicationId = string.Empty;
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey, invalidApplicationId},
-                {AuthenticationModeConfigKey, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
+                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
 
@@ -256,8 +252,8 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validApplicationId = Guid.NewGuid().ToString();
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey, validApplicationId},
-                {AuthenticationModeConfigKey, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
+                {ConfigurationKeys.Authentication.IdentityId, validApplicationId},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
 
@@ -276,8 +272,8 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             const string invalidApplicationId = " ";
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {IdentityIdConfigKey, invalidApplicationId},
-                {AuthenticationModeConfigKey, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
+                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
 
@@ -295,7 +291,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             // Arrange
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {AuthenticationModeConfigKey, AuthenticationMode.SystemAssignedManagedIdentity.ToString()},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.SystemAssignedManagedIdentity.ToString()},
             };
 
             var config = CreateConfiguration(inMemoryConfiguration);

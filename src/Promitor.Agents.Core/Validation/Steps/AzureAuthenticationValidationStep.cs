@@ -24,7 +24,6 @@ namespace Promitor.Agents.Core.Validation.Steps
         {
             try
             {
-                // TODO: Unit test
                 AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration);
                 
                 return ValidationResult.Successful(ComponentName);

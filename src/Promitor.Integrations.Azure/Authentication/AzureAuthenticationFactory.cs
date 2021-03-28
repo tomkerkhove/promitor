@@ -20,7 +20,7 @@ namespace Promitor.Integrations.Azure.Authentication
         /// <param name="configuration">Application configuration</param>
         public static AzureAuthenticationInfo GetConfiguredAzureAuthentication(IConfiguration configuration)
         {
-            // TODO: Unit test
+            // TODO: Add negative unit tests
             var authenticationConfiguration = configuration.GetSection("authentication").Get<AuthenticationConfiguration>();
 
             // To be still compatible with existing infrastructure using previous version of Promitor, we need to check if the authentication section exists.
@@ -113,6 +113,7 @@ namespace Promitor.Integrations.Azure.Authentication
             return new TokenCredentials(accessToken.Token);
         }
 
+        // TODO: Add unit tests
         public static AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
         {
             AzureCredentials credentials;
