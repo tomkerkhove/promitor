@@ -13,7 +13,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
     public class AzureAuthenticationValidationStepTests
     {
         [Fact]
-        public void ApplicationId_EmptyString_Fails()
+        public void ServicePrinciple_ApplicationIdInEnvironmentVariableIsEmptyString_Fails()
         {
             // Arrange
             var invalidApplicationId = string.Empty;
@@ -34,7 +34,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void ApplicationId_Valid_Succeeds()
+        public void ServicePrinciple_ApplicationIdInEnvironmentVariableIsValid_Succeeds()
         {
             // Arrange
             var validApplicationId = Guid.NewGuid().ToString();
@@ -55,7 +55,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void ApplicationId_Whitespace_Fails()
+        public void ServicePrinciple_ApplicationIdInEnvironmentVariableIsWhitespace_Fails()
         {
             // Arrange
             const string invalidApplicationId = " ";
@@ -76,7 +76,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void ApplicationKey_EmptyString_Fails()
+        public void ServicePrinciple_ApplicationKeyIsEmptyString_Fails()
         {
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
@@ -97,7 +97,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void ApplicationKey_Whitespace_Fails()
+        public void ServicePrinciple_ApplicationKeyHasWhitespace_Fails()
         {
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
@@ -118,7 +118,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void ApplicationKey_Valid_Succeeds()
+        public void ServicePrinciple_ApplicationKeyIsValid_Succeeds()
         {
             // Arrange
             var invalidApplicationId = Guid.NewGuid().ToString();
