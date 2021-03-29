@@ -37,7 +37,6 @@ namespace Promitor.Integrations.Azure.Authentication
                 if (string.IsNullOrWhiteSpace(identityId))
                 {
                     // Use environment variable for backwards compatibility
-                    // TODO: Deprecate this
                     identityId = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
                 }
 

@@ -53,7 +53,6 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             {
                 {"tenant_id", tenantId},
                 {"subscription_id", subscriptionId},
-                // TODO: Deprecate this
                 {"app_id", id},
             };
         }
