@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Agents.Core.Configuration
 {
