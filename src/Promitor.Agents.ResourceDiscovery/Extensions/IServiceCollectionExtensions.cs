@@ -14,6 +14,7 @@ using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
@@ -29,6 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             services.Configure<CacheConfiguration>(configuration.GetSection("cache"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
             services.Configure<ApplicationInsightsConfiguration>(configuration.GetSection("telemetry:applicationInsights"));
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
 

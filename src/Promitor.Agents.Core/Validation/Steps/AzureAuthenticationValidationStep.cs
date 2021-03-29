@@ -1,8 +1,9 @@
-﻿using GuardNet;
+﻿using System.Security.Authentication;
+using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Validation.Interfaces;
-using Promitor.Core;
+using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Agents.Core.Validation.Steps
 {
@@ -21,19 +22,16 @@ namespace Promitor.Agents.Core.Validation.Steps
 
         public ValidationResult Run()
         {
-            var applicationId = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationId);
-            if (string.IsNullOrWhiteSpace(applicationId))
+            try
             {
-                return ValidationResult.Failure(ComponentName, "No application id was specified for Azure authentication");
+                AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration);
+                
+                return ValidationResult.Successful(ComponentName);
             }
-
-            var applicationKey = _configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
-            if (string.IsNullOrWhiteSpace(applicationKey))
+            catch (AuthenticationException authenticationException)
             {
-                return ValidationResult.Failure(ComponentName, "No application key was specified for Azure authentication");
+                return ValidationResult.Failure(ComponentName, $"Azure authentication is not configured correctly - {authenticationException.Message}");
             }
-
-            return ValidationResult.Successful(ComponentName);
         }
     }
 }

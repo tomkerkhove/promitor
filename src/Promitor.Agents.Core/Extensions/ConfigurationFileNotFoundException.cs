@@ -14,7 +14,7 @@ namespace Promitor.Agents.Core.Extensions
         public ConfigurationFileNotFoundException(string path)
             : base($"A required configuration file was not found at '{path}'")
         {
-            this.Path = path;
+            Path = path;
         }
 
         /// <summary>
