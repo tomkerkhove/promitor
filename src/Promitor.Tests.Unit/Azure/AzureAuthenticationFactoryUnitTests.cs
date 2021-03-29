@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security.Authentication;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Extensions.Configuration;
 using Promitor.Core;
 using Promitor.Integrations.Azure.Authentication;
@@ -206,6 +208,164 @@ namespace Promitor.Tests.Unit.Azure
             Assert.Equal(expectedAuthenticationMode, authenticationInfo.Mode);
             Assert.Equal(configuredIdentityIdThroughNewApproach, authenticationInfo.IdentityId);
             Assert.Equal(expectedSecret, authenticationInfo.Secret);
+        }
+
+        [Fact]
+        public void CreateAzureAuthentication_SystemAssignedManagedIdentityIsValid_Succeeds()
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.SystemAssignedManagedIdentity
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+            Assert.Null(azureCredentials.ClientId);
+        }
+
+        [Fact]
+        public void CreateAzureAuthentication_UserAssignedManagedIdentityIsValid_Succeeds()
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.UserAssignedManagedIdentity,
+                IdentityId = expectedIdentityId
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+            // Client id for user-assigned MI is not exposed
+            Assert.Null(azureCredentials.ClientId);
+        }
+        
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void CreateAzureAuthentication_UserAssignedManagedIdentityWithInvalidIdentity_Fails(string identityId)
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.UserAssignedManagedIdentity,
+                IdentityId = identityId
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
+        }
+
+        [Fact]
+        public void CreateAzureAuthentication_NoModeSpecified_AssumesServicePrinciple()
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedSecret = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                IdentityId = expectedIdentityId,
+                Secret = expectedSecret
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(expectedIdentityId, azureCredentials.ClientId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+        }
+
+        [Fact]
+        public void CreateAzureAuthentication_ServicePrincipleIsValid_Succeeds()
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedSecret = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.ServicePrincipal,
+                IdentityId = expectedIdentityId,
+                Secret = expectedSecret
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(expectedIdentityId, azureCredentials.ClientId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void CreateAzureAuthentication_ServicePrincipleWithInvalidIdentity_Fails(string secret)
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.ServicePrincipal,
+                IdentityId = expectedIdentityId,
+                Secret = secret
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void CreateAzureAuthentication_ServicePrincipleWithInvalidSecret_Fails(string identityId)
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var expectedSecret = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.ServicePrincipal,
+                IdentityId = identityId,
+                Secret = expectedSecret
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
         }
 
         private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)

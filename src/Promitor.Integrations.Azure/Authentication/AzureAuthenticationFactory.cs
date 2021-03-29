@@ -112,18 +112,17 @@ namespace Promitor.Integrations.Azure.Authentication
             return new TokenCredentials(accessToken.Token);
         }
 
-        // TODO: Add unit tests
-        public static AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
+        public static AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, AzureCredentialsFactory azureCredentialsFactory)
         {
             AzureCredentials credentials;
 
-            switch (azureCredentials.Mode)
+            switch (azureAuthenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                    credentials = GetServicePrincipleCredentials(azureCloud, tenantId, azureCredentials, azureCredentialsFactory);
+                    credentials = GetServicePrincipleCredentials(azureCloud, tenantId, azureAuthenticationInfo, azureCredentialsFactory);
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    credentials = GetUserAssignedManagedIdentityCredentials(azureCloud, tenantId, azureCredentials, azureCredentialsFactory);
+                    credentials = GetUserAssignedManagedIdentityCredentials(azureCloud, tenantId, azureAuthenticationInfo, azureCredentialsFactory);
                     break;
                 default:
                     credentials = GetSystemAssignedManagedIdentityCredentials(azureCloud, tenantId, azureCredentialsFactory);
@@ -138,29 +137,29 @@ namespace Promitor.Integrations.Azure.Authentication
             return azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
         }
 
-        private static AzureCredentials GetServicePrincipleCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
+        private static AzureCredentials GetServicePrincipleCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, AzureCredentialsFactory azureCredentialsFactory)
         {
-            if (string.IsNullOrWhiteSpace(azureCredentials.IdentityId))
+            if (string.IsNullOrWhiteSpace(azureAuthenticationInfo.IdentityId))
             {
                 throw new AuthenticationException("No identity was configured for service principle authentication");
             }
 
-            if (string.IsNullOrWhiteSpace(azureCredentials.Secret))
+            if (string.IsNullOrWhiteSpace(azureAuthenticationInfo.Secret))
             {
                 throw new AuthenticationException("No identity was configured for service principle authentication");
             }
 
-            return azureCredentialsFactory.FromServicePrincipal(azureCredentials.IdentityId, azureCredentials.Secret, tenantId, azureCloud);
+            return azureCredentialsFactory.FromServicePrincipal(azureAuthenticationInfo.IdentityId, azureAuthenticationInfo.Secret, tenantId, azureCloud);
         }
 
-        private static AzureCredentials GetUserAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureCredentials, AzureCredentialsFactory azureCredentialsFactory)
+        private static AzureCredentials GetUserAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, AzureCredentialsFactory azureCredentialsFactory)
         {
-            if (string.IsNullOrWhiteSpace(azureCredentials.IdentityId))
+            if (string.IsNullOrWhiteSpace(azureAuthenticationInfo.IdentityId))
             {
                 throw new AuthenticationException("No identity was configured for user-assigned managed identity");
             }
 
-            return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(azureCredentials.IdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+            return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(azureAuthenticationInfo.IdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
         }
     }
 }
