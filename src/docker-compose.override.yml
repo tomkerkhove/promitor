@@ -5,7 +5,6 @@ services:
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
       - "PROMITOR_CONFIG_FOLDER=/config/"
-      - "PROMITOR_AUTH_APPID=67882a00-21d3-4ee7-b32a-430ea0768cd3"
       - "PROMITOR_AUTH_APPKEY=<hidden>"
     ports:
       - "777:88"
@@ -13,7 +12,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - PROMITOR_CONFIG_FOLDER=/config/
-      - PROMITOR_AUTH_APPID=ceb249a3-44ce-4c90-8863-6776336f5b7e
       - PROMITOR_AUTH_APPKEY=<hidden>
       - PROMITOR_ATLASSIAN_STATUSPAGE_APIKEY=<hidden>
       - SECRETS_STORAGEQUEUE_SAS=<hidden>
