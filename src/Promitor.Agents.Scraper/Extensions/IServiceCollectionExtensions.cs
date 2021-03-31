@@ -28,6 +28,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;

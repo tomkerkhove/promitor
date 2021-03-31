@@ -18,7 +18,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
-using Promitor.Agents.Core.Configuration.Authentication;
+using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -34,22 +34,20 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureCloud">Name of the Azure cloud to interact with</param>
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
-        /// <param name="authenticationMode">Determines which mode to use to authenticate: Managed Identity or Service Principal</param>
-        /// <param name="managedIdentityId">Id of the Azure managed identity used to authenticate with Azure Monitor</param>
-        /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
-        /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
+        /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
+            Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
         }
 
         /// <summary>
@@ -218,14 +216,15 @@ namespace Promitor.Integrations.AzureMonitor
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
         {
-            var credentials = CreateAzureAuthentication(azureCloud, tenantId, authenticationMode, managedIdentityId, applicationId, applicationSecret);
+            var credentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, tenantId, azureAuthenticationInfo, _azureCredentialsFactory);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
-            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, authenticationMode, managedIdentityId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, metricsCollector, throttlingLogger);
 
-            var azureClientConfiguration = Azure.Configure()
+            var azureClientConfiguration = Microsoft.Azure.Management.Fluent.Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);
+            
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {
@@ -240,29 +239,6 @@ namespace Promitor.Integrations.AzureMonitor
             return azureClientConfiguration
                 .Authenticate(credentials)
                 .WithSubscription(subscriptionId);
-        }
-
-        private AzureCredentials CreateAzureAuthentication(AzureEnvironment azureCloud, string tenantId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, string applicationSecret)
-        {
-            AzureCredentials credentials;
-
-            switch (authenticationMode)
-            {
-                case AuthenticationMode.ServicePrincipal:
-                    Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-                    Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
-                    credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
-                    break;
-                case AuthenticationMode.UserAssignedManagedIdentity:
-                    Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
-                    credentials = _azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(managedIdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
-                    break;
-                default:
-                    credentials = _azureCredentialsFactory.FromSystemAssignedManagedServiceIdentity(MSIResourceType.VirtualMachine, azureCloud, tenantId);
-                    break;
-            }
-
-            return credentials;
         }
     }
 }

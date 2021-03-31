@@ -15,6 +15,7 @@ using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {

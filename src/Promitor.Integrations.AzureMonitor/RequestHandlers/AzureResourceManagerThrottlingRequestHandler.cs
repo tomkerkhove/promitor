@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Configuration.Authentication;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Integrations.Azure.Authentication;
 using Version = Promitor.Core.Version;
 
 namespace Promitor.Integrations.AzureMonitor.RequestHandlers
@@ -30,25 +30,24 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// </summary>
         /// <param name="tenantId">Id of the tenant that is being interacted with via Azure Resource Manager</param>
         /// <param name="subscriptionId">Id of the subscription that is being interacted with via Azure Resource Manager</param>
-        /// <param name="authenticationMode">Authentication mode used to authenticate the service to Azure. Can be Managed Identity or Service Principal</param>
-        /// <param name="managedIdentityId">Id of the Azure managed identity used to authenticate with Azure Monitor</param>
-        /// <param name="applicationId">Id of the application that is being used to interact with Azure Resource Manager</param>
+        /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="metricSinkWriter">Metrics writer to all sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AuthenticationMode authenticationMode, string managedIdentityId, string applicationId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
+        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(metricsCollector, nameof(metricsCollector));
+            Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
             Guard.NotNull(logger, nameof(logger));
 
             _logger = logger;
             _metricSinkWriter = metricSinkWriter;
             _metricsCollector = metricsCollector;
 
-            string id = DetermineApplicationId(authenticationMode, managedIdentityId, applicationId);
+            var id = DetermineApplicationId(azureAuthenticationInfo);
   
             _metricLabels = new Dictionary<string, string>
             {
@@ -89,26 +88,19 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             }
         }
 
-        private string DetermineApplicationId(AuthenticationMode authenticationMode, string managedIdentityId, string applicationId)
+        private string DetermineApplicationId(AzureAuthenticationInfo azureAuthenticationInfo)
         {
-            string id;
-
-            switch (authenticationMode)
+            switch (azureAuthenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                    Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-                    id = applicationId;
-                    break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    Guard.NotNullOrWhitespace(managedIdentityId, nameof(managedIdentityId));
-                    id = managedIdentityId;
-                    break;
+                    Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
+                    return azureAuthenticationInfo.IdentityId;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                    return "system-assigned-identity";
                 default:
-                    id = "system-assigned-identity";
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
             }
-
-            return id;
         }
 
         private void LogArmThrottling()
