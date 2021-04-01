@@ -7,16 +7,20 @@ redirect_from:
 
 ## Introduction
 
-This walkthrough will allow you to deploy a full AKS cluster and connect your Prometheus instance to Azure Monitoring through Promitor, without having to manage and secure any sensitive password.
+This walkthrough will allow you to deploy a full AKS cluster and connect your Prometheus instance to Azure Monitoring through Promitor,
+without having to manage and secure any sensitive password.
 
-This walkthrough is almost the same as [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/scrape-promitor-with-prometheus-on-azure-kubernetes-service) but using a **managed identity** instead of a **service principal**.  
-AKS requires an identity to create additional resources (like load balancers, disks ...) 
+This walkthrough is almost the same as [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
+but using a **managed identity** instead of a **service principal**.  
+AKS requires an identity to create additional resources (like load balancers, disks ...)
+
 - Using a Service Principal requires you to provide an application id and an application key (password).
 - Using a Managed Identity requires you to create the identity on Azure, but you don't need to provide any password.
 
 Check the official Microsoft documentation about [Managed Identity in Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity).
 
-We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) project to configure identities for all your cluster pods, and rely on it for **Promitor**.
+We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) project to configure identities for all your cluster pods,
+and rely on it for **Promitor**.
 
 ## Table of Contents
 
@@ -29,7 +33,8 @@ We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) pr
 
 ## Prerequisites
 
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest), to be able to deploy resources through the command line.
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest),
+to be able to deploy resources through the command line.
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/), the Kubernetes
   command-line tool. It can also be installed via the Azure CLI with `az aks install-cli`.
 - [Helm](https://helm.sh/docs/using_helm/#installing-the-helm-client), a Kubernetes
@@ -40,7 +45,8 @@ We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) pr
 
 ### Preparing script
 
-Since we are going to use a lot of bash scripts with different variables values, it can be a good idea to parameterize everything.   
+Since we are going to use a lot of bash scripts with different variables values,
+it can be a good idea to parameterize everything.
 So far, we can start by **exporting** all the values we need:
 
 ```bash
@@ -65,7 +71,6 @@ export SERVICE_BUS_NAMESPACE=PromitorUniqueNameServiceBus
 export SERVICE_BUS_QUEUE=demo_queue
 ```
 
-
 ### Create a Resource Group
 
 ```bash
@@ -80,6 +85,7 @@ Output:
   "...": "..."
 }
 ```
+
 ### Create a Service Bus Namespace and Queue
 
 First we'll need to create a namespace. This **Service Bus Namespace** will output insights into Azure Monitoring.  
@@ -145,6 +151,7 @@ Verify your credentials and check that your cluster is up and running with
 ### Get AKS Managed Identity and MC resource group
 
 To be able to configure **aad-pod-identity**, we will need some information from your newly deployed **AKS** cluster:
+
 - **MC Resource Group**: Resource group where the AKS internal resources have been deployed
 - **AKS Managed Identity Id**: AKS Managed Identity created internally (since we used the `--enable-managed-identity` option) that is used by your AKS cluster to access Azure resources.
 
@@ -160,7 +167,7 @@ export mc_aks_mi_id="$(az aks show -g ${RG_NAME} -n ${CLUSTER_NAME} --query iden
 
 ### Configure AKS Managed Identity for AAD Pod Identity
 
-If you want to know more about how to configure and manage your aad pod identities, check the official documentation: https://azure.github.io/aad-pod-identity/docs/
+If you want to know more about how to configure and manage your aad pod identities, check the official documentation: <https://azure.github.io/aad-pod-identity/docs/>
 
 In this walkthrough we are going to configure the **AKS Managed Identity** to allow **aad-pod-identity** to access required resources. (More info: [AAD Pod Identity Role Assignements](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/#performing-role-assignments))
 
@@ -195,7 +202,7 @@ helm install aad-pod-identity aad-pod-identity/aad-pod-identity --set nmi.allowN
 
 ### Create the Managed Identity for Promitor
 
-We can basically use the already deployed and created managed identity used by AKS, but since we want to [separate the concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), 
+We can basically use the already deployed and created managed identity used by AKS, but since we want to [separate the concerns](https://en.wikipedia.org/wiki/Separation_of_concerns),
 we are going to create a new managed identity that will be the identity used later by all your Pods.
 
 ```bash
@@ -219,6 +226,7 @@ az role assignment create --role "Monitoring Reader" --scope "/subscriptions/$SU
 ```
 
 _Note:_ You can check the role assignements using this command:
+
 ```bash
 az role assignment list --assignee $AD_POD_IDENTITY_CLIENT_ID -g $RG_NAME | jq -r '.[].roleDefinitionName'
 ```
@@ -266,7 +274,6 @@ kubectl get azureidentitybinding
 
 Before going further, you can check if your AAD Pod Identity is deployed and configured correctly:
 
-
 ```bash
 echo "If you want to test the binding of identity, use this command"
 kubectl run azure-cli -it --image=mcr.microsoft.com/azure-cli --labels=aadpodidbinding=$AD_POD_IDENTITY_NAME /bin/bash
@@ -282,8 +289,8 @@ bash-5.0# az login -i --debug
 # You should have a line with 'MSI: token was retrieved. Now trying to initialize local accounts'"
 ```
 
-If your Azure CLI container is able to retrieve some information from Azure 
-without having to log in with your credentials, 
+If your Azure CLI container is able to retrieve some information from Azure
+without having to log in with your credentials,
 it means the CLI is using your Managed Identity, through the Pod Identity Binding.
 
 You may have a result indicating you are log in, using a **System Assigned Identity**
@@ -358,7 +365,7 @@ export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/ins
 kubectl port-forward --namespace default $POD_NAME 8080:88
 ```
 
-Now browse to the address http://127.0.0.1:8080/metrics and check your metrics are scrapped:
+Now browse to the address <http://127.0.0.1:8080/metrics> and check your metrics are scrapped:
 
 ``` html
 # HELP demo_queue_size Amount of active messages of the 'demo_queue' queue
