@@ -1,14 +1,12 @@
 ---
 layout: default
-title: Deploying Promitor, Prometheus, and Grafana on an AKS Cluster
-redirect_from:
-  - /walkthrough/
+title: Using Managed Identity with Promitor
 ---
 
 ## Introduction
 
-This walkthrough will allow you to deploy a full AKS cluster and connect your Prometheus instance to Azure Monitoring through Promitor,
-without having to manage and secure any sensitive password.
+This walkthrough will allow you to deploy a full AKS cluster and connect your Prometheus instance to Azure Monitoring
+ through Promitor, without having to manage and secure any sensitive password.
 
 This walkthrough is almost the same as [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
 but using a **managed identity** instead of a **service principal**.  
@@ -19,7 +17,8 @@ AKS requires an identity to create additional resources (like load balancers, di
 
 Check the official Microsoft documentation about [Managed Identity in Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity).
 
-We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) project to configure identities for all your cluster pods,
+We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) project to
+ configure identities for all your cluster pods,
 and rely on it for **Promitor**.
 
 ## Table of Contents
@@ -63,11 +62,11 @@ export AD_POD_IDENTITY_NAME=promitor-identity
 
 
 # As an example, we are going to use a service bus from where we want to grab some metrics, through Promitor
-# SERVICE_BUS_NAMESPACE represents the name of you service bus namespace. 
+# SERVICE_BUS_NAMESPACE represents the name of you service bus namespace.
 # Be careful as Service Bus Namespaces need to be globally unique.
 export SERVICE_BUS_NAMESPACE=PromitorUniqueNameServiceBus
 
-# SERVICE_BUS_QUEUE represents the name of you service bus queue. 
+# SERVICE_BUS_QUEUE represents the name of you service bus queue.
 export SERVICE_BUS_QUEUE=demo_queue
 ```
 
@@ -153,7 +152,8 @@ Verify your credentials and check that your cluster is up and running with
 To be able to configure **aad-pod-identity**, we will need some information from your newly deployed **AKS** cluster:
 
 - **MC Resource Group**: Resource group where the AKS internal resources have been deployed
-- **AKS Managed Identity Id**: AKS Managed Identity created internally (since we used the `--enable-managed-identity` option) that is used by your AKS cluster to access Azure resources.
+- **AKS Managed Identity Id**: AKS Managed Identity created internally (since we used the `--enable-managed-identity`
+ option) that is used by your AKS cluster to access Azure resources.
 
 ```bash
 echo "Retrieving MC resource group"
@@ -169,7 +169,8 @@ export mc_aks_mi_id="$(az aks show -g ${RG_NAME} -n ${CLUSTER_NAME} --query iden
 
 If you want to know more about how to configure and manage your aad pod identities, check the official documentation: <https://azure.github.io/aad-pod-identity/docs/>
 
-In this walkthrough we are going to configure the **AKS Managed Identity** to allow **aad-pod-identity** to access required resources. (More info: [AAD Pod Identity Role Assignements](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/#performing-role-assignments))
+In this walkthrough we are going to configure the **AKS Managed Identity** to allow **aad-pod-identity** to access
+ required resources. (More info: [AAD Pod Identity Role Assignements](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/#performing-role-assignments))
 
 ```bash
 echo "Assigning role needed by Pod Identity:"
@@ -375,7 +376,9 @@ demo_queue_size{resource_group="ammdocs",subscription_id="xxxxx-xxxxx-xxxxx-xxxx
 
 ### Install Prometheus, Grafana and Prometheus Operator
 
-We are going to use the [prometheus-community stack chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack) from the [Prometheus Monitoring Community](https://github.com/prometheus-community) to deploy a full Prometheus environment, already configured for Kubernetes.
+We are going to use the [prometheus-community stack chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+ from the [Prometheus Monitoring Community](https://github.com/prometheus-community) to deploy a full Prometheus
+  environment, already configured for Kubernetes.
 
 ``` bash
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -398,7 +401,8 @@ helm install prometheus prometheus-community/kube-prometheus-stack -f promitor-s
 
 ## Test and check output
 
-You can refer to the [Test and check output](scrape-promitor-with-prometheus-on-azure-kubernetes-service#test-and-check-output) from the first walkthrough to check and test your deployed solution.
+You can refer to the [Test and check output](scrape-promitor-with-prometheus-on-azure-kubernetes-service#test-and-check-output)
+ from the first walkthrough to check and test your deployed solution.
 
 ## Delete resources
 
