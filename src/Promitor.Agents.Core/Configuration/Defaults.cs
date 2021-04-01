@@ -1,15 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Promitor.Agents.Core.Configuration.Authentication;
 
 namespace Promitor.Agents.Core.Configuration
 {
     public static class Defaults
     {
-        public static class Authentication
-        {
-            public static AuthenticationMode Mode { get; } = AuthenticationMode.ServicePrincipal;
-        }
-
         public static class Server
         {
             public static int HttpPort { get; } = 80;

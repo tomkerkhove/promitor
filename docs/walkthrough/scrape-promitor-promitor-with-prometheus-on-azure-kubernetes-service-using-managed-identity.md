@@ -305,12 +305,14 @@ The yaml below will scrape
 one metric, queue length, from the queue created above.
 
 ```yaml
+azureAuthentication:
+  mode: SystemAssigneManagedIdentity
+  identity:
+    binding: <aad-pod-identity-name>
 azureMetadata:
   tenantId: <guid-tenant-id>
   subscriptionId: <guid-subscription-id>
   resourceGroupName: <promitor-resource-group-id>
-  mode: "systemAssignedManagedIdentity"
-  aadpodidbinding: <aad-pod-identity-name>
 metricDefaults:
   aggregation:
     interval: 00:05:00
