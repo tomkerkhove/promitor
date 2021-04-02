@@ -15,13 +15,33 @@ In order to achieve this, we will use the [AAD Pod Identity project](https://git
 > in the official Microsoft documentation.
 
 ## Table of Contents
-TODO: Update
-- **[Deploy Azure Infrastructure](#deploy-azure-infrastructure)**
-  - [Create a Resource Group](#create-a-resource-group)
-  - [Create a Service Principal](#create-a-service-principal)
+
+TODO: Regenerate before merging
+
+- [Introduction](#introduction)
+- [Table of Contents](#table-of-contents)
+- [Prerequisites](#prerequisites)
+- [Deploy Azure Infrastructure](#deploy-azure-infrastructure)
+  - [Preparing script](#preparing-script)
+  - [Create an Azure Resource Group](#create-an-azure-resource-group)
   - [Create a Service Bus Namespace and Queue](#create-a-service-bus-namespace-and-queue)
   - [Create an AKS Cluster](#create-an-aks-cluster)
-- **[TO COMPLETE]**
+- [Cluster Setup](#cluster-setup)
+  - [Get credentials](#get-credentials)
+  - [Get AKS Managed Identity and MC resource group](#get-aks-managed-identity-and-mc-resource-group)
+- [AAD Pod Identity](#aad-pod-identity)
+  - [Configure AKS Managed Identity for AAD Pod Identity](#configure-aks-managed-identity-for-aad-pod-identity)
+  - [Install AAD Pod Identity](#install-aad-pod-identity)
+  - [Create the Managed Identity for Promitor](#create-the-managed-identity-for-promitor)
+  - [Bind your Managed Identity to your Pods, through AAD Pod Identity](#bind-your-managed-identity-to-your-pods-through-aad-pod-identity)
+  - [Optional: Check your AAD Pod Identity Installation](#optional-check-your-aad-pod-identity-installation)
+- [Deploy Promitor and Prometheus](#deploy-promitor-and-prometheus)
+  - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
+  - [Deploy Promitor to your cluster using Helm](#deploy-promitor-to-your-cluster-using-helm)
+  - [Optional: Check your Promitor deployment](#optional-check-your-promitor-deployment)
+  - [Install Prometheus, Grafana and Prometheus Operator](#install-prometheus-grafana-and-prometheus-operator)
+- [Test and check output](#test-and-check-output)
+- [Delete resources](#delete-resources)
 
 ## Prerequisites
 
@@ -63,7 +83,7 @@ export SERVICE_BUS_NAMESPACE=PromitorUniqueNameServiceBus
 export SERVICE_BUS_QUEUE=demo_queue
 ```
 
-### Create a Resource Group
+### Create an Azure Resource Group
 
 ```bash
 az group create --name $RG_NAME --location $LOCATION
