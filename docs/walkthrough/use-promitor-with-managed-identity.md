@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Using Managed Identity with Promitor
+title: Using Managed Identity with Promitor on Azure Kubernetes Service
 ---
 
 ## Introduction
