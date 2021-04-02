@@ -5,24 +5,17 @@ title: Using Managed Identity with Promitor
 
 ## Introduction
 
-This walkthrough will allow you to deploy a full AKS cluster and connect your Prometheus instance to Azure Monitoring
- through Promitor, without having to manage and secure any sensitive password.
+This walkthrough will allow you to deploy Promitor that uses [Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview)
+ on an Azure Kubernetes Service cluster to authenticate to Microsoft Azure, using no-password authentication.
 
-This walkthrough is almost the same as [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
-but using a **managed identity** instead of a **service principal**.  
-AKS requires an identity to create additional resources (like load balancers, disks ...)
+In order to achieve this, we will use the [AAD Pod Identity project](https://github.com/Azure/aad-pod-identity) to
+ manage the identities and authentication.
 
-- Using a Service Principal requires you to provide an application id and an application key (password).
-- Using a Managed Identity requires you to create the identity on Azure, but you don't need to provide any password.
-
-Check the official Microsoft documentation about [Managed Identity in Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity).
-
-We will use the [aad-pod-identity](https://azure.github.io/aad-pod-identity/) project to
- configure identities for all your cluster pods,
-and rely on it for **Promitor**.
+> ⚠ This only works with Azure Kubernetes Service - Learn more about [Managed Identity in Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity)
+> in the official Microsoft documentation.
 
 ## Table of Contents
-
+TODO: Update
 - **[Deploy Azure Infrastructure](#deploy-azure-infrastructure)**
   - [Create a Resource Group](#create-a-resource-group)
   - [Create a Service Principal](#create-a-service-principal)
