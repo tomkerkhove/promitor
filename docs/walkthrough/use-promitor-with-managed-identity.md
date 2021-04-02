@@ -6,7 +6,7 @@ title: Using Managed Identity with Promitor on Azure Kubernetes Service
 ## Introduction
 
 This walkthrough will allow you to deploy Promitor that uses [Managed Identity](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview)
- on an Azure Kubernetes Service cluster to authenticate to Microsoft Azure, using no-password authentication.
+ on an Azure Kubernetes Service cluster to scrape Azure Service Bus metrics, using no-password authentication.
 
 In order to achieve this, we will use the [AAD Pod Identity project](https://github.com/Azure/aad-pod-identity) to
  manage the identities and authentication.
@@ -21,27 +21,25 @@ TODO: Regenerate before merging
 - [Introduction](#introduction)
 - [Table of Contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
-- [Deploy Azure Infrastructure](#deploy-azure-infrastructure)
+- [Deploying the Azure Infrastructure](#deploying-the-azure-infrastructure)
   - [Preparing script](#preparing-script)
-  - [Create an Azure Resource Group](#create-an-azure-resource-group)
-  - [Create a Service Bus Namespace and Queue](#create-a-service-bus-namespace-and-queue)
-  - [Create an AKS Cluster](#create-an-aks-cluster)
-- [Cluster Setup](#cluster-setup)
-  - [Get credentials](#get-credentials)
+  - [Creating an Azure Resource Group](#creating-an-azure-resource-group)
+  - [Creating an Azure Service Bus Namespace & Queue](#creating-an-azure-service-bus-namespace--queue)
+  - [Creating an Azure Kubernetes Service Cluster](#creating-an-azure-kubernetes-service-cluster)
+- [Setting up our cluster](#setting-up-our-cluster)
+  - [Getting The Cluster Credentials](#getting-the-cluster-credentials)
   - [Get AKS Managed Identity and MC resource group](#get-aks-managed-identity-and-mc-resource-group)
 - [AAD Pod Identity](#aad-pod-identity)
   - [Configure AKS Managed Identity for AAD Pod Identity](#configure-aks-managed-identity-for-aad-pod-identity)
   - [Install AAD Pod Identity](#install-aad-pod-identity)
   - [Create the Managed Identity for Promitor](#create-the-managed-identity-for-promitor)
   - [Bind your Managed Identity to your Pods, through AAD Pod Identity](#bind-your-managed-identity-to-your-pods-through-aad-pod-identity)
-  - [Optional: Check your AAD Pod Identity Installation](#optional-check-your-aad-pod-identity-installation)
-- [Deploy Promitor and Prometheus](#deploy-promitor-and-prometheus)
+  - [Verifying the AAD Pod Identity installation](#verifying-the-aad-pod-identity-installation)
+- [Deploying Promitor with Managed Identity](#deploying-promitor-with-managed-identity)
   - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
   - [Deploy Promitor to your cluster using Helm](#deploy-promitor-to-your-cluster-using-helm)
-  - [Optional: Check your Promitor deployment](#optional-check-your-promitor-deployment)
-  - [Install Prometheus, Grafana and Prometheus Operator](#install-prometheus-grafana-and-prometheus-operator)
-- [Test and check output](#test-and-check-output)
-- [Delete resources](#delete-resources)
+  - [Verifying the scraped output in Promitor](#verifying-the-scraped-output-in-promitor)
+- [Cleaning up](#cleaning-up)
 
 ## Prerequisites
 
@@ -53,112 +51,122 @@ to be able to deploy resources through the command line.
   deployment manager.
 - [WSL](https://docs.microsoft.com/en-us/windows/wsl/), if you are using a Windows machine to deploy your whole solution.
 
-## Deploy Azure Infrastructure
+## Deploying the Azure Infrastructure
 
 ### Preparing script
 
 Since we are going to use a lot of bash scripts with different variables values,
 it can be a good idea to parameterize everything.
-So far, we can start by **exporting** all the values we need:
+
+Let's start by **exporting** all the values we need:
 
 ```bash
 # SUBSCRIPTION_ID represents the Azure subscription id you will use to access your Azure resources
 export SUBSCRIPTION_ID=<guid-subscription-id>
-# LOCATION represents the location where your cluster will be deployed
-export LOCATION=northeurope
-# CLUSTER_NAME represents the name of your AKS Cluster
-export CLUSTER_NAME=PromitorCluster
-# RG_NAME represents the resource groupe name where your cluster will be deployed
+
+# RG_NAME represents the resource group name where your cluster will be deployed
 export RG_NAME=PromitorWithManagedIdentityRG
-# AD_POD_IDENTITY_NAME represents the name of your future configured aad-pod-identity. Be careful, should be lower case alphanumeric characters, '-' or '.'
+
+# LOCATION represents the Azure region where your cluster will be deployed
+export LOCATION=northeurope
+
+# CLUSTER_NAME represents the name of your Azure Kubernetes Service Cluster
+export CLUSTER_NAME=PromitorCluster
+
+# AD_POD_IDENTITY_NAME represents the name of the Azure AD identity that will be assigned to Promitor.
+# Be careful, should be lower case alphanumeric characters, '-' or '.'
 export AD_POD_IDENTITY_NAME=promitor-identity
 
-
 # As an example, we are going to use a service bus from where we want to grab some metrics, through Promitor
-# SERVICE_BUS_NAMESPACE represents the name of you service bus namespace.
-# Be careful as Service Bus Namespaces need to be globally unique.
+# SERVICE_BUS_NAMESPACE represents the name of your Azure Service Bus namespace.
+# Be careful as Azure Service Bus Namespaces need to be globally unique.
 export SERVICE_BUS_NAMESPACE=PromitorUniqueNameServiceBus
 
-# SERVICE_BUS_QUEUE represents the name of you service bus queue.
+# SERVICE_BUS_QUEUE represents the name of you Azure Service Bus queue.
 export SERVICE_BUS_QUEUE=demo_queue
 ```
 
-### Create an Azure Resource Group
+### Creating an Azure Resource Group
+
+First, let's create an Azure resource group in which we'll group all our resources:
 
 ```bash
-az group create --name $RG_NAME --location $LOCATION
-```
-
-Output:
-
-```json
+$ az group create --name $RG_NAME --location $LOCATION
 {
   "id": "/subscriptions/<guid-subscription-id>/resourceGroups/PromitorWithManagedIdentityRG",
   "...": "..."
 }
 ```
 
-### Create a Service Bus Namespace and Queue
+### Creating an Azure Service Bus Namespace & Queue
 
-First we'll need to create a namespace. This **Service Bus Namespace** will output insights into Azure Monitoring.  
-These insights will be exposed to **Prometheus** through **Promitor**.  
+First we'll need to create an Azure Service Bus namespace that provides metrics in Azure Monitor.
 
-_Consider this deployment as an example of an Azure resource we want to track from Prometheus._
+These metrics will be scraped by Promitor and made available to the configured metric sinks.
+
+> 💡 Consider this to be an example of metrics that you'd want to use in Prometheus, StatsD, ...
+
+Let's create the Azure Service Bus namespace:
 
 ```bash
-az servicebus namespace create \
+$ az servicebus namespace create \
   --resource-group $RG_NAME \
   --name $SERVICE_BUS_NAMESPACE \
   --location $LOCATION
 ```
 
-We'll then create a queue in that namespace:
+After that, we'll create a queue in that namespace:
 
 ```bash
-az servicebus queue create \
+$ az servicebus queue create \
   --resource-group $RG_NAME \
   --namespace-name $SERVICE_BUS_NAMESPACE \
   --name $SERVICE_BUS_QUEUE
 ```
 
-### Create an AKS Cluster
+### Creating an Azure Kubernetes Service Cluster
 
-Create an AKS cluster using the managed identity option:
+Create an Azure Kubernetes Service cluster that uses a system-assigned managed identity:
 
 ```bash
-az aks create --resource-group $RG_NAME \
+$ az aks create --resource-group $RG_NAME \
     --name $CLUSTER_NAME \
     --generate-ssh-keys \
     --node-count 1 \
     --enable-managed-identity
-```
 
-A successful cluster creation using managed identities contains this service principal profile information:
-
-```bash
+...
 "servicePrincipalProfile": {
     "clientId": "msi"
   }
+...
 ```
 
-## Cluster Setup
+Once created, the output will indicate that it is using managed identity.
 
-### Get credentials
+## Setting up our cluster
 
-Getting the credentials from your AKS cluster will allow you to use the `kubectl` CLI, locally.  
-You can get your cluster's credentials using this command:
+### Getting The Cluster Credentials
+
+In order to interact with the cluster by using `kubectl`, we need to be able to authenticate to it.
+
+You can get the credentials for your Kubernetes cluster using this command:
 
 ```bash
-az aks get-credentials \
-  --name $CLUSTER_NAME \
-  --resource-group $RG_NAME
+$ az aks get-credentials --name $CLUSTER_NAME --resource-group $RG_NAME
+Merged "<cluster-name>" as current context in /home/tom/.kube/config
 ```
 
-This will save these credentials to your kubeconfig file and set your new cluster
-as your current context for all `kubectl` commands.
+This saves the credentials in your kubeconfig file and uses it as your current context for all `kubectl` commands.
 
-Verify your credentials and check that your cluster is up and running with
-`kubectl get nodes`.
+Verify that you can connect and your cluster is up and running :
+```bash
+$ kubectl get nodes
+NAME                                STATUS   ROLES   AGE   VERSION
+aks-agentpool-34594731-vmss000000   Ready    agent   15d   v1.19.7
+aks-agentpool-34594731-vmss000001   Ready    agent   15d   v1.19.7
+aks-agentpool-34594731-vmss000002   Ready    agent   15d   v1.19.7
+```
 
 ### Get AKS Managed Identity and MC resource group
 
@@ -284,7 +292,7 @@ kubectl get azureidentity
 kubectl get azureidentitybinding
 ```
 
-### Optional: Check your AAD Pod Identity Installation
+### Verifying the AAD Pod Identity installation
 
 Before going further, you can check if your AAD Pod Identity is deployed and configured correctly:
 
@@ -316,7 +324,7 @@ You may have a result indicating you are log in, using a **System Assigned Ident
 }
 ```
 
-## Deploy Promitor and Prometheus
+## Deploying Promitor with Managed Identity
 
 ### Create a metrics declaration for Promitor
 
@@ -327,7 +335,7 @@ one metric, queue length, from the queue created above.
 
 ```yaml
 azureAuthentication:
-  mode: SystemAssigneManagedIdentity
+  mode: SystemAssignedManagedIdentity
   identity:
     binding: <aad-pod-identity-name>
 azureMetadata:
@@ -368,7 +376,7 @@ helm install promitor-agent-scraper promitor/promitor-agent-scraper \
   --values your/path/to/metric-declaration.yaml
 ```
 
-### Optional: Check your Promitor deployment
+### Verifying the scraped output in Promitor
 
 You can check that Promitor is getting insights from you service bus, using the managed identity, with this commands:
 
@@ -387,37 +395,7 @@ Now browse to the address <http://127.0.0.1:8080/metrics> and check your metrics
 demo_queue_size{resource_group="ammdocs",subscription_id="xxxxx-xxxxx-xxxxx-xxxxxx-xxxxx",resource_uri="subscriptions/xxxxx-xxxxx-xxxxx-xxxxxx-xxxxx/resourceGroups/YOUR_RESOURCE_GROUP_NAME/providers/Microsoft.ServiceBus/namespaces/YOUR_SERVICE_BUS_NAMESPACE",instance_name="INSTANCE_NAME",entity_name="YOUR_SERVICE_BUS_QUEUE"} 0 1612952581417
 ```
 
-### Install Prometheus, Grafana and Prometheus Operator
-
-We are going to use the [prometheus-community stack chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
- from the [Prometheus Monitoring Community](https://github.com/prometheus-community) to deploy a full Prometheus
-  environment, already configured for Kubernetes.
-
-``` bash
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-```
-
-```bash
-cat > promitor-scrape-config.yaml <<EOF
-prometheus:
-  prometheusSpec:
-    additionalScrapeConfigs:
-      - job_name: promitor-agent-scraper
-        metrics_path: /metrics
-        static_configs:
-          - targets:
-            - promitor-agent-scraper.default.svc.cluster.local:8888
-EOF
-helm install prometheus prometheus-community/kube-prometheus-stack -f promitor-scrape-config.yaml
-```
-
-## Test and check output
-
-You can refer to the [Test and check output](scrape-promitor-with-prometheus-on-azure-kubernetes-service#test-and-check-output)
- from the first walkthrough to check and test your deployed solution.
-
-## Delete resources
+## Cleaning up
 
 To delete all the resources used in this tutorial, run `az group delete --name $RG_NAME`.
 
