@@ -27,7 +27,7 @@
     <PackageReference Include="Spectre.Console" Version="0.38.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.1.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.2" />
     <PackageReference Include="Humanizer" Version="2.8.26" />
     <PackageReference Include="Spectre.Console" Version="0.38.0" />
   </ItemGroup>
