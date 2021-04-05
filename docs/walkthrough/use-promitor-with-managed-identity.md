@@ -16,8 +16,6 @@ In order to achieve this, we will use the [AAD Pod Identity project](https://git
 
 ## Table of Contents
 
-TODO: Regenerate before merging
-
 - [Introduction](#introduction)
 - [Table of Contents](#table-of-contents)
 - [Prerequisites](#prerequisites)
@@ -28,12 +26,12 @@ TODO: Regenerate before merging
   - [Creating an Azure Kubernetes Service Cluster](#creating-an-azure-kubernetes-service-cluster)
 - [Setting up our cluster](#setting-up-our-cluster)
   - [Getting The Cluster Credentials](#getting-the-cluster-credentials)
-  - [Get AKS Managed Identity and MC resource group](#get-aks-managed-identity-and-mc-resource-group)
-- [AAD Pod Identity](#aad-pod-identity)
-  - [Configure AKS Managed Identity for AAD Pod Identity](#configure-aks-managed-identity-for-aad-pod-identity)
-  - [Install AAD Pod Identity](#install-aad-pod-identity)
-  - [Create the Managed Identity for Promitor](#create-the-managed-identity-for-promitor)
-  - [Bind your Managed Identity to your Pods, through AAD Pod Identity](#bind-your-managed-identity-to-your-pods-through-aad-pod-identity)
+  - [Get Azure Kubernetes Service managed identity & cluster resource group](#get-azure-kubernetes-service-managed-identity--cluster-resource-group)
+- [Getting our cluster ready to use AAD Pod Identity](#getting-our-cluster-ready-to-use-aad-pod-identity)
+  - [Granting our cluster's managed identity required permissions in Azure](#granting-our-clusters-managed-identity-required-permissions-in-azure)
+  - [Installing AAD Pod Identity](#installing-aad-pod-identity)
+  - [Creating a user-assigned managed identity for Promitor](#creating-a-user-assigned-managed-identity-for-promitor)
+  - [Bind your Managed Identity to our Pods, through AAD Pod Identity](#bind-your-managed-identity-to-our-pods-through-aad-pod-identity)
   - [Verifying the AAD Pod Identity installation](#verifying-the-aad-pod-identity-installation)
 - [Deploying Promitor with Managed Identity](#deploying-promitor-with-managed-identity)
   - [Create a metrics declaration for Promitor](#create-a-metrics-declaration-for-promitor)
@@ -62,7 +60,7 @@ Let's start by **exporting** all the values we need:
 
 ```bash
 # SUBSCRIPTION_ID represents the Azure subscription id you will use to access your Azure resources
-export SUBSCRIPTION_ID=<guid-subscription-id>
+export SUBSCRIPTION_ID=<subscription-id>
 
 # RG_NAME represents the resource group name where your cluster will be deployed
 export RG_NAME=PromitorWithManagedIdentityRG
@@ -93,8 +91,15 @@ First, let's create an Azure resource group in which we'll group all our resourc
 ```bash
 $ az group create --name $RG_NAME --location $LOCATION
 {
-  "id": "/subscriptions/<guid-subscription-id>/resourceGroups/PromitorWithManagedIdentityRG",
-  "...": "..."
+  "id": "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>",
+  "location": "<location-id>",
+  "managedBy": null,
+  "name": "<resource-group-name>",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
 }
 ```
 
@@ -160,6 +165,7 @@ Merged "<cluster-name>" as current context in /home/tom/.kube/config
 This saves the credentials in your kubeconfig file and uses it as your current context for all `kubectl` commands.
 
 Verify that you can connect and your cluster is up and running :
+
 ```bash
 $ kubectl get nodes
 NAME                                STATUS   ROLES   AGE   VERSION
@@ -168,98 +174,140 @@ aks-agentpool-34594731-vmss000001   Ready    agent   15d   v1.19.7
 aks-agentpool-34594731-vmss000002   Ready    agent   15d   v1.19.7
 ```
 
-### Get AKS Managed Identity and MC resource group
+### Get Azure Kubernetes Service managed identity & cluster resource group
 
-To be able to configure **aad-pod-identity**, we will need some information from your newly deployed **AKS** cluster:
+To be able to configure AAD Pod Identity component, we need information from our new Azure Kubernetes Service cluster:
 
-- **MC Resource Group**: Resource group where the AKS internal resources have been deployed
-- **AKS Managed Identity Id**: AKS Managed Identity created internally (since we used the `--enable-managed-identity`
- option) that is used by your AKS cluster to access Azure resources.
+First, we need to get the **name of the cluster resource group** where the AKS internal resources have been deployed.
 
 ```bash
-echo "Retrieving MC resource group"
-export mc_aks_group=$(az aks show -g $RG_NAME -n $CLUSTER_NAME --query nodeResourceGroup -otsv)
+echo "Retrieving cluster resource group"
+export aks_rg_name=$(az aks show -g $RG_NAME -n $CLUSTER_NAME --query nodeResourceGroup -otsv)
+```
 
+This is a generated resource group that typically uses `MC_{resource-group}_{cluster-name}_{region}`, for example `MC_promitor-landscape_promitor_westeurope`.
+
+Second, we need the **identity of our cluster**. This is the system-assigned identity of our cluster that is used to access Azure resources.
+
+```bash
 echo "Retrieving cluster identity ID, which will be used for role assignment"
-export mc_aks_mi_id="$(az aks show -g ${RG_NAME} -n ${CLUSTER_NAME} --query identityProfile.kubeletidentity.clientId -otsv)"
+export aks_mi_identity="$(az aks show -g ${RG_NAME} -n ${CLUSTER_NAME} --query identityProfile.kubeletidentity.clientId -otsv)"
 ```
 
-## AAD Pod Identity
+This identity is managed by Azure, since we have used the `--enable-managed-identity` option during cluster creation.
 
-### Configure AKS Managed Identity for AAD Pod Identity
+## Getting our cluster ready to use AAD Pod Identity
 
-If you want to know more about how to configure and manage your aad pod identities, check the official documentation: <https://azure.github.io/aad-pod-identity/docs/>
+### Granting our cluster's managed identity required permissions in Azure
 
-In this walkthrough we are going to configure the **AKS Managed Identity** to allow **aad-pod-identity** to access
- required resources. (More info: [AAD Pod Identity Role Assignements](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/#performing-role-assignments))
+In this walkthrough we are going to configure the **managed identity for our cluster** to allow AAD Pod Identity to access
+ required resources in Azure.
+
+> Learn more about the [the required role assignments for AAD Pod Identity](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/#performing-role-assignments)
+> or have a general overview in the [official documentation](https://azure.github.io/aad-pod-identity/).
+
+In order to be able to use AAD Pod Identity, our cluster needs to be able to:
+
+- Manage identities in our application & cluster resource group
+- Manage the virtual machines that are part of the cluster, to use the assigned identity
+
+You can easily do this as following:
 
 ```bash
-echo "Assigning role needed by Pod Identity:"
-echo "Assigning 'Managed Identity Operator' role to ${mc_aks_mi_id} on resource group ${mc_aks_group}"
-az role assignment create --role "Managed Identity Operator" --assignee "${mc_aks_mi_id}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${mc_aks_group}"
+echo "Assigning 'Managed Identity Operator' role to ${aks_mi_identity} on resource group ${aks_rg_name}"
+az role assignment create --role "Managed Identity Operator" --assignee "${aks_mi_identity}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${aks_rg_name}"
 
-echo "Assigning 'Virtual Machine Contributor' role to ${mc_aks_mi_id} on resource group ${mc_aks_group}"
-az role assignment create --role "Virtual Machine Contributor" --assignee "${mc_aks_mi_id}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${mc_aks_group}"
+echo "Assigning 'Virtual Machine Contributor' role to ${aks_mi_identity} on resource group ${aks_rg_name}"
+az role assignment create --role "Virtual Machine Contributor" --assignee "${aks_mi_identity}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${aks_rg_name}"
 
-echo "Assigning 'Managed Identity Operator' role to ${mc_aks_mi_id} on resource group ${RG_NAME}"
-az role assignment create --role "Managed Identity Operator" --assignee "${mc_aks_mi_id}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}"
+echo "Assigning 'Managed Identity Operator' role to ${aks_mi_identity} on resource group ${RG_NAME}"
+az role assignment create --role "Managed Identity Operator" --assignee "${aks_mi_identity}" --scope "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}"
 ```
 
-### Install AAD Pod Identity
+### Installing AAD Pod Identity
 
-To deploy AAD Pod Identity, we need to add the chart:
+To deploy AAD Pod Identity, we need to add the Helm chart repository:
 
 ```bash
-echo "Add helm repo for aad pod identity"
-helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
-helm repo update
+$ helm repo add aad-pod-identity https://raw.githubusercontent.com/Azure/aad-pod-identity/master/charts
+"aad-pod-identity" has been added to your repositories
 ```
 
-Then we are good to go to deploy the chart:
+Update all your Helm repositories to use the latest and greatest:
 
 ```bash
-echo "Install aad pod identity and allow use of kubenet"
+$ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "aad-pod-identity" chart repository
+Update Complete. ⎈Happy Helming!⎈
+```
+
+Lastly, install the Helm chart into your cluster:
+
+```bash
 helm install aad-pod-identity aad-pod-identity/aad-pod-identity --set nmi.allowNetworkPluginKubenet=true
 ```
 
-### Create the Managed Identity for Promitor
+### Creating a user-assigned managed identity for Promitor
 
-We can basically use the already deployed and created managed identity used by AKS, but since we want to [separate the concerns](https://en.wikipedia.org/wiki/Separation_of_concerns),
-we are going to create a new managed identity that will be the identity used later by all your Pods.
+In order to let Promitor to authenticate to Azure, we have two options:
+
+1. Re-ue the managed identity of our cluster, or (syste-assigned)
+2. Create a new identity that we will assign to our Promitor pods (user-assigned)
+
+In order to [separate our concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), we will create a new identity for it:
 
 ```bash
 echo "Create identity $AD_POD_IDENTITY_NAME in resource group $RG_NAME"
 az identity create -g ${RG_NAME} -n ${AD_POD_IDENTITY_NAME}
 ```
 
-This identity will be used by **Promitor** to access **Azure Monitoring**.  
-So far, we need to allow this identity to read data from **Azure Monitoring** through **RBAC Roles Assignements**:
+Our new identity will be used by **Promitor** to access **Azure Monitor** to get metrics by using its assigned
+ **RBAC roles assignements**:
 
-> _**Warning:**_ It can take some times before the Identity is correctly propagated in Azure Active Directory.  
-> So far if you encountered an error where the identity is not found, please wait 60 sec and retry
+First, we will get the client & resource id of our identity:
 
 ```bash
-echo "Getting Azure Identity used by aad pod identity"
 export AD_POD_IDENTITY_CLIENT_ID=$(az identity show -g ${RG_NAME} -n ${AD_POD_IDENTITY_NAME} --query "clientId" -o tsv)
 export AD_POD_IDENTITY_RESOURCE_ID=$(az identity show -g ${RG_NAME} -n ${AD_POD_IDENTITY_NAME} --query "id" -o tsv)
-
-echo "Assign role 'Monitoring Reader' to identity $AD_POD_IDENTITY_NAME in resource group $RG_NAME"
-az role assignment create --role "Monitoring Reader" --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME" --assignee "${AD_POD_IDENTITY_CLIENT_ID}"
 ```
 
-_Note:_ You can check the role assignements using this command:
+Next, we will assign the `Monitoring Reader` role to our identity on our resource group to scrape our Azure Service Bus namespace:
+
+```bash
+$ az role assignment create --role "Monitoring Reader" --scope "/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RG_NAME" --assignee "${AD_POD_IDENTITY_CLIENT_ID}"
+{
+  "canDelegate": null,
+  "condition": null,
+  "conditionVersion": null,
+  "description": null,
+  "id": "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.Authorization/roleAssignments/92b1566a-2346-43f7-a093-1fd5871d4de8",
+  "name": "92b1566a-2346-43f7-a093-1fd5871d4de8",
+  "principalId": "<promitor-identity-id>",
+  "principalType": "ServicePrincipal",
+  "resourceGroup": "<resource-group-name>",
+  "roleDefinitionId": "/subscriptions/<subscription-id>/providers/Microsoft.Authorization/roleDefinitions/43d0d8ad-25c7-4714-9337-8ba259a9fe05",
+  "scope": "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>",
+  "type": "Microsoft.Authorization/roleAssignments"
+}
+```
+
+In order to verify our role assignement, you can use this command:
 
 ```bash
 az role assignment list --assignee $AD_POD_IDENTITY_CLIENT_ID -g $RG_NAME | jq -r '.[].roleDefinitionName'
 ```
 
-### Bind your Managed Identity to your Pods, through AAD Pod Identity
+> 💡 _It can take some times before the identity is correctly propagated in Azure Active Directory._
+> _So far if you encountered an error where the identity is not found, please wait 60 sec and retry_
 
-The Managed Identity is created, AAD Pod Identity is deployed, it's time to bind your identity to your Pods:
+### Bind your Managed Identity to our Pods, through AAD Pod Identity
+
+Now that our identity is created, we can tell AAD Pod Identity that we want to bind our Azure AD identity to our pods:
+
+First, we will define the identity that we want to assign:
 
 ```bash
-echo "Create an AzureIdentity in the AKS cluster that references the identity $AD_POD_IDENTITY_NAME"
-
 cat <<EOF | kubectl apply -f -
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzureIdentity
@@ -270,10 +318,11 @@ spec:
   resourceID: ${AD_POD_IDENTITY_RESOURCE_ID}
   clientID: ${AD_POD_IDENTITY_CLIENT_ID}
 EOF
+```
 
+Next, we want to define to what pods we want to link it:
 
-echo "Create an AzureIdentityBinding that reference the AzureIdentity created"
-
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: "aadpodidentity.k8s.io/v1"
 kind: AzureIdentityBinding
@@ -285,30 +334,60 @@ spec:
 EOF
 ```
 
-_Note:_ You can check the AAD Pod Identity deployed bindings, using this command:
+You can verify that the resources were created successfully as following:
 
 ```bash
-kubectl get azureidentity
-kubectl get azureidentitybinding
+$ kubectl get azureidentity
+$ kubectl get azureidentitybinding
 ```
 
 ### Verifying the AAD Pod Identity installation
 
-Before going further, you can check if your AAD Pod Identity is deployed and configured correctly:
+Before going further, we will check if our AAD Pod Identity is deployed & configured correctly.
+
+We will spin up a pod and use the Azure CLI to authenticate:
 
 ```bash
-echo "If you want to test the binding of identity, use this command"
 kubectl run azure-cli -it --image=mcr.microsoft.com/azure-cli --labels=aadpodidbinding=$AD_POD_IDENTITY_NAME /bin/bash
 ```
+
+Note that we are adding `aadpodidbinding` as a label, which is linking the pod to the AAD Pod Identity binding
+ that we have just created.
 
 > _**Warning:**_ It can take some times to Aad Pod Identity to bind the identity to your deployed container.
 > If you encountered an error, relaunch the `az login -i --debug` command after 60 sec.
 
+Next, we will run `az login -i --debug` to see the different steps it takes:
+
 ```bash
 # Once you are log in the container, and have the bash command line available, try to login using the Managed Identity:
-If you don t see a command prompt, try pressing enter.
-bash-5.0# az login -i --debug
-# You should have a line with 'MSI: token was retrieved. Now trying to initialize local accounts'"
+# If you don't see a command prompt, try pressing enter.
+$ bash-5.0# az login -i --debug
+msrestazure.azure_active_directory: MSI: Retrieving a token from http://169.254.169.254/metadata/identity/oauth2/token, with payload {'resource': 'https://management.core.windows.net/', 'api-version': '2018-02-01'}
+msrestazure.azure_active_directory: MSI: Token retrieved
+cli.azure.cli.core._profile: MSI: token was retrieved. Now trying to initialize local accounts...
+...
+[
+  {
+    "environmentName": "AzureCloud",
+    "homeTenantId": "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+    "id": "0f9d7fea-99e8-4768-8672-06a28514f77e",
+    "isDefault": true,
+    "managedByTenants": [
+      {
+        "tenantId": "2f4a9838-26b7-47ee-be60-ccc1fdec5953"
+      }
+    ],
+    "name": "Visual Studio Enterprise",
+    "state": "Enabled",
+    "tenantId": "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+    "user": {
+      "assignedIdentityInfo": "MSI",
+      "name": "systemAssignedIdentity",
+      "type": "servicePrincipal"
+    }
+  }
+]
 ```
 
 If your Azure CLI container is able to retrieve some information from Azure
@@ -328,20 +407,21 @@ You may have a result indicating you are log in, using a **System Assigned Ident
 
 ### Create a metrics declaration for Promitor
 
-Before deploying Promitor, you'll need a values file with the managed identity option & a metric declaration
-file (these can also be the same file for ease of use).  
-The yaml below will scrape
-one metric, queue length, from the queue created above.
+Before deploying Promitor, we will create a values file for our Helm deployment.
+
+In the configuration, we define what Azure resource that we want to scrape and that we want to use managed identity.
+
+Here is an example:
 
 ```yaml
 azureAuthentication:
-  mode: SystemAssignedManagedIdentity
+  mode: UserAssignedManagedIdentity
   identity:
-    binding: <aad-pod-identity-name>
+    binding: <aad-pod-identity-name>              # <- This is the value of AD_POD_IDENTITY_NAME environment variable
 azureMetadata:
-  tenantId: <guid-tenant-id>
-  subscriptionId: <guid-subscription-id>
-  resourceGroupName: <promitor-resource-group-id>
+  tenantId: <tenant-id>
+  subscriptionId: <subscription-id>               # <- This is the value of SUBSCRIPTION_ID environment variable
+  resourceGroupName: <promitor-resource-group-id> # <- This is the value of RG_NAME environment variable
 metricDefaults:
   aggregation:
     interval: 00:05:00
@@ -356,8 +436,8 @@ metrics:
       aggregation:
         type: Total
     resources:
-      - namespace: <service-bus-namespace>
-        queueName: <service-bus-queue>
+      - namespace: <service-bus-namespace>        # <- This is the value of SERVICE_BUS_NAMESPACE environment variable
+        queueName: <service-bus-queue>            # <- This is the value of SERVICE_BUS_QUEUE_NAME environment variable
 ```
 
 ### Deploy Promitor to your cluster using Helm
@@ -372,18 +452,23 @@ helm repo update
 With this repository added, we can deploy Promitor:
 
 ```bash
-helm install promitor-agent-scraper promitor/promitor-agent-scraper \
-  --values your/path/to/metric-declaration.yaml
+helm install promitor-agent-scraper promitor/promitor-agent-scraper --values your/path/to/metric-declaration.yaml
 ```
 
 ### Verifying the scraped output in Promitor
 
-You can check that Promitor is getting insights from you service bus, using the managed identity, with this commands:
+You can check that Promitor is getting insights from you Azure Service Bus queue, using the managed identity, with this commands.
+
+First, we get the name of the Promitor Scraper pod:
 
 ```bash
 # Get promitor pod
 export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/instance=promitor-agent-scraper" -o jsonpath="{.items[0].metadata.name}")
+```
 
+Next, we add port forwarding from our pod to our local machine:
+
+```bash
 kubectl port-forward --namespace default $POD_NAME 8080:88
 ```
 
