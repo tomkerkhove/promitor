@@ -93,6 +93,7 @@ and vote for features!
   - [System](operations#system)
 - **Walkthroughs**
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
+  - [Using Managed Identity with Promitor on an AKS Cluster](/walkthrough/use-promitor-with-managed-identity)
   - [Migrate from Promitor Scraper 1.x to 2.x](/walkthrough/migrate-from-1.x-to-2.x)
 - [**Frequently asked questions (FAQs)**](/faq)
 
