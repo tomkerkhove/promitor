@@ -415,7 +415,7 @@ Here is an example:
 
 ```yaml
 azureAuthentication:
-  mode: UserAssignedManagedIdentity
+  mode: SystemAssignedManagedIdentity
   identity:
     binding: <aad-pod-identity-name>              # <- This is the value of AD_POD_IDENTITY_NAME environment variable
 azureMetadata:
