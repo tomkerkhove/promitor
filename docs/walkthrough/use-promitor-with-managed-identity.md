@@ -187,7 +187,8 @@ export aks_rg_name=$(az aks show -g $RG_NAME -n $CLUSTER_NAME --query nodeResour
 
 This is a generated resource group that typically uses `MC_{resource-group}_{cluster-name}_{region}`, for example `MC_promitor-landscape_promitor_westeurope`.
 
-Second, we need the **identity of our cluster**. This is the system-assigned identity of our cluster that is used to access Azure resources.
+Second, we need the **identity of our cluster**. This is the system-assigned identity of our cluster that is used to
+ access Azure resources.
 
 ```bash
 echo "Retrieving cluster identity ID, which will be used for role assignment"
@@ -255,7 +256,8 @@ In order to let Promitor to authenticate to Azure, we have two options:
 1. Re-ue the managed identity of our cluster, or (syste-assigned)
 2. Create a new identity that we will assign to our Promitor pods (user-assigned)
 
-In order to [separate our concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), we will create a new identity for it:
+In order to [separate our concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), we will create a new
+ identity for it:
 
 ```bash
 echo "Create identity $AD_POD_IDENTITY_NAME in resource group $RG_NAME"
@@ -337,8 +339,8 @@ EOF
 You can verify that the resources were created successfully as following:
 
 ```bash
-$ kubectl get azureidentity
-$ kubectl get azureidentitybinding
+kubectl get azureidentity
+kubectl get azureidentitybinding
 ```
 
 ### Verifying the AAD Pod Identity installation
