@@ -1,8 +1,7 @@
 name: Report a bug 🐛
-about: Create a report to help us improve
+description: Create a report to help us improve
 labels: "bug"
 assignees: tomkerkhove
-issue_body: true
 body:
 - type: textarea
   attributes:
