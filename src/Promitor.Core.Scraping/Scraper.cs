@@ -121,7 +121,7 @@ namespace Promitor.Core.Scraping
                     ScrapeError scrapeError;
                     if (string.IsNullOrWhiteSpace(parsedResponse["error"]?.ToString()) == false)
                     {
-                        scrapeError = JsonConvert.DeserializeObject<ScrapeError>(parsedResponse["error"]?.ToString());
+                        scrapeError = JsonConvert.DeserializeObject<ScrapeError>(parsedResponse["error"].ToString());
                     }
                     else
                     {
