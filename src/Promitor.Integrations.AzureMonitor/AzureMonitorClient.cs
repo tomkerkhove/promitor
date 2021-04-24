@@ -206,6 +206,7 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 var filter = metricFilter.Replace("/", "%2F");
                 metricQuery.WithOdataFilter(filter);
+                metricQuery.SelectTop(int.MaxValue);
             }
 
             if (string.IsNullOrWhiteSpace(metricDimension) == false)
