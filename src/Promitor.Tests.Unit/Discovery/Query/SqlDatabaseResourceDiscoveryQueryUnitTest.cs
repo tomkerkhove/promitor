@@ -1,21 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using Bogus;
 using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Discovery.Query
 {
     [Category("Unit")]
-    public class SqlDatabaseResourceDiscoveryQueryUnitTest
+    public class SqlDatabaseResourceDiscoveryQueryUnitTest : UnitTest
     {
-        private readonly Faker _faker = new Faker();
-
         [Fact]
         public void GetParentResourceNameFromResourceUri_ValidResourceUri_GetsServerName()
         {
             // Arrange
-            var serverName = _faker.Name.FirstName();
+            var serverName = BogusGenerator.Name.FirstName();
             var resourceUri = $"/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourceGroups/promitor/providers/Microsoft.Sql/servers/{serverName}/databases/promitor-3";
             var sqlDatabaseDiscoveryQuery = new SqlDatabaseDiscoveryQuery();
 

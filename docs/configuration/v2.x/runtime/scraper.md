@@ -30,6 +30,8 @@ metricSinks:
     metricUnavailableValue: NaN # Optional. Default: NaN
     enableMetricTimestamps: false # Optional. Default: true
     baseUriPath: /metrics # Optional. Default: /metrics
+    labels:
+      transformation: None # Optional. Default: None.
   statsd:
     host: graphite
     port: 8125 # Optional. Default: 8125
@@ -135,8 +137,10 @@ In order to expose a Prometheus Scraping endpoint, you'll need to configure the 
 - `prometheusScrapingEndpoint.enableMetricTimestamps` - Defines whether or not a timestamp should
   be included when the value was scraped on Azure Monitor. Supported values are
   `True` to opt-in & `False` to opt-out. (Default: `true`)
-- `prometheusScrapingEndpoint.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
+- `prometheusScrapingEndpoint.baseUriPath` - Controls the path where the scraping
   endpoint for Prometheus is being exposed.  (Default: `/metrics`)
+- `prometheusScrapingEndpoint.labels.transformation` - Controls how label values are reported to Prometheus by using
+ transformation. Options are `None` & `Lowercase`.  (Default: `None`)
 
 ```yaml
 metricSinks:
@@ -144,6 +148,8 @@ metricSinks:
     metricUnavailableValue: NaN # Optional. Default: NaN
     enableMetricTimestamps: false # Optional. Default: true
     baseUriPath: /metrics # Optional. Default: /metrics
+    labels:
+      transformation: None # Optional. Default: None.
 ```
 
 #### What happens when metrics are unavailable for multi-dimensional metrics?

@@ -8,7 +8,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 {
-    public class DeserializationTests
+    public class DeserializationTests : UnitTest
     {
         private static readonly TimeSpan defaultInterval = TimeSpan.FromMinutes(5);
 

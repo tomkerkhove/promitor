@@ -6,7 +6,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class MetricDimensionDeserializerTests
+    public class MetricDimensionDeserializerTests : UnitTest
     {
         private readonly MetricDimensionDeserializer _deserializer;
 

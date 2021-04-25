@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
 {
-    public class RequiredTests
+    public class RequiredTests : UnitTest
     {
         private readonly FieldDeserializationInfoBuilder<TestConfig, string> _builder =
             new FieldDeserializationInfoBuilder<TestConfig, string>();

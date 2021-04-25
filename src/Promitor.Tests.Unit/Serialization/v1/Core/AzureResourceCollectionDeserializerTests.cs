@@ -6,7 +6,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class AzureResourceDiscoveryGroupDeserializerTests
+    public class AzureResourceDiscoveryGroupDeserializerTests : UnitTest
     {
         private readonly AzureResourceDiscoveryGroupDeserializer _deserializer;
 

@@ -5,7 +5,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Prometheus
 {
     [Category("Unit")]
-    public class StringExtensionTests
+    public class StringExtensionTests : UnitTest
     {
         [Fact]
         public void SanitizeForPrometheusLabelKey_ValidKey_IdenticalOutput()

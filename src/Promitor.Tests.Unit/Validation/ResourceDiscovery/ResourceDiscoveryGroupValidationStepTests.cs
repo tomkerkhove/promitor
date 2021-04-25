@@ -11,7 +11,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
 {
     [Category("Unit")]
-    public class ResourceDiscoveryGroupValidationStepTests
+    public class ResourceDiscoveryGroupValidationStepTests : UnitTest
     {
         [Fact]
         public void Validate_ResourceDiscoveryGroupsAreFullyConfigured_Success()

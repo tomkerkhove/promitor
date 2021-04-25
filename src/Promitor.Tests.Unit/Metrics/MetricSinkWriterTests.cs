@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Bogus;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -15,18 +14,16 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics
 {
     [Category("Unit")]
-    public class MetricSinkWriterTests
+    public class MetricSinkWriterTests : UnitTest
     {
-        private readonly Faker _bogus = new Faker();
-        
         [Theory]
         [InlineData("")]
         [InlineData(null)]
         public async Task ReportMetricAsync_WriteToOneSinkWithoutMetricName_ThrowsException(string metricName)
         {
             // Arrange
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricSink = new Mock<IMetricSink>();
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { metricSink.Object }, NullLogger<MetricSinkWriter>.Instance);
@@ -42,8 +39,8 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToOneSinkWithoutMetricDescription_Succeeds(string metricDescription)
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricSink = new Mock<IMetricSink>();
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { metricSink.Object }, NullLogger<MetricSinkWriter>.Instance);
@@ -56,8 +53,8 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToOneSinkWithoutScrapeResult_ThrowsException()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             ScrapeResult scrapeResult = null;
             var metricSink = new Mock<IMetricSink>();
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { metricSink.Object }, NullLogger<MetricSinkWriter>.Instance);
@@ -71,9 +68,9 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToNoSinks_Succeeds()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink>(), NullLogger<MetricSinkWriter>.Instance);
 
@@ -85,9 +82,9 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToOneSink_Succeeds()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricSink = new Mock<IMetricSink>();
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { metricSink.Object }, NullLogger<MetricSinkWriter>.Instance);
@@ -103,9 +100,9 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToMultipleSinks_Succeeds()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var firstSink = new Mock<IMetricSink>();
             var secondSink = new Mock<IMetricSink>();
@@ -123,9 +120,9 @@ namespace Promitor.Tests.Unit.Metrics
         public async Task ReportMetricAsync_WriteToStatsDSink_Succeeds()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var statsdMetricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);

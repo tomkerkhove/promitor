@@ -6,7 +6,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class SecretDeserializerTests
+    public class SecretDeserializerTests : UnitTest
     {
         private readonly SecretDeserializer _deserializer;
 
