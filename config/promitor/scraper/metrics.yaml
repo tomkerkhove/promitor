@@ -139,7 +139,7 @@ metrics:
   azureMetricConfiguration:
     metricName: ActiveMessages
     aggregation:
-      type: Total
+      type: Average
   resourceDiscoveryGroups:
   - name: service-bus-landscape
 - name: promitor_demo_app_insights_dependency_duration
