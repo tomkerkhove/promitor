@@ -206,12 +206,15 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 var filter = metricFilter.Replace("/", "%2F");
                 metricQuery.WithOdataFilter(filter);
-                metricQuery.SelectTop(int.MaxValue);
+                // TODO: Replace
+                metricQuery.SelectTop(10000);
             }
 
             if (string.IsNullOrWhiteSpace(metricDimension) == false)
             {
                 metricQuery.WithOdataFilter($"{metricDimension} eq '*'");
+                // TODO: Replace
+                metricQuery.SelectTop(10000);
             }
 
             return metricQuery;
