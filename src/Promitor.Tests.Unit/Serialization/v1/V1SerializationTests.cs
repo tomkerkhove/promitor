@@ -22,7 +22,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
     /// caught.
     /// </summary>
     [Category("Unit")]
-    public class V1SerializationTests
+    public class V1SerializationTests : UnitTest
     {
         private readonly V1Deserializer _v1Deserializer;
         private readonly ConfigurationSerializer _configurationSerializer;

@@ -15,6 +15,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Validation\Metrics\**" />
+    <Compile Remove="Validation\Misc\**" />
+    <EmbeddedResource Remove="Validation\Metrics\**" />
+    <EmbeddedResource Remove="Validation\Misc\**" />
+    <None Remove="Validation\Metrics\**" />
+    <None Remove="Validation\Misc\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Files\valid-sample.yaml" />
   </ItemGroup>
 
@@ -40,12 +49,6 @@
     <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
     <ProjectReference Include="..\Promitor.Agents.Scraper\Promitor.Agents.Scraper.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Validation\Metrics\ResourceTypes\" />
-    <Folder Include="Validation\Metrics\Sinks\" />
-    <Folder Include="Validation\Misc\" />
   </ItemGroup>
 
 </Project>

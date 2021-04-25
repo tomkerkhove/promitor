@@ -9,7 +9,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
 {
     [Category("Unit")]
-    public class PrometheusScrapingEndpointMetricSinkValidationStepTests
+    public class PrometheusScrapingEndpointMetricSinkValidationStepTests : UnitTest
     {
         [Fact]
         public void Validate_PrometheusScrapingEndpointIsFullyConfigured_Success()

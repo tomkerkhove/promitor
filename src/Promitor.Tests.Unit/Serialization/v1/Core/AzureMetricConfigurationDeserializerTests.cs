@@ -10,7 +10,7 @@ using YamlDotNet.RepresentationModel;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class AzureMetricConfigurationDeserializerTests
+    public class AzureMetricConfigurationDeserializerTests : UnitTest
     {
         private readonly AzureMetricConfigurationDeserializer _deserializer;
         private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;

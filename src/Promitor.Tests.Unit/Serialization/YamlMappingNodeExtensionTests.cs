@@ -10,7 +10,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization
 {
     [Category("Unit")]
-    public class YamlMappingNodeExtensionTests
+    public class YamlMappingNodeExtensionTests : UnitTest
     {
         [Fact]
         public void GetString_PropertySpecified_ReturnsValue()

@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Azure
 {
     [Category("Unit")]
-    public class AzureCloudUnitTests
+    public class AzureCloudUnitTests : UnitTest
     {
         [Fact]
         public void GetAzureEnvironment_ForAzureGlobalCloud_ProvidesCorrectEnvironmentInfo()

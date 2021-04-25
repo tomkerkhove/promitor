@@ -1,21 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using Bogus;
 using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Discovery.Query
 {
     [Category("Unit")]
-    public class AppServiceResourceDiscoveryQueryUnitTest
+    public class AppServiceResourceDiscoveryQueryUnitTest : UnitTest
     {
-        private readonly Faker _faker = new Faker();
-
         [Fact]
         public void DetermineAppDetails_FunctionAppWithoutSlot_ProvidesAppNameWithDefaultSlot()
         {
             // Arrange
-            var functionAppName = _faker.Name.FirstName();
+            var functionAppName = BogusGenerator.Name.FirstName();
             var functionAppDiscoveryQuery = new FunctionAppDiscoveryQuery();
 
             // Act
@@ -30,8 +27,8 @@ namespace Promitor.Tests.Unit.Discovery.Query
         public void DetermineAppDetails_FunctionAppWithSlot_ProvidesAppNameWithDefaultSlot()
         {
             // Arrange
-            var appName = _faker.Name.FirstName();
-            var slotName = _faker.Name.FirstName();
+            var appName = BogusGenerator.Name.FirstName();
+            var slotName = BogusGenerator.Name.FirstName();
             var functionAppName = $"{appName}/{slotName}";
             var functionAppDiscoveryQuery = new FunctionAppDiscoveryQuery();
 
@@ -59,7 +56,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
         public void DetermineAppDetails_WebAppWithoutSlot_ProvidesAppNameWithDefaultSlot()
         {
             // Arrange
-            var webAppName = _faker.Name.FirstName();
+            var webAppName = BogusGenerator.Name.FirstName();
             var webAppDiscoveryQuery = new WebAppDiscoveryQuery();
 
             // Act
@@ -74,8 +71,8 @@ namespace Promitor.Tests.Unit.Discovery.Query
         public void DetermineAppDetails_WebAppWithSlot_ProvidesAppNameWithDefaultSlot()
         {
             // Arrange
-            var appName = _faker.Name.FirstName();
-            var slotName = _faker.Name.FirstName();
+            var appName = BogusGenerator.Name.FirstName();
+            var slotName = BogusGenerator.Name.FirstName();
             var webAppName = $"{appName}/{slotName}";
             var webAppDiscoveryQuery = new WebAppDiscoveryQuery();
 

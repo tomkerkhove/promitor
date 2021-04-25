@@ -12,6 +12,7 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
+using Promitor.Integrations.Sinks.Prometheus.Labels;
 
 namespace Promitor.Integrations.Sinks.Prometheus
 {
@@ -106,6 +107,12 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
                     labels.Add(customLabelKey, customLabel.Value);
                 }
+            }
+
+            // Transform labels, if need be
+            if(_prometheusConfiguration.CurrentValue.Labels!=null)
+            {
+                labels = LabelTransformer.TransformLabels(_prometheusConfiguration.CurrentValue.Labels.Transformation,labels);
             }
 
             return labels;

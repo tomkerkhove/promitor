@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Promitor.Tests.Unit.Agents.Core
 {
-    public class UserAgentTest
+    public class UserAgentTest : UnitTest
     {
         [Theory]
         [InlineData(null)]

@@ -12,7 +12,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Azure
 {
     [Category("Unit")]
-    public class AzureAuthenticationFactoryUnitTests
+    public class AzureAuthenticationFactoryUnitTests : UnitTest
     {
         [Fact]
         public void GetConfiguredAzureAuthentication_SystemAssignedManagedIdentityIsValid_Succeeds()

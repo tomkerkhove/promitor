@@ -11,7 +11,7 @@ using MetricsDeclarationBuilder = Promitor.Tests.Unit.Builders.Metrics.v1.Metric
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics
 {
     [Category("Unit")]
-    public class GeneralMetricsDeclarationValidationStepTests
+    public class GeneralMetricsDeclarationValidationStepTests : UnitTest
     {
         private readonly IMapper _mapper;
 

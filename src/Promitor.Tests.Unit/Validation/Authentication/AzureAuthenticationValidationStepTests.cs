@@ -11,7 +11,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Authentication
 {
     [Category("Unit")]
-    public class AzureAuthenticationValidationStepTests
+    public class AzureAuthenticationValidationStepTests : UnitTest
     {
         [Fact]
         public void ServicePrinciple_IdentityIdInYamlIsValid_Succeeds()
