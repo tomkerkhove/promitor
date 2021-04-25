@@ -9,7 +9,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 {
-    public class ValidationTests
+    public class ValidationTests : UnitTest
     {
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
         private readonly TestDeserializer _deserializer = new TestDeserializer();

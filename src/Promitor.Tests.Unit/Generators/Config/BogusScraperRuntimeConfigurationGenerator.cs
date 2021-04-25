@@ -144,11 +144,16 @@ namespace Promitor.Tests.Unit.Generators.Config
 
         private static PrometheusScrapingEndpointSinkConfiguration GeneratePrometheusScrapingEndpointSinkConfiguration()
         {
+            var prometheusLabelConfiguration = new Faker<LabelConfiguration>()
+                .StrictMode(true)
+                .RuleFor(labelConfiguration => labelConfiguration.Transformation, faker => faker.PickRandom<LabelTransformation>())
+                .Generate();
             var prometheusScrapingEndpointSinkConfiguration = new Faker<PrometheusScrapingEndpointSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
                 .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
                 .RuleFor(promConfiguration => promConfiguration.EnableMetricTimestamps, faker => faker.Random.Bool())
+                .RuleFor(promConfiguration => promConfiguration.Labels, faker => prometheusLabelConfiguration)
                 .Generate();
             return prometheusScrapingEndpointSinkConfiguration;
         }

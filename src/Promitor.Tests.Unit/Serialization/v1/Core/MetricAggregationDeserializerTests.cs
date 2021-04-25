@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class MetricAggregationDeserializerTests
+    public class MetricAggregationDeserializerTests : UnitTest
     {
         private readonly MetricAggregationDeserializer _deserializer;
 

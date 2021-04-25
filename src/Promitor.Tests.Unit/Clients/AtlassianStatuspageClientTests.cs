@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -15,17 +14,15 @@ using Xunit;
 namespace Promitor.Tests.Unit.Clients
 {
     [Category("Unit")]
-    public class AtlassianStatuspageClientTests
+    public class AtlassianStatuspageClientTests : UnitTest
     {
-        private readonly Faker _bogus = new Faker();
-
         [Fact]
         public async Task ReportMetricAsync_MetricIdAndValueAreProvided_Succeeds()
         {
             // Arrange
-            var pageId = _bogus.Name.FirstName();
-            var metricId = _bogus.Name.FirstName();
-            var metricValue = _bogus.Random.Double();
+            var pageId = BogusGenerator.Name.FirstName();
+            var metricId = BogusGenerator.Name.FirstName();
+            var metricValue = BogusGenerator.Random.Double();
             var fakeHttpMessageHandler = new HttpMessageHandlerStub();
             var sinkConfiguration = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(pageId: pageId);
             var atlassianStatuspageClient = new AtlassianStatuspageClient(httpClient: new HttpClient(fakeHttpMessageHandler), sinkConfiguration, NullLogger<AtlassianStatuspageClient>.Instance);
@@ -47,7 +44,7 @@ namespace Promitor.Tests.Unit.Clients
         public async Task ReportMetricAsync_NoMetricIdIsProvided_ThrowsException()
         {
             // Arrange
-            var metricValue = _bogus.Random.Double();
+            var metricValue = BogusGenerator.Random.Double();
             var httpClientMock = new Mock<HttpClient>();
             var sinkConfiguration = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClient = new AtlassianStatuspageClient(httpClient: httpClientMock.Object, sinkConfiguration, NullLogger<AtlassianStatuspageClient>.Instance);

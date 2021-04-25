@@ -5,7 +5,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
 {
-    public class MapUsingTests
+    public class MapUsingTests : UnitTest
     {
         private readonly FieldDeserializationInfoBuilder<TestConfig, string> _builder =
             new FieldDeserializationInfoBuilder<TestConfig, string>();

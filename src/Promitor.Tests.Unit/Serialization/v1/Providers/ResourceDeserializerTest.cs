@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
-    public abstract class ResourceDeserializerTest<TDeserializer>
+    public abstract class ResourceDeserializerTest<TDeserializer> : UnitTest
     {
         protected ILogger<TDeserializer> Logger = NullLogger<TDeserializer>.Instance;
         protected abstract IDeserializer<AzureResourceDefinitionV1> CreateDeserializer();

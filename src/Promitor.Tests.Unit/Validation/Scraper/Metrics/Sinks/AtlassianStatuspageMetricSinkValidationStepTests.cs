@@ -17,7 +17,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
 {
     [Category("Unit")]
-    public class AtlassianStatuspageMetricSinkValidationStepTests
+    public class AtlassianStatuspageMetricSinkValidationStepTests : UnitTest
     {
         private readonly IMapper _mapper;
 

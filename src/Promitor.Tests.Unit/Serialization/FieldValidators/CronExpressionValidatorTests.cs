@@ -7,7 +7,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.FieldValidators
 {
-    public class CronExpressionValidatorTests
+    public class CronExpressionValidatorTests : UnitTest
     {
         private readonly CronExpressionValidator _validator = new CronExpressionValidator();
 

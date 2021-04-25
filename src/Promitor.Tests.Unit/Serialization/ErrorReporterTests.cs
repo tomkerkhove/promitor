@@ -6,7 +6,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization
 {
     [Category("Unit")]
-    public class ErrorReporterTests
+    public class ErrorReporterTests : UnitTest
     {
         private readonly ErrorReporter _errorReporter = new ErrorReporter();
 

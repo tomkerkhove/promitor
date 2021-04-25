@@ -13,7 +13,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
 {
     [Category("Unit")]
-    public class AzureLandscapeValidationStepTests
+    public class AzureLandscapeValidationStepTests : UnitTest
     {
         [Fact]
         public void Validate_AzureLandscapeIsFullyConfigured_Success()
