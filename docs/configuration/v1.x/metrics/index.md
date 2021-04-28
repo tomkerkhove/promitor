@@ -30,7 +30,6 @@ values are `v1`.
 - `metricDefaults.aggregation.interval` - The default interval which defines over
   what period measurements of a metric should be aggregated.
   a cron that fits your needs.
-- `metricDefaults.labels` - The default lebals that will be applied to all metrics. _(starting as of v1.6)_
 
 ### Metrics
 

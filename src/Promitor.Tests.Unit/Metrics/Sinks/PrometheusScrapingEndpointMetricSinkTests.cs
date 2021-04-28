@@ -12,6 +12,7 @@ using Moq;
 using Prometheus.Client;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
@@ -86,7 +87,11 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
-            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var defaultLabels = new Dictionary<string, string>
+            {
+                {"app", "promitor"}
+            };
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName, defaultLabels: defaultLabels);
             var prometheusConfiguration = CreatePrometheusConfiguration();
             var mocks = CreatePrometheusMetricFactoryMock();
             var metricSink = new PrometheusScrapingEndpointMetricSink(mocks.Factory.Object, metricsDeclarationProvider, prometheusConfiguration, NullLogger<PrometheusScrapingEndpointMetricSink>.Instance);
@@ -95,8 +100,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
-            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray(), defaultLabels.Keys.ToArray()))), Times.Once());
+            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray(), defaultLabels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
 
@@ -334,15 +339,31 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
 
-        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expected)
+        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels)
         {
-            if (specified.Length < expected.Length)
+            if (specified.Length < expectedMetricLabels.Length)
             {
                 return false;
             }
 
-            var outcome = Array.Exists(expected, entry=>specified.Contains(entry.ToLower()));
+            var outcome = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
             return outcome;
+        }
+
+        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels)
+        {
+            var expectedTotalLabelCount = expectedDefaultLabels.Length + expectedMetricLabels.Length;
+            if (specified.Length != expectedTotalLabelCount)
+            {
+                return false;
+            }
+
+            var isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            if(isSuccessful)
+            {
+                isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            }
+            return isSuccessful;
         }
 
         private IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> CreatePrometheusConfiguration(bool enableMetricsTimestamps = true, double? metricUnavailableValue = -1)
@@ -357,13 +378,24 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             return new OptionsMonitorStub<PrometheusScrapingEndpointSinkConfiguration>(prometheusScrapingEndpointSinkConfiguration);
         }
 
-        private MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null)
+        private MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null, Dictionary<string, string> defaultLabels = null)
         {
             var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             var mapper = mapperConfiguration.CreateMapper();
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(metricName, labels: labels)
-                .Build(mapper);
+            var metricBuilder = MetricsDeclarationBuilder.WithMetadata();
+
+            if (defaultLabels != null)
+            {
+                var defaults = new MetricDefaultsV1
+                {
+                    Labels = defaultLabels
+                };
+                
+                metricBuilder.WithDefaults(defaults);
+            }
+
+            var rawDeclaration = metricBuilder.WithServiceBusMetric(metricName, labels: labels)
+                                                    .Build(mapper);
 
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, mapper);
             return metricsDeclarationProvider;
