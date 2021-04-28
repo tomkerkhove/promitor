@@ -1,4 +1,5 @@
-﻿using Promitor.Core.Scraping.Configuration.Model;
+﻿using System.Collections.Generic;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization;
 
@@ -39,6 +40,8 @@ namespace Promitor.Core.Scraping.Configuration.Providers.Interfaces
         /// <param name="errorReporter">Used to report errors during the deserialization process.</param>
         /// <returns></returns>
         PrometheusMetricDefinition GetPrometheusDefinition(string metricName, bool applyDefaults = false, IErrorReporter errorReporter = null);
+
+        Dictionary<string, string> GetDefaultLabels(bool applyDefaults = false, IErrorReporter errorReporter = null);
 
         /// <summary>
         ///     Gets the serialized metrics declaration
