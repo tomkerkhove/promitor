@@ -49,8 +49,9 @@ namespace Promitor.Integrations.Sinks.Prometheus
             {
                 var metricValue = DetermineMetricMeasurement(measuredMetric);
                 var metricDefinition = _metricsDeclarationProvider.GetPrometheusDefinition(metricName);
-
-                var metricLabels = DetermineLabels(metricDefinition, scrapeResult, measuredMetric);
+                var defaultLabels = _metricsDeclarationProvider.GetDefaultLabels();
+                
+                var metricLabels = DetermineLabels(metricDefinition, scrapeResult, measuredMetric, defaultLabels);
 
                 var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
                 reportMetricTasks.Add(reportMetricTask);
@@ -85,7 +86,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
             return gauge;
         }
 
-        private Dictionary<string, string> DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult, MeasuredMetric measuredMetric)
+        private Dictionary<string, string> DetermineLabels(PrometheusMetricDefinition metricDefinition, ScrapeResult scrapeResult, MeasuredMetric measuredMetric, Dictionary<string, string> defaultLabels)
         {
             var labels = new Dictionary<string, string>(scrapeResult.Labels.Select(label => new KeyValuePair<string, string>(label.Key.SanitizeForPrometheusLabelKey(), label.Value)));
 
@@ -109,8 +110,17 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 }
             }
 
+            foreach (var defaultLabel in defaultLabels)
+            {
+                var defaultLabelKey = defaultLabel.Key.SanitizeForPrometheusLabelKey();
+                if (labels.ContainsKey(defaultLabelKey) == false)
+                {
+                    labels.Add(defaultLabelKey, defaultLabel.Value);
+                }
+            }
+
             // Transform labels, if need be
-            if(_prometheusConfiguration.CurrentValue.Labels!=null)
+            if(_prometheusConfiguration.CurrentValue.Labels != null)
             {
                 labels = LabelTransformer.TransformLabels(_prometheusConfiguration.CurrentValue.Labels.Transformation,labels);
             }

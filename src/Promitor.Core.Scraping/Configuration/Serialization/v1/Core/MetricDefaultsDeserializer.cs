@@ -15,6 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(defaults => defaults.Scraping)
                 .IsRequired()
                 .MapUsingDeserializer(scrapingDeserializer);
+            Map(defaults => defaults.Labels);
         }
     }
 }

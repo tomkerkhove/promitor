@@ -54,6 +54,10 @@ namespace Promitor.Tests.Unit.Serialization.v1
                     Scraping = new ScrapingV1
                     {
                         Schedule = "1 2 3 4 5"
+                    },
+                    Labels = new Dictionary<string, string>
+                    {
+                        {"geo", "china"}
                     }
                 },
                 Metrics = new List<MetricDefinitionV1>
@@ -147,6 +151,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
             Assert.Equal("promitor-group", deserializedModel.AzureMetadata.ResourceGroupName);
             Assert.Equal(TimeSpan.FromMinutes(7), deserializedModel.MetricDefaults.Aggregation.Interval);
             Assert.Equal("1 2 3 4 5", deserializedModel.MetricDefaults.Scraping.Schedule);
+            Assert.Equal("china", deserializedModel.MetricDefaults.Labels["geo"]);
 
             // Check first metric
             Assert.Equal("promitor_demo_generic_queue_size", deserializedModel.Metrics.ElementAt(0).Name);
