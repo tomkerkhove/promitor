@@ -23,14 +23,16 @@ values are `v1`. *(Required)*
 
 ### Metric Defaults
 
+- `metricDefaults.aggregation.interval` - The default interval which defines over
+  what period measurements of a metric should be aggregated.
+  a cron that fits your needs.
+- `metricDefaults.limit` - The default maximum amount of resources to scrape when using dimensions
+  or filters.
+- `metricDefaults.labels` - The default labels that will be applied to all metrics. _(starting as of v2.3)_
 - `metricDefaults.scraping.schedule` - A cron expression that controls
   the frequency of which all the configured metrics will be scraped from Azure Monitor.
   You can use [crontab-generator.org](https://crontab-generator.org/) to generate
   a cron that fits your needs. *(Required)*
-- `metricDefaults.aggregation.interval` - The default interval which defines over
-  what period measurements of a metric should be aggregated.
-  a cron that fits your needs.
-- `metricDefaults.labels` - The default labels that will be applied to all metrics. _(starting as of v2.3)_
 
 ### Metrics
 
@@ -48,6 +50,8 @@ Every metric that is being declared needs to define the following fields:
 - `resources` - An array of one or more resources to get metrics for. The fields
   required vary depending on the `resourceType` being created, and are documented
   for each resource.
+- `azureMetricConfiguration.limit` - The maximum amount of resources to scrape when using dimensions
+  or filters.
 - `resourceDiscoveryGroups` An array of one or more resource discovery groups that will be used to automatically
  discover all resources through Promitor Resource Discovery. For every found resource, it will get the metrics and
   report them. Learn more on resource discovery, in [our documentation](https://promitor.io/concepts/how-it-works#using-resource-discovery)
