@@ -30,6 +30,27 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             Assert.False(validationResult.IsSuccessful, userMessage: "Validation was successful");
         }
 
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(10001)]
+        public void StorageQueuesMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        {
+            // Arrange
+            var azureMetricName = Guid.NewGuid().ToString();
+            var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithStorageQueueMetric(azureMetricLimit: metricLimit)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            Assert.False(validationResult.IsSuccessful, userMessage: "Validation was successful");
+        }
+
         [Fact]
         public void StorageQueuesMetricsDeclaration_DeclarationWithoutAccountName_Fails()
         {

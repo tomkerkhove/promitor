@@ -41,6 +41,9 @@ namespace Promitor.Core.Scraping
             // Determine the metric filter to use, if any
             var metricFilter = DetermineMetricFilter(resourceDefinition);
 
+            // Determine the metric limit to use, if any
+            var metricLimit = DetermineMetricLimit(scrapeDefinition);
+
             // Determine the metric dimension to use, if any
             var dimensionName = DetermineMetricDimension(resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
 
@@ -48,7 +51,7 @@ namespace Promitor.Core.Scraping
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter);
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
@@ -66,6 +69,11 @@ namespace Promitor.Core.Scraping
 
             // We're done!
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
+        }
+
+        private int? DetermineMetricLimit(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
+        {
+            return scrapeDefinition.AzureMetricConfiguration.Limit;
         }
 
         /// <summary>

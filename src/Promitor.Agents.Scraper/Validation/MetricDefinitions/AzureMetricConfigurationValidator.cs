@@ -6,6 +6,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
     public class AzureMetricConfigurationValidator
     {
         private readonly MetricDefaults _metricDefaults;
+        private const int MaximumLimit = 10000;
 
         public AzureMetricConfigurationValidator(MetricDefaults metricDefaults)
         {
@@ -25,6 +26,20 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
             {
                 errorMessages.Add("No metric name for Azure is configured");
+            }
+
+            // Validate limit, if configured
+            if (azureMetricConfiguration.Limit != null)
+            {
+                if (azureMetricConfiguration.Limit > MaximumLimit)
+                {
+                    errorMessages.Add($"Limit cannot be higher than {MaximumLimit}");
+                }
+
+                if (azureMetricConfiguration.Limit <= 0)
+                {
+                    errorMessages.Add($"Limit has to be at least 1");
+                }
             }
 
             var metricAggregationValidator = new MetricAggregationValidator(_metricDefaults);

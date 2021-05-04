@@ -27,6 +27,26 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             PromitorAssert.ValidationFailed(validationResult);
         }
 
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(10001)]
+        public void SqlManagedInstanceMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithSqlManagedInstanceMetric(azureMetricLimit: metricLimit)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
         [Fact]
         public void SqlManagedInstanceMetricsDeclaration_DeclarationWithoutAzureMetricDescription_Succeeds()
         {

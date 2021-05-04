@@ -45,6 +45,25 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
+        public void Deserialize_LimitSupplied_SetsLimit()
+        {
+            YamlAssert.PropertySet(
+                _deserializer,
+                "limit: 10",
+                10,
+                a => a.Limit);
+        }
+
+        [Fact]
+        public void Deserialize_LimitNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                a => a.Limit);
+        }
+
+        [Fact]
         public void Deserialize_MetricNameNotSupplied_ReportsError()
         {
             // Arrange

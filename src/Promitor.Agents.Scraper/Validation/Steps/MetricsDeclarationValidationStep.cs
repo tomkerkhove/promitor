@@ -22,7 +22,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
-        public string ComponentName { get; } = "Metrics Declaration";
+        public string ComponentName => "Metrics Declaration";
 
         public ValidationResult Run()
         {
