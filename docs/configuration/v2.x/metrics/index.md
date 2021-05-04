@@ -88,12 +88,13 @@ azureMetadata:
 metricDefaults:
   aggregation:
     interval: 00:05:00
-  scraping:
-    # Every minute
-    schedule: "0 * * ? * *"
+  limit: 10
   labels:
     geo: china
     environment: dev
+  scraping:
+    # Every minute
+    schedule: "0 * * ? * *"
 metrics:
   - name: azure_service_bus_active_messages
     description: "The number of active messages on a service bus queue."
@@ -106,6 +107,7 @@ metrics:
       schedule: "0 */2 * ? * *"
     azureMetricConfiguration:
       metricName: ActiveMessages
+      limit: 5
       dimension:
         name: <dimension-name>
       aggregation:
@@ -115,7 +117,6 @@ metrics:
       - namespace: promitor-messaging
         queueName: orders
       - namespace: promitor-messaging-dev
-        queueName: orders
         resourceGroupName: promitor-dev
         subscriptionId: ABC
     resourceDiscoveryGroups:
