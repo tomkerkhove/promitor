@@ -12,6 +12,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
@@ -204,7 +205,7 @@ namespace Promitor.Integrations.AzureMonitor
                 .WithAggregation(metricAggregation.ToString())
                 .WithInterval(metricsInterval);
 
-            var queryLimit = metricLimit ?? 10000;
+            var queryLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             if (string.IsNullOrWhiteSpace(metricFilter) == false)
             {
                 var filter = metricFilter.Replace("/", "%2F");

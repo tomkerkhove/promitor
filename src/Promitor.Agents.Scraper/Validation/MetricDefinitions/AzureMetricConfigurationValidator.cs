@@ -6,7 +6,6 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
     public class AzureMetricConfigurationValidator
     {
         private readonly MetricDefaults _metricDefaults;
-        private const int MaximumLimit = 10000;
 
         public AzureMetricConfigurationValidator(MetricDefaults metricDefaults)
         {
@@ -31,14 +30,14 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             // Validate limit, if configured
             if (azureMetricConfiguration.Limit != null)
             {
-                if (azureMetricConfiguration.Limit > MaximumLimit)
+                if (azureMetricConfiguration.Limit > Promitor.Core.Defaults.MetricDefaults.Limit)
                 {
-                    errorMessages.Add($"Limit cannot be higher than {MaximumLimit}");
+                    errorMessages.Add($"Limit cannot be higher than {Promitor.Core.Defaults.MetricDefaults.Limit}");
                 }
 
                 if (azureMetricConfiguration.Limit <= 0)
                 {
-                    errorMessages.Add($"Limit has to be at least 1");
+                    errorMessages.Add("Limit has to be at least 1");
                 }
             }
 
