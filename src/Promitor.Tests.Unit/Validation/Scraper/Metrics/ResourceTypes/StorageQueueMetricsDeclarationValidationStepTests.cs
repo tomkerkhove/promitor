@@ -37,7 +37,6 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         public void StorageQueuesMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
-            var azureMetricName = Guid.NewGuid().ToString();
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithStorageQueueMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);

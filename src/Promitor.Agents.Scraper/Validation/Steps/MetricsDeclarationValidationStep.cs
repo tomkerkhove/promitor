@@ -78,6 +78,16 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             {
                 yield return @"No default metric scraping schedule is defined.";
             }
+
+            if (metricDefaults.Limit > Promitor.Core.Defaults.MetricDefaults.Limit)
+            {
+                yield return $"Limit cannot be higher than {Promitor.Core.Defaults.MetricDefaults.Limit}";
+            }
+
+            if (metricDefaults.Limit <= 0)
+            {
+                yield return @"Limit has to be at least 1";
+            }
         }
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)
