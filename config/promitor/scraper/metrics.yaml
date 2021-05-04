@@ -6,6 +6,7 @@ azureMetadata:
 metricDefaults:
   aggregation:
     interval: 00:05:00
+  limit: 10
   labels:
     geo: china
     environment: dev
@@ -136,140 +137,151 @@ metrics:
       type: Average
   resources:
   - namespace: promitor-messaging
-  # resourceDiscoveryGroups:
-  # - name: service-bus-landscape
-# - name: promitor_demo_app_insights_dependency_duration
-#   description: "Average dependency duration per dependency type"
-#   resourceType: Generic
-#   azureMetricConfiguration:
-#     metricName: dependencies/duration
-#     dimension:
-#       name: dependency/type
-#     aggregation:
-#       type: Average
-#   resources:
-#   - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
-#     resourceGroupName: docker-hub-metrics
-# - name: promitor_demo_app_insights_dependency_duration_200_OK
-#   description: "Average dependency duration per dependency type"
-#   resourceType: Generic
-#   azureMetricConfiguration:
-#     metricName: dependencies/duration
-#     aggregation:
-#       type: Average
-#   resources:
-#   - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
-#     resourceGroupName: docker-hub-metrics
-#     filter: dependency/resultCode eq '200'
-# - name: promitor_demo_automation_job_count
-#   description: "Amount of jobs per Azure Automation account"
-#   resourceType: AutomationAccount
-#   azureMetricConfiguration:
-#     metricName: TotalJob
-#     aggregation:
-#       type: Total
-#   resourceDiscoveryGroups:
-#   - name: automation-accounts
-#   resources:
-#   - resourceGroupName: promitor-sources
-#     accountName: promitor-sandbox
-# - name: promitor_demo_automation_update_deployment_runs
-#   description: "Amount of jobs per Azure Automation account"
-#   resourceType: AutomationAccount
-#   azureMetricConfiguration:
-#     metricName: TotalUpdateDeploymentRuns
-#     aggregation:
-#       type: Total
-#   resourceDiscoveryGroups:
-#   - name: automation-accounts
-#   resources:
-#   - resourceGroupName: promitor-sources
-#     accountName: promitor-sandbox
-# - name: promitor_demo_automation_update_deployment_machine_runs
-#   description: "Amount of jobs per Azure Automation account"
-#   resourceType: AutomationAccount
-#   azureMetricConfiguration:
-#     metricName: TotalUpdateDeploymentMachineRuns
-#     aggregation:
-#       type: Total
-#   resourceDiscoveryGroups:
-#   - name: automation-accounts
-#   resources:
-#   - resourceGroupName: promitor-sources
-#     accountName: promitor-sandbox
-# - name: promitor_demo_frontdoor_backend_health_per_backend
-#   description: "Health percentage for a backed in Azure Front Door"
-#   resourceType: FrontDoor
-#   labels:
-#     app: promitor
-#   azureMetricConfiguration:
-#     metricName: BackendHealthPercentage
-#     dimension:
-#       name: Backend
-#     aggregation:
-#       type: Average
-#   resources:
-#   - name: promitor-landscape
-#     resourceGroupName: promitor-landscape
-# - name: promitor_demo_frontdoor_backend_health_per_backend_pool
-#   description: "Health percentage for a backed in Azure Front Door"
-#   resourceType: FrontDoor
-#   labels:
-#     app: promitor
-#   azureMetricConfiguration:
-#     metricName: BackendHealthPercentage
-#     dimension:
-#       name: BackendPool
-#     aggregation:
-#       type: Average
-#   resourceDiscoveryGroups:
-#   - name: front-door-landscape
-# - name: promitor_demo_sql_elastic_pool_cpu
-#   description: "CPU percentage used for a Azure SQL Elastic Pool"
-#   resourceType: SqlElasticPool
-#   labels:
-#     app: promitor
-#   azureMetricConfiguration:
-#     metricName: cpu_percent
-#     aggregation:
-#       type: Average
-#   resourceDiscoveryGroups:
-#   - name: sql-elastic-pools
-# - name: promitor_demo_sql_elastic_pool_allocated_storage
-#   description: "Percentage of allocated storage for a Azure SQL Elastic Pool"
-#   resourceType: SqlElasticPool
-#   labels:
-#     app: promitor
-#   azureMetricConfiguration:
-#     metricName: allocated_data_storage_percent
-#     aggregation:
-#       type: Average
-#   resourceDiscoveryGroups:
-#   - name: sql-elastic-pools
-# - name: promitor_demo_synapse_apache_spark_apps_ended
-#   description: "Amount of apps ended running on Apache Spark pool in Azure Synapse"
-#   resourceType: SynapseApacheSparkPool
-#   azureMetricConfiguration:
-#     metricName: BigDataPoolApplicationsEnded
-#     aggregation:
-#       type: Total
-#   resourceDiscoveryGroups:
-#   - name: synapse-apache-spark-pools
-# - name: promitor_demo_synapse_sql_pool_dwu_limit
-#   description: "Amount of DWUs defined as limit for SQL pool in Azure Synapse"
-#   resourceType: SynapseSqlPool
-#   azureMetricConfiguration:
-#     metricName: DWULimit
-#     aggregation:
-#       type: Maximum
-#   resourceDiscoveryGroups:
-#   - name: synapse-sql-pools
-# - name: promitor_demo_synapse_workspace_builtin_sql_processed_bytes
-#   description: "Amount of bytes processed in Azure Synapse workspace"
-#   resourceType: SynapseWorkspace
-#   azureMetricConfiguration:
-#     metricName: BuiltinSqlPoolDataProcessedBytes
-#     aggregation:
-#       type: Total
-#   resourceDiscoveryGroups:
-#   - name: synapse-workspaces
+- name: promitor_demo_servicebus_messagecount_limited
+  description: "Average percentage of memory usage on an Azure App Plan"
+  resourceType: ServiceBusNamespace
+  labels:
+    geo: europe
+    app: promitor
+  azureMetricConfiguration:
+    limit: 5
+    metricName: ActiveMessages
+    aggregation:
+      type: Average
+  resources:
+  - namespace: promitor-messaging
+- name: promitor_demo_app_insights_dependency_duration
+  description: "Average dependency duration per dependency type"
+  resourceType: Generic
+  azureMetricConfiguration:
+    metricName: dependencies/duration
+    dimension:
+      name: dependency/type
+    aggregation:
+      type: Average
+  resources:
+  - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
+    resourceGroupName: docker-hub-metrics
+- name: promitor_demo_app_insights_dependency_duration_200_OK
+  description: "Average dependency duration per dependency type"
+  resourceType: Generic
+  azureMetricConfiguration:
+    metricName: dependencies/duration
+    aggregation:
+      type: Average
+  resources:
+  - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
+    resourceGroupName: docker-hub-metrics
+    filter: dependency/resultCode eq '200'
+- name: promitor_demo_automation_job_count
+  description: "Amount of jobs per Azure Automation account"
+  resourceType: AutomationAccount
+  azureMetricConfiguration:
+    metricName: TotalJob
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: automation-accounts
+  resources:
+  - resourceGroupName: promitor-sources
+    accountName: promitor-sandbox
+- name: promitor_demo_automation_update_deployment_runs
+  description: "Amount of jobs per Azure Automation account"
+  resourceType: AutomationAccount
+  azureMetricConfiguration:
+    metricName: TotalUpdateDeploymentRuns
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: automation-accounts
+  resources:
+  - resourceGroupName: promitor-sources
+    accountName: promitor-sandbox
+- name: promitor_demo_automation_update_deployment_machine_runs
+  description: "Amount of jobs per Azure Automation account"
+  resourceType: AutomationAccount
+  azureMetricConfiguration:
+    metricName: TotalUpdateDeploymentMachineRuns
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: automation-accounts
+  resources:
+  - resourceGroupName: promitor-sources
+    accountName: promitor-sandbox
+- name: promitor_demo_frontdoor_backend_health_per_backend
+  description: "Health percentage for a backed in Azure Front Door"
+  resourceType: FrontDoor
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: BackendHealthPercentage
+    dimension:
+      name: Backend
+    aggregation:
+      type: Average
+  resources:
+  - name: promitor-landscape
+    resourceGroupName: promitor-landscape
+- name: promitor_demo_frontdoor_backend_health_per_backend_pool
+  description: "Health percentage for a backed in Azure Front Door"
+  resourceType: FrontDoor
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: BackendHealthPercentage
+    dimension:
+      name: BackendPool
+    aggregation:
+      type: Average
+  resourceDiscoveryGroups:
+  - name: front-door-landscape
+- name: promitor_demo_sql_elastic_pool_cpu
+  description: "CPU percentage used for a Azure SQL Elastic Pool"
+  resourceType: SqlElasticPool
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: cpu_percent
+    aggregation:
+      type: Average
+  resourceDiscoveryGroups:
+  - name: sql-elastic-pools
+- name: promitor_demo_sql_elastic_pool_allocated_storage
+  description: "Percentage of allocated storage for a Azure SQL Elastic Pool"
+  resourceType: SqlElasticPool
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: allocated_data_storage_percent
+    aggregation:
+      type: Average
+  resourceDiscoveryGroups:
+  - name: sql-elastic-pools
+- name: promitor_demo_synapse_apache_spark_apps_ended
+  description: "Amount of apps ended running on Apache Spark pool in Azure Synapse"
+  resourceType: SynapseApacheSparkPool
+  azureMetricConfiguration:
+    metricName: BigDataPoolApplicationsEnded
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: synapse-apache-spark-pools
+- name: promitor_demo_synapse_sql_pool_dwu_limit
+  description: "Amount of DWUs defined as limit for SQL pool in Azure Synapse"
+  resourceType: SynapseSqlPool
+  azureMetricConfiguration:
+    metricName: DWULimit
+    aggregation:
+      type: Maximum
+  resourceDiscoveryGroups:
+  - name: synapse-sql-pools
+- name: promitor_demo_synapse_workspace_builtin_sql_processed_bytes
+  description: "Amount of bytes processed in Azure Synapse workspace"
+  resourceType: SynapseWorkspace
+  azureMetricConfiguration:
+    metricName: BuiltinSqlPoolDataProcessedBytes
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: synapse-workspaces
