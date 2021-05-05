@@ -9,7 +9,7 @@ title: Azure Storage Queue Declaration
 
 You can declare to scrape an Azure Queue via the `StorageQueue` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `accountName` - The name of the storage account
 - `queueName` - The name of the queue

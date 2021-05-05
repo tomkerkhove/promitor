@@ -10,7 +10,7 @@ title: Azure API Management Declaration
 You can scrape an Azure API Management via the `ApiManagement`
  resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `instanceName` - The name of the Azure API Management instance.
 - `locationName` - The name of the regional deployment of the gateway. (optional)

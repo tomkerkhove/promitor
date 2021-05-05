@@ -10,7 +10,7 @@ title: Azure Kubernetes Service Declaration
 You can declare to scrape an Azure Kubernetes Service (AKS)
 via the `KubernetesService` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `clusterName` - The name of the Azure Kubernetes Service
 

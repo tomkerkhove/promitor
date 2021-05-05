@@ -9,7 +9,7 @@ title: Azure Synapse (Apache Spark pool) Declaration
 
 You can scrape an Azure Synapse Apache Spark pool via the `SynapseApacheSparkPool` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `workspaceName` - The name of the Azure Synapse workspace.
 - `poolName` - The name of the Apache Spark pool.

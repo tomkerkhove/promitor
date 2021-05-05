@@ -10,7 +10,7 @@ title: Azure App Plan Declaration
 You can declare to scrape an Azure App Plan via the `AppPlan` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `appPlanName` - The name of the Azure App Plan
 

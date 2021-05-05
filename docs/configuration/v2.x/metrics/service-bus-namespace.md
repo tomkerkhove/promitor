@@ -10,7 +10,7 @@ title: Azure Service Bus Namespace Declaration
 You can declare to scrape an Azure Service Bus namespace via the `ServiceBusNamespace`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `namespace` - The name of the Azure Service Bus namespace
 - `queueName` - The name of the queue (optional)

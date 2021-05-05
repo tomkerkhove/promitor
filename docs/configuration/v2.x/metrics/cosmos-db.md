@@ -9,7 +9,7 @@ title: Azure Cosmos Db Declaration
 
 You can declare to scrape Cosmos Db via the `CosmosDb` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `dbName`- The name of the Cosmos Db to be scraped
 

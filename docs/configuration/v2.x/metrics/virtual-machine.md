@@ -10,7 +10,7 @@ title: Azure Virtual Machine Declaration
 You can declare to scrape an Azure Virtual Machine via the `VirtualMachine` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `virtualMachineName` - The name of the virtual machine
 

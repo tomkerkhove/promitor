@@ -10,7 +10,7 @@ title: Azure Virtual Machine Scale Set (VMSS) Declaration
 You can declare to scrape an Azure Virtual Machine Scale Set via the `VirtualMachineScaleSet` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `scaleSetName` - The name of the Virtual Machine Scale Set
 

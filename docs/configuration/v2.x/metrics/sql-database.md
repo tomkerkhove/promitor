@@ -9,7 +9,7 @@ title: Azure SQL Database Declaration
 
 You can scrape an Azure SQL Database via the `SqlDatabase` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `serverName` - The name of the SQL Server instance.
 - `databaseName` - The name of the database.

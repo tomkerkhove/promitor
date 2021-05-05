@@ -10,7 +10,7 @@ title: Azure Cache for Redis Declaration
 You can declare to scrape an Azure Cache for Redis via the `RedisCache` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `cacheName` - The name of the Redis Cache instance
 

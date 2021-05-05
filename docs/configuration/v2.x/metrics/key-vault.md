@@ -10,7 +10,7 @@ title: Azure Key Vault Declaration
 You can declare to scrape an Azure Key Vault
 via the `KeyVault` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `vaultName` - The name of the Azure Key Vault
 

@@ -10,7 +10,7 @@ title: Azure Container Instances Declaration
 You can declare to scrape an Azure Container Instances via the `ContainerInstance`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `containerGroup` - The name of the container group
 

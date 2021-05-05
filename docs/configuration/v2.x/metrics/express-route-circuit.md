@@ -10,7 +10,7 @@ title: Azure Express Route Circuit Declaration
 You can declare to scrape an Azure Express Route Circuit (without Peerings) via the `ExpressRouteCircuit` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `expressRouteCircuitName` - The name of the Azure Express Route circuit
 

@@ -10,7 +10,7 @@ title: Azure Network Interface Declaration
 You can declare to scrape an [Azure Network Interface](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-network-interface)
 via the `NetworkInterface` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `networkInterfaceName` - The name of the network interface
 

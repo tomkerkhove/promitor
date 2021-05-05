@@ -10,7 +10,7 @@ title: Azure Database for PostgreSQL
 You can declare to scrape an Azure Database for PostgreSQL server via the `PostgreSql`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `serverName` - The name of the PostgreSQL server
 

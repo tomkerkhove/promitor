@@ -10,7 +10,7 @@ title: Azure Front Door Declaration
 You can declare to scrape an Azure Front Door via the `FrontDoor` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `name` - The name of the Azure Front Door
 

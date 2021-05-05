@@ -10,7 +10,7 @@ title: Azure Network Gateway Declaration
 You can declare to scrape an Azure Network Gateway via the `NetworkGateway` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `networkGatewayName` - The name of the Azure Network Gateway
 

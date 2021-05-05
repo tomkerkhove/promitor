@@ -10,7 +10,7 @@ title: Azure Web App Declaration
 You can declare to scrape an Azure Web App via the `WebApp` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `webAppName` - The name of the Azure Web App
 - `slotName` - The name of the deployment slot *(optional)*

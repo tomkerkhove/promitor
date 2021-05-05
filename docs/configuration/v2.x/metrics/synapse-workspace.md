@@ -9,7 +9,7 @@ title: Azure Synapse (Workspace) Declaration
 
 You can scrape an Azure Synapse workspace via the `SynapseWorkspace` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `workspaceName` - The name of the Azure Synapse workspace.
 

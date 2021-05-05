@@ -10,7 +10,7 @@ title: Azure Application Gateway Declaration
 You can declare to scrape an Azure Application Gateway via the `ApplicationGateway` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `applicationGatewayName` - The name of the Azure Application Gateway
 
