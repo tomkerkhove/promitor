@@ -28,7 +28,7 @@ azureMetricConfiguration:
   metricName: TotalPullCount
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - registryName: promitor-1
 - registryName: promitor-2
 resourceDiscoveryGroups:

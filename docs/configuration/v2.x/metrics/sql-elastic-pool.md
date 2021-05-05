@@ -33,7 +33,7 @@ Example:
     metricName: cpu_percent
     aggregation:
       type: Average
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - serverName: promitor-sql-server
     poolName: promitor-db
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

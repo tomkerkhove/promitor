@@ -31,7 +31,7 @@ azureMetricConfiguration:
   metricName: Requests
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - functionAppName: promitor-function-app
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: function-app-landscape

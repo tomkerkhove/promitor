@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: BytesReceivedRate
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - networkInterfaceName: promitor-network-interface-1
 - networkInterfaceName: promitor-network-interface-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

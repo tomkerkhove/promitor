@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ArpAvailability
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - expressRouteCircuitName: promitor-express-route-circuit-1
 - expressRouteCircuitName: promitor-express-route-circuit-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

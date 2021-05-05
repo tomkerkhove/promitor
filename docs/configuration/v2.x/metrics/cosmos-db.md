@@ -25,7 +25,7 @@ azureMetricConfiguration:
   metricName: TotalRequests
   aggregation:
     type: Count
-resources:
+resources: # Optional, required when no resource discovery is configured
 - dbName: cosmos-database-1
 - dbName: cosmos-database-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

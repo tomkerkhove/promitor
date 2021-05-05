@@ -29,7 +29,7 @@ Example:
     metricName: BuiltinSqlPoolDataProcessedBytes
     aggregation:
       type: Total
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - workspaceName: promitor-synapse
     resourceGroupName: promitor-sources
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

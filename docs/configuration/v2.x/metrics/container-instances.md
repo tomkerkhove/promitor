@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: CpuUsage
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - containerGroup: promitor-container-instance-1
 - containerGroup: promitor-container-instance-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

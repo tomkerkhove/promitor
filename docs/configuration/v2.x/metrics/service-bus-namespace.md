@@ -44,7 +44,7 @@ azureMetricConfiguration:
   metricName: ActiveMessages
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - namespace: promitor-messaging
   queueName: orders
 - namespace: promitor-messaging

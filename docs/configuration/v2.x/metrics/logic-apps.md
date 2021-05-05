@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: RunsFailed
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - workflowName: promitor-workflow-1
 - workflowName: promitor-workflow-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

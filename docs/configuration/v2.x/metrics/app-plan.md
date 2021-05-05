@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: MemoryPercentage
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - appPlanName: promitor-app-plan
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: app-plans-landscape

@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: virtual_core_count
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - instanceName: promitor-sql-managed-instance
 resourceDiscoveryGroups:
 - name: sql-managed-instances

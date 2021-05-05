@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ServiceApiLatency
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - vaultName: promitor-1
 - vaultName: promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

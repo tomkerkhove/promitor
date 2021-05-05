@@ -25,7 +25,7 @@ azureMetricConfiguration:
   metricName: FileCapacity
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - accountName: promitor-1
 - accountName: promitor-2
 ```

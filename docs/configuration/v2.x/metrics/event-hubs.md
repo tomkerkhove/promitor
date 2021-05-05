@@ -33,7 +33,7 @@ azureMetricConfiguration:
   metricName: IncomingMessages
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - namespace: promitor-streaming
   topicName: orders
 - namespace: promitor-messaging

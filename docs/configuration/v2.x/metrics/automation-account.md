@@ -31,7 +31,7 @@ azureMetricConfiguration:
   metricName: TotalJob
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - resourceGroupName: promitor-sources
   accountName: promitor-sandbox
   runbookName: Example # Optional, currently only supported for 'TotalJob' metric

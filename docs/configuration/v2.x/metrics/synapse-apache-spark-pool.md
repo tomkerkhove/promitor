@@ -31,7 +31,7 @@ Example:
     metricName: BigDataPoolApplicationsEnded
     aggregation:
       type: Total
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - workspaceName: promitor-synapse
     poolName: sparkpool
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

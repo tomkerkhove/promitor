@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ApplicationGatewayTotalTime
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - applicationGatewayName: promitor-application-gateway-1
 - applicationGatewayName: promitor-application-gateway-2
 resourceDiscoveryGroups:

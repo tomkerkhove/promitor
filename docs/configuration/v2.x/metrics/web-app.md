@@ -31,7 +31,7 @@ azureMetricConfiguration:
   metricName: Requests
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - webAppName: promitor-web-app
   slot: staging
 - webAppName: promitor-web-app

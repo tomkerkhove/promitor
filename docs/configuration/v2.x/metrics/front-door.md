@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: BackendHealthPercentage
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - name: promitor-landscape
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: front-door-landscape

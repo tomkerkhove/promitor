@@ -32,7 +32,7 @@ azureMetricConfiguration:
   aggregation:
     type: Total
     interval: 00:01:00
-resources:
+resources: # Optional, required when no resource discovery is configured
 - cacheName: Promitor-1
 - cacheName: Promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

@@ -113,13 +113,13 @@ metrics:
       aggregation:
         type: Total
         interval: 00:15:00
-    resources:
+    resources: # Optional, required when no resource discovery is configured
       - namespace: promitor-messaging
         queueName: orders
       - namespace: promitor-messaging-dev
         resourceGroupName: promitor-dev
         subscriptionId: ABC
-    resourceDiscoveryGroups:
+    resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
     - name: service-bus-landscape
 ```
 

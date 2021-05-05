@@ -28,7 +28,7 @@ azureMetricConfiguration:
     name: VMName
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - scaleSetName: promitor-virtual-machine-scale-set-1
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: virtual-machine-scale-sets-landscape

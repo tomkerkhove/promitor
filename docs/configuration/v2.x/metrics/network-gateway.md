@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ExpressRouteGatewayPacketsPerSecond
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - networkGatewayName: promitor-network-gateway-1
 - networkGatewayName: promitor-network-gateway-2
 resourceDiscoveryGroups:
