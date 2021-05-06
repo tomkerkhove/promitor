@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.407-alpine3.12 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.408-alpine3.12 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
@@ -15,7 +15,7 @@ COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Promet
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.13-alpine3.12 as runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.14-alpine3.12 as runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="/config/"
 
