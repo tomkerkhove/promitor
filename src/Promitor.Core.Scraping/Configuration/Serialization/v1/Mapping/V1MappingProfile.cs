@@ -42,6 +42,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
+            CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
@@ -85,6 +86,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
+                .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()

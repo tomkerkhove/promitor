@@ -205,6 +205,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithMonitorAutoscaleMetric(string metricName = "promitor-autoscale",
+            string metricDescription = "Description for a metric",
+            string autoscaleSettingsName = "promitor-autoscale-rules",
+            string azureMetricName = "ObservedCapacity",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new MonitorAutoscaleResourceV1
+            {
+                AutoscaleSettingsName = autoscaleSettingsName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.MonitorAutoscale, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithCosmosDbMetric(string metricName = "promitor-cosmosdb",
             string metricDescription = "Description for a metric",
             string dbName = "promitor-cosmosdb",

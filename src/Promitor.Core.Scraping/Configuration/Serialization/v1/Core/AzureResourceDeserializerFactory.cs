@@ -78,6 +78,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.LogicApp:
                     var logicAppLogger = _loggerFactory.CreateLogger<LogicAppDeserializer>();
                     return new LogicAppDeserializer(logicAppLogger);
+                case ResourceType.MonitorAutoscale:
+                    var monitorAutoscaleLogger = _loggerFactory.CreateLogger<MonitorAutoscaleDeserializer>();
+                    return new MonitorAutoscaleDeserializer(monitorAutoscaleLogger);
                 case ResourceType.NetworkGateway:
                     var networkGatewayLogger = _loggerFactory.CreateLogger<NetworkGatewayDeserializer>();
                     return new NetworkGatewayDeserializer(networkGatewayLogger);

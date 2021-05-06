@@ -38,6 +38,7 @@
         SqlElasticPool = 33,
         SynapseApacheSparkPool = 34,
         SynapseSqlPool = 35,
-        SynapseWorkspace = 36
+        SynapseWorkspace = 36,
+        MonitorAutoscale = 37
     }
 }
