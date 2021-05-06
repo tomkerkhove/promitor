@@ -12,6 +12,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using Newtonsoft.Json;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
@@ -162,9 +163,23 @@ namespace Promitor.Integrations.AzureMonitor
 
         private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
         {
-            var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
+            var filtered = timeSeries.Data
+                .OrderBy(metricValue => metricValue.TimeStamp)
+                .TakeLast(10);
+            var rawList = JsonConvert.SerializeObject(filtered);
+            
+            // Filter on time
+            var relevantMetricValues = timeSeries.Data.Where(metricValue => metricValue.TimeStamp.ToEpoch() <= recordDateTime.ToEpoch())
                 .OrderByDescending(metricValue => metricValue.TimeStamp)
-                .FirstOrDefault();
+                .Take(5);
+
+            // Filter on payload
+            var relevantMetricValue = relevantMetricValues
+                .FirstOrDefault(metricValue => metricValue.Count != null ||
+                                               metricValue.Average != null ||
+                                               metricValue.Maximum != null ||
+                                               metricValue.Minimum != null ||
+                                               metricValue.Total != null);
 
             if (relevantMetricValue == null)
             {
@@ -245,6 +260,15 @@ namespace Promitor.Integrations.AzureMonitor
             return azureClientConfiguration
                 .Authenticate(credentials)
                 .WithSubscription(subscriptionId);
+        }
+    }
+
+    public static class DateTimeExtensions
+    {
+        public static double ToEpoch(this DateTime dateTime)
+        {
+            var diff = dateTime - new DateTime(1970, 1, 1);
+            return diff.TotalSeconds;
         }
     }
 }
