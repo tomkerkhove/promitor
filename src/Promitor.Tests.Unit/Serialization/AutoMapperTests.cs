@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization
 {
-    public class AutoMapperTests
+    public class AutoMapperTests : UnitTest
     {
         [Fact]
         public void VerifyConfigurationsAreValid()

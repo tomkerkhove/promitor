@@ -1,8 +1,7 @@
 name: Security Report 🔐
-about: Report security vulnerability impacting users
+description: Report security vulnerability impacting users
 labels: security
 assignees: tomkerkhove
-issue_body: true
 body:
 - type: textarea
   attributes:

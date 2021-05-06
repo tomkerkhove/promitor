@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Misc
 {
     [Category("Unit")]
-    public class ConfigurationPathValidationStepTests
+    public class ConfigurationPathValidationStepTests : UnitTest
     {
         [Fact]
         public void ConfigurationPath_FileDoesNotExist_Fails()

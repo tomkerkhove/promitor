@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +24,14 @@ namespace Promitor.Core.Scraping.Configuration.Providers
 
         public virtual PrometheusMetricDefinition GetPrometheusDefinition(string metricName, bool applyDefaults = false, IErrorReporter errorReporter = null)
         {
-            var foundMetric = GetMetricDefinition(metricName,applyDefaults,errorReporter);
+            var foundMetric = GetMetricDefinition(metricName, applyDefaults, errorReporter);
             return foundMetric?.PrometheusMetricDefinition;
+        }
+
+        public virtual Dictionary<string, string> GetDefaultLabels(bool applyDefaults = false, IErrorReporter errorReporter = null)
+        {
+            var metricsDeclaration = Get(applyDefaults, errorReporter);
+            return metricsDeclaration.MetricDefaults?.Labels ?? new Dictionary<string, string>();
         }
 
         public virtual MetricDefinition GetMetricDefinition(string metricName, bool applyDefaults = false, IErrorReporter errorReporter = null)
@@ -56,6 +63,10 @@ namespace Promitor.Core.Scraping.Configuration.Providers
                     if (metric.AzureMetricConfiguration?.Aggregation.Interval == null)
                     {
                         metric.AzureMetricConfiguration.Aggregation.Interval = config.MetricDefaults.Aggregation?.Interval;
+                    }
+                    if (metric.AzureMetricConfiguration?.Limit == null)
+                    {
+                        metric.AzureMetricConfiguration.Limit = config.MetricDefaults.Limit;
                     }
 
                     // Apply the default scraping interval if none is specified

@@ -18,6 +18,7 @@ using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Core;
 using Promitor.Core.Extensions;
+using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {
@@ -25,12 +26,18 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
         private readonly ILogger<AzureResourceGraph> _logger;
-        private readonly string _queryApplicationSecret;
+
         private ResourceGraphClient _graphClient;
 
-        public string QueryApplicationId { get; }
+        /// <summary>
+        /// The identity id that is used to run queries
+        /// </summary>
+        public string QueryIdentityId => _azureAuthenticationInfo.IdentityId;
+
         public string TenantId => _resourceDeclarationMonitor.CurrentValue?.AzureLandscape?.TenantId;
         public List<string> Subscriptions => _resourceDeclarationMonitor.CurrentValue?.AzureLandscape?.Subscriptions;
+        
+        private readonly AzureAuthenticationInfo _azureAuthenticationInfo;
 
         public AzureResourceGraph(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, IConfiguration configuration, ILogger<AzureResourceGraph> logger)
         {
@@ -42,9 +49,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
-
-            QueryApplicationId = configuration[EnvironmentVariables.Authentication.ApplicationId];
-            _queryApplicationSecret = configuration[EnvironmentVariables.Authentication.ApplicationKey];
+            _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
         public async Task<JObject> QueryAsync(string queryName, string query)
@@ -68,7 +73,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         private async Task<QueryResponse> QueryAsync(string queryName, string query, List<string> targetSubscriptions)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
-            
+
             var response = await InteractWithAzureResourceGraphAsync(queryName, query, targetSubscriptions, async graphClient =>
             {
                 var queryRequest = new QueryRequest(targetSubscriptions, query);
@@ -105,8 +110,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                         {
                             if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
                             {
-                                var unauthorizedException = new UnauthorizedException(QueryApplicationId, targetSubscriptions);
-                                _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph");
+                                var unauthorizedException = CreateUnauthorizedException(targetSubscriptions);
+
                                 throw unauthorizedException;
                             }
 
@@ -149,6 +154,34 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             });
         }
 
+        private Exception CreateUnauthorizedException(List<string> targetSubscriptions)
+        {
+            UnauthorizedException unauthorizedException;
+
+            switch (_azureAuthenticationInfo.Mode)
+            {
+                case AuthenticationMode.ServicePrincipal:
+                    unauthorizedException = new UnauthorizedException(QueryIdentityId, targetSubscriptions);
+                    _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph using the Service Principal");
+
+                    break;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    unauthorizedException = new UnauthorizedException(QueryIdentityId, targetSubscriptions);
+                    _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph using the User Managed Identity");
+
+                    break;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                    unauthorizedException = new UnauthorizedException("System Assigned Identity", targetSubscriptions);
+                    _logger.LogCritical(unauthorizedException, "Unable to query Azure Resource Graph using the System Assigned Identity");
+
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(_azureAuthenticationInfo.Mode), _azureAuthenticationInfo.Mode, "Authentication was forbidden");
+            }
+
+            return unauthorizedException;
+        }
+
         private async Task OnRetryAsync(Exception exception, int retryCount, Context retryContext)
         {
             _logger.LogInformation($"On retry for exception {exception.GetType()}");
@@ -158,8 +191,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 return;
             }
 
-            var errorResponseException = (ErrorResponseException) exception;
-            
+            var errorResponseException = (ErrorResponseException)exception;
+
             var response = JToken.Parse(errorResponseException.Response.Content);
             var errorCode = response["error"]?["code"]?.ToString();
             if (string.IsNullOrWhiteSpace(errorCode) == false && errorCode.Equals("ExpiredAuthenticationToken", StringComparison.InvariantCultureIgnoreCase))
@@ -210,8 +243,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         private async Task<ResourceGraphClient> CreateClientAsync()
         {
             var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureEnvironment();
-            var credentials = await Authentication.GetServiceClientCredentialsAsync(azureEnvironment.ManagementEndpoint, QueryApplicationId, _queryApplicationSecret, TenantId);
-            var resourceGraphClient= new ResourceGraphClient(credentials);
+
+            var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo);
+            var resourceGraphClient = new ResourceGraphClient(credentials);
 
             var version = Promitor.Core.Version.Get();
             var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);

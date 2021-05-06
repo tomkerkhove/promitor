@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
-using Bogus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Scraper.Configuration;
@@ -11,10 +10,8 @@ using Defaults = Promitor.Agents.Scraper.Configuration.Defaults;
 namespace Promitor.Tests.Unit.Configuration
 {
     [Category("Unit")]
-    public class RuntimeConfigurationUnitTes
+    public class RuntimeConfigurationUnitTest : UnitTest
     {
-        private readonly Faker _faker = new Faker();
-
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -57,7 +54,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredApplicationInsightsInstrumentationKey_UsesConfigured()
         {
             // Arrange
-            var instrumentationKey = _faker.Random.Guid().ToString();
+            var instrumentationKey = BogusGenerator.Random.Guid().ToString();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithApplicationInsightsTelemetry(instrumentationKey)
                 .GenerateAsync();
@@ -129,7 +126,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredHttpPort_UsesConfigured()
         {
             // Arrange
-            var bogusHttpPort = _faker.Random.Int();
+            var bogusHttpPort = BogusGenerator.Random.Int();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(bogusHttpPort)
                 .GenerateAsync();
 
@@ -166,7 +163,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredMetricUnavailableValueInPrometheusScrapeEndpointSink_UsesConfigured()
         {
             // Arrange
-            var metricUnavailableValue = _faker.Random.Double(min: 1);
+            var metricUnavailableValue = BogusGenerator.Random.Double(min: 1);
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithPrometheusMetricSink(metricUnavailableValue: metricUnavailableValue)
                 .GenerateAsync();
@@ -185,7 +182,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredPrometheusScrapeEndpointSinkConfigured_UsesConfigured()
         {
             // Arrange
-            var scrapeEndpointBaseUri = _faker.System.DirectoryPath();
+            var scrapeEndpointBaseUri = BogusGenerator.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithPrometheusMetricSink(scrapeEndpointBaseUri: scrapeEndpointBaseUri)
                 .GenerateAsync();
@@ -204,7 +201,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredHostInStatsDEndpoint_UsesConfigured()
         {
             // Arrange
-            var statsdHost = _faker.System.DirectoryPath();
+            var statsdHost = BogusGenerator.System.DirectoryPath();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithStatsDMetricSink(host: statsdHost)
                 .GenerateAsync();
@@ -223,7 +220,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredMetricPrefixInStatsDEndpoint_UsesConfigured()
         {
             // Arrange
-            var metricPrefix = _faker.Name.FirstName();
+            var metricPrefix = BogusGenerator.Name.FirstName();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithStatsDMetricSink(metricPrefix: metricPrefix)
                 .GenerateAsync();
@@ -242,7 +239,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasConfiguredPortInStatsDEndpoint_UsesConfigured()
         {
             // Arrange
-            var port = _faker.Random.Int();
+            var port = BogusGenerator.Random.Int();
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
                 .WithStatsDMetricSink(port: port)
                 .GenerateAsync();

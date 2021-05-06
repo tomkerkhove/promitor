@@ -19,6 +19,10 @@ if you have the need for it.
 Here is a complete example of the runtime YAML:
 
 ```yaml
+authentication:
+  # Options are ServicePrincipal, SystemAssigedManagedIdentity, UserAssigedManagedIdentity.
+  mode: ServicePrincipal # Optional. Default: ServicePrincipal.
+  identityId: xxxx-xxxx-xxxx # Optional.
 server:
   httpPort: 80 # Optional. Default: 80
 metricSinks:
@@ -26,6 +30,8 @@ metricSinks:
     metricUnavailableValue: NaN # Optional. Default: NaN
     enableMetricTimestamps: false # Optional. Default: true
     baseUriPath: /metrics # Optional. Default: /metrics
+    labels:
+      transformation: None # Optional. Default: None.
   statsd:
     host: graphite
     port: 8125 # Optional. Default: 8125
@@ -48,6 +54,24 @@ resourceDiscovery:
 
 _Note: Using Promitor v0.x? [Use environment variables](./../v0.x/) to configure
 the runtime._
+
+## Authentication
+
+The Promitor runtime allows you to use various ways to authenticate to Azure:
+
+- `authentication.mode` - Defines authentication mode to use. Options are `ServicePrincipal`,
+ `SystemAssigedManagedIdentity`, `UserAssigedManagedIdentity`. _(defaults to service principle)_
+- `authentication.identityId` - Id of the Azure AD entity to authenticate with when integrating with Microsoft Azure.
+ Required when using `ServicePrincipal` or `UserAssigedManagedIdentity`.
+
+Example:
+
+```yaml
+authentication:
+  # Options are ServicePrincipal, SystemAssigedManagedIdentity, UserAssigedManagedIdentity.
+  mode: ServicePrincipal # Optional. Default: ServicePrincipal.
+  identityId: xxxx-xxxx-xxxx # Optional.
+```
 
 ## Runtime
 
@@ -113,8 +137,10 @@ In order to expose a Prometheus Scraping endpoint, you'll need to configure the 
 - `prometheusScrapingEndpoint.enableMetricTimestamps` - Defines whether or not a timestamp should
   be included when the value was scraped on Azure Monitor. Supported values are
   `True` to opt-in & `False` to opt-out. (Default: `true`)
-- `prometheusScrapingEndpoint.scrapeEndpoint.baseUriPath` - Controls the path where the scraping
+- `prometheusScrapingEndpoint.baseUriPath` - Controls the path where the scraping
   endpoint for Prometheus is being exposed.  (Default: `/metrics`)
+- `prometheusScrapingEndpoint.labels.transformation` - Controls how label values are reported to Prometheus by using
+ transformation. Options are `None` & `Lowercase`.  (Default: `None`)
 
 ```yaml
 metricSinks:
@@ -122,6 +148,8 @@ metricSinks:
     metricUnavailableValue: NaN # Optional. Default: NaN
     enableMetricTimestamps: false # Optional. Default: true
     baseUriPath: /metrics # Optional. Default: /metrics
+    labels:
+      transformation: None # Optional. Default: None.
 ```
 
 #### What happens when metrics are unavailable for multi-dimensional metrics?
@@ -305,7 +333,7 @@ azureMonitor:
     isEnabled: false # Optional. Default: false
 ```
 
-_Note: All telemetry is emitted as verbose so you have to make sure `telemetry` is configured correctly._
+_Note: All telemetry is emitted as `trace` so you have to make sure `telemetry` is configured correctly._
 
 ## Overriding configuration with environment variables
 

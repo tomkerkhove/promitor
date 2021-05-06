@@ -10,7 +10,7 @@ using YamlDotNet.RepresentationModel;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class AzureMetadataDeserializerTests
+    public class AzureMetadataDeserializerTests : UnitTest
     {
         private readonly AzureMetadataDeserializer _deserializer;
 

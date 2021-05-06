@@ -48,7 +48,7 @@ Promitor interacts with Azure Monitor API to scrape all the required metrics.
 
 During troubleshooting it can be interesting to gain insights on what the API returns, for which you can opt-in.
 
-You can opt-in for it by configuring the [runtime telemetry](/configuration/v1.x/runtime#azure-monitor).
+You can opt-in for it by configuring the [runtime telemetry](/configuration/v2.x/runtime/scraper#azure-monitor).
 
 ## Configuration REST APIs
 

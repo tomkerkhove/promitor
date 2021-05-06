@@ -27,6 +27,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
@@ -217,6 +218,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<ResourceDiscoveryConfiguration>(configuration.GetSection("resourceDiscovery"));
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
+            services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
             services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheusScrapingEndpoint"));
             services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
             services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));

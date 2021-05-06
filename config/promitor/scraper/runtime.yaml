@@ -1,5 +1,8 @@
 server:
   httpPort: 88
+authentication:
+  mode: ServicePrincipal
+  identityId: ceb249a3-44ce-4c90-8863-6776336f5b7e
 metricSinks:
   prometheusScrapingEndpoint:
     metricUnavailableValue: -1

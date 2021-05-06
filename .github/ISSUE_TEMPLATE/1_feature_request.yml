@@ -1,8 +1,7 @@
 name: Feature request 🧭
-about: Suggest an idea for this project
+description: Suggest an idea for this project
 labels: "feature-request"
 assignees: tomkerkhove
-issue_body: true
 body:
 - type: textarea
   attributes:

@@ -82,6 +82,7 @@ and vote for features!
 - **Security**
   - [Authentication with Microsoft Azure](configuration/v2.x/azure-authentication)
     - [Overview of Azure integrations](configuration/v2.x/azure-authentication#overview)
+    - [Supported Authentication Mechanisms](configuration/v2.x/azure-authentication#supported-authentication-mechanisms)
     - [Required permissions for Azure Monitor](configuration/v2.x/azure-authentication#required-permissions-for-azure-monitor)
     - [Required permissions for Azure Resource Graph](configuration/v2.x/azure-authentication#required-permissions-for-azure-resource-graph)
 - **Operations**
@@ -92,6 +93,7 @@ and vote for features!
   - [System](operations#system)
 - **Walkthroughs**
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
+  - [Using Managed Identity with Promitor on an AKS Cluster](/walkthrough/use-promitor-with-managed-identity)
   - [Migrate from Promitor Scraper 1.x to 2.x](/walkthrough/migrate-from-1.x-to-2.x)
 - [**Frequently asked questions (FAQs)**](/faq)
 

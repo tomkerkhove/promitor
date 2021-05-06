@@ -12,12 +12,14 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
+using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
+using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -33,22 +35,20 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureCloud">Name of the Azure cloud to interact with</param>
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
-        /// <param name="applicationId">Id of the Azure AD application used to authenticate with Azure Monitor</param>
-        /// <param name="applicationSecret">Secret to authenticate with Azure Monitor for the specified Azure AD application</param>
+        /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILoggerFactory loggerFactory)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
-            Guard.NotNullOrWhitespace(applicationId, nameof(applicationId));
-            Guard.NotNullOrWhitespace(applicationSecret, nameof(applicationSecret));
+            Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
 
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, applicationId, applicationSecret, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, azureMonitorLoggingConfiguration, loggerFactory, metricSinkWriter, metricsCollector);
         }
 
         /// <summary>
@@ -60,9 +60,10 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         /// <param name="resourceId">Id of the resource to query</param>
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
+        /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
         /// <returns>Latest representation of the metric</returns>
         public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, string metricDimension, AggregationType aggregationType, TimeSpan aggregationInterval,
-            string resourceId, string metricFilter = null)
+            string resourceId, string metricFilter = null, int? metricLimit = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotNullOrWhitespace(resourceId, nameof(resourceId));
@@ -79,10 +80,10 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, startQueryingTime);
+            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, metricLimit, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName,"No time series was found", metricDimension);
+                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimension);
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
@@ -96,7 +97,7 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
-            
+
                 var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                 measuredMetrics.Add(measuredMetric);
             }
@@ -144,9 +145,9 @@ namespace Promitor.Integrations.AzureMonitor
         }
 
         private async Task<IMetric> GetRelevantMetric(string metricName, AggregationType metricAggregation, TimeSpan metricInterval,
-            string metricFilter, string metricDimension, IMetricDefinition metricDefinition, DateTime recordDateTime)
+            string metricFilter, string metricDimension, IMetricDefinition metricDefinition, int? metricLimit, DateTime recordDateTime)
         {
-            var metricQuery = CreateMetricsQuery(metricAggregation, metricInterval, metricFilter, metricDimension, metricDefinition, recordDateTime);
+            var metricQuery = CreateMetricsQuery(metricAggregation, metricInterval, metricFilter, metricDimension, metricLimit, metricDefinition, recordDateTime);
             var metrics = await metricQuery.ExecuteAsync();
 
             // We already filtered this out so only expect to have one
@@ -195,6 +196,7 @@ namespace Promitor.Integrations.AzureMonitor
         }
 
         private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, string metricDimension,
+            int? metricLimit,
             IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
             var metricQuery = metricDefinition.DefineQuery()
@@ -203,29 +205,32 @@ namespace Promitor.Integrations.AzureMonitor
                 .WithAggregation(metricAggregation.ToString())
                 .WithInterval(metricsInterval);
 
+            var queryLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             if (string.IsNullOrWhiteSpace(metricFilter) == false)
             {
                 var filter = metricFilter.Replace("/", "%2F");
                 metricQuery.WithOdataFilter(filter);
+                metricQuery.SelectTop(queryLimit);
             }
 
             if (string.IsNullOrWhiteSpace(metricDimension) == false)
             {
                 metricQuery.WithOdataFilter($"{metricDimension} eq '*'");
+                metricQuery.SelectTop(queryLimit);
             }
 
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, string applicationId, string applicationSecret, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector)
         {
-            var credentials = _azureCredentialsFactory.FromServicePrincipal(applicationId, applicationSecret, tenantId, azureCloud);
-
+            var credentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, tenantId, azureAuthenticationInfo, _azureCredentialsFactory);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
-            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, applicationId, metricSinkWriter, metricsCollector, throttlingLogger);
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, metricsCollector, throttlingLogger);
 
-            var azureClientConfiguration = Azure.Configure()
+            var azureClientConfiguration = Microsoft.Azure.Management.Fluent.Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);
+            
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {

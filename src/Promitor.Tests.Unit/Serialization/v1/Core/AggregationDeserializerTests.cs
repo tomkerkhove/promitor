@@ -7,7 +7,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
     [Category("Unit")]
-    public class AggregationDeserializerTests
+    public class AggregationDeserializerTests : UnitTest
     {
         private readonly AggregationDeserializer _deserializer;
 

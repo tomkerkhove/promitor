@@ -6,7 +6,11 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide capability to transform metric labels in Prometheus ([docs](https://promitor.io/configuration/v2.x/runtime/scraper#prometheus-scraping-endpoint)
+- {{% tag added %}} Provide capability to limit the amount of resources to query when using filters/dimensions ([docs](https://promitor.io/configuration/v2.x/metrics)
+ | [#1596](https://github.com/tomkerkhove/promitor/issues/1596))
+- {{% tag added %}} Provide capability to define default custom labels  ([docs](https://promitor.io/configuration/v2.x/metrics/)
+ | [#1608](https://github.com/tomkerkhove/promitor/issues/1608))
 
 #### Resource Discovery
 

@@ -11,7 +11,7 @@ using MetricsDeclarationBuilder = Promitor.Tests.Unit.Builders.Metrics.v1.Metric
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics
 {
     [Category("Unit")]
-    public class GeneralMetricsDeclarationValidationStepTests
+    public class GeneralMetricsDeclarationValidationStepTests : UnitTest
     {
         private readonly IMapper _mapper;
 
@@ -110,6 +110,59 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithDefaults(new MetricDefaultsV1())
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void MetricsDeclaration_WithDefaultScrapingSchedule_Succeeds()
+        {
+            // Arrange
+            var metricDefaults = new MetricDefaultsV1
+            {
+                Scraping = new ScrapingV1
+                {
+                    Schedule = @"0 * * ? * *"
+                },
+                Limit = 5
+            };
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDefaults(metricDefaults)
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(10001)]
+        public void MetricsDeclaration_WithInvalidDefaultMetricLimit_Fails(int metricLimit)
+        {
+            // Arrange
+            var metricDefaults = new MetricDefaultsV1
+            {
+                Scraping = new ScrapingV1
+                {
+                    Schedule = @"0 * * ? * *"
+                },
+                Limit = metricLimit
+            };
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDefaults(metricDefaults)
                 .Build(_mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
 

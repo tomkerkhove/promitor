@@ -9,7 +9,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
 {
     [Category("Unit")]
-    public class StatsDMetricSinkValidationStepTests
+    public class StatsDMetricSinkValidationStepTests : UnitTest
     {
         [Fact]
         public void Validate_StatsDIsFullyConfigured_Success()

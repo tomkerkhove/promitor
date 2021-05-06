@@ -13,7 +13,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Misc
 {
     [Category("Unit")]
-    public class AzureLandscapeValidationStepTests
+    public class AzureLandscapeValidationStepTests : UnitTest
     {
         private readonly IMapper _mapper;
 

@@ -86,6 +86,11 @@
                 Add usability
             </summary>
         </member>
+        <member name="P:Promitor.Agents.ResourceDiscovery.Graph.AzureResourceGraph.QueryIdentityId">
+            <summary>
+            The identity id that is used to run queries
+            </summary>
+        </member>
         <member name="P:Promitor.Agents.ResourceDiscovery.Graph.Exceptions.ParseException.QueryResponse">
             <summary>
                 Response provided by Azure Resource Graph after running a query

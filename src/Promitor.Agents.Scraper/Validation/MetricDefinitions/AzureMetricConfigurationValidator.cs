@@ -27,6 +27,20 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 errorMessages.Add("No metric name for Azure is configured");
             }
 
+            // Validate limit, if configured
+            if (azureMetricConfiguration.Limit != null)
+            {
+                if (azureMetricConfiguration.Limit > Promitor.Core.Defaults.MetricDefaults.Limit)
+                {
+                    errorMessages.Add($"Limit cannot be higher than {Promitor.Core.Defaults.MetricDefaults.Limit}");
+                }
+
+                if (azureMetricConfiguration.Limit <= 0)
+                {
+                    errorMessages.Add("Limit has to be at least 1");
+                }
+            }
+
             var metricAggregationValidator = new MetricAggregationValidator(_metricDefaults);
             var metricsAggregationErrorMessages = metricAggregationValidator.Validate(azureMetricConfiguration.Aggregation);
             errorMessages.AddRange(metricsAggregationErrorMessages);

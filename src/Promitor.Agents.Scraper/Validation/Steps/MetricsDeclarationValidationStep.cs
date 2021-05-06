@@ -22,7 +22,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
-        public string ComponentName { get; } = "Metrics Declaration";
+        public string ComponentName => "Metrics Declaration";
 
         public ValidationResult Run()
         {
@@ -77,6 +77,16 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             if (string.IsNullOrWhiteSpace(metricDefaults.Scraping?.Schedule))
             {
                 yield return @"No default metric scraping schedule is defined.";
+            }
+
+            if (metricDefaults.Limit > Promitor.Core.Defaults.MetricDefaults.Limit)
+            {
+                yield return $"Limit cannot be higher than {Promitor.Core.Defaults.MetricDefaults.Limit}";
+            }
+
+            if (metricDefaults.Limit <= 0)
+            {
+                yield return @"Limit has to be at least 1";
             }
         }
 

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Internal;
-using Bogus;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -13,6 +12,7 @@ using Moq;
 using Prometheus.Client;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
@@ -23,18 +23,16 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class PrometheusScrapingEndpointMetricSinkTests
+    public class PrometheusScrapingEndpointMetricSinkTests : UnitTest
     {
-        private readonly Faker _bogus = new Faker();
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
         public async Task ReportMetricAsync_InputDoesNotContainMetricName_ThrowsException(string metricName)
         {
             // Arrange
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
@@ -52,8 +50,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_InputDoesNotContainMetricDescription_Succeeds(string metricDescription)
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
@@ -69,8 +67,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_InputDoesNotContainMeasuredMetric_ThrowsException()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
             var metricFactoryMock = CreatePrometheusMetricFactoryMock();
@@ -85,11 +83,15 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithMetricValue_SuccessfullyWritesMetric()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
-            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var defaultLabels = new Dictionary<string, string>
+            {
+                {"app", "promitor"}
+            };
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName, defaultLabels: defaultLabels);
             var prometheusConfiguration = CreatePrometheusConfiguration();
             var mocks = CreatePrometheusMetricFactoryMock();
             var metricSink = new PrometheusScrapingEndpointMetricSink(mocks.Factory.Object, metricsDeclarationProvider, prometheusConfiguration, NullLogger<PrometheusScrapingEndpointMetricSink>.Instance);
@@ -98,8 +100,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray()))), Times.Once());
-            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray(), defaultLabels.Keys.ToArray()))), Times.Once());
+            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray(), defaultLabels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
 
@@ -107,10 +109,10 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithTwoMetricValues_SuccessfullyWritesMultipleMetrics()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var firstMetricValue = _bogus.Random.Double();
-            var secondMetricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var firstMetricValue = BogusGenerator.Random.Double();
+            var secondMetricValue = BogusGenerator.Random.Double();
             var firstMetric = MeasuredMetric.CreateWithoutDimension(firstMetricValue);
             var secondMetric = MeasuredMetric.CreateWithoutDimension(secondMetricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(firstMetric);
@@ -134,12 +136,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithTwoMetricValuesOfWhichOneIsMultiDimensional_SuccessfullyWritesMultipleMetrics()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var firstMetricValue = _bogus.Random.Double();
-            var secondMetricValue = _bogus.Random.Double();
-            var dimensionName = _bogus.Name.FirstName();
-            var dimensionValue = _bogus.Name.FirstName();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var firstMetricValue = BogusGenerator.Random.Double();
+            var secondMetricValue = BogusGenerator.Random.Double();
+            var dimensionName = BogusGenerator.Name.FirstName();
+            var dimensionValue = BogusGenerator.Name.FirstName();
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
@@ -170,9 +172,9 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithUpperCaseLabelNames_SuccessfullyWritesMetricWithLowercaseLabels()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var mutatedLabels = scrapeResult.Labels.ToDictionary(kvp => kvp.Key.ToUpper(), kvp => kvp.Value);
             scrapeResult.Labels.Clear();
@@ -197,9 +199,9 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithMetricValueAndTimestampFlag_SuccessfullyWritesMetricWithRespectToTimestampFlag(bool includeTimestampsInMetrics)
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration(enableMetricsTimestamps: includeTimestampsInMetrics);
@@ -223,8 +225,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         {
             // Arrange
             double expectedMeasuredMetric = expectedDefaultValue??double.NaN; // If nothing is configured, NaN is used.
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
@@ -247,11 +249,11 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithOneDimensions_SuccessfullyWritesMetric()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
-            var dimensionName = _bogus.Name.FirstName();
-            var dimensionValue = _bogus.Name.FirstName();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
+            var dimensionName = BogusGenerator.Name.FirstName();
+            var dimensionValue = BogusGenerator.Name.FirstName();
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
@@ -277,13 +279,13 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithDefaultMetricLabelsConfigured_SuccessfullyWritesMetric()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
-            var firstLabelName = _bogus.Name.FirstName();
-            var secondLabelName = _bogus.Name.FirstName();
-            var firstLabelValue = _bogus.Name.FirstName();
-            var secondLabelValue = _bogus.Name.FirstName();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
+            var firstLabelName = BogusGenerator.Name.FirstName();
+            var secondLabelName = BogusGenerator.Name.FirstName();
+            var firstLabelValue = BogusGenerator.Name.FirstName();
+            var secondLabelValue = BogusGenerator.Name.FirstName();
             var expectedFirstLabelName = firstLabelName.ToLower();
             var expectedSecondLabelName = secondLabelName.ToLower();
             var configuredLabels = new Dictionary<string, string>
@@ -310,12 +312,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithMetricLabelWithSameKeyAsScrapeResult_SuccessfullyWritesMetricWithLabelValueFromScrapeResult()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
-            var labelName = _bogus.Name.FirstName();
-            var scrapeResultLabelValue = _bogus.Name.FirstName();
-            var metricConfigLabelValue = _bogus.Name.FirstName();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
+            var labelName = BogusGenerator.Name.FirstName();
+            var scrapeResultLabelValue = BogusGenerator.Name.FirstName();
+            var metricConfigLabelValue = BogusGenerator.Name.FirstName();
             var expectedLabelName = labelName.ToLower();
             var configuredLabels = new Dictionary<string, string>
             {
@@ -337,15 +339,31 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
 
-        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expected)
+        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels)
         {
-            if (specified.Length < expected.Length)
+            if (specified.Length < expectedMetricLabels.Length)
             {
                 return false;
             }
 
-            var outcome = Array.Exists(expected, entry=>specified.Contains(entry.ToLower()));
+            var outcome = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
             return outcome;
+        }
+
+        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels)
+        {
+            var expectedTotalLabelCount = expectedDefaultLabels.Length + expectedMetricLabels.Length;
+            if (specified.Length != expectedTotalLabelCount)
+            {
+                return false;
+            }
+
+            var isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            if(isSuccessful)
+            {
+                isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            }
+            return isSuccessful;
         }
 
         private IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> CreatePrometheusConfiguration(bool enableMetricsTimestamps = true, double? metricUnavailableValue = -1)
@@ -360,13 +378,24 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             return new OptionsMonitorStub<PrometheusScrapingEndpointSinkConfiguration>(prometheusScrapingEndpointSinkConfiguration);
         }
 
-        private MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null)
+        private MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null, Dictionary<string, string> defaultLabels = null)
         {
             var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
             var mapper = mapperConfiguration.CreateMapper();
-            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithServiceBusMetric(metricName, labels: labels)
-                .Build(mapper);
+            var metricBuilder = MetricsDeclarationBuilder.WithMetadata();
+
+            if (defaultLabels != null)
+            {
+                var defaults = new MetricDefaultsV1
+                {
+                    Labels = defaultLabels
+                };
+                
+                metricBuilder.WithDefaults(defaults);
+            }
+
+            var rawDeclaration = metricBuilder.WithServiceBusMetric(metricName, labels: labels)
+                                                    .Build(mapper);
 
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, mapper);
             return metricsDeclarationProvider;

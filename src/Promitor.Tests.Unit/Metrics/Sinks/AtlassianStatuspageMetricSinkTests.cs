@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Metrics;
@@ -13,18 +12,16 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class AtlassianStatuspageMetricSinkTests
+    public class AtlassianStatuspageMetricSinkTests : UnitTest
     {
-        private readonly Faker _bogus = new Faker();
-
         [Theory]
         [InlineData("")]
         [InlineData(null)]
         public async Task ReportMetricAsync_InputDoesNotContainMetricName_ThrowsException(string metricName)
         {
             // Arrange
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
@@ -41,8 +38,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_InputDoesNotContainMetricDescription_Succeeds(string metricDescription)
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricValue = _bogus.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricValue = BogusGenerator.Random.Double();
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
@@ -58,8 +55,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_InputDoesNotContainMeasuredMetric_ThrowsException()
         {
             // Arrange
-            var metricName = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
             var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
@@ -73,10 +70,10 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         public async Task ReportMetricAsync_GetsValidInputWithMetricValueAndPromitorToSystemMetricMapping_SuccessfullyWritesMetric()
         {
             // Arrange
-            var promitorMetricName = _bogus.Name.FirstName();
-            var systemMetricId = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
-            var metricValue = _bogus.Random.Double();
+            var promitorMetricName = BogusGenerator.Name.FirstName();
+            var systemMetricId = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
@@ -95,9 +92,9 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         {
             // Arrange
             const double expectedDefaultValue = 0;
-            var promitorMetricName = _bogus.Name.FirstName();
-            var systemMetricId = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var promitorMetricName = BogusGenerator.Name.FirstName();
+            var systemMetricId = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
@@ -118,9 +115,9 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         {
             // Arrange
             const double expectedDefaultValue = 0;
-            var promitorMetricName = _bogus.Name.FirstName();
-            var systemMetricId = _bogus.Name.FirstName();
-            var metricDescription = _bogus.Lorem.Sentence();
+            var promitorMetricName = BogusGenerator.Name.FirstName();
+            var systemMetricId = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);

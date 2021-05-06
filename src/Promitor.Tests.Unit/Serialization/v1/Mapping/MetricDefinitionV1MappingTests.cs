@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Mapping
 {
     [Category("Unit")]
-    public class MetricDefinitionV1MappingTests
+    public class MetricDefinitionV1MappingTests : UnitTest
     {
         private readonly IMapper _mapper;
 

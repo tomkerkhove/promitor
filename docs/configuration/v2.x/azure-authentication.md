@@ -15,16 +15,36 @@ Here is an overview of our Promitor agents and their integrations:
 | Azure Monitor        | ✅               | ❌                         |
 | Azure Resource Graph | ❌               | ✅                         |
 
-Each agent needs an Azure AD identity to authenticate with to Microsoft Azure and needs to be configured with the
- following environment variables:
+Each agent needs an Azure AD identity to authenticate with to Microsoft Azure.
 
-- **PROMITOR_AUTH_APPID** - Id of the Azure AD entity to authenticate with
+In order to achieve this, you'll need to [create an Azure AD Application](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application),
+
+## Supported Authentication Mechanisms
+
+Our agents provide the following authentication mechanisms:
+
+- **Service principle** - Use application id & secret of the Azure AD entity that has been pre-created to authenticate with
+- **Managed Identity** - Use zero-secret authentication by letting Microsoft handle the authentication for you ([docs](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview))
+
+For details how to configure the authentication, we recommend reading our agent configuration documentation.
+
+### Service Principle Authentication
+
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v0.1-green.svg)
+
+Every agent needs to be configured with the following environment variables:
+
 - **PROMITOR_AUTH_APPKEY** - Secret of the Azure AD entity to authenticate with
 
-In order to use Promitor, you'll need to [create an Azure AD Application](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application),
-that will be used for integrating with the various Microsoft Azure APIs.
+### Managed Identity Authentication
 
-> ⚠ For now, we do not support managed identity but this is planned ([issue](https://github.com/tomkerkhove/promitor/issues/444)).
+![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.2-green.svg)
+
+When using Managed Identity, you can use one of the following scenarios:
+
+- **System-assigned Managed Identity** - Use the identity of the Azure resource on which it runs and let Azure handle
+ the authentication.
+- **User-assigned Managed Identity** - Use a pre-created Azure AD identity but let Azure handle the authentication for you
 
 ## Permission Overview
 

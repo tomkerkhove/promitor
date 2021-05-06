@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Promitor.Tests.Unit.Serialization
 {
-    public class DeserializationContextTests
+    public class DeserializationContextTests : UnitTest
     {
         [Fact]
         public void GetSuggestions_NoFieldsConfigured_Empty()

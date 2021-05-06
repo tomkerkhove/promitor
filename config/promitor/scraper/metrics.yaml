@@ -6,22 +6,14 @@ azureMetadata:
 metricDefaults:
   aggregation:
     interval: 00:05:00
+  limit: 10
+  labels:
+    geo: china
+    environment: dev
   scraping:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-- name: promitor_demo_frontdoor_backend_health
-  description: "Average percentage of memory usage on an Azure App Plan"
-  resourceType: FrontDoor
-  labels:
-    app: promitor
-  azureMetricConfiguration:
-    metricName: BackendHealthPercentage
-    aggregation:
-      type: Average
-  resources:
-  - name: promitor-landscape
-    resourceGroupName: promitor-landscape
 - name: promitor_demo_appplan_percentage_cpu
   description: "Average percentage of memory usage on an Azure App Plan"
   resourceType: AppPlan
@@ -136,12 +128,28 @@ metrics:
 - name: promitor_demo_servicebus_messagecount_discovered
   description: "Average percentage of memory usage on an Azure App Plan"
   resourceType: ServiceBusNamespace
+  labels:
+    geo: europe
+    app: promitor
   azureMetricConfiguration:
     metricName: ActiveMessages
     aggregation:
-      type: Total
-  resourceDiscoveryGroups:
-  - name: service-bus-landscape
+      type: Average
+  resources:
+  - namespace: promitor-messaging
+- name: promitor_demo_servicebus_messagecount_limited
+  description: "Average percentage of memory usage on an Azure App Plan"
+  resourceType: ServiceBusNamespace
+  labels:
+    geo: europe
+    app: promitor
+  azureMetricConfiguration:
+    limit: 5
+    metricName: ActiveMessages
+    aggregation:
+      type: Average
+  resources:
+  - namespace: promitor-messaging
 - name: promitor_demo_app_insights_dependency_duration
   description: "Average dependency duration per dependency type"
   resourceType: Generic

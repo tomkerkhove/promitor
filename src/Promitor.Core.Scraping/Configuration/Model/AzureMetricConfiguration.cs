@@ -8,6 +8,11 @@
         public string MetricName { get; set; }
 
         /// <summary>
+        ///     Amount of maximum resources to limit the results to
+        /// </summary>
+        public int? Limit { get; set; }
+
+        /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
         public MetricDimension Dimension { get; set; }
