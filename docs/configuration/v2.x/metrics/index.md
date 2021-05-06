@@ -147,6 +147,7 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Key Vault](key-vault)
 - [Azure Kubernetes Service](kubernetes)
 - [Azure Logic Apps](logic-apps)
+- [Azure Monitor Autoscale](monitor-autoscale)
 - [Azure Network Gateway](network-gateway)
 - [Azure Network Interface](network-interface)
 - [Azure Service Bus Namespace](service-bus-namespace)
