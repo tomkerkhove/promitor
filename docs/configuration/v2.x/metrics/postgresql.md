@@ -10,7 +10,7 @@ title: Azure Database for PostgreSQL
 You can declare to scrape an Azure Database for PostgreSQL server via the `PostgreSql`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `serverName` - The name of the PostgreSQL server
 
@@ -29,7 +29,7 @@ azureMetricConfiguration:
   aggregation:
     type: Average
     interval: 00:01:00
-resources:
+resources: # Optional, required when no resource discovery is configured
 - serverName: Promitor-1
 - serverName: Promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

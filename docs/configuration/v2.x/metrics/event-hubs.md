@@ -10,7 +10,7 @@ title: Azure Event Hubs Declaration
 You can declare to scrape an Azure Event Hubs Queue via the `EventHubs`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `namespace` - The name of the Azure Event Hubs namespace.
 - `topicName` - The name of the topic. (optional)
@@ -33,7 +33,7 @@ azureMetricConfiguration:
   metricName: IncomingMessages
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - namespace: promitor-streaming
   topicName: orders
 - namespace: promitor-messaging

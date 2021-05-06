@@ -9,7 +9,7 @@ title: Azure IoT Hub Declaration
 
 You can declare to scrape an Azure IoT Hub via the `IoTHub` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `ioTHubName` - The name of the Azure IoT Hub
 
@@ -25,7 +25,7 @@ azureMetricConfiguration:
   metricName: devices.totalDevices
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - ioTHubName: promitor-1
 - ioTHubName: promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

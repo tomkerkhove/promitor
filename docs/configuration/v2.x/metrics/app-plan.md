@@ -10,7 +10,7 @@ title: Azure App Plan Declaration
 You can declare to scrape an Azure App Plan via the `AppPlan` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `appPlanName` - The name of the Azure App Plan
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: MemoryPercentage
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - appPlanName: promitor-app-plan
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: app-plans-landscape

@@ -10,7 +10,7 @@ title: Azure IoT Hub Device Provisioning Service (DPS) Declaration
 You can declare to scrape an Azure IoT Hub Device Provisioning Service (DPS)
 via the `DeviceProvisioningService` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `deviceProvisioningServiceName` - The name of the Azure IoT Hub Device Provisioning Service (DPS)
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: AttestationAttempts
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - deviceProvisioningServiceName: promitor-1
 - deviceProvisioningServiceName: promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

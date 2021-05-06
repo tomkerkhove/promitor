@@ -10,7 +10,7 @@ title: Azure SQL Managed Instance Declaration
 You can scrape an Azure SQL Managed Instance via the `SqlManagedInstance`
  resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `instanceName` - The name of the SQL Server instance.
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: virtual_core_count
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - instanceName: promitor-sql-managed-instance
 resourceDiscoveryGroups:
 - name: sql-managed-instances

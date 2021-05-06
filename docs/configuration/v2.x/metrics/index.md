@@ -4,7 +4,57 @@ title: Metrics Declaration
 ---
 
 All the Azure Monitor metrics that need to be scraped are consolidated in one YAML
-file. This configuration defines the Azure metadata and all the metrics.
+file which is referred to as the metric declaration.
+
+This declaration defines the overall Azure metadata and all the metrics you want to expose.
+
+Every metric describes the Azure Monitor metric that it represents and what Azure resources that should be scraped.
+ It allows you to statically declaring the resources to scrape and/or use [automatic resource discovery](./../../../concepts/how-it-works.md#using-resource-discovery).
+
+## Supported Azure Services
+
+[Generic Azure Resource](generic-azure-resource) allows you to scrape every Azure
+service supported by Azure Monitor.
+
+We also provide a simplified way to scrape the following Azure resources:
+
+- [Azure API Management](api-management)
+- [Azure Application Gateway](application-gateway)
+- [Azure App Plan](app-plan)
+- [Azure Cache for Redis](redis-cache)
+- [Azure Container Instances](container-instances)
+- [Azure Container Registry](container-registry)
+- [Azure Cosmos DB](cosmos-db)
+- [Azure Database for PostgreSQL](postgresql)
+- [Azure Event Hubs](event-hubs)
+- [Azure Express Route Circuit](express-route-circuit)
+- [Azure Front Door](front-door)
+- [Azure Function App](function-app)
+- [Azure IoT Hub](iot-hub)
+- [Azure IoT Hub Device Provisioning Service (DPS)](iot-hub-device-provisioning-service)
+- [Azure Key Vault](key-vault)
+- [Azure Kubernetes Service](kubernetes)
+- [Azure Logic Apps](logic-apps)
+- [Azure Monitor Autoscale](monitor-autoscale)
+- [Azure Network Gateway](network-gateway)
+- [Azure Network Interface](network-interface)
+- [Azure Service Bus Namespace](service-bus-namespace)
+- [Azure SQL Database](sql-database)
+- [Azure SQL Elastic Pool](sql-elastic-pool)
+- [Azure SQL Managed Instance](sql-managed-instance)
+- [Azure SQL Server](sql-server)
+- [Azure Storage (Account)](storage-account)
+- [Azure Storage (Blob)](blob-storage)
+- [Azure Storage (Files)](file-storage)
+- [Azure Storage (Queue)](storage-queue)
+- [Azure Synapse (Apache Spark pool)](synapse-apache-spark-pool)
+- [Azure Synapse (SQL pool)](synapse-sql-pool)
+- [Azure Synapse (Workspace)](synapse-workspace)
+- [Azure Virtual Machine](virtual-machine)
+- [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
+- [Azure Web App](web-app)
+
+Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
 ## General Declaration
 
@@ -113,59 +163,14 @@ metrics:
       aggregation:
         type: Total
         interval: 00:15:00
-    resources:
+    resources: # Optional, required when no resource discovery is configured
       - namespace: promitor-messaging
         queueName: orders
       - namespace: promitor-messaging-dev
         resourceGroupName: promitor-dev
         subscriptionId: ABC
-    resourceDiscoveryGroups:
+    resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
     - name: service-bus-landscape
 ```
-
-## Supported Azure Services
-
-[Generic Azure Resource](generic-azure-resource) allows you to scrape every Azure
-service supported by Azure Monitor.
-
-We also provide a simplified way to scrape the following Azure resources:
-
-- [Azure API Management](api-management)
-- [Azure Application Gateway](application-gateway)
-- [Azure App Plan](app-plan)
-- [Azure Cache for Redis](redis-cache)
-- [Azure Container Instances](container-instances)
-- [Azure Container Registry](container-registry)
-- [Azure Cosmos DB](cosmos-db)
-- [Azure Database for PostgreSQL](postgresql)
-- [Azure Event Hubs](event-hubs)
-- [Azure Express Route Circuit](express-route-circuit)
-- [Azure Front Door](front-door)
-- [Azure Function App](function-app)
-- [Azure IoT Hub](iot-hub)
-- [Azure IoT Hub Device Provisioning Service (DPS)](iot-hub-device-provisioning-service)
-- [Azure Key Vault](key-vault)
-- [Azure Kubernetes Service](kubernetes)
-- [Azure Logic Apps](logic-apps)
-- [Azure Monitor Autoscale](monitor-autoscale)
-- [Azure Network Gateway](network-gateway)
-- [Azure Network Interface](network-interface)
-- [Azure Service Bus Namespace](service-bus-namespace)
-- [Azure SQL Database](sql-database)
-- [Azure SQL Elastic Pool](sql-elastic-pool)
-- [Azure SQL Managed Instance](sql-managed-instance)
-- [Azure SQL Server](sql-server)
-- [Azure Storage (Account)](storage-account)
-- [Azure Storage (Blob)](blob-storage)
-- [Azure Storage (Files)](file-storage)
-- [Azure Storage (Queue)](storage-queue)
-- [Azure Synapse (Apache Spark pool)](synapse-apache-spark-pool)
-- [Azure Synapse (SQL pool)](synapse-sql-pool)
-- [Azure Synapse (Workspace)](synapse-workspace)
-- [Azure Virtual Machine](virtual-machine)
-- [Azure Virtual Machine Scale Set (VMSS)](virtual-machine-scale-set)
-- [Azure Web App](web-app)
-
-Want to help out? Create an issue and [contribute a new scraper](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md).
 
 [&larr; back](/)

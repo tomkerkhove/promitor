@@ -10,7 +10,7 @@ title: Azure Automation Account Declaration
 You can scrape an Azure Automation account via the `AutomationAccount`
  resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `accountName` - The name of the Azure Automation account.
 - `runbookName` - The name of the runbook. (optional and only supported on limited metrics)
@@ -31,7 +31,7 @@ azureMetricConfiguration:
   metricName: TotalJob
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - resourceGroupName: promitor-sources
   accountName: promitor-sandbox
   runbookName: Example # Optional, currently only supported for 'TotalJob' metric

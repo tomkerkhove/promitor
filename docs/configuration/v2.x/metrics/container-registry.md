@@ -10,7 +10,7 @@ title: Azure Container Registry Declaration
 You can declare to scrape an Azure Container Registry via the `ContainerRegistry`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `registryName` - The name of the registry
 
@@ -28,7 +28,7 @@ azureMetricConfiguration:
   metricName: TotalPullCount
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - registryName: promitor-1
 - registryName: promitor-2
 resourceDiscoveryGroups:

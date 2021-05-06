@@ -9,7 +9,7 @@ title: Azure Synapse (Apache Spark pool) Declaration
 
 You can scrape an Azure Synapse Apache Spark pool via the `SynapseApacheSparkPool` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `workspaceName` - The name of the Azure Synapse workspace.
 - `poolName` - The name of the Apache Spark pool.
@@ -31,7 +31,7 @@ Example:
     metricName: BigDataPoolApplicationsEnded
     aggregation:
       type: Total
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - workspaceName: promitor-synapse
     poolName: sparkpool
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

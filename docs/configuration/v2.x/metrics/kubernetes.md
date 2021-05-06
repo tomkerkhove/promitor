@@ -10,7 +10,7 @@ title: Azure Kubernetes Service Declaration
 You can declare to scrape an Azure Kubernetes Service (AKS)
 via the `KubernetesService` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `clusterName` - The name of the Azure Kubernetes Service
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: kube_node_status_allocatable_cpu_cores
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - clusterName: promitor-aks
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: kubernetes-service-landscape

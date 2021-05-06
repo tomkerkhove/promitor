@@ -10,7 +10,7 @@ title: Azure Key Vault Declaration
 You can declare to scrape an Azure Key Vault
 via the `KeyVault` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `vaultName` - The name of the Azure Key Vault
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ServiceApiLatency
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - vaultName: promitor-1
 - vaultName: promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

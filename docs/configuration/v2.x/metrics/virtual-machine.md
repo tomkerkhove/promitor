@@ -10,7 +10,7 @@ title: Azure Virtual Machine Declaration
 You can declare to scrape an Azure Virtual Machine via the `VirtualMachine` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `virtualMachineName` - The name of the virtual machine
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: Percentage CPU
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - virtualMachineName: promitor-virtual-machine-1
 - virtualMachineName: promitor-virtual-machine-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

@@ -10,7 +10,7 @@ title: Azure Function App Declaration
 You can declare to scrape an Azure Function App via the `FunctionApp` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `functionAppName` - The name of the Azure Function App
 - `slotName` - The name of the deployment slot *(optional)*
@@ -31,7 +31,7 @@ azureMetricConfiguration:
   metricName: Requests
   aggregation:
     type: Total
-resources:
+resources: # Optional, required when no resource discovery is configured
 - functionAppName: promitor-function-app
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: function-app-landscape

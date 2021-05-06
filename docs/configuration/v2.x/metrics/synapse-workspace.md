@@ -9,7 +9,7 @@ title: Azure Synapse (Workspace) Declaration
 
 You can scrape an Azure Synapse workspace via the `SynapseWorkspace` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `workspaceName` - The name of the Azure Synapse workspace.
 
@@ -29,7 +29,7 @@ Example:
     metricName: BuiltinSqlPoolDataProcessedBytes
     aggregation:
       type: Total
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - workspaceName: promitor-synapse
     resourceGroupName: promitor-sources
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

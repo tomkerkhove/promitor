@@ -10,7 +10,7 @@ title: Azure Application Gateway Declaration
 You can declare to scrape an Azure Application Gateway via the `ApplicationGateway` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `applicationGatewayName` - The name of the Azure Application Gateway
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: ApplicationGatewayTotalTime
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - applicationGatewayName: promitor-application-gateway-1
 - applicationGatewayName: promitor-application-gateway-2
 resourceDiscoveryGroups:

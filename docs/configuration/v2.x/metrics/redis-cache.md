@@ -10,7 +10,7 @@ title: Azure Cache for Redis Declaration
 You can declare to scrape an Azure Cache for Redis via the `RedisCache` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `cacheName` - The name of the Redis Cache instance
 
@@ -32,7 +32,7 @@ azureMetricConfiguration:
   aggregation:
     type: Total
     interval: 00:01:00
-resources:
+resources: # Optional, required when no resource discovery is configured
 - cacheName: Promitor-1
 - cacheName: Promitor-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

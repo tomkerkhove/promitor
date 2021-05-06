@@ -10,7 +10,7 @@ title: Azure Virtual Machine Scale Set (VMSS) Declaration
 You can declare to scrape an Azure Virtual Machine Scale Set via the `VirtualMachineScaleSet` resource
 type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `scaleSetName` - The name of the Virtual Machine Scale Set
 
@@ -28,7 +28,7 @@ azureMetricConfiguration:
     name: VMName
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - scaleSetName: promitor-virtual-machine-scale-set-1
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: virtual-machine-scale-sets-landscape

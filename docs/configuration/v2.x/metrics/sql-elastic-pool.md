@@ -9,7 +9,7 @@ title: Azure SQL Elastic Pool Declaration
 
 You can scrape an Azure SQL Elastic Pool via the `SqlElasticPool` resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `serverName` - The name of the SQL Server instance.
 - `poolName` - The name of the elastic pool.
@@ -33,7 +33,7 @@ Example:
     metricName: cpu_percent
     aggregation:
       type: Average
-  resources:
+  resources: # Optional, required when no resource discovery is configured
   - serverName: promitor-sql-server
     poolName: promitor-db
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

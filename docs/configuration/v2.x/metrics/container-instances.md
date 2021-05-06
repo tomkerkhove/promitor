@@ -10,7 +10,7 @@ title: Azure Container Instances Declaration
 You can declare to scrape an Azure Container Instances via the `ContainerInstance`
 resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `containerGroup` - The name of the container group
 
@@ -26,7 +26,7 @@ azureMetricConfiguration:
   metricName: CpuUsage
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - containerGroup: promitor-container-instance-1
 - containerGroup: promitor-container-instance-2
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)

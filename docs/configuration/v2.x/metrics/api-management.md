@@ -10,7 +10,7 @@ title: Azure API Management Declaration
 You can scrape an Azure API Management via the `ApiManagement`
  resource type.
 
-The following fields need to be provided:
+When using declared resources, the following fields need to be provided:
 
 - `instanceName` - The name of the Azure API Management instance.
 - `locationName` - The name of the regional deployment of the gateway. (optional)
@@ -41,7 +41,7 @@ azureMetricConfiguration:
   metricName: Capacity
   aggregation:
     type: Average
-resources:
+resources: # Optional, required when no resource discovery is configured
 - instanceName: promitor-api-gateway
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: api-management-landscape
