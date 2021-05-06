@@ -14,6 +14,31 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
+- name: promitor_demo_appplan_autoscale_instances_current_discovered
+  description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
+  resourceType: MonitorAutoscale
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: ObservedCapacity
+    aggregation:
+      type: Average
+  resourceDiscoveryGroups:
+  - name: autoscaling-rules
+- name: promitor_demo_appplan_autoscale_observed_capacity
+  description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
+  resourceType: MonitorAutoscale
+  labels:
+    app: promitor
+  azureMetricConfiguration:
+    metricName: MetricThreshold
+    dimension:
+      name: MetricTriggerRule
+    aggregation:
+      type: Average
+  resources:
+  - autoscaleSettingsName: app-service-autoscaling-rules
+    resourceGroupName: demo
 - name: promitor_demo_appplan_percentage_cpu
   description: "Average percentage of memory usage on an Azure App Plan"
   resourceType: AppPlan

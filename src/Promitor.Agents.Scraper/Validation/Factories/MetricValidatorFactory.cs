@@ -49,6 +49,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KubernetesServiceMetricValidator();
                 case ResourceType.LogicApp:
                     return new LogicAppMetricValidator();
+                case ResourceType.MonitorAutoscale:
+                    return new MonitorAutoscaleMetricValidator();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayMetricValidator();
                 case ResourceType.NetworkInterface:

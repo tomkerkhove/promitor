@@ -42,6 +42,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KubernetesServiceDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
+                case ResourceType.MonitorAutoscale:
+                    return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
