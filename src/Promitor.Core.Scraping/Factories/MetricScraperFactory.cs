@@ -68,12 +68,14 @@ namespace Promitor.Core.Scraping.Factories
                     return new KeyVaultScraper(scraperConfiguration);
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceScraper(scraperConfiguration);
+                case ResourceType.LogicApp:
+                    return new LogicAppScraper(scraperConfiguration);
+                case ResourceType.MonitorAutoscale:
+                    return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceScraper(scraperConfiguration);
-                case ResourceType.LogicApp:
-                    return new LogicAppScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.RedisCache:

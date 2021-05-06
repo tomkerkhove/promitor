@@ -105,6 +105,7 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure Key Vault](metrics/key-vault)
 - [Azure Kubernetes Service](metrics/kubernetes)
 - [Azure Logic Apps](metrics/logic-apps)
+- [Azure Monitor Autoscale](metrics/monitor-autoscale)
 - [Azure Network Gateway](metrics/network-gateway)
 - [Azure Network Interface](metrics/network-interface)
 - [Azure Service Bus Namespace](metrics/service-bus-namespace)

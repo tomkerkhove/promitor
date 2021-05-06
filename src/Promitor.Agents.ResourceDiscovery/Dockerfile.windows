@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.407 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.408 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
@@ -8,7 +8,7 @@ COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Integrations.Azure/* Promitor.Integrations.Azure/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=%VERSION%
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.13 AS runtime
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.14 AS runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="c:/config/"
 COPY --from=build /app .

@@ -30,6 +30,8 @@ resourceDiscoveryGroups:
   type: IoTHub
 - name: key-vaults
   type: KeyVault
+- name: autoscaling-rules
+  type: MonitorAutoscale
 - name: network-interfaces
   type: NetworkInterface
 - name: postgres-databases
