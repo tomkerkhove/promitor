@@ -77,6 +77,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             metricSinkWriter,
                             jobServices.GetService<MetricScraperFactory>(),
                             azureMonitorClient,
+                            jobServices.GetService<IRuntimeMetricsCollector>(),
                             jobServices.GetService<ILogger<ResourceScrapingJob>>());
                     }, schedulerOptions =>
                     {

@@ -4,6 +4,7 @@ using GuardNet;
 using Microsoft.Extensions.Options;
 using Prometheus.Client;
 using Promitor.Core.Metrics;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus
@@ -11,14 +12,17 @@ namespace Promitor.Integrations.Sinks.Prometheus
     public class RuntimeMetricsCollector : IRuntimeMetricsCollector
     {
         private readonly IMetricFactory _metricFactory;
+        private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public RuntimeMetricsCollector(IMetricFactory metricFactory, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public RuntimeMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, IMetricFactory metricFactory, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
+            Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
             Guard.NotNull(metricFactory, nameof(metricFactory));
 
             _metricFactory = metricFactory;
             _prometheusConfiguration = prometheusConfiguration;
+            _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
         /// <summary>
@@ -31,6 +35,14 @@ namespace Promitor.Integrations.Sinks.Prometheus
         public void SetGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
+
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            if (labels.ContainsKey("tenant_id") == false)
+            {
+                labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
+            }
+
+            labels.OrderBy(kvp => kvp.Key);
 
             var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
             gauge.WithLabels(labels.Values.ToArray()).Set(value);
