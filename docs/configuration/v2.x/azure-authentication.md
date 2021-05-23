@@ -46,6 +46,8 @@ When using Managed Identity, you can use one of the following scenarios:
  the authentication.
 - **User-assigned Managed Identity** - Use a pre-created Azure AD identity but let Azure handle the authentication for you
 
+> ⚠ In order to use managed identity, your Kubernetes cluster must be hosted on Microsoft Azure to leverage this.
+
 ## Permission Overview
 
 ### Required permissions for Azure Monitor
