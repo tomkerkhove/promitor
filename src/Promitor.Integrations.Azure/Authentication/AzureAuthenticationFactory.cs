@@ -69,7 +69,7 @@ namespace Promitor.Integrations.Azure.Authentication
         /// <summary>
         ///     Gets a valid token using a Service Principal or a Managed Identity
         /// </summary>
-        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo)
+        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo, System.Uri azureAuthoriyHost)
         {
             Guard.NotNullOrWhitespace(resource, nameof(resource));
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
@@ -77,16 +77,18 @@ namespace Promitor.Integrations.Azure.Authentication
 
             TokenCredential tokenCredential;
 
+            var tokenCredentialOptions = new TokenCredentialOptions { AuthorityHost = azureAuthoriyHost };
+
             switch (authenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                    tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret);
+                    tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId);
+                    tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential();
+                    tokenCredential = new ManagedIdentityCredential( "",tokenCredentialOptions);
                     break;
                 default:
                     tokenCredential = new DefaultAzureCredential();
