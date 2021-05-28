@@ -247,7 +247,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthoriyHost);
 
-            var baseUri = new System.Uri(azureEnvironment.ResourceManagerEndpoint);
+            var baseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);
 
             var resourceGraphClient = new ResourceGraphClient(baseUri ,credentials);
 
