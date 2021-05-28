@@ -78,7 +78,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void GetAzureAuthorityHost_ForAzureGlobalCloud_ProvidesCorrectEnvironmentInfo()
+        public void GetAzureAuthorityHost_ForAzureGlobalCloud_ProvidesCorrectAuthorityHost()
         {
             // Arrange
             var azureCloud = AzureCloud.Global;
@@ -92,7 +92,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void GetAzureAuthorityHost_ForAzureChinaCloud_ProvidesCorrectEnvironmentInfo()
+        public void GetAzureAuthorityHost_ForAzureChinaCloud_ProvidesCorrectAuthorityHost()
         {
             // Arrange
             var azureCloud = AzureCloud.China;
@@ -106,7 +106,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void GetAzureAuthorityHost_ForAzureGermanCloud_ProvidesCorrectEnvironmentInfo()
+        public void GetAzureAuthorityHost_ForAzureGermanCloud_ProvidesCorrectAuthorityHost()
         {
             // Arrange
             var azureCloud = AzureCloud.Germany;
@@ -120,7 +120,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void GetAzureAuthorityHost_ForAzureUSGovernmentCloud_ProvidesCorrectEnvironmentInfo()
+        public void GetAzureAuthorityHost_ForAzureUSGovernmentCloud_ProvidesCorrectAuthorityHost()
         {
             // Arrange
             var azureCloud = AzureCloud.UsGov;
