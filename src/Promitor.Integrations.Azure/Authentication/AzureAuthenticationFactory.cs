@@ -69,7 +69,7 @@ namespace Promitor.Integrations.Azure.Authentication
         /// <summary>
         ///     Gets a valid token using a Service Principal or a Managed Identity
         /// </summary>
-        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo, System.Uri azureAuthoriyHost)
+        public static async Task<TokenCredentials> GetTokenCredentialsAsync(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo, System.Uri azureAuthorityHost)
         {
             Guard.NotNullOrWhitespace(resource, nameof(resource));
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
@@ -77,7 +77,7 @@ namespace Promitor.Integrations.Azure.Authentication
 
             TokenCredential tokenCredential;
 
-            var tokenCredentialOptions = new TokenCredentialOptions { AuthorityHost = azureAuthoriyHost };
+            var tokenCredentialOptions = new TokenCredentialOptions { AuthorityHost = azureAuthorityHost };
 
             switch (authenticationInfo.Mode)
             {
