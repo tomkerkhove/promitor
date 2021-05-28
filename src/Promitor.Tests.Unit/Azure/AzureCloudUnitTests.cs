@@ -88,7 +88,7 @@ namespace Promitor.Tests.Unit.Azure
             var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
 
             // Assert
-            PromitorAssert.Equal(expectedAuthorityHost, actualAuthorityHost);
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Promitor.Tests.Unit.Azure
             var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
 
             // Assert
-            PromitorAssert.Equal(expectedAuthorityHost, actualAuthorityHost);
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Promitor.Tests.Unit.Azure
             var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
 
             // Assert
-            PromitorAssert.Equal(expectedAuthorityHost, actualAuthorityHost);
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace Promitor.Tests.Unit.Azure
             var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
 
             // Assert
-            PromitorAssert.Equal(expectedAuthorityHost, actualAuthorityHost);
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
         }
 
         [Fact]
