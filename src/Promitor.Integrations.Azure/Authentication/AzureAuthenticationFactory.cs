@@ -88,7 +88,7 @@ namespace Promitor.Integrations.Azure.Authentication
                     tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential( "",tokenCredentialOptions);
+                    tokenCredential = new ManagedIdentityCredential(options:tokenCredentialOptions);
                     break;
                 default:
                     tokenCredential = new DefaultAzureCredential();
