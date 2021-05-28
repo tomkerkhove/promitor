@@ -124,7 +124,7 @@ namespace Promitor.Tests.Unit.Azure
         {
             // Arrange
             var azureCloud = AzureCloud.UsGov;
-            var expectedEnvironment = AzureAuthorityHosts.AzureGovernment;
+            var expectedAuthorityHost = AzureAuthorityHosts.AzureGovernment;
 
             // Act
             var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
