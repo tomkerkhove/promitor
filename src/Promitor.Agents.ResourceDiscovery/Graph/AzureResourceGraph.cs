@@ -243,9 +243,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         private async Task<ResourceGraphClient> CreateClientAsync()
         {
             var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureEnvironment();
+            var azureAuthorityHost = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureAuthorityHost();
 
-            var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo);
-            var resourceGraphClient = new ResourceGraphClient(credentials);
+            var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthorityHost);
+            var resourceManagerBaseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);
+
+            var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials);
 
             var version = Promitor.Core.Version.Get();
             var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);
