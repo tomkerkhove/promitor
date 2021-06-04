@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Azure.Identity;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Promitor.Core.Extensions;
 using Promitor.Core.Serialization.Enum;
@@ -74,6 +75,72 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<ArgumentOutOfRangeException>(()=> azureCloud.GetAzureEnvironment());
+        }
+
+        [Fact]
+        public void GetAzureAuthorityHost_ForAzureGlobalCloud_ProvidesCorrectAuthorityHost()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Global;
+            var expectedAuthorityHost = AzureAuthorityHosts.AzurePublicCloud;
+
+            // Act
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+
+            // Assert
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
+        }
+
+        [Fact]
+        public void GetAzureAuthorityHost_ForAzureChinaCloud_ProvidesCorrectAuthorityHost()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.China;
+            var expectedAuthorityHost = AzureAuthorityHosts.AzureChina;
+
+            // Act
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+
+            // Assert
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
+        }
+
+        [Fact]
+        public void GetAzureAuthorityHost_ForAzureGermanCloud_ProvidesCorrectAuthorityHost()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Germany;
+            var expectedAuthorityHost = AzureAuthorityHosts.AzureGermany;
+
+            // Act
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+
+            // Assert
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
+        }
+
+        [Fact]
+        public void GetAzureAuthorityHost_ForAzureUSGovernmentCloud_ProvidesCorrectAuthorityHost()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.UsGov;
+            var expectedAuthorityHost = AzureAuthorityHosts.AzureGovernment;
+
+            // Act
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+
+            // Assert
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
+        }
+
+        [Fact]
+        public void GetAzureAuthorityHost_ForUnspecifiedAzureCloud_ThrowsException()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Unspecified;
+
+            // Act & Assert
+            Assert.Throws<ArgumentOutOfRangeException>(() => azureCloud.GetAzureAuthorityHost());
         }
     }
 }

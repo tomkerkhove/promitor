@@ -6,14 +6,8 @@ version:
 
 #### Scraper
 
-- {{% tag added %}} Provide scraper for Azure Monitor Autoscale ([docs](https://promitor.io/configuration/v2.x/metrics/monitor-autoscale)
- | [#1593](https://github.com/tomkerkhove/promitor/issues/1593))
-- {{% tag added %}} Provide capability to transform metric labels in Prometheus ([docs](https://promitor.io/configuration/v2.x/runtime/scraper#prometheus-scraping-endpoint)
-- {{% tag added %}} Provide capability to limit the amount of resources to query when using filters/dimensions ([docs](https://promitor.io/configuration/v2.x/metrics)
- | [#1596](https://github.com/tomkerkhove/promitor/issues/1596))
-- {{% tag added %}} Provide capability to define default custom labels  ([docs](https://promitor.io/configuration/v2.x/metrics/)
- | [#1608](https://github.com/tomkerkhove/promitor/issues/1608))
+None.
 
 #### Resource Discovery
 
-None.
+- {{% tag fixed %}} Support for authenticating to Azure clouds other than public ([#1646](https://github.com/tomkerkhove/promitor/issues/1646))
