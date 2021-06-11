@@ -12,12 +12,16 @@
 <a href="https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/" rel="nofollow"><img src="https://img.shields.io/docker/stars/tomkerkhove/promitor-agent-scraper.svg?style=flat-square" alt="Docker Stars"></a>
 <a href="https://artifacthub.io/packages/search?repo=promitor" rel="nofollow"><img src="https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/promitor&style=flat-square" alt="Artifact Hub"></a>
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a>
+<a href="https://app.fossa.com/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor.svg?type=shield"/></a>
 </p>
 
 **Promitor** is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
 <!-- markdownlint-enable -->
 
 <!-- markdownlint-disable MD002 -->
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor?ref=badge_large)
 
 ## Documentation
 
