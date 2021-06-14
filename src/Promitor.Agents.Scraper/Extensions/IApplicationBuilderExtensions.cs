@@ -29,13 +29,12 @@ namespace Promitor.Agents.Scraper.Extensions
                     {
                         requestDurationsOptions.IncludePath = true;
                         requestDurationsOptions.IncludeMethod = true;
-                        requestDurationsOptions.Buckets = new double[0];
-                        //requestDurationsOptions.MetricName = "promitor_runtime_http_request";
+                        requestDurationsOptions.MetricName = "promitor_runtime_http_request_duration_seconds";
                     });
                     app.UsePrometheusServer(prometheusOptions =>
                     {
                         prometheusOptions.MapPath = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
-                        prometheusOptions.UseDefaultCollectors = true;
+                        prometheusOptions.UseDefaultCollectors = false;
                     });
                 }
             }
