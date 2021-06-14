@@ -44,20 +44,25 @@ The endpoint provides more details on integration with following dependencies:
 You can easily monitor the performance of Promitor through the following Prometheus metrics:
 
 - `promitor_scrape_error` - Provides indication of all configured metrics that were unable to be scraped in Azure Monitor
-```
+
+```prom
 # HELP promitor_scrape_error Provides an indication that the scraping of the resource has failed
 # TYPE promitor_scrape_error gauge
 promitor_scrape_error{metric_name="promitor_demo_app_insights_dependency_duration_200_OK",resource_group="docker-hub-metrics",resource_name="Microsoft.Insights/Components/docker-hub-metrics",resource_type="Generic",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27"} 1 1623691623231
 ```
+
 - `promitor_scrape_success` - Provides indication of all configured metrics that were successfully scraped and reported in
 the configured metric sinks
-```
+
+```text
 # HELP promitor_scrape_success Provides an indication that the scraping of the resource was successful
 # TYPE promitor_scrape_success gauge
 promitor_scrape_success{metric_name="promitor_demo_automation_update_deployment_machine_runs",resource_group="promitor-sources",resource_name="promitor-sandbox",resource_type="AutomationAccount",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27"} 1 1623691626335
 ```
+
 - `promitor_runtime_http_request_duration_seconds` - Provides information related to the performance of HTTP routes and outcomes
-```
+
+```text
 # HELP promitor_runtime_http_request_duration_seconds duration histogram of http responses labeled with: status_code, method, path
 # TYPE promitor_runtime_http_request_duration_seconds histogram
 promitor_runtime_http_request_duration_seconds_bucket{status_code="200",method="GET",path="/scrape",le="0.005"} 30
