@@ -11,4 +11,4 @@ version:
 
 #### Resource Discovery
 
-None.
+- {{% tag fixed %}} Support for authenticating to Azure clouds other than public ([#1646](https://github.com/tomkerkhove/promitor/issues/1646))

@@ -30,7 +30,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection ScheduleMetricScraping(this IServiceCollection services)
         {
             var serviceProviderToCreateJobsWith = services.BuildServiceProvider();
-            var metricsProvider = serviceProviderToCreateJobsWith.GetService<IMetricsDeclarationProvider>();
+            var metricsProvider = serviceProviderToCreateJobsWith.GetRequiredService<IMetricsDeclarationProvider>();
             var metrics = metricsProvider.Get(applyDefaults: true);
 
             var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
