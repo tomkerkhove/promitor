@@ -86,11 +86,13 @@ and vote for features!
     - [Required permissions for Azure Monitor](configuration/v2.x/azure-authentication#required-permissions-for-azure-monitor)
     - [Required permissions for Azure Resource Graph](configuration/v2.x/azure-authentication#required-permissions-for-azure-resource-graph)
 - **Operations**
-  - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
-  - [Azure Monitor Integration](operations#azure-monitor-integration)
-  - [Configuration REST APIs](operations#configuration-rest-apis)
   - [Health](operations#health)
+  - [Performance](operations#performance)
   - [System](operations#system)
+  - [Integrations](operations#integrations)
+    - [Azure Resource Manager API - Consumption & Throttling](operations#azure-resource-manager-api---consumption--throttling)
+    - [Azure Monitor](operations#azure-monitor)
+  - [Configuration REST APIs](operations#configuration-rest-apis)
 - **Walkthroughs**
   - [Deploying Promitor, Prometheus, and Grafana on an AKS Cluster](/walkthrough/scrape-promitor-with-prometheus-on-azure-kubernetes-service)
   - [Using Managed Identity with Promitor on an AKS Cluster](/walkthrough/use-promitor-with-managed-identity)
