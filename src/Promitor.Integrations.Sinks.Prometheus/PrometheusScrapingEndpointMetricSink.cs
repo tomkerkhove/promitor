@@ -119,13 +119,22 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 }
             }
 
+            // Add the tenant id
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            if (labels.ContainsKey("tenant_id") == false)
+            {
+                labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
+            }
+
             // Transform labels, if need be
-            if(_prometheusConfiguration.CurrentValue.Labels != null)
+            if (_prometheusConfiguration.CurrentValue.Labels != null)
             {
                 labels = LabelTransformer.TransformLabels(_prometheusConfiguration.CurrentValue.Labels.Transformation,labels);
             }
 
-            return labels;
+            var orderedLabels = labels.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            return orderedLabels;
         }
     }
 }
