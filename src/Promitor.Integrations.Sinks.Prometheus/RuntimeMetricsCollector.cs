@@ -42,10 +42,10 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
             }
 
-            labels.OrderBy(kvp => kvp.Key);
+            var orderedLabels = labels.OrderBy(kvp => kvp.Key).ToDictionary(kvp=>kvp.Key, kvp=>kvp.Value);
 
-            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: labels.Keys.ToArray());
-            gauge.WithLabels(labels.Values.ToArray()).Set(value);
+            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: orderedLabels.Keys.ToArray());
+            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(value);
         }
     }
 }
