@@ -102,11 +102,26 @@ namespace Promitor.Core.Scraping
             }
         }
 
+        private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
+        private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
+
         private void ReportScrapingOutcome(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
         {
-            var metricName = isSuccessful ? RuntimeMetricNames.ScrapeSuccessful : RuntimeMetricNames.ScrapeError;
-            var metricDescription = $"Provides an indication that the scraping of the resource {(isSuccessful ? "was successful" : "has failed")}";
+            // We reset all values, by default
+            double successfulMetricValue = 0;
+            double unsuccessfulMetricValue = 0;
 
+            // Based on the result, we reflect that in the metric
+            if (isSuccessful)
+            {
+                successfulMetricValue = 1;
+            }
+            else
+            {
+                unsuccessfulMetricValue = 1;
+            }
+
+            // Enrich with context
             var labels = new Dictionary<string, string>
             {
                 {"metric_name", scrapeDefinition.PrometheusMetricDefinition.Name},
@@ -116,7 +131,9 @@ namespace Promitor.Core.Scraping
                 {"subscription_id", scrapeDefinition.SubscriptionId}
             };
 
-            RuntimeMetricsCollector.SetGaugeMeasurement(metricName, metricDescription, 1, labels);
+            // Report!
+            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)
