@@ -1,3 +1,4 @@
+<img src="https://static.scarf.sh/a.png?x-pxid=a425a60c-d7db-4b52-a4a1-7346343f9f8e" />
 <!-- Because this file contains custom formatting for the heading, we need to
     disable some of the markdownlint rules -->
 <!-- markdownlint-disable -->
