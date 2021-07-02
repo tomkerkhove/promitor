@@ -107,14 +107,17 @@ support. Are you having issues or feature requests?
 
 Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
-## Customers
+## End-users
 
-We are proud to have the following customer(s) running Promitor in production:
+We are proud to have the following end-users(s) running Promitor in production:
 
-![ResDiary](./media/logos/customers/resdiary.png)
-![Trynz](./media/logos/customers/trynz.png)
-![Vsoft](./media/logos/customers/vsoft.png)
-![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
+![Adobe](./media/logos/end-users/adobe.png)
+![ResDiary](./media/logos/end-users/resdiary.png)
+![Trynz](./media/logos/end-users/trynz.png)
+![Vsoft](./media/logos/end-users/vsoft.png)
+![Walmart Labs](./media/logos/end-users/walmart-labs.jpg)
+
+Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
 Learn more about how they are using Promitor:
 

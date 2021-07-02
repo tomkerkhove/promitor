@@ -24,14 +24,15 @@
 
 All documentation is available on [promitor.io](https://promitor.io)
 
-## Customers
+## End-users
 
-We are proud to have the following customer(s) running Promitor in production:
+We are proud to have the following end-users(s) running Promitor in production:
 
-![ResDiary](./docs/media/logos/customers/resdiary.png)
-![Trynz](./docs/media/logos/customers/trynz.png)
-![Vsoft](./docs/media/logos/customers/vsoft.png)
-![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
+![Adobe](./docs/media/logos/end-users/adobe.png)
+![ResDiary](./docs/media/logos/end-users/resdiary.png)
+![Trynz](./docs/media/logos/end-users/trynz.png)
+![Vsoft](./docs/media/logos/end-users/vsoft.png)
+![Walmart Labs](./docs/media/logos/end-users/walmart-labs.jpg)
 
 Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
