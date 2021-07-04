@@ -2,7 +2,7 @@
 layout: default
 title: Promitor - Bringing Azure Monitor metrics where you need them
 ---
-
+<img src="https://static.scarf.sh/a.png?x-pxid=3d288d64-88d8-4196-b377-f55dc7ce7269" />
 [![License](https://img.shields.io/github/license/mashape/apistatus.svg?style=flat-square)](https://github.com/tomkerkhove/promitor/blob/master/LICENSE)
 [![Build Status](https://img.shields.io/azure-devops/build/tomkerkhove/promitor/50/master.svg?label=Scraper%20Agent%20-%20CI&style=flat-square)](https://dev.azure.com/tomkerkhove/Promitor/_build/latest?definitionId=50&branchName=master)
 [![Docker Pulls](https://img.shields.io/docker/pulls/tomkerkhove/promitor-agent-scraper.svg?style=flat-square)](https://hub.docker.com/r/tomkerkhove/promitor-agent-scraper/)
@@ -109,14 +109,17 @@ support. Are you having issues or feature requests?
 
 Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
-## Customers
+## End-users
 
-We are proud to have the following customer(s) running Promitor in production:
+We are proud to have the following end-users(s) running Promitor in production:
 
-![ResDiary](./media/logos/customers/resdiary.png)
-![Trynz](./media/logos/customers/trynz.png)
-![Vsoft](./media/logos/customers/vsoft.png)
-![Walmart Labs](./media/logos/customers/walmart-labs.jpg)
+![Adobe](./media/logos/end-users/adobe.png)
+![ResDiary](./media/logos/end-users/resdiary.png)
+![Trynz](./media/logos/end-users/trynz.png)
+![Vsoft](./media/logos/end-users/vsoft.png)
+![Walmart Labs](./media/logos/end-users/walmart-labs.jpg)
+
+Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
 Learn more about how they are using Promitor:
 

@@ -1,3 +1,4 @@
+<img src="https://static.scarf.sh/a.png?x-pxid=a425a60c-d7db-4b52-a4a1-7346343f9f8e" />
 <!-- Because this file contains custom formatting for the heading, we need to
     disable some of the markdownlint rules -->
 <!-- markdownlint-disable -->
@@ -23,14 +24,15 @@
 
 All documentation is available on [promitor.io](https://promitor.io)
 
-## Customers
+## End-users
 
-We are proud to have the following customer(s) running Promitor in production:
+We are proud to have the following end-users(s) running Promitor in production:
 
-![ResDiary](./docs/media/logos/customers/resdiary.png)
-![Trynz](./docs/media/logos/customers/trynz.png)
-![Vsoft](./docs/media/logos/customers/vsoft.png)
-![Walmart Labs](./docs/media/logos/customers/walmart-labs.jpg)
+![Adobe](./docs/media/logos/end-users/adobe.png)
+![ResDiary](./docs/media/logos/end-users/resdiary.png)
+![Trynz](./docs/media/logos/end-users/trynz.png)
+![Vsoft](./docs/media/logos/end-users/vsoft.png)
+![Walmart Labs](./docs/media/logos/end-users/walmart-labs.jpg)
 
 Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
@@ -50,6 +52,7 @@ Learn more about our support options [here](https://github.com/tomkerkhove/promi
 
 Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/sponsors/tomkerkhove/).
 
+[![Carlo Garcia-Mier](./media/supporters/CarloGarcia.jpg)](https://github.com/CarloGarcia)
 [![Karl Ots](./media/supporters/karlgots.jpg)](https://github.com/karlgots)
 [![Lovelace Engineering](./media/supporters/LovelaceEngineering.png)](https://github.com/LovelaceEngineering)
 [![Nills Franssens](./media/supporters/nillsf.jpg)](https://github.com/NillsF)
