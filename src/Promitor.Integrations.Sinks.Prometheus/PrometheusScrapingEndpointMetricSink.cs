@@ -71,9 +71,11 @@ namespace Promitor.Integrations.Sinks.Prometheus
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
-            
-            var gauge = CreateGauge(metricName, metricDescription, labels, enableMetricTimestamps);
-            gauge.WithLabels(labels.Values.ToArray()).Set(metricValue);
+
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var gauge = CreateGauge(metricName, metricDescription, orderedLabels, enableMetricTimestamps);
+            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(metricValue);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
 
