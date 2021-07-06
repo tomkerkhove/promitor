@@ -71,9 +71,11 @@ namespace Promitor.Integrations.Sinks.Prometheus
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
-            
-            var gauge = CreateGauge(metricName, metricDescription, labels, enableMetricTimestamps);
-            gauge.WithLabels(labels.Values.ToArray()).Set(metricValue);
+
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            var gauge = CreateGauge(metricName, metricDescription, orderedLabels, enableMetricTimestamps);
+            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(metricValue);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
 
@@ -119,13 +121,22 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 }
             }
 
+            // Add the tenant id
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            if (labels.ContainsKey("tenant_id") == false)
+            {
+                labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
+            }
+
             // Transform labels, if need be
-            if(_prometheusConfiguration.CurrentValue.Labels != null)
+            if (_prometheusConfiguration.CurrentValue.Labels != null)
             {
                 labels = LabelTransformer.TransformLabels(_prometheusConfiguration.CurrentValue.Labels.Transformation,labels);
             }
 
-            return labels;
+            var orderedLabels = labels.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            return orderedLabels;
         }
     }
 }

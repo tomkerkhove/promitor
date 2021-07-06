@@ -5,6 +5,7 @@ using CronScheduler.Extensions.Scheduler;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
+using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
@@ -16,6 +17,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         IScheduledJob
     {
         private readonly ScrapeDefinition<IAzureResourceDefinition> _metricScrapeDefinition;
+        private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
         private readonly AzureMonitorClient _azureMonitorClient;
         private readonly MetricSinkWriter _metricSinkWriter;
 
@@ -26,9 +28,11 @@ namespace Promitor.Agents.Scraper.Scheduling
             MetricSinkWriter metricSinkWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClient azureMonitorClient,
+            IRuntimeMetricsCollector runtimeMetricsCollector,
             ILogger<ResourceScrapingJob> logger)
             : base(jobName, logger)
         {
+            Guard.NotNull(runtimeMetricsCollector, nameof(runtimeMetricsCollector));
             Guard.NotNull(metricScrapeDefinition, nameof(metricScrapeDefinition));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
@@ -37,6 +41,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _metricScrapeDefinition = metricScrapeDefinition;
             _metricSinkWriter = metricSinkWriter;
 
+            _runtimeMetricsCollector = runtimeMetricsCollector;
             _metricScraperFactory = metricScraperFactory;
             _azureMonitorClient = azureMonitorClient;
         }
@@ -59,7 +64,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             Logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}", metricDefinitionDefinition.PrometheusMetricDefinition.Name, metricDefinitionDefinition.Resource.ResourceType);
 
-            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _metricSinkWriter, _azureMonitorClient);
+            var scraper = _metricScraperFactory.CreateScraper(metricDefinitionDefinition.Resource.ResourceType, _metricSinkWriter, _runtimeMetricsCollector, _azureMonitorClient);
             await scraper.ScrapeAsync(metricDefinitionDefinition);
         }
     }

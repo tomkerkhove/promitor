@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
+using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -33,12 +35,18 @@ namespace Promitor.Core.Scraping
 
             Logger = scraperConfiguration.Logger;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
+            RuntimeMetricsCollector = scraperConfiguration.RuntimeMetricsCollector;
         }
 
         /// <summary>
         ///     Client to interact with Azure Monitor
         /// </summary>
         protected AzureMonitorClient AzureMonitorClient { get; }
+
+        /// <summary>
+        ///     Collector to send metrics related to the runtime
+        /// </summary>
+        public IRuntimeMetricsCollector RuntimeMetricsCollector { get; }
 
         /// <summary>
         ///     Provide logger to scraper
@@ -77,15 +85,55 @@ namespace Promitor.Core.Scraping
                 LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
 
                 await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
+
+                ReportScrapingOutcome(scrapeDefinition, isSuccessful: true);
             }
             catch (ErrorResponseException errorResponseException)
             {
                 HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
+                
+                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
             }
             catch (Exception exception)
             {
                 Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
+                
+                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
             }
+        }
+
+        private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
+        private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
+
+        private void ReportScrapingOutcome(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
+        {
+            // We reset all values, by default
+            double successfulMetricValue = 0;
+            double unsuccessfulMetricValue = 0;
+
+            // Based on the result, we reflect that in the metric
+            if (isSuccessful)
+            {
+                successfulMetricValue = 1;
+            }
+            else
+            {
+                unsuccessfulMetricValue = 1;
+            }
+
+            // Enrich with context
+            var labels = new Dictionary<string, string>
+            {
+                {"metric_name", scrapeDefinition.PrometheusMetricDefinition.Name},
+                {"resource_group", scrapeDefinition.Resource.ResourceGroupName},
+                {"resource_name", scrapeDefinition.Resource.ResourceName},
+                {"resource_type", scrapeDefinition.Resource.ResourceType.ToString()},
+                {"subscription_id", scrapeDefinition.SubscriptionId}
+            };
+
+            // Report!
+            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)

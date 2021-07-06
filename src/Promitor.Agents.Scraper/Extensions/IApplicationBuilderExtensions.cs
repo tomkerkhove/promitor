@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Prometheus.Client.AspNetCore;
+using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 
 // ReSharper disable once CheckNamespace
@@ -24,6 +25,12 @@ namespace Promitor.Agents.Scraper.Extensions
                 if (string.IsNullOrWhiteSpace(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath) == false)
                 {
                     logger.LogInformation("Adding Prometheus sink to expose on {PrometheusUrl}", metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath);
+                    app.UsePrometheusRequestDurations(requestDurationsOptions =>
+                    {
+                        requestDurationsOptions.IncludePath = true;
+                        requestDurationsOptions.IncludeMethod = true;
+                        requestDurationsOptions.MetricName = "promitor_runtime_http_request_duration_seconds";
+                    });
                     app.UsePrometheusServer(prometheusOptions =>
                     {
                         prometheusOptions.MapPath = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;

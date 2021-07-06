@@ -76,7 +76,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var response = await InteractWithAzureResourceGraphAsync(queryName, query, targetSubscriptions, async graphClient =>
             {
-                var queryRequest = new QueryRequest(targetSubscriptions, query);
+                var queryOptions = new QueryRequestOptions
+                {
+                    ResultFormat = ResultFormat.Table
+                };
+                var queryRequest = new QueryRequest(targetSubscriptions, query, options: queryOptions);
                 return await graphClient.ResourcesAsync(queryRequest);
             });
 

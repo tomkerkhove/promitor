@@ -100,8 +100,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Keys.ToArray(), defaultLabels.Keys.ToArray()))), Times.Once());
-            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllArrayEntriesAreSpecified(specified, scrapeResult.Labels.Values.ToArray(), defaultLabels.Values.ToArray()))), Times.Once());
+            mocks.Factory.Verify(mock => mock.CreateGauge(metricName, metricDescription, It.IsAny<bool>(), It.Is<string[]>(specified => EnsureAllLabelKeysAreSpecified(specified, scrapeResult.Labels.Keys.ToArray(), defaultLabels.Keys.ToArray()))), Times.Once());
+            mocks.MetricFamily.Verify(mock => mock.WithLabels(It.Is<string[]>(specified => EnsureAllLabelValuesAreSpecified(specified, scrapeResult.Labels.Values.ToArray(), defaultLabels.Values.ToArray()))), Times.Once());
             mocks.Gauge.Verify(mock => mock.Set(metricValue), Times.Once());
         }
 
@@ -349,10 +349,21 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var outcome = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
             return outcome;
         }
-
-        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels)
+        
+        private bool EnsureAllLabelValuesAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels)
         {
-            var expectedTotalLabelCount = expectedDefaultLabels.Length + expectedMetricLabels.Length;
+            return EnsureAllArrayEntriesAreSpecified(specified, expectedMetricLabels, expectedDefaultLabels, "tenantId");
+        }
+
+        private bool EnsureAllLabelKeysAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels)
+        {
+            return EnsureAllArrayEntriesAreSpecified(specified, expectedMetricLabels, expectedDefaultLabels, "tenant_id");
+        }
+
+        private bool EnsureAllArrayEntriesAreSpecified(string[] specified, string[] expectedMetricLabels, string[] expectedDefaultLabels, string expectedTenantId)
+        {
+            // We are adding 1 for the tenant id label
+            var expectedTotalLabelCount = expectedDefaultLabels.Length + expectedMetricLabels.Length + 1;
             if (specified.Length != expectedTotalLabelCount)
             {
                 return false;
@@ -363,6 +374,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             {
                 isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
             }
+
+            if(isSuccessful)
+            {
+                isSuccessful = specified.Contains(expectedTenantId);
+            }
+
             return isSuccessful;
         }
 

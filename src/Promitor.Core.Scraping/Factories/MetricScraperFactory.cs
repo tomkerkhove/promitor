@@ -2,6 +2,7 @@
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
+using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
@@ -25,10 +26,11 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all sinks</param>
+        /// <param name="runtimeMetricsCollector">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, AzureMonitorClient azureMonitorClient)
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector runtimeMetricsCollector, AzureMonitorClient azureMonitorClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, runtimeMetricsCollector, _logger);
 
             switch (metricDefinitionResourceType)
             {

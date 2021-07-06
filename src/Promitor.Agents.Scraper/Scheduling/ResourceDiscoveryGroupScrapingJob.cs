@@ -112,7 +112,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             {
                 var scrapingDefinition = _metricDefinition.CreateScrapeDefinition(discoveredResource, _azureMetadata);
 
-                var scraper = _metricScraperFactory.CreateScraper(scrapingDefinition.Resource.ResourceType, _metricSinkWriter, azureMonitorClient);
+                var scraper = _metricScraperFactory.CreateScraper(scrapingDefinition.Resource.ResourceType, _metricSinkWriter, _runtimeMetricCollector, azureMonitorClient);
                 await scraper.ScrapeAsync(scrapingDefinition);
             }
             catch (Exception exception)
