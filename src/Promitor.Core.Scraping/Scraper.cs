@@ -125,7 +125,7 @@ namespace Promitor.Core.Scraping
             var labels = new Dictionary<string, string>
             {
                 {"metric_name", scrapeDefinition.PrometheusMetricDefinition.Name},
-                {"resource_group", scrapeDefinition.Resource.ResourceGroupName},
+                {"resource_group", scrapeDefinition.ResourceGroupName},
                 {"resource_name", scrapeDefinition.Resource.ResourceName},
                 {"resource_type", scrapeDefinition.Resource.ResourceType.ToString()},
                 {"subscription_id", scrapeDefinition.SubscriptionId}
