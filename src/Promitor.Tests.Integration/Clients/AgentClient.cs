@@ -55,7 +55,8 @@ namespace Promitor.Tests.Integration.Clients
             try
             {
                 var rawResponse = await response.Content.ReadAsStringAsync();
-                context.Add("Body", rawResponse);
+                // TODO: Uncomment for troubleshooting
+                // context.Add("Body", rawResponse);
             }
             finally
             {

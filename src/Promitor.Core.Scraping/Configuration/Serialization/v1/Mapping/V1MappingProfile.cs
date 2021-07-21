@@ -66,7 +66,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MetricDefinitionV1, MetricDefinition>()
                 .ForMember(m => m.PrometheusMetricDefinition, o => o.MapFrom(v1 => v1));
 
-            CreateMap<AzureResourceDefinitionV1, IAzureResourceDefinition>()
+            CreateMap<AzureResourceDefinitionV1, AzureResourceDefinition>()
                 .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
                 .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
