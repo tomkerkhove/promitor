@@ -36,13 +36,13 @@ namespace Promitor.Tests.Integration.Clients
         public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName)
         {
             // Create retry to poll for metric to show up
-            const int MaxRetries = 5;
-            var pollPolicy = Policy.HandleResult<List<IMetric>>(x => x == null || x.Find(x => x.Name == expectedMetricName) == null)
+            const int maxRetries = 5;
+            var pollPolicy = Policy.HandleResult<List<IMetric>>(metrics => metrics?.Find(metric => metric.Name == expectedMetricName) == null)
                                    .WaitAndRetryAsync(5,
                                                   retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                                                   (exception, timeSpan, retryCount, context) =>
                                                   {
-                                                      Logger.LogInformation($"Metric {expectedMetricName} was not found, retrying ({retryCount}/{MaxRetries}).");
+                                                      Logger.LogInformation($"Metric {expectedMetricName} was not found, retrying ({retryCount}/{maxRetries}).");
                                                   });
 
             // Poll
@@ -54,7 +54,7 @@ namespace Promitor.Tests.Integration.Clients
 
             // Interpret results
             var matchingMetric = foundMetrics.Find(x => x.Name == expectedMetricName);
-            return matchingMetric != null ? (Gauge)matchingMetric : null;
+            return (Gauge) matchingMetric;
         }
     }
 }

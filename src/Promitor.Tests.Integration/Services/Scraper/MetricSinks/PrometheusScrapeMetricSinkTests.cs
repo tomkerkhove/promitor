@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Promitor.Agents.Core;
 using Promitor.Tests.Integration.Clients;
@@ -33,7 +32,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         [InlineData("promitor_ratelimit_arm")]
         [InlineData("promitor_scrape_success")]
         [InlineData("promitor_scrape_error")]
-        public async Task Prometheus_Scrape_ReturnsArmRateLimitingHeader(string expectedMetricName)
+        public async Task Prometheus_Scrape_ExpectedMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
             var scraperClient = new ScraperClient(Configuration, Logger);
