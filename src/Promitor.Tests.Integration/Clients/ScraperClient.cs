@@ -1,7 +1,12 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Promitor.Parsers.Prometheus.Core.Models;
+using Promitor.Parsers.Prometheus.Core.Models.Interfaces;
 
 namespace Promitor.Tests.Integration.Clients
 {
@@ -26,6 +31,30 @@ namespace Promitor.Tests.Integration.Clients
         {
             var scrapeUri = Configuration["Agents:Scraper:Prometheus:ScrapeUri"];
             return await GetAsync($"/{scrapeUri}");
+        }
+
+        public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName)
+        {
+            // Create retry to poll for metric to show up
+            const int MaxRetries = 5;
+            var pollPolicy = Policy.HandleResult<List<IMetric>>(x => x == null || x.Find(x => x.Name == expectedMetricName) == null)
+                                   .WaitAndRetryAsync(5,
+                                                  retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                                                  (exception, timeSpan, retryCount, context) =>
+                                                  {
+                                                      Logger.LogInformation($"Metric {expectedMetricName} was not found, retrying ({retryCount}/{MaxRetries}).");
+                                                  });
+
+            // Poll
+            var foundMetrics = await pollPolicy.ExecuteAsync(async () =>
+            {
+                var scrapeResponse = await ScrapeAsync();
+                return await scrapeResponse.ReadAsPrometheusMetricsAsync();
+            });
+
+            // Interpret results
+            var matchingMetric = foundMetrics.Find(x => x.Name == expectedMetricName);
+            return matchingMetric != null ? (Gauge)matchingMetric : null;
         }
     }
 }
