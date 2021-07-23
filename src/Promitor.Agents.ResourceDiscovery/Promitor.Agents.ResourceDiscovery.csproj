@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>3.1.16</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.17</RuntimeFrameworkVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
     <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
