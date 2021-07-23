@@ -21,7 +21,7 @@
     <PackageReference Include="Guard.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.17.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.37.1" />
-    <PackageReference Include="Prometheus.Client" Version="4.4.0" />
+    <PackageReference Include="Prometheus.Client" Version="4.5.2" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 
