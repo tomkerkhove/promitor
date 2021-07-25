@@ -23,7 +23,7 @@ stages:
    - job: Lint
      displayName: Lint
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      steps:
      - powershell: |
          $prNumber = '$(System.PullRequest.PullRequestNumber)'
