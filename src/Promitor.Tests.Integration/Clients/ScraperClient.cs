@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Polly;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Polly;
 using Promitor.Parsers.Prometheus.Core.Models;
 using Promitor.Parsers.Prometheus.Core.Models.Interfaces;
 
