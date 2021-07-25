@@ -31,7 +31,7 @@ stages:
    - job: DetermineVersion
      displayName: Determine Version
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      steps:
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/versioning/determine-pr-version.yml
@@ -48,7 +48,7 @@ stages:
      displayName: Build Codebase
      condition: succeeded()
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      steps:
      - template: templates/build/build-solution.yml
        parameters:
@@ -81,7 +81,7 @@ stages:
      displayName: Run Unit Tests
      condition: succeeded()
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      steps:
      - template: templates/tests/run-unit-tests.yml
        parameters:
@@ -111,7 +111,7 @@ stages:
      displayName: Build Docker Image (Linux)
      condition: succeeded()
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      variables:
        Tags.Experimental: 'experimental-$(OS.Name)'
        OS.Name: 'linux'

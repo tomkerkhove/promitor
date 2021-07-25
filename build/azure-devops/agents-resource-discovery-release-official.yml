@@ -63,7 +63,7 @@ stages:
    - job: DetermineVersion
      displayName: Determine Version
      pool:
-       vmImage: ubuntu-16.04
+       vmImage: ubuntu-latest
      steps:
      - template: templates/versioning/determine-major-minor-version.yml
      - template: templates/utils/persist-variable.yml
@@ -76,7 +76,7 @@ stages:
   dependsOn: Init
   displayName: Linux Docker image
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   variables:
   - name: OS.Name
     value: 'linux'
@@ -213,7 +213,7 @@ stages:
     - job: CreateRelease
       displayName: Create Release
       pool:
-        vmImage: ubuntu-16.04
+        vmImage: ubuntu-latest
       steps:
       - download: current
         artifact: variables
