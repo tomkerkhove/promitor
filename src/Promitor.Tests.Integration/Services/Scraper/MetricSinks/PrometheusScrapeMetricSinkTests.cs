@@ -1,13 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Core;
 using Promitor.Tests.Integration.Clients;
+using Promitor.Tests.Integration.Data;
 using Promitor.Tests.Integration.Extensions;
 using Xunit;
 using Xunit.Abstractions;
@@ -20,8 +15,6 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
           : base(testOutput)
         {
         }
-
-        public static IEnumerable<object[]> ConfiguredMetricNames { get; set; } = new List<object[]>();
 
         [Fact]
         public async Task Prometheus_Scrape_ReturnsOk()
@@ -40,7 +33,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         [InlineData("promitor_ratelimit_arm")]
         [InlineData("promitor_scrape_success")]
         [InlineData("promitor_scrape_error")]
-        [ClassData(typeof(TestDataGenerator))]
+        [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task Prometheus_Scrape_ExpectedMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
@@ -57,7 +50,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         }
 
         [Theory]
-        [ClassData(typeof(TestDataGenerator))]
+        [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task Prometheus_Scrape_EveryMetricHasAnErrorMetric(string expectedMetricName)
         {
             // Arrange
@@ -72,7 +65,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         }
 
         [Theory]
-        [ClassData(typeof(TestDataGenerator))]
+        [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task Prometheus_Scrape_EveryMetricHasAnSuccessMetric(string expectedMetricName)
         {
             // Arrange
@@ -98,34 +91,6 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             // Assert
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
             Assert.Equal(ExpectedVersion, response.Headers.GetFirstOrDefaultHeaderValue(HttpHeaders.AgentVersion));
-        }
-    }
-    
-    public class TestDataGenerator : IEnumerable<object[]>
-    {
-        private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
-
-        IEnumerator<object[]> IEnumerable<object[]>.GetEnumerator()
-        {
-            var scraperClient = new ScraperClient(_configuration, _logger);
-            var declaration = scraperClient.GetMetricDeclarationAsync().Result;
-            return declaration.Select(x => new object[] { x.PrometheusMetricDefinition.Name }).GetEnumerator();
-        }
-
-        public IEnumerator GetEnumerator() => GetEnumerator();
-
-        public TestDataGenerator()
-        {
-            _logger = NullLogger<TestDataGenerator>.Instance;
-
-            // TODO: Move to central place and re-use for regular tests
-            // The appsettings.local.json allows users to override (gitignored) settings locally for testing purposes
-            _configuration = new ConfigurationBuilder()
-                .AddJsonFile(path: "appsettings.json")
-                .AddJsonFile(path: "appsettings.local.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build();
         }
     }
 }
