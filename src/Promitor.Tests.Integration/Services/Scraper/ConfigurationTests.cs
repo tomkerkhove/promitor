@@ -24,7 +24,7 @@ namespace Promitor.Tests.Integration.Services.Scraper
             var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.GetRuntimeConfigurationAsync();
+            var response = await scraperClient.GetRuntimeConfigurationWithResponseAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -41,7 +41,7 @@ namespace Promitor.Tests.Integration.Services.Scraper
             var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.GetRuntimeConfigurationAsync();
+            var response = await scraperClient.GetRuntimeConfigurationWithResponseAsync();
 
             // Assert
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
@@ -55,7 +55,7 @@ namespace Promitor.Tests.Integration.Services.Scraper
             var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.GetMetricDeclarationAsync();
+            var response = await scraperClient.GetMetricDeclarationWithResponseAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -68,7 +68,7 @@ namespace Promitor.Tests.Integration.Services.Scraper
             var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.GetMetricDeclarationAsync();
+            var response = await scraperClient.GetMetricDeclarationWithResponseAsync();
 
             // Assert
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));

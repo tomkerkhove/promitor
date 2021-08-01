@@ -8,6 +8,10 @@ namespace Promitor.Core.Contracts
     /// </summary>
     public class AzureResourceDefinition : IAzureResourceDefinition
     {
+        public AzureResourceDefinition()
+        {
+        }
+
         /// <summary>
         ///     Constructor
         /// </summary>
@@ -16,7 +20,7 @@ namespace Promitor.Core.Contracts
         /// <param name="resourceGroupName">Specify a resource group to scrape that defers from the default resource group.</param>
         /// <param name="resourceName">Name of the main resource</param>
         public AzureResourceDefinition(ResourceType resourceType, string subscriptionId, string resourceGroupName, string resourceName)
-            : this(resourceType, subscriptionId, resourceGroupName, resourceName, resourceName)
+        : this(resourceType, subscriptionId, resourceGroupName, resourceName, resourceName)
         {
         }
 

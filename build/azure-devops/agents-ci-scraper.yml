@@ -99,9 +99,9 @@ stages:
   - name: Agent.Scraper.BaseUrl
     value: http://localhost:$(Container.Scraper.Port)
   - name: Agent.ResourceDiscovery.BaseUrl
-    value: NOTUSED
+    value: http://localhost:$(Container.ResourceDiscovery.Port)
   - name: Agent.ResourceDiscovery.Version
-    value: NOTUSED
+    value: $(App.Version)
   - name: Container.Scraper.Name
     value: 'promitor.scraper.agent'
   - name: Container.ResourceDiscovery.Name

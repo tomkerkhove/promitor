@@ -13,7 +13,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             Scraping scraping,
             AzureMetricConfiguration azureMetricConfiguration,
             ResourceType resourceType,
-            List<IAzureResourceDefinition> resources)
+            List<AzureResourceDefinition> resources)
         {
             AzureMetricConfiguration = azureMetricConfiguration;
             PrometheusMetricDefinition = prometheusMetricDefinition;
@@ -50,7 +50,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <summary>
         /// Gets or sets the list of resources to scrape.
         /// </summary>
-        public List<IAzureResourceDefinition> Resources { get; set; }
+        public List<AzureResourceDefinition> Resources { get; set; }
 
         /// <summary>
         /// Creates a <see cref="ScrapeDefinition{TResourceDefinition}"/> object for the specified resource.

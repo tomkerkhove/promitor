@@ -2,6 +2,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -13,6 +15,7 @@ namespace Promitor.Agents.Scraper.Controllers.v1
     [Route("api/v1/configuration")]
     public class ConfigurationController : Controller
     {
+        private readonly JsonSerializerSettings _serializerSettings;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<ScraperRuntimeConfiguration> _runtimeConfiguration;
 
@@ -20,6 +23,13 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         {
             _runtimeConfiguration = runtimeConfiguration;
             _metricsDeclarationProvider = metricsDeclarationProvider;
+            
+            _serializerSettings = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+            _serializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
@@ -35,7 +45,12 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         public IActionResult GetMetricDeclaration()
         {
             var scrapeConfiguration = _metricsDeclarationProvider.Get(true);
-            return Ok(scrapeConfiguration.Metrics);
+            
+            var serializedResources = JsonConvert.SerializeObject(scrapeConfiguration.Metrics, _serializerSettings);
+                
+            var response= Content(serializedResources, "application/json");
+            response.StatusCode = (int) HttpStatusCode.OK;
+            return response;
         }
 
         /// <summary>
