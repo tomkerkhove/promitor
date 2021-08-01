@@ -17,7 +17,7 @@
     <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="2.1.0" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="2.1.0" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="2.1.0" />
-    <PackageReference Include="Arcus.WebApi.Logging" Version="1.3.1" />
+    <PackageReference Include="Arcus.WebApi.Logging" Version="1.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.13" />
