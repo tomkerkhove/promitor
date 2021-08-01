@@ -66,6 +66,7 @@ namespace Promitor.Tests.Integration.Data
             return _scraperClient.GetMetricDeclarationAsync().Result;
         }
 
+        // ReSharper disable once FunctionRecursiveOnAllPaths
         public IEnumerator GetEnumerator() => GetEnumerator();
     }
 }
