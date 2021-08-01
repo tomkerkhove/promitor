@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Promitor.Tests.Integration.Clients
 {
@@ -55,8 +56,8 @@ namespace Promitor.Tests.Integration.Clients
             try
             {
                 await response.Content.ReadAsStringAsync();
-                // TODO: Uncomment for troubleshooting
-                // context.Add("Body", rawResponse);
+                // TODO: Uncomment for full payload during troubleshooting
+                //context.Add("Body", rawResponse);
             }
             finally
             {
@@ -64,6 +65,23 @@ namespace Promitor.Tests.Integration.Clients
             }
 
             return response;
+        }
+
+        protected JsonSerializerSettings GetJsonSerializerSettings()
+        {
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects,
+                NullValueHandling = NullValueHandling.Ignore,
+                MetadataPropertyHandling = MetadataPropertyHandling.Ignore
+            };
+            return jsonSerializerSettings;
+        }
+
+        protected TResponse GetDeserializedResponse<TResponse>(string rawResponse)
+        {
+            var jsonSerializerSettings = GetJsonSerializerSettings();
+            return JsonConvert.DeserializeObject<TResponse>(rawResponse, jsonSerializerSettings);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsAsync();
+            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsWithResponseAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -43,7 +43,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsAsync();
+            var response = await resourceDiscoveryClient.GetResourceDiscoveryGroupsWithResponseAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

@@ -39,18 +39,6 @@ metrics:
   resources:
   - autoscaleSettingsName: app-service-autoscaling-rules
     resourceGroupName: demo
-- name: promitor_demo_appplan_percentage_cpu
-  description: "Average percentage of memory usage on an Azure App Plan"
-  resourceType: AppPlan
-  labels:
-    app: promitor
-  azureMetricConfiguration:
-    metricName: MemoryPercentage
-    aggregation:
-      type: Average
-  resources:
-  - appPlanName: promitor-app-plan
-    resourceGroupName: promitor-sources
 - name: azure_container_registry_total_pull_count_discovered
   description: "Amount of images that were pulled from the container registry"
   resourceType: ContainerRegistry
@@ -175,29 +163,6 @@ metrics:
       type: Average
   resources:
   - namespace: promitor-messaging
-- name: promitor_demo_app_insights_dependency_duration
-  description: "Average dependency duration per dependency type"
-  resourceType: Generic
-  azureMetricConfiguration:
-    metricName: dependencies/duration
-    dimension:
-      name: dependency/type
-    aggregation:
-      type: Average
-  resources:
-  - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
-    resourceGroupName: docker-hub-metrics
-- name: promitor_demo_app_insights_dependency_duration_200_OK
-  description: "Average dependency duration per dependency type"
-  resourceType: Generic
-  azureMetricConfiguration:
-    metricName: dependencies/duration
-    aggregation:
-      type: Average
-  resources:
-  - resourceUri: Microsoft.Insights/Components/docker-hub-metrics
-    resourceGroupName: docker-hub-metrics
-    filter: dependency/resultCode eq '200'
 - name: promitor_demo_automation_job_count
   description: "Amount of jobs per Azure Automation account"
   resourceType: AutomationAccount
@@ -234,20 +199,6 @@ metrics:
   resources:
   - resourceGroupName: promitor-sources
     accountName: promitor-sandbox
-- name: promitor_demo_frontdoor_backend_health_per_backend
-  description: "Health percentage for a backed in Azure Front Door"
-  resourceType: FrontDoor
-  labels:
-    app: promitor
-  azureMetricConfiguration:
-    metricName: BackendHealthPercentage
-    dimension:
-      name: Backend
-    aggregation:
-      type: Average
-  resources:
-  - name: promitor-landscape
-    resourceGroupName: promitor-landscape
 - name: promitor_demo_frontdoor_backend_health_per_backend_pool
   description: "Health percentage for a backed in Azure Front Door"
   resourceType: FrontDoor

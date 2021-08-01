@@ -5,10 +5,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Polly;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Polly;
 using Promitor.Parsers.Prometheus.Core.Models;
 using Promitor.Parsers.Prometheus.Core.Models.Interfaces;
 
@@ -35,13 +33,8 @@ namespace Promitor.Tests.Integration.Clients
         {
             var response = await GetMetricDeclarationWithResponseAsync();
             var rawResponse = await response.Content.ReadAsStringAsync();
-            var jsonSerializerSettings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Objects,
-                NullValueHandling = NullValueHandling.Ignore,
-                MetadataPropertyHandling = MetadataPropertyHandling.Ignore
-            };
-            return JsonConvert.DeserializeObject<List<MetricDefinition>>(rawResponse, jsonSerializerSettings);
+            
+            return GetDeserializedResponse<List<MetricDefinition>>(rawResponse);
         }
 
         public async Task<HttpResponseMessage> ScrapeWithResponseAsync()
@@ -84,7 +77,18 @@ namespace Promitor.Tests.Integration.Clients
 
             // Interpret results
             var matchingMetric = foundMetrics.Find(x => filter((Gauge) x));
-            return (Gauge) matchingMetric;
+            var gauge = (Gauge)matchingMetric;
+
+            if (gauge == null)
+            {
+                Logger.LogInformation("No matching gauge was found");
+            }
+            else
+            {
+                Logger.LogInformation("Found matching gauge {Name} with {Measurements} measurements", gauge.Name, gauge.Measurements.Count);
+            }
+
+            return gauge;
         }
     }
 }
