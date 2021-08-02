@@ -16,7 +16,7 @@ metricSinks:
     pageId: y79z9b78ybgs
     systemMetricMapping:
     - id: nfkgnrwpn545
-      promitorMetricName: promitor_demo_appplan_percentage_cpu
+      promitorMetricName: promitor_demo_appplan_autoscale_observed_capacity
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
