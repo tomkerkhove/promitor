@@ -36,7 +36,7 @@ namespace Promitor.Agents.ResourceDiscovery
                 .AddUsability()
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
                 .AddValidationRules()
-                .AddHttpCorrelation()
+                .AddHttpCorrelation(options => options.UpstreamService.ExtractFromRequest = true)
                 .AddHealthChecks()
                     .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);
         }

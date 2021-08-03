@@ -104,7 +104,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
                     var customLabelKey = customLabel.Key.SanitizeForPrometheusLabelKey();
                     if (labels.ContainsKey(customLabelKey))
                     {
-                        _logger.LogWarning("Custom label {CustomLabelName} was already specified with value 'LabelValue' instead of 'CustomLabelValue'. Ignoring...", customLabel.Key, labels[customLabelKey], customLabel.Value);
+                        _logger.LogWarning("Custom label {CustomLabelName} was already specified with value '{LabelValue}' instead of '{CustomLabelValue}'. Ignoring...", customLabel.Key, labels[customLabelKey], customLabel.Value);
                         continue;
                     }
 
