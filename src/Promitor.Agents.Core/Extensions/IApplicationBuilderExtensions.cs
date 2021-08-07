@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.Extensions.Logging;
+using Prometheus.Client.AspNetCore;
+using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Core.Middleware;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -9,6 +12,31 @@ namespace Microsoft.AspNetCore.Builder
     // ReSharper disable once InconsistentNaming
     public static class IApplicationBuilderExtensions
     {
+        /// <summary>
+        ///     Adds the required metric sinks
+        /// </summary>
+        /// <param name="app">Application Builder</param>
+        /// <param name="baseUriPath">Uri to expose all metrics on</param>
+        /// <param name="logger">Logger to write telemetry to</param>
+        public static IApplicationBuilder UsePrometheusMetrics(this IApplicationBuilder app, string baseUriPath, ILogger logger)
+        {
+            logger.LogInformation("Adding Prometheus sink to expose on {PrometheusUrl}", baseUriPath);
+            app.UsePrometheusRequestDurations(requestDurationsOptions =>
+            {
+                requestDurationsOptions.IncludePath = true;
+                requestDurationsOptions.IncludeMethod = true;
+                requestDurationsOptions.MetricName = "promitor_runtime_http_request_duration_seconds";
+            });
+            app.UsePrometheusServer(prometheusOptions =>
+            {
+                prometheusOptions.MapPath = baseUriPath;
+                prometheusOptions.UseDefaultCollectors = true;
+                prometheusOptions.MetricPrefixName = "promitor_runtime_";
+            });
+
+            return app;
+        }
+
         /// <summary>
         ///     Adds middleware to automatically add the version in our responses
         /// </summary>

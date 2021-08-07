@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
+using Prometheus.Client.DependencyInjection;
 using Swashbuckle.AspNetCore.Filters;
 
 // ReSharper disable once CheckNamespace
@@ -16,6 +17,15 @@ namespace Promitor.Agents.Scraper.Extensions
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
+        /// <summary>
+        /// Use prometheus for writing metrics
+        /// </summary>
+        public static IServiceCollection AddPrometheusMetrics(this IServiceCollection services)
+        {
+            services.AddMetricFactory();
+            return services;
+        }
+
         /// <summary>
         ///     Expose services as Web API
         /// </summary>

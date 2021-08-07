@@ -14,6 +14,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -174,7 +175,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
-            services.AddMetricFactory();
+            services.AddPrometheusMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
