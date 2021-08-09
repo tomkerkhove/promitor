@@ -8,6 +8,7 @@ Here is an overview of how you can operate Promitor.
 - [Health](#health)
   - [Consuming the health endpoint](#consuming-the-health-endpoint)
 - [Performance](#performance)
+  - [Scraping Prometheus endpoint](#scraping-prometheus-endpoint)
   - [Scraping Azure Monitor](#scraping-azure-monitor)
 - [System](#system)
   - [Consuming the System endpoint](#consuming-the-system-endpoint)
@@ -83,6 +84,13 @@ promitor_runtime_http_request_duration_seconds_bucket{status_code="200",method="
 promitor_runtime_http_request_duration_seconds_sum{status_code="200",method="GET",path="/scrape"} 0.27116070000000003
 promitor_runtime_http_request_duration_seconds_count{status_code="200",method="GET",path="/scrape"} 34
 ```
+
+### Scraping Prometheus endpoint
+
+Every Promitor agent supports exposing Prometheus metrics:
+
+- **Resource Discovery agent** - Exposed on `/metrics` endpoint
+- **Scraper agent** - Exposed through Prometheus metric sink ([docs](/configuration/v2.x/runtime/scraper#prometheus-scraping-endpoint))
 
 ### Scraping Azure Monitor
 
