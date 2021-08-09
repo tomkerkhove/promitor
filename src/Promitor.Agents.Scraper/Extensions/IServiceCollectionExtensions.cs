@@ -3,7 +3,6 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client.DependencyInjection;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -14,6 +13,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -174,7 +174,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         private static void AddPrometheusMetricSink(IServiceCollection services)
         {
-            services.AddMetricFactory();
+            services.AddPrometheusMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Health;
@@ -16,6 +17,7 @@ namespace Promitor.Agents.ResourceDiscovery
         private const string ApiName = "Promitor - Resource Discovery API";
         private const string ApiDescription = "Collection of APIs to provide automatic resource discovery for scraping resources with Promitor Scraper";
         private const string ComponentName = "Promitor Resource Discovery";
+        private const string PrometheusBaseUri = "/metrics";
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Startup" /> class.
@@ -37,12 +39,13 @@ namespace Promitor.Agents.ResourceDiscovery
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
                 .AddValidationRules()
                 .AddHttpCorrelation(options => options.UpstreamService.ExtractFromRequest = true)
+                .AddPrometheusMetrics()
                 .AddHealthChecks()
                     .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -56,6 +59,7 @@ namespace Promitor.Agents.ResourceDiscovery
             app.UseRouting();
 
             app.ExposeOpenApiUi(ApiName);
+            app.UsePrometheusMetrics(PrometheusBaseUri, logger);
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             UseSerilog(ComponentName, app.ApplicationServices);
