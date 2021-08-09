@@ -94,7 +94,8 @@ Every Promitor agent supports exposing Prometheus metrics:
 
 ### Scraping Azure Monitor
 
-You can easily monitor the performance of Promitor Scraper agent integrating with Azure Monitor through the following Prometheus metrics:
+You can easily monitor the performance of Promitor Scraper agent integrating with Azure Monitor
+ through the following Prometheus metrics:
 
 - `promitor_scrape_error` - Provides indication of all configured metrics that were unable to be scraped in Azure Monitor
 
