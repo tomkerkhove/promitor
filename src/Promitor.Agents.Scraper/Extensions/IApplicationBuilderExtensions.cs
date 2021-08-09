@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client.AspNetCore;
-using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 
 // ReSharper disable once CheckNamespace
