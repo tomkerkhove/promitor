@@ -20,4 +20,4 @@ jobs:
     - name: Lint Markdown Files
       uses: avto-dev/markdown-lint@v1
       with:
-        args: '*.md'
+        args: '**/*.md'
