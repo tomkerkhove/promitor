@@ -35,6 +35,7 @@ namespace Promitor.Agents.ResourceDiscovery
                 .AddMemoryCache()
                 .AddRuntimeConfiguration(Configuration)
                 .AddAzureResourceGraph(Configuration)
+                .AddBackgroundJobs(Configuration)
                 .AddUsability()
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
                 .AddValidationRules()

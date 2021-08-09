@@ -18,16 +18,16 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
     public class DiscoveryController : ControllerBase
     {
         private readonly JsonSerializerSettings _serializerSettings;
-        private readonly IResourceRepository _resourceRepository;
+        private readonly IAzureResourceRepository _azureResourceRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiscoveryController"/> class.
         /// </summary>
-        public DiscoveryController(IResourceRepository resourceRepository)
+        public DiscoveryController(IAzureResourceRepository azureResourceRepository)
         {
-            Guard.NotNull(resourceRepository, nameof(resourceRepository));
+            Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
 
-            _resourceRepository = resourceRepository;
+            _azureResourceRepository = azureResourceRepository;
             _serializerSettings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -45,7 +45,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         {
             try
             {
-                var foundResources = await _resourceRepository.GetResourcesAsync(resourceDiscoveryGroup);
+                var foundResources = await _azureResourceRepository.GetResourcesAsync(resourceDiscoveryGroup);
                 if (foundResources == null)
                 {
                     return NotFound(new {Information = "No resource discovery group was found with specified name"});

@@ -11,23 +11,23 @@ using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
-    public class CachedResourceRepository : IResourceRepository
+    public class CachedAzureResourceRepository : IAzureResourceRepository
     {
         private readonly IOptionsMonitor<CacheConfiguration> _cacheConfiguration;
-        private readonly ResourceRepository _resourceRepository;
+        private readonly AzureResourceRepository _azureResourceRepository;
         private readonly IMemoryCache _memoryCache;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
         /// </summary>
-        public CachedResourceRepository(ResourceRepository resourceRepository, IMemoryCache memoryCache, IOptionsMonitor<CacheConfiguration> cacheConfiguration)
+        public CachedAzureResourceRepository(AzureResourceRepository azureResourceRepository, IMemoryCache memoryCache, IOptionsMonitor<CacheConfiguration> cacheConfiguration)
         {
             Guard.NotNull(cacheConfiguration, nameof(cacheConfiguration));
-            Guard.NotNull(resourceRepository, nameof(resourceRepository));
+            Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
             Guard.NotNull(memoryCache, nameof(memoryCache));
 
             _memoryCache = memoryCache;
-            _resourceRepository = resourceRepository;
+            _azureResourceRepository = azureResourceRepository;
             _cacheConfiguration = cacheConfiguration;
         }
 
@@ -40,7 +40,7 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
                 return cachedDiscoveredResources;
             }
 
-            var discoveredResources = await _resourceRepository.GetResourcesAsync(resourceDiscoveryGroupName);
+            var discoveredResources = await _azureResourceRepository.GetResourcesAsync(resourceDiscoveryGroupName);
             AddCacheEntry(resourceDiscoveryGroupName, discoveredResources);
 
             return discoveredResources;

@@ -14,16 +14,16 @@ using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories
 {
-    public class ResourceRepository : IResourceRepository
+    public class AzureResourceRepository : IAzureResourceRepository
     {
         private readonly IAzureResourceGraph _azureResourceGraph;
-        private readonly ILogger<ResourceRepository> _logger;
+        private readonly ILogger<AzureResourceRepository> _logger;
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
         /// </summary>
-        public ResourceRepository(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<ResourceRepository> logger)
+        public AzureResourceRepository(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<AzureResourceRepository> logger)
         {
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
             Guard.NotNull(azureResourceGraph, nameof(azureResourceGraph));

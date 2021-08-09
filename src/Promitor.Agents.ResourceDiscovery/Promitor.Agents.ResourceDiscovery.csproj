@@ -49,6 +49,7 @@
     <ProjectReference Include="..\Promitor.Agents.Core\Promitor.Agents.Core.csproj" />
     <ProjectReference Include="..\Promitor.Core.Contracts\Promitor.Core.Contracts.csproj" />
     <ProjectReference Include="..\Promitor.Integrations.Azure\Promitor.Integrations.Azure.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.Sinks.Prometheus\Promitor.Integrations.Sinks.Prometheus.csproj" />
   </ItemGroup>
 
 </Project>

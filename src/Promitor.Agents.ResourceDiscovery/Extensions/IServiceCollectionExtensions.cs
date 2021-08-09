@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -12,9 +15,12 @@ using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
+using Promitor.Core.Metrics;
 using Promitor.Integrations.Azure.Authentication.Configuration;
+using Promitor.Integrations.Sinks.Prometheus;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
@@ -36,6 +42,34 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
 
             return services;
         }
+        /// <summary>
+        ///     Inject configuration
+        /// </summary>
+        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScheduler(builder =>
+            {
+                var jobName = "Azure Landscape Discovery";
+                builder.AddJob<AzureLandscapeDiscoveryBackgroundJob>(configure: schedulerOptions =>
+                    {
+                        schedulerOptions.CronSchedule = "*/5 * * * *";
+                        schedulerOptions.RunImmediately = true;
+                    });
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
+            });
+
+            return services;
+        }
+
+        private static void UnobservedJobHandler(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
+        {
+            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
+            var loggerInstance = (ILogger)logger?.ImplementationInstance;
+
+            loggerInstance?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
+
+            exceptionEventArgs.SetObserved();
+        }
 
         /// <summary>
         ///     Add Azure Resource Graph integration
@@ -51,12 +85,12 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             var isCacheEnabled = configuration.GetValue<bool>("cache:enabled", defaultValue: true);
             if (isCacheEnabled)
             {
-                services.AddTransient<ResourceRepository>();
-                services.AddTransient<IResourceRepository, CachedResourceRepository>();
+                services.AddTransient<AzureResourceRepository>();
+                services.AddTransient<IAzureResourceRepository, CachedAzureResourceRepository>();
             }
             else
             {
-                services.AddTransient<IResourceRepository, ResourceRepository>();
+                services.AddTransient<IAzureResourceRepository, AzureResourceRepository>();
             }
 
             return services;

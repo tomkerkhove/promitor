@@ -4,7 +4,7 @@ using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Repositories.Interfaces
 {
-    public interface IResourceRepository
+    public interface IAzureResourceRepository
     {
         Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName);
     }
