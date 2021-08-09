@@ -20,4 +20,4 @@ jobs:
     - name: Lint Files
       uses: avto-dev/markdown-lint@v1
       with:
-        args: '**/*.md'
+        args: '**/*.md --ignore changelog/themes/hugo-changelog-theme/*'
