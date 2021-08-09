@@ -11,13 +11,13 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   lint-changelog:
-    name: Lint changelog file
+    name: Lint Markdown Files
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
       uses: actions/checkout@v2
 
-    - name: Lint Markdown Files
+    - name: Lint Files
       uses: avto-dev/markdown-lint@v1
       with:
         args: '**/*.md'
