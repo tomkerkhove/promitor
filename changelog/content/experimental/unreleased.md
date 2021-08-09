@@ -6,8 +6,13 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide system metrics related to agent performance & resources ([docs](https://promitor.io/operations/#performance)
+ | [#341](https://github.com/tomkerkhove/promitor/issues/341))
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide Prometheus endpoint for scraping metrics
+- {{% tag added %}} Provide system metrics related to agent performance & resources ([docs](https://promitor.io/operations/#performance))
+ | [#341](https://github.com/tomkerkhove/promitor/issues/341))
+- {{% tag added %}} Provide system metric related to HTTP request performance ([docs](https://promitor.io/operations/#performance)
+ | [#1717](https://github.com/tomkerkhove/promitor/issues/1717))
