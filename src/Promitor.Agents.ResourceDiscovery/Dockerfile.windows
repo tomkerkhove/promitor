@@ -6,6 +6,11 @@ COPY Promitor.Core.Contracts/* Promitor.Core.Contracts/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Integrations.Azure/* Promitor.Integrations.Azure/
+COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
+COPY Promitor.Integrations.Azure/* Promitor.Integrations.Azure/
+COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
+COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
+COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=%VERSION%
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.16 AS runtime

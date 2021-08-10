@@ -16,9 +16,13 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
     {
         private readonly ILogger<AzureLandscapeDiscoveryBackgroundJob> _logger;
         // TODO: Refactor this one
+#pragma warning disable 169
         private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
+#pragma warning restore 169
         private readonly IMetricFactory _metricFactory;
+#pragma warning disable 169
         private readonly IAzureResourceRepository _azureResourceRepository;
+#pragma warning restore 169
 
         public AzureLandscapeDiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository,  IMetricFactory metricFactory, ILogger<AzureLandscapeDiscoveryBackgroundJob> logger)
         {

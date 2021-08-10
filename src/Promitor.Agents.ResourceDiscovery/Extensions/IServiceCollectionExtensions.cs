@@ -18,9 +18,7 @@ using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
-using Promitor.Core.Metrics;
 using Promitor.Integrations.Azure.Authentication.Configuration;
-using Promitor.Integrations.Sinks.Prometheus;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
