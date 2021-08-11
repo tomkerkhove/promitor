@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Prometheus.Client;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -43,16 +44,27 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
         /// <summary>
         ///     Inject configuration
         /// </summary>
-        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
         {
+            // TODO: Open issue for bug where scheduler options are ignored when not using the factory approach
             services.AddScheduler(builder =>
             {
                 var jobName = "Azure Landscape Discovery";
-                builder.AddJob<AzureLandscapeDiscoveryBackgroundJob>(configure: schedulerOptions =>
+                builder.AddJob<AzureLandscapeDiscoveryBackgroundJob>(
+                    jobServices => 
                     {
-                        schedulerOptions.CronSchedule = "*/5 * * * *";
+                        return new AzureLandscapeDiscoveryBackgroundJob(jobName,
+                            jobServices.GetRequiredService<IAzureResourceRepository>(),
+                            jobServices.GetRequiredService<IMetricFactory>(),
+                            jobServices.GetRequiredService<ILogger<AzureLandscapeDiscoveryBackgroundJob>>());
+                    }, 
+                    schedulerOptions =>
+                    {
+                        schedulerOptions.CronSchedule = "* */5 * * * *";
                         schedulerOptions.RunImmediately = true;
-                    });
+                    },
+                    jobName: jobName);
+
                 builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
             });
 

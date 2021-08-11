@@ -34,13 +34,13 @@ namespace Promitor.Agents.ResourceDiscovery
             services.UseWebApi()
                 .AddMemoryCache()
                 .AddRuntimeConfiguration(Configuration)
+                .AddPrometheusMetrics()
                 .AddAzureResourceGraph(Configuration)
-                .AddBackgroundJobs(Configuration)
+                .AddBackgroundJobs()
                 .AddUsability()
                 .UseOpenApiSpecifications($"{ApiName} v1", ApiDescription, 1)
                 .AddValidationRules()
                 .AddHttpCorrelation(options => options.UpstreamService.ExtractFromRequest = true)
-                .AddPrometheusMetrics()
                 .AddHealthChecks()
                     .AddCheck<AzureResourceGraphHealthCheck>("azure-resource-graph", failureStatus: HealthStatus.Unhealthy);
         }

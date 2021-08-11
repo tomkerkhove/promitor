@@ -71,7 +71,7 @@
                 Inject configuration
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddBackgroundJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddBackgroundJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Inject configuration
             </summary>

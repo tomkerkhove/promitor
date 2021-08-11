@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,21 +13,21 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
     public class AzureLandscapeDiscoveryBackgroundJob : IScheduledJob
     {
+        public const string MetricName = "promitor_azure_landscape_info";
+        public const string MetricDescription = "Provides information concerning the Azure landscape that Promitor has access to.";
         private readonly ILogger<AzureLandscapeDiscoveryBackgroundJob> _logger;
-        // TODO: Refactor this one
-#pragma warning disable 169
-        private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
-#pragma warning restore 169
-        private readonly IMetricFactory _metricFactory;
-#pragma warning disable 169
-        private readonly IAzureResourceRepository _azureResourceRepository;
-#pragma warning restore 169
 
-        public AzureLandscapeDiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository,  IMetricFactory metricFactory, ILogger<AzureLandscapeDiscoveryBackgroundJob> logger)
+        // TODO: Refactor this one
+        private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
+        private readonly IMetricFactory _metricFactory;
+        private readonly IAzureResourceRepository _azureResourceRepository;
+
+        public AzureLandscapeDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository,  IMetricFactory metricFactory, ILogger<AzureLandscapeDiscoveryBackgroundJob> logger)
         {
             Guard.NotNull(metricFactory, nameof(metricFactory));
             Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
 
+            Name = jobName;
             _logger = logger;
             _metricFactory = metricFactory;
             _azureResourceRepository = azureResourceRepository;
@@ -38,7 +37,18 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             _logger.LogInformation("Discovering Azure Landscape!");
 
-            Dictionary<string, string> labels = new Dictionary<string, string>
+            // TODO: Discover!
+
+            // Report discovered information as metric
+            ReportDiscoveredAzureInfo();
+
+            return Task.CompletedTask;
+        }
+
+        private void ReportDiscoveredAzureInfo()
+        {
+            // TODO: Report metric per subscription, resource group
+            var labels = new Dictionary<string, string>
             {
                 { "tenant_id", "ABC" },
                 { "subscription_id", "ABC" },
@@ -46,12 +56,15 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             };
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            var gauge = _metricFactory.CreateGauge("name", help: "description", includeTimestamp: true, labelNames: orderedLabels.Keys.ToArray());
-            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(1);
-
-            return Task.CompletedTask;
+            WritePrometheusMetric(orderedLabels);
         }
 
-        public string Name => "Azure Landscape Discovery";
+        private void WritePrometheusMetric(Dictionary<string, string> orderedLabels)
+        {
+            var gauge = _metricFactory.CreateGauge(MetricName, help: MetricDescription, includeTimestamp: true, labelNames: orderedLabels.Keys.ToArray());
+            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(1);
+        }
+
+        public string Name {get; }
     }
 }
