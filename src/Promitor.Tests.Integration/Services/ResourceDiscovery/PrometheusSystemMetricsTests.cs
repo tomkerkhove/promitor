@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,14 +24,30 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedSystemPerformanceMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var scraperClient = new ResourceDiscoveryClient(Configuration, Logger);
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(expectedMetricName);
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
             Assert.Equal(expectedMetricName, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedAzureLandscapeInfoMetricIsAvailable()
+        {
+            // Arrange
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(AzureLandscapeDiscoveryBackgroundJob.MetricName);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(AzureLandscapeDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
