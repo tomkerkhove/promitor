@@ -37,17 +37,34 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         }
 
         [Fact]
-        public async Task Prometheus_Scrape_ExpectedAzureLandscapeInfoMetricIsAvailable()
+        public async Task Prometheus_Scrape_ExpectedAzureSubscriptionInfoMetricIsAvailable()
+        {
+            // Arrange
+            const int expectedSubscriptionCount = 2;// We expect to get our 2 Azure subscriptions here
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(AzureSubscriptionDiscoveryBackgroundJob.MetricName);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(AzureSubscriptionDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.Equal(expectedSubscriptionCount, gaugeMetric.Measurements.Count);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedAzureResourceGroupInfoMetricIsAvailable()
         {
             // Arrange
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(AzureLandscapeDiscoveryBackgroundJob.MetricName);
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(AzureResourceGroupsDiscoveryBackgroundJob.MetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
-            Assert.Equal(AzureLandscapeDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
+            Assert.Equal(AzureResourceGroupsDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
