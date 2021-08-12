@@ -7,6 +7,9 @@ Here is an overview of how you can operate Promitor.
 
 - [Health](#health)
   - [Consuming the health endpoint](#consuming-the-health-endpoint)
+- [Discovery](#discovery)
+  - [Subscription](#subscription)
+  - [Resource Groups](#resource-groups)
 - [Performance](#performance)
   - [Scraping Prometheus endpoint](#scraping-prometheus-endpoint)
   - [Scraping Azure Monitor](#scraping-azure-monitor)
@@ -43,6 +46,38 @@ Health is currently indicated via the HTTP response status:
 The endpoint provides more details on integration with following dependencies:
 
 - **Promitor Resource Discovery** (when configured)
+
+## Discovery
+
+![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)
+![Scraper Support Badge](https://img.shields.io/badge/Support%20for%20Scraper-No-red.svg)
+
+**Promitor Resource Discovery** provides a way to discover the resources for our Scraper agent to dynamically scrape resources.
+
+Next to that, it provides a variety of system metrics that provides information concerning your Azure landscape.
+
+### Subscription
+
+TODO
+
+```prometheus
+# HELP promitor_azure_landscape_subscription_info Provides information concerning the Azure subscriptions in the landscape that Promitor has access to.
+# TYPE promitor_azure_landscape_subscription_info gauge
+promitor_azure_landscape_subscription_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27",subscription_name="Windows Azure MSDN - Visual Studio Ultimate",subscription_id="0329dd2a-59dc-4493-aa54-cb01cb027dc2",state="Enabled",spending_limit="On",quota_id="MSDN_2014-09-01",authorization="RoleBased"} 1 1628779903451
+promitor_azure_landscape_subscription_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27",subscription_name="Visual Studio Enterprise",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",state="Enabled",spending_limit="Off",quota_id="Sponsored_2016-01-01",authorization="RoleBased"} 1 1628779903451
+```
+
+### Resource Groups
+
+TODO
+
+```prometheus
+# HELP promitor_azure_landscape_resource_group_info Provides information concerning the Azure resource groups in the landscape that Promitor has access to.
+# TYPE promitor_azure_landscape_resource_group_info gauge
+promitor_azure_landscape_resource_group_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",resource_group_name="NetworkWatcherRG",region="westeurope",provisioning_state="Succeeded",managed_by="n/a"} 1 1628779903423
+promitor_azure_landscape_resource_group_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",resource_group_name="promitor-testing-resource-discovery-eu",region="westeurope",provisioning_state="Succeeded",managed_by="n/a"} 1 1628779903423
+promitor_azure_landscape_resource_group_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c0325138f27",subscription_id="0f9d7fea-99e8-4768-8672-06a28514f77e",resource_group_name="MC_keda-demos_keda-demos_westeurope",region="westeurope",provisioning_state="Succeeded",managed_by="/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourcegroups/keda-demos/providers/Microsoft.ContainerService/managedClusters/keda-demos"} 1 1628779903423
+```
 
 ## Performance
 
