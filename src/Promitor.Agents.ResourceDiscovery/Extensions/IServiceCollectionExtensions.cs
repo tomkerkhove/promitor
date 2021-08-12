@@ -46,21 +46,40 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
         /// </summary>
         public static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
         {
-            // TODO: Open issue for bug where scheduler options are ignored when not using the factory approach
             services.AddScheduler(builder =>
             {
-                var jobName = "Azure Landscape Discovery";
-                builder.AddJob<AzureLandscapeDiscoveryBackgroundJob>(
-                    jobServices => 
+                var jobName = "Azure Subscription Discovery";
+                builder.AddJob<AzureSubscriptionDiscoveryBackgroundJob>(
+                    jobServices =>
                     {
-                        return new AzureLandscapeDiscoveryBackgroundJob(jobName,
+                        return new AzureSubscriptionDiscoveryBackgroundJob(jobName,
                             jobServices.GetRequiredService<IAzureResourceRepository>(),
                             jobServices.GetRequiredService<IMetricFactory>(),
-                            jobServices.GetRequiredService<ILogger<AzureLandscapeDiscoveryBackgroundJob>>());
-                    }, 
+                            jobServices.GetRequiredService<ILogger<AzureSubscriptionDiscoveryBackgroundJob>>());
+                    },
                     schedulerOptions =>
                     {
-                        schedulerOptions.CronSchedule = "* */5 * * * *";
+                        schedulerOptions.CronSchedule = "0 * * * *";
+                        schedulerOptions.RunImmediately = true;
+                    },
+                    jobName: jobName);
+
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
+            });
+            services.AddScheduler(builder =>
+            {
+                var jobName = "Azure Resource Group Discovery";
+                builder.AddJob<AzureResourceGroupsDiscoveryBackgroundJob>(
+                    jobServices =>
+                    {
+                        return new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
+                            jobServices.GetRequiredService<IAzureResourceRepository>(),
+                            jobServices.GetRequiredService<IMetricFactory>(),
+                            jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>());
+                    },
+                    schedulerOptions =>
+                    {
+                        schedulerOptions.CronSchedule = "*/15 * * * *";
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
@@ -71,12 +90,16 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             return services;
         }
 
+        // TODO: ALign with scraper
         private static void UnobservedJobHandler(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
         {
-            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
-            var loggerInstance = (ILogger)logger?.ImplementationInstance;
+            var logger = services.BuildServiceProvider().GetService<ILogger<Startup>>();
+            if (logger == null)
+            {
+                return;
+            }
 
-            loggerInstance?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
+            logger?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
 
             exceptionEventArgs.SetObserved();
         }

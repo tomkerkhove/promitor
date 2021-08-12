@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph;
@@ -68,5 +70,115 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
 
             return foundResources;
         }
+
+        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
+        {
+            var query = @"ResourceContainers
+| where type == ""microsoft.resources/subscriptions""
+| project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
+
+            var unparsedResults = await _azureResourceGraph.QueryAsync2("Discover Azure Subscriptions", query);
+            return ParseAzureSubscriptionQueryResults(unparsedResults);
+        }
+
+        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
+        {
+            var query = @"ResourceContainers
+| where type == ""microsoft.resources/subscriptions/resourcegroups""
+| project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
+
+            var unparsedResults = await _azureResourceGraph.QueryAsync2("Discover Azure Resource Groups", query);
+            return ParseAzureResourceGroupQueryResults(unparsedResults);
+        }
+
+        private List<AzureSubscriptionInformation> ParseAzureSubscriptionQueryResults(JObject unparsedResults)
+        {
+            Guard.NotNull(unparsedResults, nameof(unparsedResults));
+
+            var foundResources = new List<AzureSubscriptionInformation>();
+            var rows = unparsedResults["rows"];
+            if (rows == null)
+            {
+                throw new Exception("No rows were found in the response");
+            }
+
+            foreach (var row in rows)
+            {
+                var resource = ParseAzureSubscriptionResults(row);
+
+                foundResources.Add(resource);
+            }
+
+            return foundResources;
+        }
+
+        private List<AzureResourceGroupInformation> ParseAzureResourceGroupQueryResults(JObject unparsedResults)
+        {
+            Guard.NotNull(unparsedResults, nameof(unparsedResults));
+
+            var foundResources = new List<AzureResourceGroupInformation>();
+            var rows = unparsedResults["rows"];
+            if (rows == null)
+            {
+                throw new Exception("No rows were found in the response");
+            }
+
+            foreach (var row in rows)
+            {
+                var resource = ParseAzureResourceGroupResults(row);
+
+                foundResources.Add(resource);
+            }
+
+            return foundResources;
+        }
+
+        private AzureSubscriptionInformation ParseAzureSubscriptionResults(JToken row)
+        {
+            return new AzureSubscriptionInformation
+            {
+                TenantId = row[0]?.ToString(),
+                Name = row[2]?.ToString(),
+                Id = row[1]?.ToString(),
+                State = row[3]?.ToString(),
+                SpendingLimit = row[4]?.ToString(),
+                QuotaId = row[5]?.ToString(),
+                AuthorizationSource = row[6]?.ToString()
+            };
+        }
+
+        private AzureResourceGroupInformation ParseAzureResourceGroupResults(JToken row)
+        {
+            return new AzureResourceGroupInformation
+            {
+                TenantId = row[0]?.ToString(),
+                SubscriptionId = row[1]?.ToString(),
+                Name = row[2]?.ToString(),
+                Region = row[3]?.ToString(),
+                ProvisioningState = row[4]?.ToString(),
+                ManagedBy = row[5]?.ToString()
+            };
+        }
+    }
+
+    public class AzureSubscriptionInformation
+    {
+        public string TenantId { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public string State { get; set; }
+        public string SpendingLimit { get; set; }
+        public string QuotaId { get; set; }
+        public string AuthorizationSource { get; set; }
+    }
+
+    public class AzureResourceGroupInformation
+    {
+        public string TenantId { get; set; }
+        public string SubscriptionId { get; set; }
+        public string Name { get; set; }
+        public string Region { get; set; }
+        public string ManagedBy { get; set; }
+        public string ProvisioningState { get; set; }
     }
 }

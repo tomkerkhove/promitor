@@ -52,6 +52,15 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
+        // TODO: Make pretty
+        public async Task<JObject> QueryAsync2(string queryName, string query)
+        {
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
+            var queryResponse = await Query2Async(queryName, query);
+            return queryResponse.Data as JObject;
+        }
+
         public async Task<JObject> QueryAsync(string queryName, string query)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
@@ -81,6 +90,23 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     ResultFormat = ResultFormat.Table
                 };
                 var queryRequest = new QueryRequest(targetSubscriptions, query, options: queryOptions);
+                return await graphClient.ResourcesAsync(queryRequest);
+            });
+
+            return response;
+        }
+
+        private async Task<QueryResponse> Query2Async(string queryName, string query)
+        {
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
+            var response = await InteractWithAzureResourceGraphAsync2(queryName, query,  async graphClient =>
+            {
+                var queryOptions = new QueryRequestOptions
+                {
+                    ResultFormat = ResultFormat.Table
+                };
+                var queryRequest = new QueryRequest(query, options: queryOptions);
                 return await graphClient.ResourcesAsync(queryRequest);
             });
 
@@ -150,6 +176,76 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                             {"Query", query},
                             {"QueryName", queryName},
                             {"Subscriptions", targetSubscriptions}
+                        };
+
+                        _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
+                    }
+                }
+            });
+        }
+
+        private async Task<TResponse> InteractWithAzureResourceGraphAsync2<TResponse>(string queryName, string query, Func<ResourceGraphClient, Task<TResponse>> interactionFunc)
+        {
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
+            var retryPolicy = Policy.Handle<ErrorResponseException>(ex => ex.Response?.StatusCode == HttpStatusCode.Unauthorized)
+                .RetryAsync(retryCount: 3, OnRetryAsync);
+
+            return await retryPolicy.ExecuteAsync(async () =>
+            {
+                var graphClient = await GetOrCreateClient();
+
+                bool isSuccessfulDependency = false;
+                using (var dependencyMeasurement = DependencyMeasurement.Start())
+                {
+                    try
+                    {
+                        var response = await interactionFunc(graphClient);
+                        isSuccessfulDependency = true;
+
+                        return response;
+                    }
+                    catch (ErrorResponseException responseException)
+                    {
+                        if (responseException.Response != null)
+                        {
+                            if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
+                            {
+                                var unauthorizedException = new Exception("Forbidden");
+
+                                throw unauthorizedException;
+                            }
+
+                            if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
+                            {
+                                var response = JToken.Parse(responseException.Response.Content);
+                                var errorDetails = response["error"]?["details"];
+                                if (errorDetails != null)
+                                {
+                                    var errorCodes = new List<string>();
+                                    foreach (var detailEntry in errorDetails)
+                                    {
+                                        errorCodes.Add(detailEntry["code"]?.ToString());
+                                    }
+
+                                    if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
+                                    {
+                                        var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(new List<string>{"temp"});
+                                        _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
+                                        throw invalidSubscriptionException;
+                                    }
+                                }
+                            }
+                        }
+
+                        throw;
+                    }
+                    finally
+                    {
+                        var contextualInformation = new Dictionary<string, object>
+                        {
+                            {"Query", query},
+                            {"QueryName", queryName}
                         };
 
                         _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);

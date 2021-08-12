@@ -46,6 +46,18 @@ namespace Promitor.Agents.ResourceDiscovery.Repositories
             return discoveredResources;
         }
 
+        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
+        {
+            // TODO: Cache
+            return await _azureResourceRepository.DiscoverAzureSubscriptionsAsync();
+        }
+
+        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
+        {
+            // TODO: Cache
+            return await _azureResourceRepository.DiscoverAzureResourceGroupsAsync();
+        }
+
         private void AddCacheEntry(string resourceDiscoveryGroupName, List<AzureResourceDefinition> discoveredResources)
         {
             var durationInMinutes = _cacheConfiguration.CurrentValue.DurationInMinutes;
