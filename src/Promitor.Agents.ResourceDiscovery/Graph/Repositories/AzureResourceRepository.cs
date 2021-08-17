@@ -8,13 +8,12 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Controllers;
-using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
-using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Core.Contracts;
 
-namespace Promitor.Agents.ResourceDiscovery.Repositories
+namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 {
     public class AzureResourceRepository : IAzureResourceRepository
     {

@@ -9,10 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Prometheus.Client.DependencyInjection;
+using Promitor.Core.Metrics.Prometheus.Collectors;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 
-// ReSharper disable once CheckNamespace
-namespace Promitor.Agents.Scraper.Extensions
+namespace Promitor.Agents.Core.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
@@ -23,6 +24,8 @@ namespace Promitor.Agents.Scraper.Extensions
         public static IServiceCollection AddPrometheusMetrics(this IServiceCollection services)
         {
             services.AddMetricFactory();
+            services.AddTransient<IPrometheusMetricsCollector, PrometheusMetricsCollector>();
+
             return services;
         }
 

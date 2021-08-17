@@ -8,7 +8,7 @@ using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Azure.Authentication;
 using Version = Promitor.Core.Version;
@@ -23,7 +23,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         private readonly ILogger _logger;
         private readonly Dictionary<string, string> _metricLabels;
         private readonly MetricSinkWriter _metricSinkWriter;
-        private readonly IRuntimeMetricsCollector _metricsCollector;
+        private readonly IAzureScrapingPrometheusMetricsCollector _azureScrapingPrometheusMetricsCollector;
 
         /// <summary>
         ///     Constructor
@@ -32,20 +32,20 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// <param name="subscriptionId">Id of the subscription that is being interacted with via Azure Resource Manager</param>
         /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="metricSinkWriter">Metrics writer to all sinks</param>
-        /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, ILogger logger)
+        public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, ILogger logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
-            Guard.NotNull(metricsCollector, nameof(metricsCollector));
+            Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
             Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
             Guard.NotNull(logger, nameof(logger));
 
             _logger = logger;
             _metricSinkWriter = metricSinkWriter;
-            _metricsCollector = metricsCollector;
+            _azureScrapingPrometheusMetricsCollector = azureScrapingPrometheusMetricsCollector;
 
             var id = DetermineApplicationId(azureAuthenticationInfo);
   
@@ -84,7 +84,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                 var remainingApiCalls = response.Headers.GetValues("x-ms-ratelimit-remaining-subscription-reads").FirstOrDefault();
                 var subscriptionReadLimit = Convert.ToInt16(remainingApiCalls);
                 await _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
-                _metricsCollector.SetGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
+                _azureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
             }
         }
 

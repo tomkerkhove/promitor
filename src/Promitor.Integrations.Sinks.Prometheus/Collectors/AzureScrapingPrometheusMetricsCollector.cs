@@ -2,26 +2,25 @@
 using System.Linq;
 using GuardNet;
 using Microsoft.Extensions.Options;
-using Prometheus.Client;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
-namespace Promitor.Integrations.Sinks.Prometheus
+namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 {
-    public class RuntimeMetricsCollector : IRuntimeMetricsCollector
+    public class AzureScrapingPrometheusMetricsCollector : IAzureScrapingPrometheusMetricsCollector
     {
-        private readonly IMetricFactory _metricFactory;
+        private readonly IPrometheusMetricsCollector _prometheusMetricsCollector;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public RuntimeMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, IMetricFactory metricFactory, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public AzureScrapingPrometheusMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, IPrometheusMetricsCollector prometheusMetricsCollector, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
-            Guard.NotNull(metricFactory, nameof(metricFactory));
+            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
 
-            _metricFactory = metricFactory;
             _prometheusConfiguration = prometheusConfiguration;
+            _prometheusMetricsCollector = prometheusMetricsCollector;
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
@@ -32,7 +31,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
         /// <param name="description">Description of the metric</param>
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
-        public void SetGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
+        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
@@ -44,8 +43,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: enableMetricTimestamps, labelNames: orderedLabels.Keys.ToArray());
-            gauge.WithLabels(orderedLabels.Values.ToArray()).Set(value);
+            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
         }
     }
 }

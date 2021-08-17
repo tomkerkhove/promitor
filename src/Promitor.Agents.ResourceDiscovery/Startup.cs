@@ -6,9 +6,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Health;
-using Promitor.Agents.Scraper.Extensions;
 
 namespace Promitor.Agents.ResourceDiscovery
 {

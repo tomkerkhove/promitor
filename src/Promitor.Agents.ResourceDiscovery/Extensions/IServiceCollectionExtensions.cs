@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -14,11 +12,12 @@ using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
-using Promitor.Agents.ResourceDiscovery.Repositories;
-using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
@@ -54,7 +53,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     {
                         return new AzureSubscriptionDiscoveryBackgroundJob(jobName,
                             jobServices.GetRequiredService<IAzureResourceRepository>(),
-                            jobServices.GetRequiredService<IMetricFactory>(),
+                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
                             jobServices.GetRequiredService<ILogger<AzureSubscriptionDiscoveryBackgroundJob>>());
                     },
                     schedulerOptions =>
@@ -74,7 +73,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     {
                         return new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
                             jobServices.GetRequiredService<IAzureResourceRepository>(),
-                            jobServices.GetRequiredService<IMetricFactory>(),
+                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
                             jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>());
                     },
                     schedulerOptions =>

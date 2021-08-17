@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using CronScheduler.Extensions.Scheduler;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Prometheus.Client;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
-using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
@@ -15,8 +15,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         public const string MetricName = "promitor_azure_landscape_resource_group_info";
         public const string MetricDescription = "Provides information concerning the Azure resource groups in the landscape that Promitor has access to.";
         
-        public AzureResourceGroupsDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository,  IMetricFactory metricFactory, ILogger<AzureResourceGroupsDiscoveryBackgroundJob> logger)
-            : base(azureResourceRepository, metricFactory, logger)
+        public AzureResourceGroupsDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, IPrometheusMetricsCollector prometheusMetricsCollector, ILogger<AzureResourceGroupsDiscoveryBackgroundJob> logger)
+            : base(azureResourceRepository, prometheusMetricsCollector, logger)
         {
             Guard.NotNullOrWhitespace(jobName, nameof(jobName));
 

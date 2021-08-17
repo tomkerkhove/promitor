@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Promitor.Core.Metrics
+namespace Promitor.Core.Metrics.Prometheus.Collectors.Interfaces
 {
-    public interface IRuntimeMetricsCollector
+    public interface IAzureScrapingPrometheusMetricsCollector
     {
         /// <summary>
         ///     Sets a new value for a measurement on a gauge
@@ -11,6 +11,6 @@ namespace Promitor.Core.Metrics
         /// <param name="description">Description of the metric</param>
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
-        void SetGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels);
+        void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels);
     }
 }
