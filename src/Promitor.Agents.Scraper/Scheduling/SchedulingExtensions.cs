@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Discovery;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;

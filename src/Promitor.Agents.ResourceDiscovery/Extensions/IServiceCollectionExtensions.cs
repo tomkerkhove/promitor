@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -22,24 +23,6 @@ using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
-    public class BackgroundJobMonitor
-    {
-
-        // TODO: ALign with scraper
-        public static void HandleException(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
-        {
-            var logger = services.BuildServiceProvider().GetService<ILogger<Startup>>();
-            if (logger == null)
-            {
-                return;
-            }
-
-            logger?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
-
-            exceptionEventArgs.SetObserved();
-        }
-    }
-
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
