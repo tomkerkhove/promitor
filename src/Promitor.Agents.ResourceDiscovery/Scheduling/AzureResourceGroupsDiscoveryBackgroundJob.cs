@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.Extensions.Scheduler;
@@ -7,9 +6,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Prometheus.Client;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
-using Promitor.Agents.ResourceDiscovery.Repositories;
 using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
-using Promitor.Core.Metrics;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
@@ -18,9 +15,6 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         public const string MetricName = "promitor_azure_landscape_resource_group_info";
         public const string MetricDescription = "Provides information concerning the Azure resource groups in the landscape that Promitor has access to.";
         
-        // TODO: Refactor this one
-        private readonly IRuntimeMetricsCollector _runtimeMetricsCollector;
-
         public AzureResourceGroupsDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository,  IMetricFactory metricFactory, ILogger<AzureResourceGroupsDiscoveryBackgroundJob> logger)
             : base(azureResourceRepository, metricFactory, logger)
         {
@@ -33,7 +27,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            Logger.LogInformation("Discovering Azure Landscape!");
+            Logger.LogTrace("Discovering Azure Resource Groups...");
 
             // Discover Azure subscriptions
             var discoveredResourceGroups = await AzureResourceRepository.DiscoverAzureResourceGroupsAsync();
@@ -43,6 +37,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             {
                 ReportDiscoveredAzureInfo(resourceGroupInformation);
             }
+
+            Logger.LogTrace("Azure Resource Groups discovered.");
         }
 
         private void ReportDiscoveredAzureInfo(AzureResourceGroupInformation resourceGroupInformation)
