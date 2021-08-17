@@ -55,7 +55,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria).Build();
 
             // 2. Run Query
-            var unparsedResults = await _azureResourceGraph.QueryAsync(resourceDiscoveryGroupName, query);
+            var unparsedResults = await _azureResourceGraph.QueryTargetSubscriptionsAsync(resourceDiscoveryGroupName, query);
 
             // 3. Parse query results into resource
             var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
@@ -95,7 +95,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 | where type == ""microsoft.resources/subscriptions/resourcegroups""
 | project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
 
-            var unparsedResults = await _azureResourceGraph.QueryAsync2("Discover Azure Resource Groups", query);
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query);
             return ParseQueryResults<AzureResourceGroupInformation>(unparsedResults, row => new AzureResourceGroupInformation
             {
                 TenantId = row[0]?.ToString(),

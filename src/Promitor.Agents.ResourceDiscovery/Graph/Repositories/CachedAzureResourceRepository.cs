@@ -32,34 +32,54 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             _cacheConfiguration = cacheConfiguration;
         }
 
+        private const string GetResourceCacheKey = "GetResources-{0}";
+        private const string AzureSubscriptionsCacheKey = "AzureSubscriptions";
+        private const string AzureResourceGroupsCacheKey = "AzureResourceGroups";
+
         public async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
         {
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName, nameof(resourceDiscoveryGroupName));
 
-            if (_memoryCache.TryGetValue(resourceDiscoveryGroupName, out List<AzureResourceDefinition> cachedDiscoveredResources))
+            var cacheKey = string.Format(GetResourceCacheKey, resourceDiscoveryGroupName);
+
+            if (_memoryCache.TryGetValue(cacheKey, out List<AzureResourceDefinition> cachedDiscoveredResources))
             {
                 return cachedDiscoveredResources;
             }
 
             var discoveredResources = await _azureResourceRepository.GetResourcesAsync(resourceDiscoveryGroupName);
-            AddCacheEntry(resourceDiscoveryGroupName, discoveredResources);
+            AddCacheEntry(cacheKey, discoveredResources);
 
             return discoveredResources;
         }
 
         public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
         {
-            // TODO: Cache
-            return await _azureResourceRepository.DiscoverAzureSubscriptionsAsync();
+            if (_memoryCache.TryGetValue(AzureSubscriptionsCacheKey, out List<AzureSubscriptionInformation> cachedAzureSubscriptions))
+            {
+                return cachedAzureSubscriptions;
+            }
+
+            var discoveredAzureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync();
+            AddCacheEntry(AzureSubscriptionsCacheKey, discoveredAzureSubscriptions);
+
+            return discoveredAzureSubscriptions;
         }
 
         public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
         {
-            // TODO: Cache
-            return await _azureResourceRepository.DiscoverAzureResourceGroupsAsync();
+            if (_memoryCache.TryGetValue(AzureResourceGroupsCacheKey, out List<AzureResourceGroupInformation> cachedAzureResourceGroups))
+            {
+                return cachedAzureResourceGroups;
+            }
+
+            var discoveredAzureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync();
+            AddCacheEntry(AzureResourceGroupsCacheKey, discoveredAzureResourceGroups);
+
+            return discoveredAzureResourceGroups;
         }
 
-        private void AddCacheEntry(string resourceDiscoveryGroupName, List<AzureResourceDefinition> discoveredResources)
+        private void AddCacheEntry<TEntry>(string resourceDiscoveryGroupName, TEntry discoveredResources)
         {
             var durationInMinutes = _cacheConfiguration.CurrentValue.DurationInMinutes;
             var cacheExpiration = TimeSpan.FromMinutes(durationInMinutes);
