@@ -22,6 +22,24 @@ using Promitor.Integrations.Azure.Authentication.Configuration;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
+    public class BackgroundJobMonitor
+    {
+
+        // TODO: ALign with scraper
+        public static void HandleException(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
+        {
+            var logger = services.BuildServiceProvider().GetService<ILogger<Startup>>();
+            if (logger == null)
+            {
+                return;
+            }
+
+            logger?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
+
+            exceptionEventArgs.SetObserved();
+        }
+    }
+
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
@@ -63,7 +81,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
             services.AddScheduler(builder =>
             {
@@ -83,24 +101,10 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             return services;
-        }
-
-        // TODO: ALign with scraper
-        private static void UnobservedJobHandler(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
-        {
-            var logger = services.BuildServiceProvider().GetService<ILogger<Startup>>();
-            if (logger == null)
-            {
-                return;
-            }
-
-            logger?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
-
-            exceptionEventArgs.SetObserved();
         }
 
         /// <summary>

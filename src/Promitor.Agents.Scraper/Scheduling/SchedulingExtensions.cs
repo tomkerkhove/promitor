@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -85,7 +84,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
@@ -114,7 +113,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     schedulerOptions.RunImmediately = true;
                 },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandlerHandler(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceDiscoveryGroup} which will be reported as metric {MetricName}", jobName, resourceDiscoveryGroup.Name, metricDefinition.PrometheusMetricDefinition?.Name);
@@ -146,17 +145,6 @@ namespace Microsoft.Extensions.DependencyInjection
             jobNameBuilder.Append(Guid.NewGuid().ToString());
 
             return jobNameBuilder.ToString();
-        }
-
-        // ReSharper disable once UnusedParameter.Local
-        private static void UnobservedJobHandlerHandler(string jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
-        {
-            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
-            var loggerInstance = (ILogger) logger?.ImplementationInstance;
-
-            loggerInstance?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
-
-            exceptionEventArgs.SetObserved();
         }
     }
 }
