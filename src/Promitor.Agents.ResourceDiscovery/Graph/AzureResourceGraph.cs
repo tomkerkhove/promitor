@@ -82,7 +82,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var response = await InteractWithAzureResourceGraphAsync2(queryName, query,  async graphClient =>
+            var response = await InteractWithAzureResourceGraphAsync(queryName, query,  async graphClient =>
             {
                 var queryOptions = new QueryRequestOptions
                 {
@@ -96,7 +96,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         }
 
         // TODO: Clean up
-        private async Task<TResponse> InteractWithAzureResourceGraphAsync<TResponse>(string queryName, string query, List<string> targetSubscriptions, Func<ResourceGraphClient, Task<TResponse>> interactionFunc)
+        private async Task<TResponse> InteractWithAzureResourceGraphAsync<TResponse>(string queryName, string query, Func<ResourceGraphClient, Task<TResponse>> interactionFunc, List<string> targetSubscriptions = null)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
@@ -157,79 +157,13 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                         var contextualInformation = new Dictionary<string, object>
                         {
                             {"Query", query},
-                            {"QueryName", queryName},
-                            {"Subscriptions", targetSubscriptions}
-                        };
-
-                        _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
-                    }
-                }
-            });
-        }
-
-        private async Task<TResponse> InteractWithAzureResourceGraphAsync2<TResponse>(string queryName, string query, Func<ResourceGraphClient, Task<TResponse>> interactionFunc, List<string> subscriptions = null)
-        {
-            Guard.NotNullOrWhitespace(query, nameof(query));
-
-            var retryPolicy = Policy.Handle<ErrorResponseException>(ex => ex.Response?.StatusCode == HttpStatusCode.Unauthorized)
-                .RetryAsync(retryCount: 3, OnRetryAsync);
-
-            return await retryPolicy.ExecuteAsync(async () =>
-            {
-                var graphClient = await GetOrCreateClient();
-
-                bool isSuccessfulDependency = false;
-                using (var dependencyMeasurement = DependencyMeasurement.Start())
-                {
-                    try
-                    {
-                        var response = await interactionFunc(graphClient);
-                        isSuccessfulDependency = true;
-
-                        return response;
-                    }
-                    catch (ErrorResponseException responseException)
-                    {
-                        if (responseException.Response != null)
-                        {
-                            if (responseException.Response.StatusCode == HttpStatusCode.Forbidden)
-                            {
-                                var unauthorizedException = new Exception("Forbidden");
-
-                                throw unauthorizedException;
-                            }
-
-                            if (responseException.Response.StatusCode == HttpStatusCode.BadRequest)
-                            {
-                                var response = JToken.Parse(responseException.Response.Content);
-                                var errorDetails = response["error"]?["details"];
-                                if (errorDetails != null)
-                                {
-                                    var errorCodes = new List<string>();
-                                    foreach (var detailEntry in errorDetails)
-                                    {
-                                        errorCodes.Add(detailEntry["code"]?.ToString());
-                                    }
-
-                                    if (errorCodes.Any(errorCode => errorCode.Equals("NoValidSubscriptionsInQueryRequest", StringComparison.InvariantCultureIgnoreCase)))
-                                    {
-                                        var invalidSubscriptionException = new QueryContainsInvalidSubscriptionException(new List<string>{"temp"});
-                                        _logger.LogCritical(invalidSubscriptionException, "Unable to query Azure Resource Graph");
-                                        throw invalidSubscriptionException;
-                                    }
-                                }
-                            }
-                        }
-
-                        throw;
-                    }
-                    finally
-                    {
-                        var contextualInformation = new Dictionary<string, object>
-                        {
-                            {"Query", query},
                             {"QueryName", queryName}
                         };
+
+                        if (targetSubscriptions?.Any() == true)
+                        {
+                            contextualInformation.Add("Subscriptions", targetSubscriptions);
+                        }
 
                         _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
                     }
