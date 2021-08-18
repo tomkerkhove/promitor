@@ -76,7 +76,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 | where type == ""microsoft.resources/subscriptions""
 | project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
 
-            var unparsedResults = await _azureResourceGraph.QueryAsync2("Discover Azure Subscriptions", query);
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query);
             return ParseQueryResults<AzureSubscriptionInformation>(unparsedResults, row => new AzureSubscriptionInformation
             {
                 TenantId = row[0]?.ToString(),
