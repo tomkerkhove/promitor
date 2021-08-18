@@ -5,7 +5,6 @@ COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
 COPY Promitor.Core.Contracts/* Promitor.Core.Contracts/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core/* Promitor.Core/
-COPY Promitor.Integrations.Azure/* Promitor.Integrations.Azure/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
 COPY Promitor.Integrations.Azure/* Promitor.Integrations.Azure/
 COPY Promitor.Integrations.AzureMonitor/* Promitor.Integrations.AzureMonitor/
