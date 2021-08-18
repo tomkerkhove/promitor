@@ -117,7 +117,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
                 .StrictMode(true)
                 .RuleFor(landscape => landscape.Subscriptions, faker => new List<string> { faker.Name.FirstName(), faker.Name.FirstName() })
                 .RuleFor(landscape => landscape.TenantId, faker => faker.Name.FirstName())
-                .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom<AzureCloud>(allowedAzureClouds))
+                .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom(allowedAzureClouds))
                 .Generate();
 
             return Options.Create(azureLandscape);

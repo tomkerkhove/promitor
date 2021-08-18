@@ -9,7 +9,7 @@
             API endpoint to discover Azure resources
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController.#ctor(Promitor.Agents.ResourceDiscovery.Repositories.Interfaces.IAzureResourceRepository)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces.IAzureResourceRepository)">
             <summary>
             Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController"/> class.
             </summary>
@@ -71,7 +71,7 @@
                 Inject configuration
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddBackgroundJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddBackgroundJobs(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
                 Inject configuration
             </summary>
@@ -107,6 +107,22 @@
             </summary>
             <param name="queryResponse">Response provided by Azure Resource Graph after running a query</param>
         </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Interfaces.IAzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.GetResourcesAsync(System.String)">
+            <summary>
+                Get resources that are part of a given resource collection
+            </summary>
+            <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.CachedAzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.CacheConfiguration})">
+            <summary>
+                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Graph.ResourceDiscoveryQuery.GetParentResourceNameFromResourceUri(System.String,Newtonsoft.Json.Linq.JToken)">
             <summary>
             Gets the name of the parent resource from a resource URI
@@ -114,22 +130,6 @@
             <param name="resourceIdentifier">Identifier to split on, ie servers/ for Azure SQL DB to get the server name</param>
             <param name="resourceUri">Uri of the child resource</param>
             <returns>Name of the parent resource</returns>
-        </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.AzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Interfaces.IAzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Repositories.AzureResourceRepository})">
-            <summary>
-                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
-            </summary>
-        </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.AzureResourceRepository.GetResourcesAsync(System.String)">
-            <summary>
-                Get resources that are part of a given resource collection
-            </summary>
-            <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
-        </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Repositories.CachedAzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Repositories.AzureResourceRepository,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.CacheConfiguration})">
-            <summary>
-                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
-            </summary>
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>

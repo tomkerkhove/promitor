@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -35,7 +35,7 @@ namespace Promitor.Core.Scraping
 
             Logger = scraperConfiguration.Logger;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
-            RuntimeMetricsCollector = scraperConfiguration.RuntimeMetricsCollector;
+            AzureScrapingPrometheusMetricsCollector = scraperConfiguration.AzureScrapingPrometheusMetricsCollector;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Collector to send metrics related to the runtime
         /// </summary>
-        public IRuntimeMetricsCollector RuntimeMetricsCollector { get; }
+        public IAzureScrapingPrometheusMetricsCollector AzureScrapingPrometheusMetricsCollector { get; }
 
         /// <summary>
         ///     Provide logger to scraper
@@ -132,8 +132,8 @@ namespace Promitor.Core.Scraping
             };
 
             // Report!
-            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
-            RuntimeMetricsCollector.SetGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+            AzureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            AzureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)

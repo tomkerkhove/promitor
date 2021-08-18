@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Core.Contracts;
 using Newtonsoft.Json.Converters;
-using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Controllers
 {

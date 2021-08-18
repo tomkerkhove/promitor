@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -13,12 +14,11 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
-using Promitor.Agents.Scraper.Extensions;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Core;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -32,6 +32,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.Prometheus;
+using Promitor.Integrations.Sinks.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
@@ -92,9 +93,9 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             Guard.NotNull(services, nameof(services));
-
+            
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IRuntimeMetricsCollector, RuntimeMetricsCollector>();
+            services.AddTransient<IAzureScrapingPrometheusMetricsCollector, AzureScrapingPrometheusMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
