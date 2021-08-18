@@ -40,7 +40,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedAzureSubscriptionInfoMetricIsAvailable()
         {
             // Arrange
-            const int expectedSubscriptionCount = 2;// We expect to get our 2 Azure subscriptions here
+            const int expectedSubscriptionCount = 2; // We expect to get our 2 Azure subscriptions here
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
