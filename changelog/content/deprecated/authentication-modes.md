@@ -11,7 +11,8 @@ version:
 
 ###### Deprecated as of April 5th, 2021 and will be removed in new major version
 
-Promitor has been using service principle authentication from its inception where the identity inforation was configured through the following environment variables:
+Promitor has been using service principle authentication from its inception where the identity
+inforation was configured through the following environment variables:
 
 - `PROMITOR_AUTH_APPKEY`
 - `PROMITOR_AUTH_APPID`

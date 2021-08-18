@@ -1,0 +1,23 @@
+name: Lint Markdown
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  lint-changelog:
+    name: Lint Markdown Files
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Lint Files
+      uses: avto-dev/markdown-lint@v1
+      with:
+        args: '**/*.md --ignore changelog/themes/hugo-changelog-theme/'
