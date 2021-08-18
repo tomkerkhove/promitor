@@ -77,7 +77,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 | project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
 
             var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query);
-            return ParseQueryResults<AzureSubscriptionInformation>(unparsedResults, row => new AzureSubscriptionInformation
+            return ParseQueryResults(unparsedResults, row => new AzureSubscriptionInformation
             {
                 TenantId = row[0]?.ToString(),
                 Name = row[2]?.ToString(),
@@ -96,7 +96,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 | project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
 
             var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query);
-            return ParseQueryResults<AzureResourceGroupInformation>(unparsedResults, row => new AzureResourceGroupInformation
+            return ParseQueryResults(unparsedResults, row => new AzureResourceGroupInformation
             {
                 TenantId = row[0]?.ToString(),
                 SubscriptionId = row[1]?.ToString(),

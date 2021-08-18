@@ -24,7 +24,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Exceptions
                 return $"Unable to discover resources due to an invalid subscription that was specified ({string.Join(",", queriedSubscriptions)})";
             }
 
-            return $"Unable to discover resources due to an invalid subscription that was specified while querying discovered subscriptions";
+            return "Unable to discover resources due to an invalid subscription that was specified while querying discovered subscriptions";
         }
     }
 }
