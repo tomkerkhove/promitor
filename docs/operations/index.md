@@ -58,7 +58,18 @@ Next to that, it provides a variety of system metrics that provides information 
 
 ### Subscription
 
-TODO
+Our `promitor_azure_landscape_subscription_info` metrics provides an overview of all the Azure subscriptions that
+ Promitor is able to discover in your Azure Landscape.
+
+It provides the following tags with more information:
+
+- `tenant_id` - Id of the Azure tenant
+- `subscription_name` - Name of the Azure subscription
+- `subscription_id` - Id of the Azure subscription
+- `state` - Indication of the state of the subscription ([docs](https://docs.microsoft.com/en-us/azure/cost-management-billing/manage/subscription-states))
+- `spending_limit` - Indication whether or not there is a spending limit
+- `quota_id` - Id of the Azure subscription used to manage quotas
+- `authorization` - Type of authorization that is being used
 
 ```prometheus
 # HELP promitor_azure_landscape_subscription_info Provides information concerning the Azure subscriptions in the landscape that Promitor has access to.
@@ -69,7 +80,17 @@ promitor_azure_landscape_subscription_info{tenant_id="c8819874-9e56-4e3f-b1a8-1c
 
 ### Resource Groups
 
-TODO
+Our `promitor_azure_landscape_resource_group_info` metrics provides an overview of all the Azure resource groups that
+ Promitor is able to discover in your Azure Landscape across all your subscriptions.
+
+It provides the following tags with more information:
+
+- `tenant_id` - Id of the Azure tenant
+- `subscription_id` - Id of the Azure subscription
+- `resource_group_name` - Name of the Azure resource group
+- `region` - Region in which the resource group is located
+- `provisioning_state` - State of the resource group
+- `managed_by` - Id of the Azure resource managing this resource group, for example an Azure Kubernetes Service cluster.
 
 ```prometheus
 # HELP promitor_azure_landscape_resource_group_info Provides information concerning the Azure resource groups in the landscape that Promitor has access to.
