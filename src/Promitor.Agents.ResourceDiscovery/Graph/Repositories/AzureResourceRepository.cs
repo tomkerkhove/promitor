@@ -70,6 +70,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             return foundResources;
         }
 
+        // TODO: Unit test
         public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
         {
             var query = @"ResourceContainers
@@ -89,6 +90,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             });
         }
 
+        // TODO: Unit test
         public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
         {
             var query = @"ResourceContainers
