@@ -52,7 +52,15 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
-        public async Task<JObject> QueryAsync(string queryName, string query)
+        public async Task<JObject> QueryAzureLandscapeAsync(string queryName, string query)
+        {
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
+            var queryResponse = await QueryAsync(queryName, query, targetSubscriptions: null);
+            return queryResponse.Data as JObject;
+        }
+
+        public async Task<JObject> QueryTargetSubscriptionsAsync(string queryName, string query)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
@@ -70,24 +78,25 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return foundResources;
         }
 
-        private async Task<QueryResponse> QueryAsync(string queryName, string query, List<string> targetSubscriptions)
+        private async Task<QueryResponse> QueryAsync(string queryName, string query, List<string> targetSubscriptions = null)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var response = await InteractWithAzureResourceGraphAsync(queryName, query, targetSubscriptions, async graphClient =>
+            var response = await InteractWithAzureResourceGraphAsync(queryName, query,  async graphClient =>
             {
                 var queryOptions = new QueryRequestOptions
                 {
                     ResultFormat = ResultFormat.Table
                 };
-                var queryRequest = new QueryRequest(targetSubscriptions, query, options: queryOptions);
+                var queryRequest = new QueryRequest(query, options: queryOptions, subscriptions: targetSubscriptions);
                 return await graphClient.ResourcesAsync(queryRequest);
             });
 
             return response;
         }
 
-        private async Task<TResponse> InteractWithAzureResourceGraphAsync<TResponse>(string queryName, string query, List<string> targetSubscriptions, Func<ResourceGraphClient, Task<TResponse>> interactionFunc)
+        // TODO: Clean up
+        private async Task<TResponse> InteractWithAzureResourceGraphAsync<TResponse>(string queryName, string query, Func<ResourceGraphClient, Task<TResponse>> interactionFunc, List<string> targetSubscriptions = null)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
@@ -148,9 +157,13 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                         var contextualInformation = new Dictionary<string, object>
                         {
                             {"Query", query},
-                            {"QueryName", queryName},
-                            {"Subscriptions", targetSubscriptions}
+                            {"QueryName", queryName}
                         };
+
+                        if (targetSubscriptions?.Any() == true)
+                        {
+                            contextualInformation.Add("Subscriptions", targetSubscriptions);
+                        }
 
                         _logger.LogDependency("Azure Resource Graph", query, "Query", isSuccessfulDependency, dependencyMeasurement, contextualInformation);
                     }

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
+using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Extensions;

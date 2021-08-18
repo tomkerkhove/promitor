@@ -87,6 +87,7 @@ and vote for features!
     - [Required permissions for Azure Resource Graph](configuration/v2.x/azure-authentication#required-permissions-for-azure-resource-graph)
 - **Operations**
   - [Health](operations#health)
+  - [Discovery](operations#discovery)
   - [Performance](operations#performance)
   - [System](operations#system)
   - [Integrations](operations#integrations)

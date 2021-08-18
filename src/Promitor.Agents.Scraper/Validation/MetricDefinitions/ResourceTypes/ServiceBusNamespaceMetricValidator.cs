@@ -40,7 +40,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 
                 if (string.IsNullOrWhiteSpace(resourceDefinition.QueueName) == false && string.IsNullOrWhiteSpace(resourceDefinition.TopicName) == false)
                 {
-                    errorMessages.Add($"Queue & topic name are both configured while we only support one or the other.");
+                    errorMessages.Add("Queue & topic name are both configured while we only support one or the other.");
                 }
             }
 

@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
+using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
-using Promitor.Agents.ResourceDiscovery.Repositories;
-using Promitor.Agents.ResourceDiscovery.Repositories.Interfaces;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories;
+using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication.Configuration;
-using Promitor.Integrations.Sinks.Prometheus;
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
@@ -45,30 +43,50 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
         /// <summary>
         ///     Inject configuration
         /// </summary>
-        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddBackgroundJobs(this IServiceCollection services)
         {
             services.AddScheduler(builder =>
             {
-                var jobName = "Azure Landscape Discovery";
-                builder.AddJob<AzureLandscapeDiscoveryBackgroundJob>(configure: schedulerOptions =>
+                var jobName = "Azure Subscription Discovery";
+                builder.AddJob<AzureSubscriptionDiscoveryBackgroundJob>(
+                    jobServices =>
                     {
-                        schedulerOptions.CronSchedule = "*/5 * * * *";
+                        return new AzureSubscriptionDiscoveryBackgroundJob(jobName,
+                            jobServices.GetRequiredService<IAzureResourceRepository>(),
+                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
+                            jobServices.GetRequiredService<ILogger<AzureSubscriptionDiscoveryBackgroundJob>>());
+                    },
+                    schedulerOptions =>
+                    {
+                        schedulerOptions.CronSchedule = "0 * * * *";
                         schedulerOptions.RunImmediately = true;
-                    });
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => UnobservedJobHandler(jobName, exceptionEventArgs, services);
+                    },
+                    jobName: jobName);
+
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+            });
+            services.AddScheduler(builder =>
+            {
+                var jobName = "Azure Resource Group Discovery";
+                builder.AddJob<AzureResourceGroupsDiscoveryBackgroundJob>(
+                    jobServices =>
+                    {
+                        return new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
+                            jobServices.GetRequiredService<IAzureResourceRepository>(),
+                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
+                            jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>());
+                    },
+                    schedulerOptions =>
+                    {
+                        schedulerOptions.CronSchedule = "*/15 * * * *";
+                        schedulerOptions.RunImmediately = true;
+                    },
+                    jobName: jobName);
+
+                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             return services;
-        }
-
-        private static void UnobservedJobHandler(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
-        {
-            var logger = services.FirstOrDefault(service => service.ServiceType == typeof(ILogger));
-            var loggerInstance = (ILogger)logger?.ImplementationInstance;
-
-            loggerInstance?.LogCritical(exceptionEventArgs.Exception, "Unhandled exception in job {JobName}", jobName);
-
-            exceptionEventArgs.SetObserved();
         }
 
         /// <summary>

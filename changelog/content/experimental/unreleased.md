@@ -16,3 +16,7 @@ version:
  | [#341](https://github.com/tomkerkhove/promitor/issues/341))
 - {{% tag added %}} Provide system metric related to HTTP request performance ([docs](https://promitor.io/operations/#performance)
  | [#1717](https://github.com/tomkerkhove/promitor/issues/1717))
+- {{% tag added %}} Provide system metrics with discovered subscription information ([docs](https://promitor.io/operations/#discovery))
+ | [#1716](https://github.com/tomkerkhove/promitor/issues/1716))
+- {{% tag added %}} Provide system metrics with discovered resource group information ([docs](https://promitor.io/operations/#discovery))
+ | [#1716](https://github.com/tomkerkhove/promitor/issues/1716))

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Discovery;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -25,7 +25,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly MetricDefinition _metricDefinition;
         private readonly AzureMetadata _azureMetadata;
         private readonly MetricSinkWriter _metricSinkWriter;
-        private readonly IRuntimeMetricsCollector _runtimeMetricCollector;
+        private readonly IAzureScrapingPrometheusMetricsCollector _azureScrapingPrometheusMetricsCollector;
         private readonly AzureMonitorClientFactory _azureMonitorClientFactory;
         private readonly IConfiguration _configuration;
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
@@ -36,7 +36,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         public ResourceDiscoveryGroupScrapingJob(string jobName, string resourceDiscoveryGroupName, AzureMetadata azureMetadata, MetricDefinition metricDefinition, ResourceDiscoveryRepository resourceDiscoveryRepository,
             MetricSinkWriter metricSinkWriter,
             MetricScraperFactory metricScraperFactory,
-            AzureMonitorClientFactory azureMonitorClientFactory, IRuntimeMetricsCollector runtimeMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,
+            AzureMonitorClientFactory azureMonitorClientFactory, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,
             ILogger<ResourceDiscoveryGroupScrapingJob> logger)
             : base(jobName, logger)
         {
@@ -47,7 +47,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNullOrWhitespace(jobName, nameof(jobName));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
             Guard.NotNull(azureMonitorClientFactory, nameof(azureMonitorClientFactory));
-            Guard.NotNull(runtimeMetricCollector, nameof(runtimeMetricCollector));
+            Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
@@ -60,7 +60,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _resourceDiscoveryRepository = resourceDiscoveryRepository;
             _metricSinkWriter = metricSinkWriter;
 
-            _runtimeMetricCollector = runtimeMetricCollector;
+            _azureScrapingPrometheusMetricsCollector = azureScrapingPrometheusMetricsCollector;
             _azureMonitorClientFactory = azureMonitorClientFactory;
             _configuration = configuration;
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
@@ -91,7 +91,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 {
                     Logger.LogDebug($"Scraping discovered resource {discoveredResource}");
 
-                    var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_azureMetadata.Cloud, _azureMetadata.TenantId, discoveredResource.SubscriptionId, _metricSinkWriter, _runtimeMetricCollector, _configuration, _azureMonitorLoggingConfiguration, _loggerFactory);
+                    var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_azureMetadata.Cloud, _azureMetadata.TenantId, discoveredResource.SubscriptionId, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, _configuration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
                     // Scrape resource
                     var scrapeTask = ScrapeResourceAsync(discoveredResource, azureMonitorClient);
@@ -112,7 +112,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             {
                 var scrapingDefinition = _metricDefinition.CreateScrapeDefinition(discoveredResource, _azureMetadata);
 
-                var scraper = _metricScraperFactory.CreateScraper(scrapingDefinition.Resource.ResourceType, _metricSinkWriter, _runtimeMetricCollector, azureMonitorClient);
+                var scraper = _metricScraperFactory.CreateScraper(scrapingDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, azureMonitorClient);
                 await scraper.ScrapeAsync(scrapingDefinition);
             }
             catch (Exception exception)

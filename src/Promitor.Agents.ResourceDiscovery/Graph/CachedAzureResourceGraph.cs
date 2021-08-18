@@ -35,7 +35,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 return cachedQueryResult;
             }
 
-            var queryResult = await _azureResourceGraph.QueryAsync(queryName, query);
+            var queryResult = await _azureResourceGraph.QueryTargetSubscriptionsAsync(queryName, query);
             AddCacheEntry(queryName, queryResult);
 
             return queryResult;

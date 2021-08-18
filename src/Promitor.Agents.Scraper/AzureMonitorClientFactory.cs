@@ -3,7 +3,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor;
@@ -22,27 +22,27 @@ namespace Promitor.Agents.Scraper
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
-        /// <param name="metricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="configuration">Configuration of Promitor</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient CreateIfNotExists(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
+        public AzureMonitorClient CreateIfNotExists(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             if (_azureMonitorClients.ContainsKey(subscriptionId))
             {
                 return _azureMonitorClients[subscriptionId];
             }
 
-            var azureMonitorClient = CreateNewAzureMonitorClient(cloud, tenantId, subscriptionId, metricSinkWriter, metricsCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+            var azureMonitorClient = CreateNewAzureMonitorClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingPrometheusMetricsCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
             _azureMonitorClients.TryAdd(subscriptionId, azureMonitorClient);
 
             return azureMonitorClient;
         }
 
-        private static AzureMonitorClient CreateNewAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IRuntimeMetricsCollector metricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
+        private static AzureMonitorClient CreateNewAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             var azureCredentials = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
-            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials, azureMonitorLoggingConfiguration, metricSinkWriter, metricsCollector, loggerFactory);
+            var azureMonitorClient = new AzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials, metricSinkWriter, azureScrapingPrometheusMetricsCollector, loggerFactory, azureMonitorLoggingConfiguration);
             return azureMonitorClient;
         }
     }
