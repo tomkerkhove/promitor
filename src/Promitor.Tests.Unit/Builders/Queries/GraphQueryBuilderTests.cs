@@ -13,7 +13,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
         public void ForResourceType_SingleResourceType_ReturnsValidGraphQueryBuilder()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 "| where type =~ 'resource type'";
 
@@ -21,25 +21,25 @@ namespace Promitor.Tests.Unit.Builders.Queries
             GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceType);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void ForResourceType_TwoResourceTypes_ReturnsValidGraphQueryBuilder()
         {
             // Arrange
-            const string ResourceType1 = "resource type 1";
-            const string ResourceType2 = "resource type 2";
-            string ExpectedQuery =
+            const string resourceType1 = "resource type 1";
+            const string resourceType2 = "resource type 2";
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type 1'{Environment.NewLine}" +
                 " or type =~ 'resource type 2'";
 
             // Act
-            GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(new[] { ResourceType1, ResourceType2 });
+            GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(new[] { resourceType1, resourceType2 });
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Theory]
@@ -50,7 +50,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
         public void Where_AppendCorrectQuery(Operator @operator, string queryOperatopr)
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| where field " + queryOperatopr + " 'value'";
@@ -61,14 +61,14 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.Where("field", @operator, "value");
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void WithSubscriptionsWithIds_AppendCorrectQuery()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| where subscriptionId =~ 'subscription Id 1' or subscriptionId =~ 'subscription Id 2' or subscriptionId =~ 'subscription Id 3'";
@@ -86,14 +86,14 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.WithSubscriptionsWithIds(subscriptionIds);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void WithResourceGroupsWithName_AppendCorrectQuery()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| where resourceGroup =~ 'resourceGroup 1' or resourceGroup =~ 'resourceGroup 2' or resourceGroup =~ 'resourceGroup 3'";
@@ -111,14 +111,14 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.WithResourceGroupsWithName(resourceGroups);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void WithinRegions_AppendCorrectQuery()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| where location =~ 'region 1' or location =~ 'region 2' or location =~ 'region 3'";
@@ -136,14 +136,14 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.WithinRegions(regions);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void WithinTags_AppendCorrectQuery()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| where tags['tag key 1'] == 'tag value 1' or tags['tag key 2'] == 'tag value 2' or tags['tag key 3'] == 'tag value 3'";
@@ -161,14 +161,14 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.WithTags(tags);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void Project_SingleField_ReturnsValidGraphQueryBuilder()
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| project field";
@@ -179,17 +179,17 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.Project("field");
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Fact]
         public void Project_TwoFields_ReturnsValidGraphQueryBuilder()
         {
             // Arrange
-            const string Field1 = "field 1";
-            const string Field2 = "field 2";
+            const string field1 = "field 1";
+            const string field2 = "field 2";
 
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| project field 1, field 2";
@@ -197,10 +197,10 @@ namespace Promitor.Tests.Unit.Builders.Queries
             GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceType);
 
             // Act
-            graphQueryBuilder.Project(new[] { Field1, Field2 });
+            graphQueryBuilder.Project(new[] { field1, field2 });
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
 
         [Theory]
@@ -211,7 +211,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
         public void LimitTo_AppendCorrectQuery(int limit)
         {
             // Arrange
-            string ExpectedQuery =
+            string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
                 "| limit " + limit;
@@ -222,7 +222,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
             graphQueryBuilder.LimitTo(limit);
 
             // Assert
-            Assert.Equal(ExpectedQuery, graphQueryBuilder.Build());
+            Assert.Equal(expectedQuery, graphQueryBuilder.Build());
         }
     }
 }
