@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
+using Promitor.Core;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
@@ -61,6 +62,22 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 
             // Act
             var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(AzureResourceGroupsDiscoveryBackgroundJob.MetricName);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(AzureResourceGroupsDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedAzureResourceGraphThrottlingMetricIsAvailable()
+        {
+            // Arrange
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForResourceGraph);
 
             // Assert
             Assert.NotNull(gaugeMetric);
