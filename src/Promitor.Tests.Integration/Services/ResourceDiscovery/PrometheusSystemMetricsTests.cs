@@ -81,7 +81,23 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 
             // Assert
             Assert.NotNull(gaugeMetric);
-            Assert.Equal(AzureResourceGroupsDiscoveryBackgroundJob.MetricName, gaugeMetric.Name);
+            Assert.Equal(RuntimeMetricNames.RateLimitingForResourceGraph, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedResourceGraphThrottledMetricIsAvailable()
+        {
+            // Arrange
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ResourceGraphThrottled);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(RuntimeMetricNames.ResourceGraphThrottled, gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
