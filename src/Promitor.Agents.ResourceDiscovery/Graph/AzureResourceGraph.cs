@@ -100,7 +100,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             return response;
         }
 
-        // TODO: Clean up
         private async Task<TResponse> InteractWithAzureResourceGraphAsync<TResponse>(string queryName, string query, Func<ResourceGraphClient, Task<TResponse>> interactionFunc, List<string> targetSubscriptions = null)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
