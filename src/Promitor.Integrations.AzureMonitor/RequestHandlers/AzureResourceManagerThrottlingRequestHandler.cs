@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Logging;
+using Promitor.Agents.Core.RequestHandlers;
 using Promitor.Core;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
@@ -18,12 +17,15 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
     /// <summary>
     ///     Request handler to provide insights on the current api consumption and throttling of Azure Resource Manager
     /// </summary>
-    public class AzureResourceManagerThrottlingRequestHandler : DelegatingHandlerBase
+    public class AzureResourceManagerThrottlingRequestHandler : ThrottlingRequestHandler
     {
-        private readonly ILogger _logger;
         private readonly Dictionary<string, string> _metricLabels;
         private readonly MetricSinkWriter _metricSinkWriter;
         private readonly IAzureScrapingPrometheusMetricsCollector _azureScrapingPrometheusMetricsCollector;
+        public override string DependencyName => "Azure Resource Manager (ARM)";
+        private const string ThrottlingHeaderName = "x-ms-ratelimit-remaining-subscription-reads";
+        private const string AvailableCallsMetricDescription = "Indication how many calls are still available before Azure Resource Manager (ARM) is going to throttle us.";
+        private const string ThrottledMetricDescription = "Indication concerning Azure Resource Manager are being throttled. (1 = yes, 0 = no).";
 
         /// <summary>
         ///     Constructor
@@ -35,15 +37,14 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
         public AzureResourceManagerThrottlingRequestHandler(string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, ILogger logger)
+            : base(azureScrapingPrometheusMetricsCollector, logger)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
             Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
-            Guard.NotNull(logger, nameof(logger));
 
-            _logger = logger;
             _metricSinkWriter = metricSinkWriter;
             _azureScrapingPrometheusMetricsCollector = azureScrapingPrometheusMetricsCollector;
 
@@ -57,36 +58,33 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             };
         }
 
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override HttpRequestMessage BeforeSendingRequest(HttpRequestMessage request)
         {
             string agentVersion = Version.Get();
             var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
             request.Headers.UserAgent.Clear();
             request.Headers.UserAgent.TryParseAdd(promitorUserAgent);
 
-            var response = await base.SendAsync(request, cancellationToken);
-
-            await MeasureArmRateLimitingAsync(response);
-
-            if ((int)response.StatusCode == 429)
-            {
-                LogArmThrottling();
-            }
-
-            return response;
+            return request;
         }
-
-        private async Task MeasureArmRateLimitingAsync(HttpResponseMessage response)
+        
+        protected override async Task AvailableRateLimitingCallsAsync(HttpResponseMessage response)
         {
             // Source: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-request-limits
-            if (response.Headers.Contains("x-ms-ratelimit-remaining-subscription-reads"))
+            if (response.Headers.Contains(ThrottlingHeaderName))
             {
-                var remainingApiCalls = response.Headers.GetValues("x-ms-ratelimit-remaining-subscription-reads").FirstOrDefault();
+                var remainingApiCalls = response.Headers.GetValues(ThrottlingHeaderName).FirstOrDefault();
                 var subscriptionReadLimit = Convert.ToInt16(remainingApiCalls);
-                await _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
-                _azureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, "Indication how many calls are still available before Azure Resource Manager is going to throttle us.", subscriptionReadLimit, _metricLabels);
+                
+                // Report metric
+                await _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
+                _azureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
             }
         }
+
+        protected override Dictionary<string, string> GetMetricLabels() => _metricLabels;
+        protected override string GetThrottlingStatusMetricName() => RuntimeMetricNames.ArmThrottled;
+        protected override string GetThrottlingStatusMetricDescription() => ThrottledMetricDescription;
 
         private string DetermineApplicationId(AzureAuthenticationInfo azureAuthenticationInfo)
         {
@@ -101,11 +99,6 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
             }
-        }
-
-        private void LogArmThrottling()
-        {
-            _logger.LogWarning("Azure subscription rate limit reached.");
         }
     }
 }

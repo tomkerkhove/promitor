@@ -123,6 +123,14 @@
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
             </summary>
         </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers.AzureResourceGraphThrottlingRequestHandler.#ctor(Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IPrometheusMetricsCollector,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+                Constructor
+            </summary>
+            <param name="prometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+            <param name="metricLabels"></param>
+            <param name="logger">Logger to write telemetry to</param>
+        </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Graph.ResourceDiscoveryQuery.GetParentResourceNameFromResourceUri(System.String,Newtonsoft.Json.Linq.JToken)">
             <summary>
             Gets the name of the parent resource from a resource URI

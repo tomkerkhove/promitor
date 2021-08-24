@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Promitor.Core;
 using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
@@ -31,6 +32,38 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             // Assert
             Assert.NotNull(gaugeMetric);
             Assert.Equal(expectedMetricName, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
+        {
+            // Arrange
+            var scraperClient = new ScraperClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(RuntimeMetricNames.RateLimitingForArm, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        [Fact]
+        public async Task Prometheus_Scrape_ExpectedArmThrottledMetricIsAvailable()
+        {
+            // Arrange
+            var scraperClient = new ScraperClient(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(RuntimeMetricNames.ArmThrottled, gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }

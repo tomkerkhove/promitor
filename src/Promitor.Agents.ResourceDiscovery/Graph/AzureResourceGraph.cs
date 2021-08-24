@@ -16,8 +16,10 @@ using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers;
 using Promitor.Core;
 using Promitor.Core.Extensions;
+using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
@@ -25,6 +27,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
     public class AzureResourceGraph : IAzureResourceGraph
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
+        private readonly IPrometheusMetricsCollector _prometheusMetricsCollector;
         private readonly ILogger<AzureResourceGraph> _logger;
 
         private ResourceGraphClient _graphClient;
@@ -39,8 +42,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         
         private readonly AzureAuthenticationInfo _azureAuthenticationInfo;
 
-        public AzureResourceGraph(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, IConfiguration configuration, ILogger<AzureResourceGraph> logger)
+        public AzureResourceGraph(IPrometheusMetricsCollector prometheusMetricsCollector, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, IConfiguration configuration, ILogger<AzureResourceGraph> logger)
         {
+            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
             Guard.NotNull(resourceDeclarationMonitor.CurrentValue, nameof(resourceDeclarationMonitor.CurrentValue));
             Guard.NotNull(resourceDeclarationMonitor.CurrentValue.AzureLandscape, nameof(resourceDeclarationMonitor.CurrentValue.AzureLandscape));
@@ -49,6 +53,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
+            _prometheusMetricsCollector = prometheusMetricsCollector;
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
@@ -265,7 +270,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthorityHost);
             var resourceManagerBaseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);
 
-            var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials);
+            var metricLabels = new Dictionary<string, string>
+            {
+                {"tenant_id", TenantId},
+                {"cloud", azureEnvironment.GetDisplayName()},
+                {"app_id", _azureAuthenticationInfo.IdentityId},
+                {"auth_mode", _azureAuthenticationInfo.Mode.ToString()},
+            };
+            var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials, new AzureResourceGraphThrottlingRequestHandler(_prometheusMetricsCollector, metricLabels, _logger));
 
             var version = Promitor.Core.Version.Get();
             var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);

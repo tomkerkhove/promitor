@@ -27,5 +27,15 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             _prometheusMetricsCollector.WriteGaugeMeasurement(metricName, metricDescription, value, labels, includeTimestamp: true);
         }
+
+        protected string GetValueOrDefault(string preferredValue, string alternative)
+        {
+            if (string.IsNullOrWhiteSpace(preferredValue))
+            {
+                return alternative;
+            }
+
+            return preferredValue;
+        }
     }
 }

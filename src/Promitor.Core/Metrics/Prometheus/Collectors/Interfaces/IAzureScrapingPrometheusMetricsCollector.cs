@@ -2,7 +2,7 @@
 
 namespace Promitor.Core.Metrics.Prometheus.Collectors.Interfaces
 {
-    public interface IAzureScrapingPrometheusMetricsCollector
+    public interface IAzureScrapingPrometheusMetricsCollector : IPrometheusMetricsCollector
     {
         /// <summary>
         ///     Sets a new value for a measurement on a gauge

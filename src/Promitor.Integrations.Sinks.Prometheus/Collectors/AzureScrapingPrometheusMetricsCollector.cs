@@ -45,5 +45,10 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
         }
+
+        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
+        }
     }
 }
