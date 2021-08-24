@@ -50,6 +50,10 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
                     return new CosmosDbScraper(scraperConfiguration);
+                case ResourceType.DataFactory:
+                    return new DataFactoryScraper(scraperConfiguration);
+                case ResourceType.DataShare:
+                    return new DataShareScraper(scraperConfiguration);
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceScraper(scraperConfiguration);
                 case ResourceType.EventHubs:
