@@ -45,6 +45,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.CosmosDb:
                     var cosmosDbLogger = _loggerFactory.CreateLogger<CosmosDbDeserializer>();
                     return new CosmosDbDeserializer(cosmosDbLogger);
+                case ResourceType.DataFactory:
+                    var dataFactoryDeserializer = _loggerFactory.CreateLogger<DataFactoryDeserializer>();
+                    return new DataFactoryDeserializer(dataFactoryDeserializer);
+                case ResourceType.DataShare:
+                    var dataShareLogger = _loggerFactory.CreateLogger<DataShareDeserializer>();
+                    return new DataShareDeserializer(dataShareLogger);
                 case ResourceType.DeviceProvisioningService:
                     var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
                     return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);

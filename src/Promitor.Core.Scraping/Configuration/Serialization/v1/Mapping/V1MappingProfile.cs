@@ -30,6 +30,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
+            CreateMap<DataFactoryResourceV1, DataFactoryResourceDefinition>();
+            CreateMap<DataShareResourceV1, DataShareResourceDefinition>();
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
             CreateMap<CosmosDbResourceV1, CosmosDbResourceDefinition>();
             CreateMap<EventHubsResourceV1, EventHubResourceDefinition>();
@@ -75,6 +77,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
+                .Include<DataFactoryResourceV1, DataFactoryResourceDefinition>()
+                .Include<DataShareResourceV1, DataShareResourceDefinition>()
                 .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
                 .Include<EventHubsResourceV1, EventHubResourceDefinition>()
                 .Include<ExpressRouteCircuitResourceV1, ExpressRouteCircuitResourceDefinition>()

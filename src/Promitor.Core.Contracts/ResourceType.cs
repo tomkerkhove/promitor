@@ -39,6 +39,8 @@
         SynapseApacheSparkPool = 34,
         SynapseSqlPool = 35,
         SynapseWorkspace = 36,
-        MonitorAutoscale = 37
+        MonitorAutoscale = 37,
+        DataFactory = 38,
+        DataShare = 39
     }
 }
