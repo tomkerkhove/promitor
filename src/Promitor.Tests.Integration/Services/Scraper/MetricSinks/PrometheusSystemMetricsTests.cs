@@ -40,10 +40,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
             // Arrange
-            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+            var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
+            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -56,10 +56,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
             // Arrange
-            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+            var scraperClient = new ScraperClient(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await resourceDiscoveryClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
+            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
 
             // Assert
             Assert.NotNull(gaugeMetric);

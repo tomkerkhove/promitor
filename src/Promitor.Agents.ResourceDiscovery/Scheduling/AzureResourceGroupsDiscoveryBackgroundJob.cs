@@ -43,15 +43,14 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
 
         private void ReportDiscoveredAzureInfo(AzureResourceGroupInformation resourceGroupInformation)
         {
-            var managedByLabel = string.IsNullOrWhiteSpace(resourceGroupInformation.ManagedBy) ? "n/a" : resourceGroupInformation.ManagedBy;
             var labels = new Dictionary<string, string>
             {
                 { "tenant_id", resourceGroupInformation.TenantId },
                 { "subscription_id", resourceGroupInformation.SubscriptionId },
                 { "resource_group_name", resourceGroupInformation.Name },
-                { "provisioning_state", resourceGroupInformation.ProvisioningState },
-                { "managed_by", managedByLabel },
-                { "region", resourceGroupInformation.Region }
+                { "provisioning_state", GetValueOrDefault(resourceGroupInformation.ProvisioningState, "n/a") },
+                { "managed_by", GetValueOrDefault(resourceGroupInformation.ManagedBy, "n/a") },
+                { "region", GetValueOrDefault(resourceGroupInformation.Region, "n/a") }
             };
 
             // Report metric in Prometheus endpoint

@@ -49,10 +49,10 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
                 { "tenant_id", azureLandscapeInformation.TenantId },
                 { "subscription_id", azureLandscapeInformation.Id },
                 { "subscription_name", azureLandscapeInformation.Name},
-                { "quota_id", azureLandscapeInformation.QuotaId},
-                { "spending_limit", azureLandscapeInformation.SpendingLimit},
-                { "state", azureLandscapeInformation.State},
-                { "authorization", azureLandscapeInformation.AuthorizationSource}
+                { "quota_id", GetValueOrDefault(azureLandscapeInformation.QuotaId, "n/a")},
+                { "spending_limit", GetValueOrDefault(azureLandscapeInformation.SpendingLimit, "n/a")},
+                { "state", GetValueOrDefault(azureLandscapeInformation.State, "n/a")},
+                { "authorization", GetValueOrDefault(azureLandscapeInformation.AuthorizationSource, "n/a")}
             };
 
             // Report metric in Prometheus endpoint
