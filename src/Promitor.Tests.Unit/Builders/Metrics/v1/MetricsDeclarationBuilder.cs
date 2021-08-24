@@ -148,6 +148,42 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithDataShareMetric(string metricName = "promitor-data-share",
+            string metricDescription = "Description for a metric",
+            string shareName = "promitor-data-share",
+            string azureMetricName = "TotalRequests",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataShareResourceV1
+            {
+                ShareName = shareName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataShare, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithDataFactoryMetric(string metricName = "promitor-data-factory",
+            string metricDescription = "Description for a metric",
+            string factoryName = "promitor-data-factory",
+            string azureMetricName = "TotalRequests",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataFactoryResourceV1
+            {
+                FactoryName = factoryName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataFactory, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithEventHubsMetric(string metricName = "promitor-event-hubs",
             string metricDescription = "Description for a metric",
             string metricDimension = "",
