@@ -95,6 +95,8 @@ Dynamic resource discovery is supported for the following scrapers:
 - [Azure Container Instances](metrics/container-instances)
 - [Azure Container Registry](metrics/container-registry)
 - [Azure Cosmos DB](metrics/cosmos-db)
+- [Azure Data Factory](metrics/data-factory)
+- [Azure Data Share](metrics/data-share)
 - [Azure Database for PostgreSQL](metrics/postgresql)
 - [Azure Event Hubs](metrics/event-hubs)
 - [Azure Express Route Circuit](metrics/express-route-circuit)

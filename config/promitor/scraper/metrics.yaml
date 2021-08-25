@@ -47,6 +47,15 @@ metrics:
   - resourceGroupName: promitor-sources
     factoryName: promitor-data-factory
     pipelineName: metric-generator
+- name: promitor_demo_data_factory_pipeline_run_successful_discovered
+  description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
+  resourceType: DataFactory
+  azureMetricConfiguration:
+    metricName: PipelineSucceededRuns
+    aggregation:
+      type: Total
+  resourceDiscoveryGroups:
+  - name: data-factory-landscape
 - name: promitor_demo_data_share_received_declared
   description: "Amount of shares received from other parties per Azure Data Share account"
   resourceType: DataShare
@@ -68,3 +77,12 @@ metrics:
   - resourceGroupName: promitor-sources
     accountName: promitor-data-share
     shareName: Promitor
+- name: promitor_demo_data_share_received_discovered
+  description: "Amount of shares received from other parties per Azure Data Share account"
+  resourceType: DataShare
+  azureMetricConfiguration:
+    metricName: ShareSubscriptionCount
+    aggregation:
+      type: Maximum
+  resourceDiscoveryGroups:
+  - name: data-share-landscape
