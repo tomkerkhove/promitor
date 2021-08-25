@@ -6,6 +6,10 @@ version:
 
 #### Scraper
 
+- {{% tag added %}} Provide scraper for Azure Data Factory ([docs](https://promitor.io/configuration/v2.x/metrics/data-factory)
+ | [#359](https://github.com/tomkerkhove/promitor/issues/359))
+- {{% tag added %}} Provide scraper for Azure Data Share ([docs](https://promitor.io/configuration/v2.x/metrics/data-share)
+ | [#1678](https://github.com/tomkerkhove/promitor/issues/1678))
 - {{% tag added %}} Provide system metrics related to agent performance & resources ([docs](https://promitor.io/operations/#performance)
  | [#341](https://github.com/tomkerkhove/promitor/issues/341))
 - {{% tag added %}} Provide system metrics indicating ARM throttling status ([docs](https://promitor.io/operations/#azure-resource-manager-api---consumption--throttling)
