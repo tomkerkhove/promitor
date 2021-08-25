@@ -1,4 +1,5 @@
-﻿using Promitor.Core.Contracts;
+﻿using System.Collections.Generic;
+using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
@@ -16,6 +17,35 @@ namespace Promitor.Core.Scraping.ResourceTypes
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, DataFactoryResourceDefinition resource)
         {
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.FactoryName);
+        }
+
+        protected override string DetermineMetricFilter(DataFactoryResourceDefinition resourceDefinition)
+        {
+            var entityName = "*";
+
+            if (IsPipelineNameConfigured(resourceDefinition))
+            {
+                entityName = resourceDefinition.PipelineName;
+            }
+
+            return $"Name eq '{entityName}'";
+        }
+
+        protected override Dictionary<string, string> DetermineMetricLabels(DataFactoryResourceDefinition resourceDefinition)
+        {
+            var metricLabels = base.DetermineMetricLabels(resourceDefinition);
+
+            if (IsPipelineNameConfigured(resourceDefinition))
+            {
+                metricLabels.Add("pipeline_name", resourceDefinition.PipelineName);
+            }
+
+            return metricLabels;
+        }
+
+        private static bool IsPipelineNameConfigured(DataFactoryResourceDefinition resourceDefinition)
+        {
+            return string.IsNullOrWhiteSpace(resourceDefinition.PipelineName) == false;
         }
     }
 }

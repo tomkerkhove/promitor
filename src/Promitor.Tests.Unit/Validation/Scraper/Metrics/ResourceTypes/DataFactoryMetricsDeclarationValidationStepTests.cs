@@ -82,7 +82,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void DataFactoryMetricsDeclaration_DeclarationWithoutRegistryName_Fails()
+        public void DataFactoryMetricsDeclaration_DeclarationWithoutFactoryName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
@@ -96,6 +96,23 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void DataFactoryMetricsDeclaration_DeclarationWithoutPipelineName_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDataFactoryMetric(pipelineName: string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]

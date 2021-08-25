@@ -7,8 +7,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public DataShareDeserializer(ILogger<DataShareDeserializer> logger) : base(logger)
         {
-            Map(resource => resource.ShareName)
+            Map(resource => resource.AccountName)
                 .IsRequired();
+            Map(resource => resource.ShareName);
         }
     }
 }

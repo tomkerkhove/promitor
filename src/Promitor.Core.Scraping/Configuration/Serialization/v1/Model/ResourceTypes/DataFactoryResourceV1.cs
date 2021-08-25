@@ -9,5 +9,10 @@
         /// The data factory name.
         /// </summary>
         public string FactoryName { get; set; }
+
+        /// <summary>
+        /// The data pipeline name.
+        /// </summary>
+        public string PipelineName { get; set; }
     }
 }

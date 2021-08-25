@@ -150,6 +150,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         public MetricsDeclarationBuilder WithDataShareMetric(string metricName = "promitor-data-share",
             string metricDescription = "Description for a metric",
+            string accountName = "promitor-data-share-account",
             string shareName = "promitor-data-share",
             string azureMetricName = "TotalRequests",
             string resourceDiscoveryGroupName = "",
@@ -158,6 +159,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         {
             var resource = new DataShareResourceV1
             {
+                AccountName = accountName,
                 ShareName = shareName
             };
 
@@ -169,6 +171,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithDataFactoryMetric(string metricName = "promitor-data-factory",
             string metricDescription = "Description for a metric",
             string factoryName = "promitor-data-factory",
+            string pipelineName = "promitor-data-pipeline",
             string azureMetricName = "TotalRequests",
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
@@ -176,7 +179,8 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         {
             var resource = new DataFactoryResourceV1
             {
-                FactoryName = factoryName
+                FactoryName = factoryName,
+                PipelineName = pipelineName
             };
 
             CreateAndAddMetricDefinition(ResourceType.DataFactory, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);

@@ -6,6 +6,11 @@
     public class DataShareResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
+        /// The data share account name.
+        /// </summary>
+        public string AccountName { get; set; }
+        
+        /// <summary>
         /// The data share name.
         /// </summary>
         public string ShareName { get; set; }

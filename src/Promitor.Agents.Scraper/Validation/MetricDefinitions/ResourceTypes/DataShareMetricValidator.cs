@@ -15,9 +15,9 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<DataShareResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.ShareName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.AccountName))
                 {
-                    yield return "No Azure Data Share name name is configured";
+                    yield return "No Azure Data Share account name is configured";
                 }
             }
         }

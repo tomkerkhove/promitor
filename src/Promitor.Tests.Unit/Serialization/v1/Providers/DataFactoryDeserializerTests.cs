@@ -23,7 +23,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_FactoryNameSupplied_SetsContainerGroup()
+        public void Deserialize_FactoryNameSupplied_SetsFactoryName()
         {
             YamlAssert.PropertySet<DataFactoryResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
@@ -33,7 +33,26 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_ShareNameNotSupplied_Null()
+        public void Deserialize_PipelineNameSupplied_SetsPipelineName()
+        {
+            YamlAssert.PropertySet<DataFactoryResourceV1, AzureResourceDefinitionV1, string>(
+                _deserializer,
+                "pipelineName: staging",
+                "staging",
+                r => r.PipelineName);
+        }
+
+        [Fact]
+        public void Deserialize_PipelineNameNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull<DataFactoryResourceV1, AzureResourceDefinitionV1>(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                r => r.PipelineName);
+        }
+
+        [Fact]
+        public void Deserialize_FactoryNameNotSupplied_Null()
         {
             YamlAssert.PropertyNull<DataFactoryResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
@@ -42,7 +61,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_ShareNameNotSupplied_ReportsError()
+        public void Deserialize_FactoryNameNotSupplied_ReportsError()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");

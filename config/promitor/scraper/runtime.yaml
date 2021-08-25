@@ -12,11 +12,6 @@ metricSinks:
     host: graphite
     port: 8125
     metricPrefix: promitor.
-  atlassianStatuspage:
-    pageId: y79z9b78ybgs
-    systemMetricMapping:
-    - id: nfkgnrwpn545
-      promitorMetricName: promitor_demo_appplan_autoscale_observed_capacity
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:

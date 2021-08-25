@@ -23,13 +23,32 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
+        public void Deserialize_AccountNameSupplied_SetsAccountName()
+        {
+            YamlAssert.PropertySet<DataShareResourceV1, AzureResourceDefinitionV1, string>(
+                _deserializer,
+                "accountName: promitor-group",
+                "promitor-group",
+                c => c.AccountName);
+        }
+
+        [Fact]
+        public void Deserialize_AccountNameNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull<DataShareResourceV1, AzureResourceDefinitionV1>(
+                _deserializer,
+                "resourceGroupName: promitor-resource-group",
+                c => c.AccountName);
+        }
+
+        [Fact]
         public void Deserialize_ShareNameSupplied_SetsShareName()
         {
             YamlAssert.PropertySet<DataShareResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                "shareName: promitor-group",
-                "promitor-group",
-                c => c.ShareName);
+                "shareName: staging",
+                "staging",
+                r => r.ShareName);
         }
 
         [Fact]
@@ -37,12 +56,12 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         {
             YamlAssert.PropertyNull<DataShareResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
-                "resourceGroupName: promitor-resource-group",
-                c => c.ShareName);
+                "resourceGroupName: promitor-group",
+                r => r.ShareName);
         }
 
         [Fact]
-        public void Deserialize_ShareNameNotSupplied_ReportsError()
+        public void Deserialize_AccountNameNotSupplied_ReportsError()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
@@ -51,7 +70,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             YamlAssert.ReportsErrorForProperty(
                 _deserializer,
                 node,
-                "shareName");
+                "accountName");
         }
     }
 }

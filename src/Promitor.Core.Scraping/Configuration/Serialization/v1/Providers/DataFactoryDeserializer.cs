@@ -9,6 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
             Map(resource => resource.FactoryName)
                 .IsRequired();
+            Map(resource => resource.PipelineName);
         }
     }
 }
