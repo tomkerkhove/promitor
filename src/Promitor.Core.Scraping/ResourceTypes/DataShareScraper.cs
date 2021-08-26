@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.ResourceTypes
@@ -19,8 +22,10 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
         }
 
-        protected override string DetermineMetricFilter(DataShareResourceDefinition resourceDefinition)
+        protected override string DetermineMetricFilter(string metricName, DataShareResourceDefinition resourceDefinition)
         {
+            var fieldName = GetMetricFilterFieldName(metricName);
+
             var entityName = "*";
 
             if (IsShareNameConfigured(resourceDefinition))
@@ -28,7 +33,33 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 entityName = resourceDefinition.ShareName;
             }
 
-            return $"ShareName eq '{entityName}'";
+            return $"{fieldName} eq '{entityName}'";
+        }
+
+        protected override string DetermineMetricDimension(string metricName, DataShareResourceDefinition resourceDefinition, MetricDimension dimension)
+        {
+            if (IsShareNameConfigured(resourceDefinition))
+            {
+                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
+            }
+
+            var dimensionName = GetMetricFilterFieldName(metricName);
+            Logger.LogTrace($"Using '{dimensionName}' dimension since no share name was configured.");
+
+            return dimensionName;
+        }
+
+        private static string GetMetricFilterFieldName(string metricName)
+        {
+            var fieldName = "ShareName";
+
+            // We need to switch field names when querying activities
+            if (metricName.Equals("ShareSubscriptionCount", StringComparison.InvariantCultureIgnoreCase))
+            {
+                fieldName = "ShareSubscriptionName";
+            }
+
+            return fieldName;
         }
 
         protected override Dictionary<string, string> DetermineMetricLabels(DataShareResourceDefinition resourceDefinition)
