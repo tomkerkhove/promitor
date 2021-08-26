@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
@@ -47,6 +49,18 @@ namespace Promitor.Core.Scraping.ResourceTypes
             Logger.LogTrace($"Using '{dimensionName}' dimension since no share name was configured.");
 
             return dimensionName;
+        }
+
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        {
+            // Change Azure Monitor dimension name to more representable value
+            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.DimensionName == "ShareName"
+                                                                             || metricValue.DimensionName == "ShareSubscriptionName"))
+            {
+                measuredMetric.DimensionName = "share_name";
+            }
+
+            return metricValues;
         }
 
         private static string GetMetricFilterFieldName(string metricName)

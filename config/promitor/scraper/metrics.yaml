@@ -53,3 +53,12 @@ metrics:
       type: Maximum
   resourceDiscoveryGroups:
   - name: data-share-landscape
+- name: promitor_demo_data_share_sent_discovered
+  description: "Amount of shares sent from other parties per Azure Data Share account"
+  resourceType: DataShare
+  azureMetricConfiguration:
+    metricName: ShareCount
+    aggregation:
+      type: Maximum
+  resourceDiscoveryGroups:
+  - name: data-share-landscape
