@@ -7,11 +7,6 @@ title: Thank you!
 
 Here is an overview of the services that are so kind to support us:
 
-- **Renovate** saves us time and reduces risk by automating the tedious process
-  of updating dependencies.
-
-![Renovate](./media/logos/renovate.jpg)
-
 - **Azure Pipelines** allows us to build automated process for building our Docker
   image and pushing it to Docker Hub, create GitHub release and more without manual
   intervention.
@@ -28,19 +23,28 @@ Here is an overview of the services that are so kind to support us:
 
 ![CloudFlare](./media/logos/cloudflare.png)
 
-- **Snyk** continuously monitors our documentation, application & Docker image and
-  lets you quickly respond when new vulnerabilities are disclosed.
+- **Codefactor** for continuously monitoring our code styling.
 
-![Snyk](./media/logos/snyk-dark.png)
+![Codefactor](./media/logos/codefactor.png)
 
 - **Netlify** allows us to provide previews of our documentation changes in our
   pull requests that make it easier to review them.
 
 ![Netlify](./media/logos/netlify.png)
 
-- **Codefactor** for continuously monitoring our code styling.
+- **Renovate** saves us time and reduces risk by automating the tedious process
+  of updating dependencies.
 
-![Codefactor](./media/logos/codefactor.png)
+![Renovate](./media/logos/renovate.jpg)
+
+- **Scarf** for helping us host our container images reliably.
+
+![Scraf](./media/logos/scarf.png)
+
+- **Snyk** continuously monitors our documentation, application & Docker image and
+  lets you quickly respond when new vulnerabilities are disclosed.
+
+![Snyk](./media/logos/snyk-dark.png)
 
 ## GitHub Apps
 
