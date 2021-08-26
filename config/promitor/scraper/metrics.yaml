@@ -24,28 +24,6 @@ metrics:
   resources:
   - resourceGroupName: promitor-sources
     factoryName: promitor-data-factory
-- name: promitor_demo_data_factory_pipeline_run_successful_dimension_declared
-  description: "Amount of successful pipeline runs in Azure Data Factory"
-  resourceType: DataFactory
-  azureMetricConfiguration:
-    metricName: PipelineSucceededRuns
-    dimension:
-        name: Name
-    aggregation:
-      type: Total
-  resources:
-  - resourceGroupName: promitor-sources
-    factoryName: promitor-data-factory
-- name: promitor_demo_data_factory_pipeline_run_successful_filtered_declared
-  description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
-  resourceType: DataFactory
-  azureMetricConfiguration:
-    metricName: PipelineSucceededRuns
-    aggregation:
-      type: Total
-  resources:
-  - resourceGroupName: promitor-sources
-    factoryName: promitor-data-factory
     pipelineName: metric-generator
 - name: promitor_demo_data_factory_pipeline_run_successful_discovered
   description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
@@ -66,17 +44,6 @@ metrics:
   resources:
   - resourceGroupName: promitor-sources
     accountName: promitor-data-share
-- name: promitor_demo_data_share_received_filtered_declared
-  description: "Amount of shares received from other parties per Azure Data Share account"
-  resourceType: DataShare
-  azureMetricConfiguration:
-    metricName: ShareSubscriptionCount
-    aggregation:
-      type: Maximum
-  resources:
-  - resourceGroupName: promitor-sources
-    accountName: promitor-data-share
-    shareName: Promitor
 - name: promitor_demo_data_share_received_discovered
   description: "Amount of shares received from other parties per Azure Data Share account"
   resourceType: DataShare
