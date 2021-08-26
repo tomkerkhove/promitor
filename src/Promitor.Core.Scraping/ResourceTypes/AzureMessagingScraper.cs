@@ -40,11 +40,11 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return metricLabels;
         }
 
-        protected override string DetermineMetricDimension(TResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected override string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
         {
             if (IsEntityDeclared(resourceDefinition))
             {
-                return base.DetermineMetricDimension(resourceDefinition, dimension);
+                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
             }
 
             Logger.LogTrace("Using 'EntityName' dimension since no topic was configured.");
@@ -52,7 +52,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return "EntityName";
         }
 
-        protected override string DetermineMetricFilter(TResourceDefinition resourceDefinition)
+        protected override string DetermineMetricFilter(string metricName, TResourceDefinition resourceDefinition)
         {
             var entityName = "*";
 

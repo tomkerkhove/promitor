@@ -25,6 +25,8 @@ We also provide a simplified way to scrape the following Azure resources:
 - [Azure Container Instances](container-instances)
 - [Azure Container Registry](container-registry)
 - [Azure Cosmos DB](cosmos-db)
+- [Azure Data Factory](data-factory)
+- [Azure Data Share](data-share)
 - [Azure Database for PostgreSQL](postgresql)
 - [Azure Event Hubs](event-hubs)
 - [Azure Express Route Circuit](express-route-circuit)

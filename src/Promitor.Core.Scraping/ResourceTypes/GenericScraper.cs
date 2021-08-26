@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.ResourceUri);
         }
 
-        protected override string DetermineMetricFilter(GenericAzureResourceDefinition resourceDefinition)
+        protected override string DetermineMetricFilter(string metricName, GenericAzureResourceDefinition resourceDefinition)
         {
             return resourceDefinition.Filter;
         }

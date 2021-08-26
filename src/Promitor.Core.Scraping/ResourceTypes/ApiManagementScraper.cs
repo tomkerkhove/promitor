@@ -22,11 +22,11 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.InstanceName);
         }
 
-        protected override string DetermineMetricFilter(ApiManagementResourceDefinition resourceDefinition)
+        protected override string DetermineMetricFilter(string metricName, ApiManagementResourceDefinition resourceDefinition)
         {
             if (string.IsNullOrWhiteSpace(resourceDefinition.LocationName))
             {
-                return base.DetermineMetricFilter(resourceDefinition);
+                return base.DetermineMetricFilter(metricName, resourceDefinition);
             }
 
             return $"Location eq '{resourceDefinition.LocationName}'";

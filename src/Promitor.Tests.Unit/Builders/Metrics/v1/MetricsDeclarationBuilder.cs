@@ -148,6 +148,46 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithDataShareMetric(string metricName = "promitor-data-share",
+            string metricDescription = "Description for a metric",
+            string accountName = "promitor-data-share-account",
+            string shareName = "promitor-data-share",
+            string azureMetricName = "TotalRequests",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataShareResourceV1
+            {
+                AccountName = accountName,
+                ShareName = shareName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataShare, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithDataFactoryMetric(string metricName = "promitor-data-factory",
+            string metricDescription = "Description for a metric",
+            string factoryName = "promitor-data-factory",
+            string pipelineName = "promitor-data-pipeline",
+            string azureMetricName = "TotalRequests",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataFactoryResourceV1
+            {
+                FactoryName = factoryName,
+                PipelineName = pipelineName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataFactory, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithEventHubsMetric(string metricName = "promitor-event-hubs",
             string metricDescription = "Description for a metric",
             string metricDimension = "",

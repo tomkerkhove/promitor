@@ -27,6 +27,10 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ContainerRegistryMetricValidator();
                 case ResourceType.CosmosDb:
                     return new CosmosDbMetricValidator();
+                case ResourceType.DataFactory:
+                    return new DataFactoryMetricValidator();
+                case ResourceType.DataShare:
+                    return new DataShareMetricValidator();
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceMetricValidator();
                 case ResourceType.EventHubs:

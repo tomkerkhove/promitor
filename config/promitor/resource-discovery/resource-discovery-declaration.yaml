@@ -20,6 +20,10 @@ resourceDiscoveryGroups:
   type: ContainerRegistry
 - name: cosmos-accounts
   type: CosmosDb
+- name: data-factory-landscape
+  type: DataFactory
+- name: data-share-landscape
+  type: DataShare
 - name: dps
   type: DeviceProvisioningService
 - name: event-hubs-landscape

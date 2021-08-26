@@ -39,13 +39,13 @@ namespace Promitor.Core.Scraping
             var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, resourceDefinition);
 
             // Determine the metric filter to use, if any
-            var metricFilter = DetermineMetricFilter(resourceDefinition);
+            var metricFilter = DetermineMetricFilter(metricName, resourceDefinition);
 
             // Determine the metric limit to use, if any
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            var dimensionName = DetermineMetricDimension(resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
+            var dimensionName = DetermineMetricDimension(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
 
             List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
             try
@@ -95,8 +95,9 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Determines the metric filter to use
         /// </summary>
+        /// <param name="metricName">Name of the metric being queried</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        protected virtual string DetermineMetricFilter(TResourceDefinition resourceDefinition)
+        protected virtual string DetermineMetricFilter(string metricName, TResourceDefinition resourceDefinition)
         {
             return null;
         }
@@ -104,9 +105,10 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Determines the dimension for a metric to use
         /// </summary>
+        /// <param name="metricName">Name of the metric being queried</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="dimension">Provides information concerning the configured metric dimension.</param>
-        protected virtual string DetermineMetricDimension(TResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected virtual string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
         {
             return dimension?.Name;
         }
