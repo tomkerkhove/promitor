@@ -3,7 +3,7 @@
   "steps": [
     {
       "title": "Introduction",
-      "description": "### Introduction\n\nThis tour walks you through the steps involved in adding a new Scraper to Promitor. A Scraper defines how Promitor gets metrics from the Azure Monitor API for a particular type of resource (for example Load Balancers or SQL Databases).\n\nAlthough the [Generic Azure Resource](https://promitor.io/configuration/v1.x/metrics/generic-azure-resource) Scraper is provided to allow any type of resource to be scraped, adding a custom Scraper provides the following benefits:\n\n- It makes it easier for users to configure by allowing them to specify properties specific to that type of resource.\n- It allows us to provide more detailed information when reporting metrics, by labelling them with attributes that describe the resource (for example database and server names).\n\n**NOTE:** _before implementing a new scraping type, please open an [issue](https://github.com/tomkerkhove/promitor/issues) to discuss your scenario. If an issue already exists please comment on it to let us know you're planning on working on it._"
+      "description": "### Introduction\n\nThis tour walks you through the steps involved in adding a new Scraper to Promitor. A Scraper defines how Promitor gets metrics from the Azure Monitor API for a particular type of resource (for example Load Balancers or SQL Databases).\n\nAlthough the [Generic Azure Resource](https://docs.promitor.io/configuration/v1.x/metrics/generic-azure-resource) Scraper is provided to allow any type of resource to be scraped, adding a custom Scraper provides the following benefits:\n\n- It makes it easier for users to configure by allowing them to specify properties specific to that type of resource.\n- It allows us to provide more detailed information when reporting metrics, by labelling them with attributes that describe the resource (for example database and server names).\n\n**NOTE:** _before implementing a new scraping type, please open an [issue](https://github.com/tomkerkhove/promitor/issues) to discuss your scenario. If an issue already exists please comment on it to let us know you're planning on working on it._"
     },
     {
       "title": "Checklist",
@@ -487,7 +487,7 @@
           "character": 27
         }
       },
-      "description": "### Add Documentation\n\nNow that everything is working, you need to add some documentation to let the rest of the world know! To do that add a new markdown file using the same format as the other resource types. The file in this example is the source for the documentation that can be found at <https://promitor.io/configuration/v2.x/metrics/service-bus-queue>."
+      "description": "### Add Documentation\n\nNow that everything is working, you need to add some documentation to let the rest of the world know! To do that add a new markdown file using the same format as the other resource types. The file in this example is the source for the documentation that can be found at <https://docs.promitor.io/configuration/v2.x/metrics/service-bus-queue>."
     },
     {
       "file": "docs/configuration/v2.x/metrics/service-bus-queue.md",

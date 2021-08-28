@@ -22,7 +22,7 @@
 
 ## Documentation
 
-All documentation is available on [promitor.io](https://promitor.io)
+All documentation is available on [promitor.io](https://docs.promitor.io)
 
 ## End-users
 
@@ -41,7 +41,7 @@ Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVF
 All contribution guidelines can be found [here](./.github/CONTRIBUTING.md). We
 welcome bug reports, improvement suggestions and pull requests.
 
-Want to see support for a scraper that is not [already supported](https://promitor.io/configuration/v2.x/metrics/#supported-azure-services)?
+Want to see support for a scraper that is not [already supported](https://docs.promitor.io/configuration/v2.x/metrics/#supported-azure-services)?
 You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
 Information about making changes to Promitor can be found [here](development-guide.md).
@@ -79,7 +79,7 @@ free to [write me an email](mailto:kerkhove.tom@gmail.com) or [get listed as a u
 ## Thank you
 
 We'd like to thank all the services, tooling & NuGet packages that support us -
- [Thank you](https://promitor.io/thank-you)!
+ [Thank you](https://docs.promitor.io/thank-you)!
 
 ## License Information
 
