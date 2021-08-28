@@ -93,7 +93,7 @@ keys:
 Configure at least one scraper under the `metrics` section and finally, run the
 Promitor.Docker project.
 
-You can find more information about how to configure Promitor [here](https://promitor.io/configuration/v2.x/metrics/).
+You can find more information about how to configure Promitor [here](https://docs.promitor.io/configuration/v2.x/metrics/).
 
 **NOTE:** Please make sure not to commit your changes to `docker-compose.override.yml`
 or `metrics.yaml`. If you do, you may end up publishing your Azure credentials

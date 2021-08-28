@@ -260,7 +260,7 @@ stages:
                 - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
 
                 Docker image is available on [GitHub Container Registry](https://github.com/tomkerkhove?tab=packages&repo_name=promitor&ecosystem=container).<br />
-                For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+                For more information about our tagging strategy, feel free to read our [documentation](https://docs.promitor.io/deployment/#image-tagging-strategy).
       - ${{ if eq(parameters['releaseType'], 'Full') }}:
           - task: GitHubRelease@0
             displayName: 'Create GitHub Pre-Release'
@@ -302,4 +302,4 @@ stages:
                 - `$(Image.MajorMinorVersion)`, `$(Image.MajorMinorVersion)-linux`, `$(Image.MajorMinorVersion)-windows`
 
                 Docker image is available on [GitHub Container Registry](https://github.com/tomkerkhove?tab=packages&repo_name=promitor&ecosystem=container).<br />
-                For more information about our tagging strategy, feel free to read our [documentation](https://promitor.io/deployment/#image-tagging-strategy).
+                For more information about our tagging strategy, feel free to read our [documentation](https://docs.promitor.io/deployment/#image-tagging-strategy).

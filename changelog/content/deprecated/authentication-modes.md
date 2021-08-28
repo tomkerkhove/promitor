@@ -32,7 +32,7 @@ With this new approach, users can use Managed Identity authentication leveraging
 
 **Announcement:** [GitHub Issue](https://github.com/tomkerkhove/promitor/issues/1582)
 
-**Impact:** Migration is required - Use the [authentication configuration](https://promitor.io/configuration/v2.x/azure-authentication#supported-authentication-mechanisms)
+**Impact:** Migration is required - Use the [authentication configuration](https://docs.promitor.io/configuration/v2.x/azure-authentication#supported-authentication-mechanisms)
  to specify Service Principle authentication and configure the identity id in the server configuration.
 
 **Alternative:** None

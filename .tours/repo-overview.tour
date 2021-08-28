@@ -23,7 +23,7 @@
     },
     {
       "directory": "docs",
-      "description": "### docs\n\nThe `docs` folder contains the content used to build <https://promitor.io>."
+      "description": "### docs\n\nThe `docs` folder contains the content used to build <https://docs.promitor.io>."
     },
     {
       "directory": "src",
