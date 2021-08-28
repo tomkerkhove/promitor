@@ -49,6 +49,7 @@ telemetry:
   defaultVerbosity: error # Optional. Default: error
 resourceDiscovery:
   host: promitor.agents.resourcediscovery # Optional. DNS name of Promitor Resource Discovery agent
+  enabled: true # Optional. Indication whether or not resource discovery is enabled through the Promitor Resource Discovery agent.
   port: 88 # Optional. Port of Promitor Resource Discovery agent
 ```
 
@@ -192,12 +193,15 @@ Resource discovery can be used by integrating with Promitor Resource Discovery w
 
 In order to enable this, resource discovery must be configured first:
 
+- `resourceDiscovery.enabled` - Indication whether or not resource discovery is enabled through the
+ Promitor Resource Discovery agent.
 - `resourceDiscovery.host` - DNS name of Promitor Resource Discovery agent.
 - `resourceDiscovery.port` - Port of Promitor Resource Discovery agent.
 
 ```yaml
 resourceDiscovery:
   host: promitor.agents.resourcediscovery
+  enabled: true
   port: 88 # Optional. Default: 80
 ```
 
