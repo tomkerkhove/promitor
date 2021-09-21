@@ -30,7 +30,7 @@ We are proud to have the following end-users(s) running Promitor in production:
 
 ![Adobe](./docs/media/logos/end-users/adobe.png)
 ![ResDiary](./docs/media/logos/end-users/resdiary.png)
-![theTradeDesk](./docs/media/logos/end-users/ttd-logo.png)
+![theTradeDesk](./docs/media/logos/end-users/the-trade-desk.png)
 ![Trynz](./docs/media/logos/end-users/trynz.png)
 ![Vsoft](./docs/media/logos/end-users/vsoft.png)
 ![Walmart Labs](./docs/media/logos/end-users/walmart-labs.jpg)
