@@ -115,7 +115,10 @@ Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/ch
 We are proud to have the following end-users(s) running Promitor in production:
 
 ![Adobe](./media/logos/end-users/adobe.png)
+![Albert Heijn](./media/logos/end-users/albert-heijn.png)
+![Bryte Blue](./media/logos/end-users/bryte-blue.png)
 ![ResDiary](./media/logos/end-users/resdiary.png)
+![The Trade Desk](./media/logos/end-users/the-trade-desk.png)
 ![Trynz](./media/logos/end-users/trynz.png)
 ![Vsoft](./media/logos/end-users/vsoft.png)
 ![Walmart Labs](./media/logos/end-users/walmart-labs.jpg)
