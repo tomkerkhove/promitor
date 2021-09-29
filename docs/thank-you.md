@@ -27,6 +27,10 @@ Here is an overview of the services that are so kind to support us:
 
 ![Codefactor](./media/logos/codefactor.png)
 
+- **Microsoft** for providing Azure credits for open-source projects. ([Learn more](https://opensource.microsoft.com/azure-credits))
+
+![Microsoft](./media/logos/microsoft.png)
+
 - **Netlify** allows us to provide previews of our documentation changes in our
   pull requests that make it easier to review them.
 
