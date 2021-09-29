@@ -58,6 +58,7 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
 [![Carlo Garcia-Mier](./media/supporters/CarloGarcia.jpg)](https://github.com/CarloGarcia)
 [![Jorge Turrado Ferrero](./media/supporters/JorTurFer.jpg)](https://github.com/JorTurFer)
 [![Karl Ots](./media/supporters/karlgots.jpg)](https://github.com/karlgots)
+[![Loc Mai](./media/supporters/locmai.jpg)](https://github.com/locmai)
 [![Lovelace Engineering](./media/supporters/LovelaceEngineering.png)](https://github.com/LovelaceEngineering)
 [![Nills Franssens](./media/supporters/nillsf.jpg)](https://github.com/NillsF)
 [![Richard Simpson](./media/supporters/RichiCoder1.jpg)](https://github.com/RichiCoder1)
