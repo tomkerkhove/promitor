@@ -14,9 +14,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="2.2.2" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="2.2.2" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="2.2.2" />
+    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="2.3.0" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="2.3.0" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="2.3.0" />
     <PackageReference Include="Arcus.WebApi.Logging" Version="1.4.0" />
     <PackageReference Include="CronScheduler.AspNetCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
