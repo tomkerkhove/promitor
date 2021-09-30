@@ -151,20 +151,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             _queryBuilder.AppendLine($"{fieldName} =~ '{allowedValues.Last()}'");
         }
 
-        private void FilterByTags(Dictionary<string,string> allowedTags)
-        {
-            _queryBuilder.Append("| where ");
-            for (int counter = 0; counter < allowedTags.Count - 1; counter++)
-            {
-                var dictionaryEntry = allowedTags.ElementAt(counter);
-                _queryBuilder.Append($"tags['{dictionaryEntry.Key}'] =~ '{dictionaryEntry.Value}' or ");
-            }
-
-            var lastDictionaryEntry = allowedTags.Last();
-            _queryBuilder.AppendLine($"tags['{lastDictionaryEntry.Key}'] =~ '{lastDictionaryEntry.Value}'");
-        }
-
-        private void FilterByTags(Dictionary<string, list> allowedTags)
+        private void FilterByTags(Dictionary<string, string> allowedTags)
         {
             _queryBuilder.Append("| where ");
             for (int counter = 0; counter < allowedTags.Count - 1; counter++)
