@@ -51,4 +51,17 @@
     <ProjectReference Include="..\Promitor.Integrations.Sinks.Statsd\Promitor.Integrations.Sinks.Statsd.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Agents\ResourceDiscovery\TestData\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Agents\ResourceDiscovery\TestData\DiscoverAzureResourceGroupsAsync.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Agents\ResourceDiscovery\TestData\DiscoverAzureSubscriptionsAsync.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
