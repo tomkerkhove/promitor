@@ -44,7 +44,6 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             Assert.NotStrictEqual(expectedSubscriptions, azureSubscriptions);
 
             azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>()), Times.Once);
-
         }
 
         [Fact]
