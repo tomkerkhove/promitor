@@ -15,21 +15,19 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
 {
     public class AzureResourceRepositoryTests
     {
-        private string basePath = Path.Combine("Agents", "ResourceDiscovery", "TestData");
+        private readonly string basePath = Path.Combine("Agents", "ResourceDiscovery", "TestData");
 
-        private readonly Mock<IAzureResourceGraph> azureResourceGraph;
-        private readonly Mock<IOptionsMonitor<ResourceDeclaration>> resourceDeclarationMonitor;
-        private readonly Mock<ILogger<AzureResourceRepository>> logger;
+        private readonly Mock<IAzureResourceGraph> _azureResourceGraph;
 
-        private readonly AzureResourceRepository azureResourceRepository;
+        private readonly AzureResourceRepository _azureResourceRepository;
 
         public AzureResourceRepositoryTests()
         {
-            azureResourceGraph = new Mock<IAzureResourceGraph>(MockBehavior.Strict);
-            resourceDeclarationMonitor = new Mock<IOptionsMonitor<ResourceDeclaration>>(MockBehavior.Strict);
-            logger = new Mock<ILogger<AzureResourceRepository>>(MockBehavior.Strict);
+            _azureResourceGraph = new Mock<IAzureResourceGraph>(MockBehavior.Strict);
+            var resourceDeclarationMonitor = new Mock<IOptionsMonitor<ResourceDeclaration>>(MockBehavior.Strict);
+            var logger = new Mock<ILogger<AzureResourceRepository>>(MockBehavior.Strict);
 
-            azureResourceRepository = new AzureResourceRepository(azureResourceGraph.Object, resourceDeclarationMonitor.Object, logger.Object);
+            _azureResourceRepository = new AzureResourceRepository(_azureResourceGraph.Object, resourceDeclarationMonitor.Object, logger.Object);
         }
 
         [Fact]
@@ -37,15 +35,15 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureSubscriptionsAsync.json");
-            azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>())).ReturnsAsync(testData);
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>())).ReturnsAsync(testData);
             var expectedSubscriptions = GetAzureSubscriptions();
 
             // Act
-            var azureSubscriptions = await azureResourceRepository.DiscoverAzureSubscriptionsAsync();
+            var azureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync();
 
             // Assert
             Assert.NotStrictEqual(expectedSubscriptions, azureSubscriptions);
-            azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>()), Times.Once);
+            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
@@ -53,15 +51,15 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureResourceGroupsAsync.json");
-            azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>())).ReturnsAsync(testData);
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>())).ReturnsAsync(testData);
             var expectedResourceGroups = GetAzureResourceGroups();
 
             // Act
-            var azureResourceGroups = await azureResourceRepository.DiscoverAzureResourceGroupsAsync();
+            var azureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync();
 
             // Assert
             Assert.NotStrictEqual(expectedResourceGroups, azureResourceGroups);
-            azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>()), Times.Once);
+            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>()), Times.Once);
         }
 
         /// <summary>
