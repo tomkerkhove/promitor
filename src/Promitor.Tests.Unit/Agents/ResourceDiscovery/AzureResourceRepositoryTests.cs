@@ -35,31 +35,39 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         [Fact]
         public async Task AzureSubscriptions_Discovery_Succeeds()
         {
+            // Arrange
             var testData = ReadTestData("DiscoverAzureSubscriptionsAsync.json");
             azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>())).ReturnsAsync(testData);
             var expectedSubscriptions = GetAzureSubscriptions();
 
+            // Act
             var azureSubscriptions = await azureResourceRepository.DiscoverAzureSubscriptionsAsync();
 
+            // Assert
             Assert.NotStrictEqual(expectedSubscriptions, azureSubscriptions);
-
             azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>()), Times.Once);
         }
 
         [Fact]
         public async Task AzureResourceGroups_Discovery_Succeeds()
         {
+            // Arrange
             var testData = ReadTestData("DiscoverAzureResourceGroupsAsync.json");
             azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>())).ReturnsAsync(testData);
             var expectedResourceGroups = GetAzureResourceGroups();
 
+            // Act
             var azureResourceGroups = await azureResourceRepository.DiscoverAzureResourceGroupsAsync();
 
+            // Assert
             Assert.NotStrictEqual(expectedResourceGroups, azureResourceGroups);
-
             azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>()), Times.Once);
         }
 
+        /// <summary>
+        /// Prepare expected results for testing DiscoverAzureSubscriptionsAsync based on the data present in DiscoverAzureSubscriptionsAsync.json
+        /// </summary>
+        /// <returns>Expected results</returns>
         private List<AzureSubscriptionInformation> GetAzureSubscriptions()
         {
             return new List<AzureSubscriptionInformation> {
@@ -95,6 +103,10 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             };
         }
 
+        /// <summary>
+        /// Prepare expected results for testing DiscoverAzureResourceGroupsAsync based on the data present in DiscoverAzureResourceGroupsAsync.json
+        /// </summary>
+        /// <returns>Expected results</returns>
         private List<AzureResourceGroupInformation> GetAzureResourceGroups()
         {
             return new List<AzureResourceGroupInformation>
@@ -247,6 +259,11 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             };
         }
 
+        /// <summary>
+        /// Read the specified file to get sample data for the tests
+        /// </summary>
+        /// <param name="fileName">The JSON file to be read to get the Sample data</param>
+        /// <returns>Sample data for the test as a <see cref="JObject"/></returns>
         private JObject ReadTestData(string fileName)
         {
             var fileContents = File.ReadAllText(basePath + fileName);
