@@ -15,7 +15,7 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
 {
     public class AzureResourceRepositoryTests
     {
-        private const string basePath = @"Agents\ResourceDiscovery\TestData\";
+        private string basePath = Path.Combine("Agents", "ResourceDiscovery", "TestData");
 
         private readonly Mock<IAzureResourceGraph> azureResourceGraph;
         private readonly Mock<IOptionsMonitor<ResourceDeclaration>> resourceDeclarationMonitor;
@@ -266,7 +266,7 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         /// <returns>Sample data for the test as a <see cref="JObject"/></returns>
         private JObject ReadTestData(string fileName)
         {
-            var fileContents = File.ReadAllText(basePath + fileName);
+            var fileContents = File.ReadAllText(Path.Combine(basePath, fileName));
             return JObject.Parse(fileContents);
         }
     }
