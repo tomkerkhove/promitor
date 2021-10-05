@@ -48,7 +48,6 @@ metrics:
         type: Average
     resources:
       - autoscaleSettingsName: app-service-autoscaling-rules
-        resourceGroupName: demo
   - name: azure_container_registry_total_pull_count_discovered
     description: "Amount of images that were pulled from the container registry"
     resourceType: ContainerRegistry
