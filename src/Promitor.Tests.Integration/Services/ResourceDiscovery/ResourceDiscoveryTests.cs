@@ -153,7 +153,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(expectedResourceCount, resources.Count);
         }
 
-        [Fact]
+        [Fact (Skip = "We only have one Azure test subscription")]
         public async Task ResourceDiscovery_GetWithFilterOnTwoSubscriptions_ReturnsExpectedAmount()
         {
             // Arrange

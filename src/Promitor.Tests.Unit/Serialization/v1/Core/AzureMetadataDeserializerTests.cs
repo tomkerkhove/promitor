@@ -88,7 +88,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_TenantIdSupplied_SetsTenantId()
         {
-            const string tenantId = "c8819874-9e56-4e3f-b1a8-1c0325138f27";
+            const string tenantId = "e0372f7f-a362-47fb-9631-74a5c4ba8bbf";
 
             var yamlText =
                 $@"azureMetadata:
@@ -107,7 +107,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         {
             const string yamlText =
 @"azureMetadata:
-    subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'";
+    subscriptionId: '63c590b6-4947-4898-92a3-cae91a31b5e4'";
 
             YamlAssert.PropertyNull(
                 _deserializer,
@@ -122,7 +122,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             // Arrange
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
-    subscriptionId: '0f9d7fea-99e8-4768-8672-06a28514f77e'");
+    subscriptionId: '63c590b6-4947-4898-92a3-cae91a31b5e4'");
             var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
             // Act / Assert
@@ -135,7 +135,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_SubscriptionIdSupplied_SetsSubscriptionId()
         {
-            const string subscriptionId = "0f9d7fea-99e8-4768-8672-06a28514f77e";
+            const string subscriptionId = "63c590b6-4947-4898-92a3-cae91a31b5e4";
 
             var yamlText =
 $@"azureMetadata:
@@ -154,7 +154,7 @@ $@"azureMetadata:
         {
             const string yamlText =
 @"azureMetadata:
-    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'";
+    tenantId: 'e0372f7f-a362-47fb-9631-74a5c4ba8bbf'";
 
             YamlAssert.PropertyNull(
                 _deserializer,
@@ -169,7 +169,7 @@ $@"azureMetadata:
             // Arrange
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
-    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+    tenantId: 'e0372f7f-a362-47fb-9631-74a5c4ba8bbf'");
             var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
             // Act / Assert
@@ -201,7 +201,7 @@ $@"azureMetadata:
         {
             const string yamlText =
 @"azureMetadata:
-    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'";
+    tenantId: 'e0372f7f-a362-47fb-9631-74a5c4ba8bbf'";
 
             YamlAssert.PropertyNull(
                 _deserializer,
@@ -216,7 +216,7 @@ $@"azureMetadata:
             // Arrange
             var node = YamlUtils.CreateYamlNode(
 @"azureMetadata:
-    tenantId: 'c8819874-9e56-4e3f-b1a8-1c0325138f27'");
+    tenantId: 'e0372f7f-a362-47fb-9631-74a5c4ba8bbf'");
             var metaDataNode = (YamlMappingNode)node.Children.Single(c => c.Key.ToString() == "azureMetadata").Value;
 
             // Act / Assert

@@ -1,8 +1,8 @@
 version: v1
 azureMetadata:
-  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
-  subscriptionId: 0f9d7fea-99e8-4768-8672-06a28514f77e
-  resourceGroupName: promitor
+  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
+  subscriptionId: 63c590b6-4947-4898-92a3-cae91a31b5e4
+  resourceGroupName: promitor-testing-infrastructure-europe
 metricDefaults:
   aggregation:
     interval: 00:05:00
@@ -14,6 +14,16 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
+  - name: promitor_demo_documentation_availability
+    description: "Availabiliy of our documentation"
+    resourceType: Generic
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+    resources:
+    - resourceUri: microsoft.insights/components/promitor-testing-resource-eu-telemetry
+      filter: availabilityResult/name eq 'Documentation'
   - name: promitor_demo_appplan_autoscale_instances_current_discovered
     description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
     resourceType: MonitorAutoscale

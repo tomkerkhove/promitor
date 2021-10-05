@@ -23,7 +23,7 @@ Here is an example of a full declaration:
 ```yaml
 version: v1
 azureLandscape:
-  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
   subscriptions:
   - SUBSCRIPTON-ID-ABC
   - SUBSCRIPTON-ID-DEF
