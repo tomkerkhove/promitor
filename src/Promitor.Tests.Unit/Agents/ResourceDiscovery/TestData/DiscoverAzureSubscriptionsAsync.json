@@ -1,0 +1,52 @@
+{
+  "columns": [
+    {
+      "name": "tenantId",
+      "type": "string"
+    },
+    {
+      "name": "subscriptionId",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "state",
+      "type": "object"
+    },
+    {
+      "name": "spendingLimit",
+      "type": "object"
+    },
+    {
+      "name": "quotaId",
+      "type": "object"
+    },
+    {
+      "name": "authorizationSource",
+      "type": "object"
+    }
+  ],
+  "rows": [
+    [
+      "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+      "0f9d7fea-99e8-4768-8672-06a28514f77e",
+      "Visual Studio Enterprise",
+      "Enabled",
+      "Off",
+      "Sponsored_2016-01-01",
+      "RoleBased"
+    ],
+    [
+      "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+      "0329dd2a-59dc-4493-aa54-cb01cb027dc2",
+      "Windows Azure MSDN - Visual Studio Ultimate",
+      "Enabled",
+      "On",
+      "MSDN_2014-09-01",
+      "RoleBased"
+    ]
+  ]
+}
