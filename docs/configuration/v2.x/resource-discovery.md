@@ -67,7 +67,7 @@ values are `v1`. *(Required)*
 
 Every resource discovery group that is being declared needs to define the following fields:
 
-- `name` - Name of the resource discovery group which will be used in metrics dclaration of Promitor Scraper. *(Required)*
+- `name` - Name of the resource discovery group which will be used in metrics declaration of Promitor Scraper. *(Required)*
 - `type` - Type of Azure resources that must be discovered, see ["Supported Azure Services](#supported-azure-services)
  for a full list of supported types. *(Required)*
 - `criteria` - Criteria to fine-tune discovered resource.
