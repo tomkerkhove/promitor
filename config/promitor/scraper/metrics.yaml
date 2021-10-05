@@ -35,19 +35,6 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: autoscaling-rules
-  - name: promitor_demo_appplan_autoscale_observed_capacity
-    description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
-    resourceType: MonitorAutoscale
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: MetricThreshold
-      dimension:
-        name: MetricTriggerRule
-      aggregation:
-        type: Average
-    resources:
-      - autoscaleSettingsName: app-service-autoscaling-rules
   - name: azure_container_registry_total_pull_count_discovered
     description: "Amount of images that were pulled from the container registry"
     resourceType: ContainerRegistry
