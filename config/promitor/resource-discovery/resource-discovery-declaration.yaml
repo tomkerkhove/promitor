@@ -98,20 +98,20 @@ resourceDiscoveryGroups:
   criteria:
     include:
       resourceGroups:
-      - promitor-testing-resource-discovery-eu
-- name: one-resource-group-scenario-wiht-other-casing
+      - promitor-testing-infrastructure-europe
+- name: one-resource-group-scenario-with-other-casing
   type: LogicApp
   criteria:
     include:
       resourceGroups:
-      - PROMITOR-testing-resource-discovery-eu
+      - promitor-testing-infrastructure-europe
 - name: two-resource-group-scenario
   type: LogicApp
   criteria:
     include:
       resourceGroups:
-      - promitor-testing-resource-discovery-eu
-      - promitor-testing-resource-discovery-us
+      - promitor-testing-infrastructure-europe
+      - promitor-testing-infrastructure-us
 - name: one-subscriptions-scenario
   type: LogicApp
   criteria:

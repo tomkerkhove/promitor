@@ -93,7 +93,7 @@ metrics:
       aggregation:
         type: Total
     resources:
-      - workflowName: promitor-automation-github-ci-scraper
+      - workflowName: promitor-testing-resource-eu-workflow-eu-1
   - name: azure_logic_apps_failed_run_discovery
     description: "Total amount of failed runs for Azure Logic Apps"
     resourceType: LogicApp
@@ -159,7 +159,7 @@ metrics:
       aggregation:
         type: Average
     resources:
-      - namespace: promitor-messaging
+      - namespace: promitor-testing-resource-eu-messaging
   - name: promitor_demo_servicebus_messagecount_limited
     description: "Average percentage of memory usage on an Azure App Plan"
     resourceType: ServiceBusNamespace
@@ -172,7 +172,7 @@ metrics:
       aggregation:
         type: Average
     resources:
-      - namespace: promitor-messaging
+      - namespace: promitor-testing-resource-eu-messaging
   - name: promitor_demo_automation_job_count
     description: "Amount of jobs per Azure Automation account"
     resourceType: AutomationAccount
@@ -183,8 +183,7 @@ metrics:
     resourceDiscoveryGroups:
       - name: automation-accounts
     resources:
-      - resourceGroupName: promitor-sources
-        accountName: promitor-sandbox
+      - accountName: promitor-testing-resource-eu-automation-1
   - name: promitor_demo_automation_update_deployment_runs
     description: "Amount of jobs per Azure Automation account"
     resourceType: AutomationAccount
@@ -195,20 +194,7 @@ metrics:
     resourceDiscoveryGroups:
       - name: automation-accounts
     resources:
-      - resourceGroupName: promitor-sources
-        accountName: promitor-sandbox
-  - name: promitor_demo_automation_update_deployment_machine_runs
-    description: "Amount of jobs per Azure Automation account"
-    resourceType: AutomationAccount
-    azureMetricConfiguration:
-      metricName: TotalUpdateDeploymentMachineRuns
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: automation-accounts
-    resources:
-      - resourceGroupName: promitor-sources
-        accountName: promitor-sandbox
+      - accountName: promitor-testing-resource-eu-automation-1
   - name: promitor_demo_frontdoor_backend_health_per_backend_pool
     description: "Health percentage for a backed in Azure Front Door"
     resourceType: FrontDoor
@@ -271,17 +257,6 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: synapse-workspaces
-  - name: promitor_demo_data_factory_pipeline_run_successful_declared
-    description: "Amount of successful pipeline runs in Azure Data Factory"
-    resourceType: DataFactory
-    azureMetricConfiguration:
-      metricName: PipelineSucceededRuns
-      aggregation:
-        type: Total
-    resources:
-      - resourceGroupName: promitor-sources
-        factoryName: promitor-data-factory
-        pipelineName: metric-generator
   - name: promitor_demo_data_factory_pipeline_run_successful_discovered
     description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
     resourceType: DataFactory
@@ -291,31 +266,3 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: data-factory-landscape
-  - name: promitor_demo_data_share_received_declared
-    description: "Amount of shares received from other parties per Azure Data Share account"
-    resourceType: DataShare
-    azureMetricConfiguration:
-      metricName: ShareSubscriptionCount
-      aggregation:
-        type: Maximum
-    resources:
-      - resourceGroupName: promitor-sources
-        accountName: promitor-data-share
-  - name: promitor_demo_data_share_received_discovered
-    description: "Amount of shares received from other parties per Azure Data Share account"
-    resourceType: DataShare
-    azureMetricConfiguration:
-      metricName: ShareSubscriptionCount
-      aggregation:
-        type: Maximum
-    resourceDiscoveryGroups:
-      - name: data-share-landscape
-  - name: promitor_demo_data_share_sent_discovered
-    description: "Amount of shares sent from other parties per Azure Data Share account"
-    resourceType: DataShare
-    azureMetricConfiguration:
-      metricName: ShareCount
-      aggregation:
-        type: Maximum
-    resourceDiscoveryGroups:
-      - name: data-share-landscape
