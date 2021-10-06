@@ -372,7 +372,7 @@ cli.azure.cli.core._profile: MSI: token was retrieved. Now trying to initialize 
 [
   {
     "environmentName": "AzureCloud",
-    "homeTenantId": "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+    "homeTenantId": "e0372f7f-a362-47fb-9631-74a5c4ba8bbf",
     "id": "0f9d7fea-99e8-4768-8672-06a28514f77e",
     "isDefault": true,
     "managedByTenants": [
@@ -382,7 +382,7 @@ cli.azure.cli.core._profile: MSI: token was retrieved. Now trying to initialize 
     ],
     "name": "Visual Studio Enterprise",
     "state": "Enabled",
-    "tenantId": "c8819874-9e56-4e3f-b1a8-1c0325138f27",
+    "tenantId": "e0372f7f-a362-47fb-9631-74a5c4ba8bbf",
     "user": {
       "assignedIdentityInfo": "MSI",
       "name": "systemAssignedIdentity",

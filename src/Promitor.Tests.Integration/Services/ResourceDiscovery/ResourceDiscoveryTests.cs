@@ -58,7 +58,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 11;
+            const int expectedResourceCount = 14;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -78,7 +78,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-resource-group-scenario";
-            const int expectedResourceCount = 3;
+            const int expectedResourceCount = 6;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -97,8 +97,8 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task ResourceDiscovery_GetWithFilterOnOneResourceGroupWithDifferentCasing_ReturnsExpectedAmount()
         {
             // Arrange
-            const string resourceDiscoveryGroupName = "one-resource-group-scenario-wiht-other-casing";
-            const int expectedResourceCount = 3;
+            const string resourceDiscoveryGroupName = "one-resource-group-scenario-with-other-casing";
+            const int expectedResourceCount = 6;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -118,7 +118,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-resource-group-scenario";
-            const int expectedResourceCount = 4;
+            const int expectedResourceCount = 7;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -138,7 +138,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-subscriptions-scenario";
-            const int expectedResourceCount = 1;
+            const int expectedResourceCount = 14;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -153,7 +153,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(expectedResourceCount, resources.Count);
         }
 
-        [Fact]
+        [Fact (Skip = "We only have one Azure test subscription")]
         public async Task ResourceDiscovery_GetWithFilterOnTwoSubscriptions_ReturnsExpectedAmount()
         {
             // Arrange
@@ -178,7 +178,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-tag-scenario";
-            const int expectedResourceCount = 3;
+            const int expectedResourceCount = 7;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -198,7 +198,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-tag-scenario";
-            const int expectedResourceCount = 3;
+            const int expectedResourceCount = 7;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -218,7 +218,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-region-scenario";
-            const int expectedResourceCount = 1;
+            const int expectedResourceCount = 3;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -238,7 +238,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 10;
+            const int expectedResourceCount = 13;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act

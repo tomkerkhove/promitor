@@ -64,7 +64,7 @@ Here is an example of resource discovery declaration which you can pass:
 ```yaml
 azureLandscape:
   cloud: Global
-  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
   subscriptionIds:
   - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
 resourceDiscoveryGroups:
@@ -87,7 +87,7 @@ azureAuthentication:
   appKey: <hidden>
 azureLandscape:
   cloud: Global
-  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
   subscriptionIds:
   - 0329dd2a-59dc-4493-aa54-cb01cb027dc2
   - 0f9d7fea-99e8-4768-8672-06a28514f77e

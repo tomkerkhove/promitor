@@ -23,7 +23,7 @@ Here is an example of a full declaration:
 ```yaml
 version: v1
 azureLandscape:
-  tenantId: c8819874-9e56-4e3f-b1a8-1c0325138f27
+  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
   subscriptions:
   - SUBSCRIPTON-ID-ABC
   - SUBSCRIPTON-ID-DEF
@@ -80,7 +80,7 @@ As of now, we only allow to define criteria that resources have to meet before t
 - `subscriptions` - A list of subscription(s) in which the resource is allowed to be located.
 - `resourceGroups` - A list of resource group(s) in which the resource is allowed to be located.
 - `tags` - A list of [Azure tags](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources)
- and the expected values with which the resources have to be annotated.
+ and the expected values with which the resources have to be annotated. (Uses `or`)
 - `regions` - A list of Azure region(s) in which the resource is allowed to be located.
 
 ## Supported Azure Services

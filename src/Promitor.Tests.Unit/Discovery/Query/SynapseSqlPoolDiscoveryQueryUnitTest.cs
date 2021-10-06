@@ -13,7 +13,7 @@ namespace Promitor.Tests.Unit.Discovery.Query
         {
             // Arrange
             var workspaceName = BogusGenerator.Name.FirstName();
-            var resourceUri = $"/subscriptions/0f9d7fea-99e8-4768-8672-06a28514f77e/resourceGroups/promitor-sources/providers/Microsoft.Synapse/workspaces/{workspaceName}/sqlPools/sqlpool";
+            var resourceUri = $"/subscriptions/63c590b6-4947-4898-92a3-cae91a31b5e4/resourceGroups/promitor-sources/providers/Microsoft.Synapse/workspaces/{workspaceName}/sqlPools/sqlpool";
             var sqlPoolDiscoveryQuery = new SynapseSqlPoolDiscoveryQuery();
 
             // Act
