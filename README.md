@@ -73,7 +73,7 @@ Learn more about our security policy [here](https://github.com/tomkerkhove/promi
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work
 you can do a small donation.
 
-[![Donate](https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square)](https://github.com/users/tomkerkhove/sponsorship)
+[![Donate](https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square)](https://github.com/sponsors/promitor)
 
 ## Get in touch
 
