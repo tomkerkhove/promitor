@@ -138,7 +138,7 @@ resourceDiscoveryGroups:
       tags:
         app: promitor-resource-discovery-tests
         region: europe
-        instance: promitor-testing-resource-eu-workflow-eu-[0-9]'
+        instance: promitor-testing-resource-eu-workflow-eu-[0-9]
 - name: one-region-scenario
   type: LogicApp
   criteria:
