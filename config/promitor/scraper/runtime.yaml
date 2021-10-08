@@ -2,7 +2,7 @@ server:
   httpPort: 88
 authentication:
   mode: ServicePrincipal
-  identityId: ceb249a3-44ce-4c90-8863-6776336f5b7e
+  identityId: 65351cf0-33f8-4f26-9b6f-3380cf910b50
 metricSinks:
   prometheusScrapingEndpoint:
     metricUnavailableValue: -1
@@ -13,10 +13,10 @@ metricSinks:
     port: 8125
     metricPrefix: promitor.
   atlassianStatuspage:
-    pageId: y79z9b78ybgs
+    pageId: 4mwc0ny6bgw1
     systemMetricMapping:
-    - id: nfkgnrwpn545
-      promitorMetricName: promitor_demo_appplan_autoscale_observed_capacity
+    - id: 333802sjqpr9
+      promitorMetricName: promitor_demo_documentation_availability
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
