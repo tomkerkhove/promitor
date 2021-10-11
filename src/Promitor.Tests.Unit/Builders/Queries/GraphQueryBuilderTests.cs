@@ -146,7 +146,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
             string expectedQuery =
                 $"Resources{Environment.NewLine}" +
                 $"| where type =~ 'resource type'{Environment.NewLine}" +
-                "| where tags['tag key 1'] matches regex @'^(?i)tag value 1\\$' or tags['tag key 2'] matches regex @'^(?i)tag value 2\\$' or tags['tag key 3'] matches regex @'^(?i)tag value 3\\$'";
+                "| where tags['tag key 1'] matches regex @'^(?i)tag value 1\\\\$' or tags['tag key 2'] matches regex @'^(?i)tag value 2\\$' or tags['tag key 3'] matches regex @'^(?i)tag value 3\\$'";
 
             GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceType);
 
