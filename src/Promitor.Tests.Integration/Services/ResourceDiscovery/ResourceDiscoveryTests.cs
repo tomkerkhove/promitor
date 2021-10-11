@@ -178,7 +178,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-tag-scenario";
-            const int expectedResourceCount = 7;
+            const int expectedResourceCount = 9;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -218,7 +218,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-instance-tag-with-multi-value-scenario";
-            const int expectedResourceCount = 7;
+            const int expectedResourceCount = 9;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
