@@ -157,11 +157,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             for (int counter = 0; counter < allowedTags.Count - 1; counter++)
             {
                 var dictionaryEntry = allowedTags.ElementAt(counter);
-                _queryBuilder.Append($"tags['{dictionaryEntry.Key}'] matches regex @'^(?i){dictionaryEntry.Value}\\$' or ");
+                _queryBuilder.Append($"tags['{dictionaryEntry.Key}'] matches regex @'^(?i){dictionaryEntry.Value}$' or ");
             }
 
             var lastDictionaryEntry = allowedTags.Last();
-            _queryBuilder.AppendLine($"tags['{lastDictionaryEntry.Key}'] matches regex @'^(?i){lastDictionaryEntry.Value}\\$'");
+            _queryBuilder.AppendLine($"tags['{lastDictionaryEntry.Key}'] matches regex @'^(?i){lastDictionaryEntry.Value}$'");
         }
     }
 }
