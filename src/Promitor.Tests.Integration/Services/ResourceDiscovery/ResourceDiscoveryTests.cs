@@ -58,7 +58,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 14;
+            const int expectedResourceCount = 17;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -118,7 +118,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-resource-group-scenario";
-            const int expectedResourceCount = 7;
+            const int expectedResourceCount = 9;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -138,7 +138,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-subscriptions-scenario";
-            const int expectedResourceCount = 14;
+            const int expectedResourceCount = 17;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -178,7 +178,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-tag-scenario";
-            const int expectedResourceCount = 7;
+            const int expectedResourceCount = 9;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -198,7 +198,27 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-tag-scenario";
-            const int expectedResourceCount = 7;
+            const int expectedResourceCount = 9;
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var rawResponseBody = await response.Content.ReadAsStringAsync();
+            Assert.NotEmpty(rawResponseBody);
+            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            Assert.NotNull(resources);
+            Assert.Equal(expectedResourceCount, resources.Count);
+        }
+
+        [Fact]
+        public async Task ResourceDiscovery_GetWithFilterOnMultipleValueInstanceTag_ReturnsExpectedAmount()
+        {
+            // Arrange
+            const string resourceDiscoveryGroupName = "one-instance-tag-with-multi-value-scenario";
+            const int expectedResourceCount = 9;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -238,7 +258,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 13;
+            const int expectedResourceCount = 14;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
