@@ -81,7 +81,6 @@ As of now, we only allow to define criteria that resources have to meet before t
 - `resourceGroups` - A list of resource group(s) in which the resource is allowed to be located.
 - `tags` - A list of [Azure tags](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources)
  and the expected values (exact or regular expression) with which the resources have to be annotated (Uses `or`).
-- **Regions** - Defines a list of Azure regions in which the regions the resources are located.
 - `regions` - A list of Azure region(s) in which the resource is allowed to be located.
 
 ## Supported Azure Services
