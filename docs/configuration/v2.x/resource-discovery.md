@@ -80,7 +80,8 @@ As of now, we only allow to define criteria that resources have to meet before t
 - `subscriptions` - A list of subscription(s) in which the resource is allowed to be located.
 - `resourceGroups` - A list of resource group(s) in which the resource is allowed to be located.
 - `tags` - A list of [Azure tags](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/tag-resources)
- and the expected values with which the resources have to be annotated (Uses `or`). The expected values could be defined in regular expression.
+ and the expected values with which the resources have to be annotated (Uses `or`). 
+The expected values could be defined in regular expression.
 - **Regions** - Defines a list of Azure regions in which the regions the resources are located.
 - `regions` - A list of Azure region(s) in which the resource is allowed to be located.
 
