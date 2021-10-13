@@ -22,7 +22,7 @@ However, as of Promitor Scraper v2.2.0 & Resource Discovery v0.3.0, users can ch
 
 ```yaml
 authentication:
-  # Options are ServicePrincipal, SystemAssigedManagedIdentity, UserAssigedManagedIdentity.
+  # Options are ServicePrincipal, SystemAssignedManagedIdentity, UserAssignedManagedIdentity.
   mode: ServicePrincipal
   identityId: xxxx-xxxx-xxxx
 ```
