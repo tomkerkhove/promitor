@@ -268,7 +268,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthorityHost);
             var resourceManagerBaseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);
-            var appId = DetermineApplicationId(azureAuthenticationInfo);
+            var appId = DetermineApplicationId(_azureAuthenticationInfo);
 
             var metricLabels = new Dictionary<string, string>
             {
