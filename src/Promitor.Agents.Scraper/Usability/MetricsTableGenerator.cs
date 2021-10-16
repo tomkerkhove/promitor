@@ -38,7 +38,7 @@ namespace Promitor.Agents.Scraper.Usability
 
             asciiTable.AddRow(metadata.TenantId, metadata.SubscriptionId, metadata.ResourceGroupName, metadata.Cloud.Name.Humanize(LetterCasing.Title));
 
-            AnsiConsole.Render(asciiTable);
+            AnsiConsole.Write(asciiTable);
         }
 
         private void PlotMetricsInAsciiTable(List<MetricDefinition> configuredMetrics)
@@ -76,7 +76,7 @@ namespace Promitor.Agents.Scraper.Usability
                 asciiTable.AddRow(outputMetricName, metric.ResourceType.Humanize(LetterCasing.Title), labels, azureMetricName, configuredResources, configuredResourceDiscoveryGroups);
             }
 
-            AnsiConsole.Render(asciiTable);
+            AnsiConsole.Write(asciiTable);
         }
 
         private Table CreateAzureMetadataAsciiTable()

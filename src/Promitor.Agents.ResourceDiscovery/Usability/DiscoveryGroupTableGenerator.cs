@@ -40,7 +40,7 @@ namespace Promitor.Agents.ResourceDiscovery.Usability
                 asciiTable.AddRow(resourceDiscoveryGroup.Name, resourceDiscoveryGroup.Type.Humanize(LetterCasing.Title), isInclusionCriteriaConfigured);
             }
 
-            AnsiConsole.Render(asciiTable);
+            AnsiConsole.Write(asciiTable);
         }
 
         private void PlotAzureMetadataInAsciiTable(AzureLandscape azureLandscape)
@@ -51,7 +51,7 @@ namespace Promitor.Agents.ResourceDiscovery.Usability
 
             asciiTable.AddRow(azureLandscape.TenantId, azureLandscape.Cloud.Humanize(LetterCasing.Title), rawSubscriptions);
 
-            AnsiConsole.Render(asciiTable);
+            AnsiConsole.Write(asciiTable);
         }
 
         private Table CreateResourceDiscoveryGroupsAsciiTable()
