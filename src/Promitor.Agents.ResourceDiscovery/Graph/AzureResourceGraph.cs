@@ -268,12 +268,13 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthorityHost);
             var resourceManagerBaseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);
+            var appId = DetermineApplicationId(_azureAuthenticationInfo);
 
             var metricLabels = new Dictionary<string, string>
             {
                 {"tenant_id", TenantId},
                 {"cloud", azureEnvironment.GetDisplayName()},
-                {"app_id", _azureAuthenticationInfo.IdentityId},
+                {"app_id", appId},
                 {"auth_mode", _azureAuthenticationInfo.Mode.ToString()},
             };
             var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials, new AzureResourceGraphThrottlingRequestHandler(_prometheusMetricsCollector, metricLabels, _logger));
@@ -284,6 +285,21 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             resourceGraphClient.UserAgent.TryParseAdd(promitorUserAgent);
 
             return resourceGraphClient;
+        }
+
+        private string DetermineApplicationId(AzureAuthenticationInfo azureAuthenticationInfo)
+        {
+            switch (azureAuthenticationInfo.Mode)
+            {
+                case AuthenticationMode.ServicePrincipal:
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
+                    return azureAuthenticationInfo.IdentityId;
+                case AuthenticationMode.SystemAssignedManagedIdentity:
+                    return "system-assigned-identity";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
+            }
         }
     }
 }
