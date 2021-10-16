@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="Fastenshtein" Version="1.0.0.7" />
+    <PackageReference Include="Fastenshtein" Version="1.0.0.8" />
     <PackageReference Include="Cronos" Version="0.7.1" />
     <PackageReference Include="Guard.Net" Version="1.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
