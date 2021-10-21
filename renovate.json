@@ -12,7 +12,7 @@
       "datasources": ["docker"],
       "packagePatterns": ["^mcr.microsoft.com/dotnet/"],
       "groupName": ".NET Core Docker containers"
-      "allowedVersions": "<5.0",
+      "allowedVersions": "<5.0"
     },
     {
       "extends": "monorepo:dotnet",
