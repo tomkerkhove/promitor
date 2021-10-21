@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Guard.Net" Version="1.2.0" />
+      <PackageReference Include="Guard.Net" Version="2.0.0" />
       <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.13" />
     </ItemGroup>

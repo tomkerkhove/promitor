@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
-    <PackageReference Include="Guard.Net" Version="1.2.0" />
+    <PackageReference Include="Guard.Net" Version="2.0.0" />
     <PackageReference Include="Humanizer" Version="2.11.10" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
     <PackageReference Include="Microsoft.Azure.Management.Monitor.Fluent" Version="1.38.0" />
