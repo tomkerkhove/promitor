@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>3.1.16</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>3.1.20</RuntimeFrameworkVersion>
     <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
   </PropertyGroup>
 
