@@ -15,7 +15,7 @@ COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Promet
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=%VERSION%
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1.20 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0.11 as runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="c:/config/"
 
