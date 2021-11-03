@@ -6,8 +6,10 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
+ | [#1593](https://github.com/tomkerkhove/promitor/issues/1593))
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
+ | [#1593](https://github.com/tomkerkhove/promitor/issues/1593))

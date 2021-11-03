@@ -15,6 +15,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ApiManagementMetricValidator();
                 case ResourceType.ApplicationGateway:
                     return new ApplicationGatewayMetricValidator();
+                case ResourceType.ApplicationInsights:
+                    return new ApplicationInsightsMetricValidator();
                 case ResourceType.AppPlan:
                     return new AppPlanMetricValidator();
                 case ResourceType.AutomationAccount:

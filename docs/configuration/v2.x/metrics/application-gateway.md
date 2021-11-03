@@ -29,8 +29,6 @@ azureMetricConfiguration:
 resources: # Optional, required when no resource discovery is configured
 - applicationGatewayName: promitor-application-gateway-1
 - applicationGatewayName: promitor-application-gateway-2
-resourceDiscoveryGroups:
-- name: application-gateway-group
 resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
 - name: application-gateway-landscape
 ```

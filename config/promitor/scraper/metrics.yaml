@@ -252,3 +252,26 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: data-factory-landscape
+  - name: promitor_demo_application_insights_discovered
+    description: "Average amount of exceptions measured in Azure Application Insights"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: serverExceptions
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: application-insights-landscape
+  - name: promitor_demo_application_insights_orders_created
+    description: "Amount of orders created and measured in Azure Application Insights"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: Orders Created
+      aggregation:
+        type: Average
+      dimension:
+        name: Tenant
+    resources:
+      # Application Insights with data in the service itself (classic, deprcated)
+    - name: promitor-testing-resource-eu-telemetry-classic
+      # Application Insights with data in Log Analtyics
+    - name: promitor-testing-resource-eu-telemetry

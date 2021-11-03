@@ -41,6 +41,7 @@
         SynapseWorkspace = 36,
         MonitorAutoscale = 37,
         DataFactory = 38,
-        DataShare = 39
+        DataShare = 39,
+        ApplicationInsights = 40
     }
 }
