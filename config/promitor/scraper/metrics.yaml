@@ -14,244 +14,244 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-  - name: promitor_demo_documentation_availability
-    description: "Availabiliy of our documentation"
-    resourceType: Generic
-    azureMetricConfiguration:
-      metricName: availabilityResults/availabilityPercentage
-      aggregation:
-        type: Average
-    resources:
-    - resourceUri: microsoft.insights/components/promitor-testing-resource-eu-telemetry
-      filter: availabilityResult/name eq 'Documentation'
-  - name: promitor_demo_appplan_autoscale_instances_current_discovered
-    description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
-    resourceType: MonitorAutoscale
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: ObservedCapacity
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: autoscaling-rules
-  - name: azure_container_registry_total_pull_count_discovered
-    description: "Amount of images that were pulled from the container registry"
-    resourceType: ContainerRegistry
-    azureMetricConfiguration:
-      metricName: TotalPullCount
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: container-registry-landscape
-  - name: promitor_demo_appplan_percentage_cpu_discovered
-    description: "Average percentage of memory usage on an Azure App Plan"
-    resourceType: AppPlan
-    azureMetricConfiguration:
-      metricName: MemoryPercentage
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: app-plan-landscape
-  - name: promitor_demo_webapp_cpu_discovery
-    description: "Amount of CPU time used for an Azure Web App"
-    resourceType: WebApp
-    azureMetricConfiguration:
-      metricName: CpuTime
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: web-app-landscape
-  - name: promitor_demo_function_memory_discovery
-    description: "Average memory for an Azure Function App"
-    resourceType: FunctionApp
-    azureMetricConfiguration:
-      metricName: MemoryWorkingSet
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: function-app-landscape
-  - name: azure_logic_apps_failed_run
-    description: "Total amount of failed runs for Azure Logic Apps"
-    resourceType: LogicApp
-    azureMetricConfiguration:
-      metricName: RunsFailed
-      aggregation:
-        type: Total
-    resources:
-      - workflowName: promitor-testing-resource-eu-workflow-eu-1
-  - name: azure_logic_apps_failed_run_discovery
-    description: "Total amount of failed runs for Azure Logic Apps"
-    resourceType: LogicApp
-    azureMetricConfiguration:
-      metricName: RunsFailed
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: logic-apps-unfiltered
-  - name: azure_storage_account_capacity_discovery
-    description: "The average capacity used in the storage account"
-    resourceType: StorageAccount
-    azureMetricConfiguration:
-      metricName: UsedCapacity
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: storage-accounts
-  - name: azure_sql_database_cpu_percent_discovery
-    description: "The CPU percentage used by an Azure SQL Database."
-    resourceType: SqlDatabase
-    azureMetricConfiguration:
-      metricName: cpu_percent
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: sql-databases
-  - name: promitor_demo_azuresqlmanagedinstance_nodes_discovery
-    description: "The amount of nodes for an Azure SQL Managed Instance."
-    resourceType: SqlManagedInstance
-    azureMetricConfiguration:
-      metricName: virtual_core_count
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: sql-managed-instances
-  - name: azure_network_interface_bytes_received_rate_discovery
-    description: "Number of bytes the Network Interface sent"
-    resourceType: NetworkInterface
-    azureMetricConfiguration:
-      metricName: BytesReceivedRate
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: network-interfaces
-  - name: azure_event_hubs_incoming_messages_discovery
-    description: "The number of incoming messages on an Azure Event Hub namespace"
-    resourceType: EventHubs
-    azureMetricConfiguration:
-      metricName: IncomingMessages
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: event-hubs-landscape
-  - name: promitor_demo_servicebus_messagecount_discovered
-    description: "Average percentage of memory usage on an Azure App Plan"
-    resourceType: ServiceBusNamespace
-    labels:
-      geo: europe
-      app: promitor
-    azureMetricConfiguration:
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-    resources:
-      - namespace: promitor-testing-resource-eu-messaging
-  - name: promitor_demo_servicebus_messagecount_limited
-    description: "Average percentage of memory usage on an Azure App Plan"
-    resourceType: ServiceBusNamespace
-    labels:
-      geo: europe
-      app: promitor
-    azureMetricConfiguration:
-      limit: 5
-      metricName: ActiveMessages
-      aggregation:
-        type: Average
-    resources:
-      - namespace: promitor-testing-resource-eu-messaging
-  - name: promitor_demo_automation_job_count
-    description: "Amount of jobs per Azure Automation account"
-    resourceType: AutomationAccount
-    azureMetricConfiguration:
-      metricName: TotalJob
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: automation-accounts
-    resources:
-      - accountName: promitor-testing-resource-eu-automation-1
-  - name: promitor_demo_automation_update_deployment_runs
-    description: "Amount of jobs per Azure Automation account"
-    resourceType: AutomationAccount
-    azureMetricConfiguration:
-      metricName: TotalUpdateDeploymentRuns
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: automation-accounts
-    resources:
-      - accountName: promitor-testing-resource-eu-automation-1
-  - name: promitor_demo_frontdoor_backend_health_per_backend_pool
-    description: "Health percentage for a backed in Azure Front Door"
-    resourceType: FrontDoor
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: BackendHealthPercentage
-      dimension:
-        name: BackendPool
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: front-door-landscape
-  - name: promitor_demo_sql_elastic_pool_cpu
-    description: "CPU percentage used for a Azure SQL Elastic Pool"
-    resourceType: SqlElasticPool
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: cpu_percent
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: sql-elastic-pools
-  - name: promitor_demo_sql_elastic_pool_allocated_storage
-    description: "Percentage of allocated storage for a Azure SQL Elastic Pool"
-    resourceType: SqlElasticPool
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: allocated_data_storage_percent
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: sql-elastic-pools
-  - name: promitor_demo_synapse_apache_spark_apps_ended
-    description: "Amount of apps ended running on Apache Spark pool in Azure Synapse"
-    resourceType: SynapseApacheSparkPool
-    azureMetricConfiguration:
-      metricName: BigDataPoolApplicationsEnded
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: synapse-apache-spark-pools
-  - name: promitor_demo_synapse_sql_pool_dwu_limit
-    description: "Amount of DWUs defined as limit for SQL pool in Azure Synapse"
-    resourceType: SynapseSqlPool
-    azureMetricConfiguration:
-      metricName: DWULimit
-      aggregation:
-        type: Maximum
-    resourceDiscoveryGroups:
-      - name: synapse-sql-pools
-  - name: promitor_demo_synapse_workspace_builtin_sql_processed_bytes
-    description: "Amount of bytes processed in Azure Synapse workspace"
-    resourceType: SynapseWorkspace
-    azureMetricConfiguration:
-      metricName: BuiltinSqlPoolDataProcessedBytes
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: synapse-workspaces
-  - name: promitor_demo_data_factory_pipeline_run_successful_discovered
-    description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
-    resourceType: DataFactory
-    azureMetricConfiguration:
-      metricName: PipelineSucceededRuns
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: data-factory-landscape
+  #- name: promitor_demo_documentation_availability
+  #  description: "Availabiliy of our documentation"
+  #  resourceType: Generic
+  #  azureMetricConfiguration:
+  #    metricName: availabilityResults/availabilityPercentage
+  #    aggregation:
+  #      type: Average
+  #  resources:
+  #  - resourceUri: microsoft.insights/components/promitor-testing-resource-eu-telemetry
+  #    filter: availabilityResult/name eq 'Documentation'
+  #- name: promitor_demo_appplan_autoscale_instances_current_discovered
+  #  description: "Average amount of current instances for an Azure App Plan with Azure Monitor Autoscale"
+  #  resourceType: MonitorAutoscale
+  #  labels:
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    metricName: ObservedCapacity
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: autoscaling-rules
+  #- name: azure_container_registry_total_pull_count_discovered
+  #  description: "Amount of images that were pulled from the container registry"
+  #  resourceType: ContainerRegistry
+  #  azureMetricConfiguration:
+  #    metricName: TotalPullCount
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: container-registry-landscape
+  #- name: promitor_demo_appplan_percentage_cpu_discovered
+  #  description: "Average percentage of memory usage on an Azure App Plan"
+  #  resourceType: AppPlan
+  #  azureMetricConfiguration:
+  #    metricName: MemoryPercentage
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: app-plan-landscape
+  #- name: promitor_demo_webapp_cpu_discovery
+  #  description: "Amount of CPU time used for an Azure Web App"
+  #  resourceType: WebApp
+  #  azureMetricConfiguration:
+  #    metricName: CpuTime
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: web-app-landscape
+  #- name: promitor_demo_function_memory_discovery
+  #  description: "Average memory for an Azure Function App"
+  #  resourceType: FunctionApp
+  #  azureMetricConfiguration:
+  #    metricName: MemoryWorkingSet
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: function-app-landscape
+  #- name: azure_logic_apps_failed_run
+  #  description: "Total amount of failed runs for Azure Logic Apps"
+  #  resourceType: LogicApp
+  #  azureMetricConfiguration:
+  #    metricName: RunsFailed
+  #    aggregation:
+  #      type: Total
+  #  resources:
+  #    - workflowName: promitor-testing-resource-eu-workflow-eu-1
+  #- name: azure_logic_apps_failed_run_discovery
+  #  description: "Total amount of failed runs for Azure Logic Apps"
+  #  resourceType: LogicApp
+  #  azureMetricConfiguration:
+  #    metricName: RunsFailed
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: logic-apps-unfiltered
+  #- name: azure_storage_account_capacity_discovery
+  #  description: "The average capacity used in the storage account"
+  #  resourceType: StorageAccount
+  #  azureMetricConfiguration:
+  #    metricName: UsedCapacity
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: storage-accounts
+  #- name: azure_sql_database_cpu_percent_discovery
+  #  description: "The CPU percentage used by an Azure SQL Database."
+  #  resourceType: SqlDatabase
+  #  azureMetricConfiguration:
+  #    metricName: cpu_percent
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: sql-databases
+  #- name: promitor_demo_azuresqlmanagedinstance_nodes_discovery
+  #  description: "The amount of nodes for an Azure SQL Managed Instance."
+  #  resourceType: SqlManagedInstance
+  #  azureMetricConfiguration:
+  #    metricName: virtual_core_count
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: sql-managed-instances
+  #- name: azure_network_interface_bytes_received_rate_discovery
+  #  description: "Number of bytes the Network Interface sent"
+  #  resourceType: NetworkInterface
+  #  azureMetricConfiguration:
+  #    metricName: BytesReceivedRate
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: network-interfaces
+  #- name: azure_event_hubs_incoming_messages_discovery
+  #  description: "The number of incoming messages on an Azure Event Hub namespace"
+  #  resourceType: EventHubs
+  #  azureMetricConfiguration:
+  #    metricName: IncomingMessages
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: event-hubs-landscape
+  #- name: promitor_demo_servicebus_messagecount_discovered
+  #  description: "Average percentage of memory usage on an Azure App Plan"
+  #  resourceType: ServiceBusNamespace
+  #  labels:
+  #    geo: europe
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    metricName: ActiveMessages
+  #    aggregation:
+  #      type: Average
+  #  resources:
+  #    - namespace: promitor-testing-resource-eu-messaging
+  #- name: promitor_demo_servicebus_messagecount_limited
+  #  description: "Average percentage of memory usage on an Azure App Plan"
+  #  resourceType: ServiceBusNamespace
+  #  labels:
+  #    geo: europe
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    limit: 5
+  #    metricName: ActiveMessages
+  #    aggregation:
+  #      type: Average
+  #  resources:
+  #    - namespace: promitor-testing-resource-eu-messaging
+  #- name: promitor_demo_automation_job_count
+  #  description: "Amount of jobs per Azure Automation account"
+  #  resourceType: AutomationAccount
+  #  azureMetricConfiguration:
+  #    metricName: TotalJob
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: automation-accounts
+  #  resources:
+  #    - accountName: promitor-testing-resource-eu-automation-1
+  #- name: promitor_demo_automation_update_deployment_runs
+  #  description: "Amount of jobs per Azure Automation account"
+  #  resourceType: AutomationAccount
+  #  azureMetricConfiguration:
+  #    metricName: TotalUpdateDeploymentRuns
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: automation-accounts
+  #  resources:
+  #    - accountName: promitor-testing-resource-eu-automation-1
+  #- name: promitor_demo_frontdoor_backend_health_per_backend_pool
+  #  description: "Health percentage for a backed in Azure Front Door"
+  #  resourceType: FrontDoor
+  #  labels:
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    metricName: BackendHealthPercentage
+  #    dimension:
+  #      name: BackendPool
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: front-door-landscape
+  #- name: promitor_demo_sql_elastic_pool_cpu
+  #  description: "CPU percentage used for a Azure SQL Elastic Pool"
+  #  resourceType: SqlElasticPool
+  #  labels:
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    metricName: cpu_percent
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: sql-elastic-pools
+  #- name: promitor_demo_sql_elastic_pool_allocated_storage
+  #  description: "Percentage of allocated storage for a Azure SQL Elastic Pool"
+  #  resourceType: SqlElasticPool
+  #  labels:
+  #    app: promitor
+  #  azureMetricConfiguration:
+  #    metricName: allocated_data_storage_percent
+  #    aggregation:
+  #      type: Average
+  #  resourceDiscoveryGroups:
+  #    - name: sql-elastic-pools
+  #- name: promitor_demo_synapse_apache_spark_apps_ended
+  #  description: "Amount of apps ended running on Apache Spark pool in Azure Synapse"
+  #  resourceType: SynapseApacheSparkPool
+  #  azureMetricConfiguration:
+  #    metricName: BigDataPoolApplicationsEnded
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: synapse-apache-spark-pools
+  #- name: promitor_demo_synapse_sql_pool_dwu_limit
+  #  description: "Amount of DWUs defined as limit for SQL pool in Azure Synapse"
+  #  resourceType: SynapseSqlPool
+  #  azureMetricConfiguration:
+  #    metricName: DWULimit
+  #    aggregation:
+  #      type: Maximum
+  #  resourceDiscoveryGroups:
+  #    - name: synapse-sql-pools
+  #- name: promitor_demo_synapse_workspace_builtin_sql_processed_bytes
+  #  description: "Amount of bytes processed in Azure Synapse workspace"
+  #  resourceType: SynapseWorkspace
+  #  azureMetricConfiguration:
+  #    metricName: BuiltinSqlPoolDataProcessedBytes
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: synapse-workspaces
+  #- name: promitor_demo_data_factory_pipeline_run_successful_discovered
+  #  description: "Amount of successful runs for 'metric generator' pipline in Azure Data Factory"
+  #  resourceType: DataFactory
+  #  azureMetricConfiguration:
+  #    metricName: PipelineSucceededRuns
+  #    aggregation:
+  #      type: Total
+  #  resourceDiscoveryGroups:
+  #    - name: data-factory-landscape
   - name: promitor_demo_application_insights_discovered
     description: "Average amount of exceptions measured in Azure Application Insights"
     resourceType: ApplicationInsights
@@ -259,19 +259,24 @@ metrics:
       metricName: serverExceptions
       aggregation:
         type: Average
-    resourceDiscoveryGroups:
-      - name: application-insights-landscape
-  - name: promitor_demo_application_insights_orders_created
-    description: "Amount of orders created and measured in Azure Application Insights"
-    resourceType: ApplicationInsights
-    azureMetricConfiguration:
-      metricName: Orders Created
-      aggregation:
-        type: Average
-      dimension:
-        name: Tenant
     resources:
       # Application Insights with data in the service itself (classic, deprcated)
     - name: promitor-testing-resource-eu-telemetry-classic
-      # Application Insights with data in Log Analtyics
-    - name: promitor-testing-resource-eu-telemetry
+  #    # Application Insights with data in Log Analtyics
+  #  - name: promitor-testing-resource-eu-telemetry
+    #resourceDiscoveryGroups:
+    #  - name: application-insights-landscape
+  #- name: promitor_demo_application_insights_orders_created
+  #  description: "Amount of orders created and measured in Azure Application Insights"
+  #  resourceType: ApplicationInsights
+  #  azureMetricConfiguration:
+  #    metricName: Orders Created
+  #    aggregation:
+  #      type: Average
+  #    dimension:
+  #      name: Tenant
+  #  resources:
+  #    # Application Insights with data in the service itself (classic, deprcated)
+  #  - name: promitor-testing-resource-eu-telemetry-classic
+  #    # Application Insights with data in Log Analtyics
+  #  - name: promitor-testing-resource-eu-telemetry
