@@ -14,11 +14,11 @@ metricDefaults:
     # Every minute
     schedule: "0 * * ? * *"
 metrics:
-  - name: promitor_demo_application_insights_discovered
-    description: "Average amount of exceptions measured in Azure Application Insights"
+  - name: promitor_demo_application_insights_availability
+    description: "Availability (%) of promitor.io measured in Azure Application Insights"
     resourceType: ApplicationInsights
     azureMetricConfiguration:
-      metricName: exceptions/server
+      metricName: availabilityResults/availabilityPercentage
       aggregation:
         type: Average
     resources:
