@@ -2,10 +2,10 @@ namespace Promitor.Core.Contracts.ResourceTypes
 {
     public class ApplicationInsightsResourceDefinition : AzureResourceDefinition
     {
-        public ApplicationInsightsResourceDefinition(string subscriptionId, string resourceGroupName, string applicationInsightsName)
-            : base(ResourceType.ApplicationInsights, subscriptionId, resourceGroupName, applicationInsightsName)
+        public ApplicationInsightsResourceDefinition(string subscriptionId, string resourceGroupName, string name)
+            : base(ResourceType.ApplicationInsights, subscriptionId, resourceGroupName, name)
         {
-            Name = applicationInsightsName;
+            Name = name;
         }
 
         public string Name { get; }
