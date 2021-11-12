@@ -14,8 +14,7 @@ When using declared resources, the following fields need to be provided:
 
 - `name` - The name of the Azure Application Insights
 
-TODO: UPDATE URL HERE AND EXPLICITLY BREAKING MARKDOWN LINTING FOR IT All supported metrics are documented
- in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftinsightscomponents).
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftinsightscomponents).
 
 Example:
 
