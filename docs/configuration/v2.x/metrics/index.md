@@ -20,6 +20,7 @@ We also provide a simplified way to scrape the following Azure resources:
 
 - [Azure API Management](api-management)
 - [Azure Application Gateway](application-gateway)
+- [Azure Application Insights](application-insights)
 - [Azure App Plan](app-plan)
 - [Azure Cache for Redis](redis-cache)
 - [Azure Container Instances](container-instances)

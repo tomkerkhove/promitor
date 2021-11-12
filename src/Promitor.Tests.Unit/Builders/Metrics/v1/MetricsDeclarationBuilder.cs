@@ -299,6 +299,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithApplicationInsightsMetric(string metricName = "promitor-application-gateway",
+            string metricDescription = "Description for a metric",
+            string applicationInsightsName = "promitor-application-insights-name",
+            string azureMetricName = "ApplicationGatewayTotalTime",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new ApplicationInsightsResourceV1
+            {
+                Name = applicationInsightsName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.ApplicationInsights, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithAppPlanMetric(string metricName = "promitor-app-plan",
             string metricDescription = "Description for a metric",
             string appPlanName = "promitor-app-plan",

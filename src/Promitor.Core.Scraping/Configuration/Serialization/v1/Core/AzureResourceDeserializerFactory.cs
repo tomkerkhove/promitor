@@ -27,6 +27,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.ApplicationGateway:
                     var applicationGatewayLogger = _loggerFactory.CreateLogger<ApplicationGatewayDeserializer>();
                     return new ApplicationGatewayDeserializer(applicationGatewayLogger);
+                case ResourceType.ApplicationInsights:
+                    var applicationInsightsLogger = _loggerFactory.CreateLogger<ApplicationInsightsDeserializer>();
+                    return new ApplicationInsightsDeserializer(applicationInsightsLogger);
                 case ResourceType.AppPlan:
                     var appPlanLogger = _loggerFactory.CreateLogger<AppPlanDeserializer>();
                     return new AppPlanDeserializer(appPlanLogger);

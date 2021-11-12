@@ -252,3 +252,17 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: data-factory-landscape
+  - name: promitor_demo_application_insights_availability
+    description: "Availability (%) of promitor.io measured in Azure Application Insights"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+    resources:
+      # Application Insights with data in the service itself (classic, deprecated)
+    - name: promitor-automation-data-generation-we-telemetry-classic
+      resourceGroupName: promitor-automation-data-generation
+      # Application Insights with data in Log Analytics
+    - name: promitor-automation-data-generation-we-telemetry
+      resourceGroupName: promitor-automation-data-generation

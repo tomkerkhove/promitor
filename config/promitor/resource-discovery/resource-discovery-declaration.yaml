@@ -9,6 +9,8 @@ resourceDiscoveryGroups:
   type: ServiceBusNamespace
 - name: api-gateways
   type: ApiManagement
+- name: application-insights-landscape
+  type: ApplicationInsights
 - name: app-plan-landscape
   type: AppPlan
 - name: automation-accounts
