@@ -58,7 +58,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 17;
+            const int expectedResourceCount = 1000; // This should be more but is a known bug, see https://github.com/tomkerkhove/promitor/issues/1828
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -138,7 +138,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-subscriptions-scenario";
-            const int expectedResourceCount = 17;
+            const int expectedResourceCount = 1000;  // This should be more but is a known bug, see https://github.com/tomkerkhove/promitor/issues/1828
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -198,7 +198,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-tag-scenario";
-            const int expectedResourceCount = 9;
+            const int expectedResourceCount = 409;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -218,7 +218,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-instance-tag-with-multi-value-scenario";
-            const int expectedResourceCount = 9;
+            const int expectedResourceCount = 409;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -238,7 +238,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "one-region-scenario";
-            const int expectedResourceCount = 3;
+            const int expectedResourceCount = 203;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -258,7 +258,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 14;
+            const int expectedResourceCount = 415;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
