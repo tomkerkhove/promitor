@@ -262,5 +262,7 @@ metrics:
     resources:
       # Application Insights with data in the service itself (classic, deprecated)
     - name: promitor-automation-data-generation-we-telemetry-classic
+      resourceGroupName: promitor-automation-data-generation
       # Application Insights with data in Log Analytics
     - name: promitor-automation-data-generation-we-telemetry
+      resourceGroupName: promitor-automation-data-generation
