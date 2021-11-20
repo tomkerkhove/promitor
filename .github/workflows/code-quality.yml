@@ -1,0 +1,16 @@
+name: Code Quality
+
+on:
+  pull_request: {}
+
+jobs:
+  resharper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      
+      - name: resharper
+        uses: glassechidna/resharper-action@master
+        with:
+          solution: src/Promitor.sln
