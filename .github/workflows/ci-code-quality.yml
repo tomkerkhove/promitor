@@ -1,15 +1,20 @@
-name: Code Quality
+name: CI - Code Quality
 
 on:
-  pull_request: {}
+  pull_request:
+    paths:
+    - src/*
 
 jobs:
-  resharper:
+  code_quality:
+    name: Code Quality (R#)
     runs-on: ubuntu-latest
     steps:
+        # Checkout code
       - name: checkout
         uses: actions/checkout@v2
-      
+
+        # Run R# code quality
       - name: resharper
         uses: glassechidna/resharper-action@master
         with:
