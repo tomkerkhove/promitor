@@ -15,6 +15,10 @@ jobs:
         # Checkout code
       - name: checkout
         uses: actions/checkout@v2
+      - name: Inspect
+        uses: nbadal/inspectcode-action@v1
+        with:
+          solution: 'src/Promitor.sln'
       - uses: goit/setup-resharper@v2.0.1
         with:
           version: '2021.2'
