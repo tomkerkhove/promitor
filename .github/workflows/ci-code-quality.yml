@@ -15,6 +15,11 @@ jobs:
         # Checkout code
       - name: checkout
         uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+      - run: dotnet tool install -g JetBrains.ReSharper.GlobalTools
+
       - name: Inspect
         uses: nbadal/inspectcode-action@v1
         with:
