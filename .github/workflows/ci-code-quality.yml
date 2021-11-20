@@ -15,10 +15,10 @@ jobs:
         # Checkout code
       - name: checkout
         uses: actions/checkout@v2
-      - uses: goit/setup-resharper@v2
+      - uses: goit/setup-resharper@v2.0.1
         with:
           version: '2021.2'
-          
+
         # Run R# code quality
       - name: resharper
         run: InspectCode src/Promitor.sln
