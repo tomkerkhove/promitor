@@ -36,6 +36,7 @@ services:
     - promitor.agents.scraper
   graphite:
     image: graphiteapp/graphite-statsd
+    container_name: graphite
     restart: always
     ports:
       - 2000:80
@@ -47,6 +48,7 @@ services:
       - 8126:8126
   grafana:
     image: grafana/grafana
+    container_name: grafana
     links:
       - prometheus
       - graphite
