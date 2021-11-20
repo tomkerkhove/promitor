@@ -28,10 +28,3 @@ jobs:
         run: |
           chmod -R 777 ${{ env.RESHARPER_ROOT }}
           ${{ env.RESHARPER_ROOT }}/inspectcode.exe src/Promitor.sln
-
-        # Run R# code quality
-      - name: resharper
-        run: |
-          chmod a+rwx inspectcode.exe
-          inspectcode.exe src/Promitor.sln
-        working-directory: ${{ env.RESHARPER_ROOT }}
