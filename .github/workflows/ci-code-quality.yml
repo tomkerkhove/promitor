@@ -25,4 +25,5 @@ jobs:
 
         # Run R# code quality
       - name: resharper
-        run: inspectcode src/Promitor.sln
+        run: inspectcode.exe src/Promitor.sln
+        working-directory: ${{ env.RESHARPER_ROOT }}
