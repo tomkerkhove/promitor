@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.100</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.0</RuntimeFrameworkVersion>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
@@ -18,7 +18,7 @@
     <PackageReference Include="Arcus.Observability.Telemetry.Core" Version="2.3.0" />
     <PackageReference Include="Arcus.Testing.Logging" Version="0.3.0" />
     <PackageReference Include="Bogus" Version="33.1.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Polly" Version="7.2.2" />
     <PackageReference Include="Promitor.Parsers.Prometheus.Http" Version="0.2.0" />

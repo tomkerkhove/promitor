@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.100</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -14,11 +14,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Guard.NET" Version="1.2.0" />
+    <PackageReference Include="Guard.NET" Version="2.0.0" />
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.13" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

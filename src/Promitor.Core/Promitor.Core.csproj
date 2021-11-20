@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.100</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -15,12 +15,12 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
-    <PackageReference Include="Guard.Net" Version="1.2.0" />
-    <PackageReference Include="Humanizer" Version="2.11.10" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
+    <PackageReference Include="Guard.Net" Version="2.0.0" />
+    <PackageReference Include="Humanizer" Version="2.13.14" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.19.0" />
     <PackageReference Include="Microsoft.Azure.Management.Monitor.Fluent" Version="1.38.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.13" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.13" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Prometheus.Client" Version="4.5.3" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
