@@ -21,7 +21,7 @@ jobs:
 
         # Run R# code quality
       - name: resharper
-        run: ls
+        run: ls ${{ env.RESHARPER_ROOT }}
 
         # Run R# code quality
       - name: resharper
