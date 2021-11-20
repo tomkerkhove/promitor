@@ -49,7 +49,7 @@ namespace Promitor.Agents.Core.Extensions
                 .AddJsonOptions(jsonOptions =>
                 {
                     jsonOptions.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                    jsonOptions.JsonSerializerOptions.IgnoreNullValues = true;
+                    jsonOptions.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 })
                 .AddNewtonsoftJson(jsonOptions =>
                 {
