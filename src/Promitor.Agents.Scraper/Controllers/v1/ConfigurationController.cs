@@ -15,7 +15,7 @@ namespace Promitor.Agents.Scraper.Controllers.v1
     [Route("api/v1/configuration")]
     public class ConfigurationController : Controller
     {
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerSettings serializerSettings;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<ScraperRuntimeConfiguration> _runtimeConfiguration;
 
@@ -24,12 +24,12 @@ namespace Promitor.Agents.Scraper.Controllers.v1
             _runtimeConfiguration = runtimeConfiguration;
             _metricsDeclarationProvider = metricsDeclarationProvider;
             
-            _serializerSettings = new JsonSerializerSettings
+            serializerSettings = new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Objects
             };
-            _serializerSettings.Converters.Add(new StringEnumConverter());
+            serializerSettings.Converters.Add(new StringEnumConverter());
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Promitor.Agents.Scraper.Controllers.v1
         {
             var scrapeConfiguration = _metricsDeclarationProvider.Get(true);
             
-            var serializedResources = JsonConvert.SerializeObject(scrapeConfiguration.Metrics, _serializerSettings);
+            var serializedResources = JsonConvert.SerializeObject(scrapeConfiguration.Metrics, serializerSettings);
                 
             var response= Content(serializedResources, "application/json");
             response.StatusCode = (int) HttpStatusCode.OK;
