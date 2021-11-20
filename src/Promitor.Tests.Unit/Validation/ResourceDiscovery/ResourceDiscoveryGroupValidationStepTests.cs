@@ -62,7 +62,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
                 .StrictMode(true)
                 .RuleFor(group => group.Name, faker => faker.Name.FirstName())
                 .RuleFor(group => group.Type, faker => faker.PickRandom<ResourceType>())
-                .RuleFor(group => group.Criteria, faker => criteria)
+                .RuleFor(group => group.Criteria, _ => criteria)
                 .Generate();
 
             return resourceDiscoveryGroup;
@@ -73,7 +73,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
             var criteria = GenerateCriteria();
             var criteriaDefinition = new Faker<ResourceCriteriaDefinition>()
                 .StrictMode(true)
-                .RuleFor(definition => definition.Include, faker => criteria)
+                .RuleFor(definition => definition.Include, _ => criteria)
                 .Generate();
             return criteriaDefinition;
         }

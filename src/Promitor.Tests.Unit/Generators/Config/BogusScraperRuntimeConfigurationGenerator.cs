@@ -76,9 +76,9 @@ namespace Promitor.Tests.Unit.Generators.Config
         {
             var telemetryConfiguration = new Faker<TelemetryConfiguration>()
                 .StrictMode(true)
-                .RuleFor(telemetry => telemetry.DefaultVerbosity, faker => LogLevel.Error)
-                .RuleFor(telemetry => telemetry.ContainerLogs, faker => containerLogConfiguration)
-                .RuleFor(telemetry => telemetry.ApplicationInsights, faker => applicationInsightsConfiguration)
+                .RuleFor(telemetry => telemetry.DefaultVerbosity, _ => LogLevel.Error)
+                .RuleFor(telemetry => telemetry.ContainerLogs, _ => containerLogConfiguration)
+                .RuleFor(telemetry => telemetry.ApplicationInsights, _ => applicationInsightsConfiguration)
                 .Generate();
             return telemetryConfiguration;
         }
@@ -87,7 +87,7 @@ namespace Promitor.Tests.Unit.Generators.Config
         {
             var applicationInsightsConfiguration = new Faker<ApplicationInsightsConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, _ => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .RuleFor(containerConfiguration => containerConfiguration.InstrumentationKey, faker => faker.Random.Guid().ToString())
                 .Generate();
@@ -107,7 +107,7 @@ namespace Promitor.Tests.Unit.Generators.Config
         {
             var containerLogConfiguration = new Faker<ContainerLogConfiguration>()
                 .StrictMode(true)
-                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, faker => LogLevel.Error)
+                .RuleFor(containerConfiguration => containerConfiguration.Verbosity, _ => LogLevel.Error)
                 .RuleFor(containerConfiguration => containerConfiguration.IsEnabled, faker => faker.Random.Bool())
                 .Generate();
             return containerLogConfiguration;
@@ -127,7 +127,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             var atlassianStatusPageSinkConfiguration = new Faker<AtlassianStatusPageSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.PageId, faker => faker.Person.FirstName)
-                .RuleFor(promConfiguration => promConfiguration.SystemMetricMapping, faker => new List<SystemMetricMapping> {  GenerateAtlassianStatuspageSystemMetricMapping() })
+                .RuleFor(promConfiguration => promConfiguration.SystemMetricMapping, _ => new List<SystemMetricMapping> {  GenerateAtlassianStatuspageSystemMetricMapping() })
                 .Generate();
             return atlassianStatusPageSinkConfiguration;
         }
@@ -153,7 +153,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(promConfiguration => promConfiguration.BaseUriPath, faker => faker.System.DirectoryPath())
                 .RuleFor(promConfiguration => promConfiguration.MetricUnavailableValue, faker => faker.Random.Double(min: 1))
                 .RuleFor(promConfiguration => promConfiguration.EnableMetricTimestamps, faker => faker.Random.Bool())
-                .RuleFor(promConfiguration => promConfiguration.Labels, faker => prometheusLabelConfiguration)
+                .RuleFor(promConfiguration => promConfiguration.Labels, _ => prometheusLabelConfiguration)
                 .Generate();
             return prometheusScrapingEndpointSinkConfiguration;
         }

@@ -74,7 +74,7 @@ namespace Promitor.Tests.Integration.Clients
             var pollPolicy = Policy.HandleResult<List<IMetric>>(metrics => metrics?.Find(x => filter((Gauge)x)) == null)
                                    .WaitAndRetryAsync(5,
                                                   retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                                                  (exception, timeSpan, retryCount, context) =>
+                                                  (_, _, retryCount, _) =>
                                                   {
                                                       Logger.LogInformation($"Metric was not found, retrying ({retryCount}/{maxRetries}).");
                                                   });

@@ -63,7 +63,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
             services.AddScheduler(builder =>
             {
@@ -83,7 +83,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             return services;

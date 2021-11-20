@@ -85,7 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
@@ -114,7 +114,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     schedulerOptions.RunImmediately = true;
                 },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceDiscoveryGroup} which will be reported as metric {MetricName}", jobName, resourceDiscoveryGroup.Name, metricDefinition.PrometheusMetricDefinition?.Name);
