@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:3.1.414 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.100 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
@@ -12,7 +12,7 @@ COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=%VERSION%
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1.20 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.0 AS runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="c:/config/"
 COPY --from=build /app .
