@@ -25,4 +25,4 @@ jobs:
 
         # Run R# code quality
       - name: resharper
-        run: InspectCode.exe src/Promitor.sln
+        run: inspectcode src/Promitor.sln
