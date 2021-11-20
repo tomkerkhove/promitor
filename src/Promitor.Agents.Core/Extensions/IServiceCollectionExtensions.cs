@@ -123,7 +123,7 @@ namespace Promitor.Agents.Core.Extensions
             if (hostingEnvironment == null)
                 return string.Empty;
 
-            var contentRootPath = ((IWebHostEnvironment) hostingEnvironment.ImplementationInstance).ContentRootPath;
+            var contentRootPath = ((IWebHostEnvironment) hostingEnvironment.ImplementationInstance)?.ContentRootPath;
             var xmlDocumentationPath = $"{contentRootPath}/Docs/{docFileName}";
 
             return File.Exists(xmlDocumentationPath) ? xmlDocumentationPath : string.Empty;

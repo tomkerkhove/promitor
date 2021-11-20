@@ -6,6 +6,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Tests.Unit.Serialization.v1;
 using Xunit;
 using YamlDotNet.RepresentationModel;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 {
