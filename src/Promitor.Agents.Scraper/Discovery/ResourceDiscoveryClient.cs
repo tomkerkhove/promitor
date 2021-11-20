@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Arcus.Observability.Telemetry.Core;
 using GuardNet;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

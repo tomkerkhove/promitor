@@ -14,7 +14,7 @@ namespace Promitor.Tests.Integration.Extensions
             Guard.NotNull(headers, nameof(headers));
             Guard.NotNullOrWhitespace(headerName, nameof(headerName));
 
-            return headers.GetValues(headerName)?.FirstOrDefault();
+            return headers.GetValues(headerName).FirstOrDefault();
         }
     }
 }

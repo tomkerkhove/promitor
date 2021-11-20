@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
@@ -39,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingPrometheusMetricsCollector>();
             var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
-            var startupLogger = loggerFactory.CreateLogger<Startup>();
+            var startupLogger = loggerFactory != null ? loggerFactory.CreateLogger<Startup>() : NullLogger<Startup>.Instance;
             foreach (var metric in metrics.Metrics)
             {
                 if (metric.ResourceDiscoveryGroups?.Any() == true)

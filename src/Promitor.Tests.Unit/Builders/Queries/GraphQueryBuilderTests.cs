@@ -36,7 +36,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
                 " or type =~ 'resource type 2'";
 
             // Act
-            GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(new[] { resourceType1, resourceType2 });
+            GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(resourceType1, resourceType2);
 
             // Assert
             Assert.Equal(expectedQuery, graphQueryBuilder.Build());
@@ -197,7 +197,7 @@ namespace Promitor.Tests.Unit.Builders.Queries
             GraphQueryBuilder graphQueryBuilder = GraphQueryBuilder.ForResourceType(ResourceType);
 
             // Act
-            graphQueryBuilder.Project(new[] { field1, field2 });
+            graphQueryBuilder.Project(field1, field2);
 
             // Assert
             Assert.Equal(expectedQuery, graphQueryBuilder.Build());
