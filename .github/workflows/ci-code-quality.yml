@@ -21,7 +21,9 @@ jobs:
 
         # Run R# code quality
       - name: resharper
-        run: chmod a+rwx ${{ env.RESHARPER_ROOT }}
+        run: |
+          chmod a+rwx ${{ env.RESHARPER_ROOT }}
+          ${{ env.RESHARPER_ROOT }}/inspectcode.exe src/Promitor.sln
 
         # Run R# code quality
       - name: resharper
