@@ -5,6 +5,6 @@ namespace Promitor.Integrations.AzureMonitor.Configuration
     public class AzureMonitorLoggingConfiguration
     {
         public HttpLoggingDelegatingHandler.Level InformationLevel { get; set; } = HttpLoggingDelegatingHandler.Level.Basic;
-        public bool IsEnabled { get; set; } = false;
+        public bool IsEnabled { get; set; }
     }
 }
