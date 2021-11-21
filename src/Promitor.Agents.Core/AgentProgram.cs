@@ -71,7 +71,7 @@ namespace Promitor.Agents.Core
             Console.WriteLine(Constants.Texts.Welcome);
             Log.Logger.Information($"Booting up Promitor v{agentVersion} running .NET {RuntimeInformation.FrameworkDescription} - Thank you for using Promitor!");
             var operatingSystem = RuntimeInformation.OSDescription.Contains("linux", StringComparison.InvariantCultureIgnoreCase) ? "Linux" : "Windows";
-            Log.Logger.Information($"Running {RuntimeInformation.FrameworkDescription} on {operatingSystem} ({RuntimeInformation.OSDescription}).");
+            Log.Logger.Information($"Running {RuntimeInformation.FrameworkDescription} on {operatingSystem} ({RuntimeInformation.RuntimeIdentifier} | {RuntimeInformation.OSDescription}).");
         }
     }
 }
