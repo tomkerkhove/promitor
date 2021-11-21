@@ -6,7 +6,9 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
 using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
@@ -33,7 +35,11 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));
 
-            var metricName = scrapeDefinition.AzureMetricConfiguration.MetricName;
+            // Determine the metric name to use
+            var metricName = DetermineMetricName(scrapeDefinition.AzureMetricConfiguration);
+
+            // Determine the namespace of the metric, if any
+            var metricNamespace = scrapeDefinition.AzureMetricConfiguration?.Metric?.Namespace;
 
             // Compose URI of the resource to measure
             var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, resourceDefinition);
@@ -51,7 +57,7 @@ namespace Promitor.Core.Scraping
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit, metricNamespace);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
@@ -90,6 +96,29 @@ namespace Promitor.Core.Scraping
         protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
         {
             return metricValues;
+        }
+
+        /// <summary>
+        ///     Determines the metric name to use
+        /// </summary>
+        /// <param name="azureMonitorConfiguration">Configuration for Azure Monitor metric</param>
+        protected virtual string DetermineMetricName(AzureMetricConfiguration azureMonitorConfiguration)
+        {
+            Guard.NotNull(azureMonitorConfiguration, nameof(azureMonitorConfiguration));
+
+            if (azureMonitorConfiguration.Metric == null && string.IsNullOrWhiteSpace(azureMonitorConfiguration.MetricName))
+            {
+                throw new InvalidOperationException("No metric name was configured");
+            }
+            
+            if (string.IsNullOrWhiteSpace(azureMonitorConfiguration?.Metric?.Name) == false)
+            {
+                return azureMonitorConfiguration.Metric.Name;
+            }
+
+            Logger.LogWarning($"Using metric name '{azureMonitorConfiguration.MetricName}' through azureMetricConfiguration.metricName which is deprecated, please use azureMetricConfiguration.metric.name instead.");
+
+            return azureMonitorConfiguration.MetricName;
         }
 
         /// <summary>

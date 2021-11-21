@@ -22,7 +22,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 return errorMessages;
             }
 
-            if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName))
+            if (string.IsNullOrWhiteSpace(azureMetricConfiguration.MetricName) && string.IsNullOrWhiteSpace(azureMetricConfiguration.Metric?.Name))
             {
                 errorMessages.Add("No metric name for Azure is configured");
             }

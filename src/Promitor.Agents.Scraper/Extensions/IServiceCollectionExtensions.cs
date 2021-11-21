@@ -104,6 +104,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
             services.AddSingleton<IDeserializer<MetricDefaultsV1>, MetricDefaultsDeserializer>();
             services.AddSingleton<IDeserializer<MetricDefinitionV1>, MetricDefinitionDeserializer>();
+            services.AddSingleton<IDeserializer<MetricInformationV1>, MetricInformationDeserializer>();
             services.AddSingleton<IDeserializer<AggregationV1>, AggregationDeserializer>();
             services.AddSingleton<IDeserializer<MetricDimensionV1>, MetricDimensionDeserializer>();
             services.AddSingleton<IDeserializer<ScrapingV1>, ScrapingDeserializer>();

@@ -1,11 +1,20 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Model
+﻿using System;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+
+namespace Promitor.Core.Scraping.Configuration.Model
 {
     public class AzureMetricConfiguration
     {
         /// <summary>
         ///     Name of the Azure Monitor metric to query
         /// </summary>
+        [Obsolete("Use Metric.Name instead")]
         public string MetricName { get; set; }
+
+        /// <summary>
+        ///     Configuration on the Azure Monitor metric to query
+        /// </summary>
+        public MetricInformation Metric { get; set; }
 
         /// <summary>
         ///     Amount of maximum resources to limit the results to

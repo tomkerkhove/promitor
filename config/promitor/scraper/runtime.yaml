@@ -16,7 +16,7 @@ metricSinks:
     pageId: 4mwc0ny6bgw1
     systemMetricMapping:
     - id: 333802sjqpr9
-      promitorMetricName: promitor_demo_documentation_availability
+      promitorMetricName: whatever
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
@@ -27,11 +27,11 @@ telemetry:
   containerLogs:
     isEnabled: true
     verbosity: information
-  defaultVerbosity: information
+  defaultVerbosity: Debug
 azureMonitor:
   logging:
     informationLevel: Headers
-    isEnabled: false
+    isEnabled: true
 resourceDiscovery:
   host: promitor.agents.resourcediscovery
   port: 88

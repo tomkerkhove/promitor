@@ -19,7 +19,8 @@ namespace Promitor.Tests.Unit.Serialization.v1
                     NullLogger<MetricDefaultsDeserializer>.Instance),
                 new MetricDefinitionDeserializer(
                     new AzureMetricConfigurationDeserializer(
-                        new MetricDimensionDeserializer(NullLogger<MetricDimensionDeserializer>.Instance), 
+                        new MetricInformationDeserializer(NullLogger<MetricInformationDeserializer>.Instance),
+                        new MetricDimensionDeserializer(NullLogger<MetricDimensionDeserializer>.Instance),
                         new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance),
                         NullLogger<AzureMetricConfigurationDeserializer>.Instance),
                     new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),

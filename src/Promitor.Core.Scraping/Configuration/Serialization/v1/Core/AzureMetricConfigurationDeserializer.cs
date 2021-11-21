@@ -7,11 +7,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     public class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfigurationV1>
     {
-        public AzureMetricConfigurationDeserializer(IDeserializer<MetricDimensionV1> dimensionDeserializer, IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger<AzureMetricConfigurationDeserializer> logger)
+        public AzureMetricConfigurationDeserializer(IDeserializer<MetricInformationV1> metricInformationDeserializer, IDeserializer<MetricDimensionV1> dimensionDeserializer, IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger<AzureMetricConfigurationDeserializer> logger)
             : base(logger)
         {
-            Map(config => config.MetricName)
-                .IsRequired();
+            Map(config => config.MetricName);
+            Map(config => config.Metric)
+                .MapUsingDeserializer(metricInformationDeserializer);
             Map(config => config.Limit)
                 .MapUsing(DetermineLimit);
             Map(config => config.Dimension)
@@ -29,6 +30,18 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             }
 
             return null;
+        }
+
+        public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
+        {
+            var metricConfiguration = base.Deserialize(node, errorReporter);
+
+            if (string.IsNullOrEmpty(metricConfiguration.MetricName) && string.IsNullOrEmpty(metricConfiguration.Metric?.Name))
+            {
+                errorReporter.ReportError(node, "No metric name was configured. Either 'metricName' or 'metric.name' must be specified.");
+            }
+
+            return metricConfiguration;
         }
     }
 }

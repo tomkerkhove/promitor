@@ -13,16 +13,18 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     public class AzureMetricConfigurationDeserializerTests : UnitTest
     {
         private readonly AzureMetricConfigurationDeserializer _deserializer;
+        private readonly Mock<IDeserializer<MetricInformationV1>> _metricInformationDeserializer;
         private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;
         private readonly Mock<IDeserializer<MetricAggregationV1>> _aggregationDeserializer;
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public AzureMetricConfigurationDeserializerTests()
         {
+            _metricInformationDeserializer = new Mock<IDeserializer<MetricInformationV1>>();
             _dimensionDeserializer = new Mock<IDeserializer<MetricDimensionV1>>();
             _aggregationDeserializer = new Mock<IDeserializer<MetricAggregationV1>>();
 
-            _deserializer = new AzureMetricConfigurationDeserializer(_dimensionDeserializer.Object,_aggregationDeserializer.Object, NullLogger<AzureMetricConfigurationDeserializer>.Instance);
+            _deserializer = new AzureMetricConfigurationDeserializer(_metricInformationDeserializer.Object, _dimensionDeserializer.Object,_aggregationDeserializer.Object, NullLogger<AzureMetricConfigurationDeserializer>.Instance);
         }
 
         [Fact]
