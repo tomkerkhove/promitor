@@ -27,4 +27,11 @@ jobs:
 
         # Run R# code quality
       - name: Run R# Code Quality on src/Promitor.sln
-        run: jb inspectcode src/Promitor.sln -o=output.xml
+        run: jb inspectcode src/Promitor.sln -o=code-inspection-summary.html --format=Html --severity=WARNING --dumpIssuesTypes
+
+        # Publish Inspection Summary
+      - name: Publish Inspection Summary
+        uses: actions/upload-artifact@v2
+        with:
+          name: resharper-inspectcode-report.html
+          path: code-inspection-summary.html
