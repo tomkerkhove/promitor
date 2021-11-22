@@ -27,7 +27,7 @@ jobs:
 
         # Run R# code quality
       - name: Run R# Code Quality on src/Promitor.sln
-        run: jb inspectcode src/Promitor.sln -o=code-inspection-summary.html --format=Html --severity=WARNING --dumpIssuesTypes
+        run: jb inspectcode src/Promitor.sln -o=code-inspection-summary.html --format=Html --severity=WARNING
 
         # Publish Inspection Summary
       - name: Publish Inspection Summary
