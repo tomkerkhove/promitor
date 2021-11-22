@@ -10,7 +10,7 @@
 	"packageRules": [{
 			"datasources": ["docker"],
 			"packagePatterns": ["^mcr.microsoft.com/dotnet/"],
-			"groupName": ".NET Core Docker containers",
+			"groupName": ".NET Core Docker containers"
 		},
 		{
 			"extends": "monorepo:dotnet",
