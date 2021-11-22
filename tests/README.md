@@ -7,11 +7,13 @@ This folder provides all resources related to (automated) tests that are not par
 You can find performance tests in the `performance` folder which are using [Artillery](https://www.artillery.io/).
 
 Easily install Artillery on your machine with the following command:
-```
+
+```shell
 npm install -g artillery@latest
 ```
 
 Verify that the installation was successful:
+
 ```shell
 $ artillery dino
  ------------
