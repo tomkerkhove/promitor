@@ -1,44 +1,43 @@
 {
-  "masterIssue": false,
-  "branchPrefix":"renovate-",
-  "separateMajorMinor": false,
-  "labels":["dependencies"],
-  "assignees": ["@tomkerkhove"],
-  "ignoreDeps":[],
-  "prHourlyLimit": 0,
-  "prConcurrentLimit": 0,
-  "packageRules": [
-    {
-      "datasources": ["docker"],
-      "packagePatterns": ["^mcr.microsoft.com/dotnet/"],
-      "groupName": ".NET Core Docker containers"
-      "allowedVersions": "<5.0"
-    },
-    {
-      "extends": "monorepo:dotnet",
-      "groupName": ".NET",
-      "allowedVersions": "<5.0.0",
-      "labels": [
-        "NuGet",
-        ".NET"
-      ]
-    },
-    {
-      "extends": "monorepo:aspnet extensions",
-      "groupName": ".NET Extensions",
-      "allowedVersions": "<5.0.0",
-      "labels": [
-        "NuGet",
-        ".NET"
-      ]
-    }
-  ],
-  "extends": [
-    "config:base",
-    "default:pinDigestsDisabled",
-    "default:disablePrControls"
-  ],
-  "nuget": {
-    "enabled": true
-   }
+	"masterIssue": false,
+	"branchPrefix": "renovate-",
+	"separateMajorMinor": false,
+	"labels": ["dependencies"],
+	"assignees": ["@tomkerkhove"],
+	"ignoreDeps": [],
+	"prHourlyLimit": 0,
+	"prConcurrentLimit": 0,
+	"packageRules": [{
+			"datasources": ["docker"],
+			"packagePatterns": ["^mcr.microsoft.com/dotnet/"],
+			"groupName": ".NET Core Docker containers",
+			"allowedVersions": "<5.0"
+		},
+		{
+			"extends": "monorepo:dotnet",
+			"groupName": ".NET",
+			"allowedVersions": "<5.0.0",
+			"labels": [
+				"NuGet",
+				".NET"
+			]
+		},
+		{
+			"extends": "monorepo:aspnet extensions",
+			"groupName": ".NET Extensions",
+			"allowedVersions": "<5.0.0",
+			"labels": [
+				"NuGet",
+				".NET"
+			]
+		}
+	],
+	"extends": [
+		"config:base",
+		"default:pinDigestsDisabled",
+		"default:disablePrControls"
+	],
+	"nuget": {
+		"enabled": true
+	}
 }
