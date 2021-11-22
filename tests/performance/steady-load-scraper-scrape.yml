@@ -1,0 +1,13 @@
+config:
+  target: "http://localhost:888"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 25
+      name: Sustained User Growth
+
+scenarios:
+  - name: "Scrape"
+    flow:
+      - get:
+          url: "/scrape"

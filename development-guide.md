@@ -73,6 +73,10 @@ dotnet watch test
 Alternatively, you can use the built-in tests runners in Visual Studio or whatever
 tool you are using to edit the code.
 
+#### Performance
+
+Learn more about our performance tests [here](tests/README.md).
+
 ### Running Promitor
 
 To run Promitor, edit [src/docker-compose.override.yml](src/docker-compose.override.yml)
