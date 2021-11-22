@@ -80,15 +80,6 @@ metrics:
         type: Total
     resources:
       - workflowName: promitor-testing-resource-eu-workflow-eu-1
-  - name: azure_logic_apps_failed_run_discovery
-    description: "Total amount of failed runs for Azure Logic Apps"
-    resourceType: LogicApp
-    azureMetricConfiguration:
-      metricName: RunsFailed
-      aggregation:
-        type: Total
-    resourceDiscoveryGroups:
-      - name: logic-apps-unfiltered
   - name: azure_storage_account_capacity_discovery
     description: "The average capacity used in the storage account"
     resourceType: StorageAccount
@@ -266,3 +257,14 @@ metrics:
       # Application Insights with data in Log Analytics
     - name: promitor-automation-data-generation-we-telemetry
       resourceGroupName: promitor-automation-data-generation
+  # This uses our large-scale data set containing 1000+ Azure Logic App instances
+  # Uncomment if you want to test with this scale
+  # - name: azure_logic_apps_failed_run_discovery
+  #   description: "Total amount of failed runs for Azure Logic Apps"
+  #   resourceType: LogicApp
+  #   azureMetricConfiguration:
+  #     metricName: RunsFailed
+  #     aggregation:
+  #       type: Total
+  #   resourceDiscoveryGroups:
+  #     - name: logic-apps-unfiltered

@@ -68,6 +68,10 @@ Thanks for those who are supporting us via [GitHub Sponsors](https://github.com/
 
 Learn more about our security policy [here](https://github.com/tomkerkhove/promitor/security/policy).
 
+## Performance
+
+Learn more about our performance tests [here](tests/README.md).
+
 ## Donate
 
 Promitor is fully OSS and built free-of-charge, however, if you appreciate my work
