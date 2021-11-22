@@ -13,24 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         # Checkout code
-      - name: checkout
+      - name: Checkout Code
         uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - run: dotnet tool install -g JetBrains.ReSharper.GlobalTools
-      - run: jb inspectcode src/Promitor.sln
 
-      - name: Inspect
-        uses: nbadal/inspectcode-action@v1
+        # Install .NET
+      - name: Install .NET
+        uses: actions/setup-dotnet@v1
         with:
-          solution: 'src/Promitor.sln'
-      - uses: goit/setup-resharper@v2.0.1
-        with:
-          version: '2021.2'
+          dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+
+      - name: Install Resharper Tooling
+        run: dotnet tool install -g JetBrains.ReSharper.GlobalTools
 
         # Run R# code quality
-      - name: resharper
-        run: |
-          chmod -R 777 ${{ env.RESHARPER_ROOT }}
-          ${{ env.RESHARPER_ROOT }}/inspectcode.exe src/Promitor.sln
+      - name: Run R# Code Quality on src/Promitor.sln
+        run: jb inspectcode src/Promitor.sln -o=output.xml
