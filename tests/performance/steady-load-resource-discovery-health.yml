@@ -8,23 +8,23 @@ config:
 
 scenarios:
   - name: "Get Health"
-    flow:    
+    flow:
       - get:
           url: "/api/v1/health"
   # Other scenarios you can use
   # - name: "Get Discovery Groups"
-  #   flow:    
+  #   flow:
   #     - get:
   #         url: "/api/v1/resources/groups"
   # - name: "Get System Info"
-  #   flow:    
+  #   flow:
   #     - get:
   #         url: "/api/v1/system"
   # - name: "Discover Cosmos DB accounts (low query)"
-  #   flow:    
+  #   flow:
   #     - get:
   #         url: "/api/v1/resources/groups/cosmos-accounts/discover"
   # - name: "Discover Logic Apps workflows (big query)"
-  #   flow:    
+  #   flow:
   #     - get:
   #         url: "/api/v1/system"

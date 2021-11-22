@@ -39,7 +39,7 @@ artillery run .\performance\steady-load-scraper-scrape.yml
 
 ### Resource Discovery Agent
 
-Automatically send a growing number of requests (5 to 25) to probe the health endpoint metrics over 60 seconds:
+Automatically send a growing number of requests (5 to 25) to probe the health endpoint over 60 seconds:
 
 ```shell
 artillery run .\performance\steady-load-resource-discovery-health.yml

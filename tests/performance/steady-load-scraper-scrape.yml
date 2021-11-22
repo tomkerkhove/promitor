@@ -8,6 +8,6 @@ config:
 
 scenarios:
   - name: "Scrape"
-    flow:    
+    flow:
       - get:
           url: "/scrape"
