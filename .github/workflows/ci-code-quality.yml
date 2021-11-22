@@ -27,7 +27,9 @@ jobs:
 
         # Run R# code quality
       - name: Run R# Code Quality on src/Promitor.sln
-        run: jb inspectcode src/Promitor.sln -o=code-inspection-summary.html --format=Html --severity=WARNING
+        run: |
+          jb inspectcode src/Promitor.sln -o=code-inspection-summary.html --format=Html --severity=WARNING
+          echo $?
 
         # Publish Inspection Summary
       - name: Publish Inspection Summary
@@ -35,3 +37,23 @@ jobs:
         with:
           name: resharper-inspectcode-report.html
           path: code-inspection-summary.html
+      
+      - name: Read Inspection Summary
+        id: summary
+        uses: juliangruber/read-file-action@v1.1.4
+        with:
+          path: code-inspection-summary.html
+
+      - name: Post Update on PR
+        uses: peter-evans/create-or-update-comment@v1.4.5
+        if: ${{ github.event_name == 'pull_request' }}
+        with:
+          issue-number: ${{github.event.number}}
+          body: |
+            Code quality check completed.
+            
+            <details>
+              <summary>Report</summary>
+              
+              ${{ steps.summary.outputs.content }}
+            </details>
