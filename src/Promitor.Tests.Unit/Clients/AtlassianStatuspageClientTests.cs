@@ -34,7 +34,8 @@ namespace Promitor.Tests.Unit.Clients
             var request = fakeHttpMessageHandler.LastRequest;
             Assert.NotNull(request);
             Assert.Equal(HttpMethod.Post, request.Method);
-            Assert.Equal($"https://api.statuspage.io/v1/pages/{pageId}/metrics/{metricId}/data", request.RequestUri.ToString());
+            Assert.Equal($"https://api.statuspage.io/v1/pages/{pageId}/metrics/{metricId}/data", request.RequestUri?.ToString());
+            Assert.NotNull(request.Content);
             var requestBody = await request.Content.ReadAsStringAsync();
             var requestToken = JToken.Parse(requestBody);
             Assert.Equal(metricValue.ToString(CultureInfo.InvariantCulture), requestToken["data"]?["value"]?.ToString());

@@ -8,6 +8,8 @@ services:
       - "PROMITOR_AUTH_APPKEY=<hidden>"
     ports:
       - "777:88"
+    dns:
+      - 8.8.8.8
   promitor.agents.scraper:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -17,3 +19,5 @@ services:
       - SECRETS_STORAGEQUEUE_SAS=<hidden>
     ports:
       - "888:88"
+    dns:
+      - 8.8.8.8

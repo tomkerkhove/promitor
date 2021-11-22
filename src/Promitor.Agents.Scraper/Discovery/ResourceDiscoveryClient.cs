@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Arcus.Observability.Telemetry.Core;
 using GuardNet;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Promitor.Agents.Core.Contracts;
 using Promitor.Agents.Core.Serialization;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Contracts;
@@ -43,10 +43,10 @@ namespace Promitor.Agents.Scraper.Discovery
             return foundResources;
         }
 
-        public async Task<HealthReport> GetHealthAsync()
+        public async Task<AgentHealthReport> GetHealthAsync()
         {
             var rawResponse = await SendGetRequestAsync("api/v1/health");
-            var healthReport = JsonConvert.DeserializeObject<HealthReport>(rawResponse, new HealthReportEntryConverter());
+            var healthReport = JsonConvert.DeserializeObject<AgentHealthReport>(rawResponse, new HealthReportEntryConverter());
             return healthReport;
         }
 

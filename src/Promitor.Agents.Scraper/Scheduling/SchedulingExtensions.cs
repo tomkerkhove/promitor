@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
@@ -39,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingPrometheusMetricsCollector>();
             var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
-            var startupLogger = loggerFactory.CreateLogger<Startup>();
+            var startupLogger = loggerFactory != null ? loggerFactory.CreateLogger<Startup>() : NullLogger<Startup>.Instance;
             foreach (var metric in metrics.Metrics)
             {
                 if (metric.ResourceDiscoveryGroups?.Any() == true)
@@ -85,7 +86,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
@@ -114,7 +115,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     schedulerOptions.RunImmediately = true;
                 },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceDiscoveryGroup} which will be reported as metric {MetricName}", jobName, resourceDiscoveryGroup.Name, metricDefinition.PrometheusMetricDefinition?.Name);

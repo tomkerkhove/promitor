@@ -19,7 +19,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
         public void MapUsing_UsesCustomMapper()
         {
             // Act
-            _builder.MapUsing((name, node, reporter) => "Hello " + name);
+            _builder.MapUsing((name, _, _) => "Hello " + name);
 
             // Assert
             var fieldInfo = _builder.Build();
@@ -31,7 +31,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
         public void MapUsing_ReturnsBuilder()
         {
             // Act
-            var result = _builder.MapUsing((name, node, reporter) => "Hello " + name);
+            var result = _builder.MapUsing((name, _, _) => "Hello " + name);
 
             // Assert
             Assert.Same(_builder, result);

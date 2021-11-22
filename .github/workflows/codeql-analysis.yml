@@ -22,6 +22,11 @@ jobs:
         # a pull request then we can checkout the head.
         fetch-depth: 2
 
+      # Install .NET 6
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
     # If this run was triggered by a pull request event, then checkout
     # the head of the pull request instead of the merge commit.
     - run: git checkout HEAD^2

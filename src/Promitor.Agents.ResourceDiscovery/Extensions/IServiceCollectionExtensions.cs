@@ -19,6 +19,7 @@ using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication.Configuration;
+// ReSharper disable RedundantTypeArgumentsOfMethod
 
 namespace Promitor.Agents.ResourceDiscovery.Extensions
 {
@@ -63,7 +64,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
             services.AddScheduler(builder =>
             {
@@ -83,7 +84,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     },
                     jobName: jobName);
 
-                builder.UnobservedTaskExceptionHandler = (sender, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
             });
 
             return services;

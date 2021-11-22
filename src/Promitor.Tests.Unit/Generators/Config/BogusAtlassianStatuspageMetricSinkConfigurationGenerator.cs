@@ -16,7 +16,7 @@ namespace Promitor.Tests.Unit.Generators.Config
 
             var sinkConfiguration = new Faker<AtlassianStatusPageSinkConfiguration>()
                 .RuleFor(config => config.PageId, fake => pageId ?? fake.Name.FirstName())
-                .RuleFor(config => config.SystemMetricMapping, fake => new List<SystemMetricMapping> { systemMetricMapping })
+                .RuleFor(config => config.SystemMetricMapping, _ => new List<SystemMetricMapping> { systemMetricMapping })
                 .Generate();
 
             return sinkConfiguration;
