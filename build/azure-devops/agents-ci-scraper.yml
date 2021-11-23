@@ -58,19 +58,6 @@ stages:
        inputs:
          targetPath: '$(Pipeline.Workspace)/build'
          artifactName: Build
-- stage: CodeQuality
-  displayName: Code Quality
-  dependsOn: [Init]
-  jobs:
-   - job: RunCodeQuality
-     displayName: Run Code Quality
-     condition: succeeded()
-     pool:
-       vmImage: windows-2019
-     steps:
-     - template: templates/quality/run-code-quality.yml
-       parameters:
-        dotnetVersion: '$(DotNet.Sdk.Version)'
 - stage: Test
   displayName: Run Tests
   dependsOn: [Init]
