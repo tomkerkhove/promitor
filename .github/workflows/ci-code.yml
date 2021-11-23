@@ -36,5 +36,5 @@ jobs:
         if: success() || failure()
         with:
           name: .NET Unit Tests
-          path: test-results.trx
+          path: src/**/test-results.trx
           reporter: dotnet-trx
