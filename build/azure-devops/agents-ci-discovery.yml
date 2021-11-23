@@ -41,25 +41,6 @@ stages:
         persistedVariableName: 'Image.Tag'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
-- stage: Build
-  dependsOn: [Init]
-  jobs:
-   - job: Build
-     displayName: Build Codebase
-     condition: succeeded()
-     pool:
-       vmImage: ubuntu-latest
-     steps:
-     - template: templates/build/build-solution.yml
-       parameters:
-        dotnetVersion: '$(DotNet.SDK.Version)'
-        buildConfiguration: '$(DotNet.Configuration)'
-        targetFolder: '$(Pipeline.Workspace)/build'
-     - task: PublishPipelineArtifact@0
-       displayName: 'Publish Build Pipeline Artifact'
-       inputs:
-         targetPath: '$(Pipeline.Workspace)/build'
-         artifactName: Build
 - stage: CodeQuality
   displayName: Code Quality
   dependsOn: [Init]

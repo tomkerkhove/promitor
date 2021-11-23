@@ -1,0 +1,31 @@
+name: CI - Code
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+    - .github/workflows/ci-code.yml
+    - src/**
+
+jobs:
+  verify_codebase:
+    name: Verify Codebase
+    runs-on: ubuntu-latest
+    steps:
+        # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+        # Install .NET
+      - name: Install .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+
+        # Build Solution
+      - name: Build Solution
+        run: dotnet build src/Promitor.sln --configuration release
+
+        # Run Automated Tests
+      - name: Run Unit Tests
+        run: dotnet test src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj --no-build
