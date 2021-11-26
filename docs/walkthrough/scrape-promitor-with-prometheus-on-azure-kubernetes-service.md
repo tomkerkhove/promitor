@@ -179,7 +179,7 @@ metricDefaults:
 metrics:
   - name: demo_queue_size
     description: "Amount of active messages of the 'demo_queue' queue"
-    resourceType: ServiceBusQueue
+    resourceType: ServiceBusNamespace
     azureMetricConfiguration:
       metricName: ActiveMessages
       aggregation:
