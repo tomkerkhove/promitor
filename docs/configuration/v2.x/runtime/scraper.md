@@ -102,7 +102,7 @@ As of today, we support the follow sinks:
 
 ![Availability Badge](https://img.shields.io/badge/Available%20Starting-v2.0-green.svg)
 
-In order to expose a Prometheus Scraping endpoint, you'll need to configure the sink:
+In order to expose an Atlassian Statuspage endpoint, you'll need to configure the sink:
 
 - `atlassianStatuspage.pageId` - Defines the id of the Atlassian Statuspage to report to.
 - `atlassianStatuspage.systemMetricMapping` - Defines a mapping of the scraped metric by Promitor and to which
