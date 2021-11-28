@@ -1,4 +1,4 @@
-# Promitor Development Guide
+# Contributing to Promitor
 
 This guide explains the layout of the Promitor repository, along with the tools
 and technologies required to develop Promitor.
@@ -32,6 +32,18 @@ The documentation for Promitor is stored in `/docs`. When adding new functionali
 to Promitor or modifying existing functionality, please add associated documentation.
 Information about how to build and run the documentation locally can be found in
 the [README](docs/README.md) for the documentation.
+
+Every PR will automatically build and deploy a preview version of the documentation for you.
+
+## Changelog
+
+All changes to Promitor are listed on [our changelog](https://changelog.promitor.io/) so that end-users can keep track
+ of changes per version over time.
+
+Every PR should document what has changed by adding an entry to our changelog located in `changelog\content\experimental\unreleased.md`.
+
+You can find some markup examples in `unreleased.md.template`, but every PR will automatically render a preview to make
+ it easier for you.
 
 ## .NET Development
 

@@ -120,10 +120,16 @@ When the scraper supports resource discovery, the following documentation is req
 2. Add scraper to supported scrapers on resource discovery configuration documentation page
  `docs/configuration/v2.x/resource-discovery.md` in alphabetical order.
 
+## Changelog
+
+New scalers are a great additions and we should make sure that they are listed in our changelog.
+
+Learn about our changelog in our [contribution guide](CONTRIBUTING.md#Changelog).
+
 ## See It In Action
 
 Now that you are done, make sure you run Promitor locally so verify that it generates the correct metrics!
 
 When opening the pull request (PR), feel free to copy the generated Prometheus metrics for review.
 
-Learn how to run it in our [development guide](development-guide.md#running-promitor).
+Learn how to run it in our [development guide](contributing.md#running-promitor).
