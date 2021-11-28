@@ -1,4 +1,4 @@
-# Promitor Development Guide
+# Contributing to Promitor
 
 This guide explains the layout of the Promitor repository, along with the tools
 and technologies required to develop Promitor.
@@ -32,6 +32,10 @@ The documentation for Promitor is stored in `/docs`. When adding new functionali
 to Promitor or modifying existing functionality, please add associated documentation.
 Information about how to build and run the documentation locally can be found in
 the [README](docs/README.md) for the documentation.
+
+## Changelog
+
+TODO
 
 ## .NET Development
 
