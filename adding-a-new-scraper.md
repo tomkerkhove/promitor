@@ -86,6 +86,20 @@ We'll add dynamic resource discovery support by using Azure Resource Graph:
 
 ------------------------
 
+## Writing Integration Tests
+
+Every new scraper, should be automatically tested to ensure that it can be scraped.
+
+To achieve this, the steps are fairly simple:
+
+1. Provision a new test resource in our testing infrastructure ([GitHub](https://github.com/promitor/azure-infrastructure))
+2. Define a new resource discovery group
+    - You can find it on `config\promitor\resource-discovery\resource-discovery-declaration.yaml`
+3. Define a new metric in the scraper configuration with a valid Azure Monitor metric for the service ([overview](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported)]
+    - You can find it on `config\promitor\scraper\metrics.yaml`
+
+Our testing infrastructure will pick up the new metric automatically and ensure that it is being reported!
+
 ## Documentation
 
 Features are great to have but without clear & well-written documentation they are

@@ -49,6 +49,10 @@ You can contribute by [adding one yourself](adding-a-new-scraper.md)!
 
 Information about making changes to Promitor can be found [here](development-guide.md).
 
+### Testing Infrastructure
+
+Our testing infrastructure is managed through Bicep and is open to contributions on [promitor/testing-infrastructure](https://github.com/promitor/testing-infrastructure).
+
 ## Support
 
 Learn more about our support options [here](https://github.com/tomkerkhove/promitor/blob/master/SUPPORT.md).
