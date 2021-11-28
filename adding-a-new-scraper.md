@@ -122,7 +122,9 @@ When the scraper supports resource discovery, the following documentation is req
 
 ## Changelog
 
-TODO
+New scalers are a great additions and we should make sure that they are listed in our changelog.
+
+Learn about our changelog in our [contribution guide](CONTRIBUTING.md#Changelog).
 
 ## See It In Action
 
