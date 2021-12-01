@@ -3,5 +3,6 @@ scrape_configs:
   scrape_interval: 5s
   metrics_path: /scrape
   static_configs:
-  - targets:
-    - promitor.agents.scraper:88
+    - targets: ['promitor.agents.scraper:88']
+    - targets: ['otel-collector:8889']
+    - targets: ['otel-collector:8888']
