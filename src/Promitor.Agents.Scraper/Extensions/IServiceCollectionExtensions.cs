@@ -1,8 +1,10 @@
-﻿using GuardNet;
+﻿using System;
+using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Metrics;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -31,6 +33,7 @@ using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
+using Promitor.Integrations.Sinks.OpenTelemetry;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
@@ -168,6 +171,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 AddAtlassianStatuspageMetricSink(services);
             }
 
+            AddOpenTelemetryCollectorMetricSink(services);
+
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
@@ -182,6 +187,16 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddAtlassianStatuspageMetricSink(IServiceCollection services)
         {
             services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
+        }
+
+        private static void AddOpenTelemetryCollectorMetricSink(IServiceCollection services)
+        {
+            services.AddOpenTelemetryMetrics(metricsBuilder =>
+            {
+                metricsBuilder.AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
+                              .AddOtlpExporter(options => options.Endpoint = new Uri("http://opentelemetry-collector:4317"));
+            });
+            services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)

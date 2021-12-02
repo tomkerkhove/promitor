@@ -4,6 +4,7 @@
     {
         PrometheusScrapingEndpoint,
         StatsD,
-        AtlassianStatuspage
+        AtlassianStatuspage,
+        OpenTelemetryCollector
     }
 }
