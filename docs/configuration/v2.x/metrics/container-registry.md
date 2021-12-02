@@ -14,9 +14,7 @@ When using declared resources, the following fields need to be provided:
 
 - `registryName` - The name of the registry
 
-All supported metrics are not documented in the official
-[Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported)
-documentation yet, but it's being added via [this PR](https://github.com/MicrosoftDocs/azure-docs/pull/27991).
+All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftcontainerregistryregistries).
 
 Example:
 
