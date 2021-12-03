@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
+using Promitor.Core.Contracts.ResourceTypes.Enums;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
@@ -14,7 +15,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
             
-            var resource = new PostgreSqlResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
+            var resource = new PostgreSqlResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString(), PostgreSqlServerType.Single);
             return resource;
         }
     }

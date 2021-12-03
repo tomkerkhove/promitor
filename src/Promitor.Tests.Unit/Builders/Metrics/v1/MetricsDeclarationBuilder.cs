@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
+using Promitor.Core.Contracts.ResourceTypes.Enums;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -628,11 +629,13 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string azureMetricName = "cpu_percent",
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
+            PostgreSqlServerType serverType = PostgreSqlServerType.Single,
             bool omitResource = false)
         {
             var resource = new PostgreSqlResourceV1
             {
-                ServerName = serverName
+                ServerName = serverName,
+                Type = serverType
             };
 
             CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
