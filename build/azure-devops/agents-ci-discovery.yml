@@ -54,20 +54,6 @@ stages:
      - template: templates/quality/run-code-quality.yml
        parameters:
         dotnetVersion: '$(DotNet.Sdk.Version)'
-- stage: Test
-  displayName: Run Tests
-  dependsOn: [Init]
-  jobs:
-   - job: RunUnitTests
-     displayName: Run Unit Tests
-     condition: succeeded()
-     pool:
-       vmImage: ubuntu-latest
-     steps:
-     - template: templates/tests/run-unit-tests.yml
-       parameters:
-        dotnetVersion: '$(DotNet.Sdk.Version)'
-        buildConfiguration: '$(DotNet.Configuration)'
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]
