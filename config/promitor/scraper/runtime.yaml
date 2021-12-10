@@ -16,7 +16,7 @@ metricSinks:
     pageId: 4mwc0ny6bgw1
     systemMetricMapping:
     - id: 333802sjqpr9
-      promitorMetricName: promitor_demo_postgresql_simple
+      promitorMetricName: promitor_demo_documentation_availability
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:
