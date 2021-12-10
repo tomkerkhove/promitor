@@ -8,8 +8,8 @@ namespace Promitor.Agents.Scraper.Validation.Exceptions
 {
     public class ValidationFailedException : Exception
     {
-        public ValidationFailedException(List<ValidationResult> validationResults) : base(
-            $"Validation Failed. Errors:{ListErrors(validationResults)}")
+        public ValidationFailedException(List<ValidationResult> validationResults)
+            : base($"Validation Failed. Errors:{ListErrors(validationResults)}")
         {
             ValidationResults.AddRange(validationResults);
         }
