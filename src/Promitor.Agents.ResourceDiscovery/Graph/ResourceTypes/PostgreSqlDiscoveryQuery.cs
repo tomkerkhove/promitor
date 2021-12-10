@@ -22,7 +22,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
             PostgreSqlServerType serverType = PostgreSqlServerType.Single;
 
             var resourceType = resultRowEntry[2]?.ToString();
-            switch (resourceType.ToLower())
+            switch (resourceType?.ToLower())
             {
                 case SingleServerResourceType:
                     serverType = PostgreSqlServerType.Single;
