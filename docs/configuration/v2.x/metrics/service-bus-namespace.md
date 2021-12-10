@@ -13,8 +13,8 @@ resource type.
 When using declared resources, the following fields need to be provided:
 
 - `namespace` - The name of the Azure Service Bus namespace
-- `queueName` - The name of the queue (optional)
-- `topicName` - The name of the topic (optional)
+- `queueName` - The name of the queue *(optional)*
+- `topicName` - The name of the topic *(optional)*
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftservicebusnamespaces).
 

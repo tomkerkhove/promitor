@@ -13,7 +13,7 @@ You can scrape an Azure API Management via the `ApiManagement`
 When using declared resources, the following fields need to be provided:
 
 - `instanceName` - The name of the Azure API Management instance.
-- `locationName` - The name of the regional deployment of the gateway. (optional)
+- `locationName` - The name of the regional deployment of the gateway. *(optional)*
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/metrics-supported#microsoftapimanagementservice).
 
