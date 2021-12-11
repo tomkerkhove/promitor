@@ -39,6 +39,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.BlobStorage:
                     var blobStorageLogger = _loggerFactory.CreateLogger<BlobStorageDeserializer>();
                     return new BlobStorageDeserializer(blobStorageLogger);
+                case ResourceType.Cdn:
+                    var cdnLogger = _loggerFactory.CreateLogger<CdnDeserializer>();
+                    return new CdnDeserializer(cdnLogger);
                 case ResourceType.ContainerInstance:
                     var containerInstanceLogger = _loggerFactory.CreateLogger<ContainerInstanceDeserializer>();
                     return new ContainerInstanceDeserializer(containerInstanceLogger);
@@ -84,9 +87,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.KubernetesService:
                     var kubernetesServiceLogger = _loggerFactory.CreateLogger<KubernetesServiceDeserializer>();
                     return new KubernetesServiceDeserializer(kubernetesServiceLogger);
+                case ResourceType.LoadBalancer:
+                    var loadBalancerLogger = _loggerFactory.CreateLogger<LoadBalancerDeserializer>();
+                    return new LoadBalancerDeserializer(loadBalancerLogger);
                 case ResourceType.LogicApp:
                     var logicAppLogger = _loggerFactory.CreateLogger<LogicAppDeserializer>();
                     return new LogicAppDeserializer(logicAppLogger);
+                case ResourceType.MariaDb:
+                    var mariaDbLogger = _loggerFactory.CreateLogger<MariaDbDeserializer>();
+                    return new MariaDbDeserializer(mariaDbLogger);
                 case ResourceType.MonitorAutoscale:
                     var monitorAutoscaleLogger = _loggerFactory.CreateLogger<MonitorAutoscaleDeserializer>();
                     return new MonitorAutoscaleDeserializer(monitorAutoscaleLogger);
@@ -102,6 +111,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.RedisCache:
                     var redisCacheLogger = _loggerFactory.CreateLogger<RedisCacheDeserializer>();
                     return new RedisCacheDeserializer(redisCacheLogger);
+                case ResourceType.RedisEnterpriseCache:
+                    var redisEnterpriseCacheLogger = _loggerFactory.CreateLogger<RedisEnterpriseCacheDeserializer>();
+                    return new RedisEnterpriseCacheDeserializer(redisEnterpriseCacheLogger);
                 case ResourceType.ServiceBusNamespace:
                     var serviceBusLogger = _loggerFactory.CreateLogger<ServiceBusNamespaceDeserializer>();
                     return new ServiceBusNamespaceDeserializer(serviceBusLogger);
@@ -137,7 +149,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     return new VirtualMachineDeserializer(virtualMachineLogger);
                 case ResourceType.VirtualMachineScaleSet:
                     var virtualMachineScaleSetLogger = _loggerFactory.CreateLogger<VirtualMachineScaleSetDeserializer>();
-                    return new VirtualMachineScaleSetDeserializer(virtualMachineScaleSetLogger);
+                    return new VirtualMachineScaleSetDeserializer(virtualMachineScaleSetLogger)
+                case ResourceType.VirtualNetwork:
+                    var virtualNetworkLogger = _loggerFactory.CreateLogger<VirtualNetworkDeserializer>();
+                    return new VirtualNetworkDeserializer(virtualNetworkLogger);
                 case ResourceType.WebApp:
                     var webAppLogger = _loggerFactory.CreateLogger<WebAppDeserializer>();
                     return new WebAppDeserializer(webAppLogger);
