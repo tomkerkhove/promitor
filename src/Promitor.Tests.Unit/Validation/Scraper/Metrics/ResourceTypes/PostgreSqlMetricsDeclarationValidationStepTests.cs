@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
+using Promitor.Core.Contracts.ResourceTypes.Enums;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
@@ -130,6 +131,43 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 
             // Assert
             PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Theory]
+        [InlineData(PostgreSqlServerType.Single)]
+        [InlineData(PostgreSqlServerType.Flexible)]
+        [InlineData(PostgreSqlServerType.Hyperscale)]
+        public void PostgreSqlMetricsDeclaration_DeclarationWithSpecificServerType_Succeeds(PostgreSqlServerType serverType)
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithPostgreSqlMetric(serverType: serverType)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
+        public void PostgreSqlMetricsDeclaration_DeclarationWithArcBasedServer_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithPostgreSqlMetric(serverType: PostgreSqlServerType.Arc)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
         }
     }
 }
