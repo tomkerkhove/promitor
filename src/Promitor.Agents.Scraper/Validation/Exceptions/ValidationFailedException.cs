@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Promitor.Agents.Core.Validation;
 
+// ReSharper disable CollectionNeverQueried.Global
 namespace Promitor.Agents.Scraper.Validation.Exceptions
 {
     public class ValidationFailedException : Exception
