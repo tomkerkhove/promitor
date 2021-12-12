@@ -149,7 +149,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     return new VirtualMachineDeserializer(virtualMachineLogger);
                 case ResourceType.VirtualMachineScaleSet:
                     var virtualMachineScaleSetLogger = _loggerFactory.CreateLogger<VirtualMachineScaleSetDeserializer>();
-                    return new VirtualMachineScaleSetDeserializer(virtualMachineScaleSetLogger)
+                    return new VirtualMachineScaleSetDeserializer(virtualMachineScaleSetLogger);
                 case ResourceType.VirtualNetwork:
                     var virtualNetworkLogger = _loggerFactory.CreateLogger<VirtualNetworkDeserializer>();
                     return new VirtualNetworkDeserializer(virtualNetworkLogger);
