@@ -15,6 +15,8 @@ resourceDiscoveryGroups:
   type: AppPlan
 - name: automation-accounts
   type: AutomationAccount
+- name: cdn-landscape
+  type: Cdn
 - name: container-instances
   type: ContainerInstance
 - name: container-registry-landscape
@@ -35,14 +37,20 @@ resourceDiscoveryGroups:
   type: IoTHub
 - name: key-vaults
   type: KeyVault
+- name: load-balancers
+  type: LoadBalancers
 - name: autoscaling-rules
   type: MonitorAutoscale
+- name: mariadb-servers
+  type: MariaDb
 - name: network-interfaces
   type: NetworkInterface
 - name: postgres-databases
   type: PostgreSql
 - name: redis-caches
   type: RedisCache
+- name: redis-enterprise-caches
+  type: RedisEnterpriseCache
 - name: sql-databases
   type: SqlDatabase
 - name: sql-managed-instances
@@ -63,6 +71,8 @@ resourceDiscoveryGroups:
   type: VirtualMachine
 - name: virtual-machine-scale-sets
   type: VirtualMachineScaleSet
+- name: virtual-networks
+  type: VirtualNetwork
 - name: web-apps-north-europe
   type: WebApp
   criteria:

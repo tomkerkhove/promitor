@@ -257,6 +257,101 @@ metrics:
       # Application Insights with data in Log Analytics
     - name: promitor-automation-data-generation-we-telemetry
       resourceGroupName: promitor-automation-data-generation
+  - name: promitor_demo_cdn_requests_declared
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: Cdn
+    azureMetricConfiguration:
+      metricName: OriginRequestCount
+      aggregation:
+        type: Total
+    resources:
+    - name: promitor-testing-resource-us-cdn
+      resourceGroupName: promitor-testing-infrastructure-us
+  - name: promitor_demo_cdn_requests_discovered
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: Cdn
+    azureMetricConfiguration:
+      metricName: OriginRequestCount
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+      - name: cdn-landscape
+  - name: promitor_demo_load_balancers_requests_declared
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: LoadBalancer
+    azureMetricConfiguration:
+      metricName: ByteCount
+      aggregation:
+        type: Total
+    resources:
+    - name: promitor-testing-resource-us-load-balancer
+      resourceGroupName: promitor-testing-infrastructure-us
+  - name: promitor_demo_load_balancers_requests_discovered
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: LoadBalancer
+    azureMetricConfiguration:
+      metricName: ByteCount
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+      - name: load-balancers
+  - name: promitor_demo_maria_db_cpu_declared
+    description: "CPU usage of Maria DB servers"
+    resourceType: MariaDb
+    azureMetricConfiguration:
+      metricName: cpu_percent
+      aggregation:
+        type: Average
+    resources:
+    - name: promitor-testing-resource-us-mariadb-server
+      resourceGroupName: promitor-testing-infrastructure-us
+  - name: promitor_demo_maria_db_cpu_discovered
+    description: "CPU usage of Maria DB servers"
+    resourceType: MariaDb
+    azureMetricConfiguration:
+      metricName: cpu_percent
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: mariadb-servers
+  - name: promitor_demo_redis_enterprise_memory_declared
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: RedisEnterpriseCache
+    azureMetricConfiguration:
+      metricName: usedmemorypercentage
+      aggregation:
+        type: Maximum
+    resources:
+    - name: promitor-testing-resource-us-redis-enterprise
+      resourceGroupName: promitor-testing-infrastructure-us
+  - name: promitor_demo_redis_enterprise_memorys_discovered
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: RedisEnterpriseCache
+    azureMetricConfiguration:
+      metricName: usedmemorypercentage
+      aggregation:
+        type: Maximum
+    resourceDiscoveryGroups:
+      - name: redis-enterprise-caches
+  - name: promitor_demo_vnet_ddos_declared
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: VirtualNetwork
+    azureMetricConfiguration:
+      metricName: IfUnderDDoSAttack
+      aggregation:
+        type: Maximum
+    resources:
+    - name: promitor-testing-resource-us-vnet
+      resourceGroupName: promitor-testing-infrastructure-us
+  - name: promitor_demo_vnet_ddos_discovered
+    description: "Amount of requests at the origin of our Azure CDN"
+    resourceType: VirtualNetwork
+    azureMetricConfiguration:
+      metricName: IfUnderDDoSAttack
+      aggregation:
+        type: Maximum
+    resourceDiscoveryGroups:
+      - name: virtual-networks
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
   # - name: azure_logic_apps_failed_run_discovery
