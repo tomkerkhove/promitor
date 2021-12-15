@@ -114,6 +114,7 @@ Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/ch
 
 We are proud to have the following end-users(s) running Promitor in production:
 
+![Adfinis](./media/logos/end-users/adfinis.png)
 ![Adobe](./media/logos/end-users/adobe.png)
 ![Albert Heijn](./media/logos/end-users/albert-heijn.png)
 ![Bryte Blue](./media/logos/end-users/bryte-blue.png)
