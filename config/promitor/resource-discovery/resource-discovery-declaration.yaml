@@ -38,7 +38,7 @@ resourceDiscoveryGroups:
 - name: key-vaults
   type: KeyVault
 - name: load-balancers
-  type: LoadBalancers
+  type: LoadBalancer
 - name: autoscaling-rules
   type: MonitorAutoscale
 - name: mariadb-servers

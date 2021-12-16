@@ -7,7 +7,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class VirtualNetworkDiscoveryQuery : ResourceDiscoveryQuery
     {
-        public override string[] ResourceTypes => new[] { "microsoft.network/virtualnetwork" };
+        public override string[] ResourceTypes => new[] { "microsoft.network/virtualnetworks" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)

@@ -6,7 +6,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 {
     internal class VirtualNetworkScraper : AzureMonitorScraper<VirtualNetworkResourceDefinition>
     {
-        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/virtualNetwork/{2}";
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/virtualNetworks/{2}";
 
         public VirtualNetworkScraper(ScraperConfiguration scraperConfiguration)
             : base(scraperConfiguration)
