@@ -276,6 +276,7 @@ metrics:
     resourceDiscoveryGroups:
       - name: mariadb-servers
   - name: promitor_demo_load_balancers_requests_discovered
+    description: "Amount of bytes sent through the Azure Load Balancer"
     resourceType: LoadBalancer
     azureMetricConfiguration:
       metricName: ByteCount
