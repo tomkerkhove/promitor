@@ -8,6 +8,16 @@ version:
 
 - {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
  | [#1239](https://github.com/tomkerkhove/promitor/issues/1239))
+- {{% tag added %}} Provide scraper for Azure Cache for Redis Enterprise ([docs](https://docs.promitor.io/configuration/v2.x/metrics/redis-enterprise-cache)
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/1880))
+- {{% tag added %}} Provide scraper for Azure CDN ([docs](https://docs.promitor.io/configuration/v2.x/metrics/cdn)
+ | [#1664](https://github.com/tomkerkhove/promitor/issues/1664))
+- {{% tag added %}} Provide scraper for Azure Database for MariaDB ([docs](https://docs.promitor.io/configuration/v2.x/metrics/maria-db)
+ | [#1795](https://github.com/tomkerkhove/promitor/issues/1795))
+- {{% tag added %}} Provide scraper for Azure Load Balancer ([docs](https://docs.promitor.io/configuration/v2.x/metrics/load-balancer)
+ | [#1845](https://github.com/tomkerkhove/promitor/issues/1845))
+- {{% tag added %}} Provide scraper for Azure Virtual Network ([docs](https://docs.promitor.io/configuration/v2.x/metrics/virtual-network)
+ | [#1170](https://github.com/tomkerkhove/promitor/issues/1170))
 - {{% tag added %}} Provide support for scraping Azure Database for PostgreSQL Flexible & Hyperscale resources ([docs](https://docs.promitor.io/configuration/v2.x/metrics/postgresql)
  | [#1870](https://github.com/tomkerkhove/promitor/issues/1870))
 - {{% tag added %}} Information concerning .NET & OS in logs on startup
@@ -19,6 +29,16 @@ version:
 
 - {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
  | [#1239](https://github.com/tomkerkhove/promitor/issues/1239))
+- {{% tag added %}} Provide scraper for Azure Cache for Redis Enterprise ([docs](https://docs.promitor.io/configuration/v2.x/metrics/redis-enterprise-cache)
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/1880))
+- {{% tag added %}} Provide scraper for Azure CDN ([docs](https://docs.promitor.io/configuration/v2.x/metrics/cdn)
+ | [#1664](https://github.com/tomkerkhove/promitor/issues/1664))
+- {{% tag added %}} Provide scraper for Azure Database for MariaDB ([docs](https://docs.promitor.io/configuration/v2.x/metrics/maria-db)
+ | [#1795](https://github.com/tomkerkhove/promitor/issues/1795))
+- {{% tag added %}} Provide scraper for Azure Load Balancer ([docs](https://docs.promitor.io/configuration/v2.x/metrics/load-balancer)
+ | [#1845](https://github.com/tomkerkhove/promitor/issues/1845))
+- {{% tag added %}} Provide scraper for Azure Virtual Network ([docs](https://docs.promitor.io/configuration/v2.x/metrics/virtual-network)
+ | [#1170](https://github.com/tomkerkhove/promitor/issues/1170))
 - {{% tag added %}} Provide support for scraping Azure Database for PostgreSQL Flexible & Hyperscale resources ([docs](https://docs.promitor.io/configuration/v2.x/metrics/postgresql)
  | [#1870](https://github.com/tomkerkhove/promitor/issues/1870))
 - {{% tag added %}} Information concerning .NET & OS in logs on startup
