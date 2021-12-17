@@ -20,8 +20,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AppPlanDiscoveryQuery();
                 case ResourceType.AutomationAccount:
                     return new AutomationAccountResourceDiscoveryQuery();
-                case ResourceType.ContainerInstance:
-                    return new ContainerInstanceDiscoveryQuery();
+                case ResourceType.Cdn:
+                    return new CdnDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.CosmosDb:
@@ -46,8 +46,12 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KeyVaultDiscoveryQuery();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceDiscoveryQuery();
+                case ResourceType.LoadBalancer:
+                    return new LoadBalancerDiscoveryQuery();
                 case ResourceType.LogicApp:
                     return new LogicAppDiscoveryQuery();
+                case ResourceType.MariaDb:
+                    return new MariaDbDiscoveryQuery();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.NetworkGateway:
@@ -56,6 +60,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new NetworkInterfaceDiscoveryQuery();
                 case ResourceType.RedisCache:
                     return new RedisCacheDiscoveryQuery();
+                case ResourceType.RedisEnterpriseCache:
+                    return new RedisEnterpriseCacheDiscoveryQuery();
                 case ResourceType.PostgreSql:
                     return new PostgreSqlDiscoveryQuery();
                 case ResourceType.ServiceBusNamespace:
@@ -78,6 +84,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new VirtualMachineDiscoveryQuery();
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetDiscoveryQuery();
+                case ResourceType.VirtualNetwork:
+                    return new VirtualNetworkDiscoveryQuery();
                 case ResourceType.WebApp:
                     return new WebAppDiscoveryQuery();
                 default:

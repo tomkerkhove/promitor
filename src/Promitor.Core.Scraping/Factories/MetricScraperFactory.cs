@@ -46,6 +46,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new AutomationAccountScraper(scraperConfiguration);
                 case ResourceType.BlobStorage:
                     return new BlobStorageScraper(scraperConfiguration);
+                case ResourceType.Cdn:
+                    return new CdnScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceScraper(scraperConfiguration);
                 case ResourceType.ContainerRegistry:
@@ -76,8 +78,12 @@ namespace Promitor.Core.Scraping.Factories
                     return new KeyVaultScraper(scraperConfiguration);
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceScraper(scraperConfiguration);
+                case ResourceType.LoadBalancer:
+                    return new LoadBalancerScraper(scraperConfiguration);
                 case ResourceType.LogicApp:
                     return new LogicAppScraper(scraperConfiguration);
+                case ResourceType.MariaDb:
+                    return new MariaDbScraper(scraperConfiguration);
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
@@ -88,6 +94,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
                     return new RedisCacheScraper(scraperConfiguration);
+                case ResourceType.RedisEnterpriseCache:
+                    return new RedisEnterpriseCacheScraper(scraperConfiguration);
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:
@@ -112,6 +120,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetScraper(scraperConfiguration);
+                case ResourceType.VirtualNetwork:
+                    return new VirtualNetworkScraper(scraperConfiguration);
                 case ResourceType.WebApp:
                     return new WebAppScraper(scraperConfiguration);
                 default:
