@@ -28,8 +28,10 @@ All documentation is available on [promitor.io](https://docs.promitor.io)
 
 We are proud to have the following end-users(s) running Promitor in production:
 
+![Adfinis](./docs/media/logos/end-users/adfinis.png)
 ![Adobe](./docs/media/logos/end-users/adobe.png)
 ![Albert Heijn](./docs/media/logos/end-users/albert-heijn.png)
+![Axon](./docs/media/logos/end-users/axon.png)
 ![Bryte Blue](./docs/media/logos/end-users/bryte-blue.png)
 ![ResDiary](./docs/media/logos/end-users/resdiary.png)
 ![theTradeDesk](./docs/media/logos/end-users/the-trade-desk.png)
