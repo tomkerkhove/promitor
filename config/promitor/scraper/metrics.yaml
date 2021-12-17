@@ -258,10 +258,10 @@ metrics:
     - name: promitor-automation-data-generation-we-telemetry
       resourceGroupName: promitor-automation-data-generation
   - name: promitor_demo_cdn_requests_discovered
-    description: "Amount of requests at the origin of our Azure CDN"
+    description: "Amount of requests sent to Azure CDN"
     resourceType: Cdn
     azureMetricConfiguration:
-      metricName: OriginRequestCount
+      metricName: RequestCount
       aggregation:
         type: Total
     resourceDiscoveryGroups:

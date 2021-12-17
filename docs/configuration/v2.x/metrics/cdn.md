@@ -16,16 +16,18 @@ When using declared resources, the following fields need to be provided:
 
 All supported metrics are documented in the official [Azure Monitor documentation](https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/metrics-supported#microsoftcdnprofiles).
 
+> 🚨 The availability of metrics depends on the SKU of the Azure CDN resource.
+
 Example:
 
 ```yaml
-name: azure_cdn_origin_requests
-description: "Average amount of requests made on the origin of the Azure CDN"
+name: azure_cdn_requests
+description: "Amount of requests sent to Azure CDN"
 resourceType: Cdn
 azureMetricConfiguration:
-  metricName: OriginRequestCount
+  metricName: RequestCount
   aggregation:
-    type: Average
+    type: Total
 resources: # Optional, required when no resource discovery is configured
 - cdnName: promitor-cdn-1
 - cdnName: promitor-cdn-2
