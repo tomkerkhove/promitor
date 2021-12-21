@@ -32,7 +32,7 @@ services:
       - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
       - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
   reverse-proxy:
-    image: traefik:v2.5
+    image: traefik:v2.6
     container_name: traefik-reverse-proxy
     command:
       - --providers.docker
