@@ -5,3 +5,8 @@ scrape_configs:
   static_configs:
   - targets:
     - promitor.agents.scraper:88
+- job_name: traefik
+  scrape_interval: 5s
+  static_configs:
+  - targets:
+    - traefik-reverse-proxy:8080

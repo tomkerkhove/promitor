@@ -21,6 +21,18 @@ The promitor repository is made up of a number of different directories:
 - `/media` - contains all media such as images and sources of schematics used in the docs
 - `/src` - contains the .NET source code for the Promitor application.
 
+## Local Landscape
+
+You can easily run Promitor locally through Docker Compose and interact with the various APIs & products:
+
+![Traefik scenario](media/schematics/contribution-guide/scenario-without-reverse-proxy.png)
+
+### Using Traefik as a reverse-proxy
+
+If you want to use Traefik as a reverse-proxy, here is how it is currently setup in Docker Compose:
+
+![Traefik scenario](media/schematics/contribution-guide/scenario-with-reverse-proxy.png)
+
 ## Helm Chart
 
 The code for Promitor's Helm chart can be found on [promitor/charts](https://github.com/promitor/charts) which is also
