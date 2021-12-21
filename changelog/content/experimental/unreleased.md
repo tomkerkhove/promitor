@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag fixed %}} Fix "Try it out" capability for end-users in Swagger UI when using reverse proxies
 
 #### Resource Discovery
 
-None.
+- {{% tag fixed %}} Fix "Try it out" capability for end-users in Swagger UI when using reverse proxies
