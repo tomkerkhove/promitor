@@ -74,8 +74,7 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     swaggerUiOptions.ConfigureDefaultOptions(apiName);
                     swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
-                    swaggerUiOptions.RoutePrefix = "api/docs";
-                    
+                    swaggerUiOptions.RoutePrefix = "api/docs";                    
                 };
             }
 
