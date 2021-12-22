@@ -33,4 +33,7 @@ Contributions must be verified by filling in the [hackathon survey](https://form
 
 ### What guidance is available?
 
-We provide some overall guidance in our [contribution guide](https://github.com/tomkerkhove/promitor/blob/master/CONTRIBUTING.md), but if you are contributing a new scraper we recommend using [this walkthrough](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md) as well.
+We provide some overall guidance in our
+[contribution guide](https://github.com/tomkerkhove/promitor/blob/master/CONTRIBUTING.md), but if you are contributing a
+new scraper we recommend using [this walkthrough](https://github.com/tomkerkhove/promitor/blob/master/adding-a-new-scraper.md)
+as well.
