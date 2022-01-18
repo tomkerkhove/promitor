@@ -11,7 +11,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
     public class OpenTelemetryCollectorMetricSink : IMetricSink
     {
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
-        private static readonly Meter AzureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
+        private static readonly Meter azureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
         public MetricSinkType Type { get; } = MetricSinkType.OpenTelemetryCollector;
 
@@ -46,7 +46,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
             // TODO: Switch to gauge
-            var counter = AzureMonitorMeter.CreateCounter<double>(metricName, description: metricDescription);
+            var counter = azureMonitorMeter.CreateCounter<double>(metricName, description: metricDescription);
             counter.Add(metricValue);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);

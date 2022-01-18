@@ -140,9 +140,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IValidationStep, AzureAuthenticationValidationStep>();
             services.AddTransient<IValidationStep, MetricsDeclarationValidationStep>();
             services.AddTransient<IValidationStep, ResourceDiscoveryValidationStep>();
-            services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
-            services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
             services.AddTransient<IValidationStep, AtlassianStatuspageMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, OpenTelemetryCollectorMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
             services.AddTransient<RuntimeValidator>();
 
             return services;
@@ -153,54 +154,68 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Collections of services in application</param>
         /// <param name="configuration">Configuration of the application</param>
-        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration)
+        /// <param name="logger"></param>
+        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration, ILogger<Startup> logger)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
+            
             if (metricSinkConfiguration?.Statsd != null)
             {
-                AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
+                AddStatsdMetricSink(services, metricSinkConfiguration.Statsd, logger);
             }
 
             if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusMetricSink(services);
+                AddPrometheusMetricSink(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath, services, logger);
             }
 
             if (metricSinkConfiguration?.AtlassianStatuspage != null)
             {
-                AddAtlassianStatuspageMetricSink(services);
+                AddAtlassianStatuspageMetricSink(metricSinkConfiguration?.AtlassianStatuspage.PageId, services, logger);
             }
 
-            AddOpenTelemetryCollectorMetricSink(services);
+            if (metricSinkConfiguration?.OpenTelemetryCollector != null
+                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
+            {
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, services, logger);
+            }
 
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
         }
 
-        private static void AddPrometheusMetricSink(IServiceCollection services)
+        private static void AddPrometheusMetricSink(string baseUri, IServiceCollection services, ILogger<Startup> logger)
         {
+            logger.LogInformation("Adding Prometheus sink to expose on {PrometheusUrl}", baseUri);
+
             services.AddPrometheusMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
-        private static void AddAtlassianStatuspageMetricSink(IServiceCollection services)
+        private static void AddAtlassianStatuspageMetricSink(string pageId, IServiceCollection services, ILogger<Startup> logger)
         {
+            logger.LogInformation("Adding Atlassian Statuspage sink to push metrics to page ID {PageId}", pageId);
+
             services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
         }
 
-        private static void AddOpenTelemetryCollectorMetricSink(IServiceCollection services)
+        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, IServiceCollection services, ILogger<Startup> logger)
         {
+            logger.LogInformation("Adding OpenTelemetry Collector sink to push metrics to {OpenTelemetryCollectorUrl}", collectorUri);
+
             services.AddOpenTelemetryMetrics(metricsBuilder =>
             {
                 metricsBuilder.AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
-                              .AddOtlpExporter(options => options.Endpoint = new Uri("http://opentelemetry-collector:4317"));
+                              .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
             });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
         }
 
-        private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
+        private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, ILogger<Startup> logger)
         {
+            logger.LogInformation("Adding StatsD sink to push metrics to {StatsDUrl}", $"{statsdConfiguration.Host}:{statsdConfiguration.Port}");
+
             services.AddTransient<IMetricSink, StatsdMetricSink>();
             services.AddStatsD(provider =>
             {

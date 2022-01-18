@@ -8,6 +8,7 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
+using Promitor.Integrations.Sinks.OpenTelemetry.Configuration;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 
@@ -49,12 +50,14 @@ namespace Promitor.Tests.Unit.Generators.Config
 
         private static MetricSinkConfiguration GenerateMetricSinkConfiguration()
         {
-            var statsDConfiguration = GenerateStatsdSinkConfiguration();
-            var prometheusScrapingEndpointSinkConfiguration = GeneratePrometheusScrapingEndpointSinkConfiguration();
             var atlassianStatusPageSinkConfiguration = GenerateAtlassianStatusPageSinkConfiguration();
+            var openTelemetryCollectorConfiguration = GenerateOpenTelemetryCollectorSinkConfiguration();
+            var prometheusScrapingEndpointSinkConfiguration = GeneratePrometheusScrapingEndpointSinkConfiguration();
+            var statsDConfiguration = GenerateStatsdSinkConfiguration();
             var metricSinkConfiguration = new Faker<MetricSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(sinkConfiguration => sinkConfiguration.Statsd, statsDConfiguration)
+                .RuleFor(sinkConfiguration => sinkConfiguration.OpenTelemetryCollector, openTelemetryCollectorConfiguration)
                 .RuleFor(sinkConfiguration => sinkConfiguration.AtlassianStatuspage, atlassianStatusPageSinkConfiguration)
                 .RuleFor(sinkConfiguration => sinkConfiguration.PrometheusScrapingEndpoint, prometheusScrapingEndpointSinkConfiguration)
                 .Generate();
@@ -121,7 +124,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .Generate();
             return serverConfiguration;
         }
-
+        
         private static AtlassianStatusPageSinkConfiguration GenerateAtlassianStatusPageSinkConfiguration()
         {
             var atlassianStatusPageSinkConfiguration = new Faker<AtlassianStatusPageSinkConfiguration>()
@@ -140,6 +143,14 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(promConfiguration => promConfiguration.PromitorMetricName, faker => faker.Person.FirstName)
                 .Generate();
             return systemMetricMapping;
+        }
+        private static OpenTelemetryCollectorSinkConfiguration GenerateOpenTelemetryCollectorSinkConfiguration()
+        {
+            var openTelemetryCollectorSinkConfiguration = new Faker<OpenTelemetryCollectorSinkConfiguration>()
+                .StrictMode(true)
+                .RuleFor(promConfiguration => promConfiguration.CollectorUri, faker => faker.Internet.Url())
+                .Generate();
+            return openTelemetryCollectorSinkConfiguration;
         }
 
         private static PrometheusScrapingEndpointSinkConfiguration GeneratePrometheusScrapingEndpointSinkConfiguration()

@@ -23,10 +23,12 @@ namespace Promitor.Agents.Scraper
     {
         private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
+        private readonly ILogger<Startup> _logger;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
             : base(configuration)
         {
+            _logger = logger;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -51,7 +53,7 @@ namespace Promitor.Agents.Scraper
             services.AddHealthChecks()
                    .AddResourceDiscoveryHealthCheck(Configuration);
             
-            services.UseMetricSinks(Configuration)
+            services.UseMetricSinks(Configuration, _logger)
                 .ScheduleMetricScraping();
         }
 
