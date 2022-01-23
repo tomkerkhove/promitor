@@ -111,7 +111,6 @@ namespace Promitor.Integrations.AzureMonitor
             return measuredMetrics;
         }
 
-
         private async Task<IReadOnlyList<IMetricDefinition>> GetMetricDefinitionsAsync(string resourceId)
         {
             // Get cached metric definitions
