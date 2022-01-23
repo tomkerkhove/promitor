@@ -27,6 +27,7 @@ namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
+        private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
         private readonly IMemoryCache _memoryCache;
@@ -110,6 +111,7 @@ namespace Promitor.Integrations.AzureMonitor
             return measuredMetrics;
         }
 
+
         private async Task<IReadOnlyList<IMetricDefinition>> GetMetricDefinitionsAsync(string resourceId)
         {
             // Get cached metric definitions
@@ -120,7 +122,7 @@ namespace Promitor.Integrations.AzureMonitor
             
             // Get from API and cache it
             var foundMetricDefinitions = await _authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);
-            _memoryCache.Set(resourceId, foundMetricDefinitions, TimeSpan.FromMinutes(30));
+            _memoryCache.Set(resourceId, foundMetricDefinitions, _metricDefinitionCacheDuration);
 
             return foundMetricDefinitions;
         }
