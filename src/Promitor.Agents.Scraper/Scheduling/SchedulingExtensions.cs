@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -37,6 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var loggerFactory = serviceProviderToCreateJobsWith.GetService<ILoggerFactory>();
             var metricSinkWriter = serviceProviderToCreateJobsWith.GetRequiredService<MetricSinkWriter>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
+            var memoryCache = serviceProviderToCreateJobsWith.GetService<IMemoryCache>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
             var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingPrometheusMetricsCollector>();
             var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
@@ -55,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     foreach (var resource in metric.Resources)
                     {
-                        ScheduleResourceScraping(resource, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
+                        ScheduleResourceScraping(resource, metrics.AzureMetadata, metric, azureMonitorClientFactory, metricSinkWriter, runtimeMetricCollector, memoryCache, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
                     }
                 }
             }
@@ -63,10 +65,10 @@ namespace Microsoft.Extensions.DependencyInjection
             return services;
         }
 
-        private static void ScheduleResourceScraping(IAzureResourceDefinition resource, AzureMetadata azureMetadata, MetricDefinition metric, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricCollector, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,  ILogger<Startup> logger, IServiceCollection services)
+        private static void ScheduleResourceScraping(IAzureResourceDefinition resource, AzureMetadata azureMetadata, MetricDefinition metric, AzureMonitorClientFactory azureMonitorClientFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricCollector, IMemoryCache memoryCache, IConfiguration configuration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory,  ILogger<Startup> logger, IServiceCollection services)
         {
             var resourceSubscriptionId = string.IsNullOrWhiteSpace(resource.SubscriptionId) ? azureMetadata.SubscriptionId : resource.SubscriptionId;
-            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(azureMetadata.Cloud, azureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, azureScrapingPrometheusMetricCollector, configuration, azureMonitorLoggingConfiguration, loggerFactory);
+            var azureMonitorClient = azureMonitorClientFactory.CreateIfNotExists(azureMetadata.Cloud, azureMetadata.TenantId, resourceSubscriptionId, metricSinkWriter, azureScrapingPrometheusMetricCollector, memoryCache, configuration, azureMonitorLoggingConfiguration, loggerFactory);
             var scrapeDefinition = metric.CreateScrapeDefinition(resource, azureMetadata);
             var jobName = GenerateResourceScrapingJobName(scrapeDefinition, resource);
 
@@ -105,6 +107,7 @@ namespace Microsoft.Extensions.DependencyInjection
                         jobServices.GetService<MetricScraperFactory>(),
                         azureMonitorClientFactory,
                         azureScrapingPrometheusMetricCollector,
+                        jobServices.GetService<IMemoryCache>(),
                         configuration,
                         azureMonitorLoggingConfiguration,
                         loggerFactory,
