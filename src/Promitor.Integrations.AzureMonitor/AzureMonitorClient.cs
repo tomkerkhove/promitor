@@ -43,6 +43,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="memoryCache">Memory cache to store items in for performance optimizations</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
         public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IMemoryCache memoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
