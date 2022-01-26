@@ -9,14 +9,18 @@ title: Generic Azure Resource Declaration
 
 You can declare to scrape a generic Azure resource via the `Generic` resource type.
 
-The following fields need to be provided:
-
-- `resourceUri` - The uri of the Azure resource to scrape.
-- `filter` - The filter to use to have fine-grained metrics. Example:
-  `EntityName eq 'orders'`
-
 Promitor simplifies defining resource uris by using the subscription & resource
 group defined in `azureMetadata` so that your configuration is small & readable.
+
+Mandatory fields :
+
+- `resourceUri` - The uri of the Azure resource to scrape.
+
+Optional fields :
+
+- `resourceGroupName` - the resource group for this resource. It overrides the one defined in `azureMetadata`.
+- `subscriptionId` - the subscription ID for this resource. It overrides the one defined in `azureMetadata`.
+- `filter` - The filter to use to have fine-grained metrics. Example: `EntityName eq 'orders'`. See [Azure Monitor REST API Filter Syntax](https://docs.microsoft.com/en-us/rest/api/monitor/filter-syntax).
 
 Example:
 
@@ -29,12 +33,15 @@ azureMetricConfiguration:
   aggregation:
     type: Total
 resources:
-# Will scrape subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.ServiceBus/namespaces/promitor-messaging
-# Where 'sub' & 'rg' are coming from azureMetadata
-- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
+# Will scrape subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.ServiceBus/namespaces/my-promitor-messaging
+# Where <sub> & <rg> are coming from azureMetadata
+- resourceUri: Microsoft.ServiceBus/namespaces/my-promitor-messaging
   filter: EntityName eq 'orders'
-- resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging
-  filter: EntityName eq 'items'
+# Will scrape subscriptions/sub2/resourceGroups/rg2/providers/Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
+# Where sub2 & rg2 are coming from the definition of this resource.
+- resourceUri: Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
+  resourceGroupName: rg2
+  subscriptionId: sub2
 ```
 
 <!-- markdownlint-disable MD033 -->
