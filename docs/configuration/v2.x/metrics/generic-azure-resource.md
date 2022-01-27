@@ -9,7 +9,7 @@ title: Generic Azure Resource Declaration
 
 You can declare to scrape a generic Azure resource via the `Generic` resource type.
 
-Promitor simplifies defining resource uris by using the subscription & resource
+Promitor simplifies defining resource URIs by using the subscription & resource
 group defined in `azureMetadata` so that your configuration is small & readable.
 
 Mandatory fields :
