@@ -41,8 +41,8 @@ resources:
 # Will scrape subscriptions/sub2/resourceGroups/rg2/providers/Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
 # Where sub2 & rg2 are coming from the definition of this resource.
 - resourceUri: Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
-  resourceGroupName: rg2
-  subscriptionId: sub2
+  subscriptionId: example-subscription
+  resourceGroupName: example-resource-group
 ```
 
 <!-- markdownlint-disable MD033 -->
