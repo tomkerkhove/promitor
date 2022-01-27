@@ -38,8 +38,8 @@ resources:
 # Where <sub> & <rg> are coming from azureMetadata
 - resourceUri: Microsoft.ServiceBus/namespaces/my-promitor-messaging
   filter: EntityName eq 'orders'
-# Will scrape subscriptions/sub2/resourceGroups/rg2/providers/Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
-# Where sub2 & rg2 are coming from the definition of this resource.
+# Will scrape subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
+# Where <sub> & <rg> are coming from the definition of this resource.
 - resourceUri: Microsoft.ServiceBus/namespaces/my-other-promitor-messaging
   subscriptionId: example-subscription
   resourceGroupName: example-resource-group
