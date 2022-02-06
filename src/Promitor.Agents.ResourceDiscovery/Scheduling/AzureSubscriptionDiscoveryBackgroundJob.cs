@@ -30,7 +30,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             Logger.LogTrace("Discovering Azure subscriptions...");
 
             // Discover Azure subscriptions
-            var discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync();
+            // TODO: Page through results
+            var discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: 0);
 
             // Report discovered information as metric
             foreach (var discoveredLandscapeItem in discoveredLandscape)

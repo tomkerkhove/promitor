@@ -39,7 +39,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         ///     Get resources that are part of a given resource collection
         /// </summary>
         /// <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
-        public virtual async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
+        /// <param name="pageSize">The amount of results that are allowed per page</param>
+        /// <param name="currentPage">Current page that is being queried</param>
+        public virtual async Task<PagedResult<List<AzureResourceDefinition>>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceDiscoveryGroupDefinition = resourceDeclaration.ResourceDiscoveryGroups.SingleOrDefault(collection => collection.Name.Equals(resourceDiscoveryGroupName, StringComparison.InvariantCultureIgnoreCase));
@@ -55,10 +57,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria).Build();
 
             // 2. Run Query
-            var unparsedResults = await _azureResourceGraph.QueryTargetSubscriptionsAsync(resourceDiscoveryGroupName, query);
+            var unparsedResults = await _azureResourceGraph.QueryTargetSubscriptionsAsync(resourceDiscoveryGroupName, query, pageSize, currentPage);
 
             // 3. Parse query results into resource
-            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
+            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults.Result);
 
             var contextualInformation = new Dictionary<string, object>
             {
@@ -67,17 +69,17 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             };
             _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
 
-            return foundResources;
+            return new PagedResult<List<AzureResourceDefinition>>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
-        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
+        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions""
 | project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
 
-            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query);
-            return ParseQueryResults(unparsedResults, row => new AzureSubscriptionInformation
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query, pageSize, currentPage);
+            return ParseQueryResults(unparsedResults.Result, row => new AzureSubscriptionInformation
             {
                 TenantId = row[0]?.ToString(),
                 Name = row[2]?.ToString(),
@@ -89,14 +91,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             });
         }
 
-        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
+        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions/resourcegroups""
 | project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
 
-            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query);
-            return ParseQueryResults(unparsedResults, row => new AzureResourceGroupInformation
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query, pageSize, currentPage);
+            return ParseQueryResults(unparsedResults.Result, row => new AzureResourceGroupInformation
             {
                 TenantId = row[0]?.ToString(),
                 SubscriptionId = row[1]?.ToString(),

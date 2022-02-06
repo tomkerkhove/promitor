@@ -7,8 +7,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces
 {
     public interface IAzureResourceRepository
     {
-        Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName);
-        Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync();
-        Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync();
+        Task<PagedResult<List<AzureResourceDefinition>>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage);
+        Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage);
+        Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage);
     }
 }

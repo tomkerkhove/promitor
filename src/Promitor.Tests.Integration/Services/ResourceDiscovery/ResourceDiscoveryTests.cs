@@ -5,6 +5,7 @@ using Bogus;
 using Newtonsoft.Json;
 using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Core.Contracts;
 using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Extensions;
 using Xunit;
@@ -68,9 +69,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -88,9 +89,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -108,9 +109,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -128,9 +129,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -148,9 +149,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact (Skip = "We only have one Azure test subscription")]
@@ -168,9 +169,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -188,9 +189,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -208,9 +209,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -228,9 +229,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -248,9 +249,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
         }
 
         [Fact]
@@ -268,9 +269,14 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
-            var resources = JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
+        }
+
+        private PagedResult<List<Resource>> DeserializeRawResponse(string rawResponseBody)
+        {
+            return JsonConvert.DeserializeObject<PagedResult<List<Resource>>>(rawResponseBody);
         }
     }
 }

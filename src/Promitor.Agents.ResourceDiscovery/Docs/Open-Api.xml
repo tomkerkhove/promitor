@@ -14,7 +14,7 @@
             Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController"/> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController.Get(System.String)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController.Get(System.String,System.Int32,System.Int32)">
             <summary>
                 Discover Resources
             </summary>
@@ -112,11 +112,13 @@
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.DiscoveryController" /> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.GetResourcesAsync(System.String)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.GetResourcesAsync(System.String,System.Int32,System.Int32)">
             <summary>
                 Get resources that are part of a given resource collection
             </summary>
             <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
+            <param name="pageSize">The amount of results that are allowed per page</param>
+            <param name="currentPage">Current page that is being queried</param>
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.CachedAzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.CacheConfiguration})">
             <summary>

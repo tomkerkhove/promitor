@@ -21,7 +21,9 @@ namespace Promitor.Agents.Scraper.Discovery
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName,nameof(resourceDiscoveryGroupName));
 
             var resources = await _resourceDiscoveryClient.GetAsync(resourceDiscoveryGroupName);
-            return resources;
+
+            // TODO: Handle paging
+            return resources.Result;
         }
     }
 }

@@ -8,6 +8,8 @@ using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
+using Promitor.Core.Contracts;
+using Spectre.Console;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {
@@ -28,27 +30,27 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _cacheConfiguration = cacheConfiguration;
         }
 
-        public async Task<JObject> QueryAsync(string queryName, string query, bool skipCache = false)
+        public async Task<PagedResult<JObject>> QueryAsync(string queryName, string query, int pageSize, int currentPage, bool skipCache = false)
         {
-            if (skipCache == false && _memoryCache.TryGetValue(queryName, out JObject cachedQueryResult))
+            if (skipCache == false && _memoryCache.TryGetValue(queryName, out PagedResult<JObject> cachedQueryResult))
             {
                 return cachedQueryResult;
             }
 
-            var queryResult = await _azureResourceGraph.QueryTargetSubscriptionsAsync(queryName, query);
+            var queryResult = await _azureResourceGraph.QueryTargetSubscriptionsAsync(queryName, query, pageSize, currentPage);
             AddCacheEntry(queryName, queryResult);
 
             return queryResult;
         }
 
-        public async Task<List<Resource>> QueryForResourcesAsync(string queryName, string query, List<string> targetSubscriptions, bool skipCache = false)
+        public async Task<List<Resource>> QueryForResourcesAsync(string queryName, string query, List<string> targetSubscriptions, int pageSize, int currentPage, bool skipCache = false)
         {
             if (skipCache == false && _memoryCache.TryGetValue(queryName, out List<Resource> cachedResources))
             {
                 return cachedResources;
             }
 
-            var queryResult = await _azureResourceGraph.QueryForResourcesAsync(queryName, query, targetSubscriptions);
+            var queryResult = await _azureResourceGraph.QueryForResourcesAsync(queryName, query, targetSubscriptions, pageSize, currentPage);
             AddCacheEntry(queryName, queryResult);
 
             return queryResult;

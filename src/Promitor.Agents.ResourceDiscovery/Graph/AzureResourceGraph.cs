@@ -18,6 +18,7 @@ using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers;
 using Promitor.Core;
+using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication;
@@ -57,33 +58,33 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
-        public async Task<JObject> QueryAzureLandscapeAsync(string queryName, string query)
+        public async Task<PagedResult<JObject>> QueryAzureLandscapeAsync(string queryName, string query, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var queryResponse = await QueryAsync(queryName, query, targetSubscriptions: null);
-            return queryResponse.Data as JObject;
+            var queryResponse = await QueryAsync(queryName, query, pageSize, currentPage, targetSubscriptions: null);
+            return new PagedResult<JObject>(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
         }
 
-        public async Task<JObject> QueryTargetSubscriptionsAsync(string queryName, string query)
+        public async Task<PagedResult<JObject>> QueryTargetSubscriptionsAsync(string queryName, string query, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var queryResponse = await QueryAsync(queryName, query, Subscriptions);
-            return queryResponse.Data as JObject;
+            var queryResponse = await QueryAsync(queryName, query, pageSize, currentPage, Subscriptions);
+            return new PagedResult<JObject>(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
         }
 
-        public async Task<List<Resource>> QueryForResourcesAsync(string queryName, string query, List<string> targetSubscriptions)
+        public async Task<List<Resource>> QueryForResourcesAsync(string queryName, string query, List<string> targetSubscriptions, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
-            var queryResult = await QueryAsync(queryName, query, targetSubscriptions);
+            var queryResult = await QueryAsync(queryName, query, pageSize, currentPage, targetSubscriptions);
             var foundResources = ParseQueryResults(queryResult);
 
             return foundResources;
         }
 
-        private async Task<QueryResponse> QueryAsync(string queryName, string query, List<string> targetSubscriptions = null)
+        private async Task<QueryResponse> QueryAsync(string queryName, string query, int pageSize, int currentPage, List<string> targetSubscriptions = null)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
@@ -91,8 +92,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             {
                 var queryOptions = new QueryRequestOptions
                 {
-                    ResultFormat = ResultFormat.Table
+                    ResultFormat = ResultFormat.Table,
+                    Skip = pageSize * (currentPage - 1),
+                    Top = pageSize
                 };
+
                 var queryRequest = new QueryRequest(query, options: queryOptions, subscriptions: targetSubscriptions);
                 return await graphClient.ResourcesAsync(queryRequest);
             });
