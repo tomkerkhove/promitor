@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using GuardNet;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
-using Promitor.Core.Contracts;
 using Newtonsoft.Json.Converters;
+using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
+using Promitor.Core.Contracts;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
 {
     /// <summary>
     /// API endpoint to discover Azure resources
@@ -43,7 +43,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
         [HttpGet("{resourceDiscoveryGroup}/discover", Name = "Discovery_Get")]
-        [ProducesResponseType(typeof(PagedResult<List<AzureResourceDefinition>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<AzureResourceDefinition>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(string resourceDiscoveryGroup, int pageSize = 1000, int currentPage = 1)
         {
@@ -61,13 +61,15 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers
                     return NotFound(new {Information = "No resource discovery group was found with specified name"});
                 }
 
-                var serializedResources = JsonConvert.SerializeObject(pagedDiscoveredResources, _serializerSettings);
+                Response.Headers.Add("X-Paging-Page-Size", pagedDiscoveredResources.PageSize.ToString());
+                Response.Headers.Add("X-Paging-Current-Page", pagedDiscoveredResources.CurrentPage.ToString());
+                Response.Headers.Add("X-Paging-Total", pagedDiscoveredResources.TotalRecords.ToString());
+
+                var serializedResources = JsonConvert.SerializeObject(pagedDiscoveredResources.Result, _serializerSettings);
 
                 var response = Content(serializedResources, "application/json");
                 response.StatusCode = (int) HttpStatusCode.OK;
-
-                // TODO: Add paging
-
+                
                 return response;
             }
             catch (ResourceTypeNotSupportedException resourceTypeNotSupportedException)

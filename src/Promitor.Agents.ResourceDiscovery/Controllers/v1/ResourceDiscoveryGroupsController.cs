@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GuardNet;
+﻿using GuardNet;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
 {
     /// <summary>
     /// API endpoint to interact with resource discovery groups

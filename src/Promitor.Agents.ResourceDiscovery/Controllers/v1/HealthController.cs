@@ -5,7 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Promitor.Agents.Core.Controllers;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
 {
     /// <summary>
     /// API endpoint to check the health of the application.
