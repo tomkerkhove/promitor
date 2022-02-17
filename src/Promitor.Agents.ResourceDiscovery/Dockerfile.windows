@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.102 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.200 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
