@@ -34,9 +34,9 @@ namespace Promitor.Agents.Scraper.Discovery
             _configuration = configuration;
         }
 
-        public async Task<PagedResult<List<AzureResourceDefinition>>> GetAsync(string resourceDiscoveryGroupName)
+        public async Task<PagedResult<List<AzureResourceDefinition>>> GetAsync(string resourceDiscoveryGroupName, int currentPage)
         {
-            var uri = $"api/v1/resources/groups/{resourceDiscoveryGroupName}/discover";
+            var uri = $"api/v2/resources/groups/{resourceDiscoveryGroupName}/discover?currentPage={currentPage}";
             var rawResponse = await SendGetRequestAsync(uri);
 
             var foundResources = JsonConvert.DeserializeObject<PagedResult<List<AzureResourceDefinition>>>(rawResponse, _serializerSettings);
