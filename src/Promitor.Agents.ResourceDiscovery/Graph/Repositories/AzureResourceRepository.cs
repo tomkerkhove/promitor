@@ -67,6 +67,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 {"ResourceType",resourceDiscoveryGroupDefinition.Type},
                 {"CollectionName",resourceDiscoveryGroupName}
             };
+            // TODO: Incorporate paging
             _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
 
             return new PagedResult<List<AzureResourceDefinition>>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);

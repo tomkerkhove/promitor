@@ -71,6 +71,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             Guard.NotNullOrWhitespace(query, nameof(query));
 
             var queryResponse = await QueryAsync(queryName, query, pageSize, currentPage, Subscriptions);
+
+            // TODO: Introduce paging info along with the result so that we can enforce collection in PagedResult
             return new PagedResult<JObject>(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
         }
 
@@ -90,10 +92,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             var response = await InteractWithAzureResourceGraphAsync(queryName, query,  async graphClient =>
             {
+                var pageSkip = currentPage > 0 ? pageSize * (currentPage - 1) : 0;
                 var queryOptions = new QueryRequestOptions
                 {
                     ResultFormat = ResultFormat.Table,
-                    Skip = pageSize * (currentPage - 1),
+                    Skip = pageSkip,
                     Top = pageSize
                 };
 

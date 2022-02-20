@@ -19,7 +19,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         private readonly IMemoryCache _memoryCache;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
+        ///     Initializes a new instance of the <see cref="CachedAzureResourceRepository" /> class.
         /// </summary>
         public CachedAzureResourceRepository(AzureResourceRepository azureResourceRepository, IMemoryCache memoryCache, IOptionsMonitor<CacheConfiguration> cacheConfiguration)
         {
@@ -32,15 +32,15 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             _cacheConfiguration = cacheConfiguration;
         }
 
-        private const string GetResourceCacheKey = "GetResources-{0}";
-        private const string AzureSubscriptionsCacheKey = "AzureSubscriptions";
-        private const string AzureResourceGroupsCacheKey = "AzureResourceGroups";
+        private const string GetResourceCacheKey = "GetResources-{0}-{1}-{2}";
+        private const string AzureSubscriptionsCacheKey = "AzureSubscriptions-{0}-{1}";
+        private const string AzureResourceGroupsCacheKey = "AzureResourceGroups-{0}-{1}";
 
         public async Task<PagedResult<List<AzureResourceDefinition>>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName, nameof(resourceDiscoveryGroupName));
 
-            var cacheKey = string.Format(GetResourceCacheKey, resourceDiscoveryGroupName);
+            var cacheKey = string.Format(GetResourceCacheKey, resourceDiscoveryGroupName, pageSize, currentPage);
 
             if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureResourceDefinition>> cachedDiscoveredResources))
             {
@@ -55,26 +55,28 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
 
         public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
-            if (_memoryCache.TryGetValue(AzureSubscriptionsCacheKey, out List<AzureSubscriptionInformation> cachedAzureSubscriptions))
+            var cacheKey = string.Format(AzureSubscriptionsCacheKey, pageSize, currentPage);
+            if (_memoryCache.TryGetValue(cacheKey, out List<AzureSubscriptionInformation> cachedAzureSubscriptions))
             {
                 return cachedAzureSubscriptions;
             }
 
             var discoveredAzureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize, currentPage);
-            AddCacheEntry(AzureSubscriptionsCacheKey, discoveredAzureSubscriptions);
+            AddCacheEntry(cacheKey, discoveredAzureSubscriptions);
 
             return discoveredAzureSubscriptions;
         }
 
         public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
-            if (_memoryCache.TryGetValue(AzureResourceGroupsCacheKey, out List<AzureResourceGroupInformation> cachedAzureResourceGroups))
+            var cacheKey = string.Format(AzureResourceGroupsCacheKey, pageSize, currentPage);
+            if (_memoryCache.TryGetValue(cacheKey, out List<AzureResourceGroupInformation> cachedAzureResourceGroups))
             {
                 return cachedAzureResourceGroups;
             }
 
             var discoveredAzureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync(pageSize, currentPage);
-            AddCacheEntry(AzureResourceGroupsCacheKey, discoveredAzureResourceGroups);
+            AddCacheEntry(cacheKey, discoveredAzureResourceGroups);
 
             return discoveredAzureResourceGroups;
         }
