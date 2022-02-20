@@ -19,9 +19,19 @@ namespace Promitor.Tests.Integration.Clients
             return await GetAsync("/api/v1/resources/groups");
         }
 
-        public async Task<HttpResponseMessage> GetDiscoveredResourcesWithResponseAsync(string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesWithResponseAsync(string apiVersion, string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
         {
-            return await GetAsync($"/api/v2/resources/groups/{resourceDiscoveryGroupName}/discover?currentPage={currentPage}&pageSize={pageSize}");
+            return await GetAsync($"/api/{apiVersion}/resources/groups/{resourceDiscoveryGroupName}/discover?currentPage={currentPage}&pageSize={pageSize}");
+        }
+
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesV1WithResponseAsync(string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
+        {
+            return await GetDiscoveredResourcesWithResponseAsync("v1", resourceDiscoveryGroupName, currentPage, pageSize);
+        }
+
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesV2WithResponseAsync(string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
+        {
+            return await GetDiscoveredResourcesWithResponseAsync("v2", resourceDiscoveryGroupName, currentPage, pageSize);
         }
 
         public async Task<List<AzureResourceDefinition>> GetAllDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
@@ -32,7 +42,7 @@ namespace Promitor.Tests.Integration.Clients
 
             do
             {
-                var response = await GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName, currentPage);
+                var response = await GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName, currentPage);
                 var rawResponse = await response.Content.ReadAsStringAsync();
 
                 pagedResult = GetDeserializedResponse<PagedResult<List<AzureResourceDefinition>>>(rawResponse);

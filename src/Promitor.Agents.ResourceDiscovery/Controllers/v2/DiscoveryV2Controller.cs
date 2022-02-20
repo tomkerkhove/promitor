@@ -49,13 +49,16 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v2
         {
             if (currentPage < 1)
             {
-                // TODO: Integration test for this
                 return ValidationProblem(detail: "Current page has to be 1 or more");
+            }
+
+            if (pageSize < 1)
+            {
+                return ValidationProblem(detail: "Page size cannot be less than 1");
             }
 
             if (pageSize > 1000)
             {
-                // TODO: Integration test for this
                 return ValidationProblem(detail: "Page size cannot be higher than 1000");
             }
 
