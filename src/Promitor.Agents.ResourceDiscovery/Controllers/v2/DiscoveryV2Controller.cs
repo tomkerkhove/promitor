@@ -10,22 +10,22 @@ using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Core.Contracts;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v2
 {
     /// <summary>
     /// API endpoint to discover Azure resources
     /// </summary>
     [ApiController]
-    [Route("api/v1/resources/groups")]
-    public class DiscoveryController : ControllerBase
+    [Route("api/v2/resources/groups")]
+    public class DiscoveryV2Controller : ControllerBase
     {
         private readonly JsonSerializerSettings _serializerSettings;
         private readonly IAzureResourceRepository _azureResourceRepository;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DiscoveryController"/> class.
+        /// Initializes a new instance of the <see cref="DiscoveryV2Controller"/> class.
         /// </summary>
-        public DiscoveryController(IAzureResourceRepository azureResourceRepository)
+        public DiscoveryV2Controller(IAzureResourceRepository azureResourceRepository)
         {
             Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
 
@@ -42,15 +42,21 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
         ///     Discover Resources
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
-        [HttpGet("{resourceDiscoveryGroup}/discover", Name = "Discovery_Get")]
-        [ProducesResponseType(typeof(List<AzureResourceDefinition>), StatusCodes.Status200OK)]
+        [HttpGet("{resourceDiscoveryGroup}/discover", Name = "DiscoveryV2_Get")]
+        [ProducesResponseType(typeof(PagedResult<List<AzureResourceDefinition>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(string resourceDiscoveryGroup, int pageSize = 1000, int currentPage = 1)
         {
-            if (currentPage < 1) 
+            if (currentPage < 1)
             {
                 // TODO: Integration test for this
                 return ValidationProblem(detail: "Current page has to be 1 or more");
+            }
+
+            if (pageSize > 1000)
+            {
+                // TODO: Integration test for this
+                return ValidationProblem(detail: "Page size cannot be higher than 1000");
             }
 
             try
@@ -61,15 +67,11 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
                     return NotFound(new {Information = "No resource discovery group was found with specified name"});
                 }
 
-                Response.Headers.Add("X-Paging-Page-Size", pagedDiscoveredResources.PageSize.ToString());
-                Response.Headers.Add("X-Paging-Current-Page", pagedDiscoveredResources.CurrentPage.ToString());
-                Response.Headers.Add("X-Paging-Total", pagedDiscoveredResources.TotalRecords.ToString());
-
-                var serializedResources = JsonConvert.SerializeObject(pagedDiscoveredResources.Result, _serializerSettings);
+                var serializedResources = JsonConvert.SerializeObject(pagedDiscoveredResources, _serializerSettings);
 
                 var response = Content(serializedResources, "application/json");
                 response.StatusCode = (int) HttpStatusCode.OK;
-                
+
                 return response;
             }
             catch (ResourceTypeNotSupportedException resourceTypeNotSupportedException)

@@ -12,13 +12,13 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
     /// </summary>
     [ApiController]
     [Route("api/v1/health")]
-    public class HealthController : OperationsController
+    public class HealthV1Controller : OperationsController
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HealthController"/> class.
+        /// Initializes a new instance of the <see cref="HealthV1Controller"/> class.
         /// </summary>
         /// <param name="healthCheckService">The service to provide the health of the API application.</param>
-        public HealthController(HealthCheckService healthCheckService)
+        public HealthV1Controller(HealthCheckService healthCheckService)
             : base(healthCheckService)
         {
         }
