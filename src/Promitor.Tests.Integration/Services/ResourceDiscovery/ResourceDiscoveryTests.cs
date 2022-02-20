@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Bogus;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Promitor.Agents.Core;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
@@ -55,15 +57,47 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         }
 
         [Fact]
-        public async Task ResourceDiscovery_GetAllPerResourceTypeWithoutFilters_ReturnsExpectedAmount()
+        public async Task ResourceDiscovery_GetAllPerResourceTypeWithoutFilters_ReturnsExpectedAmountThroughPaging()
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 1000; // This should be more but is a known bug, see https://github.com/tomkerkhove/promitor/issues/1828
+            const int pageSize = 1000;
+            const int expectedTotalResourceCount = 1018;
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act & Assert
+            var currentPage = 1;
+            bool hasMore;
+            do
+            {
+                Logger.LogInformation("Discovering resources with page size for page {CurrentPage}", currentPage);
+                
+                var response = await resourceDiscoveryClient.GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName, currentPage: currentPage);
+                var resources = await AssertAndGetPagedResult(response);
+                Assert.NotNull(resources);
+                
+                var delta = expectedTotalResourceCount - ((currentPage - 1) * pageSize);
+                var amountOfExpectedResults = delta > pageSize ? pageSize : delta;
+                Assert.Equal(amountOfExpectedResults, resources.Result.Count);
+                Assert.Equal(expectedTotalResourceCount, resources.TotalRecords);
+
+                hasMore = resources.HasMore;
+                currentPage++;
+            }
+            while (hasMore);
+        }
+
+        [Fact]
+        public async Task ResourceDiscovery_GetAllPerResourceTypeWithoutFiltersAndSpecificPageSize_ReturnsExpectedAmount()
+        {
+            // Arrange
+            const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
+            const int expectedResourceCount = 1018;
+            const int pageSize = 500;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
-            var response = await resourceDiscoveryClient.GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName);
+            var response = await resourceDiscoveryClient.GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName, pageSize: pageSize);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -71,7 +105,8 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             Assert.NotEmpty(rawResponseBody);
             var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            Assert.Equal(pageSize, resources.Result.Count);
+            Assert.Equal(expectedResourceCount, resources.TotalRecords);
         }
 
         [Fact]
@@ -272,6 +307,15 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var resources = DeserializeRawResponse(rawResponseBody);
             Assert.NotNull(resources);
             Assert.Equal(expectedResourceCount, resources.Result.Count);
+        }
+
+        private async Task<PagedResult<List<Resource>>> AssertAndGetPagedResult(HttpResponseMessage response)
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var rawResponseBody = await response.Content.ReadAsStringAsync();
+            Assert.NotEmpty(rawResponseBody);
+            var resources = DeserializeRawResponse(rawResponseBody);
+            return resources;
         }
 
         private PagedResult<List<Resource>> DeserializeRawResponse(string rawResponseBody)
