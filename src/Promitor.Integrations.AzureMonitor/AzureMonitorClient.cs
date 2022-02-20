@@ -9,6 +9,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Rest;
@@ -26,9 +27,11 @@ namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
-        private readonly ILogger _logger;
+        private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger _logger;
 
         /// <summary>
         ///     Constructor
@@ -40,14 +43,17 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="memoryCache">Memory cache to store items in for performance optimizations</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, ILoggerFactory loggerFactory, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IMemoryCache memoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
+            Guard.NotNull(memoryCache, nameof(memoryCache));
 
+            _memoryCache = memoryCache;
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
             _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingPrometheusMetricsCollector, azureMonitorLoggingConfiguration);
         }
@@ -71,7 +77,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricsDefinitions = await _authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);
+            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId);
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.Value.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
@@ -104,6 +110,21 @@ namespace Promitor.Integrations.AzureMonitor
             }
 
             return measuredMetrics;
+        }
+
+        private async Task<IReadOnlyList<IMetricDefinition>> GetMetricDefinitionsAsync(string resourceId)
+        {
+            // Get cached metric definitions
+            if (_memoryCache.TryGetValue(resourceId, out IReadOnlyList<IMetricDefinition> metricDefinitions))
+            {
+                return metricDefinitions;
+            }
+            
+            // Get from API and cache it
+            var foundMetricDefinitions = await _authenticatedAzureSubscription.MetricDefinitions.ListByResourceAsync(resourceId);
+            _memoryCache.Set(resourceId, foundMetricDefinitions, _metricDefinitionCacheDuration);
+
+            return foundMetricDefinitions;
         }
 
         private TimeSpan DetermineAggregationInterval(string metricName, TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
