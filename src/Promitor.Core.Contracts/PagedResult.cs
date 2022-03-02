@@ -1,5 +1,4 @@
-﻿
-namespace Promitor.Core.Contracts
+﻿namespace Promitor.Core.Contracts
 {
     public class PagedResult<TResult>
     {
@@ -8,7 +7,7 @@ namespace Promitor.Core.Contracts
         public int CurrentPage { get; set; }
         public long TotalRecords { get; set; }
 
-        public bool HasMore => TotalRecords - PageSize * CurrentPage > 0;
+        public bool HasMore => (TotalRecords - (PageSize * CurrentPage)) > 0;
 
         public PagedResult(TResult result, long totalRecords, int currentPage, int pageSize)
         {
