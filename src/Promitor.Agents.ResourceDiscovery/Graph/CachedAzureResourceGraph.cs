@@ -9,7 +9,6 @@ using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Core.Contracts;
-using Spectre.Console;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Promitor.Core.Contracts;
 using Xunit;
 
-namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
+namespace Promitor.Tests.Unit.Core
 {
     [Category("Unit")]
     public class PagedResultTests

@@ -36,7 +36,7 @@ namespace Promitor.Tests.Integration.Clients
 
         public async Task<List<AzureResourceDefinition>> GetAllDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
         {
-            PagedResult<List<AzureResourceDefinition>> pagedResult = null;
+            PagedResult<List<AzureResourceDefinition>> pagedResult;
             var results = new List<AzureResourceDefinition>();
             var currentPage = 1;
 

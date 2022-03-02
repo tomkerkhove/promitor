@@ -20,7 +20,7 @@ namespace Promitor.Agents.Scraper.Discovery
         {
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName,nameof(resourceDiscoveryGroupName));
 
-            PagedResult<List<AzureResourceDefinition>> pagedResult = null;
+            PagedResult<List<AzureResourceDefinition>> pagedResult;
             var results = new List<AzureResourceDefinition>();
             var currentPage = 1;
 

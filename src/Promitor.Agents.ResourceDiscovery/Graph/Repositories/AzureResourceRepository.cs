@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
-using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
@@ -22,7 +21,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
+        ///     Initializes a new instance of the <see cref="AzureResourceRepository" /> class.
         /// </summary>
         public AzureResourceRepository(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<AzureResourceRepository> logger)
         {

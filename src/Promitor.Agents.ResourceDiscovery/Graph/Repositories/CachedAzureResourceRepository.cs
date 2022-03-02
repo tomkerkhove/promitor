@@ -5,7 +5,6 @@ using GuardNet;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
-using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Core.Contracts;
