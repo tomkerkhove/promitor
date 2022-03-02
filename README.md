@@ -17,8 +17,6 @@
 
 **Promitor** is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
 
-> Contribute & win! 🎁 Participate in the Promitor hackaton until March 1st, 2022. ([learn more](hackaton.md))
-
 ## Documentation
 
 All documentation is available on [promitor.io](https://docs.promitor.io)

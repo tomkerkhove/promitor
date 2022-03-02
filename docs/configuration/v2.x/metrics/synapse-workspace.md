@@ -33,7 +33,7 @@ Example:
   - workspaceName: promitor-synapse
     resourceGroupName: promitor-sources
   resourceDiscoveryGroups: # Optional, requires Promitor Resource Discovery agent (https://promitor.io/concepts/how-it-works#using-resource-discovery)
-  - name: synapse-apache-spark-pools
+  - name: synapse-workspaces
 ```
 
 <!-- markdownlint-disable MD033 -->
