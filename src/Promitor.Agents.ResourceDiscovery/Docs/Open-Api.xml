@@ -125,7 +125,7 @@
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Interfaces.IAzureResourceGraph,Microsoft.Extensions.Options.IOptionsMonitor{Promitor.Agents.ResourceDiscovery.Configuration.ResourceDeclaration},Microsoft.Extensions.Logging.ILogger{Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository})">
             <summary>
-                Initializes a new instance of the <see cref="!:DiscoveryController" /> class.
+                Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository" /> class.
             </summary>
         </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Graph.Repositories.AzureResourceRepository.GetResourcesAsync(System.String,System.Int32,System.Int32)">

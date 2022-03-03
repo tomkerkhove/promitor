@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Bogus.Bson;
 using Promitor.Core.Contracts;
 using Xunit;
 
@@ -14,7 +15,7 @@ namespace Promitor.Tests.Unit.Core
         public void HasMore_NoMoreEntriesAreAvailableInNextPage_ReturnsFalse(long totalRecords, int currentPage, int pageSize)
         {
             // Arrange
-            object result = null;
+            object result = new { foo = "bar"};
 
             // Act
             var resource = new PagedResult<object>(result, totalRecords, currentPage, pageSize);
@@ -29,7 +30,7 @@ namespace Promitor.Tests.Unit.Core
         public void HasMore_MoreEntriesAreAvailableInNextPage_ReturnsTrue(long totalRecords, int currentPage, int pageSize)
         {
             // Arrange
-            object result = null;
+            object result = new { foo = "bar" };
 
             // Act
             var resource = new PagedResult<object>(result, totalRecords, currentPage, pageSize);
