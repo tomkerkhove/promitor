@@ -35,13 +35,13 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         private const string AzureSubscriptionsCacheKey = "AzureSubscriptions-{0}-{1}";
         private const string AzureResourceGroupsCacheKey = "AzureResourceGroups-{0}-{1}";
 
-        public async Task<PagedResult<List<AzureResourceDefinition>>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
+        public async Task<PagedPayload<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName, nameof(resourceDiscoveryGroupName));
 
             var cacheKey = string.Format(GetResourceCacheKey, resourceDiscoveryGroupName, pageSize, currentPage);
 
-            if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureResourceDefinition>> cachedDiscoveredResources))
+            if (_memoryCache.TryGetValue(cacheKey, out PagedPayload<AzureResourceDefinition> cachedDiscoveredResources))
             {
                 return cachedDiscoveredResources;
             }
@@ -52,10 +52,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             return discoveredResources;
         }
 
-        public async Task<PagedResult<List<AzureSubscriptionInformation>>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
+        public async Task<PagedPayload<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
             var cacheKey = string.Format(AzureSubscriptionsCacheKey, pageSize, currentPage);
-            if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureSubscriptionInformation>> cachedAzureSubscriptions))
+            if (_memoryCache.TryGetValue(cacheKey, out PagedPayload<AzureSubscriptionInformation> cachedAzureSubscriptions))
             {
                 return cachedAzureSubscriptions;
             }
@@ -66,10 +66,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             return discoveredAzureSubscriptions;
         }
 
-        public async Task<PagedResult<List<AzureResourceGroupInformation>>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
+        public async Task<PagedPayload<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
             var cacheKey = string.Format(AzureResourceGroupsCacheKey, pageSize, currentPage);
-            if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureResourceGroupInformation>> cachedAzureResourceGroups))
+            if (_memoryCache.TryGetValue(cacheKey, out PagedPayload<AzureResourceGroupInformation> cachedAzureResourceGroups))
             {
                 return cachedAzureResourceGroups;
             }

@@ -40,7 +40,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         /// <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
         /// <param name="pageSize">The amount of results that are allowed per page</param>
         /// <param name="currentPage">Current page that is being queried</param>
-        public virtual async Task<PagedResult<List<AzureResourceDefinition>>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
+        public virtual async Task<PagedPayload<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceDiscoveryGroupDefinition = resourceDeclaration.ResourceDiscoveryGroups.SingleOrDefault(collection => collection.Name.Equals(resourceDiscoveryGroupName, StringComparison.InvariantCultureIgnoreCase));
@@ -74,10 +74,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 _logger.LogMetric("Discovered Resources", unparsedResults.TotalRecords, contextualInformation);
             }
 
-            return new PagedResult<List<AzureResourceDefinition>>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
+            return new PagedPayload<AzureResourceDefinition>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
-        public async Task<PagedResult<List<AzureSubscriptionInformation>>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
+        public async Task<PagedPayload<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions""
@@ -95,10 +95,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 AuthorizationSource = row[6]?.ToString()
             });
 
-            return new PagedResult<List<AzureSubscriptionInformation>>(foundSubscriptionInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
+            return new PagedPayload<AzureSubscriptionInformation>(foundSubscriptionInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
-        public async Task<PagedResult<List<AzureResourceGroupInformation>>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
+        public async Task<PagedPayload<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions/resourcegroups""
@@ -115,7 +115,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 ManagedBy = row[5]?.ToString()
             });
 
-            return new PagedResult<List<AzureResourceGroupInformation>>(foundResourceGroupInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
+            return new PagedPayload<AzureResourceGroupInformation>(foundResourceGroupInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
         private List<TInfo> ParseQueryResults<TInfo>(JObject unparsedResults, Func<JToken, TInfo> parseResult)

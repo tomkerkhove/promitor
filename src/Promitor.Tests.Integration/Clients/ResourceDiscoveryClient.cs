@@ -36,7 +36,7 @@ namespace Promitor.Tests.Integration.Clients
 
         public async Task<List<AzureResourceDefinition>> GetAllDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
         {
-            PagedResult<List<AzureResourceDefinition>> pagedResult;
+            PagedPayload<AzureResourceDefinition> pagedPayload;
             var results = new List<AzureResourceDefinition>();
             var currentPage = 1;
 
@@ -45,11 +45,11 @@ namespace Promitor.Tests.Integration.Clients
                 var response = await GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName, currentPage);
                 var rawResponse = await response.Content.ReadAsStringAsync();
 
-                pagedResult = GetDeserializedResponse<PagedResult<List<AzureResourceDefinition>>>(rawResponse);
-                results.AddRange(pagedResult.Result);
+                pagedPayload = GetDeserializedResponse<PagedPayload<AzureResourceDefinition>>(rawResponse);
+                results.AddRange(pagedPayload.Result);
                 currentPage++;
             }
-            while (pagedResult.HasMore);
+            while (pagedPayload.HasMore);
 
             return results;
         }

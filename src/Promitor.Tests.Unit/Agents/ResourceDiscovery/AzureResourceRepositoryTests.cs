@@ -36,7 +36,7 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureSubscriptionsAsync.json");
-            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedResult<JObject>(testData, 100, 1, 100));
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedQueryResult(testData, 100, 1, 100));
             var expectedSubscriptions = GetAzureSubscriptions();
 
             // Act
@@ -53,7 +53,7 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureResourceGroupsAsync.json");
-            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedResult<JObject>(testData, 100, 1, 100));
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedQueryResult(testData, 100, 1, 100));
             var expectedResourceGroups = GetAzureResourceGroups();
 
             // Act

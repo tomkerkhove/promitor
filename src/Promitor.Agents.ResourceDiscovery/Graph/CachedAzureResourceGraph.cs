@@ -29,9 +29,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _cacheConfiguration = cacheConfiguration;
         }
 
-        public async Task<PagedResult<JObject>> QueryAsync(string queryName, string query, int pageSize, int currentPage, bool skipCache = false)
+        public async Task<PagedQueryResult> QueryAsync(string queryName, string query, int pageSize, int currentPage, bool skipCache = false)
         {
-            if (skipCache == false && _memoryCache.TryGetValue(queryName, out PagedResult<JObject> cachedQueryResult))
+            if (skipCache == false && _memoryCache.TryGetValue(queryName, out PagedQueryResult cachedQueryResult))
             {
                 return cachedQueryResult;
             }

@@ -32,7 +32,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
 
             // Discover Azure subscriptions
 
-            PagedResult<List<AzureSubscriptionInformation>> discoveredLandscape;
+            PagedPayload<AzureSubscriptionInformation> discoveredLandscape;
             do
             {
                 discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: 0);

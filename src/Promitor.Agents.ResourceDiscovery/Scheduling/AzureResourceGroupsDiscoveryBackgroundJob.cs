@@ -30,7 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             Logger.LogTrace("Discovering Azure Resource Groups...");
 
-            PagedResult<List<AzureResourceGroupInformation>> discoveredResourceGroups;
+            PagedPayload<AzureResourceGroupInformation> discoveredResourceGroups;
             do
             {
                 // Discover Azure subscriptions

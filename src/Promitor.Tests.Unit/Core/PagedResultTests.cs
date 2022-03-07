@@ -18,7 +18,7 @@ namespace Promitor.Tests.Unit.Core
             object result = new { foo = "bar"};
 
             // Act
-            var resource = new PagedResult<object>(result, totalRecords, currentPage, pageSize);
+            var resource = new PagedPayload<object>(result, totalRecords, currentPage, pageSize);
 
             // Assert
             Assert.False(resource.HasMore);
@@ -33,7 +33,7 @@ namespace Promitor.Tests.Unit.Core
             object result = new { foo = "bar" };
 
             // Act
-            var resource = new PagedResult<object>(result, totalRecords, currentPage, pageSize);
+            var resource = new PagedPayload<object>(result, totalRecords, currentPage, pageSize);
 
             // Assert
             Assert.True(resource.HasMore);

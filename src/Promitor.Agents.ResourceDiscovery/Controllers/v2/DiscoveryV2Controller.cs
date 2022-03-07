@@ -43,7 +43,7 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v2
         /// </summary>
         /// <remarks>Discovers Azure resources matching the criteria.</remarks>
         [HttpGet("{resourceDiscoveryGroup}/discover", Name = "DiscoveryV2_Get")]
-        [ProducesResponseType(typeof(PagedResult<List<AzureResourceDefinition>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedPayload<AzureResourceDefinition>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get(string resourceDiscoveryGroup, int pageSize = 1000, int currentPage = 1)
         {

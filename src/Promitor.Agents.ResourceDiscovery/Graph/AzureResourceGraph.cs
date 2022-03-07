@@ -58,22 +58,21 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
-        public async Task<PagedResult<JObject>> QueryAzureLandscapeAsync(string queryName, string query, int pageSize, int currentPage)
+        public async Task<PagedQueryResult> QueryAzureLandscapeAsync(string queryName, string query, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
             var queryResponse = await QueryAsync(queryName, query, pageSize, currentPage, targetSubscriptions: null);
-            return new PagedResult<JObject>(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
+            return new PagedQueryResult(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
         }
 
-        public async Task<PagedResult<JObject>> QueryTargetSubscriptionsAsync(string queryName, string query, int pageSize, int currentPage)
+        public async Task<PagedQueryResult> QueryTargetSubscriptionsAsync(string queryName, string query, int pageSize, int currentPage)
         {
             Guard.NotNullOrWhitespace(query, nameof(query));
 
             var queryResponse = await QueryAsync(queryName, query, pageSize, currentPage, Subscriptions);
-
-            // TODO: Introduce paging info along with the result so that we can enforce collection in PagedResult
-            return new PagedResult<JObject>(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
+            
+            return new PagedQueryResult(queryResponse.Data as JObject, queryResponse.TotalRecords, currentPage, pageSize);
         }
 
         public async Task<List<Resource>> QueryForResourcesAsync(string queryName, string query, List<string> targetSubscriptions, int pageSize, int currentPage)

@@ -1,15 +1,17 @@
-﻿namespace Promitor.Core.Contracts
+﻿using Newtonsoft.Json.Linq;
+
+namespace Promitor.Agents.ResourceDiscovery.Graph.Model
 {
-    public class PagedResult<TResult>
+    public class PagedQueryResult
     {
-        public TResult Result { get; set; }
+        public JObject Result { get; set; }
         public int PageSize { get; set; }
         public int CurrentPage { get; set; }
         public long TotalRecords { get; set; }
 
         public bool HasMore => (TotalRecords - (PageSize * CurrentPage)) > 0;
 
-        public PagedResult(TResult result, long totalRecords, int currentPage, int pageSize)
+        public PagedQueryResult(JObject result, long totalRecords, int currentPage, int pageSize)
         {
             Result = result;
             TotalRecords = totalRecords;

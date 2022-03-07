@@ -117,11 +117,12 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
                 var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName, currentPage: currentPage);
                 var resources = await AssertAndGetPagedResult(response);
                 Assert.NotNull(resources);
-                
+                Assert.NotNull(resources.PageInformation);
+
                 var delta = expectedTotalResourceCount - ((currentPage - 1) * pageSize);
                 var amountOfExpectedResults = delta > pageSize ? pageSize : delta;
                 Assert.Equal(amountOfExpectedResults, resources.Result.Count);
-                Assert.Equal(expectedTotalResourceCount, resources.TotalRecords);
+                Assert.Equal(expectedTotalResourceCount, resources.PageInformation.TotalRecords);
 
                 hasMore = resources.HasMore;
                 currentPage++;
@@ -134,21 +135,16 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 1018;
+            const int expectedTotalResources = 1018;
             const int pageSize = 500;
+            int expectedResourceCount = pageSize;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName, pageSize: pageSize);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(pageSize, resources.Result.Count);
-            Assert.Equal(expectedResourceCount, resources.TotalRecords);
+            await AssertV2PagedResult(response, expectedResourceCount, pageSize, expectedTotalResources);
         }
 
         [Fact]
@@ -163,12 +159,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -183,12 +174,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -203,12 +189,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -223,12 +204,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact (Skip = "We only have one Azure test subscription")]
@@ -243,12 +219,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -263,12 +234,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -283,12 +249,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -303,12 +264,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -323,12 +279,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -343,12 +294,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV2Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Result.Count);
+            await AssertV2PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -391,23 +337,16 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedResourceCount = 1018;
+            const int expectedTotalAmount = 1018;
             const int pageSize = 500;
+            var expectedResourceCount = pageSize;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName, pageSize: pageSize);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            var pageSizeInResponse = AssertAndGetHeaderValue("X-Paging-Page-Size", response);
-            var totalRecordsInResponse = AssertAndGetHeaderValue("X-Paging-Total", response);
-            Assert.Equal(pageSize, pageSizeInResponse);
-            Assert.Equal(expectedResourceCount, totalRecordsInResponse);
+            await AssertV1PagedResult(response, expectedResourceCount, pageSize, expectedTotalAmount);
         }
 
         [Fact]
@@ -422,12 +361,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -442,12 +376,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -462,12 +391,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -482,12 +406,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact(Skip = "We only have one Azure test subscription")]
@@ -502,12 +421,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -522,12 +436,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -542,12 +451,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -562,12 +466,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -582,12 +481,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            var rawResponseBody = await response.Content.ReadAsStringAsync();
-            Assert.NotEmpty(rawResponseBody);
-            var resources = DeserializeRawV1Response(rawResponseBody);
-            Assert.NotNull(resources);
-            Assert.Equal(expectedResourceCount, resources.Count);
+            await AssertV1PagedResult(response, expectedResourceCount);
         }
 
         [Fact]
@@ -602,12 +496,48 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             var response = await resourceDiscoveryClient.GetDiscoveredResourcesV1WithResponseAsync(resourceDiscoveryGroupName);
 
             // Assert
+            await AssertV1PagedResult(response, expectedResourceCount);
+        }
+
+        private async Task AssertV1PagedResult(HttpResponseMessage response, int expectedResourceCount, int? expectedPageSize = null, long? expectedTotalAmount = null)
+        {
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
             Assert.NotEmpty(rawResponseBody);
             var resources = DeserializeRawV1Response(rawResponseBody);
             Assert.NotNull(resources);
             Assert.Equal(expectedResourceCount, resources.Count);
+
+            if (expectedTotalAmount != null)
+            {
+                var totalRecordsInResponse = AssertAndGetHeaderValue("X-Paging-Total", response);
+                Assert.Equal(expectedTotalAmount, totalRecordsInResponse);
+            }
+            if (expectedPageSize != null)
+            {
+                var pageSizeInResponse = AssertAndGetHeaderValue("X-Paging-Page-Size", response);
+                Assert.Equal(expectedPageSize, pageSizeInResponse);
+            }
+        }
+
+        private async Task AssertV2PagedResult(HttpResponseMessage response, int expectedResourceCount, int? expectedPageSize = null, long? expectedTotalAmount = null)
+        {
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var rawResponseBody = await response.Content.ReadAsStringAsync();
+            Assert.NotEmpty(rawResponseBody);
+            var resources = DeserializeRawV2Response(rawResponseBody);
+            Assert.NotNull(resources);
+            Assert.NotNull(resources.PageInformation);
+            Assert.Equal(expectedResourceCount, resources.Result.Count);
+
+            if (expectedTotalAmount != null)
+            {
+                Assert.Equal(expectedTotalAmount, resources.PageInformation.TotalRecords);
+            }
+            if (expectedPageSize != null)
+            {
+                Assert.Equal(expectedPageSize, resources.PageInformation.PageSize);
+            }
         }
 
         private static int AssertAndGetHeaderValue(string headerName, HttpResponseMessage response)
@@ -619,7 +549,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             return pageSizeInResponse;
         }
 
-        private async Task<PagedResult<List<Resource>>> AssertAndGetPagedResult(HttpResponseMessage response)
+        private async Task<PagedPayload<Resource>> AssertAndGetPagedResult(HttpResponseMessage response)
         {
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var rawResponseBody = await response.Content.ReadAsStringAsync();
@@ -633,9 +563,9 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             return JsonConvert.DeserializeObject<List<Resource>>(rawResponseBody);
         }
 
-        private PagedResult<List<Resource>> DeserializeRawV2Response(string rawResponseBody)
+        private PagedPayload<Resource> DeserializeRawV2Response(string rawResponseBody)
         {
-            return JsonConvert.DeserializeObject<PagedResult<List<Resource>>>(rawResponseBody);
+            return JsonConvert.DeserializeObject<PagedPayload<Resource>>(rawResponseBody);
         }
     }
 }
