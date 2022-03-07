@@ -4,11 +4,9 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
-using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph
 {

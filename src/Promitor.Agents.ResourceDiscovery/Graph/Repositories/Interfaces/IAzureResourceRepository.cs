@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Core.Contracts;
 

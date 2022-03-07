@@ -18,7 +18,6 @@ using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers;
 using Promitor.Core;
-using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Integrations.Azure.Authentication;

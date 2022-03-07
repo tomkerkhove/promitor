@@ -9,7 +9,6 @@ using Promitor.Agents.ResourceDiscovery.Graph.Repositories;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Promitor.Core.Contracts;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
