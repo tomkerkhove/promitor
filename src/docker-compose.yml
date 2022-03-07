@@ -31,7 +31,6 @@ services:
     volumes:
       - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
       - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
-  
   # Infrastructure containers to test Promitor with
   reverse-proxy:
     image: traefik:v2.6
@@ -67,3 +66,32 @@ services:
    - ./../config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
    depends_on:
    - promitor.agents.scraper
+  graphite:
+   image: graphiteapp/graphite-statsd
+   container_name: graphite
+   restart: always
+   labels:
+   - "traefik.enable=false"
+   ports:
+     - 2000:80
+     - 2003:2003
+     - 2004:2004
+     - 2023:2023
+     - 2024:2024
+     - 8125:8125/udp
+     - 8126:8126
+  grafana:
+   image: grafana/grafana
+   container_name: grafana
+   links:
+     - prometheus
+     - graphite
+   labels:
+   - "traefik.enable=false"
+   ports:
+     - 3000:3000
+   volumes:
+     - ./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml
+     - ./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml
+     - ./../config/grafana/dashboard-config.json:/var/lib/grafana/dashboards/promitor.json
+     - ./../config/grafana/grafana.ini:/etc/grafana/grafana.ini
