@@ -6,6 +6,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
+using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
@@ -30,14 +31,19 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             Logger.LogTrace("Discovering Azure subscriptions...");
 
             // Discover Azure subscriptions
-            // TODO: Page through results
-            var discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: 0);
 
-            // Report discovered information as metric
-            foreach (var discoveredLandscapeItem in discoveredLandscape)
+            PagedResult<List<AzureSubscriptionInformation>> discoveredLandscape;
+            do
             {
-                ReportDiscoveredAzureInfo(discoveredLandscapeItem);
+                discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: 0);
+
+                // Report discovered information as metric
+                foreach (var discoveredLandscapeItem in discoveredLandscape.Result)
+                {
+                    ReportDiscoveredAzureInfo(discoveredLandscapeItem);
+                }
             }
+            while (discoveredLandscape.HasMore);
 
             Logger.LogTrace("Azure subscriptions discovered...");
         }

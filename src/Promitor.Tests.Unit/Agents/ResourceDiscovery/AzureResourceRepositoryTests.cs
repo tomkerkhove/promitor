@@ -40,10 +40,11 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             var expectedSubscriptions = GetAzureSubscriptions();
 
             // Act
-            var azureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync(1, 1);
+            var pagedAzureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync(1, 1);
 
             // Assert
-            Assert.NotStrictEqual(expectedSubscriptions, azureSubscriptions);
+            Assert.NotNull(pagedAzureSubscriptions);
+            Assert.NotStrictEqual(expectedSubscriptions, pagedAzureSubscriptions.Result);
             _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
         }
 
@@ -56,10 +57,11 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             var expectedResourceGroups = GetAzureResourceGroups();
 
             // Act
-            var azureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync(1, 100);
+            var pagedAzureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync(1, 100);
 
             // Assert
-            Assert.NotStrictEqual(expectedResourceGroups, azureResourceGroups);
+            Assert.NotNull(pagedAzureResourceGroups);
+            Assert.NotStrictEqual(expectedResourceGroups, pagedAzureResourceGroups.Result);
             _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
         }
 

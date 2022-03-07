@@ -6,6 +6,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
+using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
@@ -29,15 +30,19 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             Logger.LogTrace("Discovering Azure Resource Groups...");
 
-            // Discover Azure subscriptions
-            // TODO: Add paging
-            var discoveredResourceGroups = await AzureResourceRepository.DiscoverAzureResourceGroupsAsync(pageSize: 1000, currentPage: 0);
-
-            // Report discovered information as metric
-            foreach (var resourceGroupInformation in discoveredResourceGroups)
+            PagedResult<List<AzureResourceGroupInformation>> discoveredResourceGroups;
+            do
             {
-                ReportDiscoveredAzureInfo(resourceGroupInformation);
+                // Discover Azure subscriptions
+                discoveredResourceGroups = await AzureResourceRepository.DiscoverAzureResourceGroupsAsync(pageSize: 1000, currentPage: 0);
+
+                // Report discovered information as metric
+                foreach (var resourceGroupInformation in discoveredResourceGroups.Result)
+                {
+                    ReportDiscoveredAzureInfo(resourceGroupInformation);
+                }
             }
+            while (discoveredResourceGroups.HasMore);
 
             Logger.LogTrace("Azure Resource Groups discovered.");
         }

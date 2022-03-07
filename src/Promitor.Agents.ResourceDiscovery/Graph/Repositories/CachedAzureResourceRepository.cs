@@ -52,10 +52,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             return discoveredResources;
         }
 
-        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
+        public async Task<PagedResult<List<AzureSubscriptionInformation>>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
             var cacheKey = string.Format(AzureSubscriptionsCacheKey, pageSize, currentPage);
-            if (_memoryCache.TryGetValue(cacheKey, out List<AzureSubscriptionInformation> cachedAzureSubscriptions))
+            if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureSubscriptionInformation>> cachedAzureSubscriptions))
             {
                 return cachedAzureSubscriptions;
             }
@@ -66,10 +66,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             return discoveredAzureSubscriptions;
         }
 
-        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
+        public async Task<PagedResult<List<AzureResourceGroupInformation>>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
             var cacheKey = string.Format(AzureResourceGroupsCacheKey, pageSize, currentPage);
-            if (_memoryCache.TryGetValue(cacheKey, out List<AzureResourceGroupInformation> cachedAzureResourceGroups))
+            if (_memoryCache.TryGetValue(cacheKey, out PagedResult<List<AzureResourceGroupInformation>> cachedAzureResourceGroups))
             {
                 return cachedAzureResourceGroups;
             }
