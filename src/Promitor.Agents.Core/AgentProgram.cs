@@ -31,9 +31,9 @@ namespace Promitor.Agents.Core
                     {
                         webBuilder.ConfigureKestrel(kestrelServerOptions => kestrelServerOptions.AddServerHeader = false)
                             .UseUrls(httpEndpointUrl)
-                            .UseSerilog()
                             .UseStartup<TStartup>();
-                    });
+                    })
+                    .UseSerilog();
 
             return webHostBuilder;
         }

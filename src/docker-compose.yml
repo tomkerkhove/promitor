@@ -31,6 +31,7 @@ services:
     volumes:
       - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
       - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
+  # Infrastructure containers to test Promitor with
   reverse-proxy:
     image: traefik:v2.6
     container_name: traefik-reverse-proxy
