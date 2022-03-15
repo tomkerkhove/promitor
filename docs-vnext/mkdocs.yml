@@ -14,7 +14,7 @@ edit_uri: ""
 # Copyright
 copyright: Copyright &copy; 2016 - 2021 Promitor
 # Configuration
-docs_dir: docs-vnext
+docs_dir: docs
 theme:
   logo: media/logos/promitor-logo.svg
   name: "material"
