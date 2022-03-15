@@ -4,14 +4,22 @@ Contains all the documentation for the new [docs.promitor.io](https://docs.promi
 
 ## Running the documentation locally
 
-Install Python:
+- Install Python:
 
 ```shell
 ⚡ tkerkhove@tomkerkhove C:\promitor
 ❯  choco install python
 ```
 
-Serve the documentation:
+- Install dependencies
+
+```shell
+⚡ tkerkhove@tomkerkhove C:\promitor
+pip install -r requirements.txt
+```
+
+- Serve the documentation:
+
 ```shell
 ⚡ tkerkhove@tomkerkhove C:\promitor
 mkdocs serve
