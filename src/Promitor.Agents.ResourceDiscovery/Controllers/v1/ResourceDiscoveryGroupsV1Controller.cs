@@ -1,23 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GuardNet;
+﻿using GuardNet;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.ResourceDiscovery.Configuration;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
 {
     /// <summary>
     /// API endpoint to interact with resource discovery groups
     /// </summary>
     [ApiController]
     [Route("api/v1/resources/groups")]
-    public class ResourceDiscoveryGroupsController : ControllerBase
+    public class ResourceDiscoveryGroupsV1Controller : ControllerBase
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ResourceDiscoveryGroupsController" /> class.
+        ///     Initializes a new instance of the <see cref="ResourceDiscoveryGroupsV1Controller" /> class.
         /// </summary>
-        public ResourceDiscoveryGroupsController(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor)
+        public ResourceDiscoveryGroupsV1Controller(IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor)
         {
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
 

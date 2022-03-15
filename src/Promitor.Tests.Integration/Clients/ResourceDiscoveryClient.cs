@@ -19,17 +19,39 @@ namespace Promitor.Tests.Integration.Clients
             return await GetAsync("/api/v1/resources/groups");
         }
 
-        public async Task<HttpResponseMessage> GetDiscoveredResourcesWithResponseAsync(string resourceDiscoveryGroupName)
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesWithResponseAsync(string apiVersion, string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
         {
-            return await GetAsync($"/api/v1/resources/groups/{resourceDiscoveryGroupName}/discover");
+            return await GetAsync($"/api/{apiVersion}/resources/groups/{resourceDiscoveryGroupName}/discover?currentPage={currentPage}&pageSize={pageSize}");
         }
 
-        public async Task<List<AzureResourceDefinition>> GetDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesV1WithResponseAsync(string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
         {
-            var response = await GetDiscoveredResourcesWithResponseAsync(resourceDiscoveryGroupName);
-            var rawResponse = await response.Content.ReadAsStringAsync();
+            return await GetDiscoveredResourcesWithResponseAsync("v1", resourceDiscoveryGroupName, currentPage, pageSize);
+        }
 
-            return GetDeserializedResponse<List<AzureResourceDefinition>>(rawResponse);
+        public async Task<HttpResponseMessage> GetDiscoveredResourcesV2WithResponseAsync(string resourceDiscoveryGroupName, int currentPage = 1, int pageSize = 1000)
+        {
+            return await GetDiscoveredResourcesWithResponseAsync("v2", resourceDiscoveryGroupName, currentPage, pageSize);
+        }
+
+        public async Task<List<AzureResourceDefinition>> GetAllDiscoveredResourcesAsync(string resourceDiscoveryGroupName)
+        {
+            PagedPayload<AzureResourceDefinition> pagedPayload;
+            var results = new List<AzureResourceDefinition>();
+            var currentPage = 1;
+
+            do
+            {
+                var response = await GetDiscoveredResourcesV2WithResponseAsync(resourceDiscoveryGroupName, currentPage);
+                var rawResponse = await response.Content.ReadAsStringAsync();
+
+                pagedPayload = GetDeserializedResponse<PagedPayload<AzureResourceDefinition>>(rawResponse);
+                results.AddRange(pagedPayload.Result);
+                currentPage++;
+            }
+            while (pagedPayload.HasMore);
+
+            return results;
         }
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Promitor.Agents.ResourceDiscovery.Configuration;
-using Promitor.Agents.ResourceDiscovery.Controllers;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
@@ -22,7 +21,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DiscoveryController" /> class.
+        ///     Initializes a new instance of the <see cref="AzureResourceRepository" /> class.
         /// </summary>
         public AzureResourceRepository(IAzureResourceGraph azureResourceGraph, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, ILogger<AzureResourceRepository> logger)
         {
@@ -39,7 +38,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         ///     Get resources that are part of a given resource collection
         /// </summary>
         /// <param name="resourceDiscoveryGroupName">Name of the resource collection</param>
-        public virtual async Task<List<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName)
+        /// <param name="pageSize">The amount of results that are allowed per page</param>
+        /// <param name="currentPage">Current page that is being queried</param>
+        public virtual async Task<PagedPayload<AzureResourceDefinition>> GetResourcesAsync(string resourceDiscoveryGroupName, int pageSize, int currentPage)
         {
             var resourceDeclaration = _resourceDeclarationMonitor.CurrentValue;
             var resourceDiscoveryGroupDefinition = resourceDeclaration.ResourceDiscoveryGroups.SingleOrDefault(collection => collection.Name.Equals(resourceDiscoveryGroupName, StringComparison.InvariantCultureIgnoreCase));
@@ -55,29 +56,35 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             var query = resourceDiscovery.DefineQuery(resourceDiscoveryGroupDefinition.Criteria).Build();
 
             // 2. Run Query
-            var unparsedResults = await _azureResourceGraph.QueryTargetSubscriptionsAsync(resourceDiscoveryGroupName, query);
+            var unparsedResults = await _azureResourceGraph.QueryTargetSubscriptionsAsync(resourceDiscoveryGroupName, query, pageSize, currentPage);
 
             // 3. Parse query results into resource
-            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults);
+            var foundResources = resourceDiscovery.ParseQueryResults(unparsedResults.Result);
 
             var contextualInformation = new Dictionary<string, object>
             {
                 {"ResourceType",resourceDiscoveryGroupDefinition.Type},
                 {"CollectionName",resourceDiscoveryGroupName}
             };
-            _logger.LogMetric("Discovered Resources", foundResources.Count, contextualInformation);
+            
+            // Log a metric with amount of discovered resources
+            // But only if the current page is 1, or we'll emit it too much
+            if(currentPage == 1)
+            {
+                _logger.LogMetric("Discovered Resources", unparsedResults.TotalRecords, contextualInformation);
+            }
 
-            return foundResources;
+            return new PagedPayload<AzureResourceDefinition>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
-        public async Task<List<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync()
+        public async Task<PagedPayload<AzureSubscriptionInformation>> DiscoverAzureSubscriptionsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions""
 | project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
 
-            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query);
-            return ParseQueryResults(unparsedResults, row => new AzureSubscriptionInformation
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query, pageSize, currentPage);
+            var foundSubscriptionInformation = ParseQueryResults(unparsedResults.Result, row => new AzureSubscriptionInformation
             {
                 TenantId = row[0]?.ToString(),
                 Name = row[2]?.ToString(),
@@ -87,16 +94,18 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 QuotaId = row[5]?.ToString(),
                 AuthorizationSource = row[6]?.ToString()
             });
+
+            return new PagedPayload<AzureSubscriptionInformation>(foundSubscriptionInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
-        public async Task<List<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync()
+        public async Task<PagedPayload<AzureResourceGroupInformation>> DiscoverAzureResourceGroupsAsync(int pageSize, int currentPage)
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions/resourcegroups""
 | project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
 
-            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query);
-            return ParseQueryResults(unparsedResults, row => new AzureResourceGroupInformation
+            var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query, pageSize, currentPage);
+            var foundResourceGroupInformation = ParseQueryResults(unparsedResults.Result, row => new AzureResourceGroupInformation
             {
                 TenantId = row[0]?.ToString(),
                 SubscriptionId = row[1]?.ToString(),
@@ -105,6 +114,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
                 ProvisioningState = row[4]?.ToString(),
                 ManagedBy = row[5]?.ToString()
             });
+
+            return new PagedPayload<AzureResourceGroupInformation>(foundResourceGroupInformation, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
         }
 
         private List<TInfo> ParseQueryResults<TInfo>(JObject unparsedResults, Func<JToken, TInfo> parseResult)

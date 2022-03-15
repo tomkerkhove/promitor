@@ -4,10 +4,10 @@ using Promitor.Agents.Core.Contracts;
 using Promitor.Core;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Promitor.Agents.ResourceDiscovery.Controllers
+namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
 {
     [Route("api/v1/system")]
-    public class SystemController : Controller
+    public class SystemV1Controller : Controller
     {
         /// <summary>
         ///     Get System Info

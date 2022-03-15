@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
@@ -39,7 +39,7 @@
     <PackageReference Include="Fastenshtein" Version="1.0.0.8" />
     <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.1.20200127.214830" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="Moq" Version="4.17.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
   </ItemGroup>
