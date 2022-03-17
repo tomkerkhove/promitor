@@ -22,7 +22,7 @@
   "homepage": "https://github.com/tomkerkhove/promitor#readme",
   "devDependencies": {
     "husky": "7.0.4",
-    "lint-staged": "12.3.6",
+    "lint-staged": "12.3.7",
     "markdownlint-cli": "0.31.1"
   },
   "lint-staged": {
