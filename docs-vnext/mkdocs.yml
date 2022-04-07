@@ -129,3 +129,6 @@ nav:
     - Using Managed Identity with Promitor on an AKS Cluster: walkthroughs/use-promitor-with-managed-identity.md
     - Migrate from Promitor Scraper 1.x to 2.x: walkthroughs/migrate-from-1.x-to-2.x.md
   - FAQ: faq.md
+
+# Tweaks
+strict: true
