@@ -3,7 +3,7 @@
 **Promitor** is an Azure Monitor scraper which makes the metrics available
 to a variety of metric systems such as Atlassian Statuspage, Prometheus and StatsD.
 
-![Promitor](./../media/concepts/high-level.png){: .center}
+![Promitor](media/concepts/high-level.png){: .center}
 
 ## Scraping Azure Monitor metrics
 
@@ -14,7 +14,7 @@ By writing a metric declaration, you will define what Azure Monitor metrics to s
 
 Here's an overview of how it works:
 
-![Promitor Scraper without resource discovery](./../media/concepts/how-it-works-without-discovery.png){: .center}
+![Promitor Scraper without resource discovery](media/concepts/how-it-works-without-discovery.png){: .center}
 
 ## Using resource discovery
 
@@ -33,7 +33,7 @@ Behind the scenes, Promitor Resource Discovery integrates with **Azure Resource 
 
 Here's an overview of how they work together:
 
-![Promitor Scraper with resource discovery](./../media/concepts/how-it-works-with-discovery.png){: .center}
+![Promitor Scraper with resource discovery](media/concepts/how-it-works-with-discovery.png){: .center}
 
 You can easily start discovering resources automatically:
 
@@ -49,7 +49,7 @@ Every Promitor agent provides a REST API which which you can integrate and uses 
 
 Here's a detailed overview:
 
-![Agent internals](./../media/concepts/agent-internals.png){: .center}
+![Agent internals](media/concepts/agent-internals.png){: .center}
 
 _(*) Resources are still discovered synchronously but this will be implemented in Promitor Resource Discovery v0.2._
 
