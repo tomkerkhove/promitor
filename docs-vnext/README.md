@@ -1,6 +1,6 @@
 # Documentation for Promitor
 
-Contains all the documentation for the new [docs.promitor.io](https://docs.promitor.io)
+Contains all the documentation for the new docs.promitor.io which is available in alpha on [docs-v2.promitor.io](https://docs-v2.promitor.io)
 
 ## Running the documentation locally
 
