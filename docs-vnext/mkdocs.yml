@@ -109,8 +109,6 @@ nav:
       - deployment/resource-discovery/index.md
       - Docker: deployment/resource-discovery/docker.md
       - Kubernetes: deployment/resource-discovery/kubernetes.md
-    - Image Tagging Strategy: test.md
-    - Migrate to our new Helm chart registry: test.md
   - Configuration:
     - scraper: configuration/v2.x/runtime/scraper.md
     - resource-discovery: configuration/v2.x/runtime/resource-discovery.md
