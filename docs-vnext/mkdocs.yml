@@ -1,0 +1,132 @@
+# Project information
+site_name: Promitor Docs
+site_url: https://promitor.io
+site_author: Tom Kerkhove
+site_description: >-
+  Bringing Azure Monitor metrics
+  where you need them
+
+# Repository
+repo_name: tomkerkhove/promitor
+repo_url: https://github.com/tomkerkhove/promitor
+edit_uri: ""
+
+# Copyright
+copyright: Copyright &copy; 2016 - 2021 Promitor
+# Configuration
+docs_dir: docs
+theme:
+  logo: media/logos/promitor-logo.svg
+  name: "material"
+
+  # Static files
+  static_templates:
+    - 404.html
+
+  # Don't include MkDocs' JavaScript
+  include_search_page: false
+  search_index_only: true
+
+  # Default values, taken from mkdocs_theme.yml
+  language: en
+  features:
+    - content.code.annotate
+    # - content.tabs.link
+    # - header.autohide
+    # - navigation.expand
+    - navigation.indexes
+    # - navigation.instant
+    - navigation.sections
+    # - navigation.tabs.sticky
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    # - toc.integrate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  favicon: assets/favicon.png
+  icon:
+    logo: logo
+
+# Plugins
+
+
+# Customization
+extra:
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tomkerkhove/promitor
+extra_css:
+- stylesheets/extra.css
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list # enables HTML elements
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Page tree
+nav:
+  - Home: index.md
+  - How It Works: how-it-works.md
+  - Metrics:
+    - General Declaration: metrics/general-declaration.md
+    - Supported Providers: metrics/supported-providers.md
+    - What labels do we provide: metrics/labels.md
+  - Deployment:
+    - Overview: deployment/index.md
+    - Scraper: 
+      - deployment/scraper/index.md
+      - Docker: deployment/scraper/docker.md
+      - Kubernetes: deployment/scraper/kubernetes.md
+    - Resource Discovery:
+      - deployment/resource-discovery/index.md
+      - Docker: deployment/resource-discovery/docker.md
+      - Kubernetes: deployment/resource-discovery/kubernetes.md
+  - Configuration:
+    - scraper: configuration/v2.x/runtime/scraper.md
+    - resource-discovery: configuration/v2.x/runtime/resource-discovery.md
+  - Security:
+    - Authentication with Microsoft Azure: security/azure-authentication.md
+  - Operations:
+    - operations/index.md
+    - Health: operations/health.md
+    - Discovery: operations/discovery.md
+    - Performance: operations/performance.md
+    - System: operations/system.md
+    - Integrations: operations/integrations.md
+    # - Configuration REST APIs: not found
+  - Walkthroughs:
+    - Deploying Promitor, Prometheus, and Grafana on an AKS Cluster: walkthroughs/scrape-promitor-with-prometheus-on-azure-kubernetes-service.md
+    - Using Managed Identity with Promitor on an AKS Cluster: walkthroughs/use-promitor-with-managed-identity.md
+    - Migrate from Promitor Scraper 1.x to 2.x: walkthroughs/migrate-from-1.x-to-2.x.md
+  - FAQ: faq.md
+
+# Tweaks
+strict: true
