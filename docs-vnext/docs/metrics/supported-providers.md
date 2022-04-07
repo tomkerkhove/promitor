@@ -5,7 +5,7 @@ service supported by Azure Monitor.
 
 We also provide a simplified way to scrape the following Azure resources:
 
-- [Azure API Management](..\configuration\metrics\testerino.md)
+- [Azure API Management](api-management)
 - [Azure Application Gateway](application-gateway)
 - [Azure Application Insights](application-insights)
 - [Azure App Plan](app-plan)
