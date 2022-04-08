@@ -12,7 +12,7 @@ repo_url: https://github.com/tomkerkhove/promitor
 edit_uri: ""
 
 # Copyright
-copyright: Copyright &copy; 2016 - 2021 Promitor
+copyright: Copyright &copy; 2018 - 2021 Tom Kerkhove
 # Configuration
 docs_dir: docs
 theme:
@@ -73,8 +73,18 @@ extra:
     provider: google
     property: G-Q2ZZ6S7ZPW
   social:
+    - icon: fontawesome/brands/docker
+      link: https://github.com/tomkerkhove?tab=packages&repo_name=promitor
+      name: Container Registry
     - icon: fontawesome/brands/github
       link: https://github.com/tomkerkhove/promitor
+      name: GitHub
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/promitorio
+      name: Follow us on Twitter
+  # Remove generated link to theme as we are sponsoring
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
+  generator: false
 extra_css:
 - stylesheets/extra.css
 
