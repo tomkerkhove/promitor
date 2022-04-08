@@ -1,5 +1,5 @@
 # Project information
-site_name: Promitor Docs
+site_name: Promitor - Documentation
 site_url: https://promitor.io
 site_author: Tom Kerkhove
 site_description: >-
@@ -9,10 +9,10 @@ site_description: >-
 # Repository
 repo_name: tomkerkhove/promitor
 repo_url: https://github.com/tomkerkhove/promitor
-edit_uri: ""
+edit_uri: "edit/master/docs-vnext/docs/"
 
 # Copyright
-copyright: Copyright &copy; 2016 - 2021 Promitor
+copyright: Copyright &copy; 2018 - 2021 Tom Kerkhove
 # Configuration
 docs_dir: docs
 theme:
@@ -30,33 +30,31 @@ theme:
   # Default values, taken from mkdocs_theme.yml
   language: en
   features:
-    - content.code.annotate
-    # - content.tabs.link
-    # - header.autohide
-    # - navigation.expand
+    - navigation.expand
     - navigation.indexes
-    # - navigation.instant
     - navigation.sections
-    # - navigation.tabs.sticky
+    - navigation.tabs.sticky
     - navigation.tabs
     - navigation.top
     - navigation.tracking
+    - toc.follow
+    - content.code.annotate
+    - content.tabs.link
     - search.highlight
     - search.share
     - search.suggest
-    # - toc.integrate
   palette:
     - scheme: default
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/lightbulb-outline
         name: Switch to dark mode
     - scheme: slate
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/toggle-switch
+        icon: material/lightbulb
         name: Switch to light mode
   font:
     text: Roboto
@@ -67,15 +65,27 @@ theme:
 
 # Plugins
 
-
 # Customization
 extra:
   analytics:
     provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
+    property: G-Q2ZZ6S7ZPW
   social:
+    - icon: fontawesome/brands/docker
+      link: https://github.com/tomkerkhove?tab=packages&repo_name=promitor
+      name: Container Registry
     - icon: fontawesome/brands/github
       link: https://github.com/tomkerkhove/promitor
+      name: GitHub
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/promitorio
+      name: Follow us on Twitter
+    - icon: fontawesome/solid/heart
+      link: https://github.com/sponsors/promitor
+      name: Sponsor Promitor
+  # Remove generated link to theme as we are sponsoring
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
+  generator: false
 extra_css:
 - stylesheets/extra.css
 
@@ -88,6 +98,9 @@ markdown_extensions:
   - footnotes
   - meta
   - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
   - toc:
       permalink: true
 

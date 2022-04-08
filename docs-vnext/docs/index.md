@@ -53,6 +53,8 @@ support. Are you having issues or feature requests?
 
 Feel free to [let us know](https://github.com/tomkerkhove/promitor/issues/new/choose)!
 
+[Support Promitor :fontawesome-solid-heart:](https://github.com/sponsors/promitor){ .md-button }
+
 ## End-users
 
 We are proud to have the following end-users(s) running Promitor in production:
