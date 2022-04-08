@@ -80,6 +80,9 @@ extra:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/promitorio
       name: Follow us on Twitter
+    - icon: fontawesome/solid/heart
+      link: https://github.com/sponsors/promitor
+      name: Sponsor Promitor
   # Remove generated link to theme as we are sponsoring
   # https://squidfunk.github.io/mkdocs-material/setup/setting-up-the-footer/#generator-notice
   generator: false
