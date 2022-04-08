@@ -1,5 +1,5 @@
 # Project information
-site_name: Promitor Docs
+site_name: Promitor - Documentation
 site_url: https://promitor.io
 site_author: Tom Kerkhove
 site_description: >-
@@ -67,12 +67,11 @@ theme:
 
 # Plugins
 
-
 # Customization
 extra:
   analytics:
     provider: google
-    property: !ENV GOOGLE_ANALYTICS_KEY
+    property: G-Q2ZZ6S7ZPW
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/tomkerkhove/promitor
