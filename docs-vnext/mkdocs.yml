@@ -9,7 +9,7 @@ site_description: >-
 # Repository
 repo_name: tomkerkhove/promitor
 repo_url: https://github.com/tomkerkhove/promitor
-edit_uri: ""
+edit_uri: "edit/master/docs-vnext/docs/"
 
 # Copyright
 copyright: Copyright &copy; 2018 - 2021 Tom Kerkhove
