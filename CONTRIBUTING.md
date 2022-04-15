@@ -16,9 +16,7 @@ The promitor repository is made up of a number of different directories:
 - `/config` - contains the configuration to run Promitor locally or in the CI
 - `/deploy` - contains the automation that is being used to manage Promitor, such
   as the automated updates concerning new Docker images in a pull request.
-- `/docs` - contains the source code (mainly markdown files) for building the
-  <https://promitor.io>.
-- `/media` - contains all media such as images and sources of schematics used in the docs
+- `/media` - contains all media such as images and sources of schematics
 - `/src` - contains the .NET source code for the Promitor application.
 
 ## Local Landscape
@@ -40,10 +38,12 @@ The code for Promitor's Helm chart can be found on [promitor/charts](https://git
 
 ## Documentation
 
-The documentation for Promitor is stored in `/docs`. When adding new functionality
-to Promitor or modifying existing functionality, please add associated documentation.
+The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/legacy-docs](https://github.com/promitor/legacy-docs).
+
+When adding new functionality to Promitor or modifying existing functionality, please add associated documentation.
+
 Information about how to build and run the documentation locally can be found in
-the [README](docs/README.md) for the documentation.
+the [contribution guide]([docs/README.md](https://github.com/promitor/legacy-docs/blob/main/CONTRIBUTING.md)) for the documentation.
 
 Every PR will automatically build and deploy a preview version of the documentation for you.
 
