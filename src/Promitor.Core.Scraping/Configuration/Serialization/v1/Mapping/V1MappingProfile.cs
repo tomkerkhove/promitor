@@ -49,8 +49,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
+            CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
+            CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
+            CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
@@ -101,6 +104,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
+                .Include<MySqlResourceV1, MySqlResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()

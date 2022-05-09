@@ -99,6 +99,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.MonitorAutoscale:
                     var monitorAutoscaleLogger = _loggerFactory.CreateLogger<MonitorAutoscaleDeserializer>();
                     return new MonitorAutoscaleDeserializer(monitorAutoscaleLogger);
+                case ResourceType.MySql:
+                    var mySqlLogger = _loggerFactory.CreateLogger<MySqlDeserializer>();
+                    return new MySqlDeserializer(mySqlLogger);
                 case ResourceType.NetworkGateway:
                     var networkGatewayLogger = _loggerFactory.CreateLogger<NetworkGatewayDeserializer>();
                     return new NetworkGatewayDeserializer(networkGatewayLogger);
@@ -156,6 +159,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.WebApp:
                     var webAppLogger = _loggerFactory.CreateLogger<WebAppDeserializer>();
                     return new WebAppDeserializer(webAppLogger);
+                    
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }
