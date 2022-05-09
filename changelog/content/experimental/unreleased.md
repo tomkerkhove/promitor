@@ -6,8 +6,10 @@ version:
 
 #### Scraper
 
-None at the moment.
+- {{% tag added %}} Provide scraper for Azure Database for MySQL Servers  ([docs](https://docs.promitor.io/v2.x/scraping/providers/mysql/)
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/324))
 
 #### Resource Discovery
 
-None at the moment.
+- {{% tag added %}} Provide scraper for Azure Database for MySQL Servers ([docs](https://docs.promitor.io/v2.x/scraping/providers/mysql/
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/324))
