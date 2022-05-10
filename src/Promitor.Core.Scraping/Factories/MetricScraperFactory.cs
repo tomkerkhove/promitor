@@ -87,7 +87,7 @@ namespace Promitor.Core.Scraping.Factories
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.MySql:
-                    return new MonitorAutoscaleScraper(scraperConfiguration);
+                    return new MySqlScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
