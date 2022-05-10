@@ -1,8 +1,0 @@
-repository: tomkerkhove/promitor
-theme: jekyll-theme-cayman
-title: Promitor
-description: Bringing Azure Monitor metrics where you need them.
-google_analytics: "UA-117259584-1"
-plugins:
-  - jekyll-redirect-from
-  - jemoji

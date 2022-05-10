@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Guard.NET" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.0" />
+    <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.1" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.5" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />

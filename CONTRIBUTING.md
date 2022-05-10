@@ -38,7 +38,12 @@ The code for Promitor's Helm chart can be found on [promitor/charts](https://git
 
 ## Documentation
 
-The documentation for Promitor is managed in [promitor/docs](https://github.com/promitor/docs).
+The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/docs](https://github.com/promitor/docs).
+
+When adding new functionality to Promitor or modifying existing functionality, please add associated documentation.
+
+Information about how to build and run the documentation locally can be found in
+the [contribution guide]([docs/README.md](https://github.com/promitor/docs/blob/main/CONTRIBUTING.md)) for the documentation.
 
 Every PR will automatically build and deploy a preview version of the documentation for you.
 
