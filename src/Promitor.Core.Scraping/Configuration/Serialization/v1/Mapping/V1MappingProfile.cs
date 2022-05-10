@@ -50,7 +50,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
-            CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();

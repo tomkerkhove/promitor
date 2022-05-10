@@ -4,7 +4,6 @@ using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces;
 using Promitor.Core.Contracts.ResourceTypes;
-using Promitor.Core.Contracts.ResourceTypes.Enums;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
