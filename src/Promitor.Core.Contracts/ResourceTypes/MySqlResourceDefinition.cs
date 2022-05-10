@@ -5,7 +5,7 @@ namespace Promitor.Core.Contracts.ResourceTypes
     public class MySqlResourceDefinition : AzureResourceDefinition
     {
         public MySqlResourceDefinition(string subscriptionId, string resourceGroupName, string serverName, MySqlServerType type)
-            : base(ResourceType.PostgreSql, subscriptionId, resourceGroupName, $"{serverName}-{type}")
+            : base(ResourceType.MySql, subscriptionId, resourceGroupName, $"{serverName}-{type}")
         {
             ServerName = serverName;
             Type = type;
