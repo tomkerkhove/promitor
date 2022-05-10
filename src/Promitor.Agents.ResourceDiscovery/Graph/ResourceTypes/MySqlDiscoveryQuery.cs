@@ -9,7 +9,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
     public class MySqlResourceDiscoveryQuery : ResourceDiscoveryQuery
     {
         private const string SingleServerResourceType = "microsoft.dbformysql/servers";
-        private const string FlexibleServerResourceType = "microsoft.dbformysql/flexibleServers";
+        private const string FlexibleServerResourceType = "microsoft.dbformysql/flexibleservers";
 
         public override string[] ResourceTypes => new[] { SingleServerResourceType, FlexibleServerResourceType };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "type", "name" };
@@ -21,6 +21,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
             MySqlServerType serverType = MySqlServerType.Single;
 
             var resourceType = resultRowEntry[2]?.ToString();
+
             switch (resourceType?.ToLower())
             {
                 case SingleServerResourceType:
