@@ -43,7 +43,7 @@ namespace Promitor.Tests.Integration.Data
                 {
                     foreach (var discoveryGroup in configuredMetric.ResourceDiscoveryGroups)
                     {
-                        var discoveredResources = _resourceDiscoveryClient.GetDiscoveredResourcesAsync(discoveryGroup.Name).Result;
+                        var discoveredResources = _resourceDiscoveryClient.GetAllDiscoveredResourcesAsync(discoveryGroup.Name).Result;
                         if (discoveredResources?.Any() != true)
                         {
                             resourceFound = false;

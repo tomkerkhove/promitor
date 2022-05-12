@@ -8,6 +8,11 @@ services:
       dockerfile: Promitor.Agents.ResourceDiscovery/Dockerfile.linux
       args:
         VERSION: 0.1.2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.discovery.rule=PathPrefix(`/agents/discovery/`)"
+      - "traefik.http.middlewares.discovery.stripprefix.prefixes=/agents/discovery"
+      - "traefik.http.routers.discovery.middlewares=discovery"
     volumes:
       - ./../config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml
       - ./../config/promitor/resource-discovery/runtime.yaml:/config/runtime.yaml
@@ -18,8 +23,11 @@ services:
       dockerfile: Promitor.Agents.Scraper/Dockerfile.linux
       args:
         VERSION: 0.1.2
-    links:
-      - graphite
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.scraper.rule=PathPrefix(`/agents/scraper/`)"
+      - "traefik.http.middlewares.scraper.stripprefix.prefixes=/agents/scraper"
+      - "traefik.http.routers.scraper.middlewares=scraper"
     volumes:
       - ./../config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml
       - ./../config/promitor/scraper/runtime.yaml:/config/runtime.yaml
@@ -35,39 +43,67 @@ services:
       - "4317:4317"   # OTLP gRPC receiver
     depends_on:
       - promitor.agents.scraper
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-    - 9090:9090
+  # Infrastructure containers to test Promitor with
+  reverse-proxy:
+    image: traefik:v2.7
+    container_name: traefik-reverse-proxy
     command:
-    - --config.file=/etc/prometheus/prometheus.yml
+      - --providers.docker
+      - --api.insecure=true
+      - --metrics=true
+      - --metrics.prometheus=true
+      - --metrics.prometheus.addEntryPointsLabels=true
+      - --metrics.prometheus.addRoutersLabels=true
+      - --metrics.prometheus.addServicesLabels=true
+    ports:
+      # The HTTP port for requests
+      - "999:80"
+      # The Web UI / Management APIs (enabled by --api.insecure=true)
+      - "998:8080"
     volumes:
-    - ./../config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-    - promitor.agents.scraper
+      - /var/run/docker.sock:/var/run/docker.sock
+  prometheus:
+   image: prom/prometheus:latest
+   container_name: prometheus
+   ports:
+   - 9090:9090
+   command:
+   - --config.file=/etc/prometheus/prometheus.yml
+   labels:
+   - "traefik.enable=false"
+   - "traefik.http.routers.prometheus.rule=PathPrefix(`/metrics/`)"
+   - "traefik.http.middlewares.prometheus.stripprefix.prefixes=/metrics"
+   - "traefik.http.routers.prometheus.middlewares=prometheus"
+   volumes:
+   - ./../config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+   depends_on:
+   - promitor.agents.scraper
   graphite:
-    image: graphiteapp/graphite-statsd
-    container_name: graphite
-    restart: always
-    ports:
-      - 2000:80
-      - 2003:2003
-      - 2004:2004
-      - 2023:2023
-      - 2024:2024
-      - 8125:8125/udp
-      - 8126:8126
+   image: graphiteapp/graphite-statsd
+   container_name: graphite
+   restart: always
+   labels:
+   - "traefik.enable=false"
+   ports:
+     - 2000:80
+     - 2003:2003
+     - 2004:2004
+     - 2023:2023
+     - 2024:2024
+     - 8125:8125/udp
+     - 8126:8126
   grafana:
-    image: grafana/grafana
-    container_name: grafana
-    links:
-      - prometheus
-      - graphite
-    ports:
-      - 3000:3000
-    volumes:
-      - ./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml
-      - ./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml
-      - ./../config/grafana/dashboard-config.json:/var/lib/grafana/dashboards/promitor.json
-      - ./../config/grafana/grafana.ini:/etc/grafana/grafana.ini
+   image: grafana/grafana
+   container_name: grafana
+   links:
+     - prometheus
+     - graphite
+   labels:
+   - "traefik.enable=false"
+   ports:
+     - 3000:3000
+   volumes:
+     - ./../config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/promitor.yml
+     - ./../config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/promitor.yml
+     - ./../config/grafana/dashboard-config.json:/var/lib/grafana/dashboards/promitor.json
+     - ./../config/grafana/grafana.ini:/etc/grafana/grafana.ini

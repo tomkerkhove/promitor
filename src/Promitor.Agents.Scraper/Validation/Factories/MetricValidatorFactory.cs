@@ -23,6 +23,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new AutomationAccountMetricValidator();
                 case ResourceType.BlobStorage:
                     return new BlobStorageMetricValidator();
+                case ResourceType.Cdn:
+                    return new CdnMetricValidator();
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceMetricValidator();
                 case ResourceType.ContainerRegistry:
@@ -53,8 +55,12 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KeyVaultMetricValidator();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceMetricValidator();
+                case ResourceType.LoadBalancer:
+                    return new LoadBalancerMetricValidator();
                 case ResourceType.LogicApp:
                     return new LogicAppMetricValidator();
+                case ResourceType.MariaDb:
+                    return new MariaDbMetricValidator();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleMetricValidator();
                 case ResourceType.NetworkGateway:
@@ -65,6 +71,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new PostgreSqlMetricValidator();
                 case ResourceType.RedisCache:
                     return new RedisCacheMetricValidator();
+                case ResourceType.RedisEnterpriseCache:
+                    return new RedisEnterpriseCacheMetricValidator();
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceMetricValidator();
                 case ResourceType.SqlDatabase:
@@ -87,6 +95,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new SynapseWorkspaceMetricValidator();
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetMetricValidator();
+                case ResourceType.VirtualNetwork:
+                    return new VirtualNetworkMetricValidator();
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineMetricValidator();
                 case ResourceType.WebApp:

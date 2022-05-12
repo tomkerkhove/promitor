@@ -29,6 +29,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
             CreateMap<AutomationAccountResourceV1, AutomationAccountResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
+            CreateMap<CdnResourceV1, CdnResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
             CreateMap<DataFactoryResourceV1, DataFactoryResourceDefinition>();
@@ -44,12 +45,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
+            CreateMap<LoadBalancerResourceV1, LoadBalancerResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
+            CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
+            CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>();
@@ -60,6 +64,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>();
             CreateMap<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>();
             CreateMap<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>();
+            CreateMap<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
             CreateMap<WebAppResourceV1, WebAppResourceDefinition>();
@@ -78,6 +83,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
+                .Include<CdnResourceV1, CdnResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
                 .Include<DataFactoryResourceV1, DataFactoryResourceDefinition>()
                 .Include<DataShareResourceV1, DataShareResourceDefinition>()
@@ -91,12 +97,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
+                .Include<LoadBalancerResourceV1, LoadBalancerResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
+                .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
+                .Include<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>()
                 .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
                 .Include<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>()
@@ -107,6 +116,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>()
                 .Include<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>()
                 .Include<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>()
+                .Include<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
                 .Include<WebAppResourceV1, WebAppResourceDefinition>();

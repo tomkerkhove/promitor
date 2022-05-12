@@ -35,15 +35,16 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureSubscriptionsAsync.json");
-            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>())).ReturnsAsync(testData);
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedQueryResult(testData, 100, 1, 100));
             var expectedSubscriptions = GetAzureSubscriptions();
 
             // Act
-            var azureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync();
+            var pagedAzureSubscriptions = await _azureResourceRepository.DiscoverAzureSubscriptionsAsync(1, 1);
 
             // Assert
-            Assert.NotStrictEqual(expectedSubscriptions, azureSubscriptions);
-            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>()), Times.Once);
+            Assert.NotNull(pagedAzureSubscriptions);
+            Assert.NotStrictEqual(expectedSubscriptions, pagedAzureSubscriptions.Result);
+            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Subscriptions", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
         }
 
         [Fact]
@@ -51,15 +52,16 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         {
             // Arrange
             var testData = ReadTestData("DiscoverAzureResourceGroupsAsync.json");
-            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>())).ReturnsAsync(testData);
+            _azureResourceGraph.Setup(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new PagedQueryResult(testData, 100, 1, 100));
             var expectedResourceGroups = GetAzureResourceGroups();
 
             // Act
-            var azureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync();
+            var pagedAzureResourceGroups = await _azureResourceRepository.DiscoverAzureResourceGroupsAsync(1, 100);
 
             // Assert
-            Assert.NotStrictEqual(expectedResourceGroups, azureResourceGroups);
-            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>()), Times.Once);
+            Assert.NotNull(pagedAzureResourceGroups);
+            Assert.NotStrictEqual(expectedResourceGroups, pagedAzureResourceGroups.Result);
+            _azureResourceGraph.Verify(m => m.QueryAzureLandscapeAsync("Discover Azure Resource Groups", It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once);
         }
 
         /// <summary>

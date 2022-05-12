@@ -1,5 +1,8 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Prometheus.Client.AspNetCore;
 using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Core.Middleware;
@@ -58,7 +61,11 @@ namespace Microsoft.AspNetCore.Builder
         {
             if (openApiConfigurationAction == null)
             {
-                openApiConfigurationAction = setupAction => setupAction.RouteTemplate = "api/{documentName}/docs.json";
+                openApiConfigurationAction = setupAction =>
+                {
+                    setupAction.RouteTemplate = "api/{documentName}/docs.json";
+                    setupAction.PreSerializeFilters.Add((swagger, request) => AutomaticallyBuildApiServerUrl(request, swagger));
+                };
             }
 
             if (openApiUiConfigurationAction == null)
@@ -67,7 +74,7 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     swaggerUiOptions.ConfigureDefaultOptions(apiName);
                     swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
-                    swaggerUiOptions.RoutePrefix = "api/docs";
+                    swaggerUiOptions.RoutePrefix = "api/docs";                    
                 };
             }
 
@@ -76,6 +83,34 @@ namespace Microsoft.AspNetCore.Builder
             app.UseSwaggerUI(openApiUiConfigurationAction);
 
             return app;
+        }
+
+        private static void AutomaticallyBuildApiServerUrl(HttpRequest request, OpenApiDocument swagger)
+        {
+            // Default to simple scenario
+            string serverUrl = $"{request.Scheme}://{request.Host}";
+
+            // If request forwarding is used, we need to see if we need to adapt
+            // Here we need to use the host and prefix, when specified
+            // This is required when using reverse proxies such as Azure API Management, Traefik, NGINX, etc.
+            if (request.Headers.ContainsKey("X-Forwarded-Host"))
+            {
+                var urlPrefix = string.Empty;
+                var prefixFromHeaders = request.Headers["X-Forwarded-Prefix"];
+
+                if (string.IsNullOrWhiteSpace(prefixFromHeaders) == false)
+                {
+                    urlPrefix = prefixFromHeaders;
+                    if (urlPrefix.StartsWith("/") == false)
+                    {
+                        urlPrefix = $"/{urlPrefix}";
+                    }
+                }
+
+                serverUrl = $"{request.Scheme}://{request.Headers["X-Forwarded-Host"]}{urlPrefix}";
+            }
+
+            swagger.Servers = new List<OpenApiServer> {new OpenApiServer {Url = serverUrl}};
         }
     }
 }

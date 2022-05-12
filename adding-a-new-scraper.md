@@ -105,6 +105,8 @@ Our testing infrastructure will pick up the new metric automatically and ensure 
 Features are great to have but without clear & well-written documentation they are
 somewhat useless.
 
+The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/legacy-docs](https://github.com/promitor/legacy-docs).
+
 Please provide documentation on the following:
 
 1. What Azure service it supports and how to use it.
