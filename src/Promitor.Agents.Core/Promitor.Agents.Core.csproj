@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RuntimeFrameworkVersion>6.0.4</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.5</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,7 +21,7 @@
     <PackageReference Include="CronScheduler.AspNetCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="2.2.0" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="4.6.0" />
     <PackageReference Include="Prometheus.Client.DependencyInjection" Version="0.4.0" />
