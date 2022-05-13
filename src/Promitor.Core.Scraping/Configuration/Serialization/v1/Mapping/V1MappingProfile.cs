@@ -53,7 +53,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
-            CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
