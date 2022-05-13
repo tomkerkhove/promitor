@@ -52,7 +52,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                 }
 
                 var metricsDeclaration = _metricsDeclarationProvider.Get(true);
-                
+
+                if (atlassianStatuspageConfiguration.SystemMetricMapping == null)
+                {
+                    return errorMessages.Any() ? ValidationResult.Failure(ComponentName, errorMessages) : ValidationResult.Successful(ComponentName);
+                }
+
                 foreach (var systemMetric in atlassianStatuspageConfiguration.SystemMetricMapping)
                 {
                     if (string.IsNullOrWhiteSpace(systemMetric.Id))
