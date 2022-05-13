@@ -1,5 +1,5 @@
 server:
-  httpPort: 8888
+  httpPort: 88
 authentication:
   mode: ServicePrincipal
   identityId: bcb00b1d-7cde-4d05-b0fc-23a287697fa2
