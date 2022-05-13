@@ -2,8 +2,7 @@ server:
   httpPort: 8888
 authentication:
   mode: ServicePrincipal
-  #identityId: bcb00b1d-7cde-4d05-b0fc-23a287697fa2
-  tenantId: 101c04b6-b2b2-49ad-9a7b-9fffdc4958d8
+  identityId: bcb00b1d-7cde-4d05-b0fc-23a287697fa2
 telemetry:
   applicationInsights:
     instrumentationKey: ABC
