@@ -77,7 +77,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
 
             // Act / Assert
-            YamlAssert.ReportsNoErrorForProperty(
+            YamlAssert.ReportsErrorForProperty(
                 _deserializer,
                 node,
                 "type");
