@@ -54,6 +54,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new MariaDbDiscoveryQuery();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleDiscoveryQuery();
+                case ResourceType.MySql:
+                    return new MySqlResourceDiscoveryQuery();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:

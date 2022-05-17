@@ -551,6 +551,26 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithMySqlMetric(string metricName = "promitor-mysql",
+            string metricDescription = "Description for a metric",
+            string serverName = "promitor-mysql",
+            string azureMetricName = "cpu_percent",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            MySqlServerType serverType = MySqlServerType.Single,
+            bool omitResource = false)
+        {
+            var resource = new MySqlResourceV1
+            {
+                ServerName = serverName,
+                Type = serverType
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithNetworkGatewayMetric(string metricName = "promitor-network-gateway",
             string metricDescription = "Description for a metric",
             string networkGatewayName = "promitor-network-gateway-name",

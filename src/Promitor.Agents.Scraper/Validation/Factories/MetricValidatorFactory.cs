@@ -63,6 +63,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new MariaDbMetricValidator();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleMetricValidator();
+                case ResourceType.MySql:
+                    return new MySqlMetricValidator();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayMetricValidator();
                 case ResourceType.NetworkInterface:

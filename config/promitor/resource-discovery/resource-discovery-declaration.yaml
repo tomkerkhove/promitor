@@ -43,6 +43,8 @@ resourceDiscoveryGroups:
   type: MonitorAutoscale
 - name: mariadb-servers
   type: MariaDb
+- name: mysql-servers
+  type: MySql
 - name: network-interfaces
   type: NetworkInterface
 - name: postgres-databases

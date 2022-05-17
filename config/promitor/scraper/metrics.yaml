@@ -293,6 +293,15 @@ metrics:
         type: Maximum
     resourceDiscoveryGroups:
     - name: virtual-networks
+  - name: promitor_demo_mysql_cpu_discovered
+    description: "CPU usage of MySQL servers"
+    resourceType: MySql
+    azureMetricConfiguration:
+      metricName: cpu_percent
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: mysql-servers
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
   # - name: azure_logic_apps_failed_run_discovery

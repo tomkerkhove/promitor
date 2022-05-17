@@ -86,6 +86,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new MariaDbScraper(scraperConfiguration);
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleScraper(scraperConfiguration);
+                case ResourceType.MySql:
+                    return new MySqlScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
