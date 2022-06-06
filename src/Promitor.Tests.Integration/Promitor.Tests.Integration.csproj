@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Arcus.Observability.Telemetry.Core" Version="2.3.0" />
-    <PackageReference Include="Arcus.Testing.Logging" Version="0.3.0" />
+    <PackageReference Include="Arcus.Testing.Logging" Version="0.4.0" />
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
