@@ -30,7 +30,7 @@ namespace Promitor.Core.Metrics.Prometheus.Collectors
             // Order labels alphabetically
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: true, labelNames: orderedLabels.Keys.ToArray());
+            var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray());
             gauge.WithLabels(orderedLabels.Values.ToArray()).Set(value);
         }
     }
