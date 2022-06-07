@@ -5,7 +5,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
     public class Scraping : IEquatable<Scraping>
     {
         public string Schedule { get; set; }
-
         
         #region Equality
         
@@ -27,6 +26,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
 
         public override int GetHashCode()
         {
+            // ReSharper disable once NonReadonlyMemberInGetHashCode - this is providing the means to compare Scraping instances without having consumers become dependent on class members
             return Schedule?.Trim().GetHashCode() ?? 0;
         }
         
