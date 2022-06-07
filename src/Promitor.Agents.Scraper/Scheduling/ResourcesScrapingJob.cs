@@ -39,7 +39,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly ILoggerFactory _loggerFactory;
 
-
         /// <summary>
         /// Create a metrics scraping job for one or more resources, either enumerated specifically or
         /// identified via resource definition groups. All metrics included are expected to have
@@ -113,7 +112,6 @@ namespace Promitor.Agents.Scraper.Scheduling
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
         }
-
         
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
@@ -138,7 +136,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                 Logger.LogDebug("Ended scraping job {JobName}.", Name);
             }
         }
-
 
         private async Task<IReadOnlyCollection<ScrapeDefinition<IAzureResourceDefinition>>> GetAllScrapeDefinitions(CancellationToken cancellationToken)
         {
