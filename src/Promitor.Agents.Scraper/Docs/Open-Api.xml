@@ -13,7 +13,7 @@
             <param name="subscriptionId">Id of the Azure subscription</param>
             <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
             <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
-            <param name="memoryCache">Memory cache to store items in</param>
+            <param name="resourceMetricDefinitionMemoryCache">Memory cache to store items in</param>
             <param name="configuration">Configuration of Promitor</param>
             <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
             <param name="loggerFactory">Factory to create loggers with</param>
@@ -63,6 +63,225 @@
             </summary>
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex">
+            <summary>
+            Limits the number of threads for scraping tasks that can access the thread pool concurrently.
+            </summary>
+        </member>
+        <member name="P:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.CurrentCount">
+            <summary>
+            The current count of the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.
+            </summary>
+        </member>
+        <member name="P:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.AvailableWaitHandle">
+            <summary>
+            Returns a <see cref="T:System.Threading.WaitHandle"/> that can be used to wait on the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait(System.Threading.CancellationToken)">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            while observing a <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> token to observe.
+            </param>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait(System.TimeSpan)">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a <see cref="T:System.TimeSpan"/> to measure the time interval.
+            </summary>
+            <param name="timeout">
+            A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait,
+            or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+            </param>
+            <returns>
+            true if the current thread successfully entered the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait(System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a <see cref="T:System.TimeSpan"/> to measure the time interval, while observing a
+            <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <param name="timeout">
+            A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds to wait,
+            or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+            </param>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> to observe.
+            </param>
+            <returns>
+            true if the current thread successfully entered the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait(System.Int32)">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a 32-bit signed integer to measure the time interval.
+            </summary>
+            <param name="millisecondsTimeout">
+            The number of milliseconds to wait, or <see cref="F:System.Threading.Timeout.Infinite"/>(-1) to wait indefinitely.
+            </param>
+            <returns>
+            true if the current thread successfully entered the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Wait(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Blocks the current thread until it can enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a 32-bit signed integer to measure the time interval,
+            while observing a <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <param name="millisecondsTimeout">
+            The number of milliseconds to wait, or <see cref="F:System.Threading.Timeout.Infinite"/>(-1) to wait indefinitely.
+            </param>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> to observe.
+            </param>
+            <returns>
+            true if the current thread successfully entered the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>; otherwise, false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.
+            </summary>
+            <returns>A task that will complete when the semaphore has been entered.</returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>, while observing a
+            <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <returns>A task that will complete when the semaphore has been entered.</returns>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> token to observe.
+            </param>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync(System.Int32)">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a 32-bit signed integer to measure the time interval.
+            </summary>
+            <param name="millisecondsTimeout">
+            The number of milliseconds to wait, or <see cref="F:System.Threading.Timeout.Infinite"/>(-1) to wait indefinitely.
+            </param>
+            <returns>
+            A task that will complete with a result of true if the current thread successfully entered
+            the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>, otherwise with a result of false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync(System.TimeSpan)">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a <see cref="T:System.TimeSpan"/> to measure the time interval, while observing a
+            <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <param name="timeout">
+            A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds
+            to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+            </param>
+            <returns>
+            A task that will complete with a result of true if the current thread successfully entered
+            the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>, otherwise with a result of false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync(System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a <see cref="T:System.TimeSpan"/> to measure the time interval.
+            </summary>
+            <param name="timeout">
+            A <see cref="T:System.TimeSpan"/> that represents the number of milliseconds
+            to wait, or a <see cref="T:System.TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+            </param>
+            <param name="cancellationToken">
+            The <see cref="T:System.Threading.CancellationToken"/> token to observe.
+            </param>
+            <returns>
+            A task that will complete with a result of true if the current thread successfully entered
+            the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>, otherwise with a result of false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.WaitAsync(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously waits to enter the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>,
+            using a 32-bit signed integer to measure the time interval,
+            while observing a <see cref="T:System.Threading.CancellationToken"/>.
+            </summary>
+            <param name="millisecondsTimeout">
+            The number of milliseconds to wait, or <see cref="F:System.Threading.Timeout.Infinite"/>(-1) to wait indefinitely.
+            </param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to observe.</param>
+            <returns>
+            A task that will complete with a result of true if the current thread successfully entered
+            the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>, otherwise with a result of false.
+            </returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Release">
+            <summary>
+            Exits the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/> once.
+            </summary>
+            <returns>The previous count of the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.</returns>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.IScrapingMutex.Release(System.Int32)">
+            <summary>
+            Exits the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/> a specified number of times.
+            </summary>
+            <param name="releaseCount">The number of times to exit the semaphore.</param>
+            <returns>The previous count of the <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>.</returns>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob">
+            <summary>
+            A metrics scraping job for one or more resources, either enumerated specifically or
+            identified via resource definition groups. All metrics included are expected to have
+            the same scraping schedule.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.ResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingPrometheusMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
+            <summary>
+            Create a metrics scraping job for one or more resources, either enumerated specifically or
+            identified via resource definition groups. All metrics included are expected to have
+            the same scraping schedule.
+            </summary>
+            <param name="jobName">name of scheduled job</param>
+            <param name="metricsDeclaration">declaration of which metrics to collect from which resources</param>
+            <param name="resourceDiscoveryRepository">repository source for discovering resources via criteria</param>
+            <param name="metricSinkWriter">destination for metric reporting output</param>
+            <param name="metricScraperFactory">means of obtaining a metrics scraper for a particular type of resource</param>
+            <param name="azureMonitorClientFactory">means of obtaining a Azure Monitor client</param>
+            <param name="azureScrapingPrometheusMetricsCollector">metrics collector to write metrics to Prometheus</param>
+            <param name="resourceMetricDefinitionMemoryCache">cache of metric definitions by resource ID</param>
+            <param name="scrapingTaskMutex">semaphore used to limit concurrency of tasks if configured, or null for no limiting</param>
+            <param name="configuration">Promitor configuration</param>
+            <param name="azureMonitorLoggingConfiguration">options for Azure Monitor logging</param>
+            <param name="loggerFactory">means to obtain a logger</param>
+            <param name="logger">logger to use for scraping detail</param>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.ScheduleLimitedConcurrencyAsyncTask(System.Collections.Generic.ICollection{System.Threading.Tasks.Task},System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)">
+            <summary>
+            Run some task work in the thread pool, but only allow a limited number of threads to go at a time
+            (unless max degree of parallelism wasn't configured, in which case mutex is null and no limit is imposed). 
+            </summary>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Scheduling.ScrapingMutex">
+            <inheritdoc cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ScrapingMutex.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Promitor.Agents.Scraper.Scheduling.ScrapingMutex"/> class, specifying
+            the number scraping tasks that can be processed concurrently.
+            </summary>
+            <param name="concurrency">The number scraping tasks that can be processed concurrently.</param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Usability.MetricsTableGenerator.PlotOverviewInAsciiTable">
             <summary>
@@ -155,6 +374,11 @@
             </summary>
             <param name="services">Collections of services in application</param>
             <param name="configuration">Configuration of the application</param>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddScrapingMutex(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds a semaphore-based implementation of <see cref="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex"/> to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+            </summary>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.ConfigureYamlConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
