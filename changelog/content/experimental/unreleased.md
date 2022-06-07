@@ -8,6 +8,7 @@ version:
 
 - {{% tag added %}} Provide scraper for Azure Database for MySQL Servers  ([docs](https://docs.promitor.io/v2.x/scraping/providers/mysql/)
  | [#1880](https://github.com/tomkerkhove/promitor/issues/324))
+- {{% tag fixed %}} Honor flag not to include timestamps in system metrics for Prometheus ([#1915](https://github.com/tomkerkhove/promitor/pull/1915))
 
 #### Resource Discovery
 
