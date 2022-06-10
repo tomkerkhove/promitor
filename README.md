@@ -2,7 +2,7 @@
 <!-- Because this file contains custom formatting for the heading, we need to
     disable some of the markdownlint rules -->
 <!-- markdownlint-disable -->
-<p align=center><img src="./docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
+<p align=center><img src="https://raw.githubusercontent.com/promitor/docs/main/docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
 
 <h1 align="center">Bringing Azure Monitor metrics where you need them.</h1>
 
