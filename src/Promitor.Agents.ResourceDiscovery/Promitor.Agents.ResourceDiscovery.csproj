@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>6.0.5</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.6</RuntimeFrameworkVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
     <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
