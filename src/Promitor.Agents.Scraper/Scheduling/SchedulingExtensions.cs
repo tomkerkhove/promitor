@@ -88,7 +88,15 @@ namespace Microsoft.Extensions.DependencyInjection
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.AddUnobservedTaskExceptionHandler(s =>
+                {
+                    return
+                        (_, exceptionEventArgs) =>
+                        {
+                            var exceptionLogger = s.GetService<ILogger<BackgroundJobMonitor>>();
+                            BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, exceptionLogger);
+                        };
+                });
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource {Resource} which will be reported as metric {MetricName}", jobName, scrapeDefinition.Resource.UniqueName, scrapeDefinition.PrometheusMetricDefinition?.Name);
@@ -118,7 +126,15 @@ namespace Microsoft.Extensions.DependencyInjection
                     schedulerOptions.RunImmediately = true;
                 },
                     jobName: jobName);
-                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                builder.AddUnobservedTaskExceptionHandler(s =>
+                {
+                    return
+                        (_, exceptionEventArgs) =>
+                        {
+                            var exceptionLogger = s.GetService<ILogger<BackgroundJobMonitor>>();
+                            BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, exceptionLogger);
+                        };
+                });
             });
 
             logger.LogInformation("Scheduled scraping job {JobName} for resource collection {ResourceDiscoveryGroup} which will be reported as metric {MetricName}", jobName, resourceDiscoveryGroup.Name, metricDefinition.PrometheusMetricDefinition?.Name);
