@@ -22,6 +22,12 @@
 			]
 		},
 		{
+			"groupName": "AutoMapper",
+			"matchPackagePrefixes": [
+			  "AutoMapper"
+			]
+		},
+		{
 			"extends": "monorepo:aspnet extensions",
 			"groupName": ".NET Extensions",
 			"labels": [
