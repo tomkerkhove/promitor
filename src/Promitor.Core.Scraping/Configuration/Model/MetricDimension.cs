@@ -12,8 +12,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
         /// </summary>
         public string Name { get; set; }
 
-        #region Equality
-
         public bool Equals(MetricDimension other)
         {
             if (ReferenceEquals(null, other))
@@ -35,7 +33,5 @@ namespace Promitor.Core.Scraping.Configuration.Model
             // ReSharper disable once NonReadonlyMemberInGetHashCode - this is providing the means to compare MetricDimension instances without having consumers become dependent on class members
             return Name?.ToLowerInvariant().GetHashCode() ?? 0;
         }
-        
-        #endregion
     }
 }

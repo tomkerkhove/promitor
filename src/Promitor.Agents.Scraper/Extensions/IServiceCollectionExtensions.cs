@@ -217,22 +217,27 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection AddScrapingMutex(this IServiceCollection services, IConfiguration configuration)
         {
             if (services == null)
+            {
                 throw new ArgumentNullException(nameof(services));
+            }
+
             if (configuration == null)
+            {
                 throw new ArgumentNullException(nameof(configuration));
+            }
 
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
-
-            ScrapingMutex ScrapingMutexBuilder(IServiceProvider serviceProvider)
-            {
-                return serverConfiguration.MaxDegreeOfParallelism > 0
-                    ? new ScrapingMutex(serverConfiguration.MaxDegreeOfParallelism)
-                    : null;
-            }
             
-            services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(ScrapingMutexBuilder));
+            services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(serviceProvider => ScrapingMutexBuilder(serviceProvider, serverConfiguration)));
             
             return services;
+        }
+
+        private static ScrapingMutex ScrapingMutexBuilder(IServiceProvider serviceProvider, ServerConfiguration serverConfiguration)
+        {
+            return serverConfiguration.MaxDegreeOfParallelism > 0
+                ? new ScrapingMutex(serverConfiguration.MaxDegreeOfParallelism)
+                : null;
         }
 
         /// <summary>

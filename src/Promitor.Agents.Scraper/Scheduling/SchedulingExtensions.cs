@@ -60,9 +60,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             foreach (var metric in allMetrics.Metrics)
             {
-                if (string.IsNullOrWhiteSpace(metric?.Scraping?.Schedule))
-                    throw new InvalidOperationException($"Metric \"{metric?.AzureMetricConfiguration?.MetricName}\" is missing scraping schedule.");
-                
                 if (!metricsGroupings.TryGetValue(metric.Scraping, out var metricsGroup))
                 {
                     metricsGroup = new MetricsDeclaration
@@ -138,7 +135,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var metricsCount = metricsDeclaration.Metrics.Count;
             var uniqueness = Guid.NewGuid().ToString("N");
 
-            return $"PromitorScraper-{metricsCount}Metrics-{scheduleDescription}-{uniqueness}";
+            return $"Scraper-{metricsCount}Metrics-{scheduleDescription}-{uniqueness}";
         }
     }
 }

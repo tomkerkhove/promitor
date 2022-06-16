@@ -6,8 +6,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
     {
         public string Schedule { get; set; }
         
-        #region Equality
-        
         public bool Equals(Scraping other)
         {
             if (ReferenceEquals(null, other))
@@ -29,7 +27,5 @@ namespace Promitor.Core.Scraping.Configuration.Model
             // ReSharper disable once NonReadonlyMemberInGetHashCode - this is providing the means to compare Scraping instances without having consumers become dependent on class members
             return Schedule?.Trim().GetHashCode() ?? 0;
         }
-        
-        #endregion
     }
 }
