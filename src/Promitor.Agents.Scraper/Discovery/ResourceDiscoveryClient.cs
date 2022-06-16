@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -34,12 +33,12 @@ namespace Promitor.Agents.Scraper.Discovery
             _configuration = configuration;
         }
 
-        public async Task<List<AzureResourceDefinition>> GetAsync(string resourceDiscoveryGroupName)
+        public async Task<PagedPayload<AzureResourceDefinition>> GetAsync(string resourceDiscoveryGroupName, int currentPage)
         {
-            var uri = $"api/v1/resources/groups/{resourceDiscoveryGroupName}/discover";
+            var uri = $"api/v2/resources/groups/{resourceDiscoveryGroupName}/discover?currentPage={currentPage}";
             var rawResponse = await SendGetRequestAsync(uri);
 
-            var foundResources = JsonConvert.DeserializeObject<List<AzureResourceDefinition>>(rawResponse, _serializerSettings);
+            var foundResources = JsonConvert.DeserializeObject<PagedPayload<AzureResourceDefinition>>(rawResponse, _serializerSettings);
             return foundResources;
         }
 

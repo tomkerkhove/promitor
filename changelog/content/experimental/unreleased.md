@@ -6,18 +6,11 @@ version:
 
 #### Scraper
 
-- {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
- | [#1239](https://github.com/tomkerkhove/promitor/issues/1239))
-- {{% tag added %}} Information concerning .NET & OS in logs on startup
-- {{% tag fixed %}} Reduced HTTP request latency ([benchmark](https://github.com/tomkerkhove/promitor/pull/1833#issuecomment-975186516))
-- {{% tag changed %}} Migrate from .NET 3.1 to .NET 6.0
-- {{% tag changed %}} Reduced Docker image size with 5%
+- {{% tag added %}} Provide scraper for Azure Database for MySQL Servers  ([docs](https://docs.promitor.io/v2.x/scraping/providers/mysql/)
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/324))
+- {{% tag fixed %}} Honor flag not to include timestamps in system metrics for Prometheus ([#1915](https://github.com/tomkerkhove/promitor/pull/1915))
 
 #### Resource Discovery
 
-- {{% tag added %}} Provide scraper for Azure Application Insights ([docs](https://docs.promitor.io/configuration/v2.x/metrics/application-insights)
- | [#1239](https://github.com/tomkerkhove/promitor/issues/1239))
-- {{% tag added %}} Information concerning .NET & OS in logs on startup
-- {{% tag fixed %}} Reduced HTTP request latency ([benchmark](https://github.com/tomkerkhove/promitor/pull/1833#issuecomment-975186516))
-- {{% tag changed %}} Migrate from .NET 3.1 to .NET 6.0
-- {{% tag changed %}} Reduced Docker image size with 5%
+- {{% tag added %}} Provide scraper for Azure Database for MySQL Servers ([docs](https://docs.promitor.io/v2.x/scraping/providers/mysql/)
+ | [#1880](https://github.com/tomkerkhove/promitor/issues/324))

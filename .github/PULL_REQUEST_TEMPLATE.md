@@ -8,8 +8,8 @@ When implementing a new scraper; these tasks are completed:
 - [ ] Implement resource discovery
 - [ ] Provide unit tests
 - [ ] Test end-to-end
-- [ ] Document scraper
-- [ ] Add entry to changelog
+- [ ] Document scraper (see https://github.com/promitor/docs/blob/main/CONTRIBUTING.md#documenting-a-new-scraper)
+- [ ] Add entry to changelog (see https://github.com/tomkerkhove/promitor/blob/master/CONTRIBUTING.md#changelog)
 
 **Metrics output:**
 ```

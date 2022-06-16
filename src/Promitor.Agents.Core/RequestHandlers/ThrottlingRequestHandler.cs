@@ -43,7 +43,7 @@ namespace Promitor.Agents.Core.RequestHandlers
 
             await AvailableRateLimitingCallsAsync(response);
             AvailableThrottlingStatusAsync(wasRequestThrottled);
-
+            
             return response;
         }
 

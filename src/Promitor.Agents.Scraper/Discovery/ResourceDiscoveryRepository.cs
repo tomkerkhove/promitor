@@ -20,8 +20,19 @@ namespace Promitor.Agents.Scraper.Discovery
         {
             Guard.NotNullOrWhitespace(resourceDiscoveryGroupName,nameof(resourceDiscoveryGroupName));
 
-            var resources = await _resourceDiscoveryClient.GetAsync(resourceDiscoveryGroupName);
-            return resources;
+            PagedPayload<AzureResourceDefinition> pagedPayload;
+            var results = new List<AzureResourceDefinition>();
+            var currentPage = 1;
+
+            do
+            {
+                pagedPayload = await _resourceDiscoveryClient.GetAsync(resourceDiscoveryGroupName, currentPage);
+                results.AddRange(pagedPayload.Result);
+                currentPage++;
+            }
+            while (pagedPayload.HasMore);
+
+            return results;
         }
     }
 }

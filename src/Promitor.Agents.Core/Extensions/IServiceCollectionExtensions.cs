@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -100,9 +103,43 @@ namespace Promitor.Agents.Core.Extensions
                 {
                     swaggerGenerationOptions.IncludeXmlComments(xmlDocumentationPath);
                 }
+
+                swaggerGenerationOptions.TagActionsBy(CustomizeActionTagging);
             });
 
             return services;
+        }
+
+        private static IList<string> CustomizeActionTagging(ApiDescription apiDescription)
+        {
+            if (apiDescription.ActionDescriptor is ControllerActionDescriptor == false)
+            {
+                return new List<string>();
+            }
+
+            // Determine name of the controller
+            var controllerActionDescriptor = apiDescription.ActionDescriptor as ControllerActionDescriptor;
+            var controllerName = controllerActionDescriptor?.ControllerName;
+            if (string.IsNullOrWhiteSpace(controllerName))
+            {
+                throw new Exception("No controller name was found to tag actions with");
+            }
+
+            var tagName = controllerName;
+
+            // If the controller contains a version name, remove the suffix
+            if (controllerName.Contains("V", StringComparison.InvariantCulture))
+            {
+                var lastIndex = controllerName.LastIndexOf("V", StringComparison.InvariantCulture);
+                var suffix = controllerName.Substring(lastIndex + 1);
+
+                if (int.TryParse(suffix, out var _))
+                {
+                    tagName = controllerName.Substring(0, lastIndex);
+                }
+            }
+
+            return new List<string> { tagName };
         }
 
         private static void RestrictToJsonContentType(MvcOptions options)

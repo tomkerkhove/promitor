@@ -42,6 +42,12 @@
         MonitorAutoscale = 37,
         DataFactory = 38,
         DataShare = 39,
-        ApplicationInsights = 40
+        ApplicationInsights = 40,
+        RedisEnterpriseCache = 41,
+        MariaDb = 42,
+        Cdn = 43,
+        VirtualNetwork = 44,
+        LoadBalancer = 45,
+        MySql = 46,
     }
 }

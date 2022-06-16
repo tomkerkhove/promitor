@@ -4,7 +4,7 @@
         <name>Promitor.Agents.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingPrometheusMetricsCollector,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingPrometheusMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
             Provides an Azure Monitor client
             </summary>
@@ -13,6 +13,7 @@
             <param name="subscriptionId">Id of the Azure subscription</param>
             <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
             <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+            <param name="memoryCache">Memory cache to store items in</param>
             <param name="configuration">Configuration of Promitor</param>
             <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
             <param name="loggerFactory">Factory to create loggers with</param>
@@ -74,6 +75,14 @@
             </summary>
             <param name="metricDefinition">Metric definition to validate</param>
             <returns>List of validation errors</returns>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.MariaDbMetricValidator">
+            <summary>
+            Validates <see cref="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.MariaDbMetricValidator" /> objects.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.MariaDbMetricValidator.Validate(Promitor.Core.Scraping.Configuration.Model.Metrics.MetricDefinition)">
+            <inheritdoc />
         </member>
         <member name="T:Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes.SqlDatabaseMetricValidator">
             <summary>

@@ -1,4 +1,5 @@
-﻿using Promitor.Core.Scraping.Configuration.Serialization;
+﻿using Promitor.Core.Contracts.ResourceTypes.Enums;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
@@ -45,6 +46,43 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
                 _deserializer,
                 node,
                 "serverName");
+        }
+
+        [Theory]
+        [InlineData("Single", PostgreSqlServerType.Single)]
+        [InlineData("Flexible", PostgreSqlServerType.Flexible)]
+        [InlineData("Hyperscale", PostgreSqlServerType.Hyperscale)]
+        [InlineData("Arc", PostgreSqlServerType.Arc)]
+        public void Deserialize_ServerTypeSupplied_SetsServerName(string rawType, PostgreSqlServerType expectedType)
+        {
+            YamlAssert.PropertySet<PostgreSqlResourceV1, AzureResourceDefinitionV1, PostgreSqlServerType>(
+                _deserializer,
+                $"type: {rawType}",
+                expectedType,
+                r => r.Type);
+        }
+
+        [Fact]
+        public void Deserialize_ServerTypeNotSupplied_DefaultsToSingle()
+        {
+            YamlAssert.PropertySet<PostgreSqlResourceV1, AzureResourceDefinitionV1, PostgreSqlServerType>(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                PostgreSqlServerType.Single,
+                r => r.Type);
+        }
+
+        [Fact]
+        public void Deserialize_ServerTypeNotSupplied_ReportsError()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-resource-group");
+
+            // Act / Assert
+            YamlAssert.ReportsNoErrorForProperty(
+                _deserializer,
+                node,
+                "type");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

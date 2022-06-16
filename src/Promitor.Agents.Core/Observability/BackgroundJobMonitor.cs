@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace Promitor.Agents.Core.Observability
@@ -12,9 +11,8 @@ namespace Promitor.Agents.Core.Observability
         /// <summary>
         /// Provide capability to handle and log exceptions
         /// </summary>
-        public static void HandleException(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, IServiceCollection services)
+        public static void HandleException(object jobName, UnobservedTaskExceptionEventArgs exceptionEventArgs, ILogger logger)
         {
-            var logger = services.BuildServiceProvider().GetService<ILogger<BackgroundJobMonitor>>();
             if (logger == null)
             {
                 return;

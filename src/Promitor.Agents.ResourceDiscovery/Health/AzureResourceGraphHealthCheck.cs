@@ -80,7 +80,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
         {
             try
             {
-                await _azureResourceGraph.QueryForResourcesAsync($"health-probe-{subscription}", query, new List<string> { subscription });
+                await _azureResourceGraph.QueryForResourcesAsync($"health-probe-{subscription}", query, new List<string> { subscription }, pageSize: 1, currentPage: 0);
                 return new HealthProbeResult(subscription, isSuccessful: true, "Successfully queried resources via Azure Resource Graph");
             }
             catch (UnauthorizedException unauthorizedException)

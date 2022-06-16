@@ -63,8 +63,16 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-
-                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                
+                builder.AddUnobservedTaskExceptionHandler(s =>
+                {
+                    return
+                        (_, exceptionEventArgs) =>
+                        {
+                            var exceptionLogger = s.GetService<ILogger<BackgroundJobMonitor>>();
+                            BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, exceptionLogger);
+                        };
+                });
             });
             services.AddScheduler(builder =>
             {
@@ -83,8 +91,16 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                         schedulerOptions.RunImmediately = true;
                     },
                     jobName: jobName);
-
-                builder.UnobservedTaskExceptionHandler = (_, exceptionEventArgs) => BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, services);
+                
+                builder.AddUnobservedTaskExceptionHandler(s =>
+                {
+                    return
+                        (_, exceptionEventArgs) =>
+                        {
+                            var exceptionLogger = s.GetService<ILogger<BackgroundJobMonitor>>();
+                            BackgroundJobMonitor.HandleException(jobName, exceptionEventArgs, exceptionLogger);
+                        };
+                });
             });
 
             return services;

@@ -40,6 +40,7 @@ namespace Promitor.Agents.Scraper
             string openApiDescription = BuildOpenApiDescription(Configuration);
 
             services.UseWebApi()
+                .AddMemoryCache()
                 .AddResourceDiscoveryClient(promitorUserAgent)
                 .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
                 .AddUsability()

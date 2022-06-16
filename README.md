@@ -2,7 +2,7 @@
 <!-- Because this file contains custom formatting for the heading, we need to
     disable some of the markdownlint rules -->
 <!-- markdownlint-disable -->
-<p align=center><img src="./docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
+<p align=center><img src="https://raw.githubusercontent.com/promitor/docs/main/docs/media/logos/promitor.png" alt="Promitor Logo" height="150"></p>
 
 <h1 align="center">Bringing Azure Monitor metrics where you need them.</h1>
 
@@ -16,9 +16,6 @@
 </p>
 
 **Promitor** is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
-<!-- markdownlint-enable -->
-
-<!-- markdownlint-disable MD002 -->
 
 ## Documentation
 
@@ -28,14 +25,16 @@ All documentation is available on [promitor.io](https://docs.promitor.io)
 
 We are proud to have the following end-users(s) running Promitor in production:
 
-![Adobe](./docs/media/logos/end-users/adobe.png)
-![Albert Heijn](./docs/media/logos/end-users/albert-heijn.png)
-![Bryte Blue](./docs/media/logos/end-users/bryte-blue.png)
-![ResDiary](./docs/media/logos/end-users/resdiary.png)
-![theTradeDesk](./docs/media/logos/end-users/the-trade-desk.png)
-![Trynz](./docs/media/logos/end-users/trynz.png)
-![Vsoft](./docs/media/logos/end-users/vsoft.png)
-![Walmart Labs](./docs/media/logos/end-users/walmart-labs.jpg)
+![Adfinis](./media/logos/end-users/adfinis.png)
+![Adobe](./media/logos/end-users/adobe.png)
+![Albert Heijn](./media/logos/end-users/albert-heijn.png)
+![Axon](./media/logos/end-users/axon.png)
+![Bryte Blue](./media/logos/end-users/bryte-blue.png)
+![ResDiary](./media/logos/end-users/resdiary.png)
+![theTradeDesk](./media/logos/end-users/the-trade-desk.png)
+![Trynz](./media/logos/end-users/trynz.png)
+![Vsoft](./media/logos/end-users/vsoft.png)
+![Walmart Labs](./media/logos/end-users/walmart-labs.jpg)
 
 Are you a Promitor user? Let us know and [get listed](https://forms.gle/hjcpaaVFa1A1hZaK6)!
 
