@@ -6,6 +6,6 @@ namespace Promitor.Tests.Unit
     [Category("Unit")]
     public class UnitTest
     {
-        protected Faker BogusGenerator { get; } = new Faker();
+        protected Faker BogusGenerator { get; } = new();
     }
 }
