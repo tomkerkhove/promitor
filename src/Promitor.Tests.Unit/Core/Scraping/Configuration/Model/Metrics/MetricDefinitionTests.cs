@@ -84,5 +84,27 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
             // Assert
             Assert.Equal(_azureMetadata.ResourceGroupName, scrapeDefinition.ResourceGroupName);
         }
+
+        [Fact]
+        public void CreateScrapeDefinition_MetricDimensionIsEquatable_UsesValueComparison()
+        {
+            // Arrange
+            var dimension1 = new MetricDimension { Name = "MyMetricDimension" };
+            var dimension2 = new MetricDimension { Name = dimension1.Name };
+
+            // Assert
+            Assert.Equal(dimension1, dimension2);
+        }
+
+        [Fact]
+        public void CreateScrapeDefinition_ScrapingIsEquatable_UsesValueComparison()
+        {
+            // Arrange
+            var scraping1 = new Promitor.Core.Scraping.Configuration.Model.Scraping { Schedule = "5 * * * *" };
+            var scraping2 = new Promitor.Core.Scraping.Configuration.Model.Scraping { Schedule = scraping1.Schedule };
+
+            // Assert
+            Assert.Equal(scraping1, scraping2);
+        }
     }
 }

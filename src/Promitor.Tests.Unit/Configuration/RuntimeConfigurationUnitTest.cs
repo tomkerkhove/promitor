@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
-using Defaults = Promitor.Agents.Scraper.Configuration.Defaults;
+using DefaultsCore = Promitor.Agents.Core.Configuration.Defaults;
 
 namespace Promitor.Tests.Unit.Configuration
 {
@@ -139,6 +139,23 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(bogusHttpPort, runtimeConfiguration.Server.HttpPort);
         }
 
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredMaxDegreeOfParallelism_UsesConfigured()
+        {
+            // Arrange
+            var bogusMaxDegreeOfParallelism = BogusGenerator.Random.Int();
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(888, bogusMaxDegreeOfParallelism)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Server);
+            Assert.Equal(bogusMaxDegreeOfParallelism, runtimeConfiguration.Server.MaxDegreeOfParallelism);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -270,8 +287,8 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.Telemetry);
             Assert.NotNull(runtimeConfiguration.Telemetry.ApplicationInsights);
             Assert.Null(runtimeConfiguration.Telemetry.ApplicationInsights.InstrumentationKey);
-            Assert.Equal(Defaults.Telemetry.ApplicationInsights.Verbosity, runtimeConfiguration.Telemetry.ApplicationInsights.Verbosity);
-            Assert.Equal(Defaults.Telemetry.ApplicationInsights.IsEnabled, runtimeConfiguration.Telemetry.ApplicationInsights.IsEnabled);
+            Assert.Equal(DefaultsCore.Telemetry.ApplicationInsights.Verbosity, runtimeConfiguration.Telemetry.ApplicationInsights.Verbosity);
+            Assert.Equal(DefaultsCore.Telemetry.ApplicationInsights.IsEnabled, runtimeConfiguration.Telemetry.ApplicationInsights.IsEnabled);
         }
 
         [Fact]
@@ -289,8 +306,8 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.Telemetry);
             Assert.NotNull(runtimeConfiguration.Telemetry.ContainerLogs);
-            Assert.Equal(Defaults.Telemetry.ContainerLogs.Verbosity, runtimeConfiguration.Telemetry.ContainerLogs.Verbosity);
-            Assert.Equal(Defaults.Telemetry.ContainerLogs.IsEnabled, runtimeConfiguration.Telemetry.ContainerLogs.IsEnabled);
+            Assert.Equal(DefaultsCore.Telemetry.ContainerLogs.Verbosity, runtimeConfiguration.Telemetry.ContainerLogs.Verbosity);
+            Assert.Equal(DefaultsCore.Telemetry.ContainerLogs.IsEnabled, runtimeConfiguration.Telemetry.ContainerLogs.IsEnabled);
         }
 
         [Fact]
@@ -307,7 +324,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.Telemetry);
-            Assert.Equal(Defaults.Telemetry.DefaultVerbosity, runtimeConfiguration.Telemetry.DefaultVerbosity);
+            Assert.Equal(DefaultsCore.Telemetry.DefaultVerbosity, runtimeConfiguration.Telemetry.DefaultVerbosity);
         }
 
         [Fact]
@@ -323,7 +340,23 @@ namespace Promitor.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.Server);
-            Assert.Equal(Defaults.Server.HttpPort, runtimeConfiguration.Server.HttpPort);
+            Assert.Equal(DefaultsCore.Server.HttpPort, runtimeConfiguration.Server.HttpPort);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoMaxDegreeOfParallelism_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Server);
+            Assert.Equal(DefaultsCore.Server.MaxDegreeOfParallelism, runtimeConfiguration.Server.MaxDegreeOfParallelism);
         }
 
         [Fact]
@@ -382,6 +415,7 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.MetricsConfiguration);
             Assert.NotNull(runtimeConfiguration.ResourceDiscovery);
             Assert.Equal(bogusRuntimeConfiguration.Server.HttpPort, runtimeConfiguration.Server.HttpPort);
+            Assert.Equal(bogusRuntimeConfiguration.Server.MaxDegreeOfParallelism, runtimeConfiguration.Server.MaxDegreeOfParallelism);
             Assert.Equal(bogusRuntimeConfiguration.ResourceDiscovery.Host, runtimeConfiguration.ResourceDiscovery.Host);
             Assert.Equal(bogusRuntimeConfiguration.ResourceDiscovery.Port, runtimeConfiguration.ResourceDiscovery.Port);
             Assert.Equal(bogusRuntimeConfiguration.Telemetry.DefaultVerbosity, runtimeConfiguration.Telemetry.DefaultVerbosity);

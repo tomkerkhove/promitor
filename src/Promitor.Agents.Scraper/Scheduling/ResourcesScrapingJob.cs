@@ -87,18 +87,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
             // all metrics must have the same scraping schedule or it is not possible for them to share the same job
-            if (metricsDeclaration.Metrics.Count > 1)
-            {
-                var metrics = metricsDeclaration.Metrics;
-                var commonScraping = metrics[0].Scraping;
-
-                for (var i = 1; i < metrics.Count; i++)
-                {
-                    if (!Equals(commonScraping, metrics[i].Scraping))
-                        throw new ArgumentException(
-                            $"The \"{metrics[i].Scraping?.Schedule}\" scraping schedule for {nameof(metricsDeclaration)}.{nameof(metricsDeclaration.Metrics)}[{i}] does not share the common scraping schedule \"{commonScraping?.Schedule}\".");
-                }
-            }
+            VerifyAllMetricsHaveSameScrapingSchedule(metricsDeclaration);
 
             _metricsDeclaration = metricsDeclaration;
             _resourceDiscoveryRepository = resourceDiscoveryRepository;
@@ -112,7 +101,23 @@ namespace Promitor.Agents.Scraper.Scheduling
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
         }
-        
+
+        private static void VerifyAllMetricsHaveSameScrapingSchedule(MetricsDeclaration metricsDeclaration)
+        {
+            if (metricsDeclaration.Metrics.Count > 1)
+            {
+                var metrics = metricsDeclaration.Metrics;
+                var commonScraping = metrics[0].Scraping;
+
+                for (var i = 1; i < metrics.Count; i++)
+                {
+                    if (!Equals(commonScraping, metrics[i].Scraping))
+                        throw new ArgumentException(
+                            $"The \"{metrics[i].Scraping?.Schedule}\" scraping schedule for {nameof(metricsDeclaration)}.{nameof(metricsDeclaration.Metrics)}[{i}] does not share the common scraping schedule \"{commonScraping?.Schedule}\".");
+                }
+            }
+        }
+
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             Logger.LogDebug("Started scraping job {JobName}.", Name);
@@ -149,9 +154,11 @@ namespace Promitor.Agents.Scraper.Scheduling
                 try
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    
+
                     if (metric == null)
+                    {
                         throw new NullReferenceException("Metric within metrics declaration was null.");
+                    }
 
                     if (metric.ResourceDiscoveryGroups != null)
                     {
@@ -160,9 +167,13 @@ namespace Promitor.Agents.Scraper.Scheduling
                             cancellationToken.ThrowIfCancellationRequested();
 
                             if (string.IsNullOrWhiteSpace(resourceDiscoveryGroup?.Name))
+                            {
                                 Logger.LogError("Found resource discovery group missing a name for metric {MetricName}.", metricName);
+                            }
                             else
+                            {
                                 await ScheduleLimitedConcurrencyAsyncTask(tasks, () => GetDiscoveryGroupScrapeDefinitions(resourceDiscoveryGroup.Name, metric, scrapeDefinitions), cancellationToken);
+                            }
                         }
                     }
 
@@ -171,9 +182,13 @@ namespace Promitor.Agents.Scraper.Scheduling
                         foreach (var resourceDefinition in metric.Resources)
                         {
                             if (resourceDefinition == null)
+                            {
                                 Logger.LogError("Found null resource for metric {MetricName}.", metricName);
+                            }
                             else
+                            {
                                 GetResourceScrapeDefinition(resourceDefinition, metric, scrapeDefinitions);
+                            }
                         }
                     }
                 }
@@ -209,7 +224,8 @@ namespace Promitor.Agents.Scraper.Scheduling
                 foreach (var discoveredResource in discoveredResources)
                 {
                     Logger.LogDebug("Discovered resource {DiscoveredResource}.", discoveredResource);
-                    scrapeDefinitions.Add(metricDefinition.CreateScrapeDefinition(discoveredResource, _metricsDeclaration.AzureMetadata));
+                    var scrapeDefinition = metricDefinition.CreateScrapeDefinition(discoveredResource, _metricsDeclaration.AzureMetadata);
+                    scrapeDefinitions.Add(scrapeDefinition);
                 }
             }
             catch (Exception ex)
@@ -220,7 +236,8 @@ namespace Promitor.Agents.Scraper.Scheduling
 
         private void GetResourceScrapeDefinition(IAzureResourceDefinition resourceDefinition, MetricDefinition metricDefinition, ConcurrentBag<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions)
         {
-            scrapeDefinitions.Add(metricDefinition.CreateScrapeDefinition(resourceDefinition, _metricsDeclaration.AzureMetadata));
+            var scrapeDefinition = metricDefinition.CreateScrapeDefinition(resourceDefinition, _metricsDeclaration.AzureMetadata);
+            scrapeDefinitions.Add(scrapeDefinition);
         }
 
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
@@ -246,8 +263,11 @@ namespace Promitor.Agents.Scraper.Scheduling
             // this runs in a separate thread, must trap exceptions
             try
             {
+                var resourceSubscriptionId = !string.IsNullOrWhiteSpace(scrapeDefinition.Resource.SubscriptionId)
+                    ? scrapeDefinition.Resource.SubscriptionId
+                    : _metricsDeclaration.AzureMetadata.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
-                    scrapeDefinition.Resource.SubscriptionId, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, _resourceMetricDefinitionMemoryCache, _configuration,
+                    resourceSubscriptionId, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorLoggingConfiguration, _loggerFactory);
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, azureMonitorClient);
                 await scraper.ScrapeAsync(scrapeDefinition);
@@ -273,19 +293,19 @@ namespace Promitor.Agents.Scraper.Scheduling
             
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
 
-            async Task WorkWrapper(Func<Task> work)
-            {
-                try
-                {
-                    await work();
-                }
-                finally
-                {
-                    _scrapingTaskMutex.Release();
-                }
-            }
-
             tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));
+        }
+
+        private async Task WorkWrapper(Func<Task> work)
+        {
+            try
+            {
+                await work();
+            }
+            finally
+            {
+                _scrapingTaskMutex.Release();
+            }
         }
     }
 }
