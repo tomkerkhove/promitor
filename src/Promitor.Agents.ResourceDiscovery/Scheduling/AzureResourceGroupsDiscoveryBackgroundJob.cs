@@ -30,7 +30,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             Logger.LogTrace("Discovering Azure Resource Groups...");
 
-            PagedPayload<AzureResourceGroupInformation> discoveredResourceGroups = null;
+            PagedPayload<AzureResourceGroupInformation> discoveredResourceGroups;
             var currentPage = 1;
             do
             {
