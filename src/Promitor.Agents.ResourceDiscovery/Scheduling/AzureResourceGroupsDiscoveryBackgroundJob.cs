@@ -30,11 +30,13 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         {
             Logger.LogTrace("Discovering Azure Resource Groups...");
 
-            PagedPayload<AzureResourceGroupInformation> discoveredResourceGroups;
+            PagedPayload<AzureResourceGroupInformation> discoveredResourceGroups = null;
             do
             {
+                var currentPage = discoveredResourceGroups != null ? discoveredResourceGroups.PageInformation.CurrentPage + 1 : 0;
+            
                 // Discover Azure subscriptions
-                discoveredResourceGroups = await AzureResourceRepository.DiscoverAzureResourceGroupsAsync(pageSize: 1000, currentPage: 0);
+                discoveredResourceGroups = await AzureResourceRepository.DiscoverAzureResourceGroupsAsync(pageSize: 1000, currentPage: currentPage);
 
                 // Report discovered information as metric
                 foreach (var resourceGroupInformation in discoveredResourceGroups.Result)
