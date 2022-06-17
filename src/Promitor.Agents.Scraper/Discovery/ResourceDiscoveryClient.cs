@@ -63,7 +63,7 @@ namespace Promitor.Agents.Scraper.Discovery
 
         private async Task<HttpResponseMessage> SendRequestToApiAsync(HttpRequestMessage request)
         {
-            using (var dependencyMeasurement = DependencyMeasurement.Start())
+            using (var dependencyMeasurement = DurationMeasurement.Start())
             {
                 HttpResponseMessage response = null;
                 try

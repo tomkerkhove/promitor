@@ -117,7 +117,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 var graphClient = await GetOrCreateClient();
 
                 bool isSuccessfulDependency = false;
-                using (var dependencyMeasurement = DependencyMeasurement.Start())
+                using (var dependencyMeasurement = DurationMeasurement.Start())
                 {
                     try
                     {
