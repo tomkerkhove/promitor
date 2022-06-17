@@ -10,6 +10,7 @@ using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Core.Scraping.Configuration.Runtime;
+using Promitor.Integrations.Sinks.OpenTelemetry.Configuration;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 
@@ -74,6 +75,19 @@ namespace Promitor.Tests.Unit.Generators.Config
             }
 
             _runtimeConfiguration.MetricSinks.PrometheusScrapingEndpoint = prometheusSinkConfiguration;
+
+            return this;
+        }
+
+        public RuntimeConfigurationGenerator WithOpenTelemetryCollectorMetricSink(string collectorUri = "https://opentelemetry-collector:8888")
+        {
+            if (string.IsNullOrWhiteSpace(collectorUri) == false)
+            {
+                _runtimeConfiguration.MetricSinks.OpenTelemetryCollector = new OpenTelemetryCollectorSinkConfiguration
+                {
+                    CollectorUri = collectorUri
+                };
+            }
 
             return this;
         }
@@ -239,6 +253,11 @@ namespace Promitor.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath}");
                     configurationBuilder.AppendLine($"    enableMetricTimestamps: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps}");
                     configurationBuilder.AppendLine($"    metricUnavailableValue: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue}");
+                }
+                if (_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector != null)
+                {
+                    configurationBuilder.AppendLine("  openTelemetryCollector:");
+                    configurationBuilder.AppendLine($"    collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorUri}");
                 }
             }
 
