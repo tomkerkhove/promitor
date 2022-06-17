@@ -15,10 +15,14 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public bool Equals(MetricDimension other)
         {
             if (ReferenceEquals(null, other))
+            {
                 return false;
+            }
 
             if (ReferenceEquals(this, other))
+            {
                 return true;
+            }
 
             return string.Equals(other.Name, Name, StringComparison.OrdinalIgnoreCase);
         }
