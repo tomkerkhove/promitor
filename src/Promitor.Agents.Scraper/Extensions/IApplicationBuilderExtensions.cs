@@ -22,6 +22,7 @@ namespace Promitor.Agents.Scraper.Extensions
             {
                 if (string.IsNullOrWhiteSpace(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath) == false)
                 {
+                    logger.LogInformation("Adding Prometheus sink to expose on {PrometheusUrl}", metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath);
                     app.UsePrometheusMetrics(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath, logger);
                 }
             }
