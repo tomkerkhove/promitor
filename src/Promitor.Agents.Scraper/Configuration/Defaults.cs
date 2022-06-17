@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Promitor.Agents.Scraper.Configuration
+﻿namespace Promitor.Agents.Scraper.Configuration
 {
     public static class Defaults
     {

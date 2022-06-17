@@ -228,12 +228,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
             
-            services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(serviceProvider => ScrapingMutexBuilder(serviceProvider, serverConfiguration)));
+            services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(_ => ScrapingMutexBuilder(serverConfiguration)));
             
             return services;
         }
 
-        private static ScrapingMutex ScrapingMutexBuilder(IServiceProvider serviceProvider, ServerConfiguration serverConfiguration)
+        private static ScrapingMutex ScrapingMutexBuilder(ServerConfiguration serverConfiguration)
         {
             return serverConfiguration.MaxDegreeOfParallelism > 0
                 ? new ScrapingMutex(serverConfiguration.MaxDegreeOfParallelism)
