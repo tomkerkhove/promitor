@@ -9,10 +9,14 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public bool Equals(Scraping other)
         {
             if (ReferenceEquals(null, other))
+            {
                 return false;
+            }
 
             if (ReferenceEquals(this, other))
+            {
                 return true;
+            }
 
             return Schedule?.Trim() == other.Schedule?.Trim();
         }

@@ -29,14 +29,14 @@ namespace Promitor.Tests.Unit.Generators.Config
             _runtimeConfiguration = runtimeConfiguration;
         }
 
-        public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888, int maxDegreeOfParellelism = 8)
+        public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888, int maxDegreeOfParallelism = 8)
         {
             var serverConfiguration = httpPort == null
                 ? null
                 : new ServerConfiguration
                 {
                     HttpPort = httpPort.Value,
-                    MaxDegreeOfParallelism = maxDegreeOfParellelism
+                    MaxDegreeOfParallelism = maxDegreeOfParallelism
                 };
 
             return new RuntimeConfigurationGenerator(serverConfiguration);

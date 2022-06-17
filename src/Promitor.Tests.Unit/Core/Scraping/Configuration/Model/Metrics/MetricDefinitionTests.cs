@@ -97,6 +97,17 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         }
 
         [Fact]
+        public void CreateScrapeDefinition_MetricDimensionIsDistinguishable_UsesValueComparison()
+        {
+            // Arrange
+            var dimension1 = new MetricDimension { Name = "MetricDimension1" };
+            var dimension2 = new MetricDimension { Name = "MetricDimension2" };
+
+            // Assert
+            Assert.NotEqual(dimension1, dimension2);
+        }
+
+        [Fact]
         public void CreateScrapeDefinition_ScrapingIsEquatable_UsesValueComparison()
         {
             // Arrange
@@ -105,6 +116,17 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
 
             // Assert
             Assert.Equal(scraping1, scraping2);
+        }
+
+        [Fact]
+        public void CreateScrapeDefinition_ScrapingIsDistinguishable_UsesValueComparison()
+        {
+            // Arrange
+            var scraping1 = new Promitor.Core.Scraping.Configuration.Model.Scraping { Schedule = "5 * * * *" };
+            var scraping2 = new Promitor.Core.Scraping.Configuration.Model.Scraping { Schedule = "6 * * * *" };
+
+            // Assert
+            Assert.NotEqual(scraping1, scraping2);
         }
     }
 }
