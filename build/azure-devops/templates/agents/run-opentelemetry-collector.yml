@@ -1,8 +1,8 @@
 parameters:
   imageName: ''
   containerName: ''
-  volumes: 'promitor-ci'
   networkName: ''
+  volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
 
 steps:
 - bash: |
@@ -16,15 +16,9 @@ steps:
       echo "##vso[task.logissue type=error;]Missing template parameter \"containerName\""
       echo "##vso[task.complete result=Failed;]"
     fi
-    echo "Variable 'volumes' found with value '$VOLUMES'"
-    if [ -z "$VOLUMES" ]; then
-      echo "##vso[task.logissue type=error;]Missing template parameter \"volumes\""
-      echo "##vso[task.complete result=Failed;]"
-    fi
   env:
     IMAGE_NAME: ${{ parameters.imageName }}
     CONTAINER_NAME: ${{ parameters.containerName }}
-    VOLUMES: ${{ parameters.volumes }}
   displayName: Check for required parameters in YAML template
 - powershell: |
     $networkArgument = '';
@@ -36,9 +30,11 @@ steps:
     }
     Write-Host "##vso[task.setvariable variable=networkArgument]$networkArgument"
   displayName: 'Determine if a network is required'
+- powershell: cat $(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml
+  displayName: 'Show OpenTelemetry configuration'
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
-      docker run -d -p 8888:8888 -p 8889:8889 --name ${{ parameters.containerName }} $(networkArgument) --volume ${{ parameters.volumes }} otel/opentelemetry-collector --config otel-local-config.yaml
+      docker run -d -p 8888:8888 -p 8889:8889 --name ${{ parameters.containerName }} $(networkArgument) --volume ${{ parameters.volumes }} otel/opentelemetry-collector --config /etc/otel-local-config.yaml
       sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run OpenTelemetry Collector as ${{ parameters.containerName }} container
