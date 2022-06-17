@@ -70,7 +70,9 @@ stages:
   - name: Agent.ResourceDiscovery.Version
     value: $(App.Version)
   - name: Container.Scraper.Name
-    value: 'promitor.scraper.agent'
+    value: 'promitor.agents.scraper'
+  - name: Container.OpenTelemetryCollector.Name
+    value: 'opentelemetry.collector'
   - name: Container.ResourceDiscovery.Name
     value: 'promitor.agents.resourcediscovery'
   - name: Container.ResourceDiscovery.Port
@@ -118,6 +120,11 @@ stages:
      - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
+     - template: templates/agents/run-opentelemetry-collector.yml
+       parameters:
+          containerName: '$(Container.OpenTelemetryCollector.Name)'
+          volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
+          networkName: '$(Container.Network.Name)'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
