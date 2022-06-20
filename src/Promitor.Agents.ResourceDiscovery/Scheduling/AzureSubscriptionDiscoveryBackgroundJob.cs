@@ -33,15 +33,18 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             // Discover Azure subscriptions
 
             PagedPayload<AzureSubscriptionInformation> discoveredLandscape;
+            var currentPage = 1;
             do
             {
-                discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: 0);
+                discoveredLandscape = await AzureResourceRepository.DiscoverAzureSubscriptionsAsync(pageSize: 1000, currentPage: currentPage);
 
                 // Report discovered information as metric
                 foreach (var discoveredLandscapeItem in discoveredLandscape.Result)
                 {
                     ReportDiscoveredAzureInfo(discoveredLandscapeItem);
                 }
+
+                currentPage++;
             }
             while (discoveredLandscape.HasMore);
 
