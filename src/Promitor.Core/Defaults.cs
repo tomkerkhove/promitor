@@ -5,6 +5,7 @@
         public static class AppServices
         {
             public static string SlotName { get; } = "production";
+            public static string SlotName2 { get; } = "production";
         }
 
         public static class MetricDefaults
