@@ -42,7 +42,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 .WithResourceGroupsWithName(criteriaDefinition.Include.ResourceGroups)
                 .WithinRegions(criteriaDefinition.Include.Regions)
                 .WithTags(criteriaDefinition.Include.Tags)
-                .Project(ProjectedFieldNames);
+                .Project(ProjectedFieldNames)
+                .OrderByAsc(ProjectedFieldNames);
 
             return graphQueryBuilder;
         }
