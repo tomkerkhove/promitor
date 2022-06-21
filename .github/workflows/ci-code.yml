@@ -11,6 +11,13 @@ jobs:
   verify_codebase:
     name: Verify Codebase
     runs-on: ubuntu-latest
+    # Assign permissions for unit tests to be reported.
+    # See https://github.com/dorny/test-reporter/issues/168
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
     steps:
         # Checkout code
       - name: Checkout Code
