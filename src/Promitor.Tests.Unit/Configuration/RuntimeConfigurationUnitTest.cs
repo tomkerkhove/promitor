@@ -144,7 +144,7 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var bogusMaxDegreeOfParallelism = BogusGenerator.Random.Int();
-            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(888, bogusMaxDegreeOfParallelism)
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(maxDegreeOfParallelism: bogusMaxDegreeOfParallelism)
                 .GenerateAsync();
 
             // Act
@@ -331,7 +331,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasNoHttpPort_UsesDefault()
         {
             // Arrange
-            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(null)
+            var configuration = await RuntimeConfigurationGenerator.WithoutServerConfiguration()
                 .GenerateAsync();
 
             // Act
@@ -347,7 +347,7 @@ namespace Promitor.Tests.Unit.Configuration
         public async Task RuntimeConfiguration_HasNoMaxDegreeOfParallelism_UsesDefault()
         {
             // Arrange
-            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration(null)
+            var configuration = await RuntimeConfigurationGenerator.WithoutServerConfiguration()
                 .GenerateAsync();
 
             // Act
