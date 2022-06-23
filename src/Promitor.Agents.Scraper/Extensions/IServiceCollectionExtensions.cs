@@ -1,4 +1,5 @@
-﻿using GuardNet;
+﻿using System;
+using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -14,6 +15,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
@@ -207,6 +209,35 @@ namespace Microsoft.Extensions.DependencyInjection
                     }
                 };
             });
+        }
+
+        /// <summary>
+        /// Adds a semaphore-based implementation of <see cref="IScrapingMutex"/> to the <see cref="IServiceCollection" />.
+        /// </summary>
+        public static IServiceCollection AddScrapingMutex(this IServiceCollection services, IConfiguration configuration)
+        {
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
+            
+            services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(_ => ScrapingMutexBuilder(serverConfiguration)));
+            
+            return services;
+        }
+
+        private static ScrapingMutex ScrapingMutexBuilder(ServerConfiguration serverConfiguration)
+        {
+            return serverConfiguration.MaxDegreeOfParallelism > 0
+                ? new ScrapingMutex(serverConfiguration.MaxDegreeOfParallelism)
+                : null;
         }
 
         /// <summary>

@@ -29,16 +29,20 @@ namespace Promitor.Tests.Unit.Generators.Config
             _runtimeConfiguration = runtimeConfiguration;
         }
 
-        public static RuntimeConfigurationGenerator WithServerConfiguration(int? httpPort = 888)
+        public static RuntimeConfigurationGenerator WithServerConfiguration(int httpPort = 888, int maxDegreeOfParallelism = 8)
         {
-            var serverConfiguration = httpPort == null
-                ? null
-                : new ServerConfiguration
-                {
-                    HttpPort = httpPort.Value
-                };
+            var serverConfiguration = new ServerConfiguration
+            {
+                HttpPort = httpPort,
+                MaxDegreeOfParallelism = maxDegreeOfParallelism
+            };
 
             return new RuntimeConfigurationGenerator(serverConfiguration);
+        }
+
+        public static RuntimeConfigurationGenerator WithoutServerConfiguration()
+        {
+            return new RuntimeConfigurationGenerator(new ScraperRuntimeConfiguration());
         }
 
         public static RuntimeConfigurationGenerator WithRuntimeConfiguration(ScraperRuntimeConfiguration runtimeConfiguration)
@@ -214,6 +218,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             {
                 configurationBuilder.AppendLine("server:");
                 configurationBuilder.AppendLine($"  httpPort: {_runtimeConfiguration?.Server.HttpPort}");
+                configurationBuilder.AppendLine($"  maxDegreeOfParallelism: {_runtimeConfiguration?.Server.MaxDegreeOfParallelism}");
             }
 
             if (_runtimeConfiguration?.ResourceDiscovery != null)

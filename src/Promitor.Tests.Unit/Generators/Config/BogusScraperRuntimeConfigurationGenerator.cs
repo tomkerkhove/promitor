@@ -118,6 +118,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             var serverConfiguration = new Faker<ServerConfiguration>()
                 .StrictMode(true)
                 .RuleFor(srvConfig => srvConfig.HttpPort, faker => faker.Random.Int())
+                .RuleFor(srvConfig => srvConfig.MaxDegreeOfParallelism, faker => faker.Random.Int())
                 .Generate();
             return serverConfiguration;
         }
