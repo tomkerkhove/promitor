@@ -135,6 +135,19 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Query
             return this;
         }
 
+        public GraphQueryBuilder OrderByAsc(params string[] fields)
+        {
+            _queryBuilder.Append("| order by ");
+            for (int fieldCount = 0; fieldCount < fields.Length - 1; fieldCount++)
+            {
+                _queryBuilder.Append($"{fields[fieldCount]} asc, ");
+            }
+
+            _queryBuilder.AppendLine($"{fields.Last()} asc");
+
+            return this;
+        }
+
         public string Build()
         {
             return _queryBuilder.ToString().Trim();
