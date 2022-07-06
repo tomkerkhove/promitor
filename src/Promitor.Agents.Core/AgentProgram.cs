@@ -55,7 +55,7 @@ namespace Promitor.Agents.Core
         {
             Guard.NotNull(serverConfiguration, nameof(serverConfiguration));
 
-            return serverConfiguration?.HttpPort ?? 80;
+            return serverConfiguration?.HttpPort ?? Configuration.Defaults.Server.HttpPort;
         }
 
         /// <summary>

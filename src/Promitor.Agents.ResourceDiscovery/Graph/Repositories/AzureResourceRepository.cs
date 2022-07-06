@@ -81,7 +81,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions""
-| project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]";
+| project tenantId, subscriptionId, name, state=properties[""state""], spendingLimit=properties[""subscriptionPolicies""][""spendingLimit""], quotaId=properties[""subscriptionPolicies""][""quotaId""], authorizationSource=properties[""authorizationSource""]
+| order by tenantId asc, subscriptionId asc, name asc";
 
             var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Subscriptions", query, pageSize, currentPage);
             var foundSubscriptionInformation = ParseQueryResults(unparsedResults.Result, row => new AzureSubscriptionInformation
@@ -102,7 +103,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
         {
             var query = @"ResourceContainers
 | where type == ""microsoft.resources/subscriptions/resourcegroups""
-| project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy";
+| project tenantId, subscriptionId, name, location, provisioningState=properties[""provisioningState""], managedBy
+| order by tenantId asc, subscriptionId asc, name asc";
 
             var unparsedResults = await _azureResourceGraph.QueryAzureLandscapeAsync("Discover Azure Resource Groups", query, pageSize, currentPage);
             var foundResourceGroupInformation = ParseQueryResults(unparsedResults.Result, row => new AzureResourceGroupInformation

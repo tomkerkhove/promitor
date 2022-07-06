@@ -55,6 +55,7 @@ namespace Promitor.Agents.Scraper
                    .AddResourceDiscoveryHealthCheck(Configuration);
             
             services.UseMetricSinks(Configuration, _logger)
+                .AddScrapingMutex(Configuration)
                 .ScheduleMetricScraping();
         }
 
