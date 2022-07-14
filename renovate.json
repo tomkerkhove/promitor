@@ -10,7 +10,7 @@
 	"rebaseLabel": "renovate-rebase",
 	"packageRules": [{
 			"datasources": ["docker"],
-			"packagePatterns": ["^mcr.microsoft.com/dotnet/"],
+			"matchPackagePrefixes": ["mcr.microsoft.com/dotnet/"],
 			"groupName": ".NET Core Docker containers"
 		},
 		{
