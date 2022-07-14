@@ -75,7 +75,7 @@ namespace Promitor.Agents.Scraper
         {
             IConfiguration configuration = BuildConfiguration(configurationFolder);
             ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
-            IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration, context =>
+            IHostBuilder webHostBuilder = CreatePromitorWebHost(args, configuration, serverConfiguration, _ =>
             {
                 var startupLogger = new SerilogLoggerFactory(Log.Logger).CreateLogger<Startup>();
                 return new Startup(configuration, startupLogger);

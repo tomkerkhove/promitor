@@ -172,7 +172,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (metricSinkConfiguration?.AtlassianStatuspage != null)
             {
-                AddAtlassianStatuspageMetricSink(metricSinkConfiguration?.AtlassianStatuspage.PageId, services, logger);
+                AddAtlassianStatuspageMetricSink(metricSinkConfiguration.AtlassianStatuspage.PageId, services, logger);
             }
 
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
@@ -221,7 +221,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddStatsD(provider =>
             {
                 var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-                var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
+                var sinkLogger = loggerFactory.CreateLogger<StatsdMetricSink>();
                 var host = statsdConfiguration.Host;
                 var port = statsdConfiguration.Port;
                 var metricPrefix = statsdConfiguration.MetricPrefix;
@@ -233,7 +233,7 @@ namespace Microsoft.Extensions.DependencyInjection
                     Prefix = metricPrefix,
                     OnError = ex =>
                     {
-                        logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
+                        sinkLogger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
                         return true;
                     }
                 };

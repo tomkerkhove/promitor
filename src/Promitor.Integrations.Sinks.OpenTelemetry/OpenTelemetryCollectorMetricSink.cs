@@ -41,7 +41,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             await Task.WhenAll(reportMetricTasks);
         }
 
-        public async Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
@@ -50,6 +50,8 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             counter.Add(metricValue);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
+
+            return Task.CompletedTask;
         }
     }
 }

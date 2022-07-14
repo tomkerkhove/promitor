@@ -19,7 +19,7 @@ namespace Promitor.Agents.Core
         /// <param name="args">Startup arguments</param>
         /// <param name="configuration">General agent configuration</param>
         /// <param name="serverConfiguration">Configuration with regards to the web server</param>
-        /// <param name="createStartup">Builds an instance of the required startup class</param>
+        /// <param name="createStartupFunc">Builds an instance of the required startup class</param>
         public static IHostBuilder CreatePromitorWebHost<TStartup>(string[] args, IConfiguration configuration, ServerConfiguration serverConfiguration, Func<WebHostBuilderContext, TStartup> createStartupFunc = null) where TStartup : class
         {
             var httpPort = DetermineHttpPort(serverConfiguration);
@@ -31,8 +31,7 @@ namespace Promitor.Agents.Core
                     .ConfigureWebHostDefaults(webBuilder =>
                     {
                         webBuilder.ConfigureKestrel(kestrelServerOptions => kestrelServerOptions.AddServerHeader = false)
-                            .UseUrls(httpEndpointUrl)
-                            .UseSerilog();
+                            .UseUrls(httpEndpointUrl);
 
                         if (createStartupFunc != null)
                         {
@@ -42,7 +41,8 @@ namespace Promitor.Agents.Core
                         {
                             webBuilder.UseStartup<TStartup>();
                         }
-                    });
+                    })
+                    .UseSerilog();
 
             return webHostBuilder;
         }
