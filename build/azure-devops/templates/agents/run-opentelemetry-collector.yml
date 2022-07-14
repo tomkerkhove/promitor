@@ -38,4 +38,4 @@ steps:
       sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run OpenTelemetry Collector as ${{ parameters.containerName }} container
-  failOnStderr: true
+  failOnStderr: false
