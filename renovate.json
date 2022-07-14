@@ -10,8 +10,12 @@
 	"rebaseLabel": "renovate-rebase",
 	"packageRules": [{
 			"datasources": ["docker"],
-			"matchPackagePrefixes": ["mcr.microsoft.com/dotnet/"],
-			"groupName": ".NET Core Docker containers"
+			"matchPackagePrefixes": ["mcr.microsoft.com/dotnet"],
+			"groupName": ".NET Core Docker containers",
+			"labels": [
+				"Docker",
+				".NET"
+			]
 		},
 		{
 			"extends": "monorepo:dotnet",
