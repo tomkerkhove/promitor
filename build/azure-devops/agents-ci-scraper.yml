@@ -151,6 +151,7 @@ stages:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
+        additionalTestFilters: 'OS=Linux'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
@@ -230,6 +231,7 @@ stages:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
+        additionalTestFilters: 'OS!=Linux'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
