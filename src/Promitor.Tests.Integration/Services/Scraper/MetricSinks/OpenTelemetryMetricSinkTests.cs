@@ -1,9 +1,6 @@
-﻿using System.Net;
-using System.Threading.Tasks;
-using Promitor.Agents.Core;
+﻿using System.Threading.Tasks;
 using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Data;
-using Promitor.Tests.Integration.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,19 +14,6 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         {
         }
 
-        [Fact]
-        public async Task OpenTelemetry_Scrape_ReturnsOk()
-        {
-            // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
-
-            // Act
-            var response = await scraperClient.ScrapeWithResponseAsync();
-
-            // Assert
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        }
-
         [Theory]
         [InlineData("promitor_ratelimit_arm")]
         [InlineData("promitor_scrape_success")]
@@ -38,10 +22,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_ExpectedMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var openTelemetryPrometheusClient = GetOpenTelemetryPrometheusClient();
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(expectedMetricName);
+            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -56,10 +40,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         {
             // Arrange
             const string errorMetricName = "promitor_scrape_error";
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var openTelemetryPrometheusClient = GetOpenTelemetryPrometheusClient();
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
+            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -71,13 +55,18 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         {
             // Arrange
             const string errorMetricName = "promitor_scrape_success";
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var openTelemetryPrometheusClient = GetOpenTelemetryPrometheusClient();
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
+            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
+        }
+
+        private PrometheusClient GetOpenTelemetryPrometheusClient()
+        {
+            return new PrometheusClient("OpenTelemetry:Collector:Uri", "OpenTelemetry:Collector:ScrapeUri", Configuration, Logger);
         }
     }
 }

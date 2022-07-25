@@ -7,54 +7,42 @@ using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Polly;
 using Promitor.Parsers.Prometheus.Core.Models;
 using Promitor.Parsers.Prometheus.Core.Models.Interfaces;
 
 namespace Promitor.Tests.Integration.Clients
 {
-    public class AgentClient
+    public class PrometheusClient
     {
         protected IConfiguration Configuration { get; }
         protected HttpClient HttpClient { get; }
-        protected string AgentName{ get; }
+        protected string ScrapeUri { get; }
         protected ILogger Logger { get; }
 
-        public AgentClient(string agentName, string baseUrlConfigKey, IConfiguration configuration, ILogger logger)
+        public PrometheusClient(string baseUrlConfigKey, string scrapeUriConfigKey, IConfiguration configuration, ILogger logger)
         {
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(logger, nameof(logger));
 
             var baseUrl = configuration[baseUrlConfigKey];
-            logger.LogInformation("Base URL for {AgentName} is '{Url}'", agentName, baseUrl);
+            ScrapeUri = $"/{configuration[scrapeUriConfigKey]}";
+            logger.LogInformation("Base URL for Prometheus interaction is '{Url}' to scrape on '{ScrapeUri}'", baseUrl, ScrapeUri);
 
             HttpClient = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
             };
             Configuration = configuration;
-            AgentName = agentName;
             Logger = logger;
-        }
-
-        public async Task<HttpResponseMessage> GetHealthAsync()
-        {
-            return await GetAsync("/api/v1/health");
-        }
-
-        public async Task<HttpResponseMessage> GetSystemInfoAsync()
-        {
-            return await GetAsync("/api/v1/system");
         }
 
         public async Task<HttpResponseMessage> ScrapeWithResponseAsync()
         {
-            var scrapeUri = Configuration[$"Agents:{AgentName.Replace(" ", "")}:Prometheus:ScrapeUri"];
-            return await GetAsync($"/{scrapeUri}");
+            return await GetAsync(ScrapeUri);
         }
 
-        public async Task<Gauge>  WaitForPrometheusMetricAsync(string expectedMetricName)
+        public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName)
         {
             return await WaitForPrometheusMetricAsync(x => x.Name.Equals(expectedMetricName, StringComparison.InvariantCultureIgnoreCase));
         }
@@ -123,23 +111,6 @@ namespace Promitor.Tests.Integration.Clients
             }
 
             return response;
-        }
-
-        protected JsonSerializerSettings GetJsonSerializerSettings()
-        {
-            var jsonSerializerSettings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Objects,
-                NullValueHandling = NullValueHandling.Ignore,
-                MetadataPropertyHandling = MetadataPropertyHandling.Ignore
-            };
-            return jsonSerializerSettings;
-        }
-
-        protected TResponse GetDeserializedResponse<TResponse>(string rawResponse)
-        {
-            var jsonSerializerSettings = GetJsonSerializerSettings();
-            return JsonConvert.DeserializeObject<TResponse>(rawResponse, jsonSerializerSettings);
         }
     }
 }
