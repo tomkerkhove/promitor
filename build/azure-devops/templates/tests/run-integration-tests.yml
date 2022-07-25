@@ -16,7 +16,7 @@ steps:
 - powershell: |
     $testFilter = 'Agent=${{ parameters.agentName }}';
     if ('${{ parameters.additionalTestFilters }}' -ne '') {
-      $testFilter = '$($testFilter)&${{ parameters.additionalTestFilters }}';
+      $testFilter = 'Agent=${{ parameters.agentName }}&${{ parameters.additionalTestFilters }}';
     }
     Write-Host "Test Filter = $testFilter"
     Write-Host "##vso[task.setvariable variable=testFilter]$testFilter"
