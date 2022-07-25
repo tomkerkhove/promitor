@@ -81,6 +81,8 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
+  - name: OpenTelemetry.Collector.Uri
+    value: http://opentelemetry.collector:8889
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
