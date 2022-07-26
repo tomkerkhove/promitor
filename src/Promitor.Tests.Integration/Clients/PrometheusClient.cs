@@ -15,29 +15,31 @@ namespace Promitor.Tests.Integration.Clients
 {
     public class PrometheusClient
     {
-        protected IConfiguration Configuration { get; }
         protected HttpClient HttpClient { get; }
+        protected string MetricNamespace { get; }
         protected string ScrapeUri { get; }
         protected ILogger Logger { get; }
-
-        public PrometheusClient(string baseUrlConfigKey, string scrapeUriConfigKey, IConfiguration configuration, ILogger logger)
+        
+        public PrometheusClient(string baseUrl, string scrapingUri, ILogger logger)
+            : this(baseUrl, scrapingUri, metricNamespace: null, logger: logger)
         {
-            Guard.NotNull(configuration, nameof(configuration));
+        }
+
+        public PrometheusClient(string baseUrl, string scrapeUri, string metricNamespace, ILogger logger)
+        {
+            Guard.NotNullOrWhitespace(baseUrl, nameof(baseUrl));
+            Guard.NotNullOrWhitespace(scrapeUri, nameof(scrapeUri));
             Guard.NotNull(logger, nameof(logger));
 
-            var baseUrl = configuration[baseUrlConfigKey];
-
-            var configuredScrapingUri = configuration[scrapeUriConfigKey];
-            ScrapeUri = string.IsNullOrWhiteSpace(configuredScrapingUri)? "/scrape" : $"/{configuration[scrapeUriConfigKey]}";
-
-            logger.LogInformation("Base URL for Prometheus interaction is '{Url}' to scrape on '{ScrapeUri}'", baseUrl, ScrapeUri);
-
+            MetricNamespace = metricNamespace;
+            ScrapeUri = scrapeUri;
             HttpClient = new HttpClient
             {
                 BaseAddress = new Uri(baseUrl)
             };
-            Configuration = configuration;
             Logger = logger;
+
+            Logger.LogInformation("Base URL for Prometheus interaction is '{Url}' to scrape on '{ScrapeUri}' with metric namespace '{MetricNamespace}'", baseUrl, ScrapeUri, metricNamespace);
         }
 
         public async Task<HttpResponseMessage> ScrapeWithResponseAsync()
@@ -52,9 +54,11 @@ namespace Promitor.Tests.Integration.Clients
 
         public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName, string expectedLabelName, string expectedLabelValue)
         {
+            var computedExpectedMetricName = string.IsNullOrWhiteSpace(MetricNamespace) ? expectedMetricName : $"{MetricNamespace}_{expectedMetricName}";
+
             Func<KeyValuePair<string, string>, bool> labelFilter = label => label.Key.Equals(expectedLabelName, StringComparison.InvariantCultureIgnoreCase)
                                                                             && label.Value.Equals(expectedLabelValue, StringComparison.InvariantCultureIgnoreCase);
-            return await WaitForPrometheusMetricAsync(x => x.Name.Equals(expectedMetricName, StringComparison.InvariantCultureIgnoreCase)
+            return await WaitForPrometheusMetricAsync(x => x.Name.Equals(computedExpectedMetricName, StringComparison.InvariantCultureIgnoreCase)
                                                            && x.Measurements?.Any(measurement => measurement.Labels?.Any(labelFilter) == true) == true);
         }
 

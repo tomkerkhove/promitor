@@ -20,10 +20,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ReturnsOk()
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.ScrapeWithResponseAsync();
+            var response = await prometheusClient.ScrapeWithResponseAsync();
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -37,10 +37,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(expectedMetricName);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -55,10 +55,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         {
             // Arrange
             const string errorMetricName = "promitor_scrape_error";
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -70,10 +70,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         {
             // Arrange
             const string errorMetricName = "promitor_scrape_success";
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -83,10 +83,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_Get_ReturnsVersionHeader()
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var response = await scraperClient.ScrapeWithResponseAsync();
+            var response = await prometheusClient.ScrapeWithResponseAsync();
 
             // Assert
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));

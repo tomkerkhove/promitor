@@ -24,10 +24,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedSystemPerformanceMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(expectedMetricName);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -40,10 +40,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
 
             // Assert
             Assert.NotNull(gaugeMetric);
@@ -56,10 +56,10 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
             // Arrange
-            var scraperClient = new ScraperClient(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
 
             // Act
-            var gaugeMetric = await scraperClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
 
             // Assert
             Assert.NotNull(gaugeMetric);
