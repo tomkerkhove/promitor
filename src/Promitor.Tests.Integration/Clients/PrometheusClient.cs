@@ -26,7 +26,10 @@ namespace Promitor.Tests.Integration.Clients
             Guard.NotNull(logger, nameof(logger));
 
             var baseUrl = configuration[baseUrlConfigKey];
-            ScrapeUri = $"/{configuration[scrapeUriConfigKey]}";
+
+            var configuredScrapingUri = configuration[scrapeUriConfigKey];
+            ScrapeUri = string.IsNullOrWhiteSpace(configuredScrapingUri)? "/scrape" : $"/{configuration[scrapeUriConfigKey]}";
+
             logger.LogInformation("Base URL for Prometheus interaction is '{Url}' to scrape on '{ScrapeUri}'", baseUrl, ScrapeUri);
 
             HttpClient = new HttpClient

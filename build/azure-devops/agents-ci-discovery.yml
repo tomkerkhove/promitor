@@ -23,6 +23,8 @@ variables:
     value: 'promitor-discovery-agent'
   - name: App.Version
     value: '0.0.0-$(Image.Tag)'
+  - name: OpenTelemetry.Collector.Uri
+    value: http://notused:8889
 stages:
 - stage: Init
   displayName: Prepare Build
