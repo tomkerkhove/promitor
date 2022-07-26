@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GuardNet;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Promitor.Parsers.Prometheus.Core.Models;
@@ -49,7 +48,8 @@ namespace Promitor.Tests.Integration.Clients
 
         public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName)
         {
-            return await WaitForPrometheusMetricAsync(x => x.Name.Equals(expectedMetricName, StringComparison.InvariantCultureIgnoreCase));
+            var computedExpectedMetricName = string.IsNullOrWhiteSpace(MetricNamespace) ? expectedMetricName : $"{MetricNamespace}_{expectedMetricName}";
+            return await WaitForPrometheusMetricAsync(x => x.Name.Equals(computedExpectedMetricName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName, string expectedLabelName, string expectedLabelValue)
@@ -65,9 +65,9 @@ namespace Promitor.Tests.Integration.Clients
         private async Task<Gauge> WaitForPrometheusMetricAsync(Predicate<Gauge> filter)
         {
             // Create retry to poll for metric to show up
-            const int maxRetries = 5;
+            const int maxRetries = 10;
             var pollPolicy = Policy.HandleResult<List<IMetric>>(metrics => metrics?.Find(x => filter((Gauge)x)) == null)
-                                   .WaitAndRetryAsync(5,
+                                   .WaitAndRetryAsync(maxRetries,
                                                   retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                                                   (_, _, retryCount, _) =>
                                                   {

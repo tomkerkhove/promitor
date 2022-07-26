@@ -10,32 +10,31 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
     [Trait("Integrations", "OpenTelemetry")]
     public class OpenTelemetryMetricSinkTests : ScraperIntegrationTest
     {
+        private readonly string _openTelemetryMetricNamespace;
+
         public OpenTelemetryMetricSinkTests(ITestOutputHelper testOutput)
           : base(testOutput)
         {
+            _openTelemetryMetricNamespace = Configuration["OpenTelemetry:Collector:MetricNamespace"];
         }
 
-        [Theory]
+        [Theory(Skip = "System metrics are not implemented yet")]
         [InlineData("promitor_ratelimit_arm")]
         [InlineData("promitor_scrape_success")]
         [InlineData("promitor_scrape_error")]
-        [ClassData(typeof(AvailableMetricsTestInputGenerator))]
-        public async Task OpenTelemetry_Scrape_ExpectedMetricIsAvailable(string expectedMetricName)
+        public async Task OpenTelemetry_Scrape_ExpectedSystemMetricIsAvailable(string expectedMetricName)
         {
-            // Arrange
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
-
-            // Act
-            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
-
-            // Assert
-            Assert.NotNull(gaugeMetric);
-            Assert.Equal(expectedMetricName, gaugeMetric.Name);
-            Assert.NotNull(gaugeMetric.Measurements);
-            Assert.False(gaugeMetric.Measurements.Count < 1);
+            await AssertExpectedMetricIsAvailable(expectedMetricName);
         }
 
         [Theory]
+        [ClassData(typeof(AvailableMetricsTestInputGenerator))]
+        public async Task OpenTelemetry_Scrape_ExpectedScrapedMetricIsAvailable(string expectedMetricName)
+        {
+            await AssertExpectedMetricIsAvailable(expectedMetricName);
+        }
+
+        [Theory(Skip = "System metrics are not implemented yet")]
         [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnErrorMetric(string expectedMetricName)
         {
@@ -50,7 +49,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.NotNull(gaugeMetric);
         }
 
-        [Theory]
+        [Theory(Skip = "System metrics are not implemented yet")]
         [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnSuccessMetric(string expectedMetricName)
         {
@@ -65,29 +64,6 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.NotNull(gaugeMetric);
         }
 
-        [Theory]
-        [InlineData("promitor_runtime_dotnet_totalmemory")]
-        [InlineData("promitor_runtime_process_virtual_bytes")]
-        [InlineData("promitor_runtime_process_working_set")]
-        [InlineData("promitor_runtime_process_private_bytes")]
-        [InlineData("promitor_runtime_process_num_threads")]
-        [InlineData("promitor_runtime_process_processid")]
-        [InlineData("promitor_runtime_process_start_time_seconds")]
-        public async Task OpenTelemetry_Scrape_ExpectedSystemPerformanceMetricIsAvailable(string expectedMetricName)
-        {
-            // Arrange
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
-
-            // Act
-            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
-
-            // Assert
-            Assert.NotNull(gaugeMetric);
-            Assert.Equal(expectedMetricName, gaugeMetric.Name);
-            Assert.NotNull(gaugeMetric.Measurements);
-            Assert.False(gaugeMetric.Measurements.Count < 1);
-        }
-
         [Fact]
         public async Task OpenTelemetry_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
@@ -99,12 +75,12 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 
             // Assert
             Assert.NotNull(gaugeMetric);
-            Assert.Equal(RuntimeMetricNames.RateLimitingForArm, gaugeMetric.Name);
+            Assert.Equal($"{_openTelemetryMetricNamespace}_{RuntimeMetricNames.RateLimitingForArm}", gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
-
-        [Fact]
+        
+        [Fact(Skip = "System metrics are not implemented yet")]
         public async Task OpenTelemetry_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
             // Arrange
@@ -115,7 +91,22 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 
             // Assert
             Assert.NotNull(gaugeMetric);
-            Assert.Equal(RuntimeMetricNames.ArmThrottled, gaugeMetric.Name);
+            Assert.Equal($"{_openTelemetryMetricNamespace}_{RuntimeMetricNames.RateLimitingForArm}", gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+        }
+
+        private async Task AssertExpectedMetricIsAvailable(string expectedMetricName)
+        {
+            // Arrange
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+
+            // Act
+            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal($"{_openTelemetryMetricNamespace}_{expectedMetricName}", gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
