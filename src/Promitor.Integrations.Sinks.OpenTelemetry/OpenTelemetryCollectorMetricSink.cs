@@ -36,8 +36,8 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
                 var metricValue = measuredMetric.Value ?? 0;
-
-                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, new Dictionary<string, string>());
+                
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels);
                 reportMetricTasks.Add(reportMetricTask);
             }
 
