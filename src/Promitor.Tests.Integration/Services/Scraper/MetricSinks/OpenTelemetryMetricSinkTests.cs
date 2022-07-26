@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 
 namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 {
-    [Trait("OS", "Linux")]
+    [Trait("Integrations", "OpenTelemetry")]
     public class OpenTelemetryMetricSinkTests : ScraperIntegrationTest
     {
         public OpenTelemetryMetricSinkTests(ITestOutputHelper testOutput)
