@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
@@ -13,7 +16,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
         private static readonly Meter azureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
-        public MetricSinkType Type { get; } = MetricSinkType.OpenTelemetryCollector;
+        public MetricSinkType Type => MetricSinkType.OpenTelemetryCollector;
 
         public OpenTelemetryCollectorMetricSink(ILogger<OpenTelemetryCollectorMetricSink> logger)
         {
@@ -41,17 +44,43 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             await Task.WhenAll(reportMetricTasks);
         }
 
+        private readonly ConcurrentDictionary<string, ObservableGauge<double>> gauges = new ConcurrentDictionary<string, ObservableGauge<double>>();
+        private readonly ConcurrentDictionary<string, HashSet<Measurement<double>>> measurements = new ConcurrentDictionary<string, HashSet<Measurement<double>>>();
+
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
-            // TODO: Switch to gauge
-            var counter = azureMonitorMeter.CreateCounter<double>(metricName, description: metricDescription);
-            counter.Add(metricValue);
+            // TODO: Move to factory instead?
+            if (gauges.ContainsKey(metricName) == false)
+            {
+                InitializeNewMetric(metricName, metricDescription);
+            }
+
+            var composedTags = labels.Select(kvp => new KeyValuePair<string, object?>(kvp.Key, kvp.Value)).ToArray();
+            var newMeasurement = new Measurement<double>(metricValue, composedTags);
+            measurements[metricName].Add(newMeasurement);
 
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
 
             return Task.CompletedTask;
+        }
+
+        private void InitializeNewMetric(string metricName, string metricDescription)
+        {
+            var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
+            gauges.TryAdd(metricName, gauge);
+
+            measurements.TryAdd(metricName, new HashSet<Measurement<double>>());
+        }
+
+        private IEnumerable<Measurement<double>> ReportMeasurementsForMetric(string metricName)
+        {
+            var recordedMeasurements = measurements[metricName];
+
+            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, new HashSet<Measurement<double>>());
+
+            return measurementsToReport;
         }
     }
 }
