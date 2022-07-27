@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Promitor.Core;
 using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Data;
@@ -25,7 +24,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_ExpectedSystemMetricIsAvailable(string expectedMetricName)
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
 
             await AssertExpectedMetricIsAvailable(expectedMetricName);
@@ -36,7 +35,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_ExpectedScrapedMetricIsAvailable(string expectedMetricName)
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
 
             await AssertExpectedMetricIsAvailable(expectedMetricName);
@@ -47,7 +46,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnErrorMetric(string expectedMetricName)
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
 
             // Arrange
@@ -66,7 +65,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnSuccessMetric(string expectedMetricName)
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
 
             // Arrange
@@ -84,7 +83,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
             // Arrange
             var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
@@ -103,7 +102,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task OpenTelemetry_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
 #if RELEASE
-            Skip.If(OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
+            Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
             // Arrange
             var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
