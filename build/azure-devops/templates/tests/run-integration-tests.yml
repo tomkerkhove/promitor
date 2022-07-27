@@ -5,22 +5,11 @@ parameters:
   type: string
 - name: buildConfiguration
   type: string
-- name: additionalTestFilters
-  type: string
-  default: ''
 
 steps:
 - template: ./../../build/install-sdk.yml
   parameters:
     dotnetVersion: '${{ parameters.dotnetVersion }}'
-- powershell: |
-    $testFilter = 'Agent=${{ parameters.agentName }}';
-    if ('${{ parameters.additionalTestFilters }}' -ne '') {
-      $testFilter = 'Agent=${{ parameters.agentName }}|${{ parameters.additionalTestFilters }}';
-    }
-    Write-Host "Test Filter = $testFilter"
-    Write-Host "##vso[task.setvariable variable=testFilter]$testFilter"
-  displayName: 'Determine test filters'
 - task: replacetokens@3
   displayName: Replace Tokens in Integration Test Configuration (${{ parameters.agentName }} Agent)
   inputs:
@@ -41,4 +30,4 @@ steps:
     projects: 'src/Promitor.Tests.Integration/Promitor.Tests.Integration.csproj'
     feedsToUse: 'config'
     nugetConfigPath: 'src/NuGet.config'
-    arguments: '--configuration ${{ parameters.buildConfiguration }} --filter "$(testFilter)"'
+    arguments: '--configuration ${{ parameters.buildConfiguration }} --filter "Agent=${{ parameters.agentName}}"'

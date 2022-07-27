@@ -119,7 +119,6 @@ stages:
         agentName: 'Resource Discovery'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-        additionalTestFilters: 'Integrations!=OpenTelemetry'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Name)'
@@ -175,7 +174,6 @@ stages:
         agentName: 'Resource Discovery'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-        additionalTestFilters: 'Integrations!=OpenTelemetry'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Name)'

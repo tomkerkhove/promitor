@@ -128,7 +128,7 @@ stages:
           volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
           networkName: '$(Container.Network.Name)'
      - task: replacetokens@3
-       displayName: Replace Tokens in Runtime Configuration (${{ parameters.agentName }} Agent)
+       displayName: Replace Tokens in Runtime Configuration
        inputs:
           rootDirectory: '$(Pipeline.Workspace)/s/config/promitor/scraper/'
           targetFiles: 'ci-runtime.yaml'
@@ -165,7 +165,6 @@ stages:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-        additionalTestFilters: 'Integrations=OpenTelemetry'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
@@ -220,7 +219,7 @@ stages:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
      - task: replacetokens@3
-       displayName: Replace Tokens in Runtime Configuration (${{ parameters.agentName }} Agent)
+       displayName: Replace Tokens in Runtime Configuration
        inputs:
           rootDirectory: '$(Pipeline.Workspace)\s\config\promitor\scraper\'
           targetFiles: 'ci-runtime.yaml'
@@ -257,7 +256,6 @@ stages:
         agentName: 'Scraper'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
-        additionalTestFilters: 'Integrations!=OpenTelemetry'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
