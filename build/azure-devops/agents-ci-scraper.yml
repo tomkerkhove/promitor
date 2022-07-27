@@ -127,6 +127,18 @@ stages:
           containerName: '$(Container.OpenTelemetryCollector.Name)'
           volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
           networkName: '$(Container.Network.Name)'
+     - task: replacetokens@3
+       displayName: Replace Tokens in Runtime Configuration (${{ parameters.agentName }} Agent)
+       inputs:
+          rootDirectory: '$(Pipeline.Workspace)/s/config/promitor/scraper/'
+          targetFiles: 'ci-runtime.yaml'
+          encoding: 'auto'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'fail'
+          keepToken: false
+          tokenPrefix: '#{'
+          tokenSuffix: '}#'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
@@ -207,6 +219,18 @@ stages:
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
+     - task: replacetokens@3
+       displayName: Replace Tokens in Runtime Configuration (${{ parameters.agentName }} Agent)
+       inputs:
+          rootDirectory: '$(Pipeline.Workspace)\s\config\promitor\scraper\'
+          targetFiles: 'ci-runtime.yaml'
+          encoding: 'auto'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'fail'
+          keepToken: false
+          tokenPrefix: '#{'
+          tokenSuffix: '}#'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'

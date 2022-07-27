@@ -1,6 +1,8 @@
 server:
   httpPort: 88
 metricSinks:
+  openTelemetryCollector:
+    collectorUri: http://#{Container.OpenTelemetryCollector.Name}#:4317
   prometheusScrapingEndpoint:
     metricUnavailableValue: NaN
     enableMetricTimestamps: true # true by default
@@ -16,5 +18,5 @@ azureMonitor:
   logging:
     isEnabled: false
 resourceDiscovery:
-  host: promitor.agents.resourcediscovery
+  host: #{Container.ResourceDiscovery.Name}#
   port: 99
