@@ -35,7 +35,7 @@ namespace Promitor.Tests.Integration.Clients
 
         private PrometheusClient CreateForPrometheusScrapingEndpoint(string agentName, IConfiguration configuration)
         {
-            var baseUri = configuration["Agents:Scraper:BaseUrl"];
+            var baseUri = configuration[$"Agents:{agentName}:BaseUrl"];
             var scrapeUri = configuration[$"Agents:{agentName}:Prometheus:ScrapeUri"];
 
             _logger.LogInformation("Creating Prometheus client for {BaseUri}/{ScrapeUri}", baseUri, scrapeUri);
