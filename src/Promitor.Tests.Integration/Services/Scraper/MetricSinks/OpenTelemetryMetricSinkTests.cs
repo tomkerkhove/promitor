@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Promitor.Core;
-using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Data;
 using Xunit;
 using Xunit.Abstractions;

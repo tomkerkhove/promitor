@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Promitor.Agents.Core;
-using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Data;
 using Promitor.Tests.Integration.Extensions;
 using Xunit;

@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Core;
-using Promitor.Tests.Integration.Clients;
 using Xunit;
 using Xunit.Abstractions;
 
