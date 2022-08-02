@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Extensions;
@@ -10,6 +11,7 @@ using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Core;
 using Serilog;
+using Serilog.Extensions.Logging;
 
 namespace Promitor.Agents.Scraper
 {
@@ -73,7 +75,11 @@ namespace Promitor.Agents.Scraper
         {
             IConfiguration configuration = BuildConfiguration(configurationFolder);
             ServerConfiguration serverConfiguration = GetServerConfiguration(configuration);
-            IHostBuilder webHostBuilder = CreatePromitorWebHost<Startup>(args, configuration, serverConfiguration);
+            IHostBuilder webHostBuilder = CreatePromitorWebHost(args, configuration, serverConfiguration, _ =>
+            {
+                var startupLogger = new SerilogLoggerFactory(Log.Logger).CreateLogger<Startup>();
+                return new Startup(configuration, startupLogger);
+            });
 
             return webHostBuilder;
         }

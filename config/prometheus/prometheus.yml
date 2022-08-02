@@ -1,10 +1,11 @@
 scrape_configs:
 - job_name: promitor
   scrape_interval: 5s
-  metrics_path: /scrape
+  metrics_path: /metrics
   static_configs:
-  - targets:
-    - promitor.agents.scraper:88
+    - targets: ['promitor.agents.scraper:88']
+    - targets: ['opentelemetry-collector:8889']
+    - targets: ['opentelemetry-collector:8888']
 - job_name: traefik
   scrape_interval: 5s
   static_configs:

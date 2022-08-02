@@ -6,7 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide support for pushing metrics to an OpenTelemetry Collector ([docs](https://docs.promitor.io/latest/scraping/runtime-configuration/#opentelemetry)
+ | [#1824](https://github.com/tomkerkhove/promitor/issues/1824))
 
 #### Resource Discovery
 

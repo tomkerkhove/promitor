@@ -272,6 +272,42 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredCollectorUriInOpenTelemetryCollectorEndpoint_UsesConfigured()
+        {
+            // Arrange
+            var collectorUri = "https://foo.bar";
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithOpenTelemetryCollectorMetricSink(collectorUri: collectorUri)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
+            Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorUri);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredNoCollectorUriInOpenTelemetryCollectorEndpoint_OpenTelemetryIsIgnored()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithOpenTelemetryCollectorMetricSink(collectorUri: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.Null(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
+        }
+
+        [Fact]
         public async Task RuntimeConfiguration_HasNoDefaultApplicationInsights_UsesDefault()
         {
             // Arrange

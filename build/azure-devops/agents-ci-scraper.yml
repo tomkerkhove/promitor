@@ -70,7 +70,9 @@ stages:
   - name: Agent.ResourceDiscovery.Version
     value: $(App.Version)
   - name: Container.Scraper.Name
-    value: 'promitor.scraper.agent'
+    value: 'promitor.agents.scraper'
+  - name: Container.OpenTelemetryCollector.Name
+    value: 'opentelemetry.collector'
   - name: Container.ResourceDiscovery.Name
     value: 'promitor.agents.resourcediscovery'
   - name: Container.ResourceDiscovery.Port
@@ -79,6 +81,8 @@ stages:
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
     value: 'local/promitor-resource-discovery:dev'
+  - name: OpenTelemetry.Collector.Uri
+    value: http://localhost:8889
   jobs:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
@@ -118,6 +122,23 @@ stages:
      - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
+     - template: templates/agents/run-opentelemetry-collector.yml
+       parameters:
+          containerName: '$(Container.OpenTelemetryCollector.Name)'
+          volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
+          networkName: '$(Container.Network.Name)'
+     - task: replacetokens@3
+       displayName: Replace Tokens in Runtime Configuration
+       inputs:
+          rootDirectory: '$(Pipeline.Workspace)/s/config/promitor/scraper/'
+          targetFiles: 'ci-runtime.yaml'
+          encoding: 'auto'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'fail'
+          keepToken: false
+          tokenPrefix: '#{'
+          tokenSuffix: '}#'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
@@ -197,6 +218,18 @@ stages:
        parameters:
         networkName: '$(Container.Network.Name)'
         driverName: 'nat'
+     - task: replacetokens@3
+       displayName: Replace Tokens in Runtime Configuration
+       inputs:
+          rootDirectory: '$(Pipeline.Workspace)\s\config\promitor\scraper\'
+          targetFiles: 'runtime.yaml'
+          encoding: 'auto'
+          writeBOM: true
+          verbosity: 'detailed'
+          actionOnMissing: 'fail'
+          keepToken: false
+          tokenPrefix: '#{'
+          tokenSuffix: '}#'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'

@@ -4,6 +4,7 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Metrics;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -33,11 +34,13 @@ using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
+using Promitor.Integrations.Sinks.OpenTelemetry;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
+using Spectre.Console;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -139,9 +142,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IValidationStep, AzureAuthenticationValidationStep>();
             services.AddTransient<IValidationStep, MetricsDeclarationValidationStep>();
             services.AddTransient<IValidationStep, ResourceDiscoveryValidationStep>();
-            services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
-            services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
             services.AddTransient<IValidationStep, AtlassianStatuspageMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, OpenTelemetryCollectorMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, PrometheusScrapingEndpointMetricSinkValidationStep>();
+            services.AddTransient<IValidationStep, StatsDMetricSinkValidationStep>();
             services.AddTransient<RuntimeValidator>();
 
             return services;
@@ -152,47 +156,80 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Collections of services in application</param>
         /// <param name="configuration">Configuration of the application</param>
-        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration)
+        /// <param name="logger"></param>
+        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration, ILogger<Startup> logger)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
+
+            logger.LogInformation("The following metric sinks were configured and are being enabled:");
+
+            // Create a table for listing all configured sinks
+            var metricSinkAsciiTable = CreateAsciiTable();
+
             if (metricSinkConfiguration?.Statsd != null)
             {
-                AddStatsdMetricSink(services, metricSinkConfiguration.Statsd);
+                AddStatsdMetricSink(services, metricSinkConfiguration.Statsd, metricSinkAsciiTable);
             }
 
             if (metricSinkConfiguration?.PrometheusScrapingEndpoint != null)
             {
-                AddPrometheusMetricSink(services);
+                AddPrometheusMetricSink(metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath, services, metricSinkAsciiTable);
             }
 
             if (metricSinkConfiguration?.AtlassianStatuspage != null)
             {
-                AddAtlassianStatuspageMetricSink(services);
+                AddAtlassianStatuspageMetricSink(metricSinkConfiguration.AtlassianStatuspage.PageId, services, metricSinkAsciiTable);
             }
+
+            if (metricSinkConfiguration?.OpenTelemetryCollector != null
+                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
+            {
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, services, metricSinkAsciiTable);
+            }
+
+            AnsiConsole.Write(metricSinkAsciiTable);
 
             services.TryAddSingleton<MetricSinkWriter>();
 
             return services;
         }
 
-        private static void AddPrometheusMetricSink(IServiceCollection services)
+        private static void AddPrometheusMetricSink(string baseUri, IServiceCollection services, Table metricSinkAsciiTable)
         {
+            metricSinkAsciiTable.AddRow("Prometheus Scraping Endpoint", $"Url: {baseUri}.");
+
             services.AddPrometheusMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 
-        private static void AddAtlassianStatuspageMetricSink(IServiceCollection services)
+        private static void AddAtlassianStatuspageMetricSink(string pageId, IServiceCollection services, Table metricSinkAsciiTable)
         {
+            metricSinkAsciiTable.AddRow("Atlassian Statuspage", $"Page ID: {pageId}.");
+
             services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
         }
 
-        private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration)
+        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, IServiceCollection services, Table metricSinkAsciiTable)
         {
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {collectorUri}.");
+
+            services.AddOpenTelemetryMetrics(metricsBuilder =>
+            {
+                metricsBuilder.AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
+                              .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
+            });
+            services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
+        }
+
+        private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)
+        {
+            metricSinkAsciiTable.AddRow("StatsD", $"Url: {statsdConfiguration.Host}:{statsdConfiguration.Port}.");
+
             services.AddTransient<IMetricSink, StatsdMetricSink>();
             services.AddStatsD(provider =>
             {
                 var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-                var logger = loggerFactory.CreateLogger<StatsdMetricSink>();
+                var sinkLogger = loggerFactory.CreateLogger<StatsdMetricSink>();
                 var host = statsdConfiguration.Host;
                 var port = statsdConfiguration.Port;
                 var metricPrefix = statsdConfiguration.MetricPrefix;
@@ -204,11 +241,26 @@ namespace Microsoft.Extensions.DependencyInjection
                     Prefix = metricPrefix,
                     OnError = ex =>
                     {
-                        logger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
+                        sinkLogger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
                         return true;
                     }
                 };
             });
+        }
+
+        private static Table CreateAsciiTable()
+        {
+            var asciiTable = new Table
+            {
+                Border = TableBorder.HeavyEdge
+            };
+
+            // Add some columns
+            asciiTable.AddColumn("Metric Sink");
+            asciiTable.AddColumn("Details");
+            asciiTable.Caption("Configured Metric Sinks");
+
+            return asciiTable;
         }
 
         /// <summary>

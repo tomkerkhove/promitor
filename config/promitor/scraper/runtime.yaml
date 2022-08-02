@@ -4,19 +4,21 @@ authentication:
   mode: ServicePrincipal
   identityId: 65351cf0-33f8-4f26-9b6f-3380cf910b50
 metricSinks:
+  atlassianStatuspage:
+    pageId: 4mwc0ny6bgw1
+    systemMetricMapping:
+    - id: 333802sjqpr9
+      promitorMetricName: promitor_demo_documentation_availability
+  openTelemetryCollector:
+    collectorUri: http://opentelemetry-collector:4317
   prometheusScrapingEndpoint:
     metricUnavailableValue: -1
     enableMetricTimestamps: true # true by default
-    baseUriPath: /scrape
+    baseUriPath: /metrics
   statsd:
     host: graphite
     port: 8125
     metricPrefix: promitor.
-  # atlassianStatuspage:
-  #   pageId: 4mwc0ny6bgw1
-  #   systemMetricMapping:
-  #   - id: 333802sjqpr9
-  #     promitorMetricName: promitor_demo_documentation_availability
 metricsConfiguration:
   absolutePath: /config/metrics-declaration.yaml
 telemetry:

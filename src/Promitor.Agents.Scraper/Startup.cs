@@ -23,10 +23,12 @@ namespace Promitor.Agents.Scraper
     {
         private const string ApiName = "Promitor - Scraper API";
         private const string ComponentName = "Promitor Scraper";
+        private readonly ILogger<Startup> _logger;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
             : base(configuration)
         {
+            _logger = logger;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -52,7 +54,7 @@ namespace Promitor.Agents.Scraper
             services.AddHealthChecks()
                    .AddResourceDiscoveryHealthCheck(Configuration);
             
-            services.UseMetricSinks(Configuration)
+            services.UseMetricSinks(Configuration, _logger)
                 .AddScrapingMutex(Configuration)
                 .ScheduleMetricScraping();
         }
@@ -98,18 +100,25 @@ namespace Promitor.Agents.Scraper
             openApiDescriptionBuilder.Append("Collection of APIs to manage the Promitor Scraper.\r\n\r\n");
             openApiDescriptionBuilder.AppendLine("Configured metric sinks are:\r\n");
 
-            if (metricSinkConfiguration != null)
+            if (metricSinkConfiguration == null)
             {
-                if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
-                {
-                    var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
-                    openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"../../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
-                }
+                return openApiDescriptionBuilder.ToString();
+            }
 
-                if (metricSinkConfiguration.Statsd != null)
-                {
-                    openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
-                }
+            if (metricSinkConfiguration.PrometheusScrapingEndpoint != null)
+            {
+                var prometheusScrapingBaseUri = metricSinkConfiguration.PrometheusScrapingEndpoint.BaseUriPath;
+                openApiDescriptionBuilder.AppendLine($"<li>Prometheus scrape endpoint is exposed at <a href=\"../../..{prometheusScrapingBaseUri}\" target=\"_blank\">{prometheusScrapingBaseUri}</a></li>");
+            }
+
+            if (metricSinkConfiguration.OpenTelemetryCollector != null)
+            {
+                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector located on {metricSinkConfiguration.OpenTelemetryCollector.CollectorUri}</li>");
+            }
+
+            if (metricSinkConfiguration.Statsd != null)
+            {
+                openApiDescriptionBuilder.AppendLine($"<li>StatsD server located on {metricSinkConfiguration.Statsd.Host}:{metricSinkConfiguration.Statsd.Port}</li>");
             }
 
             return openApiDescriptionBuilder.ToString();
