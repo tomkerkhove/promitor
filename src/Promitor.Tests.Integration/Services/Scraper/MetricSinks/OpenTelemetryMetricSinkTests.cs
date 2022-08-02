@@ -51,7 +51,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 
             // Arrange
             const string errorMetricName = "promitor_scrape_error";
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
             var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
@@ -70,7 +70,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 
             // Arrange
             const string errorMetricName = "promitor_scrape_success";
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
             var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(errorMetricName, "metric_name", expectedMetricName);
@@ -86,7 +86,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
             // Arrange
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
             var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
@@ -105,7 +105,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Skip.If(System.OperatingSystem.IsWindows(), "OpenTelemetry Collector does not run on Windows");
 #endif
             // Arrange
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
             var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
@@ -120,7 +120,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         private async Task AssertExpectedMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration, Logger);
+            var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
             var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);

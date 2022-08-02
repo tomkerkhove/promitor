@@ -25,7 +25,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedSystemPerformanceMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
@@ -41,7 +41,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedAzureSubscriptionInfoMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(AzureSubscriptionDiscoveryBackgroundJob.MetricName);
@@ -57,7 +57,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedAzureResourceGroupInfoMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(AzureResourceGroupsDiscoveryBackgroundJob.MetricName);
@@ -73,7 +73,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedAzureResourceGraphThrottlingMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForResourceGraph);
@@ -89,7 +89,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         public async Task Prometheus_Scrape_ExpectedResourceGraphThrottledMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ResourceGraphThrottled);

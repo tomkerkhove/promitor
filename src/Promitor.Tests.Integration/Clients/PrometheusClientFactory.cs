@@ -1,32 +1,45 @@
 ﻿using Arcus.Testing.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Promitor.Tests.Integration.Clients
 {
-    internal class PrometheusClientFactory
+    public class PrometheusClientFactory
     {
-        internal static PrometheusClient CreateForOpenTelemetryCollector(IConfiguration configuration, XunitTestLogger logger)
+        private readonly ILogger _logger;
+
+        public PrometheusClientFactory(ILogger logger)
+        {
+            _logger = logger;
+        }
+
+        internal PrometheusClient CreateForOpenTelemetryCollector(IConfiguration configuration)
         {
             var baseUri = configuration["OpenTelemetry:Collector:Uri"];
             var metricNamespace = configuration["OpenTelemetry:Collector:MetricNamespace"];
-            return new PrometheusClient(baseUri, "/metrics", metricNamespace, logger);
+
+            _logger.LogInformation("Creating Prometheus client for {BaseUri}/metrics with metric namespace {metricNamespace}", baseUri, metricNamespace);
+
+            return new PrometheusClient(baseUri, "/metrics", metricNamespace, _logger);
         }
 
-        internal static PrometheusClient CreateForPrometheusScrapingEndpointInScraperAgent(IConfiguration configuration, XunitTestLogger logger)
+        internal PrometheusClient CreateForPrometheusScrapingEndpointInScraperAgent(IConfiguration configuration)
         {
-            return CreateForPrometheusScrapingEndpoint("Scraper", configuration, logger);
+            return CreateForPrometheusScrapingEndpoint("Scraper", configuration);
         }
 
-        internal static PrometheusClient CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(IConfiguration configuration, XunitTestLogger logger)
+        internal PrometheusClient CreateForPrometheusScrapingEndpointInResourceDiscoveryAgent(IConfiguration configuration)
         {
-            return CreateForPrometheusScrapingEndpoint("ResourceDiscovery", configuration, logger);
+            return CreateForPrometheusScrapingEndpoint("ResourceDiscovery", configuration);
         }
 
-        private static PrometheusClient CreateForPrometheusScrapingEndpoint(string agentName, IConfiguration configuration, XunitTestLogger logger)
+        private PrometheusClient CreateForPrometheusScrapingEndpoint(string agentName, IConfiguration configuration)
         {
             var baseUri = configuration["Agents:Scraper:BaseUrl"];
             var scrapeUri = configuration[$"Agents:{agentName}:Prometheus:ScrapeUri"];
-            return new PrometheusClient(baseUri, scrapeUri, logger);
+
+            _logger.LogInformation("Creating Prometheus client for {BaseUri}/{ScrapeUri}", baseUri, scrapeUri);
+            return new PrometheusClient(baseUri, scrapeUri, _logger);
         }
     }
 }

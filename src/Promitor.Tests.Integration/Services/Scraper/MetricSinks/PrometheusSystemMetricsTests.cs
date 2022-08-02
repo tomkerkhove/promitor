@@ -24,7 +24,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedSystemPerformanceMetricIsAvailable(string expectedMetricName)
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
@@ -40,7 +40,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.RateLimitingForArm);
@@ -56,7 +56,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         public async Task Prometheus_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
             // Arrange
-            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration, Logger);
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration);
 
             // Act
             var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);

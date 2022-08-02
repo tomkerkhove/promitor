@@ -1,5 +1,6 @@
 ﻿using Arcus.Testing.Logging;
 using Microsoft.Extensions.Configuration;
+using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Infrastructure;
 using Xunit;
 using Xunit.Abstractions;
@@ -11,6 +12,7 @@ namespace Promitor.Tests.Integration
     {
         protected IConfiguration Configuration { get; }
         protected XunitTestLogger Logger { get; }
+        public PrometheusClientFactory PrometheusClientFactory => new PrometheusClientFactory(Logger);
 
         public IntegrationTest(ITestOutputHelper testOutput)
         {
