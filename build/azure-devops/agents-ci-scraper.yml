@@ -222,7 +222,7 @@ stages:
        displayName: Replace Tokens in Runtime Configuration
        inputs:
           rootDirectory: '$(Pipeline.Workspace)\s\config\promitor\scraper\'
-          targetFiles: 'ci-runtime.yaml'
+          targetFiles: 'runtime.yaml'
           encoding: 'auto'
           writeBOM: true
           verbosity: 'detailed'
@@ -235,8 +235,7 @@ stages:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
           imageName: '$(Image.TaggedName)'
-          # volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\:c:\config\'
-          volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\ci-runtime.yaml:c:\config\runtime.yaml --volume $(Pipeline.Workspace)\s\config\promitor\scraper\metrics.yaml:c:\config\metrics-declaration.yaml'
+          volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\:c:\config\'
           activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
           networkName: '$(Container.Network.Name)'
