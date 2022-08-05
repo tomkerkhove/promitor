@@ -1,4 +1,7 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Model
+﻿using System;
+using System.Collections.Generic;
+
+namespace Promitor.Core.Scraping.Configuration.Model
 {
     public class AzureMetricConfiguration
     {
@@ -15,7 +18,13 @@
         /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
+        [Obsolete("Dimension is deprecated, use Dimensions instead.")]
         public MetricDimension Dimension { get; set; }
+
+        /// <summary>
+        ///     Information about the dimension of an Azure Monitor metric
+        /// </summary>
+        public List<MetricDimension> Dimensions { get; set; }
 
         /// <summary>
         ///     Configuration on how to aggregate the metric

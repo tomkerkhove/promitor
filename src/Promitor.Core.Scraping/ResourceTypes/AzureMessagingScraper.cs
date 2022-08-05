@@ -40,16 +40,16 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return metricLabels;
         }
 
-        protected override string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected override List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
         {
             if (IsEntityDeclared(resourceDefinition))
             {
-                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, dimensions);
             }
 
             Logger.LogTrace("Using 'EntityName' dimension since no topic was configured.");
 
-            return "EntityName";
+            return new List<string> { "EntityName" };
         }
 
         protected override string DetermineMetricFilter(string metricName, TResourceDefinition resourceDefinition)

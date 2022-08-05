@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -45,7 +46,7 @@ namespace Promitor.Core.Scraping
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            var dimensionName = DetermineMetricDimension(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
+            List<string> dimensionName = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
 
             List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
             try
@@ -107,10 +108,10 @@ namespace Promitor.Core.Scraping
         /// </summary>
         /// <param name="metricName">Name of the metric being queried</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimension">Provides information concerning the configured metric dimension.</param>
-        protected virtual string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
+        /// <param name="dimensions">Provides information concerning the configured metric dimensions.</param>
+        protected virtual List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
         {
-            return dimension?.Name;
+            return dimensions?.Select(dimension => dimension.Name).ToList();
         }
 
         /// <summary>

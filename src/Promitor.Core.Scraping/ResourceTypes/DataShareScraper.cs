@@ -38,17 +38,17 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return $"{fieldName} eq '{entityName}'";
         }
 
-        protected override string DetermineMetricDimension(string metricName, DataShareResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected override List<string> DetermineMetricDimensions(string metricName, DataShareResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
         {
             if (IsShareNameConfigured(resourceDefinition))
             {
-                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, dimensions);
             }
 
             var dimensionName = GetMetricFilterFieldName(metricName);
             Logger.LogTrace($"Using '{dimensionName}' dimension since no share name was configured.");
 
-            return dimensionName;
+            return new List<string> { dimensionName };
         }
 
         protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
