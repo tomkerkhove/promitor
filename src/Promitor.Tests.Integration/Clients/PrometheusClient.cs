@@ -108,9 +108,9 @@ namespace Promitor.Tests.Integration.Clients
             var context = new Dictionary<string, object>();
             try
             {
-                var rawResponse = await response.Content.ReadAsStringAsync();
+                await response.Content.ReadAsStringAsync();
                 // TODO: Uncomment for full payload during troubleshooting
-                context.Add("Body", rawResponse);
+                //context.Add("Body", rawResponse);
             }
             finally
             {
