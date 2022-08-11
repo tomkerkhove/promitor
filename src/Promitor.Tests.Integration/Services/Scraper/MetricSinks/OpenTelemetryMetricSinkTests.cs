@@ -107,11 +107,11 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             var openTelemetryPrometheusClient = PrometheusClientFactory.CreateForOpenTelemetryCollector(Configuration);
 
             // Act
-            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ArmThrottled);
+            var gaugeMetric = await openTelemetryPrometheusClient.WaitForPrometheusMetricAsync(RuntimeMetricNames.ResourceGraphThrottled);
 
             // Assert
             Assert.NotNull(gaugeMetric);
-            Assert.Equal($"{_openTelemetryMetricNamespace}_{RuntimeMetricNames.RateLimitingForArm}", gaugeMetric.Name);
+            Assert.Equal($"{_openTelemetryMetricNamespace}_{RuntimeMetricNames.ResourceGraphThrottled}", gaugeMetric.Name);
             Assert.NotNull(gaugeMetric.Measurements);
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
