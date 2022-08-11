@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GuardNet;
 using Prometheus.Client;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Core.Metrics.Prometheus.Collectors
 {
-    // TODO: Move to Prometheus project
     public class PrometheusSystemMetricsCollector : ISystemMetricsCollector
     {
         private readonly IMetricFactory _metricFactory;
@@ -26,13 +26,15 @@ namespace Promitor.Core.Metrics.Prometheus.Collectors
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
         /// <param name="includeTimestamp">Indication whether or not a timestamp should be reported</param>
-        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        public Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
             // Order labels alphabetically
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray());
             gauge.WithLabels(orderedLabels.Values.ToArray()).Set(value);
+
+            return Task.CompletedTask;
         }
     }
 }

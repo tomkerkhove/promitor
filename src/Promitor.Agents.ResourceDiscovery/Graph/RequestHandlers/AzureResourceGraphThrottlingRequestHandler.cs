@@ -35,7 +35,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
             _metricLabels = metricLabels;
         }
 
-        protected override Task AvailableRateLimitingCallsAsync(HttpResponseMessage response)
+        protected override async Task AvailableRateLimitingCallsAsync(HttpResponseMessage response)
         {
             // Source:
             // - https://docs.microsoft.com/en-us/azure/governance/resource-graph/overview#throttling
@@ -46,10 +46,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
                 var subscriptionReadLimit = Convert.ToInt16(remainingApiCalls);
 
                 // Report metric
-                SystemMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
+                await SystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
             }
-            
-            return Task.CompletedTask;
         }
 
         protected override Dictionary<string, string> GetMetricLabels() => _metricLabels;

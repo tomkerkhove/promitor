@@ -66,7 +66,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             };
 
             // Report metric in Prometheus endpoint
-            WritePrometheusMetric(MetricName, MetricDescription, value: 1, labels);
+            WritePrometheusMetricAsync(MetricName, MetricDescription, value: 1, labels);
         }
     }
 }

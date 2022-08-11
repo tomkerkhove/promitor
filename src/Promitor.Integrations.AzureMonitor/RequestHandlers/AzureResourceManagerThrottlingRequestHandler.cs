@@ -78,7 +78,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                 
                 // Report metric
                 await _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
-                _azureScrapingSystemMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
+                await _azureScrapingSystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
             }
         }
 

@@ -40,7 +40,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
                 // Report discovered information as metric
                 foreach (var resourceGroupInformation in discoveredResourceGroups.Result)
                 {
-                    ReportDiscoveredAzureInfo(resourceGroupInformation);
+                    await ReportDiscoveredAzureInfoAsync(resourceGroupInformation);
                 }
                 
                 currentPage++;
@@ -50,7 +50,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             Logger.LogTrace("Azure Resource Groups discovered.");
         }
 
-        private void ReportDiscoveredAzureInfo(AzureResourceGroupInformation resourceGroupInformation)
+        private async Task ReportDiscoveredAzureInfoAsync(AzureResourceGroupInformation resourceGroupInformation)
         {
             var labels = new Dictionary<string, string>
             {
@@ -63,7 +63,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             };
 
             // Report metric in Prometheus endpoint
-            WritePrometheusMetric(MetricName, MetricDescription, value: 1, labels);
+            await WritePrometheusMetricAsync(MetricName, MetricDescription, value: 1, labels);
         }
     }
 }

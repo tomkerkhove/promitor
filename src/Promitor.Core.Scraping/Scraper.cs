@@ -86,26 +86,26 @@ namespace Promitor.Core.Scraping
 
                 await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
 
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: true);
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true);
             }
             catch (ErrorResponseException errorResponseException)
             {
                 HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
-                
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false);
             }
             catch (Exception exception)
             {
                 Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
-                
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false);
             }
         }
 
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
 
-        private void ReportScrapingOutcome(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
+        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
         {
             // We reset all values, by default
             double successfulMetricValue = 0;
@@ -132,8 +132,8 @@ namespace Promitor.Core.Scraping
             };
 
             // Report!
-            AzureScrapingSystemMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
-            AzureScrapingSystemMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+            await AzureScrapingSystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            await AzureScrapingSystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)

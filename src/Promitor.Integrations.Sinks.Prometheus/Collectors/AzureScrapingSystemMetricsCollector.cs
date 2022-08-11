@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Options;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
@@ -31,7 +32,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         /// <param name="description">Description of the metric</param>
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
-        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
+        public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
@@ -43,12 +44,12 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            _systemMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
+            await _systemMetricsCollector.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }
 
-        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            _systemMetricsCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
+            await _systemMetricsCollector.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
     }
 }

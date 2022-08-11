@@ -35,6 +35,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.OpenTelemetry;
+using Promitor.Integrations.Sinks.OpenTelemetry.Collectors;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
@@ -197,9 +198,8 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddPrometheusMetricSink(string baseUri, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("Prometheus Scraping Endpoint", $"Url: {baseUri}.");
-
-            services.AddSystemMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
+            services.AddPrometheusSystemMetrics();
         }
 
         private static void AddAtlassianStatuspageMetricSink(string pageId, IServiceCollection services, Table metricSinkAsciiTable)
@@ -219,6 +219,8 @@ namespace Microsoft.Extensions.DependencyInjection
                               .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
             });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
+            services.AddTransient<OpenTelemetryCollectorMetricSink>();
+            services.AddOpenTelemetrySystemMetrics();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)

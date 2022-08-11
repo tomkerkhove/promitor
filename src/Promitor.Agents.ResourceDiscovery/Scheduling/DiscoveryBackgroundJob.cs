@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
@@ -23,9 +24,9 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             AzureResourceRepository = azureResourceRepository;
         }
 
-        protected void WritePrometheusMetric(string metricName, string metricDescription, int value, Dictionary<string, string> labels)
+        protected async Task WritePrometheusMetricAsync(string metricName, string metricDescription, int value, Dictionary<string, string> labels)
         {
-            _systemMetricsCollector.WriteGaugeMeasurement(metricName, metricDescription, value, labels, includeTimestamp: true);
+            await _systemMetricsCollector.WriteGaugeMeasurementAsync(metricName, metricDescription, value, labels, includeTimestamp: true);
         }
 
         protected string GetValueOrDefault(string preferredValue, string alternative)

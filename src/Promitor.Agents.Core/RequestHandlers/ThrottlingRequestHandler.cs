@@ -42,16 +42,16 @@ namespace Promitor.Agents.Core.RequestHandlers
             }
 
             await AvailableRateLimitingCallsAsync(response);
-            AvailableThrottlingStatusAsync(wasRequestThrottled);
+            await AvailableThrottlingStatusAsync(wasRequestThrottled);
             
             return response;
         }
 
-        private void AvailableThrottlingStatusAsync(bool wasRequestThrottled)
+        private async Task AvailableThrottlingStatusAsync(bool wasRequestThrottled)
         {
             var metricValue = wasRequestThrottled ? 1 : 0;
             var metricLabels = GetMetricLabels();
-            SystemMetricsCollector.WriteGaugeMeasurement(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
+            await SystemMetricsCollector.WriteGaugeMeasurementAsync(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
         }
 
         protected abstract Dictionary<string, string> GetMetricLabels();
