@@ -6,11 +6,12 @@ using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Core.Metrics.Prometheus.Collectors
 {
-    public class PrometheusMetricsCollector : IPrometheusMetricsCollector
+    // TODO: Move to Prometheus project
+    public class PrometheusSystemMetricsCollector : ISystemMetricsCollector
     {
         private readonly IMetricFactory _metricFactory;
 
-        public PrometheusMetricsCollector(IMetricFactory metricFactory)
+        public PrometheusSystemMetricsCollector(IMetricFactory metricFactory)
         {
             Guard.NotNull(metricFactory, nameof(metricFactory));
 

@@ -100,7 +100,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Guard.NotNull(services, nameof(services));
             
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IAzureScrapingPrometheusMetricsCollector, AzureScrapingPrometheusMetricsCollector>();
+            services.AddTransient<IAzureScrapingSystemMetricsCollector, AzureScrapingSystemMetricsCollector>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
@@ -198,7 +198,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             metricSinkAsciiTable.AddRow("Prometheus Scraping Endpoint", $"Url: {baseUri}.");
 
-            services.AddPrometheusMetrics();
+            services.AddSystemMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
         }
 

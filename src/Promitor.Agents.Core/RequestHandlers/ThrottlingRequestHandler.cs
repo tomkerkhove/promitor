@@ -13,20 +13,20 @@ namespace Promitor.Agents.Core.RequestHandlers
         public abstract string DependencyName { get; }
 
         protected ILogger Logger { get; }
-        protected IPrometheusMetricsCollector PrometheusMetricsCollector { get; }
+        protected ISystemMetricsCollector SystemMetricsCollector { get; }
 
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="prometheusMetricsCollector">Metrics collector for Prometheus</param>
+        /// <param name="systemMetricsCollector">Metrics collector for Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        protected ThrottlingRequestHandler(IPrometheusMetricsCollector prometheusMetricsCollector, ILogger logger)
+        protected ThrottlingRequestHandler(ISystemMetricsCollector systemMetricsCollector, ILogger logger)
         {
-            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
+            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
             Guard.NotNull(logger, nameof(logger));
 
             Logger = logger;
-            PrometheusMetricsCollector = prometheusMetricsCollector;
+            SystemMetricsCollector = systemMetricsCollector;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -51,7 +51,7 @@ namespace Promitor.Agents.Core.RequestHandlers
         {
             var metricValue = wasRequestThrottled ? 1 : 0;
             var metricLabels = GetMetricLabels();
-            PrometheusMetricsCollector.WriteGaugeMeasurement(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
+            SystemMetricsCollector.WriteGaugeMeasurement(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
         }
 
         protected abstract Dictionary<string, string> GetMetricLabels();

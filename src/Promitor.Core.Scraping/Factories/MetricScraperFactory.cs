@@ -26,11 +26,11 @@ namespace Promitor.Core.Scraping.Factories
         /// </summary>
         /// <param name="metricDefinitionResourceType">Resource type to scrape</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all sinks</param>
-        /// <param name="azureScrapingPrometheusMetricsCollector">Collector to send metrics related to the runtime</param>
+        /// <param name="azureScrapingSystemMetricsCollector">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, AzureMonitorClient azureMonitorClient)
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsCollector azureScrapingSystemMetricsCollector, AzureMonitorClient azureMonitorClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, azureScrapingPrometheusMetricsCollector, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, azureScrapingSystemMetricsCollector, _logger);
 
             switch (metricDefinitionResourceType)
             {

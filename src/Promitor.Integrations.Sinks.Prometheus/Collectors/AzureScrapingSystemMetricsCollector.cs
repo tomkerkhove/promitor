@@ -8,19 +8,19 @@ using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 {
-    public class AzureScrapingPrometheusMetricsCollector : IAzureScrapingPrometheusMetricsCollector
+    public class AzureScrapingSystemMetricsCollector : IAzureScrapingSystemMetricsCollector
     {
-        private readonly IPrometheusMetricsCollector _prometheusMetricsCollector;
+        private readonly ISystemMetricsCollector _systemMetricsCollector;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public AzureScrapingPrometheusMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, IPrometheusMetricsCollector prometheusMetricsCollector, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public AzureScrapingSystemMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, ISystemMetricsCollector systemMetricsCollector, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
-            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
+            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
 
             _prometheusConfiguration = prometheusConfiguration;
-            _prometheusMetricsCollector = prometheusMetricsCollector;
+            _systemMetricsCollector = systemMetricsCollector;
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
@@ -43,12 +43,12 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
+            _systemMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
         }
 
         public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
+            _systemMetricsCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
         }
     }
 }

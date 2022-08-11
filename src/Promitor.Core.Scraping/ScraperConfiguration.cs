@@ -26,26 +26,26 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Collector to send metrics related to the runtime
         /// </summary>
-        public IAzureScrapingPrometheusMetricsCollector AzureScrapingPrometheusMetricsCollector { get; }
+        public IAzureScrapingSystemMetricsCollector AzureScrapingSystemMetricsCollector { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
-        /// <param name="azureScrapingPrometheusMetricsCollector">Collector to send metrics related to the runtime</param>
+        /// <param name="azureScrapingSystemMetricsCollector">Collector to send metrics related to the runtime</param>
         /// <param name="logger">General logger</param>
-        public ScraperConfiguration(AzureMonitorClient azureMonitorClient, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, ILogger logger)
+        public ScraperConfiguration(AzureMonitorClient azureMonitorClient, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsCollector azureScrapingSystemMetricsCollector, ILogger logger)
         {
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
-            Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
+            Guard.NotNull(azureScrapingSystemMetricsCollector, nameof(azureScrapingSystemMetricsCollector));
 
             AzureMonitorClient = azureMonitorClient;
             Logger = logger;
             MetricSinkWriter = metricSinkWriter;
-            AzureScrapingPrometheusMetricsCollector = azureScrapingPrometheusMetricsCollector;
+            AzureScrapingSystemMetricsCollector = azureScrapingSystemMetricsCollector;
         }
     }
 }

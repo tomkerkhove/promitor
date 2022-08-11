@@ -16,8 +16,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         public const string MetricName = "promitor_azure_landscape_subscription_info";
         public const string MetricDescription = "Provides information concerning the Azure subscriptions in the landscape that Promitor has access to.";
         
-        public AzureSubscriptionDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, IPrometheusMetricsCollector prometheusMetricsCollector, ILogger<AzureSubscriptionDiscoveryBackgroundJob> logger)
-            : base(azureResourceRepository, prometheusMetricsCollector, logger)
+        public AzureSubscriptionDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, ISystemMetricsCollector systemMetricsCollector, ILogger<AzureSubscriptionDiscoveryBackgroundJob> logger)
+            : base(azureResourceRepository, systemMetricsCollector, logger)
         {
             Guard.NotNullOrWhitespace(jobName, nameof(jobName));
 

@@ -38,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var resourceMetricDefinitionMemoryCache = serviceProviderToCreateJobsWith.GetService<IMemoryCache>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
-            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingPrometheusMetricsCollector>();
+            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingSystemMetricsCollector>();
             var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
             var startupLogger = loggerFactory.CreateLogger<Startup>();
             var scrapingTaskMutex = serviceProviderToCreateJobsWith.GetService<IScrapingMutex>();
@@ -79,7 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void ScheduleResourcesScraping(MetricsDeclaration metricsDeclaration,
             MetricSinkWriter metricSinkWriter,
             AzureMonitorClientFactory azureMonitorClientFactory,
-            IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector,
+            IAzureScrapingSystemMetricsCollector azureScrapingSystemMetricsCollector,
             IMemoryCache resourceMetricDefinitionMemoryCache,
             IScrapingMutex scrapingTaskMutex,
             IConfiguration configuration,
@@ -99,7 +99,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             metricSinkWriter,
                             jobServices.GetService<MetricScraperFactory>(),
                             azureMonitorClientFactory,
-                            azureScrapingPrometheusMetricsCollector,
+                            azureScrapingSystemMetricsCollector,
                             resourceMetricDefinitionMemoryCache,
                             scrapingTaskMutex,
                             configuration,

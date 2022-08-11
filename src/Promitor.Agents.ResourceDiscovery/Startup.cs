@@ -34,7 +34,7 @@ namespace Promitor.Agents.ResourceDiscovery
             services.UseWebApi()
                 .AddMemoryCache()
                 .AddRuntimeConfiguration(Configuration)
-                .AddPrometheusMetrics()
+                .AddSystemMetrics()
                 .AddAzureResourceGraph(Configuration)
                 .AddBackgroundJobs()
                 .AddUsability()

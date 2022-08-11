@@ -24,11 +24,11 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="prometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="systemMetricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="metricLabels"></param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceGraphThrottlingRequestHandler(IPrometheusMetricsCollector prometheusMetricsCollector, Dictionary<string, string> metricLabels, ILogger logger)
-        : base(prometheusMetricsCollector, logger)
+        public AzureResourceGraphThrottlingRequestHandler(ISystemMetricsCollector systemMetricsCollector, Dictionary<string, string> metricLabels, ILogger logger)
+        : base(systemMetricsCollector, logger)
         {
             Guard.NotNull(metricLabels, nameof(metricLabels));
 
@@ -46,7 +46,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
                 var subscriptionReadLimit = Convert.ToInt16(remainingApiCalls);
 
                 // Report metric
-                PrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
+                SystemMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
             }
             
             return Task.CompletedTask;

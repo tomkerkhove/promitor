@@ -54,7 +54,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     {
                         return new AzureSubscriptionDiscoveryBackgroundJob(jobName,
                             jobServices.GetRequiredService<IAzureResourceRepository>(),
-                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
+                            jobServices.GetRequiredService<ISystemMetricsCollector>(),
                             jobServices.GetRequiredService<ILogger<AzureSubscriptionDiscoveryBackgroundJob>>());
                     },
                     schedulerOptions =>
@@ -82,7 +82,7 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
                     {
                         return new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
                             jobServices.GetRequiredService<IAzureResourceRepository>(),
-                            jobServices.GetRequiredService<IPrometheusMetricsCollector>(),
+                            jobServices.GetRequiredService<ISystemMetricsCollector>(),
                             jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>());
                     },
                     schedulerOptions =>

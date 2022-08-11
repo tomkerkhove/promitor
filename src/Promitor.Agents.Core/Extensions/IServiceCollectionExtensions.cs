@@ -18,16 +18,50 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Promitor.Agents.Core.Extensions
 {
+    public class AggregatedSystemMetricsCollector : ISystemMetricsCollector
+    {
+        private readonly ISystemMetricsCollector[] _metricCollectors;
+
+        public AggregatedSystemMetricsCollector(ISystemMetricsCollector[] metricCollectors)
+        {
+            _metricCollectors = metricCollectors;
+        }
+
+        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            if (_metricCollectors == null)
+            {
+                return;
+            }
+
+            foreach (var metricCollector in _metricCollectors)
+            {
+                metricCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
+            }
+        }
+    }
+
+    // TODO: Move to OTEL project
+    public class OpenTelemetrySystemMetricsCollector : ISystemMetricsCollector
+    {
+        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions
     {
         /// <summary>
         /// Use prometheus for writing metrics
         /// </summary>
-        public static IServiceCollection AddPrometheusMetrics(this IServiceCollection services)
+        public static IServiceCollection AddSystemMetrics(this IServiceCollection services)
         {
             services.AddMetricFactory();
-            services.AddTransient<IPrometheusMetricsCollector, PrometheusMetricsCollector>();
+            services.AddTransient<ISystemMetricsCollector, PrometheusSystemMetricsCollector>();
+            services.AddTransient<ISystemMetricsCollector, OpenTelemetrySystemMetricsCollector>();
+            services.AddTransient<ISystemMetricsCollector, AggregatedSystemMetricsCollector>();
 
             return services;
         }
