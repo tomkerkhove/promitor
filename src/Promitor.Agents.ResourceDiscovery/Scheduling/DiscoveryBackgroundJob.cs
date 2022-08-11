@@ -12,21 +12,21 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         protected IAzureResourceRepository AzureResourceRepository { get; }
         protected ILogger Logger { get; }
         
-        private readonly ISystemMetricsCollector _systemMetricsCollector;
+        private readonly ISystemMetricsPublisher _systemMetricsPublisher;
 
-        public DiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository, ISystemMetricsCollector systemMetricsCollector, ILogger logger)
+        public DiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository, ISystemMetricsPublisher systemMetricsPublisher, ILogger logger)
         {
-            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
             Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
 
             Logger = logger;
-            _systemMetricsCollector = systemMetricsCollector;
+            _systemMetricsPublisher = systemMetricsPublisher;
             AzureResourceRepository = azureResourceRepository;
         }
 
         protected async Task WritePrometheusMetricAsync(string metricName, string metricDescription, int value, Dictionary<string, string> labels)
         {
-            await _systemMetricsCollector.WriteGaugeMeasurementAsync(metricName, metricDescription, value, labels, includeTimestamp: true);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(metricName, metricDescription, value, labels, includeTimestamp: true);
         }
 
         protected string GetValueOrDefault(string preferredValue, string alternative)

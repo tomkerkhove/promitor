@@ -26,26 +26,26 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Collector to send metrics related to the runtime
         /// </summary>
-        public IAzureScrapingSystemMetricsCollector AzureScrapingSystemMetricsCollector { get; }
+        public IAzureScrapingSystemMetricsPublisher AzureScrapingSystemMetricsPublisher { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="azureMonitorClient">Client to communicate with Azure Monitor</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
-        /// <param name="azureScrapingSystemMetricsCollector">Collector to send metrics related to the runtime</param>
+        /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="logger">General logger</param>
-        public ScraperConfiguration(AzureMonitorClient azureMonitorClient, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsCollector azureScrapingSystemMetricsCollector, ILogger logger)
+        public ScraperConfiguration(AzureMonitorClient azureMonitorClient, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, ILogger logger)
         {
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
             Guard.NotNull(logger, nameof(logger));
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
-            Guard.NotNull(azureScrapingSystemMetricsCollector, nameof(azureScrapingSystemMetricsCollector));
+            Guard.NotNull(azureScrapingSystemMetricsPublisher, nameof(azureScrapingSystemMetricsPublisher));
 
             AzureMonitorClient = azureMonitorClient;
             Logger = logger;
             MetricSinkWriter = metricSinkWriter;
-            AzureScrapingSystemMetricsCollector = azureScrapingSystemMetricsCollector;
+            AzureScrapingSystemMetricsPublisher = azureScrapingSystemMetricsPublisher;
         }
     }
 }

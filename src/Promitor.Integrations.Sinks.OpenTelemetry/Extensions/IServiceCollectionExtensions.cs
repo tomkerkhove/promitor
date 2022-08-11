@@ -12,7 +12,7 @@ namespace Promitor.Agents.Core.Extensions
         /// </summary>
         public static IServiceCollection AddOpenTelemetrySystemMetrics(this IServiceCollection services)
         {
-            services.AddTransient<ISystemMetricsCollector, OpenTelemetrySystemMetricsCollector>();
+            services.AddTransient<ISystemMetricsSink, OpenTelemetrySystemMetricsSink>();
 
             return services;
         }

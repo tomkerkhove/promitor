@@ -4,23 +4,23 @@ using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Core.Metrics
 {
-    public class AggregatedSystemMetricsCollector : ISystemMetricsCollector
+    public class AggregatedSystemMetricsPublisher : ISystemMetricsPublisher
     {
-        private readonly IEnumerable<ISystemMetricsCollector> _metricCollectors;
+        private readonly IEnumerable<ISystemMetricsSink> _metricSinks;
 
-        public AggregatedSystemMetricsCollector(IEnumerable<ISystemMetricsCollector> metricCollectors)
+        public AggregatedSystemMetricsPublisher(IEnumerable<ISystemMetricsSink> metricSinks)
         {
-            _metricCollectors = metricCollectors;
+            _metricSinks = metricSinks;
         }
 
         public async Task WriteGaugeMeasurementAsync (string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            if (_metricCollectors == null)
+            if (_metricSinks == null)
             {
                 return;
             }
 
-            foreach (var metricCollector in _metricCollectors)
+            foreach (var metricCollector in _metricSinks)
             {
                 if (metricCollector == null)
                 {

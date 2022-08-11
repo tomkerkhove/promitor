@@ -9,19 +9,19 @@ using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 {
-    public class AzureScrapingSystemMetricsCollector : IAzureScrapingSystemMetricsCollector
+    public class AzureScrapingSystemMetricsPublisher : IAzureScrapingSystemMetricsPublisher
     {
-        private readonly ISystemMetricsCollector _systemMetricsCollector;
+        private readonly ISystemMetricsPublisher _systemMetricsPublisher;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public AzureScrapingSystemMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, ISystemMetricsCollector systemMetricsCollector, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public AzureScrapingSystemMetricsPublisher(IMetricsDeclarationProvider metricsDeclarationProvider, ISystemMetricsPublisher systemMetricsPublisher, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
-            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
 
             _prometheusConfiguration = prometheusConfiguration;
-            _systemMetricsCollector = systemMetricsCollector;
+            _systemMetricsPublisher = systemMetricsPublisher;
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
@@ -44,12 +44,12 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            await _systemMetricsCollector.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }
 
         public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            await _systemMetricsCollector.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
     }
 }

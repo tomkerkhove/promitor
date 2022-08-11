@@ -27,7 +27,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
     public class AzureResourceGraph : IAzureResourceGraph
     {
         private readonly IOptionsMonitor<ResourceDeclaration> _resourceDeclarationMonitor;
-        private readonly ISystemMetricsCollector _systemMetricsCollector;
+        private readonly ISystemMetricsPublisher _systemMetricsPublisher;
         private readonly ILogger<AzureResourceGraph> _logger;
 
         private ResourceGraphClient _graphClient;
@@ -42,9 +42,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
         
         private readonly AzureAuthenticationInfo _azureAuthenticationInfo;
 
-        public AzureResourceGraph(ISystemMetricsCollector systemMetricsCollector, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, IConfiguration configuration, ILogger<AzureResourceGraph> logger)
+        public AzureResourceGraph(ISystemMetricsPublisher systemMetricsPublisher, IOptionsMonitor<ResourceDeclaration> resourceDeclarationMonitor, IConfiguration configuration, ILogger<AzureResourceGraph> logger)
         {
-            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
             Guard.NotNull(resourceDeclarationMonitor, nameof(resourceDeclarationMonitor));
             Guard.NotNull(resourceDeclarationMonitor.CurrentValue, nameof(resourceDeclarationMonitor.CurrentValue));
             Guard.NotNull(resourceDeclarationMonitor.CurrentValue.AzureLandscape, nameof(resourceDeclarationMonitor.CurrentValue.AzureLandscape));
@@ -53,7 +53,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
             _logger = logger;
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
-            _systemMetricsCollector = systemMetricsCollector;
+            _systemMetricsPublisher = systemMetricsPublisher;
             _azureAuthenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
         }
 
@@ -282,7 +282,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                 {"app_id", appId},
                 {"auth_mode", _azureAuthenticationInfo.Mode.ToString()},
             };
-            var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials, new AzureResourceGraphThrottlingRequestHandler(_systemMetricsCollector, metricLabels, _logger));
+            var resourceGraphClient = new ResourceGraphClient(resourceManagerBaseUri, credentials, new AzureResourceGraphThrottlingRequestHandler(_systemMetricsPublisher, metricLabels, _logger));
 
             var version = Promitor.Core.Version.Get();
             var promitorUserAgent = UserAgent.Generate("Resource-Discovery", version);

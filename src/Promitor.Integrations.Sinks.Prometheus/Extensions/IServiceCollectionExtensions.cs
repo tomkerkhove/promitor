@@ -14,7 +14,7 @@ namespace Promitor.Agents.Core.Extensions
         public static IServiceCollection AddPrometheusSystemMetrics(this IServiceCollection services)
         {
             services.AddMetricFactory();
-            services.AddTransient<ISystemMetricsCollector, PrometheusSystemMetricsCollector>();
+            services.AddTransient<ISystemMetricsSink, PrometheusSystemMetricsSink>();
 
             return services;
         }

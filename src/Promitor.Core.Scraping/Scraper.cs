@@ -35,7 +35,7 @@ namespace Promitor.Core.Scraping
 
             Logger = scraperConfiguration.Logger;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
-            AzureScrapingSystemMetricsCollector = scraperConfiguration.AzureScrapingSystemMetricsCollector;
+            AzureScrapingSystemMetricsPublisher = scraperConfiguration.AzureScrapingSystemMetricsPublisher;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Collector to send metrics related to the runtime
         /// </summary>
-        public IAzureScrapingSystemMetricsCollector AzureScrapingSystemMetricsCollector { get; }
+        public IAzureScrapingSystemMetricsPublisher AzureScrapingSystemMetricsPublisher { get; }
 
         /// <summary>
         ///     Provide logger to scraper
@@ -132,8 +132,8 @@ namespace Promitor.Core.Scraping
             };
 
             // Report!
-            await AzureScrapingSystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
-            await AzureScrapingSystemMetricsCollector.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)

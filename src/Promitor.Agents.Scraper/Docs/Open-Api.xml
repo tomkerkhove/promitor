@@ -4,7 +4,7 @@
         <name>Promitor.Agents.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingSystemMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
             Provides an Azure Monitor client
             </summary>
@@ -12,7 +12,7 @@
             <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
             <param name="subscriptionId">Id of the Azure subscription</param>
             <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
-            <param name="azureScrapingSystemMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+            <param name="azureScrapingSystemMetricsPublisher">Metrics collector to write metrics to Prometheus</param>
             <param name="resourceMetricDefinitionMemoryCache">Memory cache to store items in</param>
             <param name="configuration">Configuration of Promitor</param>
             <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
@@ -247,7 +247,7 @@
             the same scraping schedule.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.ResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingSystemMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.ResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
             <summary>
             Create a metrics scraping job for one or more resources, either enumerated specifically or
             identified via resource definition groups. All metrics included are expected to have
@@ -259,7 +259,7 @@
             <param name="metricSinkWriter">destination for metric reporting output</param>
             <param name="metricScraperFactory">means of obtaining a metrics scraper for a particular type of resource</param>
             <param name="azureMonitorClientFactory">means of obtaining a Azure Monitor client</param>
-            <param name="azureScrapingSystemMetricsCollector">metrics collector to write metrics to Prometheus</param>
+            <param name="azureScrapingSystemMetricsPublisher">metrics collector to write metrics to Prometheus</param>
             <param name="resourceMetricDefinitionMemoryCache">cache of metric definitions by resource ID</param>
             <param name="scrapingTaskMutex">semaphore used to limit concurrency of tasks if configured, or null for no limiting</param>
             <param name="configuration">Promitor configuration</param>

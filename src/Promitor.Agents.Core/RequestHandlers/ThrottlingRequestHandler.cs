@@ -13,20 +13,20 @@ namespace Promitor.Agents.Core.RequestHandlers
         public abstract string DependencyName { get; }
 
         protected ILogger Logger { get; }
-        protected ISystemMetricsCollector SystemMetricsCollector { get; }
+        protected ISystemMetricsPublisher SystemMetricsPublisher { get; }
 
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="systemMetricsCollector">Metrics collector for Prometheus</param>
+        /// <param name="systemMetricsPublisher">Metrics collector for Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        protected ThrottlingRequestHandler(ISystemMetricsCollector systemMetricsCollector, ILogger logger)
+        protected ThrottlingRequestHandler(ISystemMetricsPublisher systemMetricsPublisher, ILogger logger)
         {
-            Guard.NotNull(systemMetricsCollector, nameof(systemMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
             Guard.NotNull(logger, nameof(logger));
 
             Logger = logger;
-            SystemMetricsCollector = systemMetricsCollector;
+            SystemMetricsPublisher = systemMetricsPublisher;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -51,7 +51,7 @@ namespace Promitor.Agents.Core.RequestHandlers
         {
             var metricValue = wasRequestThrottled ? 1 : 0;
             var metricLabels = GetMetricLabels();
-            await SystemMetricsCollector.WriteGaugeMeasurementAsync(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
+            await SystemMetricsPublisher.WriteGaugeMeasurementAsync(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
         }
 
         protected abstract Dictionary<string, string> GetMetricLabels();

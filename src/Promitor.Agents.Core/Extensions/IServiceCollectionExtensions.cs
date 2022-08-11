@@ -26,7 +26,8 @@ namespace Promitor.Agents.Core.Extensions
         public static IServiceCollection AddSystemMetrics(this IServiceCollection services, Action<IServiceCollection> sinkBuilder = null)
         {
             sinkBuilder?.Invoke(services);
-            services.AddTransient<ISystemMetricsCollector, AggregatedSystemMetricsCollector>(s => new AggregatedSystemMetricsCollector(s.GetServices<ISystemMetricsCollector>()));
+
+            services.AddTransient<ISystemMetricsPublisher, AggregatedSystemMetricsPublisher>();
 
             return services;
         }

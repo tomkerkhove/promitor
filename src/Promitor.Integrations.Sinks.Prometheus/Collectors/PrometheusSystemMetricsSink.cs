@@ -7,11 +7,11 @@ using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Core.Metrics.Prometheus.Collectors
 {
-    public class PrometheusSystemMetricsCollector : ISystemMetricsCollector
+    public class PrometheusSystemMetricsSink : ISystemMetricsSink
     {
         private readonly IMetricFactory _metricFactory;
 
-        public PrometheusSystemMetricsCollector(IMetricFactory metricFactory)
+        public PrometheusSystemMetricsSink(IMetricFactory metricFactory)
         {
             Guard.NotNull(metricFactory, nameof(metricFactory));
 

@@ -101,7 +101,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Guard.NotNull(services, nameof(services));
             
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IAzureScrapingSystemMetricsCollector, AzureScrapingSystemMetricsCollector>();
+            services.AddTransient<IAzureScrapingSystemMetricsPublisher, AzureScrapingSystemMetricsPublisher>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();

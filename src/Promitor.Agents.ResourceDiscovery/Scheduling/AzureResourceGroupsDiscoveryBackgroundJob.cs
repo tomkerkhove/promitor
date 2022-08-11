@@ -16,8 +16,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         public const string MetricName = "promitor_azure_landscape_resource_group_info";
         public const string MetricDescription = "Provides information concerning the Azure resource groups in the landscape that Promitor has access to.";
         
-        public AzureResourceGroupsDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, ISystemMetricsCollector systemMetricsCollector, ILogger<AzureResourceGroupsDiscoveryBackgroundJob> logger)
-            : base(azureResourceRepository, systemMetricsCollector, logger)
+        public AzureResourceGroupsDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, ISystemMetricsPublisher systemMetricsPublisher, ILogger<AzureResourceGroupsDiscoveryBackgroundJob> logger)
+            : base(azureResourceRepository, systemMetricsPublisher, logger)
         {
             Guard.NotNullOrWhitespace(jobName, nameof(jobName));
 

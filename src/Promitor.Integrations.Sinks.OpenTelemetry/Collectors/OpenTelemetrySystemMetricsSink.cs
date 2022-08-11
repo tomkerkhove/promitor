@@ -5,11 +5,11 @@ using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 
 namespace Promitor.Integrations.Sinks.OpenTelemetry.Collectors
 {
-    public class OpenTelemetrySystemMetricsCollector : ISystemMetricsCollector
+    public class OpenTelemetrySystemMetricsSink : ISystemMetricsSink
     {
         private readonly OpenTelemetryCollectorMetricSink _metricSink;
 
-        public OpenTelemetrySystemMetricsCollector(OpenTelemetryCollectorMetricSink metricSink)
+        public OpenTelemetrySystemMetricsSink(OpenTelemetryCollectorMetricSink metricSink)
         {
             Guard.NotNull(metricSink, nameof(metricSink));
 
