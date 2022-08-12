@@ -17,11 +17,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
-        public MetricDimensionV1 Dimension { get; set; }
-
-        /// <summary>
-        ///     Information about the dimension of an Azure Monitor metric
-        /// </summary>
         public IReadOnlyCollection<MetricDimensionV1> Dimensions { get; set; }
 
         /// <summary>
