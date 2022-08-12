@@ -142,7 +142,7 @@ namespace Promitor.Core.Scraping
             {
                 if (measuredMetric.IsDimensional)
                 {
-                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension {DimensionValue} as part of {DimensionName} dimension with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValues, measuredMetric.DimensionNames, aggregationInterval);
+                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension values {DimensionValue} as part of the dimensions {DimensionName} with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValues, measuredMetric.DimensionNames, aggregationInterval);
                 }
                 else
                 {
