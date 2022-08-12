@@ -1044,9 +1044,12 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
             if (string.IsNullOrWhiteSpace(metricDimension) == false)
             {
-                metricConfig.Dimension = new MetricDimensionV1
+                metricConfig.Dimensions = new List<MetricDimensionV1>
                 {
-                    Name = metricDimension
+                    new()
+                    {
+                        Name = metricDimension
+                    }
                 };
             }
 

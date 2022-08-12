@@ -18,9 +18,8 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 
             var errorMessages = new List<string>();
 
-            var configuredDimension = metricDefinition.AzureMetricConfiguration?.Dimension?.Name;
-            var isEntityNameDimensionConfigured = string.IsNullOrWhiteSpace(configuredDimension) == false && configuredDimension.Equals(EntityNameDimension, StringComparison.InvariantCultureIgnoreCase);
-
+            var isEntityNameDimensionConfigured = metricDefinition.AzureMetricConfiguration?.Dimensions?.Where(dimension => dimension.Name.Equals(EntityNameDimension, StringComparison.InvariantCultureIgnoreCase)).Any() ?? false;
+            
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusNamespaceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.Namespace))
