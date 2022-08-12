@@ -16,12 +16,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor Dimension name to more representable value
-            foreach (var measuredMetric in metricValues.Where(metricValue => string.IsNullOrWhiteSpace(metricValue.DimensionName) == false))
+            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.DimensionNames.Any()))
             {
-                measuredMetric.DimensionName = EntityNameLabel;
+                measuredMetric.DimensionNames[0] = EntityNameLabel; // TODO
             }
 
             return metricValues;

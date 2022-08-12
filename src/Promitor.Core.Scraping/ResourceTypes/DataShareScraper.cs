@@ -51,13 +51,18 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return new List<string> { dimensionName };
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor dimension name to more representable value
-            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.DimensionName == "ShareName"
-                                                                             || metricValue.DimensionName == "ShareSubscriptionName"))
+            foreach (var measuredMetric in metricValues)
             {
-                measuredMetric.DimensionName = "share_name";
+                for (int i = 0; i < measuredMetric.DimensionNames.Count; i++)
+                {
+                    if (measuredMetric.DimensionNames[i] == "ShareName" || measuredMetric.DimensionNames[i] == "ShareSubscriptionName")
+                    {
+                        measuredMetric.DimensionNames[i] = "share_name";
+                    }
+                }
             }
 
             return metricValues;

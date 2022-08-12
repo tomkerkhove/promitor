@@ -110,7 +110,7 @@ namespace Promitor.Integrations.AzureMonitor
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
 
-                var measuredMetric = string.IsNullOrWhiteSpace(metricDimensions) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimensions, timeseries);
+                var measuredMetric = metricDimensions.Any() ? MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimensions, timeseries) : MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate);
                 measuredMetrics.Add(measuredMetric);
             }
 
@@ -239,18 +239,14 @@ namespace Promitor.Integrations.AzureMonitor
                 metricQuery.WithOdataFilter(filter);
                 metricQuery.SelectTop(queryLimit);
             }
-
-            metricDimensions.RemoveAll(string.IsNullOrWhiteSpace);
-            metricDimensions.
-
-            string metricDimensionsFilter = 
             
-            if (string.IsNullOrWhiteSpace(metricDimensions) == false)
+            if (metricDimensions.Any())
             {
-                metricQuery.WithOdataFilter($"{metricDimensions} eq '*'");
+                string metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
+                metricQuery.WithOdataFilter(metricDimensionsFilter);
                 metricQuery.SelectTop(queryLimit);
             }
-
+            
             return metricQuery;
         }
 

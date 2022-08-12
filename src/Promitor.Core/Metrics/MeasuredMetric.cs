@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -15,12 +16,12 @@ namespace Promitor.Core.Metrics
         /// <summary>
         ///     Name of dimension for a metric
         /// </summary>
-        public string DimensionName { get; set; }
+        public List<string> DimensionNames { get; set; }
 
         /// <summary>
         ///     Name of dimension for a metric
         /// </summary>
-        public string DimensionValue { get; }
+        public List<string> DimensionValues { get; }
 
         /// <summary>
         ///     Indication whether or not the metric represents a dimension
@@ -32,16 +33,16 @@ namespace Promitor.Core.Metrics
             Value = value;
         }
 
-        private MeasuredMetric(double? value, string dimensionName, string dimensionValue)
+        private MeasuredMetric(double? value, List<string> dimensionNames, List<string> dimensionValues)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
-            Guard.NotNullOrWhitespace(dimensionValue, nameof(dimensionValue));
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
+            Guard.NotAny(dimensionValues, nameof(dimensionValues));
 
             Value = value;
 
             IsDimensional = true;
-            DimensionName = dimensionName;
-            DimensionValue = dimensionValue;
+            DimensionNames = dimensionNames;
+            DimensionValues = dimensionValues;
         }
 
         /// <summary>
@@ -57,30 +58,35 @@ namespace Promitor.Core.Metrics
         /// Create a measured metric for a given dimension
         /// </summary>
         /// <param name="value">Measured metric value</param>
-        /// <param name="dimensionName">Name of dimension that is being scraped</param>
+        /// <param name="dimensionNames"></param>
         /// <param name="timeseries">Timeseries representing one of the dimensions</param>
-        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, TimeSeriesElement timeseries)
+        public static MeasuredMetric CreateForDimension(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
             Guard.NotNull(timeseries, nameof(timeseries));
             Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
 
-            var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);
-            return CreateForDimension(value, dimensionName, dimensionValue.Value);
+            var dimensionValues = new List<string>(); 
+            foreach (var dimensionName in dimensionNames)
+            {
+                dimensionValues.Add(timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value);
+            }
+            
+            return CreateForDimension(value, dimensionNames, dimensionValues);
         }
 
         /// <summary>
         /// Create a measured metric for a given dimension
         /// </summary>
         /// <param name="value">Measured metric value</param>
-        /// <param name="dimensionName">Name of dimension that is being scraped</param>
-        /// <param name="dimensionValue">Value of the dimension that is being scraped</param>
-        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, string dimensionValue)
+        /// <param name="dimensionNames"></param>
+        /// <param name="dimensionValues"></param>
+        public static MeasuredMetric CreateForDimension(double? value, List<string> dimensionNames, List<string> dimensionValues)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
-            Guard.NotNullOrWhitespace(dimensionValue, nameof(dimensionValue));
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
+            Guard.NotAny(dimensionValues, nameof(dimensionValues));
 
-            return new MeasuredMetric(value, dimensionName, dimensionValue);
+            return new MeasuredMetric(value, dimensionNames, dimensionValues);
         }
     }
 }

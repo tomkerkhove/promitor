@@ -46,19 +46,19 @@ namespace Promitor.Core.Scraping
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            List<string> dimensionName = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
+            List<string> dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
 
             List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
-                Logger.LogWarning("No metric information found for metric {MetricName} with dimension {MetricDimension}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimension, metricsNotFoundException.Details);
+                Logger.LogWarning("No metric information found for metric {MetricName} with dimensions {MetricDimensions}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimensions, metricsNotFoundException.Details);
                 
-                var measuredMetric = string.IsNullOrWhiteSpace(dimensionName) ? MeasuredMetric.CreateWithoutDimension(null) : MeasuredMetric.CreateForDimension(null, dimensionName, "unknown");
+                var measuredMetric = dimensionNames.Any() ? MeasuredMetric.CreateForDimension((double?)null, dimensionNames, Enumerable.Repeat("unknown",dimensionNames.Count).ToList()) : MeasuredMetric.CreateWithoutDimension(null);
                 measuredMetrics.Add(measuredMetric);
             }
 
@@ -66,7 +66,7 @@ namespace Promitor.Core.Scraping
             var metricLabels = DetermineMetricLabels(resourceDefinition);
 
             // Enrich measured metrics, in case we need to
-            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionName, measuredMetrics);
+            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionNames, measuredMetrics);
 
             // We're done!
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
@@ -85,10 +85,10 @@ namespace Promitor.Core.Scraping
         ///     metrics to align with others
         /// </remarks>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimensionName">Name of the specified dimension provided by the scraper</param>
+        /// <param name="dimensionNames"></param>
         /// <param name="metricValues">Measured metric values that were found</param>
         /// <returns></returns>
-        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             return metricValues;
         }
@@ -111,7 +111,7 @@ namespace Promitor.Core.Scraping
         /// <param name="dimensions">Provides information concerning the configured metric dimensions.</param>
         protected virtual List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
         {
-            return dimensions?.Select(dimension => dimension.Name).ToList();
+            return dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).ToList();
         }
 
         /// <summary>
