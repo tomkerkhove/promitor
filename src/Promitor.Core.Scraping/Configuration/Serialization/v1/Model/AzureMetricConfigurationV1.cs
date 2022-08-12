@@ -1,4 +1,6 @@
-﻿namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
+﻿using System.Collections.Generic;
+
+namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
     public class AzureMetricConfigurationV1
     {
@@ -16,6 +18,11 @@
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
         public MetricDimensionV1 Dimension { get; set; }
+
+        /// <summary>
+        ///     Information about the dimension of an Azure Monitor metric
+        /// </summary>
+        public IReadOnlyCollection<MetricDimensionV1> Dimensions { get; set; }
 
         /// <summary>
         ///     The settings for how the metric should be aggregated before being returned from Azure.
