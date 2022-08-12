@@ -8,8 +8,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     public class AzureMetricConfigurationDeserializer : Deserializer<AzureMetricConfigurationV1>
     {
-        private const string DimensionsTag = "dimensions";
-        private const string DimensionTag = "dimension";
+        private const string MultipleDimensionsTag = "dimensions";
+        private const string SingleDimensionTag = "dimension";
         private readonly IDeserializer<MetricDimensionV1> _dimensionDeserializer;
             
         public AzureMetricConfigurationDeserializer(IDeserializer<MetricDimensionV1> dimensionDeserializer, IDeserializer<MetricAggregationV1> aggregationDeserializer, ILogger<AzureMetricConfigurationDeserializer> logger)
@@ -19,11 +19,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .IsRequired();
             Map(config => config.Limit)
                 .MapUsing(DetermineLimit);
-            Map(config => config.Dimension)
-                .MapUsingDeserializer(dimensionDeserializer);
             Map(config => config.Aggregation)
                 .IsRequired()
                 .MapUsingDeserializer(aggregationDeserializer);
+            IgnoreField(MultipleDimensionsTag);
+            IgnoreField(SingleDimensionTag);
 
             _dimensionDeserializer = dimensionDeserializer;
         }
@@ -32,11 +32,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             var azureMetricConfiguration = base.Deserialize(node, errorReporter);
 
-            // TODO: add backwards compatibility, only accept one of dimension or dimensions and map dimension to list with one entry
-
-            if (node.Children.TryGetValue(DimensionsTag, out var dimensionsNode))
+            if (node.Children.TryGetValue(MultipleDimensionsTag, out var multipleDimensionsNode))
             {
-                azureMetricConfiguration.Dimensions = _dimensionDeserializer.Deserialize((YamlSequenceNode)dimensionsNode, errorReporter);
+                azureMetricConfiguration.Dimensions = _dimensionDeserializer.Deserialize((YamlSequenceNode)multipleDimensionsNode, errorReporter);
+            }
+            
+            else if (node.Children.TryGetValue(SingleDimensionTag, out var singleDimensionNode))
+            {
+                errorReporter.ReportWarning(node, "Usage of 'dimension' is deprecated in favor of using 'dimensions'.");
+                azureMetricConfiguration.Dimensions = new List<MetricDimensionV1>{ _dimensionDeserializer.Deserialize((YamlMappingNode)singleDimensionNode, errorReporter) };
             }
 
             return azureMetricConfiguration;
