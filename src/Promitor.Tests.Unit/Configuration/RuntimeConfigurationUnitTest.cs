@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
+using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Scraper.Configuration;
@@ -15,6 +16,49 @@ namespace Promitor.Tests.Unit.Configuration
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
+        public async Task RuntimeConfiguration_HasConfiguredAzureMonitorLoggingEnabledFlag_UsesConfigured(bool azureMonitorLogsEnabled)
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorLogging(isEnabled: azureMonitorLogsEnabled)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Logging);
+            Assert.Equal(azureMonitorLogsEnabled, runtimeConfiguration.AzureMonitor.Logging.IsEnabled);
+        }
+
+        [Theory]
+        [InlineData(HttpLoggingDelegatingHandler.Level.None)]
+        [InlineData(HttpLoggingDelegatingHandler.Level.Basic)]
+        [InlineData(HttpLoggingDelegatingHandler.Level.Headers)]
+        [InlineData(HttpLoggingDelegatingHandler.Level.Body)]
+        [InlineData(HttpLoggingDelegatingHandler.Level.BodyAndHeaders)]
+        public async Task RuntimeConfiguration_HasConfiguredAzureMonitorLoggingInformationLevel_UsesConfigured(HttpLoggingDelegatingHandler.Level informationLevel)
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorLogging(informationLevel: informationLevel)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Logging);
+            Assert.Equal(informationLevel, runtimeConfiguration.AzureMonitor.Logging.InformationLevel);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
         public async Task RuntimeConfiguration_HasConfiguredContainerLogEnabledFlag_UsesConfigured(bool containerLogsEnabled)
         {
             // Arrange
@@ -27,6 +71,7 @@ namespace Promitor.Tests.Unit.Configuration
 
             // Assert
             Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Telemetry);
             Assert.NotNull(runtimeConfiguration.Telemetry.ContainerLogs);
             Assert.Equal(containerLogsEnabled, runtimeConfiguration.Telemetry.ContainerLogs.IsEnabled);
         }
