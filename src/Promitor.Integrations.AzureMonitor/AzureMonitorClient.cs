@@ -27,6 +27,7 @@ namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorClient
     {
+        private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
         private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
@@ -41,19 +42,22 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
+        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor integration</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
         /// <param name="resourceMetricDefinitionMemoryCache">Memory cache to store items in for performance optimizations</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
             Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
+            Guard.NotNull(azureMonitorIntegrationConfiguration, nameof(azureMonitorIntegrationConfiguration));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(resourceMetricDefinitionMemoryCache, nameof(resourceMetricDefinitionMemoryCache));
 
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
+            _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
             _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingPrometheusMetricsCollector, azureMonitorLoggingConfiguration);
         }
@@ -218,11 +222,11 @@ namespace Promitor.Integrations.AzureMonitor
         }
 
         private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, string metricDimension,
-            int? metricLimit,
-            IMetricDefinition metricDefinition, DateTime recordDateTime)
+            int? metricLimit, IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
+            var startingFromHistoryInMinutes = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInMinutes;
             var metricQuery = metricDefinition.DefineQuery()
-                .StartingFrom(recordDateTime.AddDays(-5))
+                .StartingFrom(recordDateTime.AddHours(-startingFromHistoryInMinutes))
                 .EndsBefore(recordDateTime)
                 .WithAggregation(metricAggregation.ToString())
                 .WithInterval(metricsInterval);

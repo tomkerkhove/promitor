@@ -310,6 +310,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<ContainerLogConfiguration>(configuration.GetSection("telemetry:containerLogs"));
             services.Configure<ScrapeEndpointConfiguration>(configuration.GetSection("prometheus:scrapeEndpoint"));
             services.Configure<AzureMonitorConfiguration>(configuration.GetSection("azureMonitor"));
+            services.Configure<AzureMonitorIntegrationConfiguration>(configuration.GetSection("azureMonitor:integration"));
             services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
 
             return services;
