@@ -36,6 +36,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly IScrapingMutex _scrapingTaskMutex;
         private readonly IConfiguration _configuration;
+        private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly ILoggerFactory _loggerFactory;
 
@@ -54,6 +55,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="resourceMetricDefinitionMemoryCache">cache of metric definitions by resource ID</param>
         /// <param name="scrapingTaskMutex">semaphore used to limit concurrency of tasks if configured, or null for no limiting</param>
         /// <param name="configuration">Promitor configuration</param>
+        /// <param name="azureMonitorIntegrationConfiguration">options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">options for Azure Monitor logging</param>
         /// <param name="loggerFactory">means to obtain a logger</param>
         /// <param name="logger">logger to use for scraping detail</param>
@@ -67,6 +69,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             IMemoryCache resourceMetricDefinitionMemoryCache,
             IScrapingMutex scrapingTaskMutex,
             IConfiguration configuration,
+            IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration,
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<ResourcesScrapingJob> logger)
@@ -83,6 +86,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
             Guard.NotNull(resourceMetricDefinitionMemoryCache, nameof(resourceMetricDefinitionMemoryCache));
             Guard.NotNull(configuration, nameof(configuration));
+            Guard.NotNull(azureMonitorIntegrationConfiguration, nameof(azureMonitorIntegrationConfiguration));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
@@ -98,6 +102,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _scrapingTaskMutex = scrapingTaskMutex;
             _configuration = configuration;
+            _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
         }
@@ -268,7 +273,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, _resourceMetricDefinitionMemoryCache, _configuration,
-                    _azureMonitorLoggingConfiguration, _loggerFactory);
+                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, azureMonitorClient);
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
