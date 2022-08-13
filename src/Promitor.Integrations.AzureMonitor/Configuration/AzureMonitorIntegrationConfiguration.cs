@@ -1,6 +1,4 @@
-﻿using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
-
-namespace Promitor.Integrations.AzureMonitor.Configuration
+﻿namespace Promitor.Integrations.AzureMonitor.Configuration
 {
     public class AzureMonitorIntegrationConfiguration
     {
