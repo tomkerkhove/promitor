@@ -2,6 +2,6 @@
 {
     public class AzureMonitorHistoryConfiguration
     {
-        public int StartingFromInMinutes { get; set; } = 60;
+        public int StartingFromInHours { get; set; } = 12;
     }
 }

@@ -242,6 +242,21 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
+        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100)
+        {
+            _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
+            _runtimeConfiguration.AzureMonitor.Integration ??= new AzureMonitorIntegrationConfiguration();
+
+            _runtimeConfiguration.AzureMonitor.Integration.History = new AzureMonitorHistoryConfiguration();
+
+            if (startingFromInHours != null)
+            {
+                _runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours = startingFromInHours.Value;
+            }
+
+            return this;
+        }
+
         public async Task<IConfiguration> GenerateAsync()
         {
             var configurationBuilder = new StringBuilder();
@@ -326,7 +341,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 {
                     configurationBuilder.AppendLine("  integration:");
                     configurationBuilder.AppendLine("    history:");
-                    configurationBuilder.AppendLine($"    startingFromInMinutes: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInMinutes}");
+                    configurationBuilder.AppendLine($"      startingFromInHours: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInHours}");
                 }
 
                 if (_runtimeConfiguration?.AzureMonitor.Logging != null)

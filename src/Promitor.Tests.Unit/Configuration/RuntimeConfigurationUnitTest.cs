@@ -56,6 +56,45 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(informationLevel, runtimeConfiguration.AzureMonitor.Logging.InformationLevel);
         }
 
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoStartingFromInHoursConfiguredForAzureMonitorIntegration_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(startingFromInHours: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
+            Assert.Equal(12, runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasStartingFromInHoursConfiguredForAzureMonitorIntegration_UsesConfigured()
+        {
+            // Arrange
+            var expectedStartingFromInHours = BogusGenerator.Random.Int(min: 1);
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(startingFromInHours: expectedStartingFromInHours)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
+            Assert.Equal(expectedStartingFromInHours, runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

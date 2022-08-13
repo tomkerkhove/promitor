@@ -224,9 +224,9 @@ namespace Promitor.Integrations.AzureMonitor
         private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, string metricDimension,
             int? metricLimit, IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
-            var startingFromHistoryInMinutes = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInMinutes;
+            var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             var metricQuery = metricDefinition.DefineQuery()
-                .StartingFrom(recordDateTime.AddHours(-startingFromHistoryInMinutes))
+                .StartingFrom(recordDateTime.AddHours(-historyStartingFromInHours))
                 .EndsBefore(recordDateTime)
                 .WithAggregation(metricAggregation.ToString())
                 .WithInterval(metricsInterval);
