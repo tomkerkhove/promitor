@@ -38,6 +38,16 @@
 				"NuGet",
 				".NET"
 			]
+		},
+		{
+			"groupName": "Prometheus.Client",
+			"sourceUrlPrefixes": [
+			  "https://github.com/prom-client-net"
+			],
+			"labels": [
+				"NuGet",
+				".NET"
+			]
 		}
 	],
 	"extends": [
