@@ -17,8 +17,4 @@ WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="c:/config/"
 COPY --from=build /app .
 
-# See https://docs.microsoft.com/en-us/dotnet/core/runtime-config/globalization
-RUN apk add --no-cache icu-libs
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-
 ENTRYPOINT ["dotnet", "Promitor.Agents.ResourceDiscovery.dll"]
