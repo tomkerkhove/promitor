@@ -11,6 +11,7 @@ version:
 - {{% tag added %}} Provide capability to define metric window starting point to query in Azure Monitor ([docs](https://docs.promitor.io/latest/scraping/runtime-configuration/#azure-monitor)
  | [#2023](https://github.com/tomkerkhove/promitor/issues/2023))
 - {{% tag fixed %}} Avoid querying too much data from Azure Monitor by using 6 days of metric data ([#2023](https://github.com/tomkerkhove/promitor/issues/2023))
+- {{% tag fixed %}} Agent no longer fails to create background jobs due to CultureNotFoundException ([#2089](https://github.com/tomkerkhove/promitor/issues/2089))
 
 #### Resource Discovery
 
