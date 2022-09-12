@@ -56,7 +56,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             // Change Azure Monitor dimension name to more representable value
             foreach (var measuredMetric in metricValues)
             {
-                for (int i = 0; i < measuredMetric.DimensionNames.Count; i++)
+                for (var i = 0; i < measuredMetric.DimensionNames.Count; i++)
                 {
                     if (measuredMetric.DimensionNames[i] == "ShareName" || measuredMetric.DimensionNames[i] == "ShareSubscriptionName")
                     {

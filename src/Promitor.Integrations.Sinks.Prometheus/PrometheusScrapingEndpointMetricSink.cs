@@ -94,7 +94,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
             if (measuredMetric.IsDimensional)
             {
-                for (int i = 0; i < measuredMetric.DimensionNames.Count; i++)
+                for (var i = 0; i < measuredMetric.DimensionNames.Count; i++)
                 {
                     labels.Add(measuredMetric.DimensionNames[i].SanitizeForPrometheusLabelKey(), measuredMetric.DimensionValues[i]);    
                 }
