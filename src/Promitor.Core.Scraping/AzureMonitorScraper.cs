@@ -85,7 +85,7 @@ namespace Promitor.Core.Scraping
         ///     metrics to align with others
         /// </remarks>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimensionNames"></param>
+        /// <param name="dimensionNames">List of names of the specified dimensions provided by the scraper.</param>
         /// <param name="metricValues">Measured metric values that were found</param>
         /// <returns></returns>
         protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
