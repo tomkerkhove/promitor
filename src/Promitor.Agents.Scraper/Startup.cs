@@ -41,7 +41,7 @@ namespace Promitor.Agents.Scraper
 
             services.UseWebApi()
                 .AddMemoryCache()
-                .AddResourceDiscoveryClient(promitorUserAgent)
+                .AddResourceDiscoveryClient(promitorUserAgent, Configuration)
                 .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
                 .AddUsability()
                 .AddHttpCorrelation(options => options.UpstreamService.ExtractFromRequest = true)

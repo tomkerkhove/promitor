@@ -248,7 +248,7 @@
             the same scraping schedule.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.ResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingPrometheusMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.Interfaces.IResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IAzureScrapingPrometheusMetricsCollector,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
             <summary>
             Create a metrics scraping job for one or more resources, either enumerated specifically or
             identified via resource definition groups. All metrics included are expected to have
@@ -337,12 +337,13 @@
             <param name="configuration">Configuration of Promitor</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddResourceDiscoveryClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddResourceDiscoveryClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Add the Promitor Resource Discovery client
             </summary>
             <param name="services">Collections of services in application</param>
             <param name="promitorUserAgent">User agent for Promitor</param>
+            <param name="configuration"></param>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddAtlassianStatuspageClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
