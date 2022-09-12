@@ -46,9 +46,9 @@ namespace Promitor.Core.Scraping
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            List<string> dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
+            var dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
 
-            List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
+            var measuredMetrics = new List<MeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
@@ -58,7 +58,7 @@ namespace Promitor.Core.Scraping
             {
                 Logger.LogWarning("No metric information found for metric {MetricName} with dimensions {MetricDimensions}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimensions, metricsNotFoundException.Details);
                 
-                var measuredMetric = dimensionNames.Any() ? MeasuredMetric.CreateForDimension((double?)null, dimensionNames, Enumerable.Repeat("unknown",dimensionNames.Count).ToList()) : MeasuredMetric.CreateWithoutDimension(null);
+                var measuredMetric = dimensionNames.Any() ? MeasuredMetric.CreateForDimension(null, dimensionNames, Enumerable.Repeat("unknown",dimensionNames.Count).ToList()) : MeasuredMetric.CreateWithoutDimension(null);
                 measuredMetrics.Add(measuredMetric);
             }
 
