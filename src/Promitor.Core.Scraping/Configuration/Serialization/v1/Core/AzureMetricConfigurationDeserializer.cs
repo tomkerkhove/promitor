@@ -37,6 +37,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 azureMetricConfiguration.Dimensions = _dimensionDeserializer.Deserialize((YamlSequenceNode)multipleDimensionsNode, errorReporter);
             }
             
+            // backwards compatibility: if old tag "dimension" is used, a list containing only the one MetricDimension is created
             else if (node.Children.TryGetValue(SingleDimensionTag, out var singleDimensionNode))
             {
                 errorReporter.ReportWarning(node, "Usage of 'dimension' is deprecated in favor of using 'dimensions'.");
