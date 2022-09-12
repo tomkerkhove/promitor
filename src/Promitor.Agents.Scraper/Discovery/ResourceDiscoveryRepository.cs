@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
+using Promitor.Agents.Core.Contracts;
+using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Discovery
 {
-    public class ResourceDiscoveryRepository
+    public class ResourceDiscoveryRepository : IResourceDiscoveryRepository
     {
         private readonly ResourceDiscoveryClient _resourceDiscoveryClient;
 
@@ -33,6 +35,11 @@ namespace Promitor.Agents.Scraper.Discovery
             while (pagedPayload.HasMore);
 
             return results;
+        }
+
+        public async Task<AgentHealthReport> GetHealthAsync()
+        {
+            return await _resourceDiscoveryClient.GetHealthAsync();
         }
     }
 }

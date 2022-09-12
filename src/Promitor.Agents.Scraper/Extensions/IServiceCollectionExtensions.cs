@@ -4,6 +4,7 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
@@ -16,6 +17,7 @@ using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
@@ -53,16 +55,26 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Collections of services in application</param>
         /// <param name="promitorUserAgent">User agent for Promitor</param>
-        public static IServiceCollection AddResourceDiscoveryClient(this IServiceCollection services, string promitorUserAgent)
+        /// <param name="configuration"></param>
+        public static IServiceCollection AddResourceDiscoveryClient(this IServiceCollection services, string promitorUserAgent, IConfiguration configuration)
         {
             Guard.NotNull(services, nameof(services));
 
-            services.AddHttpClient<ResourceDiscoveryClient>(client =>
+            var resourceDiscoveryConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            if(resourceDiscoveryConfiguration.ResourceDiscovery?.IsConfigured == true)
             {
-                // Provide Promitor User-Agent
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
-            });
-            services.AddTransient<ResourceDiscoveryRepository>();
+                services.AddHttpClient<ResourceDiscoveryClient>(client =>
+                {
+                    // Provide Promitor User-Agent
+                    client.DefaultRequestHeaders.UserAgent.TryParseAdd(promitorUserAgent);
+                });
+                services.AddTransient<IResourceDiscoveryRepository, ResourceDiscoveryRepository>();
+            }
+            else
+            {
+                services.AddTransient<IResourceDiscoveryRepository, StubResourceDiscoveryRepository>();
+            }
 
             return services;
         }
@@ -86,7 +98,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 var apiKey = configuration[EnvironmentVariables.Integrations.AtlassianStatuspage.ApiKey];
                 client.DefaultRequestHeaders.Add("Authorization", $"OAuth {apiKey}");
             });
-            services.AddTransient<ResourceDiscoveryRepository>();
 
             return services;
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CronScheduler.Extensions.Scheduler;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
@@ -28,7 +30,7 @@ namespace Promitor.Agents.Scraper.Scheduling
     public class ResourcesScrapingJob : MetricScrapingJob, IScheduledJob
     {
         private readonly MetricsDeclaration _metricsDeclaration;
-        private readonly ResourceDiscoveryRepository _resourceDiscoveryRepository;
+        private readonly IResourceDiscoveryRepository _resourceDiscoveryRepository;
         private readonly MetricSinkWriter _metricSinkWriter;
         private readonly MetricScraperFactory _metricScraperFactory;
         private readonly IAzureScrapingPrometheusMetricsCollector _azureScrapingPrometheusMetricsCollector;
@@ -61,7 +63,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="logger">logger to use for scraping detail</param>
         public ResourcesScrapingJob(string jobName,
             MetricsDeclaration metricsDeclaration,
-            ResourceDiscoveryRepository resourceDiscoveryRepository,
+            IResourceDiscoveryRepository resourceDiscoveryRepository,
             MetricSinkWriter metricSinkWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClientFactory azureMonitorClientFactory,
@@ -165,7 +167,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                         throw new NullReferenceException("Metric within metrics declaration was null.");
                     }
 
-                    if (metric.ResourceDiscoveryGroups != null)
+                    if (metric.ResourceDiscoveryGroups?.Any() == true)
                     {
                         foreach (var resourceDiscoveryGroup in metric.ResourceDiscoveryGroups)
                         {
@@ -182,7 +184,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                         }
                     }
 
-                    if (metric.Resources != null)
+                    if (metric.Resources?.Any() == true)
                     {
                         foreach (var resourceDefinition in metric.Resources)
                         {

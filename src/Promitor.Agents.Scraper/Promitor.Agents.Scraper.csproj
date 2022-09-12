@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Discovery\Interfaces\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
