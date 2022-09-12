@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 
 namespace Promitor.Agents.Scraper.Health

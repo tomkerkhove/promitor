@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
-using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
