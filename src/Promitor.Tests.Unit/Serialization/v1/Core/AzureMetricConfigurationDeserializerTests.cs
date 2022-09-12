@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Promitor.Core.Scraping.Configuration.Serialization;
@@ -108,13 +110,34 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var dimensionNode = (YamlMappingNode)node.Children["dimension"];
 
             var dimension = new MetricDimensionV1();
-            _dimensionDeserializer.Setup(d => d.DeserializeObject(dimensionNode, _errorReporter.Object)).Returns(dimension);
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
+
+            // Act
+            var config = _deserializer.Deserialize(node, _errorReporter.Object);
+            
+            // Assert
+            Assert.Equal(new List<MetricDimensionV1> { dimension }, config.Dimensions);
+        }
+
+        [Fact]
+        public void Deserialize_DimensionsSupplied_UsesDeserializer()
+        {
+            // Arrange
+            const string yamlText =
+                @"dimensions:
+  - name: EntityPath
+  - name: Test";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var dimensionsNode = (YamlSequenceNode)node.Children["dimensions"];
+            
+            var dimensions = new List<MetricDimensionV1> { new MetricDimensionV1(), new MetricDimensionV1() };
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Same(dimension, config.Dimension);
+            Assert.Same(dimensions, config.Dimensions);
         }
 
         [Fact]
@@ -123,7 +146,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             YamlAssert.PropertyNull(
                 _deserializer,
                 "metricName: ActiveMessages",
-                c => c.Dimension);
+                c => c.Dimensions);
         }
 
         [Fact]
