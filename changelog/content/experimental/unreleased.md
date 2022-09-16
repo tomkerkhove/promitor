@@ -5,9 +5,11 @@ version:
 ---
 
 #### Scraper
-
+  
 - {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)
   | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
+- {{% tag added %}} Provide capability to use multiple metric dimensions by using new configuration property `dimensions` ([#1820](https://github.com/tomkerkhove/promitor/issues/1820))
+- {{% tag deprecated %}} Old configuration property for metric dimension `dimension` ([#1820](https://github.com/tomkerkhove/promitor/issues/1820))
 
 #### Resource Discovery
 
