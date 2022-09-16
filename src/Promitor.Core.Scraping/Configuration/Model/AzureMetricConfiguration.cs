@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {
@@ -23,5 +25,15 @@ namespace Promitor.Core.Scraping.Configuration.Model
         ///     Configuration on how to aggregate the metric
         /// </summary>
         public MetricAggregation Aggregation { get; set; }
+
+        /// <summary>
+        ///    Checks whether the configuration contains a dimension with the given name.
+        /// </summary>
+        /// <param name="dimensionName">Dimension name to be checked for.</param>
+        /// <returns>true if the dimension name was found, false otherwise</returns>
+        public bool HasDimension(string dimensionName)
+        {
+            return Dimensions?.Where(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)).Any() ?? false;
+        }
     }
 }
