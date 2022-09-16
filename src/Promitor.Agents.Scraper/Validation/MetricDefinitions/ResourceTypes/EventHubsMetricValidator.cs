@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;

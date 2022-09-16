@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GuardNet;
+﻿using GuardNet;
 
 namespace Promitor.Core.Metrics;
 
