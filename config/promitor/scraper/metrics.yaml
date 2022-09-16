@@ -173,7 +173,7 @@ metrics:
     resources:
       - accountName: promitor-testing-resource-eu-automation-1
   - name: promitor_demo_frontdoor_backend_health_per_backend_pool
-    description: "Health percentage for a backed in Azure Front Door"
+    description: "Health percentage for a backend in Azure Front Door"
     resourceType: FrontDoor
     labels:
       app: promitor
@@ -181,6 +181,20 @@ metrics:
       metricName: BackendHealthPercentage
       dimension:
         name: BackendPool
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: front-door-landscape
+  - name: promitor_demo_frontdoor_backend_health_per_backend_pool_and_backend
+    description: "Health percentage for a backend in Azure Front Door"
+    resourceType: FrontDoor
+    labels:
+      app: promitor
+    azureMetricConfiguration:
+      metricName: BackendHealthPercentage
+      dimensions:
+        - name: BackendPool
+        - name: Backend
       aggregation:
         type: Average
     resourceDiscoveryGroups:
