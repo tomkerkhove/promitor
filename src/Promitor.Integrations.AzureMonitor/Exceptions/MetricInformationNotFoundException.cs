@@ -25,7 +25,7 @@ namespace Promitor.Integrations.AzureMonitor.Exceptions
         /// </summary>
         /// <param name="name">Name of the metric</param>
         /// <param name="details">Details that provide more context about the scenario</param>
-        /// <param name="dimensions"></param>
+        /// <param name="dimensions">Dimensions of the metric</param>
         public MetricInformationNotFoundException(string name, string details, List<string> dimensions) : base($"No metric information was found for '{name}' with dimensions '{dimensions}'. Reason: '{details}'")
         {
             Guard.NotNullOrWhitespace(name, nameof(name));
