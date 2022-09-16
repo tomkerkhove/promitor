@@ -112,8 +112,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var firstMetricValue = BogusGenerator.Random.Double();
             var secondMetricValue = BogusGenerator.Random.Double();
-            var firstMetric = MeasuredMetric.CreateWithoutDimension(firstMetricValue);
-            var secondMetric = MeasuredMetric.CreateWithoutDimension(secondMetricValue);
+            var firstMetric = MeasuredMetric.CreateWithoutDimensions(firstMetricValue);
+            var secondMetric = MeasuredMetric.CreateWithoutDimensions(secondMetricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(firstMetric);
             scrapeResult.MetricValues.Add(secondMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
@@ -146,8 +146,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             {
                 Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var firstMetric = MeasuredMetric.CreateForDimension(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
-            var secondMetric = MeasuredMetric.CreateWithoutDimension(secondMetricValue);
+            var firstMetric = MeasuredMetric.CreateForDimensions(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var secondMetric = MeasuredMetric.CreateWithoutDimensions(secondMetricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(firstMetric);
             scrapeResult.MetricValues.Add(secondMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
@@ -228,7 +228,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
-            var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration(metricUnavailableValue: expectedDefaultValue);
@@ -258,7 +258,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             {
                 Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var measuredMetric = MeasuredMetric.CreateForDimension(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var measuredMetric = MeasuredMetric.CreateForDimensions(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();

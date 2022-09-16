@@ -109,7 +109,7 @@ namespace Promitor.Integrations.AzureMonitor
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
 
-                var measuredMetric = metricDimensions.Any() ? MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimensions, timeseries) : MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate);
+                var measuredMetric = metricDimensions.Any() ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                 measuredMetrics.Add(measuredMetric);
             }
 

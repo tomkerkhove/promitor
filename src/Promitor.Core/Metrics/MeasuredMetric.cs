@@ -42,7 +42,7 @@ namespace Promitor.Core.Metrics
         /// Create a measured metric without dimensions
         /// </summary>
         /// <param name="value">Measured metric value</param>
-        public static MeasuredMetric CreateWithoutDimension(double? value)
+        public static MeasuredMetric CreateWithoutDimensions(double? value)
         {
             return new MeasuredMetric(value);
         }
@@ -53,7 +53,7 @@ namespace Promitor.Core.Metrics
         /// <param name="value">Measured metric value</param>
         /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
         /// <param name="timeseries">Timeseries representing one of the dimensions</param>
-        public static MeasuredMetric CreateForDimension(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
+        public static MeasuredMetric CreateForDimensions(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
         {
             Guard.NotAny(dimensionNames, nameof(dimensionNames));
             Guard.NotNull(timeseries, nameof(timeseries));
@@ -73,7 +73,7 @@ namespace Promitor.Core.Metrics
         /// Create a measured metric for given dimensions when no metric information was found
         /// </summary>
         /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
-        public static MeasuredMetric CreateForDimension(List<string> dimensionNames)
+        public static MeasuredMetric CreateForDimensions(List<string> dimensionNames)
         {
             Guard.NotAny(dimensionNames, nameof(dimensionNames));
 

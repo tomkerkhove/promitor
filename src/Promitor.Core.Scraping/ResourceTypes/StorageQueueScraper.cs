@@ -51,7 +51,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
 
             var measuredMetrics = new List<MeasuredMetric>
             {
-                MeasuredMetric.CreateWithoutDimension(foundMetricValue)
+                MeasuredMetric.CreateWithoutDimensions(foundMetricValue)
             };
 
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName, resourceUri, measuredMetrics, labels);

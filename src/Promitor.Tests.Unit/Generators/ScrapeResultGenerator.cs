@@ -21,7 +21,7 @@ namespace Promitor.Tests.Unit.Generators
 
         public static ScrapeResult Generate(double metricValue)
         {
-            return GenerateFromMetric(MeasuredMetric.CreateWithoutDimension(metricValue));
+            return GenerateFromMetric(MeasuredMetric.CreateWithoutDimensions(metricValue));
         }
     }
 }

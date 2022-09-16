@@ -39,7 +39,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             // Arrange
             var metricName = BogusGenerator.Name.FirstName();
             var metricValue = BogusGenerator.Random.Double();
-            var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
@@ -70,7 +70,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricName = BogusGenerator.Name.FirstName();
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricValue = BogusGenerator.Random.Double();
-            var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
@@ -91,7 +91,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
-            var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
