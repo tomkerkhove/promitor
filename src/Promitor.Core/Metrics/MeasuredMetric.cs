@@ -14,14 +14,9 @@ namespace Promitor.Core.Metrics
         public double? Value { get; }
 
         /// <summary>
-        ///     Name of dimension for a metric
+        ///     Measured dimensions.
         /// </summary>
-        public List<string> DimensionNames { get; set; }
-
-        /// <summary>
-        ///     Name of dimension for a metric
-        /// </summary>
-        public List<string> DimensionValues { get; }
+        public List<MeasuredMetricDimension> Dimensions { get; }
 
         /// <summary>
         ///     Indication whether or not the metric represents a dimension
@@ -33,20 +28,18 @@ namespace Promitor.Core.Metrics
             Value = value;
         }
 
-        private MeasuredMetric(double? value, List<string> dimensionNames, List<string> dimensionValues)
+        private MeasuredMetric(double? value, List<MeasuredMetricDimension> dimensions)
         {
-            Guard.NotAny(dimensionNames, nameof(dimensionNames));
-            Guard.NotAny(dimensionValues, nameof(dimensionValues));
+            Guard.NotAny(dimensions, nameof(dimensions));
 
             Value = value;
 
             IsDimensional = true;
-            DimensionNames = dimensionNames;
-            DimensionValues = dimensionValues;
+            Dimensions = dimensions;
         }
 
         /// <summary>
-        /// Create a measured metric without dimension
+        /// Create a measured metric without dimensions
         /// </summary>
         /// <param name="value">Measured metric value</param>
         public static MeasuredMetric CreateWithoutDimension(double? value)
@@ -55,7 +48,7 @@ namespace Promitor.Core.Metrics
         }
 
         /// <summary>
-        /// Create a measured metric for a given dimension
+        /// Create a measured metric for given dimensions
         /// </summary>
         /// <param name="value">Measured metric value</param>
         /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
@@ -66,27 +59,27 @@ namespace Promitor.Core.Metrics
             Guard.NotNull(timeseries, nameof(timeseries));
             Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
 
-            var dimensionValues = new List<string>(); 
+            var dimensions = new List<MeasuredMetricDimension>(); 
             foreach (var dimensionName in dimensionNames)
             {
-                dimensionValues.Add(timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value);
+                var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value;
+                dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
             
-            return CreateForDimension(value, dimensionNames, dimensionValues);
+            return new MeasuredMetric(value, dimensions);
         }
 
         /// <summary>
-        /// Create a measured metric for a given dimension
+        /// Create a measured metric for given dimensions when no metric information was found
         /// </summary>
-        /// <param name="value">Measured metric value</param>
         /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
-        /// <param name="dimensionValues">List of values of the dimension that are being scraped</param>
-        public static MeasuredMetric CreateForDimension(double? value, List<string> dimensionNames, List<string> dimensionValues)
+        public static MeasuredMetric CreateForDimension(List<string> dimensionNames)
         {
             Guard.NotAny(dimensionNames, nameof(dimensionNames));
-            Guard.NotAny(dimensionValues, nameof(dimensionValues));
 
-            return new MeasuredMetric(value, dimensionNames, dimensionValues);
+            var dimensions = dimensionNames.Select(name => new MeasuredMetricDimension(name, "unknown")).ToList();
+            
+            return new MeasuredMetric(null, dimensions);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace Promitor.Core.Scraping.ResourceTypes
         protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor Dimension name to more representable value
-            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.DimensionNames.Any()))
+            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.Dimensions.Any()))
             {
-                measuredMetric.DimensionNames[0] = EntityNameLabel; // TODO
+                measuredMetric.Dimensions[0].Name = EntityNameLabel; // TODO
             }
 
             return metricValues;
