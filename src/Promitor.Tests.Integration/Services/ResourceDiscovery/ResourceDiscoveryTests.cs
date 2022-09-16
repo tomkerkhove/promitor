@@ -104,7 +104,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
             const int pageSize = 1000;
-            const int expectedTotalResourceCount = 1018;
+            const int expectedTotalResourceCount = 1016;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act & Assert
@@ -135,7 +135,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedTotalResources = 1018;
+            const int expectedTotalResources = 1016;
             const int pageSize = 500;
             int expectedResourceCount = pageSize;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
@@ -287,7 +287,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 415;
+            const int expectedResourceCount = 413;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
@@ -303,7 +303,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
             const int pageSize = 1000;
-            const int expectedTotalResourceCount = 1018;
+            const int expectedTotalResourceCount = 1016;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act & Assert
@@ -337,7 +337,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "logic-apps-unfiltered";
-            const int expectedTotalAmount = 1018;
+            const int expectedTotalAmount = 1016;
             const int pageSize = 500;
             var expectedResourceCount = pageSize;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
@@ -489,7 +489,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
         {
             // Arrange
             const string resourceDiscoveryGroupName = "two-region-scenario";
-            const int expectedResourceCount = 415;
+            const int expectedResourceCount = 413;
             var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
 
             // Act
