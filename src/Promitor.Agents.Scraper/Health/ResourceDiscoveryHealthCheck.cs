@@ -3,26 +3,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Discovery.Interfaces;
 
 namespace Promitor.Agents.Scraper.Health
 {
     public class ResourceDiscoveryHealthCheck : IHealthCheck
     {
-        private readonly ResourceDiscoveryClient _resourceDiscoveryClient;
+        private readonly IResourceDiscoveryRepository _resourceDiscoveryRepository;
 
-        public ResourceDiscoveryHealthCheck(ResourceDiscoveryClient resourceDiscoveryClient)
+        public ResourceDiscoveryHealthCheck(IResourceDiscoveryRepository resourceDiscoveryRepository)
         {
-            Guard.NotNull(resourceDiscoveryClient, nameof(resourceDiscoveryClient));
+            Guard.NotNull(resourceDiscoveryRepository, nameof(resourceDiscoveryRepository));
 
-            _resourceDiscoveryClient = resourceDiscoveryClient;
+            _resourceDiscoveryRepository = resourceDiscoveryRepository;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
             try
             {
-                var resourceDiscoveryHealthReport = await _resourceDiscoveryClient.GetHealthAsync();
+                var resourceDiscoveryHealthReport = await _resourceDiscoveryRepository.GetHealthAsync();
                 if (resourceDiscoveryHealthReport.Status == HealthStatus.Healthy)
                 {
                     return HealthCheckResult.Healthy("Successfully contacted Promitor Resource Discovery");

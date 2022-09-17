@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
-using Promitor.Agents.Scraper.Discovery;
+using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
@@ -35,6 +35,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var loggerFactory = serviceProviderToCreateJobsWith.GetRequiredService<ILoggerFactory>();
             
             var metricSinkWriter = serviceProviderToCreateJobsWith.GetRequiredService<MetricSinkWriter>();
+            var azureMonitorIntegrationConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorIntegrationConfiguration>>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var resourceMetricDefinitionMemoryCache = serviceProviderToCreateJobsWith.GetService<IMemoryCache>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
@@ -48,7 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var metricsForScrapingInterval in metricsGroupedByScrapingInterval)
             {
                 ScheduleResourcesScraping(metricsForScrapingInterval, metricSinkWriter, azureMonitorClientFactory, runtimeMetricCollector, resourceMetricDefinitionMemoryCache, 
-                    scrapingTaskMutex, configuration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
+                    scrapingTaskMutex, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
             }
 
             return services;
@@ -83,6 +84,7 @@ namespace Microsoft.Extensions.DependencyInjection
             IMemoryCache resourceMetricDefinitionMemoryCache,
             IScrapingMutex scrapingTaskMutex,
             IConfiguration configuration,
+            IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration,
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<Startup> logger,
@@ -95,7 +97,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 builder.AddJob(jobServices =>
                         new ResourcesScrapingJob(jobName,
                             metricsDeclaration,
-                            jobServices.GetService<ResourceDiscoveryRepository>(),
+                            jobServices.GetService<IResourceDiscoveryRepository>(),
                             metricSinkWriter,
                             jobServices.GetService<MetricScraperFactory>(),
                             azureMonitorClientFactory,
@@ -103,6 +105,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             resourceMetricDefinitionMemoryCache,
                             scrapingTaskMutex,
                             configuration,
+                            azureMonitorIntegrationConfiguration,
                             azureMonitorLoggingConfiguration,
                             loggerFactory,
                             jobServices.GetService<ILogger<ResourcesScrapingJob>>()),

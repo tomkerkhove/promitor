@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>6.0.7</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>6.0.9</RuntimeFrameworkVersion>
     <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
   </PropertyGroup>
 
@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Discovery\Interfaces\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

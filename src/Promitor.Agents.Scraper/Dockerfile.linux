@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0.302-alpine3.16 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.401-alpine3.16 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
@@ -16,9 +16,13 @@ COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.7-alpine3.16 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.9-alpine3.16 as runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="/config/"
+
+# See https://docs.microsoft.com/en-us/dotnet/core/runtime-config/globalization
+RUN apk add --no-cache icu-libs
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 COPY --from=build /src/app .
 
