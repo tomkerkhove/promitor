@@ -16,7 +16,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             _openTelemetryMetricNamespace = Configuration["OpenTelemetry:Collector:MetricNamespace"];
         }
 
-        [Theory]
+        [SkippableTheory]
         [InlineData("promitor_ratelimit_arm")]
         [InlineData("promitor_scrape_success")]
         [InlineData("promitor_scrape_error")]
@@ -29,7 +29,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             await AssertExpectedMetricIsAvailable(expectedMetricName);
         }
 
-        [Theory]
+        [SkippableTheory]
         [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task OpenTelemetry_Scrape_ExpectedScrapedMetricIsAvailable(string expectedMetricName)
         {
@@ -40,7 +40,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             await AssertExpectedMetricIsAvailable(expectedMetricName);
         }
 
-        [Theory]
+        [SkippableTheory]
         [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnErrorMetric(string expectedMetricName)
         {
@@ -59,7 +59,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.NotNull(gaugeMetric);
         }
 
-        [Theory]
+        [SkippableTheory]
         [ClassData(typeof(AvailableMetricsTestInputGenerator))]
         public async Task OpenTelemetry_Scrape_EveryMetricHasAnSuccessMetric(string expectedMetricName)
         {
@@ -78,7 +78,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.NotNull(gaugeMetric);
         }
 
-        [Fact]
+        [SkippableFact]
         public async Task OpenTelemetry_Scrape_ExpectedRateLimitingForArmMetricIsAvailable()
         {
 #if RELEASE
@@ -97,7 +97,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.False(gaugeMetric.Measurements.Count < 1);
         }
         
-        [Fact]
+        [SkippableFact]
         public async Task OpenTelemetry_Scrape_ExpectedArmThrottledMetricIsAvailable()
         {
 #if RELEASE
