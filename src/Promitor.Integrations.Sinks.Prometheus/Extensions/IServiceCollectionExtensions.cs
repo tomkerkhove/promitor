@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Prometheus.Client.DependencyInjection;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Prometheus.Collectors;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Integrations.Sinks.Prometheus.Collectors;
 
-namespace Promitor.Agents.Core.Extensions
+namespace Promitor.Integrations.Sinks.Prometheus.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions

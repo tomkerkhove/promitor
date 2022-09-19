@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Integrations.Sinks.OpenTelemetry.Collectors;
 
-namespace Promitor.Agents.Core.Extensions
+namespace Promitor.Integrations.Sinks.OpenTelemetry.Extensions
 {
     // ReSharper disable once InconsistentNaming
     public static class IServiceCollectionExtensions

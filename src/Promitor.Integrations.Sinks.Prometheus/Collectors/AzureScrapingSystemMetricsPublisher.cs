@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 

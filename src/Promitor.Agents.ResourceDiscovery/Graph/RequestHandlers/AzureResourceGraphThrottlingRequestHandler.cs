@@ -7,7 +7,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.RequestHandlers;
 using Promitor.Core;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
 {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
@@ -66,7 +66,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             };
 
             // Report metric in Prometheus endpoint
-            WritePrometheusMetricAsync(MetricName, MetricDescription, value: 1, labels);
+            WritePrometheusMetricAsync(MetricName, MetricDescription, value: 1, labels).Wait();
         }
     }
 }

@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Rest;
 using Promitor.Core;
 using Promitor.Core.Metrics;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.Core.RequestHandlers
 {

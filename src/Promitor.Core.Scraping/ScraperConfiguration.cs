@@ -1,6 +1,6 @@
 ﻿using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor;
 

@@ -17,7 +17,7 @@ using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Scheduling;
 using Promitor.Agents.ResourceDiscovery.Usability;
 using Promitor.Agents.ResourceDiscovery.Validation.Steps;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Integrations.Azure.Authentication.Configuration;
 // ReSharper disable RedundantTypeArgumentsOfMethod
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Promitor.Core.Metrics.Prometheus.Collectors.Interfaces
+namespace Promitor.Core.Metrics.Interfaces
 {
     public interface IAzureScrapingSystemMetricsPublisher : ISystemMetricsPublisher
     {

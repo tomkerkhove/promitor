@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Prometheus.Client;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
-namespace Promitor.Core.Metrics.Prometheus.Collectors
+namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 {
     public class PrometheusSystemMetricsSink : ISystemMetricsSink
     {
