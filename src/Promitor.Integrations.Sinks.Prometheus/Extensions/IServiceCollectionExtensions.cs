@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Prometheus.Client.DependencyInjection;
 using Promitor.Core.Metrics.Interfaces;
-using Promitor.Core.Metrics.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
 
 namespace Promitor.Integrations.Sinks.Prometheus.Extensions
