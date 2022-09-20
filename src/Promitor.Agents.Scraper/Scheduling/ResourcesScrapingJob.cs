@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -32,7 +32,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IResourceDiscoveryRepository _resourceDiscoveryRepository;
         private readonly MetricSinkWriter _metricSinkWriter;
         private readonly MetricScraperFactory _metricScraperFactory;
-        private readonly IAzureScrapingPrometheusMetricsCollector _azureScrapingPrometheusMetricsCollector;
+        private readonly IAzureScrapingSystemMetricsPublisher _azureScrapingSystemMetricsPublisher;
         private readonly AzureMonitorClientFactory _azureMonitorClientFactory;
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly IScrapingMutex _scrapingTaskMutex;
@@ -52,7 +52,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="metricSinkWriter">destination for metric reporting output</param>
         /// <param name="metricScraperFactory">means of obtaining a metrics scraper for a particular type of resource</param>
         /// <param name="azureMonitorClientFactory">means of obtaining a Azure Monitor client</param>
-        /// <param name="azureScrapingPrometheusMetricsCollector">metrics collector to write metrics to Prometheus</param>
+        /// <param name="azureScrapingSystemMetricsPublisher">metrics collector to write metrics to Prometheus</param>
         /// <param name="resourceMetricDefinitionMemoryCache">cache of metric definitions by resource ID</param>
         /// <param name="scrapingTaskMutex">semaphore used to limit concurrency of tasks if configured, or null for no limiting</param>
         /// <param name="configuration">Promitor configuration</param>
@@ -66,7 +66,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             MetricSinkWriter metricSinkWriter,
             MetricScraperFactory metricScraperFactory,
             AzureMonitorClientFactory azureMonitorClientFactory,
-            IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector,
+            IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher,
             IMemoryCache resourceMetricDefinitionMemoryCache,
             IScrapingMutex scrapingTaskMutex,
             IConfiguration configuration,
@@ -84,7 +84,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(metricSinkWriter, nameof(metricSinkWriter));
             Guard.NotNull(metricScraperFactory, nameof(metricScraperFactory));
             Guard.NotNull(azureMonitorClientFactory, nameof(azureMonitorClientFactory));
-            Guard.NotNull(azureScrapingPrometheusMetricsCollector, nameof(azureScrapingPrometheusMetricsCollector));
+            Guard.NotNull(azureScrapingSystemMetricsPublisher, nameof(azureScrapingSystemMetricsPublisher));
             Guard.NotNull(resourceMetricDefinitionMemoryCache, nameof(resourceMetricDefinitionMemoryCache));
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(azureMonitorIntegrationConfiguration, nameof(azureMonitorIntegrationConfiguration));
@@ -99,7 +99,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _metricSinkWriter = metricSinkWriter;
             _metricScraperFactory = metricScraperFactory;
             _azureMonitorClientFactory = azureMonitorClientFactory;
-            _azureScrapingPrometheusMetricsCollector = azureScrapingPrometheusMetricsCollector;
+            _azureScrapingSystemMetricsPublisher = azureScrapingSystemMetricsPublisher;
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _scrapingTaskMutex = scrapingTaskMutex;
             _configuration = configuration;
@@ -273,9 +273,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                     ? scrapeDefinition.Resource.SubscriptionId
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
-                    resourceSubscriptionId, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, _resourceMetricDefinitionMemoryCache, _configuration,
+                    resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
-                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingPrometheusMetricsCollector, azureMonitorClient);
+                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient);
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
             catch (Exception ex)

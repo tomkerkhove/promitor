@@ -11,9 +11,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
-using Prometheus.Client.DependencyInjection;
-using Promitor.Core.Metrics.Prometheus.Collectors;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics;
+using Promitor.Core.Metrics.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Promitor.Agents.Core.Extensions
@@ -24,10 +23,11 @@ namespace Promitor.Agents.Core.Extensions
         /// <summary>
         /// Use prometheus for writing metrics
         /// </summary>
-        public static IServiceCollection AddPrometheusMetrics(this IServiceCollection services)
+        public static IServiceCollection AddSystemMetrics(this IServiceCollection services, Action<IServiceCollection> sinkBuilder = null)
         {
-            services.AddMetricFactory();
-            services.AddTransient<IPrometheusMetricsCollector, PrometheusMetricsCollector>();
+            sinkBuilder?.Invoke(services);
+
+            services.AddTransient<ISystemMetricsPublisher, AggregatedSystemMetricsPublisher>();
 
             return services;
         }

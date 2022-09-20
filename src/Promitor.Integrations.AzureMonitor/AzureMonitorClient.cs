@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Rest;
 using Promitor.Core;
 using Promitor.Core.Metrics;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.AzureMonitor.Exceptions;
@@ -42,12 +42,12 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
-        /// <param name="azureScrapingPrometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="azureScrapingSystemMetricsPublisher">Metrics collector to write metrics to Prometheus</param>
         /// <param name="resourceMetricDefinitionMemoryCache">Memory cache to store items in for performance optimizations</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor logging</param>
-        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor integration</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
+        /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
+        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -59,7 +59,7 @@ namespace Promitor.Integrations.AzureMonitor
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingPrometheusMetricsCollector, azureMonitorLoggingConfiguration);
+            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
 
         /// <summary>
@@ -248,11 +248,11 @@ namespace Promitor.Integrations.AzureMonitor
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             var credentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, tenantId, azureAuthenticationInfo, _azureCredentialsFactory);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();
-            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingPrometheusMetricsCollector, throttlingLogger);
+            var monitorHandler = new AzureResourceManagerThrottlingRequestHandler(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, throttlingLogger);
 
             var azureClientConfiguration = Microsoft.Azure.Management.Fluent.Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);

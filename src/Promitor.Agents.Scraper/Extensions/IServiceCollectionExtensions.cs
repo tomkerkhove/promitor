@@ -8,7 +8,6 @@ using OpenTelemetry.Metrics;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
-using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -22,7 +21,7 @@ using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Core;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
@@ -36,9 +35,11 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.OpenTelemetry;
+using Promitor.Integrations.Sinks.OpenTelemetry.Extensions;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
+using Promitor.Integrations.Sinks.Prometheus.Extensions;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Spectre.Console;
@@ -110,7 +111,7 @@ namespace Microsoft.Extensions.DependencyInjection
             Guard.NotNull(services, nameof(services));
             
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
-            services.AddTransient<IAzureScrapingPrometheusMetricsCollector, AzureScrapingPrometheusMetricsCollector>();
+            services.AddTransient<IAzureScrapingSystemMetricsPublisher, AzureScrapingSystemMetricsPublisher>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
@@ -207,9 +208,8 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddPrometheusMetricSink(string baseUri, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("Prometheus Scraping Endpoint", $"Url: {baseUri}.");
-
-            services.AddPrometheusMetrics();
             services.AddTransient<IMetricSink, PrometheusScrapingEndpointMetricSink>();
+            services.AddPrometheusSystemMetrics();
         }
 
         private static void AddAtlassianStatuspageMetricSink(string pageId, IServiceCollection services, Table metricSinkAsciiTable)
@@ -229,6 +229,8 @@ namespace Microsoft.Extensions.DependencyInjection
                               .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
             });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
+            services.AddTransient<OpenTelemetryCollectorMetricSink>();
+            services.AddOpenTelemetrySystemMetrics();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)

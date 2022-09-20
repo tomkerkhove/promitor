@@ -7,7 +7,7 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.RequestHandlers;
 using Promitor.Core;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
 {
@@ -24,18 +24,18 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="prometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+        /// <param name="systemMetricsPublisher">Metrics collector to write metrics to Prometheus</param>
         /// <param name="metricLabels"></param>
         /// <param name="logger">Logger to write telemetry to</param>
-        public AzureResourceGraphThrottlingRequestHandler(IPrometheusMetricsCollector prometheusMetricsCollector, Dictionary<string, string> metricLabels, ILogger logger)
-        : base(prometheusMetricsCollector, logger)
+        public AzureResourceGraphThrottlingRequestHandler(ISystemMetricsPublisher systemMetricsPublisher, Dictionary<string, string> metricLabels, ILogger logger)
+        : base(systemMetricsPublisher, logger)
         {
             Guard.NotNull(metricLabels, nameof(metricLabels));
 
             _metricLabels = metricLabels;
         }
 
-        protected override Task AvailableRateLimitingCallsAsync(HttpResponseMessage response)
+        protected override async Task AvailableRateLimitingCallsAsync(HttpResponseMessage response)
         {
             // Source:
             // - https://docs.microsoft.com/en-us/azure/governance/resource-graph/overview#throttling
@@ -46,10 +46,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers
                 var subscriptionReadLimit = Convert.ToInt16(remainingApiCalls);
 
                 // Report metric
-                PrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
+                await SystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.RateLimitingForResourceGraph, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels, includeTimestamp: true);
             }
-            
-            return Task.CompletedTask;
         }
 
         protected override Dictionary<string, string> GetMetricLabels() => _metricLabels;

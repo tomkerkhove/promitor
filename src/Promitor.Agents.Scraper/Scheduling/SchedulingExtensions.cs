@@ -8,9 +8,9 @@ using Promitor.Agents.Core.Observability;
 using Promitor.Agents.Scraper;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Agents.Scraper.Scheduling;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Integrations.AzureMonitor.Configuration;
@@ -39,7 +39,7 @@ namespace Microsoft.Extensions.DependencyInjection
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var resourceMetricDefinitionMemoryCache = serviceProviderToCreateJobsWith.GetService<IMemoryCache>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
-            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingPrometheusMetricsCollector>();
+            var runtimeMetricCollector = serviceProviderToCreateJobsWith.GetService<IAzureScrapingSystemMetricsPublisher>();
             var azureMonitorClientFactory = serviceProviderToCreateJobsWith.GetRequiredService<AzureMonitorClientFactory>();
             var startupLogger = loggerFactory.CreateLogger<Startup>();
             var scrapingTaskMutex = serviceProviderToCreateJobsWith.GetService<IScrapingMutex>();
@@ -80,7 +80,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void ScheduleResourcesScraping(MetricsDeclaration metricsDeclaration,
             MetricSinkWriter metricSinkWriter,
             AzureMonitorClientFactory azureMonitorClientFactory,
-            IAzureScrapingPrometheusMetricsCollector azureScrapingPrometheusMetricsCollector,
+            IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher,
             IMemoryCache resourceMetricDefinitionMemoryCache,
             IScrapingMutex scrapingTaskMutex,
             IConfiguration configuration,
@@ -101,7 +101,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             metricSinkWriter,
                             jobServices.GetService<MetricScraperFactory>(),
                             azureMonitorClientFactory,
-                            azureScrapingPrometheusMetricsCollector,
+                            azureScrapingSystemMetricsPublisher,
                             resourceMetricDefinitionMemoryCache,
                             scrapingTaskMutex,
                             configuration,

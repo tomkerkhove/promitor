@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Promitor.Core.Metrics.Prometheus.Collectors.Interfaces
+namespace Promitor.Core.Metrics.Interfaces
 {
-    public interface IAzureScrapingPrometheusMetricsCollector : IPrometheusMetricsCollector
+    public interface ISystemMetricsSink
     {
         /// <summary>
         ///     Sets a new value for a measurement on a gauge
@@ -11,6 +12,7 @@ namespace Promitor.Core.Metrics.Prometheus.Collectors.Interfaces
         /// <param name="description">Description of the metric</param>
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
-        void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels);
+        /// <param name="includeTimestamp">Indication whether or not a timestamp should be reported</param>
+        Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp);
     }
 }

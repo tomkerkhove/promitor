@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.Core.RequestHandlers
 {
@@ -13,20 +13,20 @@ namespace Promitor.Agents.Core.RequestHandlers
         public abstract string DependencyName { get; }
 
         protected ILogger Logger { get; }
-        protected IPrometheusMetricsCollector PrometheusMetricsCollector { get; }
+        protected ISystemMetricsPublisher SystemMetricsPublisher { get; }
 
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="prometheusMetricsCollector">Metrics collector for Prometheus</param>
+        /// <param name="systemMetricsPublisher">Metrics collector for Prometheus</param>
         /// <param name="logger">Logger to write telemetry to</param>
-        protected ThrottlingRequestHandler(IPrometheusMetricsCollector prometheusMetricsCollector, ILogger logger)
+        protected ThrottlingRequestHandler(ISystemMetricsPublisher systemMetricsPublisher, ILogger logger)
         {
-            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
             Guard.NotNull(logger, nameof(logger));
 
             Logger = logger;
-            PrometheusMetricsCollector = prometheusMetricsCollector;
+            SystemMetricsPublisher = systemMetricsPublisher;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -42,16 +42,16 @@ namespace Promitor.Agents.Core.RequestHandlers
             }
 
             await AvailableRateLimitingCallsAsync(response);
-            AvailableThrottlingStatusAsync(wasRequestThrottled);
+            await AvailableThrottlingStatusAsync(wasRequestThrottled);
             
             return response;
         }
 
-        private void AvailableThrottlingStatusAsync(bool wasRequestThrottled)
+        private async Task AvailableThrottlingStatusAsync(bool wasRequestThrottled)
         {
             var metricValue = wasRequestThrottled ? 1 : 0;
             var metricLabels = GetMetricLabels();
-            PrometheusMetricsCollector.WriteGaugeMeasurement(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
+            await SystemMetricsPublisher.WriteGaugeMeasurementAsync(GetThrottlingStatusMetricName(), GetThrottlingStatusMetricDescription(), metricValue, metricLabels, includeTimestamp: true);
         }
 
         protected abstract Dictionary<string, string> GetMetricLabels();

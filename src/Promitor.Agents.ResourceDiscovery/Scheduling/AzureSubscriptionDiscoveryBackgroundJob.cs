@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
@@ -16,8 +16,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         public const string MetricName = "promitor_azure_landscape_subscription_info";
         public const string MetricDescription = "Provides information concerning the Azure subscriptions in the landscape that Promitor has access to.";
         
-        public AzureSubscriptionDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, IPrometheusMetricsCollector prometheusMetricsCollector, ILogger<AzureSubscriptionDiscoveryBackgroundJob> logger)
-            : base(azureResourceRepository, prometheusMetricsCollector, logger)
+        public AzureSubscriptionDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, ISystemMetricsPublisher systemMetricsPublisher, ILogger<AzureSubscriptionDiscoveryBackgroundJob> logger)
+            : base(azureResourceRepository, systemMetricsPublisher, logger)
         {
             Guard.NotNullOrWhitespace(jobName, nameof(jobName));
 
@@ -66,7 +66,7 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
             };
 
             // Report metric in Prometheus endpoint
-            WritePrometheusMetric(MetricName, MetricDescription, value: 1, labels);
+            WritePrometheusMetricAsync(MetricName, MetricDescription, value: 1, labels).Wait();
         }
     }
 }

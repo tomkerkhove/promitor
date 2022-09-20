@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Interfaces;
@@ -35,7 +35,7 @@ namespace Promitor.Core.Scraping
 
             Logger = scraperConfiguration.Logger;
             AzureMonitorClient = scraperConfiguration.AzureMonitorClient;
-            AzureScrapingPrometheusMetricsCollector = scraperConfiguration.AzureScrapingPrometheusMetricsCollector;
+            AzureScrapingSystemMetricsPublisher = scraperConfiguration.AzureScrapingSystemMetricsPublisher;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Collector to send metrics related to the runtime
         /// </summary>
-        public IAzureScrapingPrometheusMetricsCollector AzureScrapingPrometheusMetricsCollector { get; }
+        public IAzureScrapingSystemMetricsPublisher AzureScrapingSystemMetricsPublisher { get; }
 
         /// <summary>
         ///     Provide logger to scraper
@@ -86,26 +86,26 @@ namespace Promitor.Core.Scraping
 
                 await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
 
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: true);
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true);
             }
             catch (ErrorResponseException errorResponseException)
             {
                 HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
-                
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false);
             }
             catch (Exception exception)
             {
                 Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
-                
-                ReportScrapingOutcome(scrapeDefinition, isSuccessful: false);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false);
             }
         }
 
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
 
-        private void ReportScrapingOutcome(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
+        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
         {
             // We reset all values, by default
             double successfulMetricValue = 0;
@@ -132,8 +132,8 @@ namespace Promitor.Core.Scraping
             };
 
             // Report!
-            AzureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
-            AzureScrapingPrometheusMetricsCollector.WriteGaugeMeasurement(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)

@@ -9,6 +9,7 @@ using Promitor.Agents.Core;
 using Promitor.Agents.Core.Extensions;
 using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Health;
+using Promitor.Integrations.Sinks.Prometheus.Extensions;
 
 namespace Promitor.Agents.ResourceDiscovery
 {
@@ -34,7 +35,10 @@ namespace Promitor.Agents.ResourceDiscovery
             services.UseWebApi()
                 .AddMemoryCache()
                 .AddRuntimeConfiguration(Configuration)
-                .AddPrometheusMetrics()
+                .AddSystemMetrics(sinkBuilder =>
+                {
+                    sinkBuilder.AddPrometheusSystemMetrics();
+                })
                 .AddAzureResourceGraph(Configuration)
                 .AddBackgroundJobs()
                 .AddUsability()

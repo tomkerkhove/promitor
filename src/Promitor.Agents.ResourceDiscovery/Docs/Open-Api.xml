@@ -141,11 +141,11 @@
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Graph.Repositories.CachedAzureResourceRepository" /> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers.AzureResourceGraphThrottlingRequestHandler.#ctor(Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.IPrometheusMetricsCollector,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.Extensions.Logging.ILogger)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers.AzureResourceGraphThrottlingRequestHandler.#ctor(Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.ISystemMetricsPublisher,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.Extensions.Logging.ILogger)">
             <summary>
                 Constructor
             </summary>
-            <param name="prometheusMetricsCollector">Metrics collector to write metrics to Prometheus</param>
+            <param name="systemMetricsPublisher">Metrics collector to write metrics to Prometheus</param>
             <param name="metricLabels"></param>
             <param name="logger">Logger to write telemetry to</param>
         </member>

@@ -1,26 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Options;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 
 namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 {
-    public class AzureScrapingPrometheusMetricsCollector : IAzureScrapingPrometheusMetricsCollector
+    public class AzureScrapingSystemMetricsPublisher : IAzureScrapingSystemMetricsPublisher
     {
-        private readonly IPrometheusMetricsCollector _prometheusMetricsCollector;
+        private readonly ISystemMetricsPublisher _systemMetricsPublisher;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
 
-        public AzureScrapingPrometheusMetricsCollector(IMetricsDeclarationProvider metricsDeclarationProvider, IPrometheusMetricsCollector prometheusMetricsCollector, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
+        public AzureScrapingSystemMetricsPublisher(IMetricsDeclarationProvider metricsDeclarationProvider, ISystemMetricsPublisher systemMetricsPublisher, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
             Guard.NotNull(metricsDeclarationProvider, nameof(metricsDeclarationProvider));
-            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
 
             _prometheusConfiguration = prometheusConfiguration;
-            _prometheusMetricsCollector = prometheusMetricsCollector;
+            _systemMetricsPublisher = systemMetricsPublisher;
             _metricsDeclarationProvider = metricsDeclarationProvider;
         }
 
@@ -31,7 +32,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         /// <param name="description">Description of the metric</param>
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
-        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels)
+        public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels)
         {
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
@@ -43,12 +44,12 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, orderedLabels, enableMetricTimestamps);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }
 
-        public void WriteGaugeMeasurement(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            _prometheusMetricsCollector.WriteGaugeMeasurement(name, description, value, labels, includeTimestamp);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
     }
 }

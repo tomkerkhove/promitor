@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces;
-using Promitor.Core.Metrics.Prometheus.Collectors.Interfaces;
+using Promitor.Core.Metrics.Interfaces;
 
 namespace Promitor.Agents.ResourceDiscovery.Scheduling
 {
@@ -11,21 +12,21 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
         protected IAzureResourceRepository AzureResourceRepository { get; }
         protected ILogger Logger { get; }
         
-        private readonly IPrometheusMetricsCollector _prometheusMetricsCollector;
+        private readonly ISystemMetricsPublisher _systemMetricsPublisher;
 
-        public DiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository, IPrometheusMetricsCollector prometheusMetricsCollector, ILogger logger)
+        public DiscoveryBackgroundJob(IAzureResourceRepository azureResourceRepository, ISystemMetricsPublisher systemMetricsPublisher, ILogger logger)
         {
-            Guard.NotNull(prometheusMetricsCollector, nameof(prometheusMetricsCollector));
+            Guard.NotNull(systemMetricsPublisher, nameof(systemMetricsPublisher));
             Guard.NotNull(azureResourceRepository, nameof(azureResourceRepository));
 
             Logger = logger;
-            _prometheusMetricsCollector = prometheusMetricsCollector;
+            _systemMetricsPublisher = systemMetricsPublisher;
             AzureResourceRepository = azureResourceRepository;
         }
 
-        protected void WritePrometheusMetric(string metricName, string metricDescription, int value, Dictionary<string, string> labels)
+        protected async Task WritePrometheusMetricAsync(string metricName, string metricDescription, int value, Dictionary<string, string> labels)
         {
-            _prometheusMetricsCollector.WriteGaugeMeasurement(metricName, metricDescription, value, labels, includeTimestamp: true);
+            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(metricName, metricDescription, value, labels, includeTimestamp: true);
         }
 
         protected string GetValueOrDefault(string preferredValue, string alternative)
