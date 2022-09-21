@@ -63,13 +63,16 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 errorMessages.AddRange(metricDefinitionValidationErrors);
             }
 
-            var metricAggregationValidator = new AzureMetricConfigurationValidator(_metricDefaults);
-            var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
-            errorMessages.AddRange(metricsConfigurationErrorMessages);
+            if (metric.ResourceType != ResourceType.LogAnalytics)
+            {
+                var metricAggregationValidator = new AzureMetricConfigurationValidator(_metricDefaults);
+                var metricsConfigurationErrorMessages = metricAggregationValidator.Validate(metric.AzureMetricConfiguration);
+                errorMessages.AddRange(metricsConfigurationErrorMessages);
 
-            var metricScrapingScheduleValidator = new MetricScrapingValidator(_metricDefaults);
-            var metricScrapingErrorMessages = metricScrapingScheduleValidator.Validate(metric.Scraping);
-            errorMessages.AddRange(metricScrapingErrorMessages);
+                var metricScrapingScheduleValidator = new MetricScrapingValidator(_metricDefaults);
+                var metricScrapingErrorMessages = metricScrapingScheduleValidator.Validate(metric.Scraping);
+                errorMessages.AddRange(metricScrapingErrorMessages);
+            }
 
             return errorMessages;
         }

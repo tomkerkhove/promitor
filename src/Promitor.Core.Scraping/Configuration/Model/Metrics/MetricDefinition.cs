@@ -12,10 +12,12 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public MetricDefinition(PrometheusMetricDefinition prometheusMetricDefinition,
             Scraping scraping,
             AzureMetricConfiguration azureMetricConfiguration,
+            LogAnalyticsConfiguration logAnalyticsConfiguration,
             ResourceType resourceType,
             List<AzureResourceDefinition> resources)
         {
             AzureMetricConfiguration = azureMetricConfiguration;
+            LogAnalyticsConfiguration = logAnalyticsConfiguration;
             PrometheusMetricDefinition = prometheusMetricDefinition;
             Scraping = scraping;
             ResourceType = resourceType;
@@ -26,6 +28,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         ///     Configuration about the Azure Monitor metric to scrape
         /// </summary>
         public AzureMetricConfiguration AzureMetricConfiguration { get; set; }
+
+        /// <summary>
+        ///     Configuration about the Azure Log Analytics to scrape
+        /// </summary>
+        public LogAnalyticsConfiguration LogAnalyticsConfiguration { get; set; }
 
         /// <summary>
         /// The details of the prometheus metric that will be created.
@@ -65,6 +72,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 
             var output =  new ScrapeDefinition<IAzureResourceDefinition>(
                 AzureMetricConfiguration,
+                LogAnalyticsConfiguration,
                 PrometheusMetricDefinition,
                 Scraping,
                 resource,

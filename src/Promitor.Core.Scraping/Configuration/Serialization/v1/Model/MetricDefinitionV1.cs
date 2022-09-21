@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Promitor.Core.Contracts;
+using Promitor.Core.Scraping.Configuration.Model;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
@@ -8,8 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
     /// that should be scraped to supply the metric.
     /// </summary>
     public class MetricDefinitionV1
-    {
-        /// <summary>
+    { /// <summary>
         /// The name of the prometheus metric.
         /// </summary>
         public string Name { get; set; }
@@ -33,6 +33,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// Contains the configuration used when querying Azure metrics.
         /// </summary>
         public AzureMetricConfigurationV1 AzureMetricConfiguration { get; set; }
+
+        public LogAnalyticsConfigurationV1 LogAnalyticsConfiguration { get; set; }
 
         /// <summary>
         /// Allows a custom scraping schedule to be specified for the metric.

@@ -159,7 +159,10 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.WebApp:
                     var webAppLogger = _loggerFactory.CreateLogger<WebAppDeserializer>();
                     return new WebAppDeserializer(webAppLogger);
-                    
+                case ResourceType.LogAnalytics:
+                    var logAnalyticsLogger = _loggerFactory.CreateLogger<LogAnalyticsDeserializer>();
+                    return new LogAnalyticsDeserializer(logAnalyticsLogger);
+
                 default:
                     throw new ArgumentOutOfRangeException($"Resource Type {resourceType} not supported.");
             }

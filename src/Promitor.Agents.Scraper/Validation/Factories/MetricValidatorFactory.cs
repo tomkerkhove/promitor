@@ -103,6 +103,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new VirtualMachineMetricValidator();
                 case ResourceType.WebApp:
                     return new WebAppMetricValidator();
+                case ResourceType.LogAnalytics:
+                    return new LogAnalyticsValidator();
             }
 
             throw new ArgumentOutOfRangeException(nameof(resourceType), $"No validation rules are defined for metric type '{resourceType}'");

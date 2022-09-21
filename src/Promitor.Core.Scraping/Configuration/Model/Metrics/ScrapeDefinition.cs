@@ -12,6 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// Creates a new instance of the <see cref="ScrapeDefinition{TResourceDefinition}"/> class.
         /// </summary>
         /// <param name="azureMetricConfiguration">Configuration about the Azure Monitor metric to scrape</param>
+        /// <param name="logAnalyticsConfiguration">Configuration about the Azure LogAnalytics to scrape</param>
         /// <param name="prometheusMetricDefinition">The details of the prometheus metric that will be created.</param>
         /// <param name="scraping">The scraping model.</param>
         /// <param name="resource">The resource to scrape.</param>
@@ -22,13 +23,15 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </param>
         public ScrapeDefinition(
             AzureMetricConfiguration azureMetricConfiguration,
+            LogAnalyticsConfiguration logAnalyticsConfiguration,
             PrometheusMetricDefinition prometheusMetricDefinition,
             Scraping scraping,
             TResourceDefinition resource,
             string subscriptionId,
             string resourceGroupName)
         {
-            Guard.NotNull(azureMetricConfiguration, nameof(azureMetricConfiguration));
+            // Guard.NotNull(azureMetricConfiguration, nameof(azureMetricConfiguration));
+
             Guard.NotNull(prometheusMetricDefinition, nameof(prometheusMetricDefinition));
             Guard.NotNull(scraping, nameof(scraping));
             Guard.NotNull(resource, nameof(resource));
@@ -36,6 +39,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             Guard.NotNull(resourceGroupName, nameof(resourceGroupName));
 
             AzureMetricConfiguration = azureMetricConfiguration;
+            LogAnalyticsConfiguration = logAnalyticsConfiguration;
             PrometheusMetricDefinition = prometheusMetricDefinition;
             Scraping = scraping;
             Resource = resource;
@@ -47,6 +51,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// Configuration about the Azure Monitor metric to scrape
         /// </summary>
         public AzureMetricConfiguration AzureMetricConfiguration { get; }
+
+        /// <summary>
+        /// Configuration about the Azure LogAnalytics to scrape
+        /// </summary>
+        public LogAnalyticsConfiguration LogAnalyticsConfiguration { get; }
 
         /// <summary>
         /// The details of the prometheus metric that will be created.

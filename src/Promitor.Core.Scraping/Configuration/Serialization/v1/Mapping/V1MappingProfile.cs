@@ -19,6 +19,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MetricDimensionV1, MetricDimension>();
             CreateMap<ScrapingV1, Configuration.Model.Scraping>();
             CreateMap<AzureMetricConfigurationV1, AzureMetricConfiguration>();
+            CreateMap<LogAnalyticsConfigurationV1, LogAnalyticsConfiguration>();
+
             CreateMap<MetricAggregationV1, MetricAggregation>();
             CreateMap<AzureResourceDiscoveryGroupDefinitionV1, AzureResourceDiscoveryGroup>();
             CreateMap<SecretV1, Secret>();
@@ -62,6 +64,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
+            CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>();
             CreateMap<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>();
             CreateMap<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>();
@@ -121,7 +124,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
-                .Include<WebAppResourceV1, WebAppResourceDefinition>();
+                .Include<WebAppResourceV1, WebAppResourceDefinition>()
+                .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
         }
     }
 }

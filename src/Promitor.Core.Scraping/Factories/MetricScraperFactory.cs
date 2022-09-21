@@ -34,6 +34,7 @@ namespace Promitor.Core.Scraping.Factories
 
             switch (metricDefinitionResourceType)
             {
+                //todo add case ResourceType.LogAnalytics
                 case ResourceType.ApiManagement:
                     return new ApiManagementScraper(scraperConfiguration);
                 case ResourceType.ApplicationGateway:

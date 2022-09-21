@@ -14,6 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         private readonly IAzureResourceDeserializerFactory _azureResourceDeserializerFactory;
 
         public MetricDefinitionDeserializer(IDeserializer<AzureMetricConfigurationV1> azureMetricConfigurationDeserializer,
+            IDeserializer<LogAnalyticsConfigurationV1> logAnalyticsConfigurationDeserializer,
             IDeserializer<ScrapingV1> scrapingDeserializer,
             IDeserializer<AzureResourceDiscoveryGroupDefinitionV1> azureResourceDiscoveryGroupDeserializer,
             IAzureResourceDeserializerFactory azureResourceDeserializerFactory,
@@ -28,9 +29,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .IsRequired();
             Map(definition => definition.ResourceType)
                 .IsRequired();
+
             Map(definition => definition.AzureMetricConfiguration)
-                .IsRequired()
+                // .IsRequired()
                 .MapUsingDeserializer(azureMetricConfigurationDeserializer);
+
+            Map(definition => definition.LogAnalyticsConfiguration)
+                // .IsRequired()
+                .MapUsingDeserializer(logAnalyticsConfigurationDeserializer);
+
             Map(definition => definition.Labels);
             Map(definition => definition.Scraping)
                 .MapUsingDeserializer(scrapingDeserializer);
