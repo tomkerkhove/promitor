@@ -1,0 +1,33 @@
+version: v1
+azureMetadata:
+  tenantId: 5766f879-f51d-4e43-88e6-a8c609103041
+  subscriptionId: 4d47ec28-1799-4c7b-9e34-81300079de6b
+  resourceGroupName: ag1-data-platform-core
+  cloud: "UsGov"
+metricDefaults:
+  aggregation:
+    interval: 00:00:01
+  limit: 10
+  labels:
+    geo: china
+    environment: dev
+  scraping:
+    # Every minute
+    schedule: "0 * * ? * *"
+metrics:
+  - name: azure_storage_account_capacity_discovery
+    description: "The average capacity used in the storage account"
+    resourceType: StorageAccount
+    azureMetricConfiguration:
+      metricName: UsedCapacity
+      aggregation:
+        type: Average
+    resources: # Optional, required when no resource discovery is configured
+    - accountName: platformdatalaketest
+  - name: azure_logs_analytics
+    description: "Query 1 cai gi do"
+    resourceType: LogAnalytics
+    logAnalyticsConfiguration:
+      query: AzureActivity | take 100
+    resources:
+    - workspaceId: xxxx-xxx-xxxxxxx
