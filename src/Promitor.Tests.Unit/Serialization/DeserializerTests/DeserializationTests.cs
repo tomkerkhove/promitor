@@ -13,7 +13,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
         private static readonly TimeSpan defaultInterval = TimeSpan.FromMinutes(5);
 
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
-        private readonly Mock<IDeserializer> _childDeserializer = new Mock<IDeserializer>();
+        private readonly Mock<IDeserializer<object>> _childDeserializer = new Mock<IDeserializer<object>>();
         private readonly RegistrationConfigDeserializer _deserializer;
 
         public DeserializationTests()
@@ -209,7 +209,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
     childProperty: 123");
             var child = new ChildConfig();
             _childDeserializer.Setup(
-                d => d.DeserializeObject((YamlMappingNode)node.Children["child"], _errorReporter.Object)).Returns(child);
+                d => d.Deserialize((YamlMappingNode)node.Children["child"], _errorReporter.Object)).Returns(child);
 
             // Act
             var result = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -227,7 +227,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
     childProperty: 123");
             var child = new ChildConfig();
             _childDeserializer.Setup(
-                d => d.DeserializeObject((YamlMappingNode)node.Children["optionalChild"], _errorReporter.Object)).Returns(child);
+                d => d.Deserialize((YamlMappingNode)node.Children["optionalChild"], _errorReporter.Object)).Returns(child);
 
             // Act
             var result = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -259,7 +259,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 
         private class RegistrationConfigDeserializer: Deserializer<RegistrationConfig>
         {
-            public RegistrationConfigDeserializer(IDeserializer childDeserializer) : base(NullLogger.Instance)
+            public RegistrationConfigDeserializer(IDeserializer<object> childDeserializer) : base(NullLogger.Instance)
             {
                 Map(t => t.Name).IsRequired();
                 Map(t => t.Age).IsRequired();

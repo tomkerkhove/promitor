@@ -89,7 +89,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
 
             var aggregation = new MetricAggregationV1();
             _aggregationDeserializer.Setup(
-                d => d.DeserializeObject(aggregationNode, _errorReporter.Object)).Returns(aggregation);
+                d => d.Deserialize(aggregationNode, _errorReporter.Object)).Returns(aggregation);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);

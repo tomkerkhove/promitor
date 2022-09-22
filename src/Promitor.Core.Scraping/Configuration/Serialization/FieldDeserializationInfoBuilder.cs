@@ -17,7 +17,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         private bool _isRequired;
         private object _defaultValue;
         private Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> _customMapperFunc;
-        private IDeserializer _deserializer;
+        private IDeserializer<object> _deserializer;
 
         /// <summary>
         /// Sets the expression that defines the property to map.
@@ -76,7 +76,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// </summary>
         /// <param name="deserializer">The deserializer.</param>
         /// <returns>The builder.</returns>
-        public FieldDeserializationInfoBuilder<TObject, TReturn> MapUsingDeserializer(IDeserializer deserializer)
+        public FieldDeserializationInfoBuilder<TObject, TReturn> MapUsingDeserializer(IDeserializer<object> deserializer)
         {
             _deserializer = deserializer;
 

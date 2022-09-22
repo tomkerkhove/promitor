@@ -21,7 +21,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(config => config.Aggregation)
                 .IsRequired()
                 .MapUsingDeserializer(aggregationDeserializer);
-            IgnoreField(MultipleDimensionsTag);
+            Map(config => config.Dimensions)
+                .MapUsingDeserializer(dimensionDeserializer);
             IgnoreField(SingleDimensionTag);
 
             _dimensionDeserializer = dimensionDeserializer;
@@ -30,16 +31,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         public override AzureMetricConfigurationV1 Deserialize(YamlMappingNode node, IErrorReporter errorReporter)
         {
             var azureMetricConfiguration = base.Deserialize(node, errorReporter);
-
-            if (node.Children.TryGetValue(MultipleDimensionsTag, out var multipleDimensionsNode))
-            {
-                azureMetricConfiguration.Dimensions = _dimensionDeserializer.Deserialize((YamlSequenceNode)multipleDimensionsNode, errorReporter);
-            }
             
             // backwards compatibility: if old tag "dimension" is used, a list containing only the one MetricDimension is created
-            else if (node.Children.TryGetValue(SingleDimensionTag, out var singleDimensionNode))
+            if (node.Children.TryGetValue(SingleDimensionTag, out var singleDimensionNode))
             {
                 errorReporter.ReportWarning(node, "Usage of 'dimension' is deprecated in favor of using 'dimensions'.");
+                if (node.Children.TryGetValue(MultipleDimensionsTag, out var multipleDimensionsNode))
+                {
+                    errorReporter.ReportWarning(node, "Both 'dimensions' and 'dimension' are defined. " +
+                                                      "Only value from 'dimensions' will be used.");
+                    return azureMetricConfiguration;
+                }
                 azureMetricConfiguration.Dimensions = new List<MetricDimensionV1>{ _dimensionDeserializer.Deserialize((YamlMappingNode)singleDimensionNode, errorReporter) };
             }
 

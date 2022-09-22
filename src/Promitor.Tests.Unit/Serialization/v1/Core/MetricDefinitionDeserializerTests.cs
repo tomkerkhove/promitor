@@ -176,7 +176,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var configurationNode = (YamlMappingNode)node.Children["azureMetricConfiguration"];
             var configuration = new AzureMetricConfigurationV1();
 
-            _azureMetricConfigurationDeserializer.Setup(d => d.DeserializeObject(configurationNode, _errorReporter.Object)).Returns(configuration);
+            _azureMetricConfigurationDeserializer.Setup(d => d.Deserialize(configurationNode, _errorReporter.Object)).Returns(configuration);
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);
@@ -270,7 +270,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var scrapingNode = (YamlMappingNode)node.Children["scraping"];
             var scraping = new ScrapingV1();
 
-            _scrapingDeserializer.Setup(d => d.DeserializeObject(scrapingNode, _errorReporter.Object)).Returns(scraping);
+            _scrapingDeserializer.Setup(d => d.Deserialize(scrapingNode, _errorReporter.Object)).Returns(scraping);
 
             // Act
             var definition = _deserializer.Deserialize(node, _errorReporter.Object);

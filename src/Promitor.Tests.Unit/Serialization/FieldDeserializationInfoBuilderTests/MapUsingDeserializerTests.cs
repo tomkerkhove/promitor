@@ -18,7 +18,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
         public void MapUsingDeserializer_SetsDeserializer()
         {
             // Arrange
-            var deserializer = Mock.Of<IDeserializer>();
+            var deserializer = Mock.Of<IDeserializer<object>>();
 
             // Act
             _builder.MapUsingDeserializer(deserializer);
@@ -32,7 +32,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
         public void MapUsingDeserializer_ReturnsBuilder()
         {
             // Arrange
-            var deserializer = Mock.Of<IDeserializer>();
+            var deserializer = Mock.Of<IDeserializer<object>>();
 
             // Act
             var result = _builder.MapUsingDeserializer(deserializer);
