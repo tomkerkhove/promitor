@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Promitor.Core.Contracts;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {

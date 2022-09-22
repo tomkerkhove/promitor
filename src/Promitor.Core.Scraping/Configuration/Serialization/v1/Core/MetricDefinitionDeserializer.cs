@@ -31,7 +31,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .IsRequired();
 
             Map(definition => definition.AzureMetricConfiguration)
-                // .IsRequired()
+                .IsRequired()
                 .MapUsingDeserializer(azureMetricConfigurationDeserializer);
 
             Map(definition => definition.LogAnalyticsConfiguration)

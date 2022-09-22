@@ -2,7 +2,6 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
-using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {

@@ -30,8 +30,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             string subscriptionId,
             string resourceGroupName)
         {
-            // Guard.NotNull(azureMetricConfiguration, nameof(azureMetricConfiguration));
-
+            Guard.NotNull(azureMetricConfiguration, nameof(azureMetricConfiguration));
             Guard.NotNull(prometheusMetricDefinition, nameof(prometheusMetricDefinition));
             Guard.NotNull(scraping, nameof(scraping));
             Guard.NotNull(resource, nameof(resource));
