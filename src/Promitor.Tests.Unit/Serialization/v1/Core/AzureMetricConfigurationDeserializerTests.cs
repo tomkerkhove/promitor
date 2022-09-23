@@ -115,7 +115,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
             
             // Assert
-            Assert.Equal(new List<MetricDimensionV1> { dimension }, config.Dimensions);
+            Assert.Equal(dimension, config.Dimension);
         }
 
         [Fact]
@@ -129,13 +129,42 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var node = YamlUtils.CreateYamlNode(yamlText);
             var dimensionsNode = (YamlSequenceNode)node.Children["dimensions"];
             
-            var dimensions = new List<MetricDimensionV1> { new MetricDimensionV1(), new MetricDimensionV1() };
+            var dimensions = new List<MetricDimensionV1> { new(), new() };
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
+            Assert.Same(dimensions, config.Dimensions);
+        }
+
+        [Fact]
+        public void Deserialize_DimensionAndDimensionsSupplied_UsesDeserializer()
+        {
+            // Arrange
+            const string yamlText =
+                @"dimension:
+    name: EntityPath
+dimensions:
+    - name: EntityPath
+    - name: EntityName";
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var dimensionNode = (YamlMappingNode)node.Children["dimension"];
+            var dimensionsNode = (YamlSequenceNode)node.Children["dimensions"];
+
+            var dimension = new MetricDimensionV1();
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
+
+            
+            var dimensions = new List<MetricDimensionV1> { new(), new() };
+            _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
+            
+            // Act
+            var config = _deserializer.Deserialize(node, _errorReporter.Object);
+            
+            // Assert
+            Assert.Equal(dimension, config.Dimension);
             Assert.Same(dimensions, config.Dimensions);
         }
 

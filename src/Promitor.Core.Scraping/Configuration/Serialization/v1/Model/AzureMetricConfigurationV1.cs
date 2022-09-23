@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
@@ -15,9 +16,15 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         public int? Limit { get; set; }
 
         /// <summary>
-        ///     Information about the dimension of an Azure Monitor metric
+        ///     Information about the dimensions of an Azure Monitor metric
         /// </summary>
         public IReadOnlyCollection<MetricDimensionV1> Dimensions { get; set; }
+
+        /// <summary>
+        ///     Information about the dimension of an Azure Monitor metric
+        /// </summary>
+        [Obsolete("Dimension is deprecated, please use Dimensions instead.")]
+        public MetricDimensionV1 Dimension { get; set; }
 
         /// <summary>
         ///     The settings for how the metric should be aggregated before being returned from Azure.

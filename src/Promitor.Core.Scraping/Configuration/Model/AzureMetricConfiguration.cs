@@ -17,9 +17,15 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public int? Limit { get; set; }
 
         /// <summary>
+        ///     Information about the dimensions of an Azure Monitor metric
+        /// </summary>
+        public IReadOnlyCollection<MetricDimension> Dimensions { get; set; }
+
+        /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
-        public List<MetricDimension> Dimensions { get; set; }
+        [Obsolete("Dimension is deprecated, please use Dimensions instead.")]
+        public MetricDimension Dimension { get; set; }
 
         /// <summary>
         ///     Configuration on how to aggregate the metric

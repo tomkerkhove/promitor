@@ -48,11 +48,11 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return metricLabels;
         }
 
-        protected override List<string> DetermineMetricDimensions(string metricName, DataFactoryResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
+        protected override List<string> DetermineMetricDimensions(string metricName, DataFactoryResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
             if (IsPipelineNameConfigured(resourceDefinition))
             {
-                return base.DetermineMetricDimensions(metricName, resourceDefinition, dimensions);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, configuration);
             }
 
             var dimensionName = GetMetricFilterFieldName(metricName);

@@ -38,11 +38,11 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return $"{fieldName} eq '{entityName}'";
         }
 
-        protected override List<string> DetermineMetricDimensions(string metricName, DataShareResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
+        protected override List<string> DetermineMetricDimensions(string metricName, DataShareResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
             if (IsShareNameConfigured(resourceDefinition))
             {
-                return base.DetermineMetricDimensions(metricName, resourceDefinition, dimensions);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, configuration);
             }
 
             var dimensionName = GetMetricFilterFieldName(metricName);

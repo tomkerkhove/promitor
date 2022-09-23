@@ -7,9 +7,9 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Integrations.AzureMonitor.Exceptions;
-using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
 namespace Promitor.Core.Scraping
 {
@@ -46,7 +46,7 @@ namespace Promitor.Core.Scraping
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            var dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimensions);
+            var dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration);
 
             var measuredMetrics = new List<MeasuredMetric>();
             try
@@ -108,10 +108,17 @@ namespace Promitor.Core.Scraping
         /// </summary>
         /// <param name="metricName">Name of the metric being queried</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimensions">Provides information concerning the configured metric dimensions.</param>
-        protected virtual List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
+        /// <param name="configuration"></param>
+        protected virtual List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
-            return dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).ToList();
+            if (configuration.Dimension != null)
+            {
+                Logger.LogWarning("AzureMetricConfiguration property 'dimension' has been deprecated and will be removed in a future update. Please use 'dimensions' instead.");
+                return string.IsNullOrWhiteSpace(configuration.Dimension.Name) ? new List<string>() : new List<string>{ configuration.Dimension.Name };
+            }
+
+            return configuration.Dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).ToList();
+
         }
 
         /// <summary>

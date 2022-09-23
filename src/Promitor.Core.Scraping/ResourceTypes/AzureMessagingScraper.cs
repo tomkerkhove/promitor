@@ -40,11 +40,11 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return metricLabels;
         }
 
-        protected override List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, List<MetricDimension> dimensions)
+        protected override List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
             if (IsEntityDeclared(resourceDefinition))
             {
-                return base.DetermineMetricDimensions(metricName, resourceDefinition, dimensions);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, configuration);
             }
 
             Logger.LogTrace("Using 'EntityName' dimension since no topic was configured.");
