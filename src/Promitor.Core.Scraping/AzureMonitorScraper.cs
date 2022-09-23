@@ -118,7 +118,6 @@ namespace Promitor.Core.Scraping
             }
 
             return configuration.Dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).ToList();
-
         }
 
         /// <summary>

@@ -3,7 +3,6 @@ using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
 {
-
     /// <summary>
     /// An object that can deserialize a yaml node into an object.
     /// </summary>

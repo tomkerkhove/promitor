@@ -155,7 +155,6 @@ dimensions:
 
             var dimension = new MetricDimensionV1();
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
-
             
             var dimensions = new List<MetricDimensionV1> { new(), new() };
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
