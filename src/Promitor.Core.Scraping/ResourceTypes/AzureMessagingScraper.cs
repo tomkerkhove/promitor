@@ -21,7 +21,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             // Change Azure Monitor Dimension name to more representable value
             foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.Dimensions.Any()))
             {
-                measuredMetric.Dimensions[0].Name = EntityNameLabel; // TODO
+                measuredMetric.Dimensions[0].Name = EntityNameLabel;
             }
 
             return metricValues;

@@ -16,6 +16,11 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
             var errorMessages = new List<string>();
+
+            if (metricDefinition.AzureMetricConfiguration?.Dimensions?.Count > 1)
+            {
+                errorMessages.Add("At least one Dimension other than EntityName is defined.");
+            }
             
             var isEntityNameDimensionConfigured = metricDefinition.AzureMetricConfiguration?.HasDimension(EntityNameDimension) ?? false;
 
