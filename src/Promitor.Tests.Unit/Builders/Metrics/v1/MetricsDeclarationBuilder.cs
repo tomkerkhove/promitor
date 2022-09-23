@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -316,7 +317,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         public MetricsDeclarationBuilder WithEventHubsMetric(string metricName = "promitor-event-hubs",
             string metricDescription = "Description for a metric",
-            string metricDimension = "",
+            IReadOnlyCollection<string> metricDimensions = null,
             string topicName = "promitor-queue",
             string eventHubsNamespace = "promitor-namespace",
             string azureMetricName = "Total",
@@ -330,7 +331,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 Namespace = eventHubsNamespace
             };
 
-            CreateAndAddMetricDefinition(ResourceType.EventHubs, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource, metricDimension);
+            CreateAndAddMetricDefinition(ResourceType.EventHubs, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource, metricDimensions);
 
             return this;
         }
@@ -507,7 +508,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
             bool omitResource = false,
-            string metricDimension = null,
+            IReadOnlyCollection<string> metricDimensions = null,
             Dictionary<string, string> labels = null,
             string query = "Usage | take 1 | extend result = Quantity | project result",
             string interval = "10:00:00:00")
@@ -519,7 +520,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             };
 
             CreateAndAddMetricDefinition(ResourceType.LogAnalytics, metricName, metricDescription, resourceDiscoveryGroupName, omitResource,
-                azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimension, labels, query, interval);
+                azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimensions, labels, query, interval);
 
             return this;
         }
@@ -692,7 +693,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         public MetricsDeclarationBuilder WithServiceBusMetric(string metricName = "promitor-service-bus",
             string metricDescription = "Description for a metric",
-            string metricDimension = "",
+            IReadOnlyCollection<string> metricDimensions = null,
             string queueName = "promitor-queue",
             string topicName = "",
             string serviceBusNamespace = "promitor-namespace",
@@ -728,7 +729,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 serviceBusQueueResources.Add(resource);
             }
 
-            CreateAndAddMetricDefinition(ResourceType.ServiceBusNamespace, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, serviceBusQueueResources, metricDimension, labels);
+            CreateAndAddMetricDefinition(ResourceType.ServiceBusNamespace, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, serviceBusQueueResources, metricDimensions, labels);
 
             return this;
         }
@@ -993,16 +994,17 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, int? azureMetricLimit, AzureResourceDefinitionV1 resource, string metricDimension = null)
+        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, int? azureMetricLimit, AzureResourceDefinitionV1 resource, IReadOnlyCollection<string> metricDimensions = null)
         {
-            CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimension);
+            CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimensions);
         }
 
         private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource,
-            string azureMetricName, int? azureMetricLimit, List<AzureResourceDefinitionV1> resources, string metricDimension = null, Dictionary<string, string> labels = null, string query = "", string interval = "10:00:00:00")
+            string azureMetricName, int? azureMetricLimit, List<AzureResourceDefinitionV1> resources, IReadOnlyCollection<string> metricDimensions = null, Dictionary<string, string> labels = null, string query = "", string interval = "10:00:00:00")
         {
-            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, azureMetricLimit, metricDimension);
+            var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, azureMetricLimit, metricDimensions);
             var logAnalyticsConfiguration = CreateLogAnalyticsConfiguration(query, interval);
+            
             var metric = new MetricDefinitionV1
             {
                 Name = metricName,
@@ -1030,7 +1032,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             _metrics.Add(metric);
         }
 
-        private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName, int? azureMetricLimit, string metricDimension = "")
+        private AzureMetricConfigurationV1 CreateAzureMetricConfiguration(string azureMetricName, int? azureMetricLimit, IReadOnlyCollection<string> metricDimensions = null)
         {
             var metricConfig = new AzureMetricConfigurationV1
             {
@@ -1042,16 +1044,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 }
             };
 
-            if (string.IsNullOrWhiteSpace(metricDimension) == false)
-            {
-                metricConfig.Dimensions = new List<MetricDimensionV1>
-                {
-                    new()
-                    {
-                        Name = metricDimension
-                    }
-                };
-            }
+            metricConfig.Dimensions = metricDimensions != null ? metricDimensions.Select(name => new MetricDimensionV1{ Name = name }).ToList() : new List<MetricDimensionV1>();
 
             return metricConfig;
         }
