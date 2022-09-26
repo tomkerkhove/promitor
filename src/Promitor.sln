@@ -82,6 +82,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenTelemetry", "OpenTeleme
 		..\config\opentelemetry-collector\collector-config.yaml = ..\config\opentelemetry-collector\collector-config.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Promitor.Integrations.LogAnalytics", "Promitor.Integrations.LogAnalytics\Promitor.Integrations.LogAnalytics.csproj", "{2427547B-090A-460D-A631-A41D71545281}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +153,10 @@ Global
 		{0C2DD710-EA3A-49D2-8DED-7303FFF1F957}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C2DD710-EA3A-49D2-8DED-7303FFF1F957}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C2DD710-EA3A-49D2-8DED-7303FFF1F957}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2427547B-090A-460D-A631-A41D71545281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2427547B-090A-460D-A631-A41D71545281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2427547B-090A-460D-A631-A41D71545281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2427547B-090A-460D-A631-A41D71545281}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{961DBAFB-900C-4C09-94F5-642313A5DEFD} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
 		{614F1E5A-0E5C-4189-9B1C-FD596A959CBF} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
 		{F6988AF7-6E1E-431B-B2A4-C485D5E8CF64} = {1C184DB7-C5E5-41F4-9E0C-8A798B9ED0CA}
+		{2427547B-090A-460D-A631-A41D71545281} = {59D7FFBC-3929-48AD-8C9C-242280D01CBD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B47A777A-C793-453F-8F4F-7703551DFC4C}

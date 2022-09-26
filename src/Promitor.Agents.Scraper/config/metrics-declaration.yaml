@@ -28,6 +28,7 @@ metrics:
     description: "Query 1 cai gi do"
     resourceType: LogAnalytics
     logAnalyticsConfiguration:
-      query: AzureActivity | take 100
+       # this query need to return 1 row with 1 column result only
+      query: Usage | take 1 | extend result = Quantity | project result
     resources:
-    - workspaceId: xxxx-xxx-xxxxxxx
+    - workspaceId: ec563c3a-c8d3-47ab-bf2a-be1cdfeb95d7

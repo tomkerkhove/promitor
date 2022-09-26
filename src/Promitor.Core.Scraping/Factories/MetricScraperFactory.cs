@@ -1,4 +1,5 @@
 ﻿using System;
+using Azure.Core;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
@@ -7,6 +8,8 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.LogAnalytics;
+using ResourceType = Promitor.Core.Contracts.ResourceType;
 
 namespace Promitor.Core.Scraping.Factories
 {
@@ -28,13 +31,13 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="metricSinkWriter">Writer to send metrics to all sinks</param>
         /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient)
+        /// <param name="tokenCredentials">the token used for Azure Authentication</param>
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, logAnalyticsClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
 
             switch (metricDefinitionResourceType)
             {
-                //todo add case ResourceType.LogAnalytics
                 case ResourceType.ApiManagement:
                     return new ApiManagementScraper(scraperConfiguration);
                 case ResourceType.ApplicationGateway:
@@ -127,6 +130,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new VirtualNetworkScraper(scraperConfiguration);
                 case ResourceType.WebApp:
                     return new WebAppScraper(scraperConfiguration);
+                case ResourceType.LogAnalytics:
+                    return new LogAnalyticsScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(metricDefinitionResourceType), metricDefinitionResourceType, "Matching scraper not found");
             }
