@@ -48,6 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
             CreateMap<LoadBalancerResourceV1, LoadBalancerResourceDefinition>();
+            CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
@@ -64,7 +65,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SqlServerResourceV1, SqlServerResourceDefinition>();
             CreateMap<StorageAccountResourceV1, StorageAccountResourceDefinition>();
             CreateMap<StorageQueueResourceV1, StorageQueueResourceDefinition>();
-            CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>();
             CreateMap<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>();
             CreateMap<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>();
@@ -102,6 +102,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
                 .Include<LoadBalancerResourceV1, LoadBalancerResourceDefinition>()
+                .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
@@ -124,8 +125,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
-                .Include<WebAppResourceV1, WebAppResourceDefinition>()
-                .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
+                .Include<WebAppResourceV1, WebAppResourceDefinition>();
         }
     }
 }

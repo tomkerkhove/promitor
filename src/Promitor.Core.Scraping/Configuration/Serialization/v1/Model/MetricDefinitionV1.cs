@@ -8,7 +8,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
     /// that should be scraped to supply the metric.
     /// </summary>
     public class MetricDefinitionV1
-    { /// <summary>
+    {
+        /// <summary>
         /// The name of the prometheus metric.
         /// </summary>
         public string Name { get; set; }
@@ -33,6 +34,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// </summary>
         public AzureMetricConfigurationV1 AzureMetricConfiguration { get; set; }
 
+        /// <summary>
+        /// Contains the configuration used when querying Log Analytics
+        /// </summary>
         public LogAnalyticsConfigurationV1 LogAnalyticsConfiguration { get; set; }
 
         /// <summary>

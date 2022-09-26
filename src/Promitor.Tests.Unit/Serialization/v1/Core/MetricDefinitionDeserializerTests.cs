@@ -18,7 +18,8 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
         private readonly Mock<IAzureResourceDeserializerFactory> _resourceDeserializerFactory;
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
-
+        private readonly Mock<IDeserializer<LogAnalyticsConfigurationV1>> _logAnalyticsConfigurationDeserializer =
+            new Mock<IDeserializer<LogAnalyticsConfigurationV1>>();
         private readonly Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>> _resourceDiscoveryGroupDeserializer =
             new Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>>();
 
@@ -27,13 +28,12 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         public MetricDefinitionDeserializerTests()
         {
             _azureMetricConfigurationDeserializer = new Mock<IDeserializer<AzureMetricConfigurationV1>>();
-            var logAnalyticsConfigurationDeserializer = new Mock<IDeserializer<LogAnalyticsConfigurationV1>>();
             _scrapingDeserializer = new Mock<IDeserializer<ScrapingV1>>();
             _resourceDeserializerFactory = new Mock<IAzureResourceDeserializerFactory>();
 
             _deserializer = new MetricDefinitionDeserializer(
                 _azureMetricConfigurationDeserializer.Object,
-                logAnalyticsConfigurationDeserializer.Object,
+                _logAnalyticsConfigurationDeserializer.Object,
                 _scrapingDeserializer.Object,
                 _resourceDiscoveryGroupDeserializer.Object,
                 _resourceDeserializerFactory.Object,

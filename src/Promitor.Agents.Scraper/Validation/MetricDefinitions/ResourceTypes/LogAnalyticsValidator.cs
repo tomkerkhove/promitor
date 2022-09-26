@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.WorkspaceId))
                 {
-                    yield return "No workspaceId is configured";
+                    yield return "No workspace Id is configured";
                 }
             }
         }
