@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure;
-using Azure.Monitor.Query.Models;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
@@ -10,8 +8,6 @@ using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
-using Promitor.Integrations.Azure.Authentication;
-using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.LogAnalytics;
 
 namespace Promitor.Core.Scraping
@@ -30,7 +26,7 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.LogAnalyticsConfiguration, nameof(scrapeDefinition.LogAnalyticsConfiguration));
 
-            string resourceUri = null;
+            string resourceUri = "logAnalytics";
             var query = scrapeDefinition.LogAnalyticsConfiguration.Query;
             var workspaceId = resourceDefinition.WorkspaceId;
 

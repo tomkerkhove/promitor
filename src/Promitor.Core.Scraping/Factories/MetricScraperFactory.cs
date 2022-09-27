@@ -1,5 +1,4 @@
 ﻿using System;
-using Azure.Core;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
@@ -31,7 +30,7 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="metricSinkWriter">Writer to send metrics to all sinks</param>
         /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        /// <param name="tokenCredentials">the token used for Azure Authentication</param>
+        /// <param name="logAnalyticsClient">Client to interact with Log Analytics</param>
         public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient)
         {
             var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, logAnalyticsClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
@@ -84,6 +83,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new KubernetesServiceScraper(scraperConfiguration);
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerScraper(scraperConfiguration);
+                case ResourceType.LogAnalytics:
+                    return new LogAnalyticsScraper(scraperConfiguration);
                 case ResourceType.LogicApp:
                     return new LogicAppScraper(scraperConfiguration);
                 case ResourceType.MariaDb:
@@ -130,8 +131,6 @@ namespace Promitor.Core.Scraping.Factories
                     return new VirtualNetworkScraper(scraperConfiguration);
                 case ResourceType.WebApp:
                     return new WebAppScraper(scraperConfiguration);
-                case ResourceType.LogAnalytics:
-                    return new LogAnalyticsScraper(scraperConfiguration);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(metricDefinitionResourceType), metricDefinitionResourceType, "Matching scraper not found");
             }

@@ -12,7 +12,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
 
         public LogAnalyticsConfigurationDeserializerTests()
         {
-            _deserializer = new LogAnalyticsConfigurationDeserializer(NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
+            _deserializer = new LogAnalyticsConfigurationDeserializer(new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance), NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
         }
 
         [Fact]

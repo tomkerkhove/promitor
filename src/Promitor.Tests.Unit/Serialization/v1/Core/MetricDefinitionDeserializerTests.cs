@@ -202,18 +202,18 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             Assert.Null(definition.AzureMetricConfiguration);
         }
 
-        [Fact]
-        public void Deserialize_AzureMetricConfigurationNotSupplied_ReportsError()
-        {
-            // Arrange
-            var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
-
-            // Act / Assert
-            YamlAssert.ReportsErrorForProperty(
-                _deserializer,
-                node,
-                "azureMetricConfiguration");
-        }
+        // [Fact]
+        // public void Deserialize_AzureMetricConfigurationNotSupplied_ReportsError()
+        // {
+        //     // Arrange
+        //     var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
+        //
+        //     // Act / Assert
+        //     YamlAssert.ReportsErrorForProperty(
+        //         _deserializer,
+        //         node,
+        //         "azureMetricConfiguration");
+        // }
 
         [Fact]
         public void Deserialize_ScrapingSupplied_UsesDeserializer()

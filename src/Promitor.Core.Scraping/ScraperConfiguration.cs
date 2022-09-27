@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using GuardNet;
+﻿using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;

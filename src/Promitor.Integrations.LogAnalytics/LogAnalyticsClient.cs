@@ -38,6 +38,7 @@ namespace Promitor.Integrations.LogAnalytics
             var queryResult = await _logsQueryClient.QueryWorkspaceAsync(workspaceId, query, new QueryTimeRange(aggregationInterval, DateTime.UtcNow));
             if (queryResult.Value.Table.Rows.Count != 1)
             {
+                _logger.LogError("Query result length need to be 1");
                 throw new Exception("Query result length need to be 1");
             }
 

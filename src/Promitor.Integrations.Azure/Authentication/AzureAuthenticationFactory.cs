@@ -66,7 +66,6 @@ namespace Promitor.Integrations.Azure.Authentication
             };
         }
 
-
         public static TokenCredential GetTokenCredential(string resource, string tenantId, AzureAuthenticationInfo authenticationInfo, System.Uri azureAuthorityHost)
         {
             Guard.NotNullOrWhitespace(resource, nameof(resource));
