@@ -60,7 +60,7 @@ namespace Promitor.Core.Scraping
                 throw new ArgumentNullException(nameof(scrapeDefinition));
             }
 
-            var aggregationInterval = scrapeDefinition.AzureMetricConfiguration?.Aggregation?.Interval;
+            var aggregationInterval = scrapeDefinition.GetAggregationInterval();
             if (aggregationInterval == null)
             {
                 throw new ArgumentNullException(nameof(scrapeDefinition));

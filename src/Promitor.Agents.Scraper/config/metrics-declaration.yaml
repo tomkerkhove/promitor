@@ -30,5 +30,7 @@ metrics:
     logAnalyticsConfiguration:
        # this query need to return 1 row with 1 column result only
       query: Usage | take 1 | extend result = Quantity | project result
+      logAnalyticsAggregation:
+        interval: 100:00:00:00
     resources:
-    - workspaceId: ec563c3a-c8d3-47ab-bf2a-be1cdfeb95d7
+    - workspaceId: 0202fe93-55de-4c08-ae83-b5e4a3b6bed6

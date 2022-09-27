@@ -11,7 +11,6 @@ namespace Promitor.Integrations.LogAnalytics
     public class LogAnalyticsClient
     {
         private readonly ILogger _logger;
-        public readonly int TimeRangeQueryInHours = 12;
         public readonly string ColumnNameResult = "result";
         private readonly Uri _defaultEndpoint = new Uri("https://api.loganalytics.io");
         private readonly Uri _govEndpoint = new Uri("https://api.loganalytics.us");
@@ -34,9 +33,9 @@ namespace Promitor.Integrations.LogAnalytics
             _logsQueryClient = new LogsQueryClient(uri, tokenCredentials);
         }
 
-        public async Task<double> QueryDouble(string workspaceId, string query)
+        public async Task<double> QueryDouble(string workspaceId, string query, TimeSpan aggregationInterval)
         {
-            var queryResult = await _logsQueryClient.QueryWorkspaceAsync(workspaceId, query, new QueryTimeRange(TimeSpan.FromHours(TimeRangeQueryInHours), DateTime.UtcNow));
+            var queryResult = await _logsQueryClient.QueryWorkspaceAsync(workspaceId, query, new QueryTimeRange(aggregationInterval, DateTime.UtcNow));
             if (queryResult.Value.Table.Rows.Count != 1)
             {
                 throw new Exception("Query result length need to be 1");

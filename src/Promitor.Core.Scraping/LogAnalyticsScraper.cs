@@ -38,12 +38,13 @@ namespace Promitor.Core.Scraping
             try
             {
                 // Query Azure Monitor for metrics
-                var result = await _logAnalyticsClient.QueryDouble(workspaceId, query);
+                var result = await _logAnalyticsClient.QueryDouble(workspaceId, query, aggregationInterval);
                 var measuredMetric = MeasuredMetric.CreateWithoutDimension(result);
                 measuredMetrics.Add(measuredMetric);
             }
             catch (Exception e)
             {
+                Logger.LogError(e.Message);
                 Logger.LogWarning("Something wrong when query logs analytics");
                 var measuredMetric = MeasuredMetric.CreateWithoutDimension(null);
                 measuredMetrics.Add(measuredMetric);

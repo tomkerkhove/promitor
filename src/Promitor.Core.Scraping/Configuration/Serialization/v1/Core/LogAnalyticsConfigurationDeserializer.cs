@@ -5,10 +5,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 {
     public class LogAnalyticsConfigurationDeserializer : Deserializer<LogAnalyticsConfigurationV1>
     {
-        public LogAnalyticsConfigurationDeserializer(ILogger<LogAnalyticsConfigurationDeserializer> logger) : base(logger)
+        public LogAnalyticsConfigurationDeserializer(IDeserializer<AggregationV1> aggregationDeserializer, ILogger<LogAnalyticsConfigurationDeserializer> logger) : base(logger)
         {
             Map(logAnalyticsConfiguration => logAnalyticsConfiguration.Query)
                 .IsRequired();
+            Map(logAnalyticsConfiguration => logAnalyticsConfiguration.LogAnalyticsAggregation)
+                .MapUsingDeserializer(aggregationDeserializer);
         }
     }
 }

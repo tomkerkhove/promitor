@@ -1,4 +1,5 @@
-﻿using GuardNet;
+﻿using System;
+using GuardNet;
 using Promitor.Core.Contracts;
 
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics
@@ -84,5 +85,14 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// the global resource group name if none is overridden at the resource level.
         /// </summary>
         public string ResourceGroupName { get; }
+
+        public TimeSpan? GetAggregationInterval()
+        {
+            if (Resource.ResourceType == ResourceType.LogAnalytics)
+            {
+                return LogAnalyticsConfiguration?.LogAnalyticsAggregation?.Interval;
+            }
+            return AzureMetricConfiguration?.Aggregation?.Interval;
+        }
     }
 }
