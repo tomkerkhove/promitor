@@ -1,7 +1,11 @@
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
+using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {
@@ -9,20 +13,51 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     public class LogAnalyticsConfigurationDeserializerTests : UnitTest
     {
         private readonly LogAnalyticsConfigurationDeserializer _deserializer;
+        private readonly Mock<IDeserializer<AggregationV1>> _logAnalyticsAggregationDeserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public LogAnalyticsConfigurationDeserializerTests()
         {
-            _deserializer = new LogAnalyticsConfigurationDeserializer(new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance), NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
+            _logAnalyticsAggregationDeserializer = new Mock<IDeserializer<AggregationV1>>();
+           _deserializer = new LogAnalyticsConfigurationDeserializer(_logAnalyticsAggregationDeserializer.Object, NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
         }
 
         [Fact]
         public void Deserialize_QuerySupplied_SetsQuery()
         {
+            var yamlText = "query: AzureActivity | take 100";
             YamlAssert.PropertySet(
                 _deserializer,
-                "query: AzureActivity | take 100",
+                yamlText,
                 "AzureActivity | take 100",
                 a => a.Query);
+
+            YamlAssert.PropertyNull(
+                _deserializer,
+                yamlText,
+                a => a.LogAnalyticsAggregation);
+        }
+
+        [Fact]
+        public void Deserialize_LogAnalyticsAggregationSupplied_UsesDeserializer()
+        {
+            // Arrange
+            const string yamlText =
+                @"logAnalyticsAggregation:
+                    interval: 10:00:00:00";
+
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var aggregationNode = (YamlMappingNode)node.Children["logAnalyticsAggregation"];
+
+            var logAnalyticsAggregation = new AggregationV1();
+            _logAnalyticsAggregationDeserializer.Setup(
+                d => d.DeserializeObject(aggregationNode, _errorReporter.Object)).Returns(logAnalyticsAggregation);
+
+            // Act
+            var config = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            // Assert
+            Assert.Same(logAnalyticsAggregation, config.LogAnalyticsAggregation);
         }
 
         [Fact]
