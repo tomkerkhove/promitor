@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Prometheus.Client;
 using Prometheus.Client.DependencyInjection;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Integrations.Sinks.Prometheus.Collectors;
@@ -13,7 +14,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Extensions
         /// </summary>
         public static IServiceCollection AddPrometheusSystemMetrics(this IServiceCollection services)
         {
-            services.AddMetricFactory();
+            services.AddMetricFactory(Metrics.DefaultCollectorRegistry);
             services.AddTransient<ISystemMetricsSink, PrometheusSystemMetricsSink>();
 
             return services;
