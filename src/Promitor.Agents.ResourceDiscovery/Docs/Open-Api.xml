@@ -141,7 +141,7 @@
                 Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Graph.Repositories.CachedAzureResourceRepository" /> class.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers.AzureResourceGraphThrottlingRequestHandler.#ctor(Promitor.Core.Metrics.Prometheus.Collectors.Interfaces.ISystemMetricsPublisher,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.Extensions.Logging.ILogger)">
+        <member name="M:Promitor.Agents.ResourceDiscovery.Graph.RequestHandlers.AzureResourceGraphThrottlingRequestHandler.#ctor(Promitor.Core.Metrics.Interfaces.ISystemMetricsPublisher,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.Extensions.Logging.ILogger)">
             <summary>
                 Constructor
             </summary>
