@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
+using ResourceType = Promitor.Core.Contracts.ResourceType;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
 {
@@ -12,7 +14,17 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             _metricDefaults = metricDefaults;
         }
 
-        public IEnumerable<string> Validate(AzureMetricConfiguration azureMetricConfiguration)
+        public IEnumerable<string> Validate(MetricDefinition metrics)
+        {
+            if (metrics.ResourceType == ResourceType.LogAnalytics)
+            {
+                return ValidateLogAnalyticsConfiguration(metrics.LogAnalyticsConfiguration);
+            }
+
+            return ValidateAzureMetricConfiguration(metrics.AzureMetricConfiguration);
+        }
+
+        private IEnumerable<string> ValidateAzureMetricConfiguration(AzureMetricConfiguration azureMetricConfiguration)
         {
             var errorMessages = new List<string>();
 
@@ -44,6 +56,29 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             var metricAggregationValidator = new MetricAggregationValidator(_metricDefaults);
             var metricsAggregationErrorMessages = metricAggregationValidator.Validate(azureMetricConfiguration.Aggregation);
             errorMessages.AddRange(metricsAggregationErrorMessages);
+
+            return errorMessages;
+        }
+
+        private IEnumerable<string> ValidateLogAnalyticsConfiguration(LogAnalyticsConfiguration logAnalyticsConfiguration)
+        {
+            var errorMessages = new List<string>();
+
+            if (logAnalyticsConfiguration == null)
+            {
+                errorMessages.Add("Invalid Log Analytics is configured");
+                return errorMessages;
+            }
+
+            if (string.IsNullOrWhiteSpace(logAnalyticsConfiguration.Query))
+            {
+                errorMessages.Add("No Query for Log Analytics is configured");
+            }
+
+            if (logAnalyticsConfiguration.LogAnalyticsAggregation?.Interval == null)
+            {
+                errorMessages.Add("No Log Analytics Interval is configured");
+            }
 
             return errorMessages;
         }

@@ -31,11 +31,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .IsRequired();
 
             Map(definition => definition.AzureMetricConfiguration)
-                // .IsRequired()
                 .MapUsingDeserializer(azureMetricConfigurationDeserializer);
 
             Map(definition => definition.LogAnalyticsConfiguration)
-                // .IsRequired()
                 .MapUsingDeserializer(logAnalyticsConfigurationDeserializer);
 
             Map(definition => definition.Labels);
@@ -90,6 +88,31 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 (metricDefinition.ResourceDiscoveryGroups == null || !metricDefinition.ResourceDiscoveryGroups.Any()))
             {
                 errorReporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified.");
+            }
+
+            if (metricDefinition.ResourceType == ResourceType.LogAnalytics)
+            {
+                if (metricDefinition.LogAnalyticsConfiguration == null)
+                {
+                    errorReporter.ReportError(node, "'logAnalyticsConfiguration' must be specified with LogAnalytics resource type");
+                }
+
+                if (metricDefinition.AzureMetricConfiguration != null)
+                {
+                    errorReporter.ReportWarning(node, "'azureMetricConfiguration' will be ignored with LogAnalytics resource type");
+                }
+            }
+            else
+            {
+                if (metricDefinition.AzureMetricConfiguration == null)
+                {
+                    errorReporter.ReportError(node, "'azureMetricConfiguration' must be specified with this resource type");
+                }
+
+                if (metricDefinition.LogAnalyticsConfiguration != null)
+                {
+                    errorReporter.ReportWarning(node, "'logAnalyticsConfiguration' will be ignored with this resource type");
+                }
             }
         }
     }
