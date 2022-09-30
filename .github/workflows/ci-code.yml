@@ -25,7 +25,7 @@ jobs:
 
         # Install .NET
       - name: Install .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
 
