@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Kusto.Language;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using ResourceType = Promitor.Core.Contracts.ResourceType;
@@ -62,6 +63,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
 
         private IEnumerable<string> ValidateLogAnalyticsConfiguration(LogAnalyticsConfiguration logAnalyticsConfiguration)
         {
+            var resultString = "project result";
             var errorMessages = new List<string>();
 
             if (logAnalyticsConfiguration == null)
@@ -70,16 +72,30 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 return errorMessages;
             }
 
-            if (string.IsNullOrWhiteSpace(logAnalyticsConfiguration.Query))
-            {
-                errorMessages.Add("No Query for Log Analytics is configured");
-            }
-
             if (logAnalyticsConfiguration.LogAnalyticsAggregation?.Interval == null)
             {
                 errorMessages.Add("No Log Analytics Interval is configured");
             }
 
+
+            if (string.IsNullOrWhiteSpace(logAnalyticsConfiguration.Query))
+            {
+                errorMessages.Add("No Query for Log Analytics is configured");
+            }
+            else
+            {
+                var code = KustoCode.Parse(logAnalyticsConfiguration.Query);
+                var diagnostics = code.GetDiagnostics();
+                if (diagnostics.Count > 0)
+                {
+                    errorMessages.Add("Syntax error with the query");
+                }
+
+                if (!logAnalyticsConfiguration.Query.Contains(resultString))
+                {
+                    errorMessages.Add("The Query need to return only 1 column name result only (use \"project result\")");
+                }
+            }
             return errorMessages;
         }
     }
