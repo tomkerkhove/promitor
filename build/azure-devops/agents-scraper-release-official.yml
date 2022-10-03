@@ -38,6 +38,8 @@ variables:
     value: '${{ parameters.imageVersion }}'
   - name: 'Release.Title'
     value: '${{ parameters.githubReleaseTitle }}'
+  - name: 'OpenTelemetry.Collector.Uri'
+    value: 'http://localhost:8889'
 
 stages:
 - stage: Init
@@ -68,6 +70,8 @@ stages:
     value: 'promitor.agents.resourcediscovery'
   - name: Container.ResourceDiscovery.Port
     value: '999'
+  - name: Container.OpenTelemetryCollector.Name
+    value: 'opentelemetry.collector'
   - name: Container.Network.Name
     value: 'ci-network'
   - name: Image.ResourceDiscovery.Name
@@ -116,6 +120,11 @@ stages:
      - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
+     - template: templates/agents/run-opentelemetry-collector.yml
+       parameters:
+          containerName: '$(Container.OpenTelemetryCollector.Name)'
+          volumes: '$(Pipeline.Workspace)/s/config/opentelemetry-collector/collector-config.yaml:/etc/otel-collector-config.yaml'
+          networkName: '$(Container.Network.Name)'
      - template: templates/agents/run-scraper-image.yml
        parameters:
           containerName: '$(Container.Scraper.Name)'
