@@ -77,7 +77,6 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 errorMessages.Add("No Log Analytics Interval is configured");
             }
 
-
             if (string.IsNullOrWhiteSpace(logAnalyticsConfiguration.Query))
             {
                 errorMessages.Add("No Query for Log Analytics is configured");

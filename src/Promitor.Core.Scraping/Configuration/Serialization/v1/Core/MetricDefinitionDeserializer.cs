@@ -90,13 +90,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 errorReporter.ReportError(node, "Either 'resources' or 'resourceDiscoveryGroups' must be specified.");
             }
 
+            ReportConfigurationError(node, metricDefinition, errorReporter);
+        }
+
+        private void ReportConfigurationError(YamlMappingNode node, MetricDefinitionV1 metricDefinition, IErrorReporter errorReporter)
+        {
             if (metricDefinition.ResourceType == ResourceType.LogAnalytics)
             {
                 if (metricDefinition.LogAnalyticsConfiguration == null)
                 {
                     errorReporter.ReportError(node, "'logAnalyticsConfiguration' must be specified with LogAnalytics resource type");
                 }
-
                 if (metricDefinition.AzureMetricConfiguration != null)
                 {
                     errorReporter.ReportWarning(node, "'azureMetricConfiguration' will be ignored with LogAnalytics resource type");
@@ -108,7 +112,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 {
                     errorReporter.ReportError(node, "'azureMetricConfiguration' must be specified with this resource type");
                 }
-
                 if (metricDefinition.LogAnalyticsConfiguration != null)
                 {
                     errorReporter.ReportWarning(node, "'logAnalyticsConfiguration' will be ignored with this resource type");
