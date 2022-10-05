@@ -171,6 +171,14 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Scraper'
+        url: '$(Agent.Scraper.BaseUrl)/$(Agent.Scraper.Prometheus.ScrapeUri)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/docker/push-image.yml
           parameters:
@@ -259,6 +267,14 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Scraper'
+        url: '$(Agent.Scraper.BaseUrl)/$(Agent.Scraper.Prometheus.ScrapeUri)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
