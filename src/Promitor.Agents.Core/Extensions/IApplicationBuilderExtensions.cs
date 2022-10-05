@@ -35,6 +35,9 @@ namespace Microsoft.AspNetCore.Builder
                 prometheusOptions.MapPath = baseUriPath;
                 prometheusOptions.UseDefaultCollectors = true;
                 prometheusOptions.MetricPrefixName = "promitor_runtime_";
+#pragma warning disable CS0618
+                prometheusOptions.AddLegacyMetrics = true;
+#pragma warning restore CS0618
             });
 
             return app;
