@@ -1,0 +1,10 @@
+parameters:
+- name: url
+  type: string
+- name: agentName
+  type: string
+
+steps:
+- script: curl -X GET -i ${{ parameters.url}}
+  displayName: Show Prometheus metrics for ${{ parameters.agentName}} agent
+  condition: always()
