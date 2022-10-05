@@ -259,6 +259,12 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
+     - script: curl -X GET -i $(Agent.Scraper.BaseUrl)/$(Agent.Scraper.Prometheus.ScrapeUri)
+       displayName: Show Prometheus metrics for Scraper agent
+       condition: always()
+     - script: curl -X GET -i $(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)
+       displayName: Show Prometheus metrics for Resource Discovery agent
+       condition: always()
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
