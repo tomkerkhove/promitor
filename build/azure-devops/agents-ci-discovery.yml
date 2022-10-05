@@ -122,6 +122,10 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Name)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/docker/push-image.yml
           parameters:
@@ -177,6 +181,10 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Name)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'Resource Discovery'
+        url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/docker/push-image.yml
           parameters:
