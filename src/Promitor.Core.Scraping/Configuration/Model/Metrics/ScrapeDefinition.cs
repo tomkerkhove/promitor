@@ -90,7 +90,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         {
             if (Resource.ResourceType == ResourceType.LogAnalytics)
             {
-                return LogAnalyticsConfiguration?.LogAnalyticsAggregation?.Interval;
+                return LogAnalyticsConfiguration?.Aggregation?.Interval;
             }
             return AzureMetricConfiguration?.Aggregation?.Interval;
         }

@@ -202,18 +202,62 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             Assert.Null(definition.AzureMetricConfiguration);
         }
 
-        // [Fact]
-        // public void Deserialize_AzureMetricConfigurationNotSupplied_ReportsError()
-        // {
-        //     // Arrange
-        //     var node = YamlUtils.CreateYamlNode("name: 'test_metric'");
-        //
-        //     // Act / Assert
-        //     YamlAssert.ReportsErrorForProperty(
-        //         _deserializer,
-        //         node,
-        //         "azureMetricConfiguration");
-        // }
+        [Fact]
+        public void Deserialize_AzureMetricConfigurationNotSuppliedWithNotLogAnalyticsResource_ReportsError()
+        {
+            const string yamlText =
+                @"metrics:
+                    name: 'test_metrics'
+                    description: 'some metric'
+                    resourceType: 'StorageAccount'";
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var metricNode = (YamlMappingNode)node.Children["metrics"];
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metricNode,
+                "azureMetricConfiguration");
+        }
+
+        [Fact]
+        public void Deserialize_AzureMetricConfigurationNotSuppliedWithLogAnalyticsResource_ReportsNoError()
+        {
+            const string yamlText =
+                @"metrics:
+                    name: 'test_metrics'
+                    description: 'some metric'
+                    resourceType: 'LogAnalytics'";
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var metricNode = (YamlMappingNode)node.Children["metrics"];
+
+            // Act / Assert
+            YamlAssert.ReportsNoErrorForProperty(
+                _deserializer,
+                metricNode,
+                "azureMetricConfiguration");
+        }
+
+        [Fact]
+        public void Deserialize_LogAnalyticsNotSuppliedWithLogAnalyticsResource_ReportsError()
+        {
+            const string yamlText =
+                @"metrics:
+                    name: 'test_metrics'
+                    description: 'some metric'
+                    resourceType: 'LogAnalytics'";
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(yamlText);
+            var metricNode = (YamlMappingNode)node.Children["metrics"];
+
+            // Act / Assert
+            YamlAssert.ReportsErrorForProperty(
+                _deserializer,
+                metricNode,
+                "logAnalytics");
+        }
 
         [Fact]
         public void Deserialize_ScrapingSupplied_UsesDeserializer()

@@ -5,6 +5,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
     {
         public string Query { get; set; }
 
-        public AggregationV1 LogAnalyticsAggregation { get; set; }
+        public AggregationV1 Aggregation { get; set; }
     }
 }

@@ -72,7 +72,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 return errorMessages;
             }
 
-            if (logAnalyticsConfiguration.LogAnalyticsAggregation?.Interval == null)
+            if (logAnalyticsConfiguration.Aggregation?.Interval == null)
             {
                 errorMessages.Add("No Log Analytics Interval is configured");
             }

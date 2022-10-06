@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Monitor.Query;
+using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 
@@ -33,12 +34,21 @@ namespace Promitor.Integrations.LogAnalytics
             _logsQueryClient = new LogsQueryClient(uri, tokenCredentials);
         }
 
-        public async Task<double> QueryDouble(string workspaceId, string query, TimeSpan aggregationInterval)
+        public async Task<double> RunKustoQueryAsync(string workspaceId, string query, TimeSpan aggregationInterval)
         {
+            Guard.NotNullOrWhitespace(workspaceId, nameof(workspaceId));
+            Guard.NotNullOrWhitespace(query, nameof(query));
+
             var queryResult = await _logsQueryClient.QueryWorkspaceAsync(workspaceId, query, new QueryTimeRange(aggregationInterval, DateTime.UtcNow));
+
+            if (queryResult?.Value?.Table?.Rows == null)
+            {
+                throw new Exception("Query result cannot be null here");
+            }
+
             if (queryResult.Value.Table.Rows.Count != 1)
             {
-                _logger.LogError("Query result length need to be 1");
+                _logger.LogError("Query result length need to be 1, instead it was {number}", queryResult.Value.Table.Rows.Count);
                 throw new Exception("Query result length need to be 1");
             }
 

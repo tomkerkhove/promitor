@@ -13,13 +13,13 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     public class LogAnalyticsConfigurationDeserializerTests : UnitTest
     {
         private readonly LogAnalyticsConfigurationDeserializer _deserializer;
-        private readonly Mock<IDeserializer<AggregationV1>> _logAnalyticsAggregationDeserializer;
+        private readonly Mock<IDeserializer<AggregationV1>> _aggregationDeserializer;
         private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
 
         public LogAnalyticsConfigurationDeserializerTests()
         {
-            _logAnalyticsAggregationDeserializer = new Mock<IDeserializer<AggregationV1>>();
-           _deserializer = new LogAnalyticsConfigurationDeserializer(_logAnalyticsAggregationDeserializer.Object, NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
+            _aggregationDeserializer = new Mock<IDeserializer<AggregationV1>>();
+           _deserializer = new LogAnalyticsConfigurationDeserializer(_aggregationDeserializer.Object, NullLogger<LogAnalyticsConfigurationDeserializer>.Instance);
         }
 
         [Fact]
@@ -35,29 +35,29 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             YamlAssert.PropertyNull(
                 _deserializer,
                 yamlText,
-                a => a.LogAnalyticsAggregation);
+                a => a.Aggregation);
         }
 
         [Fact]
-        public void Deserialize_LogAnalyticsAggregationSupplied_UsesDeserializer()
+        public void Deserialize_AggregationSupplied_UsesDeserializer()
         {
             // Arrange
             const string yamlText =
-                @"logAnalyticsAggregation:
+                @"aggregation:
                     interval: 10:00:00:00";
 
             var node = YamlUtils.CreateYamlNode(yamlText);
-            var aggregationNode = (YamlMappingNode)node.Children["logAnalyticsAggregation"];
+            var aggregationNode = (YamlMappingNode)node.Children["aggregation"];
 
-            var logAnalyticsAggregation = new AggregationV1();
-            _logAnalyticsAggregationDeserializer.Setup(
-                d => d.DeserializeObject(aggregationNode, _errorReporter.Object)).Returns(logAnalyticsAggregation);
+            var aggregation = new AggregationV1();
+            _aggregationDeserializer.Setup(
+                d => d.DeserializeObject(aggregationNode, _errorReporter.Object)).Returns(aggregation);
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Same(logAnalyticsAggregation, config.LogAnalyticsAggregation);
+            Assert.Same(aggregation, config.Aggregation);
         }
 
         [Fact]

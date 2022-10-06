@@ -9,6 +9,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
         {
             Map(resource => resource.WorkspaceId)
                 .IsRequired();
+            Map(resource => resource.Name)
+                .IsRequired();
         }
     }
 }

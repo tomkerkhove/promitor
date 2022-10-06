@@ -9,7 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             Map(logAnalyticsConfiguration => logAnalyticsConfiguration.Query)
                 .IsRequired();
-            Map(logAnalyticsConfiguration => logAnalyticsConfiguration.LogAnalyticsAggregation)
+            Map(logAnalyticsConfiguration => logAnalyticsConfiguration.Aggregation)
                 .MapUsingDeserializer(aggregationDeserializer);
         }
     }

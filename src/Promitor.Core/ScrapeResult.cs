@@ -41,10 +41,7 @@ namespace Promitor.Core
 
             Labels.Add("resource_group", resourceGroupName);
             Labels.Add("subscription_id", subscriptionId);
-            if (resourceUri == null)
-                Labels.Add("resource_uri", "logAnalytics");
-            else
-                Labels.Add("resource_uri", resourceUri);
+            Labels.Add("resource_uri", resourceUri);
 
             if (string.IsNullOrWhiteSpace(instanceName) == false)
             {

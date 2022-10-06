@@ -10,6 +10,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
         /// <summary>
         ///     Configuration on how to aggregate the query
         /// </summary>
-        public Aggregation LogAnalyticsAggregation { get; set; }
+        public Aggregation Aggregation { get; set; }
     }
 }

@@ -65,8 +65,8 @@ namespace Promitor.Core.Scraping.Configuration.Providers
 
                     // Apply the default scraping interval for log analytics if none is specified
                     metric.LogAnalyticsConfiguration ??= new LogAnalyticsConfiguration();
-                    metric.LogAnalyticsConfiguration.LogAnalyticsAggregation ??= new MetricAggregation();
-                    metric.LogAnalyticsConfiguration.LogAnalyticsAggregation.Interval ??= config.MetricDefaults.Aggregation?.Interval;
+                    metric.LogAnalyticsConfiguration.Aggregation ??= new MetricAggregation();
+                    metric.LogAnalyticsConfiguration.Aggregation.Interval ??= config.MetricDefaults.Aggregation?.Interval;
                 }
             }
             return config;

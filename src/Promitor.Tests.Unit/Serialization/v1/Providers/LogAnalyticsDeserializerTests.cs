@@ -16,7 +16,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_AccountNameSupplied_SetsAccountName()
+        public void Deserialize_LogAnalyticsWorkspaceIdSupplied_SetsWorkspaceId()
         {
             const string workspaceId = "123-456-789";
             YamlAssert.PropertySet<LogAnalyticsResourceV1, AzureResourceDefinitionV1, string>(
@@ -27,12 +27,32 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         }
 
         [Fact]
-        public void Deserialize_AccountNameNotSupplied_Null()
+        public void Deserialize_LogAnalyticsWorkspaceIdNotSupplied_Null()
         {
             YamlAssert.PropertyNull<LogAnalyticsResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
                 r => r.WorkspaceId);
+        }
+
+        [Fact]
+        public void Deserialize_LogAnalyticsSubscriptionIdSupplied_SetsSubscriptionId()
+        {
+            const string subscriptionId = "123-456-789";
+            YamlAssert.PropertySet<LogAnalyticsResourceV1, AzureResourceDefinitionV1, string>(
+                _deserializer,
+                $"subscriptionId: {subscriptionId}",
+                subscriptionId,
+                r => r.SubscriptionId);
+        }
+
+        [Fact]
+        public void Deserialize_LogAnalyticsSubscriptionIdNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull<LogAnalyticsResourceV1, AzureResourceDefinitionV1>(
+                _deserializer,
+                "resourceGroupName: promitor-group",
+                r => r.SubscriptionId);
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()

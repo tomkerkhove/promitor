@@ -28,8 +28,7 @@ namespace Promitor.Agents.Scraper.Scheduling
     /// identified via resource definition groups. All metrics included are expected to have
     /// the same scraping schedule.
     /// </summary>
-    public class ResourcesScrapingJob : MetricScrapingJob,
-        IScheduledJob
+    public class ResourcesScrapingJob : MetricScrapingJob, IScheduledJob
     {
         private readonly MetricsDeclaration _metricsDeclaration;
         private readonly IResourceDiscoveryRepository _resourceDiscoveryRepository;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;
@@ -14,6 +13,7 @@ namespace Promitor.Core.Scraping
 {
     public class LogAnalyticsScraper : Scraper<LogAnalyticsResourceDefinition>
     {
+        private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.OperationalInsights/workspaces/{2}/Overview";
         private readonly LogAnalyticsClient _logAnalyticsClient;
 
         public LogAnalyticsScraper(ScraperConfiguration scraperConfiguration) : base(scraperConfiguration)
@@ -26,26 +26,16 @@ namespace Promitor.Core.Scraping
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.LogAnalyticsConfiguration, nameof(scrapeDefinition.LogAnalyticsConfiguration));
 
-            string resourceUri = "logAnalytics";
+            string resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, resourceDefinition);
             var query = scrapeDefinition.LogAnalyticsConfiguration.Query;
             var workspaceId = resourceDefinition.WorkspaceId;
 
             List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
-            try
-            {
-                // Query Azure Monitor for metrics
-                var result = await _logAnalyticsClient.QueryDouble(workspaceId, query, aggregationInterval);
-                var measuredMetric = MeasuredMetric.CreateWithoutDimension(result);
-                measuredMetrics.Add(measuredMetric);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e.Message);
-                Logger.LogWarning("Something wrong when query logs analytics");
-                var measuredMetric = MeasuredMetric.CreateWithoutDimension(null);
-                measuredMetrics.Add(measuredMetric);
-            }
 
+            // Query Azure Log Analytics for result
+            var result = await _logAnalyticsClient.RunKustoQueryAsync(workspaceId, query, aggregationInterval);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimension(result);
+            measuredMetrics.Add(measuredMetric);
             var metricLabels = DetermineMetricLabels(resourceDefinition);
 
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, measuredMetrics, metricLabels);
@@ -53,12 +43,12 @@ namespace Promitor.Core.Scraping
 
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, LogAnalyticsResourceDefinition resource)
         {
-            return null;
+            return string.Format(ResourceUriTemplate, subscriptionId, resource.ResourceGroupName, resource.Name);
         }
 
         private Dictionary<string, string> DetermineMetricLabels(LogAnalyticsResourceDefinition resourceDefinition)
         {
-            return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId } };
+            return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"name", resourceDefinition.Name} };
         }
     }
 }
