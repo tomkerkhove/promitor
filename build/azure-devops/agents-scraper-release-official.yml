@@ -261,11 +261,11 @@ stages:
           networkName: '$(Container.Network.Name)'
           os: '$(OS.Name)'
      - template: templates/docker/show-running-containers.yml
-     - template: templates/tests/run-integration-tests.yml
-       parameters:
-        agentName: 'Scraper'
-        dotnetVersion: '$(DotNet.Sdk.Version)'
-        buildConfiguration: '$(DotNet.Configuration)'
+     #- template: templates/tests/run-integration-tests.yml
+     #  parameters:
+     #   agentName: 'Scraper'
+     #   dotnetVersion: '$(DotNet.Sdk.Version)'
+     #   buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
