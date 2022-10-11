@@ -2,14 +2,14 @@ namespace Promitor.Core.Contracts.ResourceTypes
 {
     public class LogAnalyticsResourceDefinition : AzureResourceDefinition
     {
-        public LogAnalyticsResourceDefinition(string subscriptionId, string resourceGroupName, string name, string workspaceId)
-            : base(ResourceType.LogAnalytics, subscriptionId, resourceGroupName, name)
+        public LogAnalyticsResourceDefinition(string subscriptionId, string resourceGroupName, string workspaceName, string workspaceId)
+            : base(ResourceType.LogAnalytics, subscriptionId, resourceGroupName, workspaceName)
         {
-            Name = name;
+            WorkspaceName = workspaceName;
             WorkspaceId = workspaceId;
         }
 
         public string WorkspaceId { get; }
-        public string Name { get; }
+        public string WorkspaceName { get; }
     }
 }

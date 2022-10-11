@@ -43,12 +43,12 @@ namespace Promitor.Core.Scraping
 
         protected override string BuildResourceUri(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, LogAnalyticsResourceDefinition resource)
         {
-            return string.Format(ResourceUriTemplate, subscriptionId, resource.ResourceGroupName, resource.Name);
+            return string.Format(ResourceUriTemplate, subscriptionId, resource.ResourceGroupName, resource.WorkspaceName);
         }
 
         private Dictionary<string, string> DetermineMetricLabels(LogAnalyticsResourceDefinition resourceDefinition)
         {
-            return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"name", resourceDefinition.Name} };
+            return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"workspace_name", resourceDefinition.WorkspaceName} };
         }
     }
 }

@@ -502,7 +502,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         public MetricsDeclarationBuilder WithLogAnalytics(string metricName = "promitor",
             string metricDescription = "Description for a metric",
             string workspaceId = "promitor-workspace-id",
-            string name = "log-analytics-name",
+            string workspaceName = "log-analytics-name",
             string azureMetricName = "Total",
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
@@ -515,7 +515,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             var resource = new LogAnalyticsResourceV1
             {
                 WorkspaceId = workspaceId,
-                Name = name
+                WorkspaceName = workspaceName
             };
 
             CreateAndAddMetricDefinition(ResourceType.LogAnalytics, metricName, metricDescription, resourceDiscoveryGroupName, omitResource,

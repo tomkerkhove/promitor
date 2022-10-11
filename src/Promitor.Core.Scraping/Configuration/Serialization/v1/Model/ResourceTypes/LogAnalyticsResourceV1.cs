@@ -10,6 +10,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTy
         /// <summary>
         /// The name of the Azure Log Analytics to query metrics for.
         /// </summary>
-        public string Name { get; set; }
+        public string WorkspaceName { get; set; }
     }
 }

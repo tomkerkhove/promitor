@@ -29,8 +29,9 @@ metrics:
     resourceType: LogAnalytics
     logAnalyticsConfiguration:
        # this query need to return 1 row with 1 column result only
-      query: Usage | take 1 | extend result = Quantity | project result
-      logAnalyticsAggregation:
-        interval: 100:00:00:00
+      query: SparkLoggingEvent_CL | where Level != "ERROR" | summarize result = count() | take 1 | project result
+      aggregation:
+          interval: 1:00:00:00
     resources:
     - workspaceId: 0202fe93-55de-4c08-ae83-b5e4a3b6bed6
+      workspaceName: afs-log-analytics
