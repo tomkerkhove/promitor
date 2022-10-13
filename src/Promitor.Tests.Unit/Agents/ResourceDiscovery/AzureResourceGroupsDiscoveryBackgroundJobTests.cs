@@ -13,31 +13,29 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
 {
     public class AzureResourceGroupsDiscoveryBackgroundJobTests
     {
-        private readonly Mock<IAzureResourceRepository> _azureResourceRepository;
         private readonly Mock<ISystemMetricsPublisher> _systemMetricsPublisher;
         private readonly AzureSubscriptionDiscoveryBackgroundJob _azureResourceGroupsDiscoveryBackgroundJob;
-        private readonly Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation> firstPage;
-        private readonly Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation> secondPage;
+        private readonly Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation> _firstPage;
 
         public AzureResourceGroupsDiscoveryBackgroundJobTests()
         {
-            _azureResourceRepository = new Mock<IAzureResourceRepository>(MockBehavior.Strict);
+            var azureResourceRepository = new Mock<IAzureResourceRepository>(MockBehavior.Strict);
             _systemMetricsPublisher = new Mock<ISystemMetricsPublisher>(MockBehavior.Strict);
             var logger = new Mock<ILogger<AzureSubscriptionDiscoveryBackgroundJob>>(MockBehavior.Loose);
-            _azureResourceGroupsDiscoveryBackgroundJob = new AzureSubscriptionDiscoveryBackgroundJob("jobName", _azureResourceRepository.Object, _systemMetricsPublisher.Object, logger.Object);
+            _azureResourceGroupsDiscoveryBackgroundJob = new AzureSubscriptionDiscoveryBackgroundJob("jobName", azureResourceRepository.Object, _systemMetricsPublisher.Object, logger.Object);
 
-            firstPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
+            _firstPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
             {
                 PageInformation = new Promitor.Core.Contracts.PageInformation { CurrentPage = 1, PageSize = 1, TotalRecords = 1 },
                 Result = new List<AzureSubscriptionInformation>() { new AzureSubscriptionInformation { TenantId = "TenantId", Id = "ID", Name = "Name" } }
             };
-            secondPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
+            var secondPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
             {
                 PageInformation = new Promitor.Core.Contracts.PageInformation { CurrentPage = 2, PageSize = 1, TotalRecords = 1 },
                 Result = new List<AzureSubscriptionInformation>() { new AzureSubscriptionInformation { TenantId = "TenantId", Id = "ID", Name = "Name" } }
             };
-            _azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 1)).ReturnsAsync(firstPage);
-            _azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 2)).ReturnsAsync(secondPage);
+            azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 1)).ReturnsAsync(_firstPage);
+            azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 2)).ReturnsAsync(secondPage);
             _systemMetricsPublisher.Setup(p => p.WriteGaugeMeasurementAsync(It.IsAny<string>(), It.IsAny<string>(), 1, It.IsAny<Dictionary<string, string>>(), true)).Returns(Task.CompletedTask);
         }
 
@@ -61,7 +59,7 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
         public async Task AzureResourceGroupsDiscoveryBackgroundJob_Execution_LoopsOnMultiplePages()
         {
             // Arrange
-            firstPage.PageInformation.TotalRecords = 2;
+            _firstPage.PageInformation.TotalRecords = 2;
 
             // Act
             await _azureResourceGroupsDiscoveryBackgroundJob.ExecuteAsync(CancellationToken.None);
