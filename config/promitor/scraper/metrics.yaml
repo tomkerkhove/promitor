@@ -302,6 +302,17 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: mysql-servers
+  - name: promitor_demo_log_analytics
+    description: "Usage of Azure Log Analytics"
+    resourceType: LogAnalytics
+    logAnalyticsConfiguration:
+      query: Usage | summarize result = count() | project result
+      aggregation:
+        interval: 7:00:00:00
+    resources:
+      - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
+        workspaceName: promitor-testing-resource-eu-logs
+
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
   # - name: azure_logic_apps_failed_run_discovery
