@@ -68,18 +68,18 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
 
             if (logAnalyticsConfiguration == null)
             {
-                errorMessages.Add("Invalid Log Analytics is configured");
+                errorMessages.Add("Invalid Azure Log Analytics is configured");
                 return errorMessages;
             }
 
             if (logAnalyticsConfiguration.Aggregation?.Interval == null)
             {
-                errorMessages.Add("No Log Analytics Interval is configured");
+                errorMessages.Add("No Azure Log Analytics Interval is configured");
             }
 
             if (string.IsNullOrWhiteSpace(logAnalyticsConfiguration.Query))
             {
-                errorMessages.Add("No Query for Log Analytics is configured");
+                errorMessages.Add("No Query for Azure Log Analytics is configured");
             }
             else
             {

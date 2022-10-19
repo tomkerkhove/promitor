@@ -38,6 +38,7 @@ namespace Promitor.Integrations.LogAnalytics
         {
             Guard.NotNullOrWhitespace(workspaceId, nameof(workspaceId));
             Guard.NotNullOrWhitespace(query, nameof(query));
+            Guard.For<ArgumentException>(() => aggregationInterval == default);
 
             var queryResult = await _logsQueryClient.QueryWorkspaceAsync(workspaceId, query, new QueryTimeRange(aggregationInterval, DateTime.UtcNow));
 
