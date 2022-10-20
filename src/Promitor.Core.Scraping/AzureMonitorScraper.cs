@@ -117,7 +117,7 @@ namespace Promitor.Core.Scraping
                 return string.IsNullOrWhiteSpace(configuration.Dimension.Name) ? new List<string>() : new List<string>{ configuration.Dimension.Name };
             }
 
-            return configuration.Dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).ToList();
+            return configuration.Dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).Distinct().ToList();
         }
 
         /// <summary>
