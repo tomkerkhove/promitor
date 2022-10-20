@@ -31,7 +31,7 @@ namespace Promitor.Integrations.LogAnalytics
             {
                 nameof(AzureEnvironment.AzureGlobalCloud) => _defaultEndpoint,
                 nameof(AzureEnvironment.AzureUSGovernment) => _govEndpoint,
-                _ => throw new Exception("This environment is not supported for LogAnalytics resource")
+                _ => throw new NotSupportedException($"Environment {azureEnvironment.Name} is not supported for scraping Azure Log Analytics resource(s)")
             };
 
             _logsQueryClient = new LogsQueryClient(uri, tokenCredentials);
