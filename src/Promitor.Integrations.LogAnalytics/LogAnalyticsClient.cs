@@ -27,9 +27,12 @@ namespace Promitor.Integrations.LogAnalytics
         public LogAnalyticsClient(ILoggerFactory loggerFactory, AzureEnvironment azureEnvironment, TokenCredential tokenCredentials)
         {
             _logger = loggerFactory.CreateLogger<LogAnalyticsClient>();
-            var uri = _defaultEndpoint;
-            if (azureEnvironment.Name == nameof(AzureEnvironment.AzureUSGovernment))
-                uri = _govEndpoint;
+            var uri = azureEnvironment.Name switch
+            {
+                nameof(AzureEnvironment.AzureGlobalCloud) => _defaultEndpoint,
+                nameof(AzureEnvironment.AzureUSGovernment) => _govEndpoint,
+                _ => throw new Exception("This environment is not supported for LogAnalytics resource")
+            };
 
             _logsQueryClient = new LogsQueryClient(uri, tokenCredentials);
         }
