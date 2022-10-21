@@ -57,6 +57,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KubernetesServiceMetricValidator();
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerMetricValidator();
+                case ResourceType.LogAnalytics:
+                    return new LogAnalyticsValidator();
                 case ResourceType.LogicApp:
                     return new LogicAppMetricValidator();
                 case ResourceType.MariaDb:

@@ -35,6 +35,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         public AzureMetricConfigurationV1 AzureMetricConfiguration { get; set; }
 
         /// <summary>
+        /// Contains the configuration used when querying Log Analytics
+        /// </summary>
+        public LogAnalyticsConfigurationV1 LogAnalyticsConfiguration { get; set; }
+
+        /// <summary>
         /// Allows a custom scraping schedule to be specified for the metric.
         /// </summary>
         public ScrapingV1 Scraping { get; set; }

@@ -28,9 +28,10 @@ namespace Promitor.Core
         /// <param name="customLabels">A collection of custom labels to add to the scraping result</param>
         public ScrapeResult(string subscriptionId, string resourceGroupName, string instanceName, string resourceUri, List<MeasuredMetric> metricValues, Dictionary<string, string> customLabels)
         {
+            //Todo resourceUri is null when resourceType=logAnalytics
             Guard.NotNullOrEmpty(subscriptionId, nameof(subscriptionId));
             Guard.NotNullOrEmpty(resourceGroupName, nameof(resourceGroupName));
-            Guard.NotNullOrEmpty(resourceUri, nameof(resourceUri));
+            // Guard.NotNullOrEmpty(resourceUri, nameof(resourceUri));
             Guard.NotNull(customLabels, nameof(customLabels));
 
             SubscriptionId = subscriptionId;

@@ -17,7 +17,9 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Integrations.LogAnalytics;
 
 namespace Promitor.Agents.Scraper.Scheduling
 {
@@ -131,7 +133,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
-                
+
                 await ScrapeMetrics(scrapeDefinitions, cancellationToken);
             }
             catch (OperationCanceledException)
@@ -152,7 +154,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             var scrapeDefinitions = new ConcurrentBag<ScrapeDefinition<IAzureResourceDefinition>>();
             var tasks = new List<Task>();
-            
+
             foreach (var metric in _metricsDeclaration.Metrics)
             {
                 var metricName = metric?.PrometheusMetricDefinition?.Name ?? "Unknown";
@@ -225,8 +227,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                     Logger.LogWarning("Discovered no resources for resource collection {ResourceDiscoveryGroup}.", resourceDiscoveryGroupName);
                     return;
                 }
+
                 Logger.LogInformation("Discovered {ResourceCount} resources for resource collection {ResourceDiscoveryGroup}.", discoveredResources.Count, resourceDiscoveryGroupName);
-                
+
                 foreach (var discoveredResource in discoveredResources)
                 {
                     Logger.LogDebug("Discovered resource {DiscoveredResource}.", discoveredResource);
@@ -249,7 +252,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
         {
             var tasks = new List<Task>();
-            
+
             foreach (var scrapeDefinition in scrapeDefinitions)
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -260,7 +263,7 @@ namespace Promitor.Agents.Scraper.Scheduling
 
                 await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetric(scrapeDefinition), cancellationToken);
             }
-            
+
             await Task.WhenAll(tasks);
         }
 
@@ -275,12 +278,17 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
-                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient);
+
+                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(_metricsDeclaration.AzureMetadata.Cloud.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.Cloud, tokenCredential);
+
+                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource {ResourceName}.", 
+                Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource {ResourceName}.",
                     scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.Resource.ResourceName);
             }
         }
@@ -296,7 +304,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 tasks.Add(Task.Run(asyncWork, cancellationToken));
                 return;
             }
-            
+
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
 
             tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));

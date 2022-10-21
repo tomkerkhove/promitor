@@ -19,6 +19,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MetricDimensionV1, MetricDimension>();
             CreateMap<ScrapingV1, Configuration.Model.Scraping>();
             CreateMap<AzureMetricConfigurationV1, AzureMetricConfiguration>();
+            CreateMap<LogAnalyticsConfigurationV1, LogAnalyticsConfiguration>();
+
             CreateMap<MetricAggregationV1, MetricAggregation>();
             CreateMap<AzureResourceDiscoveryGroupDefinitionV1, AzureResourceDiscoveryGroup>();
             CreateMap<SecretV1, Secret>();
@@ -46,6 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
             CreateMap<LoadBalancerResourceV1, LoadBalancerResourceDefinition>();
+            CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
@@ -99,6 +102,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
                 .Include<LoadBalancerResourceV1, LoadBalancerResourceDefinition>()
+                .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -18,6 +19,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
     {
         private readonly AzureMetadataV1 _azureMetadata;
         private readonly List<MetricDefinitionV1> _metrics = new List<MetricDefinitionV1>();
+
         private MetricDefaultsV1 _metricDefaults = new MetricDefaultsV1
         {
             Scraping = new ScrapingV1 { Schedule = @"0 * * ? * *" }
@@ -497,6 +499,31 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithLogAnalytics(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string workspaceId = "promitor-workspace-id",
+            string workspaceName = "log-analytics-name",
+            string azureMetricName = "Total",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false,
+            string metricDimension = null,
+            Dictionary<string, string> labels = null,
+            string query = "Usage | take 1 | extend result = Quantity | project result",
+            string interval = "10:00:00:00")
+        {
+            var resource = new LogAnalyticsResourceV1
+            {
+                WorkspaceId = workspaceId,
+                WorkspaceName = workspaceName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.LogAnalytics, metricName, metricDescription, resourceDiscoveryGroupName, omitResource,
+                azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimension, labels, query, interval);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithLogicAppMetric(string metricName = "promitor-logic-apps-failed-runs",
             string metricDescription = "Description for a metric",
             string workflowName = "promitor-workflow",
@@ -968,17 +995,20 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, int? azureMetricLimit, AzureResourceDefinitionV1 resource, string metricDimension = null)
         {
-            CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> {resource}, metricDimension);
+            CreateAndAddMetricDefinition(resourceType, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, new List<AzureResourceDefinitionV1> { resource }, metricDimension);
         }
 
-        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource, string azureMetricName, int? azureMetricLimit, List<AzureResourceDefinitionV1> resources, string metricDimension = null, Dictionary<string, string> labels = null)
+        private void CreateAndAddMetricDefinition(ResourceType resourceType, string metricName, string metricDescription, string resourceDiscoveryGroupName, bool omitResource,
+            string azureMetricName, int? azureMetricLimit, List<AzureResourceDefinitionV1> resources, string metricDimension = null, Dictionary<string, string> labels = null, string query = "", string interval = "10:00:00:00")
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, azureMetricLimit, metricDimension);
+            var logAnalyticsConfiguration = CreateLogAnalyticsConfiguration(query, interval);
             var metric = new MetricDefinitionV1
             {
                 Name = metricName,
                 Description = metricDescription,
                 AzureMetricConfiguration = azureMetricConfiguration,
+                LogAnalyticsConfiguration = logAnalyticsConfiguration,
                 ResourceType = resourceType,
                 Labels = labels
             };
@@ -1021,6 +1051,14 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             }
 
             return metricConfig;
+        }
+
+        private LogAnalyticsConfigurationV1 CreateLogAnalyticsConfiguration(string query, string interval)
+        {
+            var aggregation = new AggregationV1 { Interval = TimeSpan.Parse(interval) };
+            var logAnalyticsConfig = new LogAnalyticsConfigurationV1 { Query = query, Aggregation = aggregation };
+
+            return logAnalyticsConfig;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                         new MetricDimensionDeserializer(NullLogger<MetricDimensionDeserializer>.Instance), 
                         new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance),
                         NullLogger<AzureMetricConfigurationDeserializer>.Instance),
+                    new LogAnalyticsConfigurationDeserializer(new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance), NullLogger<LogAnalyticsConfigurationDeserializer>.Instance),
                     new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),
                     new AzureResourceDiscoveryGroupDeserializer(NullLogger<AzureResourceDiscoveryGroupDeserializer>.Instance),
                     new AzureResourceDeserializerFactory(new SecretDeserializer(NullLogger<SecretDeserializer>.Instance), new LoggerFactory()),

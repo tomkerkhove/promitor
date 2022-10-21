@@ -7,6 +7,8 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Interfaces;
 using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Integrations.AzureMonitor;
+using Promitor.Integrations.LogAnalytics;
+using ResourceType = Promitor.Core.Contracts.ResourceType;
 
 namespace Promitor.Core.Scraping.Factories
 {
@@ -28,9 +30,10 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="metricSinkWriter">Writer to send metrics to all sinks</param>
         /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient)
+        /// <param name="logAnalyticsClient">Client to interact with Log Analytics</param>
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient)
         {
-            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
+            var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, logAnalyticsClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
 
             switch (metricDefinitionResourceType)
             {
@@ -80,6 +83,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new KubernetesServiceScraper(scraperConfiguration);
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerScraper(scraperConfiguration);
+                case ResourceType.LogAnalytics:
+                    return new LogAnalyticsScraper(scraperConfiguration);
                 case ResourceType.LogicApp:
                     return new LogicAppScraper(scraperConfiguration);
                 case ResourceType.MariaDb:
