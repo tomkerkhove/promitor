@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
