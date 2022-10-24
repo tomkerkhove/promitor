@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
 using Promitor.Core.Scraping.Configuration.Model;
+using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Xunit;
 using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
@@ -17,12 +18,17 @@ public class AzureMetricConfigurationValidatorTest
             MetricName = "testMetric",
         };
 
+        var metricDefinition = new MetricDefinition
+        {
+            AzureMetricConfiguration = metricConfig
+        };
+
         metricConfig.Dimensions = new List<MetricDimension> { new(), new() };
         metricConfig.Dimension = new MetricDimension();
 
         // Act
         var azureMetricConfigurationValidator = new AzureMetricConfigurationValidator( new MetricDefaults());
-        var validationErrors = azureMetricConfigurationValidator.Validate(metricConfig);
+        var validationErrors = azureMetricConfigurationValidator.Validate(metricDefinition);
 
         // Assert
         Assert.NotEmpty(validationErrors);
@@ -37,12 +43,17 @@ public class AzureMetricConfigurationValidatorTest
             MetricName = "testMetric",
         };
 
+        var metricDefinition = new MetricDefinition
+        {
+            AzureMetricConfiguration = metricConfig
+        };
+
         metricConfig.Dimension = new MetricDimension();
         metricConfig.Dimensions = new List<MetricDimension>();
 
         // Act
         var azureMetricConfigurationValidator = new AzureMetricConfigurationValidator( new MetricDefaults());
-        var validationErrors = azureMetricConfigurationValidator.Validate(metricConfig);
+        var validationErrors = azureMetricConfigurationValidator.Validate(metricDefinition);
 
         // Assert
         Assert.Empty(validationErrors);
@@ -57,11 +68,16 @@ public class AzureMetricConfigurationValidatorTest
             MetricName = "testMetric",
         };
 
+        var metricDefinition = new MetricDefinition
+        {
+            AzureMetricConfiguration = metricConfig
+        };
+
         metricConfig.Dimensions = new List<MetricDimension> { new(), new() };
 
         // Act
         var azureMetricConfigurationValidator = new AzureMetricConfigurationValidator( new MetricDefaults());
-        var validationErrors = azureMetricConfigurationValidator.Validate(metricConfig);
+        var validationErrors = azureMetricConfigurationValidator.Validate(metricDefinition);
 
         // Assert
         Assert.Empty(validationErrors);
