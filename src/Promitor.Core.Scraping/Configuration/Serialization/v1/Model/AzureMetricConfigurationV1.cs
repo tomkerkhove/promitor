@@ -23,7 +23,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
-        [Obsolete("Dimension is deprecated, please use Dimensions instead.")]
+        //[Obsolete("Dimension is deprecated, please use Dimensions instead.")]
         public MetricDimensionV1 Dimension { get; set; }
 
         /// <summary>

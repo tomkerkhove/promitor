@@ -24,7 +24,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
         /// <summary>
         ///     Information about the dimension of an Azure Monitor metric
         /// </summary>
-        [Obsolete("Dimension is deprecated, please use Dimensions instead.")]
+        //[Obsolete("Dimension is deprecated, please use Dimensions instead.")]
         public MetricDimension Dimension { get; set; }
 
         /// <summary>
