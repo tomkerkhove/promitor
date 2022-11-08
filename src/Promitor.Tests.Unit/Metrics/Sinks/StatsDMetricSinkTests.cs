@@ -3,10 +3,14 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using Promitor.Core.Metrics;
+using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators;
+using Promitor.Tests.Unit.Stubs;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Metrics.Sinks
@@ -24,7 +28,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
-            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var statsDSinkConfiguration = CreateStatsDConfiguration();
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -42,7 +47,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
-            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var statsDSinkConfiguration = CreateStatsDConfiguration();
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -56,7 +62,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricName = BogusGenerator.Name.FirstName();
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
-            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var statsDSinkConfiguration = CreateStatsDConfiguration();
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -73,7 +80,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
-            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var statsDSinkConfiguration = CreateStatsDConfiguration();
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
 
             // Act
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
@@ -94,13 +102,23 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var measuredMetric = MeasuredMetric.CreateWithoutDimension(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
-            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, NullLogger<StatsdMetricSink>.Instance);
+            var statsDSinkConfiguration = CreateStatsDConfiguration();
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
 
             // Act
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
             statsDPublisherMock.Verify(mock => mock.Gauge(expectedDefaultValue, metricName), Times.Once());
+        }
+
+        private IOptionsMonitor<StatsdSinkConfiguration> CreateStatsDConfiguration()
+        {
+            var statsDConfiguration = new StatsdSinkConfiguration
+            {                
+            };
+
+            return new OptionsMonitorStub<StatsdSinkConfiguration>(statsDConfiguration);
         }
     }
 }

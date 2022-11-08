@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0.402-alpine3.16 AS build
 WORKDIR /src
-ARG VERSION="UNSET-VERSION"
+ARG VERSION="1.0"
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/
