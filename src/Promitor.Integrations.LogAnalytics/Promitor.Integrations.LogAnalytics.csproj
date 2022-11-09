@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Identity" Version="1.7.0" />
+      <PackageReference Include="Azure.Identity" Version="1.8.0" />
       <PackageReference Include="Azure.Monitor.Query" Version="1.1.0" />
       <PackageReference Include="Guard.Net" Version="3.0.0" />
       <PackageReference Include="Microsoft.Azure.Management.ResourceManager.Fluent" Version="1.38.1" />
