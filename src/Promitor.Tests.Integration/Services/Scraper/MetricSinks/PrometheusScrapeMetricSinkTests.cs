@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Promitor.Agents.Core;
 using Promitor.Tests.Integration.Data;
@@ -90,6 +92,34 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             // Assert
             Assert.True(response.Headers.Contains(HttpHeaders.AgentVersion));
             Assert.Equal(ExpectedVersion, response.Headers.GetFirstOrDefaultHeaderValue(HttpHeaders.AgentVersion));
+        }
+
+        [Theory]
+        [MemberData(nameof(DimensionsData))]
+        public async Task Prometheus_Scrape_ExpectedDimensionsAreAvailable(string expectedMetricName, IReadOnlyCollection<string> expectedDimensionNames)
+        {
+            // Arrange
+            var prometheusClient = PrometheusClientFactory.CreateForPrometheusScrapingEndpointInScraperAgent(Configuration);
+
+            // Act
+            var gaugeMetric = await prometheusClient.WaitForPrometheusMetricAsync(expectedMetricName);
+
+            // Assert
+            Assert.NotNull(gaugeMetric);
+            Assert.Equal(expectedMetricName, gaugeMetric.Name);
+            Assert.NotNull(gaugeMetric.Measurements);
+            Assert.False(gaugeMetric.Measurements.Count < 1);
+
+            foreach (var expectedDimensionName in expectedDimensionNames)
+            {
+                Assert.True(gaugeMetric.Measurements[0].Labels.ContainsKey(expectedDimensionName.SanitizeForPrometheusLabelKey()));
+                Assert.NotEqual("unknown", gaugeMetric.Measurements[0].Labels[expectedDimensionName]);
+            }
+        }
+        
+        public static IEnumerable<object[]> DimensionsData(){
+            yield return new object[] { "promitor_demo_frontdoor_backend_health_per_backend_pool", new List<string>{ "BackendPool" } };
+            yield return new object[] { "promitor_demo_frontdoor_backend_health_per_backend_pool_and_backend", new List<string>{ "BackendPool", "Backend" } };
         }
     }
 }
