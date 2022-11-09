@@ -71,8 +71,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             return this;
         }
 
+        // ReSharper disable once InvalidXmlDocComment
         /// <summary>
-        /// Specifies an <see cref="IDeserializer" /> to use to map the field.
+        /// Specifies an <see cref="IDeserializer"/> to use to map the field.
         /// </summary>
         /// <param name="deserializer">The deserializer.</param>
         /// <returns>The builder.</returns>
