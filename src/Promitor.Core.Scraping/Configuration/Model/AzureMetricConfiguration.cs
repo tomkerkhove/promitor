@@ -43,7 +43,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
             {
                 return Dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase);
             }
-            return Dimensions?.Where(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)).Any() ?? false;
+            return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)) ?? false;
         }
     }
 }
