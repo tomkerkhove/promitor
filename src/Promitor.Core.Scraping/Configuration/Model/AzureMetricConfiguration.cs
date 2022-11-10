@@ -41,7 +41,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
         {
             if (Dimension != null)
             {
-                return Dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase);
+                return Dimension?.Name?.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) ?? false;
             }
             return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)) ?? false;
         }
