@@ -37,13 +37,13 @@ namespace Promitor.Core.Scraping.Configuration.Model
         /// </summary>
         /// <param name="dimensionName">Dimension name to be checked for.</param>
         /// <returns>true if the dimension name was found, false otherwise</returns>
-        public bool HasDimension(string dimensionName)
+        public bool? HasDimension(string dimensionName)
         {
             if (Dimension != null)
             {
-                return Dimension?.Name?.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) ?? false;
+                return Dimension?.Name?.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase);
             }
-            return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)) ?? false;
+            return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
