@@ -16,8 +16,8 @@ public class AzureMetricConfigurationValidatorTest
         var metricConfig = new AzureMetricConfiguration
         {
             MetricName = "testMetric",
-            Dimension = new MetricDimension(),
-            Dimensions = new List<MetricDimension> { new(), new() }
+            Dimension = new MetricDimension { Name = "testDimension1" },
+            Dimensions = new List<MetricDimension> { new() {Name = "testDimension2"}, new() { Name = "testDimension3" } }
         };
 
         var metricDefinition = new MetricDefinition
@@ -40,7 +40,7 @@ public class AzureMetricConfigurationValidatorTest
         var metricConfig = new AzureMetricConfiguration
         {
             MetricName = "testMetric",
-            Dimension = new MetricDimension(),
+            Dimension = new MetricDimension { Name = "testDimension1" },
             Dimensions = new List<MetricDimension>()
         };
 
@@ -64,7 +64,7 @@ public class AzureMetricConfigurationValidatorTest
         var metricConfig = new AzureMetricConfiguration
         {
             MetricName = "testMetric",
-            Dimensions = new List<MetricDimension> { new(), new() }
+            Dimensions = new List<MetricDimension> { new() {Name = "testDimension1"}, new() { Name = "testDimension2" } }
         };
 
         var metricDefinition = new MetricDefinition
