@@ -264,7 +264,7 @@ metrics:
       metricName: availabilityResults/availabilityPercentage
       aggregation:
         type: Average
-      dimension: 
+      dimension:
         name: availabilityResult/name
     resources:
       # Application Insights with data in the service itself (classic, deprecated)
