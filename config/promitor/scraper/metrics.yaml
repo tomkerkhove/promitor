@@ -271,6 +271,39 @@ metrics:
       # Application Insights with data in Log Analytics
     - name: promitor-automation-data-generation-we-telemetry
       resourceGroupName: promitor-automation-data-generation
+  - name: promitor_demo_application_insights_availability_per_name
+    description: "Availability (%) of promitor.io measured in Azure Application Insights per name"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+      dimension: 
+        name: availabilityResult/name
+    resources:
+      # Application Insights with data in the service itself (classic, deprecated)
+      - name: promitor-automation-data-generation-we-telemetry-classic
+        resourceGroupName: promitor-automation-data-generation
+        # Application Insights with data in Log Analytics
+      - name: promitor-automation-data-generation-we-telemetry
+        resourceGroupName: promitor-automation-data-generation
+  - name: promitor_demo_application_insights_availability_per_name_and_location
+    description: "Availability (%) of promitor.io measured in Azure Application Insights per name and location"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+      dimensions:
+        - name: availabilityResult/name
+        - name: availabilityResult/location
+    resources:
+      # Application Insights with data in the service itself (classic, deprecated)
+      - name: promitor-automation-data-generation-we-telemetry-classic
+        resourceGroupName: promitor-automation-data-generation
+        # Application Insights with data in Log Analytics
+      - name: promitor-automation-data-generation-we-telemetry
+        resourceGroupName: promitor-automation-data-generation
   - name: promitor_demo_cdn_requests_discovered
     description: "Amount of requests sent to Azure CDN"
     resourceType: Cdn
