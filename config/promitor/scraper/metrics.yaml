@@ -185,20 +185,6 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: front-door-landscape
-  - name: promitor_demo_frontdoor_backend_health_per_backend_pool_and_backend
-    description: "Health percentage for a backend in Azure Front Door"
-    resourceType: FrontDoor
-    labels:
-      app: promitor
-    azureMetricConfiguration:
-      metricName: BackendHealthPercentage
-      dimensions:
-        - name: BackendPool
-        - name: Backend
-      aggregation:
-        type: Average
-    resourceDiscoveryGroups:
-      - name: front-door-landscape
   - name: promitor_demo_sql_elastic_pool_cpu
     description: "CPU percentage used for a Azure SQL Elastic Pool"
     resourceType: SqlElasticPool
