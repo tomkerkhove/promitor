@@ -112,8 +112,9 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
 
             foreach (var expectedDimensionName in expectedDimensionNames)
             {
-                Assert.True(gaugeMetric.Measurements[0].Labels.ContainsKey(expectedDimensionName.SanitizeForPrometheusLabelKey()));
-                Assert.NotEqual("unknown", gaugeMetric.Measurements[0].Labels[expectedDimensionName.SanitizeForPrometheusLabelKey()]);
+                var sanitizedDimensionName = expectedDimensionName.SanitizeForPrometheusLabelKey();
+                Assert.True(gaugeMetric.Measurements[0].Labels.ContainsKey(sanitizedDimensionName));
+                Assert.NotEqual("unknown", gaugeMetric.Measurements[0].Labels[sanitizedDimensionName]);
             }
         }
         
