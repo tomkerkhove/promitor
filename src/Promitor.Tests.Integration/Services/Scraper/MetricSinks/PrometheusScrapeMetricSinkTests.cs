@@ -94,7 +94,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
             Assert.Equal(ExpectedVersion, response.Headers.GetFirstOrDefaultHeaderValue(HttpHeaders.AgentVersion));
         }
 
-        [Theory(Skip = "todo disabled because it causes infinite(?) loop")]
+        [Theory]
         [MemberData(nameof(DimensionsData))]
         public async Task Prometheus_Scrape_ExpectedDimensionsAreAvailable(string expectedMetricName, IReadOnlyCollection<string> expectedDimensionNames)
         {
@@ -118,8 +118,8 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
         }
         
         public static IEnumerable<object[]> DimensionsData(){
-            yield return new object[] { "promitor_demo_frontdoor_backend_health_per_backend_pool", new List<string>{ "BackendPool" } };
-            yield return new object[] { "promitor_demo_frontdoor_backend_health_per_backend_pool_and_backend", new List<string>{ "BackendPool", "Backend" } };
+            yield return new object[] { "promitor_demo_application_insights_availability_per_name", new List<string>{ "availabilityResult/name" } };
+            yield return new object[] { "promitor_demo_application_insights_availability_per_name_and_location", new List<string>{ "availabilityResult/name", "availabilityResult/location" } };
         }
     }
 }
