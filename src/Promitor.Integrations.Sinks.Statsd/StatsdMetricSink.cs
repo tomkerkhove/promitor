@@ -70,7 +70,7 @@ namespace Promitor.Integrations.Sinks.Statsd
             return Task.CompletedTask;
         }
 
-        public Task ReportCustomFormattedMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        public Task ReportMetricWithGenevaFormattingAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
             Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));            
