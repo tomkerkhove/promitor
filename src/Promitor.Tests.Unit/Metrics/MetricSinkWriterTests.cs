@@ -141,9 +141,7 @@ namespace Promitor.Tests.Unit.Metrics
 
         private IOptionsMonitor<StatsdSinkConfiguration> CreateStatsDConfiguration()
         {
-            var statsDConfiguration = new StatsdSinkConfiguration
-            {
-            };
+            var statsDConfiguration = new StatsdSinkConfiguration();
 
             return new OptionsMonitorStub<StatsdSinkConfiguration>(statsDConfiguration);
         }
