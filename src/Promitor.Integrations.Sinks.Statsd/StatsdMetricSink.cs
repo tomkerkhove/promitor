@@ -52,7 +52,7 @@ namespace Promitor.Integrations.Sinks.Statsd
             {
                 var metricValue = measuredMetric.Value ?? 0;
 
-                var reportMetricTask = _reportMetricsActions[formatterType](metricName, metricDescription, metricValue, scrapeResult.Labels);
+                var reportMetricTask = ReportMetric(metricName, metricDescription, metricValue, scrapeResult.Labels);
                 reportMetricTasks.Add(reportMetricTask);
             }
 
