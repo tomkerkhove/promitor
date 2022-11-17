@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper.Internal.Mappers;
 using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
@@ -29,12 +28,6 @@ namespace Promitor.Integrations.Sinks.Statsd
             _statsDPublisher = statsDPublisher;
             _statsDConfiguration = configuration;
             _logger = logger;
-
-            _reportMetricsActions = new Dictionary<string, Func<string, string, double, Dictionary<string, string>, Task>>
-            {
-                {  StatsdFormatterTypes.DEFAULT, new Func<string, string, double, Dictionary<string, string>, Task>(ReportMetricAsync) },
-                {  StatsdFormatterTypes.CUSTOM, new Func<string, string, double, Dictionary<string, string>, Task>(ReportCustomFormattedMetricAsync) }
-            };
         }
 
         public MetricSinkType Type => MetricSinkType.StatsD;
@@ -46,17 +39,24 @@ namespace Promitor.Integrations.Sinks.Statsd
             Guard.NotNull(scrapeResult.MetricValues, nameof(scrapeResult.MetricValues));
 
             var reportMetricTasks = new List<Task>();
-            var formatterType = _statsDConfiguration.CurrentValue?.FormatterType ?? StatsdFormatterTypes.DEFAULT;
+            var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypes.DEFAULT;
 
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
                 var metricValue = measuredMetric.Value ?? 0;
 
-                var reportMetricTask = _reportMetricsActions[formatterType](metricName, metricDescription, metricValue, scrapeResult.Labels);
-                reportMetricTasks.Add(reportMetricTask);
-            }
+                switch (formatterType)
+                {
+                    case StatsdFormatterTypes.DEFAULT:
+                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        break;
+                    case StatsdFormatterTypes.GENEVA:
+                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        break;
+                }
 
-            await Task.WhenAll(reportMetricTasks);
+                await Task.WhenAll(reportMetricTasks);
+            }
         }
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
@@ -70,16 +70,17 @@ namespace Promitor.Integrations.Sinks.Statsd
             return Task.CompletedTask;
         }
 
-        public Task ReportCustomFormattedMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        private Task ReportMetricWithGenevaFormattingAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
-            Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));            
+            Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));
 
-            var bucket = JsonConvert.SerializeObject(new { 
-                Account = _statsDConfiguration.CurrentValue.Account, 
-                Namespace = _statsDConfiguration.CurrentValue.Namespace, 
-                Metric = metricName, 
-                Dims = labels 
+            var bucket = JsonConvert.SerializeObject(new
+            {
+                Account = _statsDConfiguration.CurrentValue.Geneva.Account,
+                Namespace = _statsDConfiguration.CurrentValue.Geneva.Namespace,
+                Metric = metricName,
+                Dims = labels
             });
 
             _statsDPublisher.Gauge(metricValue, bucket);
@@ -87,6 +88,6 @@ namespace Promitor.Integrations.Sinks.Statsd
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
 
             return Task.CompletedTask;
-        }
+        }        
     }
 }

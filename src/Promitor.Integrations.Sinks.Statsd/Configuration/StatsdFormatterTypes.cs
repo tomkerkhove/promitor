@@ -3,6 +3,6 @@
     public class StatsdFormatterTypes
     {
         public const string DEFAULT = "default";
-        public const string CUSTOM = "custom";
+        public const string GENEVA = "geneva";
     }   
 }
