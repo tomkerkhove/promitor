@@ -84,7 +84,7 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher.Gauge(metricValue, bucket);
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+            LogMetricWritten(metricName, metricValue);
 
             return Task.CompletedTask;
         }
