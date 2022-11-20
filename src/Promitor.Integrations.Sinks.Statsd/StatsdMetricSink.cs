@@ -39,7 +39,7 @@ namespace Promitor.Integrations.Sinks.Statsd
             Guard.NotNull(scrapeResult.MetricValues, nameof(scrapeResult.MetricValues));
 
             var reportMetricTasks = new List<Task>();
-            var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypes.DEFAULT;
+            var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypesEnum.Default;
 
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
@@ -47,10 +47,10 @@ namespace Promitor.Integrations.Sinks.Statsd
 
                 switch (formatterType)
                 {
-                    case StatsdFormatterTypes.DEFAULT:
+                    case StatsdFormatterTypesEnum.Default:
                         reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
                         break;
-                    case StatsdFormatterTypes.GENEVA:
+                    case StatsdFormatterTypesEnum.Geneva:
                         reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
                         break;
                 }
@@ -65,7 +65,7 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher.Gauge(metricValue, metricName);
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+            LogMetricWritten(metricName, metricValue);
 
             return Task.CompletedTask;
         }
@@ -74,6 +74,7 @@ namespace Promitor.Integrations.Sinks.Statsd
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
             Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));
+            Guard.NotNull(_statsDConfiguration.CurrentValue.Geneva, nameof(_statsDConfiguration.CurrentValue.Geneva));
 
             var bucket = JsonConvert.SerializeObject(new
             {
@@ -85,9 +86,14 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher.Gauge(metricValue, bucket);
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+            LogMetricWritten(metricName, metricValue);
 
             return Task.CompletedTask;
-        }        
+        }
+
+        private void LogMetricWritten(string metricName, double metricValue)
+        {
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+        }
     }
 }

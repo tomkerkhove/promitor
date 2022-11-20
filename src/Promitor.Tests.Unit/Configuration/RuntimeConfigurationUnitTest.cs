@@ -4,6 +4,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
 using DefaultsCore = Promitor.Agents.Core.Configuration.Defaults;
@@ -356,6 +357,36 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
+        public async Task RuntimeConfiguration_HasConfiguredGenevaInStatsDEndpoint_UsesConfigured()
+        {
+            // Arrange
+            var port = BogusGenerator.Random.Int();
+            var geneva_account = "abc";
+            var geneva_namespace = "xyz";
+
+            var geneva = new GenevaConfiguration {
+                Account = geneva_account,
+                Namespace = geneva_namespace
+            };
+
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithStatsDMetricSink(port: port, geneva: geneva)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.MetricSinks);
+            Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
+            Assert.Equal(port, runtimeConfiguration.MetricSinks.Statsd.Port);
+            Assert.Equal(geneva_account , runtimeConfiguration.MetricSinks.Statsd.Geneva.Account);
+            Assert.Equal(geneva_namespace, runtimeConfiguration.MetricSinks.Statsd.Geneva.Namespace);
+        }
+
+
+        [Fact]
         public async Task RuntimeConfiguration_HasConfiguredCollectorUriInOpenTelemetryCollectorEndpoint_UsesConfigured()
         {
             // Arrange
@@ -551,6 +582,7 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Host, runtimeConfiguration.MetricSinks.Statsd.Host);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.Port, runtimeConfiguration.MetricSinks.Statsd.Port);
             Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.MetricPrefix, runtimeConfiguration.MetricSinks.Statsd.MetricPrefix);
+            Assert.Equal(bogusRuntimeConfiguration.MetricSinks.Statsd.MetricFormat, runtimeConfiguration.MetricSinks.Statsd.MetricFormat);
         }
     }
 }

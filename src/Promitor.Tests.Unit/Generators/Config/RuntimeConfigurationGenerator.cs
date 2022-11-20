@@ -98,7 +98,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithStatsDMetricSink(int? port = 1234, string host = "automated-test.host", string metricPrefix = "test.")
+        public RuntimeConfigurationGenerator WithStatsDMetricSink(int? port = 1234, string host = "automated-test.host", string metricPrefix = "test.", GenevaConfiguration geneva = null)
         {
             StatsdSinkConfiguration statsdSinkConfiguration;
             if (string.IsNullOrWhiteSpace(host) && port == null)
@@ -122,6 +122,11 @@ namespace Promitor.Tests.Unit.Generators.Config
                 if (port != null)
                 {
                     statsdSinkConfiguration.Port = port.Value;
+                }
+
+                if (geneva != null)
+                {
+                    statsdSinkConfiguration.Geneva = geneva;
                 }
             }
 
@@ -284,7 +289,14 @@ namespace Promitor.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    host: {_runtimeConfiguration?.MetricSinks.Statsd.Host}");
                     configurationBuilder.AppendLine($"    port: {_runtimeConfiguration?.MetricSinks.Statsd.Port}");
                     configurationBuilder.AppendLine($"    metricPrefix: {_runtimeConfiguration?.MetricSinks.Statsd.MetricPrefix}");
-                }
+                    configurationBuilder.AppendLine($"    metricFormat: {_runtimeConfiguration?.MetricSinks.Statsd.MetricFormat}");
+                    if (_runtimeConfiguration?.MetricSinks.Statsd.Geneva != null)
+                    {
+                        configurationBuilder.AppendLine($"    geneva:");
+                        configurationBuilder.AppendLine($"      account: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Account}");
+                        configurationBuilder.AppendLine($"      namespace: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Namespace}");
+                    }
+                }               
                 if (_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint != null)
                 {
                     configurationBuilder.AppendLine("  prometheusScrapingEndpoint:");
