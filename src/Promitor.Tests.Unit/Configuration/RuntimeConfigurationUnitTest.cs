@@ -385,7 +385,6 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(geneva_namespace, runtimeConfiguration.MetricSinks.Statsd.Geneva.Namespace);
         }
 
-
         [Fact]
         public async Task RuntimeConfiguration_HasConfiguredCollectorUriInOpenTelemetryCollectorEndpoint_UsesConfigured()
         {
