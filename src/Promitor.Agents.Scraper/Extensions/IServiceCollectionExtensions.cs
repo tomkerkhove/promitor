@@ -245,13 +245,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 var sinkLogger = loggerFactory.CreateLogger<StatsdMetricSink>();
                 var host = statsdConfiguration.Host;
                 var port = statsdConfiguration.Port;
-                var metricPrefix = statsdConfiguration.MetricPrefix;
+                var metricPrefix = statsdConfiguration.MetricPrefix;                
 
                 return new StatsDConfiguration
                 {
                     Host = host,
                     Port = port,
-                    Prefix = metricPrefix,
+                    Prefix = metricPrefix,                    
                     OnError = ex =>
                     {
                         sinkLogger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
