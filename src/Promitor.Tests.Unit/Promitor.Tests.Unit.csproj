@@ -38,7 +38,7 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Fastenshtein" Version="1.0.0.8" />
     <PackageReference Include="JetBrains.DotMemoryUnit" Version="3.2.20220510" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
