@@ -53,6 +53,8 @@ namespace Promitor.Integrations.Sinks.Statsd
                     case StatsdFormatterTypesEnum.Geneva:
                         reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
                         break;
+default:
+  throw new ArgumentOutOfRangeException(nameof(formatterType), $"{formatterType} is not supported as formatting type.");
                 }
 
                 await Task.WhenAll(reportMetricTasks);
