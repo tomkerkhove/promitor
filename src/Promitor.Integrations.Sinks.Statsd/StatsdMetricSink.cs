@@ -81,7 +81,7 @@ default:
             var bucket = JsonConvert.SerializeObject(new
             {
                 Account = _statsDConfiguration.CurrentValue.Geneva.Account,
-                Namespace = _statsDConfiguration.CurrentValue.Geneva.Namespace,
+                Namespace = _statsDConfiguration.CurrentValue.Geneva?.Namespace,
                 Metric = metricName,
                 Dims = labels
             });
