@@ -53,6 +53,8 @@ namespace Promitor.Integrations.Sinks.Statsd
                     case StatsdFormatterTypesEnum.Geneva:
                         reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
                         break;
+default:
+  throw new ArgumentOutOfRangeException(nameof(formatterType), $"{formatterType} is not supported as formatting type.");
                 }
 
                 await Task.WhenAll(reportMetricTasks);
@@ -78,8 +80,8 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             var bucket = JsonConvert.SerializeObject(new
             {
-                Account = _statsDConfiguration.CurrentValue.Geneva.Account,
-                Namespace = _statsDConfiguration.CurrentValue.Geneva.Namespace,
+                Account = _statsDConfiguration.CurrentValue.Geneva?.Account,
+                Namespace = _statsDConfiguration.CurrentValue.Geneva?.Namespace,
                 Metric = metricName,
                 Dims = labels
             });

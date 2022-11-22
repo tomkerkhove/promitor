@@ -361,8 +361,8 @@ namespace Promitor.Tests.Unit.Configuration
         {
             // Arrange
             var port = BogusGenerator.Random.Int();
-            var geneva_account = "abc";
-            var geneva_namespace = "xyz";
+            var genevaAccountName = "abc";
+            var genevaNamespace = "xyz";
 
             var geneva = new GenevaConfiguration {
                 Account = geneva_account,
@@ -370,7 +370,7 @@ namespace Promitor.Tests.Unit.Configuration
             };
 
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithStatsDMetricSink(port: port, geneva: geneva)
+                .WithStatsDMetricSink(port: port, genevaMetadata: geneva)
                 .GenerateAsync();
 
             // Act

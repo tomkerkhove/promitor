@@ -133,7 +133,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         }
 
         [Fact]
-        public async Task ReportMetricAsync_GetsValidInputWithGenevaFormat_SuccessfullyWritesMetric()
+        public async Task ReportMetricAsync_UsesValidInputWithGenevaFormat_SuccessfullyWritesMetric()
         {
             // Arrange
             var metricName = BogusGenerator.Name.FirstName();
