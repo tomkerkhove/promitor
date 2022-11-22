@@ -365,8 +365,8 @@ namespace Promitor.Tests.Unit.Configuration
             var genevaNamespace = "xyz";
 
             var geneva = new GenevaConfiguration {
-                Account = geneva_account,
-                Namespace = geneva_namespace
+                Account = genevaAccountName,
+                Namespace = genevaNamespace
             };
 
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
@@ -381,8 +381,8 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.MetricSinks);
             Assert.NotNull(runtimeConfiguration.MetricSinks.Statsd);
             Assert.Equal(port, runtimeConfiguration.MetricSinks.Statsd.Port);
-            Assert.Equal(geneva_account , runtimeConfiguration.MetricSinks.Statsd.Geneva.Account);
-            Assert.Equal(geneva_namespace, runtimeConfiguration.MetricSinks.Statsd.Geneva.Namespace);
+            Assert.Equal(genevaAccountName, runtimeConfiguration.MetricSinks.Statsd.Geneva.Account);
+            Assert.Equal(genevaNamespace, runtimeConfiguration.MetricSinks.Statsd.Geneva.Namespace);
         }
 
         [Fact]

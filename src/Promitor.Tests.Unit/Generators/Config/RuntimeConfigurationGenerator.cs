@@ -98,7 +98,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithStatsDMetricSink(int? port = 1234, string host = "automated-test.host", string metricPrefix = "test.", GenevaConfiguration geneva = null)
+        public RuntimeConfigurationGenerator WithStatsDMetricSink(int? port = 1234, string host = "automated-test.host", string metricPrefix = "test.", GenevaConfiguration genevaMetadata = null)
         {
             StatsdSinkConfiguration statsdSinkConfiguration;
             if (string.IsNullOrWhiteSpace(host) && port == null)
@@ -124,9 +124,9 @@ namespace Promitor.Tests.Unit.Generators.Config
                     statsdSinkConfiguration.Port = port.Value;
                 }
 
-                if (geneva != null)
+                if (genevaMetadata != null)
                 {
-                    statsdSinkConfiguration.Geneva = geneva;
+                    statsdSinkConfiguration.Geneva = genevaMetadata;
                 }
             }
 
