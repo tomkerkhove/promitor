@@ -370,7 +370,7 @@ namespace Promitor.Tests.Unit.Configuration
             };
 
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithStatsDMetricSink(port: port, geneva: geneva)
+                .WithStatsDMetricSink(port: port, genevaMetadata: geneva)
                 .GenerateAsync();
 
             // Act
