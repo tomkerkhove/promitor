@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
@@ -12,13 +16,17 @@ namespace Promitor.Integrations.Sinks.Statsd
     {
         private readonly ILogger<StatsdMetricSink> _logger;
         private readonly IStatsDPublisher _statsDPublisher;
+        private readonly IOptionsMonitor<StatsdSinkConfiguration> _statsDConfiguration;
+        private readonly Dictionary<string, Func<string, string, double, Dictionary<string, string>, Task>> _reportMetricsActions;
 
-        public StatsdMetricSink(IStatsDPublisher statsDPublisher, ILogger<StatsdMetricSink> logger)
+        public StatsdMetricSink(IStatsDPublisher statsDPublisher, IOptionsMonitor<StatsdSinkConfiguration> configuration, ILogger<StatsdMetricSink> logger)
         {
             Guard.NotNull(statsDPublisher, nameof(statsDPublisher));
             Guard.NotNull(logger, nameof(logger));
+            Guard.NotNull(configuration, nameof(configuration));
 
             _statsDPublisher = statsDPublisher;
+            _statsDConfiguration = configuration;
             _logger = logger;
         }
 
@@ -31,16 +39,24 @@ namespace Promitor.Integrations.Sinks.Statsd
             Guard.NotNull(scrapeResult.MetricValues, nameof(scrapeResult.MetricValues));
 
             var reportMetricTasks = new List<Task>();
+            var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypesEnum.Default;
 
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
                 var metricValue = measuredMetric.Value ?? 0;
 
-                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, new Dictionary<string, string>());
-                reportMetricTasks.Add(reportMetricTask);
-            }
+                switch (formatterType)
+                {
+                    case StatsdFormatterTypesEnum.Default:
+                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        break;
+                    case StatsdFormatterTypesEnum.Geneva:
+                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        break;
+                }
 
-            await Task.WhenAll(reportMetricTasks);
+                await Task.WhenAll(reportMetricTasks);
+            }
         }
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
@@ -49,9 +65,35 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher.Gauge(metricValue, metricName);
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+            LogMetricWritten(metricName, metricValue);
 
             return Task.CompletedTask;
+        }
+
+        private Task ReportMetricWithGenevaFormattingAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        {
+            Guard.NotNullOrEmpty(metricName, nameof(metricName));
+            Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));
+            Guard.NotNull(_statsDConfiguration.CurrentValue.Geneva, nameof(_statsDConfiguration.CurrentValue.Geneva));
+
+            var bucket = JsonConvert.SerializeObject(new
+            {
+                Account = _statsDConfiguration.CurrentValue.Geneva.Account,
+                Namespace = _statsDConfiguration.CurrentValue.Geneva.Namespace,
+                Metric = metricName,
+                Dims = labels
+            });
+
+            _statsDPublisher.Gauge(metricValue, bucket);
+
+            LogMetricWritten(metricName, metricValue);
+
+            return Task.CompletedTask;
+        }
+
+        private void LogMetricWritten(string metricName, double metricValue)
+        {
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
         }
     }
 }
