@@ -362,7 +362,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var port = BogusGenerator.Random.Int();
             var geneva_account = "abc";
-            var geneva_namespace = "xyz";
+            var genevaNamespace = "xyz";
 
             var geneva = new GenevaConfiguration {
                 Account = geneva_account,
