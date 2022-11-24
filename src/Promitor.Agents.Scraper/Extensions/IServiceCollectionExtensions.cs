@@ -258,7 +258,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 {
                     Host = host,
                     Port = port,
-                    Prefix = metricPrefix,                    
+                    Prefix = metricPrefix,
                     OnError = ex =>
                     {
                         sinkLogger.LogCritical(ex, "Failed to emit metric to {StatsdHost} on {StatsdPort} with prefix {StatsdPrefix}", host, port, metricPrefix);
