@@ -252,7 +252,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 var sinkLogger = loggerFactory.CreateLogger<StatsdMetricSink>();
                 var host = statsdConfiguration.Host;
                 var port = statsdConfiguration.Port;
-                var metricPrefix = statsdConfiguration.MetricPrefix;                
+                var metricPrefix = statsdConfiguration.MetricPrefix;
 
                 return new StatsDConfiguration
                 {
