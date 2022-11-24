@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
+using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
 using Xunit;
 
@@ -85,6 +86,38 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
 
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Theory]        
+        [InlineData(null)]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaConfiguration_Fails(GenevaConfiguration genevaConfiguration)
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+            runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = genevaConfiguration;
+
+            // Act
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void Validate_StatsDWithGenevaFormatWithGenevaConfiguration_Success()
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+            runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
+
+            // Act
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Theory]

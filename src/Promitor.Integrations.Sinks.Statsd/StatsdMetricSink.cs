@@ -76,7 +76,7 @@ namespace Promitor.Integrations.Sinks.Statsd
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
             Guard.NotNull(_statsDConfiguration.CurrentValue, nameof(_statsDConfiguration.CurrentValue));
-            Guard.NotNull(_statsDConfiguration.CurrentValue.Geneva, new MissingMemberException());
+            Guard.NotNull(_statsDConfiguration.CurrentValue.Geneva, new ArgumentException ("Geneva formatter settings are required", nameof(_statsDConfiguration.CurrentValue.Geneva)));
 
             var bucket = JsonConvert.SerializeObject(new
             {

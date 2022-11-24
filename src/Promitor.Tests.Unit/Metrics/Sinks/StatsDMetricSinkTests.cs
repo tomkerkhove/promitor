@@ -129,7 +129,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
-            await Assert.ThrowsAsync<MissingMemberException>(() => metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult));
+            await Assert.ThrowsAsync<ArgumentException>(() => metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult));
         }
 
         [Fact]
