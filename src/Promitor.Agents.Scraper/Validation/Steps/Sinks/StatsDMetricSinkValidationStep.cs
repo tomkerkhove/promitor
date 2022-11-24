@@ -51,7 +51,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                 }
                 else 
                 {
-                    if (statsDConfiguration.Geneva.Account is null)
+                    if (string.IsNullOrWhiteSpace(statsDConfiguration.Geneva.Account))
                     {
                         errorMessages.Add("Account of Geneva is missing for StatsD formatter");
                     }
