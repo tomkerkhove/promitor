@@ -56,7 +56,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                         errorMessages.Add("Account of Geneva is missing for StatsD formatter");
                     }
 
-                    if (statsDConfiguration.Geneva.Namespace is null)
+                    if (string.IsNullOrWhiteSpace(statsDConfiguration.Geneva.Namespace))
                     {
                         errorMessages.Add("Namespace of Geneva is missing for StatsD formatter");
                     }
