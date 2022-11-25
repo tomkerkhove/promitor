@@ -103,6 +103,38 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
         }
+        [Fact]
+
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaAccountConfiguration_Fails()
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+            runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = null, Namespace = "Namespace" };
+
+            // Act
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaNamespaceConfiguration_Fails()
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+            runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = "Account", Namespace = null };
+
+            // Act
+            var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
 
         [Fact]
         public void Validate_StatsDWithGenevaFormatWithGenevaConfiguration_Success()
