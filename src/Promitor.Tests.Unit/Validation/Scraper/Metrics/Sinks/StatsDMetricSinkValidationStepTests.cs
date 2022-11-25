@@ -88,14 +88,13 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             PromitorAssert.ValidationFailed(validationResult);
         }
 
-        [Theory]        
-        [InlineData(null)]
-        public void Validate_StatsDWithGenevaFormatWithoutGenevaConfiguration_Fails(GenevaConfiguration genevaConfiguration)
+        [Fact]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaConfiguration_Fails()
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
             runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
-            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = genevaConfiguration;
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = null;
 
             // Act
             var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
