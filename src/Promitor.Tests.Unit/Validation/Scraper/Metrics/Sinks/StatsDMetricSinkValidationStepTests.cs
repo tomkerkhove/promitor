@@ -113,7 +113,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
             runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
-            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = null, Namespace = "Namespace" };
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = accountName, Namespace = "Namespace" };
 
             // Act
             var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
