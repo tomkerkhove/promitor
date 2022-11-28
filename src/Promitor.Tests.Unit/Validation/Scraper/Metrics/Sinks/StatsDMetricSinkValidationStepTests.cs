@@ -103,14 +103,17 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
         }
-        [Fact]
 
-        public void Validate_StatsDWithGenevaFormatWithoutGenevaAccountConfiguration_Fails()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaAccountConfiguration_Fails(string accountName)
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
             runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
-            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = null, Namespace = "Namespace" };
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = accountName, Namespace = "Namespace" };
 
             // Act
             var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
@@ -120,13 +123,16 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             PromitorAssert.ValidationFailed(validationResult);
         }
 
-        [Fact]
-        public void Validate_StatsDWithGenevaFormatWithoutGenevaNamespaceConfiguration_Fails()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaNamespaceConfiguration_Fails(string namespaceName)
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
             runtimeConfiguration.Value.MetricSinks.Statsd.MetricFormat = StatsdFormatterTypesEnum.Geneva;
-            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = "Account", Namespace = null };
+            runtimeConfiguration.Value.MetricSinks.Statsd.Geneva = new GenevaConfiguration { Account = "Account", Namespace = namespaceName };
 
             // Act
             var azureAuthenticationValidationStep = new StatsDMetricSinkValidationStep(runtimeConfiguration, NullLogger<StatsDMetricSinkValidationStep>.Instance);
