@@ -123,8 +123,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             PromitorAssert.ValidationFailed(validationResult);
         }
 
-        [Fact]
-        public void Validate_StatsDWithGenevaFormatWithoutGenevaNamespaceConfiguration_Fails()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaNamespaceConfiguration_Fails(string namespaceName)
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
