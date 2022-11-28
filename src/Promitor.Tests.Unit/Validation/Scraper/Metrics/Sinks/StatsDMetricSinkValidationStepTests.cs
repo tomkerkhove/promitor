@@ -103,9 +103,12 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
         }
-        [Fact]
 
-        public void Validate_StatsDWithGenevaFormatWithoutGenevaAccountConfiguration_Fails()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void Validate_StatsDWithGenevaFormatWithoutGenevaAccountConfiguration_Fails(string accountName)
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
