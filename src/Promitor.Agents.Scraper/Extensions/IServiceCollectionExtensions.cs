@@ -235,8 +235,15 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)
-        {
+        {            
             metricSinkAsciiTable.AddRow("StatsD", $"Url: {statsdConfiguration.Host}:{statsdConfiguration.Port}.");
+            metricSinkAsciiTable.AddRow("", $"Format: {statsdConfiguration.MetricFormat}.");
+
+            if (statsdConfiguration.MetricFormat == StatsdFormatterTypesEnum.Geneva)
+            {
+                metricSinkAsciiTable.AddRow("", $"  Geneva account: {statsdConfiguration.Geneva.Account}.");
+                metricSinkAsciiTable.AddRow("", $"  Geneva namespace: {statsdConfiguration.Geneva.Namespace}.");
+            }
 
             services.AddTransient<IMetricSink, StatsdMetricSink>();
             services.AddStatsD(provider =>
