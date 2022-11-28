@@ -72,7 +72,7 @@ namespace Promitor.Integrations.Sinks.Statsd
             return Task.CompletedTask;
         }
 
-        [SuppressMessage("ReSharper", "[UnusedTypeParameter]")]
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private Task ReportMetricWithGenevaFormattingAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
