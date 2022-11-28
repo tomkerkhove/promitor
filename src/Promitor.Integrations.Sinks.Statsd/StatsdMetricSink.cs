@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using GuardNet;
 using JustEat.StatsD;
@@ -16,8 +17,7 @@ namespace Promitor.Integrations.Sinks.Statsd
     {
         private readonly ILogger<StatsdMetricSink> _logger;
         private readonly IStatsDPublisher _statsDPublisher;
-        private readonly IOptionsMonitor<StatsdSinkConfiguration> _statsDConfiguration;
-        private readonly Dictionary<string, Func<string, string, double, Dictionary<string, string>, Task>> _reportMetricsActions;
+        private readonly IOptionsMonitor<StatsdSinkConfiguration> _statsDConfiguration;       
 
         public StatsdMetricSink(IStatsDPublisher statsDPublisher, IOptionsMonitor<StatsdSinkConfiguration> configuration, ILogger<StatsdMetricSink> logger)
         {
@@ -72,6 +72,7 @@ namespace Promitor.Integrations.Sinks.Statsd
             return Task.CompletedTask;
         }
 
+        [SuppressMessage("ReSharper", "[UnusedParameter.Global]")]
         private Task ReportMetricWithGenevaFormattingAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
@@ -80,8 +81,8 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             var bucket = JsonConvert.SerializeObject(new
             {
-                Account = _statsDConfiguration.CurrentValue.Geneva?.Account,
-                Namespace = _statsDConfiguration.CurrentValue.Geneva?.Namespace,
+                _statsDConfiguration.CurrentValue.Geneva?.Account,
+                _statsDConfiguration.CurrentValue.Geneva?.Namespace,
                 Metric = metricName,
                 Dims = labels
             });

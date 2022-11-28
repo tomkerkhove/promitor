@@ -1,14 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Bogus;
 using JustEat.StatsD;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Newtonsoft.Json;
 using Promitor.Core.Metrics;
-using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators;
@@ -149,8 +147,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
 
             var bucket = JsonConvert.SerializeObject(new
             {
-                Account = statsDSinkConfiguration.CurrentValue.Geneva.Account,
-                Namespace = statsDSinkConfiguration.CurrentValue.Geneva.Namespace,
+                statsDSinkConfiguration.CurrentValue.Geneva.Account,
+                statsDSinkConfiguration.CurrentValue.Geneva.Namespace,
                 Metric = metricName,
                 Dims = scrapeResult.Labels
             });

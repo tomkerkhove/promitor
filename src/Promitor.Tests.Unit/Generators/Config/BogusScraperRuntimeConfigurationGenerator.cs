@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Bogus;
 using Microsoft.Extensions.Logging;
 using Promitor.Agents.Core.Configuration.Server;
