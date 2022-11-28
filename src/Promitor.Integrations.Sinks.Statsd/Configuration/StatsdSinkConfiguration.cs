@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices.ComTypes;
-
-namespace Promitor.Integrations.Sinks.Statsd.Configuration
+﻿namespace Promitor.Integrations.Sinks.Statsd.Configuration
 {
     public class StatsdSinkConfiguration
     {

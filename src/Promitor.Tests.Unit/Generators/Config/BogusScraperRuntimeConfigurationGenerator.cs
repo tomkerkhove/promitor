@@ -71,7 +71,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Host, faker => faker.Person.FirstName)
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Port, faker => faker.Random.Int(min: 0))
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricPrefix, faker => faker.Person.FirstName)
-                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricFormat, faker => StatsdFormatterTypesEnum.Default)
+                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricFormat, _ => StatsdFormatterTypesEnum.Default)
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Geneva, faker => new GenevaConfiguration 
                 { 
                     Account = faker.Person.FirstName, 
