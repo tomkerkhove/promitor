@@ -69,6 +69,7 @@ namespace Promitor.Core.Scraping.Configuration.Providers
                     metric.LogAnalyticsConfiguration.Aggregation.Interval ??= config.MetricDefaults.Aggregation?.Interval;
                 }
             }
+
             return config;
         }
 
