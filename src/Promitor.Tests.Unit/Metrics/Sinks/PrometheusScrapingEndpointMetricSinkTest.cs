@@ -22,7 +22,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class PrometheusScrapingEndpointMetricSinkTests : UnitTest
+    public class PrometheusScrapingEndpointMetricSinkTest : MetricSinkTest
     {
         [Theory]
         [InlineData("")]
