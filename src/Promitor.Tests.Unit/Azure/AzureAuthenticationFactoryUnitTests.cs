@@ -412,7 +412,7 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
-        }        
+        }
 
         private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)
         {
