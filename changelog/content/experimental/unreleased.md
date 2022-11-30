@@ -4,11 +4,6 @@ weight: 1
 version:
 ---
 
-#### Scraper
+#### Integration Azure
 
-- {{% tag added %}} Provide custom formatting for emitting metrics using StatsD sink in Geneva format
-- {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)| [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
-
-#### Resource Discovery
-
-None.
+- {{% tag added %}} Provide path to read app secret key from file

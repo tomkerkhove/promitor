@@ -210,6 +210,52 @@ namespace Promitor.Tests.Unit.Azure
             Assert.Equal(expectedSecret, authenticationInfo.Secret);
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithInvalidSecretFilePath_Fails(string secretFilePath)
+        {
+            // Arrange
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var expectedSecretFileName = Guid.NewGuid().ToString();
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},                
+                {ConfigurationKeys.Authentication.SecretFilePath, secretFilePath},
+                {ConfigurationKeys.Authentication.SecretFileName, expectedSecretFileName}
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithInvalidSecretFileName_Fails(string secretFileName)
+        {
+            // Arrange
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var expectedSecretFilePath = Guid.NewGuid().ToString();
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},
+                {ConfigurationKeys.Authentication.SecretFilePath, expectedSecretFilePath},
+                {ConfigurationKeys.Authentication.SecretFileName, secretFileName}
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act & Assert
+            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+        }
+
         [Fact]
         public void CreateAzureAuthentication_SystemAssignedManagedIdentityIsValid_Succeeds()
         {
@@ -328,7 +374,7 @@ namespace Promitor.Tests.Unit.Azure
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public void CreateAzureAuthentication_ServicePrincipleWithInvalidIdentity_Fails(string secret)
+        public void CreateAzureAuthentication_ServicePrincipleWithInvalidSecret_Fails(string secret)
         {
             // Arrange
             var expectedTenantId = Guid.NewGuid().ToString();
@@ -350,7 +396,7 @@ namespace Promitor.Tests.Unit.Azure
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public void CreateAzureAuthentication_ServicePrincipleWithInvalidSecret_Fails(string identityId)
+        public void CreateAzureAuthentication_ServicePrincipleWithInvalidIdentity_Fails(string identityId)
         {
             // Arrange
             var expectedTenantId = Guid.NewGuid().ToString();
@@ -366,7 +412,7 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
-        }
+        }        
 
         private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)
         {
