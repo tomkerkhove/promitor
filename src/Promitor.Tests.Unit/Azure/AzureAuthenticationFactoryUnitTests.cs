@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Security.Authentication;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
@@ -254,6 +255,32 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+        }
+
+        [Fact]
+        public void GetConfiguredAzureAuthentication_ServicePrincipleWithValidSecretFileName_Succeeds()
+        {
+            // Arrange
+            const string secretFilePath = "Files/valid-secret-file";
+            var expectedIdentityId = Guid.NewGuid().ToString();
+            var expectedAuthenticationMode = AuthenticationMode.ServicePrincipal;
+            var expectedSecretFilePath = "Files";
+            var expectedSecretFileName = "valid-secret-file";
+            var expectedSecret = File.ReadAllText(secretFilePath);
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},
+                {ConfigurationKeys.Authentication.SecretFilePath, expectedSecretFilePath},
+                {ConfigurationKeys.Authentication.SecretFileName, expectedSecretFileName}
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act
+            var authenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config);
+
+            // Act & Assert
+            Assert.Equal(expectedSecret, authenticationInfo.Secret);
         }
 
         [Fact]

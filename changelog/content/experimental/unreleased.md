@@ -4,6 +4,10 @@ weight: 1
 version:
 ---
 
-#### Integration Azure
+#### Scraper
+
+- {{% tag added %}} Provide path to read app secret key from file
+
+#### Resource Discovery
 
 - {{% tag added %}} Provide path to read app secret key from file
