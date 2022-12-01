@@ -32,7 +32,7 @@ namespace Promitor.Integrations.Azure.Authentication
 
             string applicationKey;
 
-            if (!string.IsNullOrEmpty(authenticationConfiguration.SecretFilePath) && !string.IsNullOrEmpty(authenticationConfiguration.SecretFileName))
+            if (!string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFilePath) && !string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFileName))
             {
                 var filePath = Path.Combine(authenticationConfiguration.SecretFilePath, authenticationConfiguration.SecretFileName);
 
