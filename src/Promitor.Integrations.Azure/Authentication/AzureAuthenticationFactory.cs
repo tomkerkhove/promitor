@@ -38,7 +38,7 @@ namespace Promitor.Integrations.Azure.Authentication
 
                 if (!File.Exists(filePath))
                 {
-                    throw new AuthenticationException("Invalid secret file path was configured for service principle authentication");
+                    throw new AuthenticationException("Invalid secret file path was configured for service principle authentication because it does not exist");
                 }
                 
                 applicationKey = File.ReadAllText(filePath);
