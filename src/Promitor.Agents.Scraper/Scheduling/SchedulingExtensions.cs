@@ -14,6 +14,7 @@ using Promitor.Core.Scraping.Factories;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Integrations.AzureMonitor.Configuration;
+using Promitor.Core.Scraping.Configuration.Serialization;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -29,7 +30,12 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var serviceProviderToCreateJobsWith = services.BuildServiceProvider();
             var metricsProvider = serviceProviderToCreateJobsWith.GetRequiredService<IMetricsDeclarationProvider>();
-            var allMetrics = metricsProvider.Get(applyDefaults: true);
+            var errorReporter = new ErrorReporter();
+            var allMetrics = metricsProvider.Get(applyDefaults: true, errorReporter: errorReporter);
+            if (errorReporter.HasErrors)
+            {
+                return services;
+            }
 
             // this is relied on as non-null down the stack
             var loggerFactory = serviceProviderToCreateJobsWith.GetRequiredService<ILoggerFactory>();
