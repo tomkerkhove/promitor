@@ -82,6 +82,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new SynapseSqlPoolDiscoveryQuery();
                 case ResourceType.SynapseWorkspace:
                     return new SynapseWorkspaceDiscoveryQuery();
+                case ResourceType.TrafficManagerProfile:
+                    return new TrafficManagerProfileDiscoveryQuery();
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineDiscoveryQuery();
                 case ResourceType.VirtualMachineScaleSet:

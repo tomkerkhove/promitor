@@ -123,6 +123,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new SynapseSqlPoolScraper(scraperConfiguration);
                 case ResourceType.SynapseWorkspace:
                     return new SynapseWorkspaceScraper(scraperConfiguration);
+                case ResourceType.TrafficManagerProfile:
+                    return new TrafficManagerProfileScraper(scraperConfiguration);
                 case ResourceType.VirtualMachine:
                     return new VirtualMachineScraper(scraperConfiguration);
                 case ResourceType.VirtualMachineScaleSet:

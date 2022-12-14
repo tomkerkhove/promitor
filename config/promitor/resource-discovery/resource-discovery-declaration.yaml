@@ -69,6 +69,8 @@ resourceDiscoveryGroups:
   type: SynapseSqlPool
 - name: synapse-workspaces
   type: SynapseWorkspace
+- name: traffic-manager-profiles
+  type: TrafficManagerProfiles
 - name: virtual-machines
   type: VirtualMachine
 - name: virtual-machine-scale-sets

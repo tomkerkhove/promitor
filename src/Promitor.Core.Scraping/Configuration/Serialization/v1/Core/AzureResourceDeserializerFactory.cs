@@ -150,6 +150,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.SynapseWorkspace:
                     var synapseWorkspaceLogger = _loggerFactory.CreateLogger<SynapseWorkspaceDeserializer>();
                     return new SynapseWorkspaceDeserializer(synapseWorkspaceLogger);
+                case ResourceType.TrafficManagerProfile:
+                    var trafficManagerProfileLogger = _loggerFactory.CreateLogger<TrafficManagerProfileDeserializer>();
+                    return new TrafficManagerProfileDeserializer(trafficManagerProfileLogger);
                 case ResourceType.VirtualMachine:
                     var virtualMachineLogger = _loggerFactory.CreateLogger<VirtualMachineDeserializer>();
                     return new VirtualMachineDeserializer(virtualMachineLogger);

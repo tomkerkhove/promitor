@@ -312,6 +312,15 @@ metrics:
     resources:
       - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
         workspaceName: promitor-testing-resource-eu-logs
+  - name: azure_traffic_manager_profile_endpoint_qps
+    description: Number of times a Traffic Manager endpoint was returned in the given time frame
+    resourceType: TrafficManagerProfile
+    azureMetricConfiguration:
+      metricName: QpsByEndpoint
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+      - name: traffic-manager-profiles
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

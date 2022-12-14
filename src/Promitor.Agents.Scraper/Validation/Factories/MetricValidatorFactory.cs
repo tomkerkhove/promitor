@@ -97,6 +97,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new SynapseSqlPoolMetricValidator();
                 case ResourceType.SynapseWorkspace:
                     return new SynapseWorkspaceMetricValidator();
+                case ResourceType.TrafficManagerProfile:
+                    return new TrafficManagerProfileMetricValidator();
                 case ResourceType.VirtualMachineScaleSet:
                     return new VirtualMachineScaleSetMetricValidator();
                 case ResourceType.VirtualNetwork:

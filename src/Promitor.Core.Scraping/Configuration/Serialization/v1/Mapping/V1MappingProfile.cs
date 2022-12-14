@@ -68,6 +68,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>();
             CreateMap<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>();
             CreateMap<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>();
+            CreateMap<TrafficManagerProfileResourceV1, TrafficManagerProfileResourceDefinition>();
             CreateMap<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>();
             CreateMap<VirtualMachineResourceV1, VirtualMachineResourceDefinition>();
             CreateMap<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>();
@@ -122,6 +123,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<SynapseApacheSparkPoolResourceV1, SynapseApacheSparkPoolResourceDefinition>()
                 .Include<SynapseSqlPoolResourceV1, SynapseSqlPoolResourceDefinition>()
                 .Include<SynapseWorkspaceResourceV1, SynapseWorkspaceResourceDefinition>()
+                .Include<TrafficManagerProfileResourceV1, TrafficManagerProfileResourceDefinition>()
                 .Include<VirtualNetworkResourceV1, VirtualNetworkResourceDefinition>()
                 .Include<VirtualMachineResourceV1, VirtualMachineResourceDefinition>()
                 .Include<VirtualMachineScaleSetResourceV1, VirtualMachineScaleSetResourceDefinition>()
