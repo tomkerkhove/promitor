@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.ProfileName))
                 {
-                    yield return "No profile name is configured";
+                    yield return "No Azure Traffic Manager profile name is configured";
                 }
             }
         }
