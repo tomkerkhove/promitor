@@ -7,7 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
     {
         public TrafficManagerProfileDeserializer(ILogger<TrafficManagerProfileDeserializer> logger) : base(logger)
         {
-            Map(resource => resource.ProfileName)
+            Map(resource => resource.Name)
                 .IsRequired();
         }
     }
