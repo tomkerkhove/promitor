@@ -87,6 +87,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.KubernetesService:
                     var kubernetesServiceLogger = _loggerFactory.CreateLogger<KubernetesServiceDeserializer>();
                     return new KubernetesServiceDeserializer(kubernetesServiceLogger);
+                case ResourceType.KustoCluster:
+                    var kustoClusterLogger = _loggerFactory.CreateLogger<KustoClusterDeserializer>();
+                    return new KustoClusterDeserializer(kustoClusterLogger);
                 case ResourceType.LoadBalancer:
                     var loadBalancerLogger = _loggerFactory.CreateLogger<LoadBalancerDeserializer>();
                     return new LoadBalancerDeserializer(loadBalancerLogger);
@@ -105,6 +108,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.MySql:
                     var mySqlLogger = _loggerFactory.CreateLogger<MySqlDeserializer>();
                     return new MySqlDeserializer(mySqlLogger);
+                case ResourceType.NatGateway:
+                    var natGatewayLogger = _loggerFactory.CreateLogger<NatGatewayDeserializer>();
+                    return new NatGatewayDeserializer(natGatewayLogger);
                 case ResourceType.NetworkGateway:
                     var networkGatewayLogger = _loggerFactory.CreateLogger<NetworkGatewayDeserializer>();
                     return new NetworkGatewayDeserializer(networkGatewayLogger);

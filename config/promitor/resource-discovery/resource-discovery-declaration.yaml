@@ -37,6 +37,8 @@ resourceDiscoveryGroups:
   type: IoTHub
 - name: key-vaults
   type: KeyVault
+- name: kusto-clusters
+  type: KustoCluster
 - name: load-balancers
   type: LoadBalancer
 - name: autoscaling-rules
@@ -45,6 +47,8 @@ resourceDiscoveryGroups:
   type: MariaDb
 - name: mysql-servers
   type: MySql
+- name: nat-gateways
+  type: NatGateway
 - name: network-interfaces
   type: NetworkInterface
 - name: postgres-databases

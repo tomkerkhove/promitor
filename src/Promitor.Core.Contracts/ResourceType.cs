@@ -50,5 +50,7 @@
         LoadBalancer = 45,
         MySql = 46,
         LogAnalytics = 47,
+        KustoCluster = 48,
+        NatGateway = 49
     }
 }

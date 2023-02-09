@@ -55,6 +55,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KeyVaultMetricValidator();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceMetricValidator();
+                case ResourceType.KustoCluster:
+                    return new KustoClusterMetricValidator();
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerMetricValidator();
                 case ResourceType.LogAnalytics:
@@ -67,6 +69,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new MonitorAutoscaleMetricValidator();
                 case ResourceType.MySql:
                     return new MySqlMetricValidator();
+                case ResourceType.NatGateway:
+                    return new NatGatewayMetricValidator();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayMetricValidator();
                 case ResourceType.NetworkInterface:

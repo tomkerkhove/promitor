@@ -81,6 +81,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new KeyVaultScraper(scraperConfiguration);
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceScraper(scraperConfiguration);
+                case ResourceType.KustoCluster:
+                    return new KustoClusterScraper(scraperConfiguration);
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerScraper(scraperConfiguration);
                 case ResourceType.LogAnalytics:
@@ -93,6 +95,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.MySql:
                     return new MySqlScraper(scraperConfiguration);
+                case ResourceType.NatGateway:
+                    return new NatGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:

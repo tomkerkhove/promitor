@@ -312,6 +312,24 @@ metrics:
     resources:
       - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
         workspaceName: promitor-testing-resource-eu-logs
+  - name: promitor_demo_nat_gateway_DatapathAvailability
+    description: "DatapathAvailability usage of nat gateway"
+    resourceType: NatGateway
+    azureMetricConfiguration:
+      metricName: DatapathAvailability
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: nat-gateways
+  - name: promitor_demo_mysql_kusto_cluster_CPU
+    description: "CPU usage of kusto cluster"
+    resourceType: KustoCluster
+    azureMetricConfiguration:
+      metricName: CPU
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: kusto-clusters
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

@@ -47,12 +47,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
+            CreateMap<KustoClusterResourceV1, KustoClusterResourceDefinition>();
             CreateMap<LoadBalancerResourceV1, LoadBalancerResourceDefinition>();
             CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
+            CreateMap<NatGatewayResourceV1, NatGatewayResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
@@ -101,12 +103,14 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
+                .Include<KustoClusterResourceV1, KustoClusterResourceDefinition>()
                 .Include<LoadBalancerResourceV1, LoadBalancerResourceDefinition>()
                 .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
                 .Include<MySqlResourceV1, MySqlResourceDefinition>()
+                .Include<NatGatewayResourceV1, NatGatewayResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()

@@ -46,6 +46,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KeyVaultDiscoveryQuery();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceDiscoveryQuery();
+                case ResourceType.KustoCluster:
+                    return new KustoClusterDiscoveryQuery();
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerDiscoveryQuery();
                 case ResourceType.LogicApp:
@@ -56,6 +58,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.MySql:
                     return new MySqlResourceDiscoveryQuery();
+                case ResourceType.NatGateway:
+                    return new NatGatewayDiscoveryQuery();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
