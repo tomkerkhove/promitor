@@ -131,7 +131,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         }
 
         [Fact]
-        public async Task ReportMetricAsync_UsesValidInputWithGenevaFormat_SuccessfullyWritesMetric()
+        public async Task ReportMetricAsync_UsesValidInputWithGenevaFormat_SuccessfullyWritesMetricWithRounding()
         {
             // Arrange
             var metricName = BogusGenerator.Name.FirstName();
@@ -144,6 +144,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var statsDSinkConfiguration = CreateStatsDConfiguration(metricFormat, genevaConfiguration);
             var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
+            var expectedMetricValue = Math.Round(metricValue, MidpointRounding.AwayFromZero);
 
             var bucket = JsonConvert.SerializeObject(new
             {
@@ -157,7 +158,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
 
             // Assert
-            statsDPublisherMock.Verify(mock => mock.Gauge(metricValue, bucket), Times.Once());
+            statsDPublisherMock.Verify(mock => mock.Gauge(expectedMetricValue, bucket), Times.Once());
         }
 
         private GenevaConfiguration GenerateGenevaConfiguration()
