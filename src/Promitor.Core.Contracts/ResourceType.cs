@@ -51,6 +51,6 @@
         MySql = 46,
         LogAnalytics = 47,
         KustoCluster = 48,
-        NatGateway = 49
+        NatGateway = 49,
     }
 }
