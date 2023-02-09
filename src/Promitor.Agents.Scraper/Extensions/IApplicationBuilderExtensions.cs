@@ -14,7 +14,7 @@ namespace Promitor.Agents.Scraper.Extensions
         /// </summary>
         /// <param name="app">Application Builder</param>
         /// <param name="configuration">Configuration of the scraper agent</param>
-        /// <param name="logger"></param>
+        /// <param name="logger">Logger to write logs to</param>
         public static IApplicationBuilder UseMetricSinks(this IApplicationBuilder app, IConfiguration configuration, ILogger<Startup> logger)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
