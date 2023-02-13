@@ -312,7 +312,15 @@ metrics:
     resources:
       - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
         workspaceName: promitor-testing-resource-eu-logs
-
+  - name: azure_container_instance_cpu_usage_discovered
+    description: "Average cpu usage of our container instance"
+    resourceType: ContainerInstance
+    azureMetricConfiguration:
+      metricName: CpuUsage
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: container-instances
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
   # - name: azure_logic_apps_failed_run_discovery
