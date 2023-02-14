@@ -2,13 +2,8 @@ using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
-using Promitor.Tests.Unit.Serialization.v1;
-using Promitor.Tests.Unit.Serialization;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
-using Promitor.Core.Scraping.Configuration.Serialization;
 
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
