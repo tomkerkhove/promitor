@@ -499,7 +499,6 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-
         public MetricsDeclarationBuilder WithLoadBalancerMetric(string metricName = "promitor-load-balancer",
             string metricDescription = "Description for a metric",
             string loadBalancerName = "promitor-load-balancer-name",
