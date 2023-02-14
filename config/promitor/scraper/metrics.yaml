@@ -321,15 +321,15 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: nat-gateways
-  - name: promitor_demo_mysql_kusto_cluster_CPU
-    description: "CPU usage of kusto cluster"
-    resourceType: KustoCluster
+  - name: promitor_demo_mysql_data_explorer_cluster_CPU
+    description: "CPU usage of Azure Data Explorer cluster"
+    resourceType: DataExplorerCluster
     azureMetricConfiguration:
       metricName: CPU
       aggregation:
         type: Average
     resourceDiscoveryGroups:
-      - name: kusto-clusters
+      - name: data-explorer-clusters
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

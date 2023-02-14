@@ -256,6 +256,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithDataExplorerClusterMetric(string metricName = "promitor-data-explorer-cluster",
+            string metricDescription = "Description for a metric",
+            string clusterName = "promitor-data-explorer-cluster",
+            string azureMetricName = "CPU",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataExplorerClusterResourceV1
+            {
+                ClusterName = clusterName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataExplorerCluster, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithDataShareMetric(string metricName = "promitor-data-share",
             string metricDescription = "Description for a metric",
             string accountName = "promitor-data-share-account",
@@ -481,23 +499,6 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithKustoClusterMetric(string metricName = "promitor-kusto-cluster",
-            string metricDescription = "Description for a metric",
-            string kustoClusterName = "promitor-kusto-cluster",
-            string azureMetricName = "CPU",
-            string resourceDiscoveryGroupName = "",
-            int? azureMetricLimit = null,
-            bool omitResource = false)
-        {
-            var resource = new KustoClusterResourceV1
-            {
-                KustoClusterName = kustoClusterName
-            };
-
-            CreateAndAddMetricDefinition(ResourceType.KustoCluster, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
-
-            return this;
-        }
 
         public MetricsDeclarationBuilder WithLoadBalancerMetric(string metricName = "promitor-load-balancer",
             string metricDescription = "Description for a metric",

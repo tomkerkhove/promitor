@@ -7,17 +7,17 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class KustoClusterMetricValidator : IMetricValidator
+    internal class DataExplorerClusterMetricValidator : IMetricValidator
     {
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<KustoClusterResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<DataExplorerClusterResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.KustoClusterName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.ClusterName))
                 {
-                    yield return "No kusto cluster name is configured";
+                    yield return "No Azure Data Explorer cluster name is configured";
                 }
             }
         }

@@ -37,8 +37,8 @@ resourceDiscoveryGroups:
   type: IoTHub
 - name: key-vaults
   type: KeyVault
-- name: kusto-clusters
-  type: KustoCluster
+- name: data-explorer-clusters
+  type: DataExplorerCluster
 - name: load-balancers
   type: LoadBalancer
 - name: autoscaling-rules

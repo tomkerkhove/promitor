@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class KustoClusterDiscoveryQuery : ResourceDiscoveryQuery
+    public class DataExplorerClusterDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.kusto/clusters" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name" };
@@ -14,8 +14,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var kustoClusterName = resultRowEntry[2]?.ToString();
-            var resource = new KustoClusterResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), kustoClusterName);
+            var clusterName = resultRowEntry[2]?.ToString();
+            var resource = new DataExplorerClusterResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), clusterName);
             return resource;
         }
     }

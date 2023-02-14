@@ -57,6 +57,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
                     return new CosmosDbScraper(scraperConfiguration);
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterScraper(scraperConfiguration);
                 case ResourceType.DataFactory:
                     return new DataFactoryScraper(scraperConfiguration);
                 case ResourceType.DataShare:
@@ -81,8 +83,6 @@ namespace Promitor.Core.Scraping.Factories
                     return new KeyVaultScraper(scraperConfiguration);
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceScraper(scraperConfiguration);
-                case ResourceType.KustoCluster:
-                    return new KustoClusterScraper(scraperConfiguration);
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerScraper(scraperConfiguration);
                 case ResourceType.LogAnalytics:

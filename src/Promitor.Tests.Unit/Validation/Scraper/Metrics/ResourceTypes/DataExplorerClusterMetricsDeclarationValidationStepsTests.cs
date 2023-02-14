@@ -2,20 +2,25 @@ using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
+using Promitor.Tests.Unit.Serialization.v1;
+using Promitor.Tests.Unit.Serialization;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Providers;
+using Promitor.Core.Scraping.Configuration.Serialization;
 
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class KustoClusterMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class DataExplorerClusterMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(azureMetricName: string.Empty)
+                .WithDataExplorerClusterMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -31,11 +36,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void KustoClusterMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(azureMetricLimit: metricLimit)
+                .WithDataExplorerClusterMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -48,11 +53,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(metricDescription: string.Empty)
+                .WithDataExplorerClusterMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -65,11 +70,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(string.Empty)
+                .WithDataExplorerClusterMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -82,11 +87,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutKustoClusterName_Fails()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutDataExplorerClusterName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(kustoClusterName: string.Empty)
+                .WithDataExplorerClusterMetric(clusterName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -99,11 +104,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(omitResource: true)
+                .WithDataExplorerClusterMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -116,11 +121,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void DataExplorerClusterMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithDataExplorerClusterMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -133,11 +138,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void KustoClusterMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void DataExplorerClusterMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithKustoClusterMetric()
+                .WithDataExplorerClusterMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

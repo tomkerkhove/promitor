@@ -28,6 +28,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new CosmosDbDiscoveryQuery();
                 case ResourceType.DataFactory:
                     return new DataFactoryDiscoveryQuery();
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterDiscoveryQuery();
                 case ResourceType.DataShare:
                     return new DataShareDiscoveryQuery();
                 case ResourceType.DeviceProvisioningService:
@@ -46,8 +48,6 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new KeyVaultDiscoveryQuery();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceDiscoveryQuery();
-                case ResourceType.KustoCluster:
-                    return new KustoClusterDiscoveryQuery();
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerDiscoveryQuery();
                 case ResourceType.LogicApp:

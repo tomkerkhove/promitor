@@ -26,7 +26,7 @@ namespace Promitor.Agents.Scraper
 
                 Welcome();
 
-                var configurationFolder = Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
+                var configurationFolder = "C:\\WorkSpace\\Promitor\\GitHub\\promitor\\config\\promitor\\scraper";//Environment.GetEnvironmentVariable(EnvironmentVariables.Configuration.Folder);
                 Log.Logger.Information($"Using configuration folder '{configurationFolder}'");
                 if (string.IsNullOrWhiteSpace(configurationFolder))
                 {

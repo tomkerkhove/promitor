@@ -34,6 +34,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<CdnResourceV1, CdnResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
+            CreateMap<DataExplorerClusterResourceV1, DataExplorerClusterResourceDefinition>();
             CreateMap<DataFactoryResourceV1, DataFactoryResourceDefinition>();
             CreateMap<DataShareResourceV1, DataShareResourceDefinition>();
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
@@ -47,7 +48,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<IoTHubResourceV1, IoTHubResourceDefinition>();
             CreateMap<KeyVaultResourceV1, KeyVaultResourceDefinition>();
             CreateMap<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>();
-            CreateMap<KustoClusterResourceV1, KustoClusterResourceDefinition>();
             CreateMap<LoadBalancerResourceV1, LoadBalancerResourceDefinition>();
             CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
@@ -91,6 +91,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CdnResourceV1, CdnResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
+                .Include<DataExplorerClusterResourceV1, DataExplorerClusterResourceDefinition>()
                 .Include<DataFactoryResourceV1, DataFactoryResourceDefinition>()
                 .Include<DataShareResourceV1, DataShareResourceDefinition>()
                 .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
@@ -103,7 +104,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<IoTHubResourceV1, IoTHubResourceDefinition>()
                 .Include<KeyVaultResourceV1, KeyVaultResourceDefinition>()
                 .Include<KubernetesServiceResourceV1, KubernetesServiceResourceDefinition>()
-                .Include<KustoClusterResourceV1, KustoClusterResourceDefinition>()
                 .Include<LoadBalancerResourceV1, LoadBalancerResourceDefinition>()
                 .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()

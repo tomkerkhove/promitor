@@ -33,6 +33,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new CosmosDbMetricValidator();
                 case ResourceType.DataFactory:
                     return new DataFactoryMetricValidator();
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterMetricValidator();
                 case ResourceType.DataShare:
                     return new DataShareMetricValidator();
                 case ResourceType.DeviceProvisioningService:
@@ -55,8 +57,6 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new KeyVaultMetricValidator();
                 case ResourceType.KubernetesService:
                     return new KubernetesServiceMetricValidator();
-                case ResourceType.KustoCluster:
-                    return new KustoClusterMetricValidator();
                 case ResourceType.LoadBalancer:
                     return new LoadBalancerMetricValidator();
                 case ResourceType.LogAnalytics:

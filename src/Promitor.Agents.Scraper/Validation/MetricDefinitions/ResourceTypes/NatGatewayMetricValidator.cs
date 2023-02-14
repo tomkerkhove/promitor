@@ -17,7 +17,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.NatGatewayName))
                 {
-                    yield return "No Azure NAT Gateway name is configured";
+                    yield return "No Azure Virtual Network NAT Gateway name is configured";
                 }
             }
         }

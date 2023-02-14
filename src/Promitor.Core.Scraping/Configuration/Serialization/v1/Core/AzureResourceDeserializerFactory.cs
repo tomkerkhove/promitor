@@ -51,6 +51,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.CosmosDb:
                     var cosmosDbLogger = _loggerFactory.CreateLogger<CosmosDbDeserializer>();
                     return new CosmosDbDeserializer(cosmosDbLogger);
+                case ResourceType.DataExplorerCluster:
+                    var dataExplorerClusterLogger = _loggerFactory.CreateLogger<DataExplorerClusterDeserializer>();
+                    return new DataExplorerClusterDeserializer(dataExplorerClusterLogger);
                 case ResourceType.DataFactory:
                     var dataFactoryDeserializer = _loggerFactory.CreateLogger<DataFactoryDeserializer>();
                     return new DataFactoryDeserializer(dataFactoryDeserializer);
@@ -87,9 +90,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.KubernetesService:
                     var kubernetesServiceLogger = _loggerFactory.CreateLogger<KubernetesServiceDeserializer>();
                     return new KubernetesServiceDeserializer(kubernetesServiceLogger);
-                case ResourceType.KustoCluster:
-                    var kustoClusterLogger = _loggerFactory.CreateLogger<KustoClusterDeserializer>();
-                    return new KustoClusterDeserializer(kustoClusterLogger);
                 case ResourceType.LoadBalancer:
                     var loadBalancerLogger = _loggerFactory.CreateLogger<LoadBalancerDeserializer>();
                     return new LoadBalancerDeserializer(loadBalancerLogger);
