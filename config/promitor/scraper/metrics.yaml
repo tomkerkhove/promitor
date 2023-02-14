@@ -312,6 +312,15 @@ metrics:
     resources:
       - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
         workspaceName: promitor-testing-resource-eu-logs
+  - name: azure_container_instance_cpu_usage_discovered
+    description: "Average cpu usage of our container instance"
+    resourceType: ContainerInstance
+    azureMetricConfiguration:
+      metricName: CpuUsage
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+    - name: container-instances
   - name: promitor_demo_nat_gateway_DatapathAvailability
     description: "DatapathAvailability usage of nat gateway"
     resourceType: NatGateway

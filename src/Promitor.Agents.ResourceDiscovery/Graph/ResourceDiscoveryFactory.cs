@@ -22,6 +22,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AutomationAccountResourceDiscoveryQuery();
                 case ResourceType.Cdn:
                     return new CdnDiscoveryQuery();
+                case ResourceType.ContainerInstance:
+                    return new ContainerInstanceDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.CosmosDb:
