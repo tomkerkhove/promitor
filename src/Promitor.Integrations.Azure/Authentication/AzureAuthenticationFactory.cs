@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.IO;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
@@ -29,7 +30,23 @@ namespace Promitor.Integrations.Azure.Authentication
                 authenticationConfiguration = new AuthenticationConfiguration();
             }
 
-            var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+            string applicationKey;
+
+            if (!string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFilePath) && !string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFileName))
+            {
+                var filePath = Path.Combine(authenticationConfiguration.SecretFilePath, authenticationConfiguration.SecretFileName);
+
+                if (!File.Exists(filePath))
+                {
+                    throw new AuthenticationException("Invalid secret file path was configured for service principle authentication because it does not exist");
+                }
+                
+                applicationKey = File.ReadAllText(filePath);
+            }
+            else
+            {
+                applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+            } 
 
             string identityId = authenticationConfiguration.IdentityId;
             if (authenticationConfiguration.Mode == AuthenticationMode.ServicePrincipal)

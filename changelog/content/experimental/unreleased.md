@@ -9,9 +9,12 @@ version:
 - {{% tag added %}} Provide custom formatting for emitting metrics using StatsD sink in Geneva format
 - {{% tag added %}} Provide support for all label scenarios in StatsD & OpenTelemetry metric sink. This includes
 dimensions, customer & default labels.
+- {{% tag added %}} Provide capability to read Azure AD service principal secret from a file
 - {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)
 | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
+- {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
+- {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide path to read app secret key from file

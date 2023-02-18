@@ -88,7 +88,7 @@ namespace Promitor.Integrations.Sinks.Statsd
                 Dims = labels
             });
 
-            _statsDPublisher.Gauge(metricValue, bucket);
+            _statsDPublisher.Gauge(Math.Round(metricValue, MidpointRounding.AwayFromZero), bucket);
 
             LogMetricWritten(metricName, metricValue);
 
