@@ -130,7 +130,7 @@ namespace Promitor.Tests.Unit.Metrics
         }
 
         [Fact]
-        public async Task EnabledMetricSinks_MultipleSinks_ReturnsSinkTypes()
+        public void EnabledMetricSinks_MultipleSinks_ReturnsSinkTypes()
         {
             // Arrange
             var firstSinkType = MetricSinkType.OpenTelemetryCollector;
