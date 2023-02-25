@@ -28,10 +28,10 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.CosmosDb:
                     return new CosmosDbDiscoveryQuery();
-                case ResourceType.DataFactory:
-                    return new DataFactoryDiscoveryQuery();
                 case ResourceType.DataExplorerCluster:
                     return new DataExplorerClusterDiscoveryQuery();
+                case ResourceType.DataFactory:
+                    return new DataFactoryDiscoveryQuery();
                 case ResourceType.DataShare:
                     return new DataShareDiscoveryQuery();
                 case ResourceType.DeviceProvisioningService:
