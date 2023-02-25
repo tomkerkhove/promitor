@@ -12,6 +12,8 @@ namespace Promitor.Core.Metrics.Sinks
         private readonly List<IMetricSink> _configuredSinks;
         private ILogger Logger { get; }
 
+        public List<MetricSinkType> EnabledMetricSinks { get; }
+
         public MetricSinkWriter(IEnumerable<IMetricSink> configuredSinks, ILogger<MetricSinkWriter> logger)
         {
             var metricSinks = configuredSinks?.ToList();
@@ -20,6 +22,8 @@ namespace Promitor.Core.Metrics.Sinks
 
             Logger = logger;
             _configuredSinks = metricSinks;
+            // ReSharper disable once AssignNullToNotNullAttribute (see guard above)
+            this.EnabledMetricSinks = metricSinks.Select(x => x.Type).Distinct().ToList();
         }
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
