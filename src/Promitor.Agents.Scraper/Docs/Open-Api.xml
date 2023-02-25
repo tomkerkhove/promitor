@@ -56,7 +56,6 @@
             </summary>
             <param name="app">Application Builder</param>
             <param name="configuration">Configuration of the scraper agent</param>
-            <param name="logger"></param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Extensions.ObjectExtensions.Clone``1(``0)">
             <summary>
@@ -371,13 +370,14 @@
             </summary>
             <param name="services">Collections of services in application</param>
         </member>
-        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Startup})">
+        <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.UseMetricSinks(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration,System.String,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Startup})">
             <summary>
                 Adds the required metric sinks
             </summary>
             <param name="services">Collections of services in application</param>
             <param name="configuration">Configuration of the application</param>
-            <param name="logger"></param>
+            <param name="agentVersion">Version of Promitor Scraper agent</param>
+            <param name="logger">Logger to write logs to</param>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddScrapingMutex(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
