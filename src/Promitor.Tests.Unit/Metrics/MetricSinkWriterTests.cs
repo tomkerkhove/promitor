@@ -120,6 +120,38 @@ namespace Promitor.Tests.Unit.Metrics
         }
 
         [Fact]
+        public void EnabledMetricSinks_NoSinks_ReturnsNothing()
+        {
+            // Arrange
+            var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink>(), NullLogger<MetricSinkWriter>.Instance);
+
+            // Act & Assert
+            Assert.Empty(metricSinkWriter.EnabledMetricSinks);
+        }
+
+        [Fact]
+        public void EnabledMetricSinks_MultipleSinks_ReturnsSinkTypes()
+        {
+            // Arrange
+            var firstSinkType = MetricSinkType.OpenTelemetryCollector;
+            var firstSink = new Mock<IMetricSink>();
+            firstSink.SetupGet(x => x.Type).Returns(firstSinkType);
+            var secondSinkType = MetricSinkType.PrometheusScrapingEndpoint;
+            var secondSink = new Mock<IMetricSink>();
+            secondSink.SetupGet(x => x.Type).Returns(secondSinkType);
+            var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { firstSink.Object, secondSink.Object }, NullLogger<MetricSinkWriter>.Instance);
+
+            // Act
+            var enabledMetricSinks=metricSinkWriter.EnabledMetricSinks;
+
+            // Assert
+            Assert.NotEmpty(enabledMetricSinks);
+            Assert.Equal(2, enabledMetricSinks.Count);
+            Assert.Contains(firstSinkType, enabledMetricSinks);
+            Assert.Contains(secondSinkType, enabledMetricSinks);
+        }
+
+        [Fact]
         public async Task ReportMetricAsync_WriteToStatsDSink_Succeeds()
         {
             // Arrange
