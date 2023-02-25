@@ -12,6 +12,7 @@ version:
 | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
+- {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
 
 #### Resource Discovery
 
