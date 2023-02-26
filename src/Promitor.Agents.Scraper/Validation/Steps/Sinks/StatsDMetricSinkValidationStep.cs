@@ -21,12 +21,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             _runtimeConfiguration = runtimeConfiguration;
         }
 
-        public string ComponentName { get; } = "StatsD Metric Sink";
+        public string ComponentName => "StatsD Metric Sink";
 
         public ValidationResult Run()
         {
             var currentRuntimeConfiguration = _runtimeConfiguration.Value;
-            var statsDConfiguration = currentRuntimeConfiguration?.MetricSinks?.Statsd;
+            var statsDConfiguration = currentRuntimeConfiguration.MetricSinks?.Statsd;
             if (statsDConfiguration == null)
             {
                 return ValidationResult.Successful(ComponentName);
