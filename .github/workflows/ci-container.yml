@@ -8,60 +8,15 @@ on:
     - src/**
 
 jobs:
-  scan_scapper2:
-    name: Scan Scraper Image 2
+  scan_scaper:
+    name: Scan Scraper Agent
     uses: ./.github/workflows/templates-scan-image.yml
     with:
       image_name: local/scraper:${{ github.sha }}
+      project_name: Promitor.Agents.Scraper
+  scan_resource_discovery:
+    name: Scan Resource Discovery Agent
+    uses: ./.github/workflows/templates-scan-image.yml
+    with:
+      image_name: local/resource-discovery:${{ github.sha }}
       project_name: Promitor.Agents.ResourceDiscovery
-  scan_scraper:
-    name: Scan Scraper Image
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: local/scraper:${{ github.sha }}
-    steps:
-        # Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Build an image from Dockerfile
-        run: |
-          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'
-
-  scan_resource_discover:
-    name: Scan Resource Discovery Image
-    runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: local/resource-discovery:${{ github.sha }}
-    steps:
-        # Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Build an image from Dockerfile
-        run: |
-          docker build ./src/ --file ./src/Promitor.Agents.ResourceDiscovery/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'

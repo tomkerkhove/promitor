@@ -9,7 +9,8 @@ on:
         type: string
 
 jobs:
-  build:
+  scan:
+    name: Scan Image
     runs-on: ubuntu-latest
     steps:
         # Checkout code
