@@ -46,7 +46,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
         }
 
         private readonly ConcurrentDictionary<string, ObservableGauge<double>> _gauges = new ConcurrentDictionary<string, ObservableGauge<double>>();
-        private readonly ConcurrentDictionary<string, HashSet<Measurement<double>>> _measurements = new ConcurrentDictionary<string, HashSet<Measurement<double>>>();
+        private readonly ConcurrentDictionary<string, ConcurrentBag<Measurement<double>>> _measurements = new ConcurrentDictionary<string, ConcurrentBag<Measurement<double>>>();
 
         public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
@@ -61,7 +61,6 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var composedTags = labels.Select(kvp => new KeyValuePair<string, object?>(kvp.Key, kvp.Value)).ToArray();
             var newMeasurement = new Measurement<double>(metricValue, composedTags);
             _measurements[metricName].Add(newMeasurement);
-
             _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
 
             return Task.CompletedTask;
@@ -72,14 +71,14 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
             _gauges.TryAdd(metricName, gauge);
 
-            _measurements.TryAdd(metricName, new HashSet<Measurement<double>>());
+            _measurements.TryAdd(metricName, new ConcurrentBag<Measurement<double>>());
         }
 
         private IEnumerable<Measurement<double>> ReportMeasurementsForMetric(string metricName)
         {
             var recordedMeasurements = _measurements[metricName];
 
-            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, new HashSet<Measurement<double>>());
+            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, new ConcurrentBag<Measurement<double>>());
 
             return measurementsToReport;
         }
