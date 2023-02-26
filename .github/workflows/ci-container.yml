@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/templates-scan-image.yml
     with:
       image_name: local/scraper:${{ github.sha }}
-      tag: Promitor.Agents.ResourceDiscovery
+      project_name: Promitor.Agents.ResourceDiscovery
   scan_scraper:
     name: Scan Scraper Image
     runs-on: ubuntu-latest
