@@ -10,7 +10,7 @@ on:
 jobs:
   scan_scapper2:
     name: Scan Scraper Image 2
-    uses: ./.github/workflows/templates/scan-image.yml
+    uses: ./.github/workflows/templates-scan-image.yml
     with:
       image_name: local/scraper:${{ github.sha }}
       tag: Promitor.Agents.ResourceDiscovery
