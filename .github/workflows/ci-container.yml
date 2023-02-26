@@ -1,0 +1,40 @@
+name: CI - Container
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+    - .github/workflows/ci-container.yml
+    - src/**
+
+jobs:
+  scan_container:
+    name: Scan Container
+    runs-on: ubuntu-latest
+    # Assign permissions for unit tests to be reported.
+    # See https://github.com/dorny/test-reporter/issues/168
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+    steps:
+        # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-args VERSION="1.2.3" -t local/scraper:${{ github.sha }} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
