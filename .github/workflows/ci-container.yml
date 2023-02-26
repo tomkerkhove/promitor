@@ -1,0 +1,22 @@
+name: CI - Container
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+    - .github/workflows/ci-container.yml
+    - src/**
+
+jobs:
+  scan_scaper:
+    name: Scan Scraper Agent
+    uses: ./.github/workflows/templates-scan-image.yml
+    with:
+      image_name: local/scraper:${{ github.sha }}
+      project_name: Promitor.Agents.Scraper
+  scan_resource_discovery:
+    name: Scan Resource Discovery Agent
+    uses: ./.github/workflows/templates-scan-image.yml
+    with:
+      image_name: local/resource-discovery:${{ github.sha }}
+      project_name: Promitor.Agents.ResourceDiscovery
