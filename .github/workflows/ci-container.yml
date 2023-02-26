@@ -20,7 +20,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-args VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
+          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -46,7 +46,7 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build ./src/ --file ./src/Promitor.Agents.ResourceDiscovery/Dockerfile.linux --build-args VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
+          docker build ./src/ --file ./src/Promitor.Agents.ResourceDiscovery/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
