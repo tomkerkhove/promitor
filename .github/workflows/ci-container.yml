@@ -8,16 +8,11 @@ on:
     - src/**
 
 jobs:
-  scan_container:
-    name: Scan Container
+  scan_scraper:
+    name: Scan Scraper Image
     runs-on: ubuntu-latest
-    # Assign permissions for unit tests to be reported.
-    # See https://github.com/dorny/test-reporter/issues/168
-    permissions:
-      statuses: write
-      checks: write
-      contents: write
-      pull-requests: write
+    env:
+      IMAGE_NAME: local/scraper:${{ github.sha }}
     steps:
         # Checkout code
       - name: Checkout Code
@@ -25,12 +20,12 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-args VERSION="1.2.3" -t local/scraper:${{ github.sha }} .
+          docker build ./src/ --file ./src/Promitor.Agents.Scraper/Dockerfile.linux --build-args VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
+          image-ref: '${{ env.IMAGE_NAME }}'
           format: 'sarif'
           output: 'trivy-results.sarif'
 
