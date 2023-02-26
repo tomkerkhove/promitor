@@ -19,4 +19,5 @@ version:
 #### Resource Discovery
 
 - {{% tag added %}} Provide path to read app secret key from file
-- {{% tag added %}} Provide support for Azure NAT Gateway and Azure Data Explorer Clusters.
+- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
+- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
