@@ -63,27 +63,25 @@ namespace Promitor.Agents.Scraper.Discovery
 
         private async Task<HttpResponseMessage> SendRequestToApiAsync(HttpRequestMessage request)
         {
-            using (var dependencyMeasurement = DurationMeasurement.Start())
+            using var durationMeasurement = DurationMeasurement.Start();
+            HttpResponseMessage response = null;
+            try
             {
-                HttpResponseMessage response = null;
+                response = await _httpClient.SendAsync(request);
+                _logger.LogRequest(request, response, durationMeasurement);
+
+                return response;
+            }
+            finally
+            {
                 try
                 {
-                    response = await _httpClient.SendAsync(request);
-                    _logger.LogRequest(request, response, dependencyMeasurement.Elapsed);
-
-                    return response;
+                    var statusCode = response?.StatusCode ?? HttpStatusCode.InternalServerError;
+                    _logger.LogHttpDependency(request, statusCode, durationMeasurement);
                 }
-                finally
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        var statusCode = response?.StatusCode ?? HttpStatusCode.InternalServerError;
-                        _logger.LogHttpDependency(request, statusCode, dependencyMeasurement);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogWarning("Failed to log HTTP dependency. Reason: {Message}", ex.Message);
-                    }
+                    _logger.LogWarning("Failed to log HTTP dependency. Reason: {Message}", ex.Message);
                 }
             }
         }
