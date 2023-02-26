@@ -33,3 +33,29 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+
+  scan_resource_discover:
+    name: Scan Resource Discovery Image
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: local/resource-discovery:${{ github.sha }}
+    steps:
+        # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build an image from Dockerfile
+        run: |
+          docker build ./src/ --file ./src/Promitor.Agents.ResourceDiscovery/Dockerfile.linux --build-args VERSION="1.2.3" -t ${{ env.IMAGE_NAME }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
