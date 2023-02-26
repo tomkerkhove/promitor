@@ -8,6 +8,12 @@ on:
     - src/**
 
 jobs:
+  scan_scapper2:
+    name: Scan Scraper Image 2
+    uses: ./.github/workflows/templates/scan-image.yml
+    with:
+      image_name: local/scraper:${{ github.sha }}
+      tag: Promitor.Agents.ResourceDiscovery
   scan_scraper:
     name: Scan Scraper Image
     runs-on: ubuntu-latest
