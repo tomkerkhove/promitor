@@ -7,25 +7,37 @@ on:
     - .github/workflows/preview-images.yml
     - src/**
 
-env:
-  dotnetVersion: '7.0.x'
-
 jobs:
   verify_codebase:
     name: Verify Codebase
     runs-on: ubuntu-latest
-    # Assign permissions for unit tests to be reported.
-    # See https://github.com/dorny/test-reporter/issues/168
-    permissions:
-      statuses: write
-      checks: write
-      contents: write
-      pull-requests: write
+    env:
+      scraper_vnext: '2.9.0'
+      artifact_version: ${{ env.scraper_vnext }}-${{ github.sha }}
+      image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview:${{ env.artifact_version }}
+      image_uri: ${{ env.image_name }}:${{ env.artifact_version }}
     steps:
-        # Checkout code
       - name: Checkout Code
         uses: actions/checkout@v3
+        
+      - name: Docker Metadata action
+        uses: docker/metadata-action@v4.3.0
+        with:
+          images: ${{ env.image_name}}
 
-      - name: Build container image
-        run: |
-          docker build ./src/ --file ./src/${{ inputs.project_name }}/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ inputs.image_name }}
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: tomkerkhove
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v4.0.0
+        with:
+          build-args: VERSION="${{ env.artifact_version }}"
+          context: ./src/
+          file: ./src/Promitor.Agents.Scraper/Dockerfile.linux
+          tags: ${{ env.image_uri }}
+          push: true
+          sbom: true
