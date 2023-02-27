@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -168,8 +169,9 @@ namespace Microsoft.Extensions.DependencyInjection
         /// </summary>
         /// <param name="services">Collections of services in application</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="logger"></param>
-        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration, ILogger<Startup> logger)
+        /// <param name="agentVersion">Version of Promitor Scraper agent</param>
+        /// <param name="logger">Logger to write logs to</param>
+        public static IServiceCollection UseMetricSinks(this IServiceCollection services, IConfiguration configuration, string agentVersion, ILogger<Startup> logger)
         {
             var metricSinkConfiguration = configuration.GetSection("metricSinks").Get<MetricSinkConfiguration>();
 
@@ -196,7 +198,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
                 && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
             {
-                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, services, metricSinkAsciiTable);
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, agentVersion, services, metricSinkAsciiTable);
             }
 
             AnsiConsole.Write(metricSinkAsciiTable);
@@ -220,13 +222,19 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IMetricSink, AtlassianStatuspageMetricSink>();
         }
 
-        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, IServiceCollection services, Table metricSinkAsciiTable)
+        const string OpenTelemetryServiceName = "promitor-scraper";
+
+        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {collectorUri}.");
 
+            var resourceBuilder = ResourceBuilder.CreateDefault()
+                .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
+
             services.AddOpenTelemetryMetrics(metricsBuilder =>
             {
-                metricsBuilder.AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
+                metricsBuilder.SetResourceBuilder(resourceBuilder)
+                              .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
                               .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
             });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();

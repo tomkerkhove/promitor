@@ -61,7 +61,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         protected override HttpRequestMessage BeforeSendingRequest(HttpRequestMessage request)
         {
             string agentVersion = Version.Get();
-            var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
+            var promitorUserAgent = ArmUserAgent.Generate(agentVersion, _metricSinkWriter.EnabledMetricSinks);
             request.Headers.UserAgent.Clear();
             request.Headers.UserAgent.TryParseAdd(promitorUserAgent);
 

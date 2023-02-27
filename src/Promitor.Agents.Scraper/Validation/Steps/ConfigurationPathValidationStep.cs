@@ -11,7 +11,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
     public class ConfigurationPathValidationStep : ValidationStep, IValidationStep
     {
         private readonly IOptions<MetricsConfiguration> _metricsConfiguration;
-        public string ComponentName { get; } = "Metrics Declaration Path";
+        public string ComponentName => "Metrics Declaration Path";
 
         public ConfigurationPathValidationStep(IOptions<MetricsConfiguration> metricsConfiguration, ILogger<ConfigurationPathValidationStep> logger) : base(logger)
         {
@@ -20,7 +20,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
         public ValidationResult Run()
         {
-            var absolutePath = _metricsConfiguration.Value?.AbsolutePath;
+            var absolutePath = _metricsConfiguration.Value.AbsolutePath;
             if (string.IsNullOrWhiteSpace(absolutePath))
             {
                 var errorMessage = "No scrape configuration path configured";
