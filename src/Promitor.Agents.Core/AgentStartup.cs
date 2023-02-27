@@ -99,7 +99,7 @@ namespace Promitor.Agents.Core
             if (appInsightsConfig?.IsEnabled == true)
             {
                 var logLevel = SerilogFactory.DetermineSinkLogLevel(appInsightsConfig.Verbosity);
-                loggerConfiguration.WriteTo.AzureApplicationInsights(appInsightsConfig.InstrumentationKey, restrictedToMinimumLevel: logLevel);
+                loggerConfiguration.WriteTo.AzureApplicationInsightsWithInstrumentationKey(appInsightsConfig.InstrumentationKey, restrictedToMinimumLevel: logLevel);
             }
 
             var consoleLogConfig = telemetryConfiguration.ContainerLogs;

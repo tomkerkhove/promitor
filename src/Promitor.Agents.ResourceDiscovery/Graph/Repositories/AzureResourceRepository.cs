@@ -71,7 +71,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.Repositories
             // But only if the current page is 1, or we'll emit it too much
             if(currentPage == 1)
             {
-                _logger.LogMetric("Discovered Resources", unparsedResults.TotalRecords, contextualInformation);
+                _logger.LogCustomMetric("Discovered Resources", unparsedResults.TotalRecords, contextualInformation);
             }
 
             return new PagedPayload<AzureResourceDefinition>(foundResources, unparsedResults.TotalRecords, unparsedResults.CurrentPage, unparsedResults.PageSize);
