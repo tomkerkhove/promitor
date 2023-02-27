@@ -11,6 +11,7 @@ version:
 - {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)
 | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
 - {{% tag added %}} Provide container vulnerability scanning in CI
+- {{% tag added %}} Provide option to use a User Assigned Managed Identity for authentication without specifying the Client ID
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 - {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
