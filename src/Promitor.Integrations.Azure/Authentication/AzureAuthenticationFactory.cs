@@ -92,7 +92,7 @@ namespace Promitor.Integrations.Azure.Authentication
                     tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    var clientId = string.IsNullOrWhiteSpace(authenticationInfo.IdentityId) ? null : authenticationInfo.IdentityId;
+                    var clientId = authenticationInfo.GetIdentityIdOrDefault();
                     tokenCredential = new ManagedIdentityCredential(clientId, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
@@ -173,7 +173,7 @@ namespace Promitor.Integrations.Azure.Authentication
 
         private static AzureCredentials GetUserAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, AzureCredentialsFactory azureCredentialsFactory)
         {
-            var clientId = string.IsNullOrWhiteSpace(azureAuthenticationInfo.IdentityId) ? null : azureAuthenticationInfo.IdentityId;
+            var clientId = azureAuthenticationInfo.GetIdentityIdOrDefault();
             return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(clientId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
         }
     }
