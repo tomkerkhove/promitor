@@ -10,6 +10,8 @@ version:
 - {{% tag added %}} Provide capability to read Azure AD service principal secret from a file
 - {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)
 | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
+- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md))
+- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md))
 - {{% tag added %}} Provide container vulnerability scanning in CI
 - {{% tag security %}} Patch for [CVE-2023-0286](https://github.com/advisories/GHSA-x4qr-2fvf-3mr5) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2023-0215](https://github.com/advisories/GHSA-x4qr-2fvf-3mr5) (Critical | Base image)
@@ -18,8 +20,6 @@ version:
 - {{% tag security %}} Patch for [CVE-2023-0215](https://github.com/advisories/GHSA-r7jw-wp68-3xch) (High | Base image)
 - {{% tag security %}} Patch for [CVE-2022-42898](https://access.redhat.com/security/cve/cve-2022-42898) (High | Base image)
 - {{% tag security %}} Patch for [CVE-2022-4304](https://github.com/advisories/GHSA-p52g-cm5j-mjv4) (Moderate | Base image)
-- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
-- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 - {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
@@ -30,6 +30,8 @@ version:
 
 - {{% tag added %}} Provide path to read app secret key from file
 - {{% tag added %}} Provide container vulnerability scanning in CI
+- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md))
+- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md))
 - {{% tag security %}} Patch for [CVE-2022-37434](https://github.com/advisories/GHSA-cfmr-vrgj-vqwv) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2021-42377](https://github.com/advisories/GHSA-phvg-gc27-gjwp) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2022-38013](https://github.com/advisories/GHSA-r8m2-4x37-6592) (High)
@@ -41,5 +43,3 @@ version:
 - {{% tag security %}} Patch for [CVE-2022-4304](https://github.com/advisories/GHSA-p52g-cm5j-mjv4) (Moderate | Base image)
 - {{% tag changed %}} Migrate to .NET 7
 - {{% tag changed %}} Migrate Resharper code quality check to GitHub Actions
-- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
-- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
