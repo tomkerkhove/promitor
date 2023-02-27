@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Arcus.Observability.Telemetry.Core;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -105,11 +105,9 @@ namespace Promitor.Tests.Integration.Clients
         protected async Task<HttpResponseMessage> GetAsync(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            var stopwatch = Stopwatch.StartNew();
             var response = await HttpClient.SendAsync(request);
-            stopwatch.Stop();
-
+            
+            using var durationMeasurement = DurationMeasurement.Start();
             var context = new Dictionary<string, object>();
             try
             {
@@ -119,7 +117,7 @@ namespace Promitor.Tests.Integration.Clients
             }
             finally
             {
-                Logger.LogRequest(request, response, stopwatch.Elapsed, context);
+                Logger.LogRequest(request, response, durationMeasurement, context);
             }
 
             return response;

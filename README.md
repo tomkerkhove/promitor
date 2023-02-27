@@ -52,6 +52,19 @@ Information about making changes to Promitor can be found [here](contributing.md
 
 Our testing infrastructure is managed through Bicep and is open to contributions on [promitor/testing-infrastructure](https://github.com/promitor/testing-infrastructure).
 
+### Image Overview
+
+Here is an overview of the available images:
+
+| Image name | Use-Case | Supported? | Tag Format |
+|:-----------|:---------|:-----------|:-----------|
+| `ghcr.io/tomkerkhove/promitor-agent-scraper` | Use Promitor Scraper in production | Yes | `:{SemVer}` |
+| `ghcr.io/tomkerkhove/promitor-agent-resource-discovery` | Use Promitor Resource Discovery in production | Yes | `:{SemVer}` |
+| `ghcr.io/tomkerkhove/promitor-agent-scraper-preview` | Preview image of Promitor Scraper vNext created off of `master` branch. | No, experimentation only | `:{SemVer}-{Commit}` |
+| `ghcr.io/tomkerkhove/promitor-agent-resource-discovery-preview` | Preview image of Promitor Resource Discovery vNext created off of `master` branch. | No, experimentation only | `:{SemVer}-{Commit}` |
+| `ghcr.io/tomkerkhove/promitor-agent-scraper-ci` | CI image of Promitor Scraper created from a PR. | No, used for testing/ease-of-contribution | `:pr{pr-id}` |
+| `ghcr.io/tomkerkhove/promitor-agent-resource-discovery-ci` | CI image of Promitor Resource Discovery created from a PR. | No, used for testing/ease-of-contribution | `:pr{pr-id}` |
+
 ## Support
 
 Learn more about our support options [here](https://github.com/tomkerkhove/promitor/blob/master/SUPPORT.md).
