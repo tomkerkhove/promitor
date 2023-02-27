@@ -10,12 +10,6 @@ on:
       project_name:
         required: true
         type: string
-      os:
-        required: true
-        type: string
-      github_runner:
-        required: true
-        type: string
 
 jobs:
   linux:

@@ -17,5 +17,10 @@ jobs:
       image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview
       project_name: Promitor.Agents.Scraper
       version: '2.9.0'
-      os: linux
-      github_runner: ubuntu-latest
+  ship_discovery_preview:
+    name: Ship Resource Discovery Preview
+    uses: ./.github/workflows/templates-build-push-image.yml
+    with:
+      image_name: ghcr.io/tomkerkhove/promitor-agent-resource-discovery-preview
+      project_name: Promitor.Agents.ResourceDiscovery
+      version: '0.9.0'
