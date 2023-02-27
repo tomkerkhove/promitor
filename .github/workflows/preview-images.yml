@@ -46,4 +46,3 @@ jobs:
           file: ./src/Promitor.Agents.Scraper/Dockerfile.linux
           tags: ${{ env.image_uri }}
           push: true
-          sbom: true
