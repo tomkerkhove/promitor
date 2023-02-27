@@ -31,6 +31,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new ContainerRegistryMetricValidator();
                 case ResourceType.CosmosDb:
                     return new CosmosDbMetricValidator();
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterMetricValidator();
                 case ResourceType.DataFactory:
                     return new DataFactoryMetricValidator();
                 case ResourceType.DataShare:
@@ -67,6 +69,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new MonitorAutoscaleMetricValidator();
                 case ResourceType.MySql:
                     return new MySqlMetricValidator();
+                case ResourceType.NatGateway:
+                    return new NatGatewayMetricValidator();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayMetricValidator();
                 case ResourceType.NetworkInterface:

@@ -18,6 +18,8 @@ version:
 - {{% tag security %}} Patch for [CVE-2023-0215](https://github.com/advisories/GHSA-r7jw-wp68-3xch) (High | Base image)
 - {{% tag security %}} Patch for [CVE-2022-42898](https://access.redhat.com/security/cve/cve-2022-42898) (High | Base image)
 - {{% tag security %}} Patch for [CVE-2022-4304](https://github.com/advisories/GHSA-p52g-cm5j-mjv4) (Moderate | Base image)
+- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
+- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 - {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
@@ -39,3 +41,5 @@ version:
 - {{% tag security %}} Patch for [CVE-2022-4304](https://github.com/advisories/GHSA-p52g-cm5j-mjv4) (Moderate | Base image)
 - {{% tag changed %}} Migrate to .NET 7
 - {{% tag changed %}} Migrate Resharper code quality check to GitHub Actions
+- {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
+- {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
