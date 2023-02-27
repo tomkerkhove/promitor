@@ -22,9 +22,11 @@ jobs:
 
       - name: "Set environmental variables"
         run: |
-          echo "artifact_version=${{ env.scraper_vnext }}-${{ github.sha }}" >> $GITHUB_ENV
-          echo "image_name=ghcr.io/tomkerkhove/promitor-agent-scraper-preview:${{ env.artifact_version }}" >> $GITHUB_ENV
-          echo "image_uri=${{ env.image_name }}:${{ env.artifact_version }}" >> $GITHUB_ENV
+          $artifact_version=${{ env.scraper_vnext }}-${{ github.sha }}
+          echo "$artifact_version" >> $GITHUB_ENV
+          $image_name=ghcr.io/tomkerkhove/promitor-agent-scraper-preview:$artifact_version
+          echo "$image_name" >> $GITHUB_ENV
+          echo "image_uri=$image_name" >> $GITHUB_ENV
 
       - name: Docker Metadata action
         uses: docker/metadata-action@v4.3.0
