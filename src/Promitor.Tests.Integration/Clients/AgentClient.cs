@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Arcus.Observability.Telemetry.Core;
 using GuardNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -23,6 +23,11 @@ namespace Promitor.Tests.Integration.Clients
             Guard.NotNull(logger, nameof(logger));
 
             var baseUrl = configuration[baseUrlConfigKey];
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                throw new ArgumentException("Base URL is not configured");
+            }
+
             logger.LogInformation("Base URL for {AgentName} is '{Url}'", agentName, baseUrl);
 
             HttpClient = new HttpClient
@@ -47,12 +52,11 @@ namespace Promitor.Tests.Integration.Clients
         protected async Task<HttpResponseMessage> GetAsync(string uri)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            var stopwatch = Stopwatch.StartNew();
             var response = await HttpClient.SendAsync(request);
-            stopwatch.Stop();
 
             var context = new Dictionary<string, object>();
+
+            using var durationMeasurement = DurationMeasurement.Start();
             try
             {
                 await response.Content.ReadAsStringAsync();
@@ -61,7 +65,7 @@ namespace Promitor.Tests.Integration.Clients
             }
             finally
             {
-                Logger.LogRequest(request, response, stopwatch.Elapsed, context);
+                Logger.LogRequest(request, response, durationMeasurement, context);
             }
 
             return response;

@@ -63,7 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var resourceDiscoveryConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
-            if(resourceDiscoveryConfiguration.ResourceDiscovery?.IsConfigured == true)
+            if(resourceDiscoveryConfiguration?.ResourceDiscovery?.IsConfigured == true)
             {
                 services.AddHttpClient<ResourceDiscoveryClient>(client =>
                 {
@@ -231,12 +231,13 @@ namespace Microsoft.Extensions.DependencyInjection
             var resourceBuilder = ResourceBuilder.CreateDefault()
                 .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
 
-            services.AddOpenTelemetryMetrics(metricsBuilder =>
-            {
-                metricsBuilder.SetResourceBuilder(resourceBuilder)
-                              .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
-                              .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
-            });
+            services.AddOpenTelemetry()
+                    .WithMetrics(metricsBuilder =>
+                    {
+                        metricsBuilder.SetResourceBuilder(resourceBuilder)
+                                      .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
+                                      .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
+                    });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();
             services.AddOpenTelemetrySystemMetrics();
