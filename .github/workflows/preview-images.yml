@@ -1,0 +1,31 @@
+name: Push Preview Images
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+    - .github/workflows/preview-images.yml
+    - src/**
+
+env:
+  dotnetVersion: '7.0.x'
+
+jobs:
+  verify_codebase:
+    name: Verify Codebase
+    runs-on: ubuntu-latest
+    # Assign permissions for unit tests to be reported.
+    # See https://github.com/dorny/test-reporter/issues/168
+    permissions:
+      statuses: write
+      checks: write
+      contents: write
+      pull-requests: write
+    steps:
+        # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build container image
+        run: |
+          docker build ./src/ --file ./src/${{ inputs.project_name }}/Dockerfile.linux --build-arg VERSION="1.2.3" -t ${{ inputs.image_name }}
