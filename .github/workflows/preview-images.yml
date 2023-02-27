@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-        
+
       - name: Docker Metadata action
         uses: docker/metadata-action@v4.3.0
         with:
