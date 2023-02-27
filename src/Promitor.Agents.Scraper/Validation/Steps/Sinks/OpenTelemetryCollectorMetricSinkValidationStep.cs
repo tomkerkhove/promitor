@@ -20,12 +20,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             _runtimeConfiguration = runtimeConfiguration;
         }
 
-        public string ComponentName { get; } = "OpenTelemetry Collector Metric Sink";
+        public string ComponentName => "OpenTelemetry Collector Metric Sink";
 
         public ValidationResult Run()
         {
             var currentRuntimeConfiguration = _runtimeConfiguration.Value;
-            var openTelemetryCollectorSinkConfiguration = currentRuntimeConfiguration?.MetricSinks?.OpenTelemetryCollector;
+            var openTelemetryCollectorSinkConfiguration = currentRuntimeConfiguration.MetricSinks?.OpenTelemetryCollector;
             if (openTelemetryCollectorSinkConfiguration == null)
             {
                 return ValidationResult.Successful(ComponentName);

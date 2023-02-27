@@ -22,10 +22,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AutomationAccountResourceDiscoveryQuery();
                 case ResourceType.Cdn:
                     return new CdnDiscoveryQuery();
+                case ResourceType.ContainerInstance:
+                    return new ContainerInstanceDiscoveryQuery();
                 case ResourceType.ContainerRegistry:
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.CosmosDb:
                     return new CosmosDbDiscoveryQuery();
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterDiscoveryQuery();
                 case ResourceType.DataFactory:
                     return new DataFactoryDiscoveryQuery();
                 case ResourceType.DataShare:
@@ -56,6 +60,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.MySql:
                     return new MySqlResourceDiscoveryQuery();
+                case ResourceType.NatGateway:
+                    return new NatGatewayDiscoveryQuery();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
