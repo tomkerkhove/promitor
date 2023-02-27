@@ -60,8 +60,8 @@ Here is an overview of the available images:
 |:-----------|:---------|:-----------|:-----------|
 | `ghcr.io/tomkerkhove/promitor-agent-scraper` | Use Promitor Scraper in production | Yes | `:{SemVer}` |
 | `ghcr.io/tomkerkhove/promitor-agent-resource-discovery` | Use Promitor Resource Discovery in production | Yes | `:{SemVer}` |
-| `ghcr.io/tomkerkhove/promitor-agent-scraper-preview` | Preview image of Promitor Scraper vNext created off of `master` branch. | No, experimentation only | `:{SemVer}-{Commit}` |
-| `ghcr.io/tomkerkhove/promitor-agent-resource-discovery-preview` | Preview image of Promitor Resource Discovery vNext created off of `master` branch. | No, experimentation only | `:{SemVer}-{Commit}` |
+| `ghcr.io/tomkerkhove/promitor-agent-scraper-preview` | Preview image of Promitor Scraper vNext created off of `master` branch. | No, experimentation only | `:{SemVer}` & `:{SemVer}-{Commit}` |
+| `ghcr.io/tomkerkhove/promitor-agent-resource-discovery-preview` | Preview image of Promitor Resource Discovery vNext created off of `master` branch. | No, experimentation only | `:{SemVer}` & `:{SemVer}-{Commit}` |
 | `ghcr.io/tomkerkhove/promitor-agent-scraper-ci` | CI image of Promitor Scraper created from a PR. | No, used for testing/ease-of-contribution | `:pr{pr-id}` |
 | `ghcr.io/tomkerkhove/promitor-agent-resource-discovery-ci` | CI image of Promitor Resource Discovery created from a PR. | No, used for testing/ease-of-contribution | `:pr{pr-id}` |
 
