@@ -45,11 +45,9 @@ namespace Promitor.Core
 
             if (string.IsNullOrWhiteSpace(instanceName) == false)
             {
-                // Simulate R# warning
-                InstanceName = instanceName.ToString();
+                InstanceName = instanceName;
                 Labels.Add("instance_name", instanceName);
             }
-
 
             foreach (KeyValuePair<string, string> customLabel in customLabels)
             {
