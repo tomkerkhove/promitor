@@ -43,11 +43,11 @@ namespace Promitor.Core
             Labels.Add("subscription_id", subscriptionId);
             Labels.Add("resource_uri", resourceUri);
 
-            if (string.IsNullOrWhiteSpace(instanceName) == false)
-            {
+            // if (string.IsNullOrWhiteSpace(instanceName) == false)
+            // {
                 InstanceName = instanceName;
                 Labels.Add("instance_name", instanceName);
-            }
+            // }
 
             foreach (KeyValuePair<string, string> customLabel in customLabels)
             {
