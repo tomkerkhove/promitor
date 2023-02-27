@@ -10,17 +10,22 @@ on:
       project_name:
         required: true
         type: string
-      os:
-        required: true
-        type: string
-      github_runner:
-        required: true
-        type: string
 
 jobs:
   linux:
-    name: Build & Push (Linux)
-    runs-on: ubuntu-latest
+    name: Build & Push (${{ matrix.platform }})
+    runs-on: ${{ matrix.github_runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [Linux, Windows]
+        include:
+        - platform: Linux
+          github_runner: ubuntu-latest
+          dockerfile: Dockerfile.linux
+        - platform: Windows
+          github_runner: windows-latest
+          dockerfile: Dockerfile.windows
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -50,6 +55,6 @@ jobs:
         with:
           build-args: VERSION="${{ env.artifact_version }}"
           context: ./src/
-          file: ./src/${{ inputs.project_name }}/Dockerfile.linux
+          file: ./src/${{ inputs.project_name }}/${{ matrix.dockerfile }}
           tags: ${{ env.image_uri }}
           push: true
