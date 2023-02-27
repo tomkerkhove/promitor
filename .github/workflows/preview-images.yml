@@ -17,3 +17,5 @@ jobs:
       image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview
       project_name: Promitor.Agents.Scraper
       version: '2.9.0'
+      os: linux
+      github_runner: ubuntu-latest
