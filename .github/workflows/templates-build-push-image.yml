@@ -21,11 +21,15 @@ jobs:
 
       - name: "Determine preview artifact version"
         run: |
-          echo "artifact_version=${{ inputs.version }}-${{ github.sha }}" >> $GITHUB_ENV
+          echo "artifact_full_version=${{ inputs.version }}-${{ github.sha }}" >> $GITHUB_ENV
 
-      - name: "Determine full container image uri"
+      - name: "Determine full container image uri (commit)"
         run: |
-          echo "image_uri=${{ inputs.image_name }}:$artifact_version" >> $GITHUB_ENV
+          echo "image_commit_uri=${{ inputs.image_name }}:$artifact_full_version" >> $GITHUB_ENV
+
+      - name: "Determine full container image uri (latest)"
+        run: |
+          echo "image_latest_uri=${{ inputs.image_name }}:${{ inputs.version }}" >> $GITHUB_ENV
 
       - name: Determine container image metadata
         uses: docker/metadata-action@v4.3.0
@@ -42,8 +46,8 @@ jobs:
       - name: Build and push preview image
         uses: docker/build-push-action@v4.0.0
         with:
-          build-args: VERSION="${{ env.artifact_version }}"
+          build-args: VERSION="${{ env.artifact_full_version }}"
           context: ./src/
           file: ./src/${{ inputs.project_name }}/Dockerfile.linux
-          tags: ${{ env.image_uri }}
+          tags: ${{ env.image_commit_uri }},${{ env.image_latest_uri }}
           push: true
