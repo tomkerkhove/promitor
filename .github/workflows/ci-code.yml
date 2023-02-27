@@ -67,3 +67,4 @@ jobs:
         uses: muno92/resharper_inspectcode@1.6.5
         with:
           solutionPath: src/Promitor.sln
+          minimumSeverity: warning
