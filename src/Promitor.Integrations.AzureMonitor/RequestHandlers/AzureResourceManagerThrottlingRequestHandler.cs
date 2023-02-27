@@ -92,8 +92,8 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             {
                 case AuthenticationMode.ServicePrincipal:
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
-                    return azureAuthenticationInfo.IdentityId;
+                    var applicationId = string.IsNullOrWhiteSpace(azureAuthenticationInfo.IdentityId) ? "user-assigned-identity" : azureAuthenticationInfo.IdentityId;
+                    return applicationId;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     return "system-assigned-identity";
                 default:
