@@ -15,6 +15,7 @@ jobs:
       image_name: local/scraper:${{ github.sha }}
       project_name: Promitor.Agents.Scraper
       github_runner: ubuntu-latest
+      os: linux
   scan_scaper_windows:
     name: Scan Scraper Agent (Windows)
     uses: ./.github/workflows/templates-scan-image.yml
@@ -22,6 +23,7 @@ jobs:
       image_name: local/scraper:${{ github.sha }}
       project_name: Promitor.Agents.Scraper
       github_runner: windows-latest
+      os: windows
   scan_resource_discovery_linux:
     name: Scan Resource Discovery Agent (Linux)
     uses: ./.github/workflows/templates-scan-image.yml
@@ -29,6 +31,7 @@ jobs:
       image_name: local/resource-discovery:${{ github.sha }}
       project_name: Promitor.Agents.ResourceDiscovery
       github_runner: ubuntu-latest
+      os: linux
   scan_resource_discovery_windows:
     name: Scan Resource Discovery Agent (Windows)
     uses: ./.github/workflows/templates-scan-image.yml
@@ -36,3 +39,4 @@ jobs:
       image_name: local/resource-discovery:${{ github.sha }}
       project_name: Promitor.Agents.ResourceDiscovery
       github_runner: windows-latest
+      os: windows
