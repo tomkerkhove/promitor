@@ -35,8 +35,6 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new DataExplorerClusterMetricValidator();
                 case ResourceType.DataFactory:
                     return new DataFactoryMetricValidator();
-                case ResourceType.DataExplorerCluster:
-                    return new DataExplorerClusterMetricValidator();
                 case ResourceType.DataShare:
                     return new DataShareMetricValidator();
                 case ResourceType.DeviceProvisioningService:

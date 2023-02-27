@@ -13,13 +13,11 @@ version:
 - {{% tag added %}} Provide container vulnerability scanning in CI
 - {{% tag added %}} Provide support for Azure Data Explorer Clusters. ([docs](https://docs.promitor.io/v2.9/scraping/providers/data-explorer-clusters.md)
 - {{% tag added %}} Provide support for Azure NAT Gateway. ([docs](https://docs.promitor.io/v2.9/scraping/providers/nat-gateway.md)
-- {{% tag changed %}} Migrate to .NET 7
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 - {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
 - {{% tag changed %}} Migrate to .NET 7
 - {{% tag changed %}} Migrate Resharper code quality check to GitHub Actions
-- {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
 
 #### Resource Discovery
 
