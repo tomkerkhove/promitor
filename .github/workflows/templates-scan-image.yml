@@ -7,11 +7,14 @@ on:
       project_name:
         required: true
         type: string
+      github_runner:
+        required: true
+        type: string
 
 jobs:
   scan:
     name: Scan Image
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.github_runner }}
     steps:
         # Checkout code
       - name: Checkout Code
