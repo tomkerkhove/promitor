@@ -7,6 +7,9 @@ on:
     - .github/workflows/ci-code.yml
     - src/**
 
+env:
+  dotnetVersion: '7.0.x'
+
 jobs:
   verify_codebase:
     name: Verify Codebase
@@ -27,7 +30,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+          dotnet-version: ${{ env.dotnetVersion }}
 
         # Build Solution
       - name: Build Solution
@@ -45,3 +48,22 @@ jobs:
           name: .NET Unit Tests
           path: src/**/test-results.trx
           reporter: dotnet-trx
+  code_quality:
+    runs-on: ubuntu-latest # or macos-latest, windows-latest
+    name: Code Quality (R#)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.dotnetVersion }}
+
+      - name: Restore NuGet Packages
+        run: dotnet restore src/Promitor.sln
+
+      - name: R# Code Quality
+        uses: muno92/resharper_inspectcode@1.6.5
+        with:
+          solutionPath: src/Promitor.sln
