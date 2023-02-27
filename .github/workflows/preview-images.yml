@@ -13,12 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     env:
       scraper_vnext: '2.9.0'
-      artifact_version: ${{ env.scraper_vnext }}-${{ github.sha }}
-      image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview:${{ env.artifact_version }}
-      image_uri: ${{ env.image_name }}:${{ env.artifact_version }}
+      #artifact_version: ${{ env.scraper_vnext }}-${{ github.sha }}
+      #image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview:${{ env.artifact_version }}
+      #image_uri: ${{ env.image_name }}:${{ env.artifact_version }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+
+      - name: "Set environmental variables"
+        run: |
+          echo "artifact_version=${{ env.scraper_vnext }}-${{ github.sha }}" >> $GITHUB_ENV
+          echo "image_name=ghcr.io/tomkerkhove/promitor-agent-scraper-preview:${{ env.artifact_version }}" >> $GITHUB_ENV
+          echo "image_uri=${{ env.image_name }}:${{ env.artifact_version }}" >> $GITHUB_ENV
 
       - name: Docker Metadata action
         uses: docker/metadata-action@v4.3.0
