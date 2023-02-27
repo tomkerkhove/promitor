@@ -11,6 +11,7 @@ version:
 - {{% tag added %}} Provide Azure Log Analytics scraper ([docs](https://docs.promitor.io/v2.9/scraping/providers/log-analytics/)
 | [#2132](https://github.com/tomkerkhove/promitor/pull/2132))
 - {{% tag added %}} Provide container vulnerability scanning in CI
+- {{% tag security %}} Patch for [CVE-2022-2097](https://github.com/advisories/GHSA-3wx7-46ch-7rq2) (High)
 - {{% tag fixed %}} Fixed a bug where startup throws scheduling exception due to metric misconfiguration
 - {{% tag fixed %}} Fixed a bug where resource discovery for Azure Container Instances was not working
 - {{% tag fixed %}} Fixed a bug where Promitor was reported as `unknown_service:dotnet` job in OpenTelemetry Collector
@@ -21,5 +22,14 @@ version:
 
 - {{% tag added %}} Provide path to read app secret key from file
 - {{% tag added %}} Provide container vulnerability scanning in CI
+- {{% tag security %}} Patch for [CVE-2022-37434](https://github.com/advisories/GHSA-cfmr-vrgj-vqwv) (Critical | Base image)
+- {{% tag security %}} Patch for [CVE-2023-0215](https://github.com/advisories/GHSA-x4qr-2fvf-3mr5) (Critical | Base image)
+- {{% tag security %}} Patch for [CVE-2021-42377](https://github.com/advisories/GHSA-phvg-gc27-gjwp) (Critical | Base image)
+- {{% tag security %}} Patch for [CVE-2022-38013](https://github.com/advisories/GHSA-r8m2-4x37-6592) (High)
+- {{% tag security %}} Patch for [CVE-2022-41032](https://github.com/advisories/GHSA-g3q9-xf95-8hp5) (High)
+- {{% tag security %}} Patch for [CVE-2022-2097](https://github.com/advisories/GHSA-3wx7-46ch-7rq2) (High | Base image)
+- {{% tag security %}} Patch for [CVE-2021-42373](https://github.com/advisories/GHSA-6w3h-h7gw-72qf) (High | Base image)
+- {{% tag security %}} Patch for [CVE-2022-34716](https://github.com/advisories/GHSA-2m65-m22p-9wjw) (Moderate)
+- {{% tag security %}} Patch for [CVE-2022-4304](https://github.com/advisories/GHSA-p52g-cm5j-mjv4) (Moderate | Base image)
 - {{% tag changed %}} Migrate to .NET 7
 - {{% tag changed %}} Migrate Resharper code quality check to GitHub Actions
