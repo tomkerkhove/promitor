@@ -2,7 +2,9 @@ name: Push Preview Images
 
 on:
   workflow_dispatch:
-  pull_request:
+  push:
+    branches:
+      - master
     paths:
     - .github/workflows/preview-images.yml
     - src/**
