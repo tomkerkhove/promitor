@@ -8,41 +8,12 @@ on:
     - src/**
 
 jobs:
-  verify_codebase:
-    name: Verify Codebase
-    runs-on: ubuntu-latest
-    env:
-      scraper_vnext: '2.9.0'
+  ship_scraper_preview:
+    name: Ship Scraper Preview
+    uses: ./.github/workflows/templates-build-push-image.yml
+    with:
       image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: "Set environmental variables"
-        run: |
-          echo "artifact_version=${{ env.scraper_vnext }}-${{ github.sha }}" >> $GITHUB_ENV
-
-      - name: "Set environmental variables"
-        run: |
-          echo "image_uri=${{ env.image_name }}:$artifact_version" >> $GITHUB_ENV
-
-      - name: Docker Metadata action
-        uses: docker/metadata-action@v4.3.0
-        with:
-          images: ${{ env.image_name}}
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: tomkerkhove
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker images
-        uses: docker/build-push-action@v4.0.0
-        with:
-          build-args: VERSION="${{ env.artifact_version }}"
-          context: ./src/
-          file: ./src/Promitor.Agents.Scraper/Dockerfile.linux
-          tags: ${{ env.image_uri }}
-          push: true
+      project_name: Promitor.Agents.Scraper
+      version: '2.9.0'
+      os: linux
+      github_runner: ubuntu-latest
