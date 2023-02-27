@@ -23,6 +23,11 @@ namespace Promitor.Tests.Integration.Clients
             Guard.NotNull(logger, nameof(logger));
 
             var baseUrl = configuration[baseUrlConfigKey];
+            if (string.IsNullOrWhiteSpace(baseUrl))
+            {
+                throw new ArgumentException("Base URL is not configured");
+            }
+
             logger.LogInformation("Base URL for {AgentName} is '{Url}'", agentName, baseUrl);
 
             HttpClient = new HttpClient
