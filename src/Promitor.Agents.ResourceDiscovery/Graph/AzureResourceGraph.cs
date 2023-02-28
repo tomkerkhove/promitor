@@ -298,6 +298,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
             switch (azureAuthenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
+                    Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
+                    return azureAuthenticationInfo.IdentityId;
                 case AuthenticationMode.UserAssignedManagedIdentity:
                     return azureAuthenticationInfo.GetIdentityIdOrDefault("externally-configured-user-assigned-identity");
                 case AuthenticationMode.SystemAssignedManagedIdentity:
