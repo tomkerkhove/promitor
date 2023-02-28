@@ -27,34 +27,21 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Theory]
-        [InlineData("default-id")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public void GetIdentityIdOrDefault_NullIdentityId_ReturnsDefaultValue(string defaultValue)
+        [InlineData(null, "default-id")]
+        [InlineData(null, " ")]
+        [InlineData(null, null)]
+        [InlineData("", "default-id")]
+        [InlineData("", " ")]
+        [InlineData("", null)]
+        [InlineData(" ", "default-id")]
+        [InlineData(" ", " ")]
+        [InlineData(" ", null)]
+        public void GetIdentityIdOrDefault_NullOrWhiteSpaceIdentityId_ReturnsDefaultValue(string identityId, string defaultValue)
         {
             // Arrange
             var azureAuthenticationInfo = new AzureAuthenticationInfo
             {
-                IdentityId = null,
-            };
-
-            // Act
-            var identityIdOrDefault = azureAuthenticationInfo.GetIdentityIdOrDefault(defaultValue);
-
-            // Assert
-            Assert.Equal(identityIdOrDefault, defaultValue);
-        }
-
-        [Theory]
-        [InlineData("default-id")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        public void GetIdentityIdOrDefault_WhiteSpaceIdentityId_ReturnsDefaultValue(string defaultValue)
-        {
-            // Arrange
-            var azureAuthenticationInfo = new AzureAuthenticationInfo
-            {
-                IdentityId = " ",
+                IdentityId = identityId,
             };
 
             // Act
