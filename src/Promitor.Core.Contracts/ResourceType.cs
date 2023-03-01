@@ -52,6 +52,6 @@
         LogAnalytics = 47,
         DataExplorerCluster = 48,
         NatGateway = 49,
-        PublicIPAddress = 50,
+        PublicIpAddress = 50,
     }
 }

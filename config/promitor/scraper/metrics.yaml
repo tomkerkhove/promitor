@@ -341,7 +341,7 @@ metrics:
       - name: data-explorer-clusters
   - name: promitor_demo_public_ip_address_under_ddos_attack
     description: "Public IP Address under DDoS attack or not"
-    resourceType: PublicIPAddress
+    resourceType: PublicIpAddress
     azureMetricConfiguration:
       metricName: IfUnderDDoSAttack
       aggregation:

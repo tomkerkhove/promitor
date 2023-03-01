@@ -7,15 +7,15 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class PublicIPAddressMetricValidator : IMetricValidator
+    internal class PublicIpAddressMetricValidator : IMetricValidator
     {
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<PublicIPAddressResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<PublicIpAddressResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.PublicIPAddressName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.PublicIpAddressName))
                 {
                     yield return "No Public IP Address name is configured";
                 }

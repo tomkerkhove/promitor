@@ -8,36 +8,36 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class PublicIPAddressDeserializerTests : ResourceDeserializerTest<PublicIPAddressDeserializer>
+    public class PublicIpAddressDeserializerTests : ResourceDeserializerTest<PublicIpAddressDeserializer>
     {
-        private readonly PublicIPAddressDeserializer _deserializer;
+        private readonly PublicIpAddressDeserializer _deserializer;
 
-        public PublicIPAddressDeserializerTests()
+        public PublicIpAddressDeserializerTests()
         {
-            _deserializer = new PublicIPAddressDeserializer(Logger);
+            _deserializer = new PublicIpAddressDeserializer(Logger);
         }
 
         [Fact]
-        public void Deserialize_PublicIPAddressNameSupplied_SetsName()
+        public void Deserialize_PublicIpAddressNameSupplied_SetsName()
         {
-            YamlAssert.PropertySet<PublicIPAddressResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<PublicIpAddressResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
-                "publicIPAddressName: promitor-ip-address",
+                "publicIpAddressName: promitor-ip-address",
                 "promitor-ip-address",
-                r => r.PublicIPAddressName);
+                r => r.PublicIpAddressName);
         }
 
         [Fact]
-        public void Deserialize_PublicIPAddressNameNotSupplied_Null()
+        public void Deserialize_PublicIpAddressNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<PublicIPAddressResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<PublicIpAddressResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-group",
-                r => r.PublicIPAddressName);
+                r => r.PublicIpAddressName);
         }
 
         [Fact]
-        public void Deserialize_PublicIPAddressNameNotSupplied_ReportsError()
+        public void Deserialize_PublicIpAddressNameNotSupplied_ReportsError()
         {
             // Arrange
             var node = YamlUtils.CreateYamlNode("resourceGroupName: promitor-group");
@@ -46,12 +46,12 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
             YamlAssert.ReportsErrorForProperty(
                 _deserializer,
                 node,
-                "publicIPAddressName");
+                "publicIpAddressName");
         }
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new PublicIPAddressDeserializer(Logger);
+            return new PublicIpAddressDeserializer(Logger);
         }
     }
 }

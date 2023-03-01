@@ -3,11 +3,11 @@
     /// <summary>
     /// Contains the configuration required to scrape a Public IP Address.
     /// </summary>
-    public class PublicIPAddressResourceV1 : AzureResourceDefinitionV1
+    public class PublicIpAddressResourceV1 : AzureResourceDefinitionV1
     {
         /// <summary>
         /// The name of the Public IP Address to get metrics for.
         /// </summary>
-        public string PublicIPAddressName { get; set; }
+        public string PublicIpAddressName { get; set; }
     }
 }

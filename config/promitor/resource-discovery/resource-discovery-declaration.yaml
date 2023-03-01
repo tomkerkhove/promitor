@@ -54,7 +54,7 @@ resourceDiscoveryGroups:
 - name: postgres-databases
   type: PostgreSql
 - name: public-ip-addresses
-  type: PublicIPAddress
+  type: PublicIpAddress
 - name: redis-caches
   type: RedisCache
 - name: redis-enterprise-caches

@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class PublicIPAddressDiscoveryQuery : ResourceDiscoveryQuery
+    public class PublicIpAddressDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.network/publicipaddresses" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name" };
@@ -14,9 +14,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var publicIPAddressName = resultRowEntry[2]?.ToString();
+            var publicIpAddressName = resultRowEntry[2]?.ToString();
 
-            var resource = new PublicIPAddressResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), publicIPAddressName);
+            var resource = new PublicIpAddressResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), publicIpAddressName);
             return resource;
         }
     }

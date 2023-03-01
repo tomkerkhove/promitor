@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class PublicIPAddressMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class PublicIpAddressMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(azureMetricName: string.Empty)
+                .WithPublicIpAddressMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -31,11 +31,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(azureMetricLimit: metricLimit)
+                .WithPublicIpAddressMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -48,11 +48,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(metricDescription: string.Empty)
+                .WithPublicIpAddressMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -65,11 +65,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(string.Empty)
+                .WithPublicIpAddressMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -82,11 +82,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutPublicIPAddressName_Fails()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutPublicIpAddressName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(publicIPAddressName: string.Empty)
+                .WithPublicIpAddressMetric(publicIpAddressName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -99,11 +99,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(omitResource: true)
+                .WithPublicIpAddressMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -116,11 +116,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void PublicIpAddressMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithPublicIpAddressMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -133,11 +133,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PublicIPAddressMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void PublicIpAddressMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPublicIPAddressMetric()
+                .WithPublicIpAddressMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
