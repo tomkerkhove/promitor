@@ -107,7 +107,9 @@ somewhat useless.
 
 The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/docs](https://github.com/promitor/docs).
 
-Please follow the instructions in the [docs contribution guide](https://github.com/promitor/docs/blob/main/CONTRIBUTING.md#documenting-a-new-scraper) for documenting a new scraper.
+Please follow the instructions in the
+[docs contribution guide](https://github.com/promitor/docs/blob/main/CONTRIBUTING.md#documenting-a-new-scraper)
+for documenting a new scraper.
 
 ## Changelog
 
