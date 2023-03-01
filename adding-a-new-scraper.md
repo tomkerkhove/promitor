@@ -21,7 +21,7 @@ discuss your scenario_
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD029 -->
 <!-- markdownlint-disable MD032 -->
-1. Add your new scraping type to the `Promitor.Core.Contracts`.
+1. Add your new scraping type to the `ResourceType` enum in `Promitor.Core.Contracts`.
 2. Describe the resource for which you're scraping metrics by creating `<New-Type>ResourceDefinition`
   and inherit from
   `Promitor.Core.Scraping.Configuration.Model.Metrics.AzureResourceDefinition` -
@@ -105,22 +105,11 @@ Our testing infrastructure will pick up the new metric automatically and ensure 
 Features are great to have but without clear & well-written documentation they are
 somewhat useless.
 
-The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/legacy-docs](https://github.com/promitor/legacy-docs).
+The documentation for Promitor is hosted on [docs.promitor.io](https://docs.promitor.io) and is maintained in [promitor/docs](https://github.com/promitor/docs).
 
-Please provide documentation on the following:
-
-1. What Azure service it supports and how to use it.
-2. What fields need to be configured and what they are for.
-3. An example configuration.
-
-This should be provided in a new file under `docs\configuration\v2.x\metrics` and be listed
-under the supported providers on `docs/configuration/v2.x/metrics/index.md` in alphabetical order.
-
-When the scraper supports resource discovery, the following documentation is required:
-
-1. Add discovery support badge in scraper documentation page - `![Resource Discovery Support Badge](https://img.shields.io/badge/Support%20for%20Resource%20Discovery-Yes-green.svg)`
-2. Add scraper to supported scrapers on resource discovery configuration documentation page
- `docs/configuration/v2.x/resource-discovery.md` in alphabetical order.
+Please follow the instructions in the
+[docs contribution guide](https://github.com/promitor/docs/blob/main/CONTRIBUTING.md#documenting-a-new-scraper)
+for documenting a new scraper.
 
 ## Changelog
 

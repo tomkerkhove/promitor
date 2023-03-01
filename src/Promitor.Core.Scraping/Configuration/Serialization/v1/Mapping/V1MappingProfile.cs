@@ -58,6 +58,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
+            CreateMap<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
@@ -82,7 +83,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
 
             CreateMap<AzureResourceDefinitionV1, AzureResourceDefinition>()
                 .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
-                .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()                
+                .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()
                 .Include<ApplicationInsightsResourceV1, ApplicationInsightsResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
@@ -114,6 +115,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
+                .Include<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>()
                 .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()
