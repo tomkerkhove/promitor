@@ -330,7 +330,7 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: nat-gateways
-  - name: promitor_demo_mysql_data_explorer_cluster_CPU
+  - name: promitor_demo_data_explorer_cluster_CPU
     description: "CPU usage of Azure Data Explorer cluster"
     resourceType: DataExplorerCluster
     azureMetricConfiguration:
@@ -339,6 +339,15 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: data-explorer-clusters
+  - name: promitor_demo_public_ip_address_under_ddos_attack
+    description: "Public IP Address under DDoS attack or not"
+    resourceType: PublicIPAddress
+    azureMetricConfiguration:
+      metricName: IfUnderDDoSAttack
+      aggregation:
+        type: Maximum
+    resourceDiscoveryGroups:
+      - name: public-ip-addresses
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

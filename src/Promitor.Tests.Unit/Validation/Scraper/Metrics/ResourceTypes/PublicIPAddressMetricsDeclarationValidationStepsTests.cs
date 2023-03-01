@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class NatGatewayMetricsDeclarationValidationStepTests : MetricsDeclarationValidationStepsTests
+    public class PublicIPAddressMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(azureMetricName: string.Empty)
+                .WithPublicIPAddressMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -31,11 +31,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void NatGatewayMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(azureMetricLimit: metricLimit)
+                .WithPublicIPAddressMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -48,11 +48,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(metricDescription: string.Empty)
+                .WithPublicIPAddressMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -65,11 +65,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutMetricName_Fails()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(string.Empty)
+                .WithPublicIPAddressMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -82,11 +82,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutNatGatewayName_Fails()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutPublicIPAddressName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(natGatewayName: string.Empty)
+                .WithPublicIPAddressMetric(publicIPAddressName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -99,11 +99,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(omitResource: true)
+                .WithPublicIPAddressMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -116,11 +116,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void PublicIPAddressMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
+                .WithPublicIPAddressMetric(omitResource: true, resourceDiscoveryGroupName:"sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -133,11 +133,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void NatGatewayMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void PublicIPAddressMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithNatGatewayMetric()
+                .WithPublicIPAddressMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

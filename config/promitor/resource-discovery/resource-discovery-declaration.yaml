@@ -53,6 +53,8 @@ resourceDiscoveryGroups:
   type: NetworkInterface
 - name: postgres-databases
   type: PostgreSql
+- name: public-ip-addresses
+  type: PublicIPAddress
 - name: redis-caches
   type: RedisCache
 - name: redis-enterprise-caches

@@ -103,6 +103,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlScraper(scraperConfiguration);
+                case ResourceType.PublicIPAddress:
+                    return new PublicIPAddressScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
                     return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.RedisEnterpriseCache:

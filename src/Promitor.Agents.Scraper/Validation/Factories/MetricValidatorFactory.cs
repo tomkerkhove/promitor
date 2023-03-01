@@ -77,6 +77,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new NetworkInterfaceMetricValidator();
                 case ResourceType.PostgreSql:
                     return new PostgreSqlMetricValidator();
+                case ResourceType.PublicIPAddress:
+                    return new PublicIPAddressMetricValidator();
                 case ResourceType.RedisCache:
                     return new RedisCacheMetricValidator();
                 case ResourceType.RedisEnterpriseCache:

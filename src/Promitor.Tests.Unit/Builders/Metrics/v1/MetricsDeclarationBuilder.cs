@@ -690,6 +690,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithPublicIPAddressMetric(string metricName = "promitor-ip-address",
+            string metricDescription = "Description for a metric",
+            string publicIPAddressName = "promitor-ip-address-name",
+            string azureMetricName = "IfUnderDDoSAttack",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new PublicIPAddressResourceV1
+            {
+                PublicIPAddressName = publicIPAddressName,
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PublicIPAddress, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis",
             string metricDescription = "Description for a metric",
             string cacheName = "promitor-redis",

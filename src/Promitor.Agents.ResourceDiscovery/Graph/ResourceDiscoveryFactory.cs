@@ -66,12 +66,14 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceDiscoveryQuery();
+                case ResourceType.PostgreSql:
+                    return new PostgreSqlDiscoveryQuery();
+                case ResourceType.PublicIPAddress:
+                    return new PublicIPAddressDiscoveryQuery();
                 case ResourceType.RedisCache:
                     return new RedisCacheDiscoveryQuery();
                 case ResourceType.RedisEnterpriseCache:
                     return new RedisEnterpriseCacheDiscoveryQuery();
-                case ResourceType.PostgreSql:
-                    return new PostgreSqlDiscoveryQuery();
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceDiscoveryQuery();
                 case ResourceType.SqlDatabase:
