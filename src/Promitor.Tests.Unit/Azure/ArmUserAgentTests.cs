@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.AzureMonitor;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Promitor.Tests.Unit.Azure
     [Category("Unit")]
     public class ArmUserAgentTests : UnitTest
     {
-        private const string UserNameFormat = "App/Promitor Agent/Scraper Version/{0} Prometheus/{1} OpenTelemetryCollector/{2} StatsD/{3} AtlassianStatuspage/{4}";
+        private const string UserNameFormat = "App/Promitor Agent/Scraper Version/{0} OS/{1} Prometheus/{2} OpenTelemetryCollector/{3} StatsD/{4} AtlassianStatuspage/{5}";
         private const string EnabledText = "Enabled";
         private const string DisabledText = "Disabled";
 
@@ -26,7 +27,8 @@ namespace Promitor.Tests.Unit.Azure
                 MetricSinkType.StatsD,
                 MetricSinkType.OpenTelemetryCollector
             };
-            var expectedUserAgent = string.Format(UserNameFormat, agentVersion, EnabledText, EnabledText, EnabledText, EnabledText);
+            var operatingSystem = DetermineOperatingSystem();
+            var expectedUserAgent = string.Format(UserNameFormat, agentVersion, operatingSystem, EnabledText, EnabledText, EnabledText, EnabledText);
 
             // Act
             var userAgent = ArmUserAgent.Generate(agentVersion, enabledMetricSinks);
@@ -46,7 +48,8 @@ namespace Promitor.Tests.Unit.Azure
                 MetricSinkType.StatsD,
                 MetricSinkType.OpenTelemetryCollector
             };
-            var expectedUserAgent = string.Format(UserNameFormat, agentVersion, DisabledText, EnabledText, EnabledText, EnabledText);
+            var operatingSystem = DetermineOperatingSystem();
+            var expectedUserAgent = string.Format(UserNameFormat, agentVersion, operatingSystem, DisabledText, EnabledText, EnabledText, EnabledText);
 
             // Act
             var userAgent = ArmUserAgent.Generate(agentVersion, enabledMetricSinks);
@@ -92,6 +95,11 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => ArmUserAgent.Generate(agentVersion, enabledMetricSinks));
+        }
+
+        string DetermineOperatingSystem()
+        {
+            return RuntimeInformation.OSDescription.Contains("linux", StringComparison.InvariantCultureIgnoreCase) ? "Linux" : "Windows";
         }
     }
 }

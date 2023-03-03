@@ -28,6 +28,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new ContainerRegistryDiscoveryQuery();
                 case ResourceType.CosmosDb:
                     return new CosmosDbDiscoveryQuery();
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterDiscoveryQuery();
                 case ResourceType.DataFactory:
                     return new DataFactoryDiscoveryQuery();
                 case ResourceType.DataShare:
@@ -58,16 +60,20 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.MySql:
                     return new MySqlResourceDiscoveryQuery();
+                case ResourceType.NatGateway:
+                    return new NatGatewayDiscoveryQuery();
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayDiscoveryQuery();
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceDiscoveryQuery();
+                case ResourceType.PostgreSql:
+                    return new PostgreSqlDiscoveryQuery();
+                case ResourceType.PublicIpAddress:
+                    return new PublicIpAddressDiscoveryQuery();
                 case ResourceType.RedisCache:
                     return new RedisCacheDiscoveryQuery();
                 case ResourceType.RedisEnterpriseCache:
                     return new RedisEnterpriseCacheDiscoveryQuery();
-                case ResourceType.PostgreSql:
-                    return new PostgreSqlDiscoveryQuery();
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceDiscoveryQuery();
                 case ResourceType.SqlDatabase:

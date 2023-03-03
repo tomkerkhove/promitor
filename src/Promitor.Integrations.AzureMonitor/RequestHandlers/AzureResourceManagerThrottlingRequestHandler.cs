@@ -91,9 +91,10 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             switch (azureAuthenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                case AuthenticationMode.UserAssignedManagedIdentity:
                     Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
                     return azureAuthenticationInfo.IdentityId;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    return azureAuthenticationInfo.GetIdentityIdOrDefault("externally-configured-user-assigned-identity");
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     return "system-assigned-identity";
                 default:

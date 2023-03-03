@@ -34,6 +34,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<CdnResourceV1, CdnResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
+            CreateMap<DataExplorerClusterResourceV1, DataExplorerClusterResourceDefinition>();
             CreateMap<DataFactoryResourceV1, DataFactoryResourceDefinition>();
             CreateMap<DataShareResourceV1, DataShareResourceDefinition>();
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
@@ -53,9 +54,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
+            CreateMap<NatGatewayResourceV1, NatGatewayResourceDefinition>();
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
+            CreateMap<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
@@ -80,7 +83,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
 
             CreateMap<AzureResourceDefinitionV1, AzureResourceDefinition>()
                 .Include<ApiManagementResourceV1, ApiManagementResourceDefinition>()
-                .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()                
+                .Include<ApplicationGatewayResourceV1, ApplicationGatewayResourceDefinition>()
                 .Include<ApplicationInsightsResourceV1, ApplicationInsightsResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
@@ -89,6 +92,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CdnResourceV1, CdnResourceDefinition>()
                 .Include<CosmosDbResourceV1, CosmosDbResourceDefinition>()
+                .Include<DataExplorerClusterResourceV1, DataExplorerClusterResourceDefinition>()
                 .Include<DataFactoryResourceV1, DataFactoryResourceDefinition>()
                 .Include<DataShareResourceV1, DataShareResourceDefinition>()
                 .Include<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>()
@@ -107,9 +111,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
                 .Include<MySqlResourceV1, MySqlResourceDefinition>()
+                .Include<NatGatewayResourceV1, NatGatewayResourceDefinition>()
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
+                .Include<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>()
                 .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()

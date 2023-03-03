@@ -1,0 +1,26 @@
+name: Push Preview Images
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+    - .github/workflows/preview-images.yml
+    - src/**
+
+jobs:
+  ship_scraper_preview:
+    name: Ship Scraper Preview
+    uses: ./.github/workflows/templates-build-push-image.yml
+    with:
+      image_name: ghcr.io/tomkerkhove/promitor-agent-scraper-preview
+      project_name: Promitor.Agents.Scraper
+      version: '2.9.0'
+  ship_discovery_preview:
+    name: Ship Resource Discovery Preview
+    uses: ./.github/workflows/templates-build-push-image.yml
+    with:
+      image_name: ghcr.io/tomkerkhove/promitor-agent-resource-discovery-preview
+      project_name: Promitor.Agents.ResourceDiscovery
+      version: '0.9.0'
