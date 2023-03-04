@@ -52,7 +52,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
-            // TODO: Move to factory instead?
+            // TODO: Move to factory instead? 
             if (_gauges.ContainsKey(metricName) == false)
             {
                 InitializeNewMetric(metricName, metricDescription);
