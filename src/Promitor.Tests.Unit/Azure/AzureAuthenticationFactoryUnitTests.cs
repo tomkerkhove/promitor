@@ -61,7 +61,7 @@ namespace Promitor.Tests.Unit.Azure
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public void GetConfiguredAzureAuthentication_UserAssignedManagedIdentityWithInvalidIdentity_Fails(string identityId)
+        public void GetConfiguredAzureAuthentication_UserAssignedManagedIdentityWithEmptyIdentity_Succeeds(string identityId)
         {
             // Arrange
             var expectedAuthenticationMode = AuthenticationMode.UserAssignedManagedIdentity;
@@ -72,8 +72,13 @@ namespace Promitor.Tests.Unit.Azure
             };
             var config = CreateConfiguration(inMemoryConfiguration);
 
-            // Act & Assert
-            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config));
+            // Act
+            var authenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config);
+
+            // Assert
+            Assert.Equal(expectedAuthenticationMode, authenticationInfo.Mode);
+            Assert.Equal(identityId, authenticationInfo.IdentityId);
+            Assert.Null(authenticationInfo.Secret);
         }
 
         [Fact]
@@ -224,7 +229,7 @@ namespace Promitor.Tests.Unit.Azure
             var inMemoryConfiguration = new Dictionary<string, string>
             {
                 {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
-                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},                
+                {EnvironmentVariables.Authentication.ApplicationId, expectedIdentityId},
                 {ConfigurationKeys.Authentication.SecretFilePath, secretFilePath},
                 {ConfigurationKeys.Authentication.SecretFileName, expectedSecretFileName}
             };
@@ -332,7 +337,7 @@ namespace Promitor.Tests.Unit.Azure
         [InlineData("")]
         [InlineData(" ")]
         [InlineData(null)]
-        public void CreateAzureAuthentication_UserAssignedManagedIdentityWithInvalidIdentity_Fails(string identityId)
+        public void CreateAzureAuthentication_UserAssignedManagedIdentityWithEmptyIdentity_Succeeds(string identityId)
         {
             // Arrange
             var expectedTenantId = Guid.NewGuid().ToString();
@@ -344,8 +349,14 @@ namespace Promitor.Tests.Unit.Azure
             };
             var azureCredentialFactory = new AzureCredentialsFactory();
 
-            // Act & Assert
-            Assert.Throws<AuthenticationException>(() => AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory));
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+            // Client id for user-assigned MI is not exposed
+            Assert.Null(azureCredentials.ClientId);
         }
 
         [Fact]

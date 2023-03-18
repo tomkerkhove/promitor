@@ -213,8 +213,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         }
 
         [Theory]
-        [InlineData(0)]
-        [InlineData(-1)]
+        [InlineData((double)0)]
+        [InlineData((double)-1)]
         [InlineData(null)]
         public async Task ReportMetricAsync_GetsValidInputWithoutMetricValue_SuccessfullyWritesMetricWithDefault(double? expectedDefaultValue)
         {

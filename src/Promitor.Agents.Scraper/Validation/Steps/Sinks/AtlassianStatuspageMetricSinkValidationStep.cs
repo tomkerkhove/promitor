@@ -28,7 +28,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
         public ValidationResult Run()
         {
             var currentRuntimeConfiguration = _runtimeConfiguration.Value;
-            var atlassianStatuspageConfiguration = currentRuntimeConfiguration?.MetricSinks?.AtlassianStatuspage;
+            var atlassianStatuspageConfiguration = currentRuntimeConfiguration.MetricSinks?.AtlassianStatuspage;
             if (atlassianStatuspageConfiguration == null)
             {
                 return ValidationResult.Successful(ComponentName);

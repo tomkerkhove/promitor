@@ -1,0 +1,53 @@
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+
+jobs:
+  linux:
+    name: Build & Push (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: "Determine preview artifact version"
+        run: |
+          echo "artifact_full_version=${{ inputs.version }}-${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: "Determine full container image uri (commit)"
+        run: |
+          echo "image_commit_uri=${{ inputs.image_name }}:$artifact_full_version" >> $GITHUB_ENV
+
+      - name: "Determine full container image uri (latest)"
+        run: |
+          echo "image_latest_uri=${{ inputs.image_name }}:${{ inputs.version }}" >> $GITHUB_ENV
+
+      - name: Determine container image metadata
+        uses: docker/metadata-action@v4.3.0
+        with:
+          images: ${{ inputs.image_name }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: tomkerkhove
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push preview image
+        uses: docker/build-push-action@v4.0.0
+        with:
+          build-args: VERSION="${{ env.artifact_full_version }}"
+          context: ./src/
+          file: ./src/${{ inputs.project_name }}/Dockerfile.linux
+          tags: ${{ env.image_commit_uri }},${{ env.image_latest_uri }}
+          push: true
