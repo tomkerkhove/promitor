@@ -226,13 +226,13 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void UserAssignedManagedIdentity_IdentityIdIsEmptyString_Fails()
+        public void UserAssignedManagedIdentity_IdentityIdIsEmptyString_Succeeds()
         {
             // Arrange
-            var invalidApplicationId = string.Empty;
+            var emptyApplicationId = string.Empty;
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
+                {ConfigurationKeys.Authentication.IdentityId, emptyApplicationId},
                 {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -242,7 +242,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            PromitorAssert.ValidationFailed(validationResult);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]
@@ -266,13 +266,13 @@ namespace Promitor.Tests.Unit.Validation.Authentication
         }
 
         [Fact]
-        public void UserAssignedManagedIdentity_IdentityIdIsWhitespace_Fails()
+        public void UserAssignedManagedIdentity_IdentityIdIsWhitespace_Succeeds()
         {
             // Arrange
-            const string invalidApplicationId = " ";
+            const string whitespaceApplicationId = " ";
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {ConfigurationKeys.Authentication.IdentityId, invalidApplicationId},
+                {ConfigurationKeys.Authentication.IdentityId, whitespaceApplicationId},
                 {ConfigurationKeys.Authentication.Mode, AuthenticationMode.UserAssignedManagedIdentity.ToString()},
             };
             var config = CreateConfiguration(inMemoryConfiguration);
@@ -282,7 +282,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             var validationResult = azureAuthenticationValidationStep.Run();
 
             // Assert
-            PromitorAssert.ValidationFailed(validationResult);
+            PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
         [Fact]

@@ -16,12 +16,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             _runtimeConfiguration = runtimeConfiguration;
         }
 
-        public string ComponentName { get; } = "Prometheus Scraping Endpoint Metric Sink";
+        public string ComponentName => "Prometheus Scraping Endpoint Metric Sink";
 
         public ValidationResult Run()
         {
             var currentRuntimeConfiguration = _runtimeConfiguration.Value;
-            var prometheusScrapingEndpointConfiguration = currentRuntimeConfiguration?.MetricSinks?.PrometheusScrapingEndpoint;
+            var prometheusScrapingEndpointConfiguration = currentRuntimeConfiguration.MetricSinks?.PrometheusScrapingEndpoint;
             if (prometheusScrapingEndpointConfiguration == null)
             {
                 return ValidationResult.Successful(ComponentName);

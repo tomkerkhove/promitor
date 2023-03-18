@@ -61,7 +61,7 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
         protected override HttpRequestMessage BeforeSendingRequest(HttpRequestMessage request)
         {
             string agentVersion = Version.Get();
-            var promitorUserAgent = UserAgent.Generate("Scraper", agentVersion);
+            var promitorUserAgent = ArmUserAgent.Generate(agentVersion, _metricSinkWriter.EnabledMetricSinks);
             request.Headers.UserAgent.Clear();
             request.Headers.UserAgent.TryParseAdd(promitorUserAgent);
 
@@ -91,9 +91,10 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
             switch (azureAuthenticationInfo.Mode)
             {
                 case AuthenticationMode.ServicePrincipal:
-                case AuthenticationMode.UserAssignedManagedIdentity:
                     Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
                     return azureAuthenticationInfo.IdentityId;
+                case AuthenticationMode.UserAssignedManagedIdentity:
+                    return azureAuthenticationInfo.GetIdentityIdOrDefault("externally-configured-user-assigned-identity");
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     return "system-assigned-identity";
                 default:

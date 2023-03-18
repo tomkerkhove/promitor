@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.IO;
+using System.Security.Authentication;
 using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Identity;
@@ -29,7 +30,23 @@ namespace Promitor.Integrations.Azure.Authentication
                 authenticationConfiguration = new AuthenticationConfiguration();
             }
 
-            var applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+            string applicationKey;
+
+            if (!string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFilePath) && !string.IsNullOrWhiteSpace(authenticationConfiguration.SecretFileName))
+            {
+                var filePath = Path.Combine(authenticationConfiguration.SecretFilePath, authenticationConfiguration.SecretFileName);
+
+                if (!File.Exists(filePath))
+                {
+                    throw new AuthenticationException("Invalid secret file path was configured for service principle authentication because it does not exist");
+                }
+                
+                applicationKey = File.ReadAllText(filePath);
+            }
+            else
+            {
+                applicationKey = configuration.GetValue<string>(EnvironmentVariables.Authentication.ApplicationKey);
+            }
 
             string identityId = authenticationConfiguration.IdentityId;
             if (authenticationConfiguration.Mode == AuthenticationMode.ServicePrincipal)
@@ -48,13 +65,6 @@ namespace Promitor.Integrations.Azure.Authentication
                 if (string.IsNullOrWhiteSpace(applicationKey))
                 {
                     throw new AuthenticationException("No identity secret was configured for service principle authentication");
-                }
-            }
-            else if (authenticationConfiguration.Mode == AuthenticationMode.UserAssignedManagedIdentity)
-            {
-                if (string.IsNullOrWhiteSpace(identityId))
-                {
-                    throw new AuthenticationException("No identity was configured for user-assigned managed identity");
                 }
             }
             
@@ -82,7 +92,8 @@ namespace Promitor.Integrations.Azure.Authentication
                     tokenCredential = new ClientSecretCredential(tenantId, authenticationInfo.IdentityId, authenticationInfo.Secret, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential(authenticationInfo.IdentityId, tokenCredentialOptions);
+                    var clientId = authenticationInfo.GetIdentityIdOrDefault();
+                    tokenCredential = new ManagedIdentityCredential(clientId, tokenCredentialOptions);
                     break;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     tokenCredential = new ManagedIdentityCredential(options:tokenCredentialOptions);
@@ -162,12 +173,8 @@ namespace Promitor.Integrations.Azure.Authentication
 
         private static AzureCredentials GetUserAssignedManagedIdentityCredentials(AzureEnvironment azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, AzureCredentialsFactory azureCredentialsFactory)
         {
-            if (string.IsNullOrWhiteSpace(azureAuthenticationInfo.IdentityId))
-            {
-                throw new AuthenticationException("No identity was configured for user-assigned managed identity");
-            }
-
-            return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(azureAuthenticationInfo.IdentityId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
+            var clientId = azureAuthenticationInfo.GetIdentityIdOrDefault();
+            return azureCredentialsFactory.FromUserAssigedManagedServiceIdentity(clientId, MSIResourceType.VirtualMachine, azureCloud, tenantId);
         }
     }
 }

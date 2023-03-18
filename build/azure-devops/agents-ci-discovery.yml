@@ -43,19 +43,6 @@ stages:
         persistedVariableName: 'Image.Tag'
      - publish: $(Pipeline.Workspace)/variables
        artifact: variables
-- stage: CodeQuality
-  displayName: Code Quality
-  dependsOn: [Init]
-  jobs:
-   - job: RunCodeQuality
-     displayName: Run Code Quality
-     condition: succeeded()
-     pool:
-       vmImage: windows-2019
-     steps:
-     - template: templates/quality/run-code-quality.yml
-       parameters:
-        dotnetVersion: '$(DotNet.Sdk.Version)'
 - stage: Docker
   displayName: Docker Image
   dependsOn: [Init]

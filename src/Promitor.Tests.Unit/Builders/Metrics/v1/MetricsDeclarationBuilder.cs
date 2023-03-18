@@ -257,6 +257,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithDataExplorerClusterMetric(string metricName = "promitor-data-explorer-cluster",
+            string metricDescription = "Description for a metric",
+            string clusterName = "promitor-data-explorer-cluster",
+            string azureMetricName = "CPU",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DataExplorerClusterResourceV1
+            {
+                ClusterName = clusterName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DataExplorerCluster, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithDataShareMetric(string metricName = "promitor-data-share",
             string metricDescription = "Description for a metric",
             string accountName = "promitor-data-share-account",
@@ -599,6 +617,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithNatGatewayMetric(string metricName = "promitor-nat-gateway",
+            string metricDescription = "Description for a metric",
+            string natGatewayName = "promitor-nat-gateway-name",
+            string azureMetricName = "ExpressRouteGatewayPacketsPerSecond",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new NatGatewayResourceV1
+            {
+                NatGatewayName = natGatewayName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.NatGateway, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithNetworkGatewayMetric(string metricName = "promitor-network-gateway",
             string metricDescription = "Description for a metric",
             string networkGatewayName = "promitor-network-gateway-name",
@@ -651,6 +687,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             };
 
             CreateAndAddMetricDefinition(ResourceType.PostgreSql, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithPublicIpAddressMetric(string metricName = "promitor-ip-address",
+            string metricDescription = "Description for a metric",
+            string publicIpAddressName = "promitor-ip-address-name",
+            string azureMetricName = "IfUnderDDoSAttack",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new PublicIpAddressResourceV1
+            {
+                PublicIpAddressName = publicIpAddressName,
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PublicIpAddress, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
 
             return this;
         }

@@ -51,6 +51,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.CosmosDb:
                     var cosmosDbLogger = _loggerFactory.CreateLogger<CosmosDbDeserializer>();
                     return new CosmosDbDeserializer(cosmosDbLogger);
+                case ResourceType.DataExplorerCluster:
+                    var dataExplorerClusterLogger = _loggerFactory.CreateLogger<DataExplorerClusterDeserializer>();
+                    return new DataExplorerClusterDeserializer(dataExplorerClusterLogger);
                 case ResourceType.DataFactory:
                     var dataFactoryDeserializer = _loggerFactory.CreateLogger<DataFactoryDeserializer>();
                     return new DataFactoryDeserializer(dataFactoryDeserializer);
@@ -105,6 +108,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.MySql:
                     var mySqlLogger = _loggerFactory.CreateLogger<MySqlDeserializer>();
                     return new MySqlDeserializer(mySqlLogger);
+                case ResourceType.NatGateway:
+                    var natGatewayLogger = _loggerFactory.CreateLogger<NatGatewayDeserializer>();
+                    return new NatGatewayDeserializer(natGatewayLogger);
                 case ResourceType.NetworkGateway:
                     var networkGatewayLogger = _loggerFactory.CreateLogger<NetworkGatewayDeserializer>();
                     return new NetworkGatewayDeserializer(networkGatewayLogger);
@@ -114,6 +120,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.PostgreSql:
                     var postgreSqlLogger = _loggerFactory.CreateLogger<PostgreSqlDeserializer>();
                     return new PostgreSqlDeserializer(postgreSqlLogger);
+                case ResourceType.PublicIpAddress:
+                    var publicIpAddressLogger = _loggerFactory.CreateLogger<PublicIpAddressDeserializer>();
+                    return new PublicIpAddressDeserializer(publicIpAddressLogger);
                 case ResourceType.RedisCache:
                     var redisCacheLogger = _loggerFactory.CreateLogger<RedisCacheDeserializer>();
                     return new RedisCacheDeserializer(redisCacheLogger);

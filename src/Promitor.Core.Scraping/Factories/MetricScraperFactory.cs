@@ -57,6 +57,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new ContainerRegistryScraper(scraperConfiguration);
                 case ResourceType.CosmosDb:
                     return new CosmosDbScraper(scraperConfiguration);
+                case ResourceType.DataExplorerCluster:
+                    return new DataExplorerClusterScraper(scraperConfiguration);
                 case ResourceType.DataFactory:
                     return new DataFactoryScraper(scraperConfiguration);
                 case ResourceType.DataShare:
@@ -93,12 +95,16 @@ namespace Promitor.Core.Scraping.Factories
                     return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.MySql:
                     return new MySqlScraper(scraperConfiguration);
+                case ResourceType.NatGateway:
+                    return new NatGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkGateway:
                     return new NetworkGatewayScraper(scraperConfiguration);
                 case ResourceType.NetworkInterface:
                     return new NetworkInterfaceScraper(scraperConfiguration);
                 case ResourceType.PostgreSql:
                     return new PostgreSqlScraper(scraperConfiguration);
+                case ResourceType.PublicIpAddress:
+                    return new PublicIpAddressScraper(scraperConfiguration);
                 case ResourceType.RedisCache:
                     return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.RedisEnterpriseCache:

@@ -6,6 +6,8 @@
         {
             public const string IdentityId = "authentication:IdentityId";
             public const string Mode = "authentication:Mode";
+            public const string SecretFilePath = "authentication:SecretFilePath";
+            public const string SecretFileName = "authentication:SecretFileName";
         }
     }
 }
