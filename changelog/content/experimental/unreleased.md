@@ -15,6 +15,7 @@ version:
 - {{% tag added %}} Provide container vulnerability scanning in CI
 - {{% tag added %}} Provide option to use a User Assigned Managed Identity without specifying the Client ID
 - {{% tag added %}} Provide support for Public IP Address ([docs](https://docs.promitor.io/unreleased/scraping/providers/public-ip-address.md))
+- {{% tag added %}} Provide support for Azure Traffic Manager ([docs](https://docs.promitor.io/unreleased/scraping/providers/traffic-manager.md))
 - {{% tag security %}} Patch for [CVE-2023-0286](https://github.com/advisories/GHSA-x4qr-2fvf-3mr5) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2023-0215](https://github.com/advisories/GHSA-x4qr-2fvf-3mr5) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2022-41032](https://github.com/advisories/GHSA-g3q9-xf95-8hp5) (High)
@@ -37,6 +38,7 @@ version:
 - {{% tag added %}} Provide support for Azure NAT Gateway ([docs](https://docs.promitor.io/unreleased/scraping/providers/nat-gateway.md))
 - {{% tag added %}} Provide option to use a User Assigned Managed Identity without specifying the Client ID
 - {{% tag added %}} Provide support for Public IP Address ([docs](https://docs.promitor.io/unreleased/scraping/providers/public-ip-address.md))
+- {{% tag added %}} Provide support for Azure Traffic Manager ([docs](https://docs.promitor.io/unreleased/scraping/providers/traffic-manager.md))
 - {{% tag security %}} Patch for [CVE-2022-37434](https://github.com/advisories/GHSA-cfmr-vrgj-vqwv) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2021-42377](https://github.com/advisories/GHSA-phvg-gc27-gjwp) (Critical | Base image)
 - {{% tag security %}} Patch for [CVE-2022-38013](https://github.com/advisories/GHSA-r8m2-4x37-6592) (High)

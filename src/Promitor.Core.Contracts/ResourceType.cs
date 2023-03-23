@@ -53,5 +53,6 @@
         DataExplorerCluster = 48,
         NatGateway = 49,
         PublicIpAddress = 50,
+        TrafficManager = 51,
     }
 }
