@@ -348,6 +348,15 @@ metrics:
         type: Maximum
     resourceDiscoveryGroups:
       - name: public-ip-addresses
+  - name: azure_traffic_manager_endpoint_qps
+    description: Number of times a Traffic Manager endpoint was returned in the given time frame
+    resourceType: TrafficManager
+    azureMetricConfiguration:
+      metricName: QpsByEndpoint
+      aggregation:
+        type: Total
+    resourceDiscoveryGroups:
+      - name: traffic-managers
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

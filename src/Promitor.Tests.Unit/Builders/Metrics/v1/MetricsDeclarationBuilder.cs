@@ -973,6 +973,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithTrafficManagerMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string name = "promitor-traffic-manager",
+            string azureMetricName = "QpsByEndpoint",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new TrafficManagerResourceV1
+            {
+                Name = name
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.TrafficManager, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine",
             string metricDescription = "Description for a metric",
             string virtualMachineName = "promitor-virtual-machine-name",
