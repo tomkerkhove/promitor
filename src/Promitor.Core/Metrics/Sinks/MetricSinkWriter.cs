@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Promitor.Core.Metrics.Sinks
     public class MetricSinkWriter
     {
         private readonly List<IMetricSink> _configuredSinks;
+        private readonly ConcurrentDictionary<string, string> _subscriptionMappings = new ConcurrentDictionary<string, string>();
+
         private ILogger Logger { get; }
 
         public List<MetricSinkType> EnabledMetricSinks { get; }
@@ -26,10 +29,16 @@ namespace Promitor.Core.Metrics.Sinks
             this.EnabledMetricSinks = metricSinks.Select(x => x.Type).Distinct().ToList();
         }
 
+        public void RegisterSubscriptionMapping(string id, string name)
+        {
+            _subscriptionMappings[id] = name;
+        }
+
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapedMetricResult)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotNull(scrapedMetricResult, nameof(scrapedMetricResult));
+            addSubscriptionNameLabel(scrapedMetricResult.Labels);
 
             var reportTasks = new List<Task>();
             foreach (var sink in _configuredSinks)
@@ -62,6 +71,7 @@ namespace Promitor.Core.Metrics.Sinks
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotNull(metricLabels, nameof(metricLabels));
+            addSubscriptionNameLabel(metricLabels);
 
             var reportTasks = new List<Task>();
             foreach (var sink in _configuredSinks)
@@ -71,6 +81,21 @@ namespace Promitor.Core.Metrics.Sinks
             }
 
             await Task.WhenAll(reportTasks);
+        }
+
+        private void addSubscriptionNameLabel(Dictionary<string, string> labels)
+        {
+            if (!labels.ContainsKey("subscription_id")) return;
+
+            string nameValue;
+            if (_subscriptionMappings.TryGetValue(labels["subscription_id"], out nameValue))
+            {
+                labels["subscription_name"] = nameValue;
+            }
+            else
+            {
+                labels["subscription_name"] = "";
+            }
         }
     }
 }

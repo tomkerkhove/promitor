@@ -41,5 +41,10 @@ namespace Promitor.Agents.Scraper.Discovery
         {
             return await _resourceDiscoveryClient.GetHealthAsync();
         }
+
+        public async Task<List<AzureSubscription>> GetSubscriptionsAsync()
+        {
+            return await _resourceDiscoveryClient.GetSubscriptionsAsync();
+        }
     }
 }

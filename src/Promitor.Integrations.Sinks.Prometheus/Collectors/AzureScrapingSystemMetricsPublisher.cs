@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
@@ -14,6 +15,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         private readonly ISystemMetricsPublisher _systemMetricsPublisher;
         private readonly IMetricsDeclarationProvider _metricsDeclarationProvider;
         private readonly IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> _prometheusConfiguration;
+        private readonly ConcurrentDictionary<string, string> _subscriptionMappings = new ConcurrentDictionary<string, string>();
 
         public AzureScrapingSystemMetricsPublisher(IMetricsDeclarationProvider metricsDeclarationProvider, ISystemMetricsPublisher systemMetricsPublisher, IOptionsMonitor<PrometheusScrapingEndpointSinkConfiguration> prometheusConfiguration)
         {
@@ -23,6 +25,16 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             _prometheusConfiguration = prometheusConfiguration;
             _systemMetricsPublisher = systemMetricsPublisher;
             _metricsDeclarationProvider = metricsDeclarationProvider;
+        }
+
+        /// <summary>
+        /// Registers or updates a subscription ID to name mapping
+        /// </summary>
+        /// <param name="id">Subscription ID.</param>
+        /// <param name="name">Subscription name.</param>
+        public void RegisterSubscriptionMapping(string id, string name)
+        {
+            _subscriptionMappings[id] = name;
         }
 
         /// <summary>
@@ -42,6 +54,8 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
                 labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
             }
 
+            addSubscriptionNameLabel(labels);
+
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
@@ -49,7 +63,24 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
         public async Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
+            addSubscriptionNameLabel(labels);
+
             await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
+        }
+
+        private void addSubscriptionNameLabel(Dictionary<string, string> labels)
+        {
+            if (!labels.ContainsKey("subscription_id")) return;
+
+            string nameValue;
+            if (_subscriptionMappings.TryGetValue(labels["subscription_id"], out nameValue))
+            {
+                labels["subscription_name"] = nameValue;
+            }
+            else
+            {
+                labels["subscription_name"] = "";
+            }
         }
     }
 }

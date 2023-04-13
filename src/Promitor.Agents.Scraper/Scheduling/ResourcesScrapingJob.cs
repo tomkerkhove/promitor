@@ -132,6 +132,8 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             try
             {
+                await UpdateSubscriptionMappings(cancellationToken);
+
                 var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
 
                 await ScrapeMetrics(scrapeDefinitions, cancellationToken);
@@ -147,6 +149,16 @@ namespace Promitor.Agents.Scraper.Scheduling
             finally
             {
                 Logger.LogDebug("Ended scraping job {JobName}.", Name);
+            }
+        }
+
+        private async Task UpdateSubscriptionMappings(CancellationToken cancellationToken)
+        {
+            var list = await _resourceDiscoveryRepository.GetSubscriptionsAsync();
+            foreach (var sub in list)
+            {
+                _azureScrapingSystemMetricsPublisher.RegisterSubscriptionMapping(sub.Id, sub.Name);
+                _metricSinkWriter.RegisterSubscriptionMapping(sub.Id, sub.Name);
             }
         }
 

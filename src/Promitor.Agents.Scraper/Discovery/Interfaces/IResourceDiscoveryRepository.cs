@@ -9,5 +9,6 @@ namespace Promitor.Agents.Scraper.Discovery.Interfaces
     {
         Task<List<AzureResourceDefinition>> GetResourceDiscoveryGroupAsync(string resourceDiscoveryGroupName);
         Task<AgentHealthReport> GetHealthAsync();
+        Task<List<AzureSubscription>> GetSubscriptionsAsync();
     }
 }

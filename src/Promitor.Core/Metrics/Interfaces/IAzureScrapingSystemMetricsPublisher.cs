@@ -1,10 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Promitor.Core.Metrics.Interfaces
 {
     public interface IAzureScrapingSystemMetricsPublisher : ISystemMetricsPublisher
     {
+        /// <summary>
+        ///     Registers or updates a subscription ID to name mapping
+        /// </summary>
+        /// <param name="id">Subscription ID.</param>
+        /// <param name="name">Subscription name.</param>
+        void RegisterSubscriptionMapping(string id, string name);
+
         /// <summary>
         ///     Sets a new value for a measurement on a gauge
         /// </summary>

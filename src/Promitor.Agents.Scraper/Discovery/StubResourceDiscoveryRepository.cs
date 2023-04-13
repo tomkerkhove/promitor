@@ -10,6 +10,7 @@ namespace Promitor.Agents.Scraper.Discovery
     {
         private static readonly List<AzureResourceDefinition> emptyResourceDefinitions = new List<AzureResourceDefinition>();
         private static readonly AgentHealthReport healthReport = new AgentHealthReport();
+        private static readonly List<AzureSubscription> emptySubscriptions = new List<AzureSubscription>();
 
         public Task<List<AzureResourceDefinition>> GetResourceDiscoveryGroupAsync(string resourceDiscoveryGroupName)
         {
@@ -19,6 +20,11 @@ namespace Promitor.Agents.Scraper.Discovery
         public Task<AgentHealthReport> GetHealthAsync()
         {
             return Task.FromResult(healthReport);
+        }
+
+        public Task<List<AzureSubscription>> GetSubscriptionsAsync()
+        {
+            return Task.FromResult(emptySubscriptions);
         }
     }
 }
