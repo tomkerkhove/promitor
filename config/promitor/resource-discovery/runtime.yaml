@@ -2,7 +2,7 @@ server:
   httpPort: 88
 authentication:
   mode: ServicePrincipal
-  identityId: bcb00b1d-7cde-4d05-b0fc-23a287697fa2
+  identityId: 90a927a2-fa24-414a-a961-70f574d14df9
 telemetry:
   applicationInsights:
     instrumentationKey: ABC
