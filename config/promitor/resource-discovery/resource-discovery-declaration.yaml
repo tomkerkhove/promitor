@@ -1,8 +1,8 @@
 version: v1
 azureLandscape:
-  tenantId: e0372f7f-a362-47fb-9631-74a5c4ba8bbf
+  tenantId: 56c6cf98-bd87-4684-ad83-f3b41dfdcb21
   subscriptions:
-  - 63c590b6-4947-4898-92a3-cae91a31b5e4
+  - 3566a5fa-878c-40fd-ac37-ef0ba0eee29d
   cloud: Global
 resourceDiscoveryGroups:
 - name: service-bus-landscape
