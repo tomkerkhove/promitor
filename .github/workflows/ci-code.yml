@@ -40,14 +40,13 @@ jobs:
       - name: Run Unit Tests
         run: dotnet test src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj --logger "trx;LogFileName=test-results.trx"
 
-        # Provide Unit Test Results
-      - name: Report Unit Test Results
-        uses: dorny/test-reporter@v1
+        # Publish Unit Test Results
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
         if: success() || failure()
         with:
-          name: .NET Unit Tests
+          name: test-results
           path: src/**/test-results.trx
-          reporter: dotnet-trx
   code_quality:
     runs-on: ubuntu-latest # or macos-latest, windows-latest
     name: Code Quality (R#)
