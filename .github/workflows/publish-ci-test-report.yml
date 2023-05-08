@@ -20,7 +20,6 @@ jobs:
       id: download-artifact
       uses: dawidd6/action-download-artifact@v2
       with:
-        commit: ${{ github.event.pull_request.head.sha }}
         run_id: ${{ github.event.workflow_run.id }}
         name: test-results
 
