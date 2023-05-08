@@ -55,6 +55,8 @@ variables:
     value: NOTUSED
   - name: Agent.ResourceDiscovery.Version
     value: $(Image.Version)
+  - name: OpenTelemetry.Collector.Uri
+    value: http://notused:8889
 
 stages:
 - stage: Init
