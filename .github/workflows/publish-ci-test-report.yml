@@ -28,7 +28,7 @@ jobs:
       with:
         artifact: test-results
         name: .NET Unit Tests
-        path: '*.trx'
+        path: '**/*.trx'
         reporter: dotnet-trx
 
     - name: 'Comment on PR'
