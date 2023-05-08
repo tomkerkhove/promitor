@@ -1,0 +1,24 @@
+name: 'Test Report'
+on:
+  workflow_run:
+    workflows: ['CI - Code']
+    types:
+      - completed
+
+permissions:
+  statuses: write
+  checks: write
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: dorny/test-reporter@v1
+      with:
+        artifact: test-results
+        name: .NET Unit Tests
+        path: '*.trx'
+        reporter: dotnet-trx
