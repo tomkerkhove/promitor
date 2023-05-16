@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.202 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.302 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
