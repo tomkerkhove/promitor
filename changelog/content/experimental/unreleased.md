@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag security %}} Patch for [CVE-2023-28260](https://github.com/advisories/GHSA-w4m3-43gp-x8hx) (High | Base image)
 
 #### Resource Discovery
 
-None.
+- {{% tag security %}} Patch for [CVE-2023-28260](https://github.com/advisories/GHSA-w4m3-43gp-x8hx) (High | Base image)
