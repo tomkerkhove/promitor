@@ -9,7 +9,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldValidators
 {
     public class CronExpressionValidatorTests : UnitTest
     {
-        private readonly CronExpressionValidator _validator = new CronExpressionValidator();
+        private readonly CronExpressionValidator _validator = new();
 
         [Fact]
         public void Validate_InvalidExpression_ReportsError()

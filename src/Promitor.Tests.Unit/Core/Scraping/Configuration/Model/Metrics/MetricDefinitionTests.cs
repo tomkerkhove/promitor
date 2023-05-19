@@ -12,9 +12,9 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
     public class MetricDefinitionTests
     {
         private readonly PrometheusMetricDefinition _prometheusMetricDefinition =
-            new PrometheusMetricDefinition("promitor_test", "test", new Dictionary<string, string>());
+            new("promitor_test", "test", new Dictionary<string, string>());
 
-        private readonly AzureMetadata _azureMetadata = new AzureMetadata { ResourceGroupName = "global-resource-group", SubscriptionId = "global-subscription-id"};
+        private readonly AzureMetadata _azureMetadata = new() { ResourceGroupName = "global-resource-group", SubscriptionId = "global-subscription-id"};
 
         [Fact]
         public void CreateScrapeDefinition_ResourceOverridesResourceGroupName_UsesOverriddenName()

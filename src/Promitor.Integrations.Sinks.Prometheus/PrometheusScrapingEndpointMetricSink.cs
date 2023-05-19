@@ -102,9 +102,9 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 foreach (var customLabel in metricDefinition.Labels)
                 {
                     var customLabelKey = customLabel.Key.SanitizeForPrometheusLabelKey();
-                    if (labels.ContainsKey(customLabelKey))
+                    if (labels.TryGetValue(customLabelKey, out var customLabelValue))
                     {
-                        _logger.LogWarning("Custom label {CustomLabelName} was already specified with value '{LabelValue}' instead of '{CustomLabelValue}'. Ignoring...", customLabel.Key, labels[customLabelKey], customLabel.Value);
+                        _logger.LogWarning("Custom label {CustomLabelName} was already specified with value '{LabelValue}' instead of '{CustomLabelValue}'. Ignoring...", customLabel.Key, customLabelValue, customLabel.Value);
                         continue;
                     }
 
@@ -115,18 +115,12 @@ namespace Promitor.Integrations.Sinks.Prometheus
             foreach (var defaultLabel in defaultLabels)
             {
                 var defaultLabelKey = defaultLabel.Key.SanitizeForPrometheusLabelKey();
-                if (labels.ContainsKey(defaultLabelKey) == false)
-                {
-                    labels.Add(defaultLabelKey, defaultLabel.Value);
-                }
+                labels.TryAdd(defaultLabelKey, defaultLabel.Value);
             }
 
             // Add the tenant id
             var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
-            if (labels.ContainsKey("tenant_id") == false)
-            {
-                labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
-            }
+            labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
 
             // Transform labels, if need be
             if (_prometheusConfiguration.CurrentValue.Labels != null)

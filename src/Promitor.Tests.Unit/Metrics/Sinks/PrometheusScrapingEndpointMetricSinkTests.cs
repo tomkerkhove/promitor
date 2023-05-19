@@ -144,7 +144,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
-                Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
+                Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
             var firstMetric = MeasuredMetric.CreateForDimension(firstMetricValue, dimensionName.ToUpper(), timeSeries);
             var secondMetric = MeasuredMetric.CreateWithoutDimension(secondMetricValue);
@@ -256,7 +256,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
-                Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
+                Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
             var measuredMetric = MeasuredMetric.CreateForDimension(metricValue, dimensionName.ToUpper(), timeSeries);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);

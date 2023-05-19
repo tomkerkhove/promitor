@@ -12,8 +12,8 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 {
     public class ValidationTests : UnitTest
     {
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
-        private readonly TestDeserializer _deserializer = new TestDeserializer();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
+        private readonly TestDeserializer _deserializer = new();
         
         [Fact]
         public void Deserialize_RequiredFieldMissing_ReportsError()

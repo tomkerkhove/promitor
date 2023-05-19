@@ -14,7 +14,7 @@ namespace Promitor.Agents.Scraper
 {
     public class AzureMonitorClientFactory
     {
-        private readonly Dictionary<string, AzureMonitorClient> _azureMonitorClients = new Dictionary<string, AzureMonitorClient>();
+        private readonly Dictionary<string, AzureMonitorClient> _azureMonitorClients = new();
 
         /// <summary>
         /// Provides an Azure Monitor client
@@ -31,9 +31,9 @@ namespace Promitor.Agents.Scraper
         /// <param name="loggerFactory">Factory to create loggers with</param>
         public AzureMonitorClient CreateIfNotExists(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
-            if (_azureMonitorClients.ContainsKey(subscriptionId))
+            if (_azureMonitorClients.TryGetValue(subscriptionId, out var value))
             {
-                return _azureMonitorClients[subscriptionId];
+                return value;
             }
 
             var azureMonitorClient = CreateNewAzureMonitorClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);

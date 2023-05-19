@@ -14,7 +14,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     {
         private readonly LogAnalyticsConfigurationDeserializer _deserializer;
         private readonly Mock<IDeserializer<AggregationV1>> _aggregationDeserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
 
         public LogAnalyticsConfigurationDeserializerTests()
         {

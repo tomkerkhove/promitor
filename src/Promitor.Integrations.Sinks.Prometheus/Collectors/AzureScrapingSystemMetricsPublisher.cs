@@ -37,10 +37,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
             var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
-            if (labels.ContainsKey("tenant_id") == false)
-            {
-                labels.Add("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
-            }
+            labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 

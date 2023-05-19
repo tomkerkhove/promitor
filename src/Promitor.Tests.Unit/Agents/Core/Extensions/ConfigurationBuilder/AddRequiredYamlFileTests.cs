@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Agents.Core.Extensions.ConfigurationBuilder
 
     public class AddRequiredYamlFileTests : IDisposable
     {
-        private readonly List<string> _tempFiles = new List<string>();
+        private readonly List<string> _tempFiles = new();
 
         [Fact]
         public void AddRequiredYamlFile_FileExists_AddsFile()

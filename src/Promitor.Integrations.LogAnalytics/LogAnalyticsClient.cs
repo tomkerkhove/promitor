@@ -13,8 +13,8 @@ namespace Promitor.Integrations.LogAnalytics
     {
         private readonly ILogger _logger;
         public readonly string ColumnNameResult = "result";
-        private readonly Uri _defaultEndpoint = new Uri("https://api.loganalytics.io");
-        private readonly Uri _govEndpoint = new Uri("https://api.loganalytics.us");
+        private readonly Uri _defaultEndpoint = new("https://api.loganalytics.io");
+        private readonly Uri _govEndpoint = new("https://api.loganalytics.us");
 
         private readonly LogsQueryClient _logsQueryClient;
 

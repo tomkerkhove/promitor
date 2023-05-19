@@ -7,9 +7,9 @@ namespace Promitor.Agents.Scraper.Configuration
 {
     public class ScraperRuntimeConfiguration : RuntimeConfiguration
     {
-        public AzureMonitorConfiguration AzureMonitor { get; set; } = new AzureMonitorConfiguration();
-        public MetricsConfiguration MetricsConfiguration { get; set; } = new MetricsConfiguration();
-        public MetricSinkConfiguration MetricSinks { get; set; } = new MetricSinkConfiguration();
+        public AzureMonitorConfiguration AzureMonitor { get; set; } = new();
+        public MetricsConfiguration MetricsConfiguration { get; set; } = new();
+        public MetricSinkConfiguration MetricSinks { get; set; } = new();
         public ResourceDiscoveryConfiguration ResourceDiscovery { get; set; }
     }
 }

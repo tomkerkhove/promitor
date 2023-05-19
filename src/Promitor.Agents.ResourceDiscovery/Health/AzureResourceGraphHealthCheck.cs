@@ -31,7 +31,7 @@ namespace Promitor.Agents.ResourceDiscovery.Health
             _resourceDeclarationMonitor = resourceDeclarationMonitor;
         }
 
-        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
         {
             var query = GraphQueryBuilder.ForResourceType("microsoft.logic/workflows")
                 .Project("subscriptionId", "resourceGroup", "type", "name", "id")

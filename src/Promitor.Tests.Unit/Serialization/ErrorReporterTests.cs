@@ -8,7 +8,7 @@ namespace Promitor.Tests.Unit.Serialization
     [Category("Unit")]
     public class ErrorReporterTests : UnitTest
     {
-        private readonly ErrorReporter _errorReporter = new ErrorReporter();
+        private readonly ErrorReporter _errorReporter = new();
 
         [Fact]
         public void ReportError_AfterErrorReported_AddsError()

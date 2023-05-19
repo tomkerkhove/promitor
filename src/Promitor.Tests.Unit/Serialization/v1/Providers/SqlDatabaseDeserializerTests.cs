@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
     [Category("Unit")]
     public class SqlDatabaseDeserializerTests : ResourceDeserializerTest<SqlDatabaseDeserializer>
     {
-        private readonly SqlDatabaseDeserializer _deserializer = new SqlDatabaseDeserializer(NullLogger.Instance);
+        private readonly SqlDatabaseDeserializer _deserializer = new(NullLogger.Instance);
 
         [Fact]
         public void Deserialize_ServerNameSupplied_SetsServerName()

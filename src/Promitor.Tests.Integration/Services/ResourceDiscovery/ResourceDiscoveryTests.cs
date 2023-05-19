@@ -18,7 +18,7 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
 {
     public class ResourceDiscoveryTests : ResourceDiscoveryIntegrationTest
     {
-        private readonly Faker _bogusGenerator = new Faker();
+        private readonly Faker _bogusGenerator = new();
 
         public ResourceDiscoveryTests(ITestOutputHelper testOutput)
           : base(testOutput)
