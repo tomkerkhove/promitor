@@ -62,24 +62,18 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="openApiConfigurationAction">Action to configure Open API</param>
         public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, string apiName, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
         {
-            if (openApiConfigurationAction == null)
+            openApiConfigurationAction ??= setupAction =>
             {
-                openApiConfigurationAction = setupAction =>
-                {
-                    setupAction.RouteTemplate = "api/{documentName}/docs.json";
-                    setupAction.PreSerializeFilters.Add((swagger, request) => AutomaticallyBuildApiServerUrl(request, swagger));
-                };
-            }
+                setupAction.RouteTemplate = "api/{documentName}/docs.json";
+                setupAction.PreSerializeFilters.Add((swagger, request) => AutomaticallyBuildApiServerUrl(request, swagger));
+            };
 
-            if (openApiUiConfigurationAction == null)
+            openApiUiConfigurationAction ??= swaggerUiOptions =>
             {
-                openApiUiConfigurationAction = swaggerUiOptions =>
-                {
-                    swaggerUiOptions.ConfigureDefaultOptions(apiName);
-                    swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
-                    swaggerUiOptions.RoutePrefix = "api/docs";                    
-                };
-            }
+                swaggerUiOptions.ConfigureDefaultOptions(apiName);
+                swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
+                swaggerUiOptions.RoutePrefix = "api/docs";
+            };
 
             // New Swagger UI
             app.UseSwagger(openApiConfigurationAction);

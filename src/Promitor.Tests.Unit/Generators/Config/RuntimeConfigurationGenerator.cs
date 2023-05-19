@@ -200,12 +200,8 @@ namespace Promitor.Tests.Unit.Generators.Config
                     Verbosity = verbosity
                 };
 
-            if (_runtimeConfiguration.Telemetry == null)
-            {
-                _runtimeConfiguration.Telemetry = new TelemetryConfiguration();
-            }
-
-            _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
+            _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
+_runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
 
             return this;
         }
@@ -221,11 +217,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                     Verbosity = verbosity
                 };
 
-            if (_runtimeConfiguration.Telemetry == null)
-            {
-                _runtimeConfiguration.Telemetry = new TelemetryConfiguration();
-            }
-
+            _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
             _runtimeConfiguration.Telemetry.ApplicationInsights = applicationInsightsTelemetry;
 
             return this;
@@ -233,11 +225,7 @@ namespace Promitor.Tests.Unit.Generators.Config
 
         public RuntimeConfigurationGenerator WithAzureMonitorLogging(bool isEnabled = true, HttpLoggingDelegatingHandler.Level informationLevel = HttpLoggingDelegatingHandler.Level.Headers)
         {
-            if (_runtimeConfiguration.AzureMonitor == null)
-            {
-                _runtimeConfiguration.AzureMonitor = new AzureMonitorConfiguration();
-            }
-
+            _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Logging = new AzureMonitorLoggingConfiguration
             {
                 IsEnabled = isEnabled,

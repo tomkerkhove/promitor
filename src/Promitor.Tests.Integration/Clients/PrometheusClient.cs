@@ -60,7 +60,7 @@ namespace Promitor.Tests.Integration.Clients
             Func<KeyValuePair<string, string>, bool> labelFilter = label => label.Key.Equals(expectedLabelName, StringComparison.InvariantCultureIgnoreCase)
                                                                             && label.Value.Equals(expectedLabelValue, StringComparison.InvariantCultureIgnoreCase);
             return await WaitForPrometheusMetricAsync(x => x.Name.Equals(computedExpectedMetricName, StringComparison.InvariantCultureIgnoreCase)
-                                                           && x.Measurements?.Any(measurement => measurement.Labels?.Any(labelFilter) == true) == true);
+                                                           && x.Measurements?.Any(measurement => measurement.Labels?.Any(F) == true) == true);
         }
 
         private async Task<Gauge> WaitForPrometheusMetricAsync(Predicate<Gauge> filter)

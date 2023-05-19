@@ -22,7 +22,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             Guard.NotNull(metrics, nameof(metrics));
 
             var errorMessages = metrics
-                .SelectMany(metric => Validate(metric))
+                .SelectMany(Validate)
                 .AsParallel();
 
             return errorMessages.ToList();

@@ -189,8 +189,7 @@ namespace Promitor.Integrations.AzureMonitor
         private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
-                .OrderByDescending(metricValue => metricValue.TimeStamp)
-                .FirstOrDefault();
+                                                     .MaxBy(metricValue => metricValue.TimeStamp);
 
             if (relevantMetricValue == null)
             {
