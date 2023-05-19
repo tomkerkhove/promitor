@@ -292,7 +292,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    metricFormat: {_runtimeConfiguration?.MetricSinks.Statsd.MetricFormat}");
                     if (_runtimeConfiguration?.MetricSinks.Statsd.Geneva != null)
                     {
-                        configurationBuilder.AppendLine($"    geneva:");
+                        configurationBuilder.AppendLine("    geneva:");
                         configurationBuilder.AppendLine($"      account: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Account}");
                         configurationBuilder.AppendLine($"      namespace: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Namespace}");
                     }

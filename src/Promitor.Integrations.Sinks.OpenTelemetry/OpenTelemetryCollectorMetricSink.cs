@@ -68,7 +68,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
 
         private void InitializeNewMetric(string metricName, string metricDescription)
         {
-            var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetricAsync(metricName).Result);
+            var gauge = azureMonitorMeter.CreateObservableGauge(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetricAsync(metricName).Result);
             _gauges.TryAdd(metricName, gauge);
 
             _measurements.TryAdd(metricName, CreateNewMeasurementChannel());

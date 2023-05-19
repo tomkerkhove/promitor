@@ -91,12 +91,12 @@ namespace Microsoft.AspNetCore.Builder
         private static void AutomaticallyBuildApiServerUrl(HttpRequest request, OpenApiDocument swagger)
         {
             // Default to simple scenario
-            string serverUrl = $"{request.Scheme}://{request.Host}";
+            var serverUrl = $"{request.Scheme}://{request.Host}";
 
             // If request forwarding is used, we need to see if we need to adapt
             // Here we need to use the host and prefix, when specified
             // This is required when using reverse proxies such as Azure API Management, Traefik, NGINX, etc.
-            if (request.Headers.ContainsKey("X-Forwarded-Host"))
+            if (request.Headers.TryGetValue("X-Forwarded-Host", out var forwardedHost))
             {
                 var urlPrefix = string.Empty;
                 var prefixFromHeaders = request.Headers["X-Forwarded-Prefix"];
@@ -110,7 +110,7 @@ namespace Microsoft.AspNetCore.Builder
                     }
                 }
 
-                serverUrl = $"{request.Scheme}://{request.Headers["X-Forwarded-Host"]}{urlPrefix}";
+                serverUrl = $"{request.Scheme}://{forwardedHost}{urlPrefix}";
             }
 
             swagger.Servers = new List<OpenApiServer> {new OpenApiServer {Url = serverUrl}};
