@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -47,6 +48,15 @@ namespace Promitor.Agents.Scraper.Discovery
             var rawResponse = await SendGetRequestAsync("api/v1/health");
             var healthReport = JsonConvert.DeserializeObject<AgentHealthReport>(rawResponse, new HealthReportEntryConverter());
             return healthReport;
+        }
+
+        public async Task<List<AzureSubscription>> GetSubscriptionsAsync()
+        {
+            var uri = $"api/v2/subscriptions";
+            var rawResponse = await SendGetRequestAsync(uri);
+
+            var foundSubscriptions = JsonConvert.DeserializeObject<List<AzureSubscription>>(rawResponse, _serializerSettings);
+            return foundSubscriptions;
         }
 
         private async Task<string> SendGetRequestAsync(string uriPath)

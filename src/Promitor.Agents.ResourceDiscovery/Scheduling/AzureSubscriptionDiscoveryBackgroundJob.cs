@@ -15,7 +15,9 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
     {
         public const string MetricName = "promitor_azure_landscape_subscription_info";
         public const string MetricDescription = "Provides information concerning the Azure subscriptions in the landscape that Promitor has access to.";
-        
+
+        public static List<AzureSubscription> CurrentSubscriptions { get; private set; } = new List<AzureSubscription>();
+
         public AzureSubscriptionDiscoveryBackgroundJob(string jobName, IAzureResourceRepository azureResourceRepository, ISystemMetricsPublisher systemMetricsPublisher, ILogger<AzureSubscriptionDiscoveryBackgroundJob> logger)
             : base(azureResourceRepository, systemMetricsPublisher, logger)
         {
@@ -32,6 +34,8 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
 
             // Discover Azure subscriptions
 
+            var newList = new List<AzureSubscription>();
+
             PagedPayload<AzureSubscriptionInformation> discoveredLandscape;
             var currentPage = 1;
             do
@@ -42,12 +46,14 @@ namespace Promitor.Agents.ResourceDiscovery.Scheduling
                 foreach (var discoveredLandscapeItem in discoveredLandscape.Result)
                 {
                     ReportDiscoveredAzureInfo(discoveredLandscapeItem);
+                    newList.Add(new AzureSubscription { Id = discoveredLandscapeItem.Id, Name = discoveredLandscapeItem.Name });
                 }
 
                 currentPage++;
             }
             while (discoveredLandscape.HasMore);
 
+            CurrentSubscriptions = newList;
             Logger.LogTrace("Azure subscriptions discovered...");
         }
 

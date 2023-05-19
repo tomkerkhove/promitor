@@ -82,6 +82,21 @@
             </summary>
             <remarks>Discovers Azure resources matching the criteria.</remarks>
         </member>
+        <member name="T:Promitor.Agents.ResourceDiscovery.Controllers.v2.SubscriptionsV2Controller">
+            <summary>
+            API endpoint to list Azure subscriptions
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.v2.SubscriptionsV2Controller.#ctor(Promitor.Agents.ResourceDiscovery.Graph.Repositories.Interfaces.IAzureResourceRepository)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Promitor.Agents.ResourceDiscovery.Controllers.v2.SubscriptionsV2Controller"/> class.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.ResourceDiscovery.Controllers.v2.SubscriptionsV2Controller.Get">
+            <summary>
+            List subscriptions
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.ResourceDiscovery.Extensions.IServiceCollectionExtensions.AddRuntimeConfiguration(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Inject configuration
