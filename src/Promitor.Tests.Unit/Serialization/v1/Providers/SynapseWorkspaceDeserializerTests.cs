@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
     [Category("Unit")]
     public class SynapseWorkspaceDeserializerTests : ResourceDeserializerTest<SynapseWorkspaceDeserializer>
     {
-        private readonly SynapseWorkspaceDeserializer _deserializer = new SynapseWorkspaceDeserializer(NullLogger<SynapseWorkspaceDeserializer>.Instance);
+        private readonly SynapseWorkspaceDeserializer _deserializer = new(NullLogger<SynapseWorkspaceDeserializer>.Instance);
         
         [Fact]
         public void Deserialize_WorkspaceNameSupplied_SetsWorkspace()

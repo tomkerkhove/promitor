@@ -113,7 +113,7 @@ namespace Microsoft.AspNetCore.Builder
                 serverUrl = $"{request.Scheme}://{forwardedHost}{urlPrefix}";
             }
 
-            swagger.Servers = new List<OpenApiServer> {new OpenApiServer {Url = serverUrl}};
+            swagger.Servers = new List<OpenApiServer> {new() {Url = serverUrl}};
         }
     }
 }

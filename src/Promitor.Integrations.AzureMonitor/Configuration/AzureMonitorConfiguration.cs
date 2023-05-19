@@ -2,7 +2,7 @@
 {
     public class AzureMonitorConfiguration
     {
-        public AzureMonitorIntegrationConfiguration Integration { get; set; } = new AzureMonitorIntegrationConfiguration();
-        public AzureMonitorLoggingConfiguration Logging { get; set; } = new AzureMonitorLoggingConfiguration();
+        public AzureMonitorIntegrationConfiguration Integration { get; set; } = new();
+        public AzureMonitorLoggingConfiguration Logging { get; set; } = new();
     }
 }

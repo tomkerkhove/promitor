@@ -2,6 +2,6 @@
 {
     public class ResourceCriteriaDefinition
     {
-        public ResourceCriteria Include { get; set; } = new ResourceCriteria();
+        public ResourceCriteria Include { get; set; } = new();
     }
 }

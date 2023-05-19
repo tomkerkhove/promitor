@@ -5,6 +5,6 @@
         public string BaseUriPath { get; set; } = Defaults.Prometheus.ScrapeEndpointBaseUri;
         public double? MetricUnavailableValue { get; set; } = Defaults.Prometheus.MetricUnavailableValue;
         public bool EnableMetricTimestamps { get; set; } = Defaults.Prometheus.EnableMetricTimestamps;
-        public LabelConfiguration Labels { get; set; } = new LabelConfiguration();
+        public LabelConfiguration Labels { get; set; } = new();
     }
 }

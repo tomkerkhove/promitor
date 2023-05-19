@@ -20,7 +20,7 @@ namespace Promitor.Tests.Unit.Generators.Config
 {
     internal class RuntimeConfigurationGenerator
     {
-        private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new ScraperRuntimeConfiguration();
+        private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new();
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {

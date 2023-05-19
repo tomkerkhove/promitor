@@ -30,7 +30,7 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
-        private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
+        private readonly AzureCredentialsFactory _azureCredentialsFactory = new();
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
 

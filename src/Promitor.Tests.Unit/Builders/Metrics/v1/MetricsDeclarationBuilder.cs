@@ -18,9 +18,9 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
     public class MetricsDeclarationBuilder
     {
         private readonly AzureMetadataV1 _azureMetadata;
-        private readonly List<MetricDefinitionV1> _metrics = new List<MetricDefinitionV1>();
+        private readonly List<MetricDefinitionV1> _metrics = new();
 
-        private MetricDefaultsV1 _metricDefaults = new MetricDefaultsV1
+        private MetricDefaultsV1 _metricDefaults = new()
         {
             Scraping = new ScrapingV1 { Schedule = @"0 * * ? * *" }
         };

@@ -14,7 +14,7 @@ namespace Promitor.Agents.Scraper
 {
     public class AzureMonitorClientFactory
     {
-        private readonly Dictionary<string, AzureMonitorClient> _azureMonitorClients = new Dictionary<string, AzureMonitorClient>();
+        private readonly Dictionary<string, AzureMonitorClient> _azureMonitorClients = new();
 
         /// <summary>
         /// Provides an Azure Monitor client

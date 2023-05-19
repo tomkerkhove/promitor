@@ -6,8 +6,7 @@ namespace Promitor.Tests.Unit.Serialization.FieldDeserializationInfoBuilderTests
 {
     public class SetPropertyTests : UnitTest
     {
-        private readonly FieldDeserializationInfoBuilder<TestConfig, string> _builder =
-            new FieldDeserializationInfoBuilder<TestConfig, string>();
+        private readonly FieldDeserializationInfoBuilder<TestConfig, string> _builder = new();
 
         [Fact]
         public void SetProperty_SetsPropertyInfo_WhenBuilding()
