@@ -236,7 +236,10 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         metricsBuilder.SetResourceBuilder(resourceBuilder)
                                       .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
-                                      .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
+                                      .AddOtlpExporter(options =>
+                                            options.Endpoint = new Uri(collectorUri),
+                                            options.Protocol = (metricSinkConfiguration.OpenTelemetryCollector.CollectorUri.StartsWith("https")) ? OtlpExporterProtocol.HttpProtobuf : OtlpExporterProtocol.Grpc
+                                        );
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();
