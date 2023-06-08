@@ -228,7 +228,7 @@ namespace Microsoft.Extensions.DependencyInjection
         private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {otelConfiguration.CollectorUri}.");
-
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Protocol: {otelConfiguration.Collector.CollectorProtocol}.");
             var resourceBuilder = ResourceBuilder.CreateDefault()
                 .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
 
@@ -240,7 +240,7 @@ namespace Microsoft.Extensions.DependencyInjection
                                       .AddOtlpExporter(options =>
                                           {
                                               options.Endpoint = new Uri(otelConfiguration.CollectorUri);
-                                              options.Protocol = (otelConfiguration.CollectorProtocol.StartsWith("http")) ? OtlpExportProtocol.HttpProtobuf : OtlpExportProtocol.Grpc;
+                                              options.Protocol = (otelConfiguration.Collector.CollectorProtocol.Equals("http")) ? OtlpExportProtocol.HttpProtobuf : OtlpExportProtocol.Grpc;
                                           }
                                       );
                     });

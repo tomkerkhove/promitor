@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
@@ -33,6 +34,18 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
 
             var errorMessages = new List<string>();
             var collectorUri = openTelemetryCollectorSinkConfiguration.CollectorUri;
+            var collectorProtocol = openTelemetryCollectorSinkConfiguration.Collector.CollectorProtocol;
+
+            // Protocol Validation
+            if (string.IsNullOrWhiteSpace(collectorProtocol))
+            {
+                errorMessages.Add("No Protocol for the OpenTelemetry Collector is configured.");
+            }
+            else if (collectorProtocol != "http" && collectorProtocol != "grpc")
+            {
+                errorMessages.Add($"Configured Protocol ({collectorProtocol}) for the OpenTelemetry Collector should be either 'http' or 'grpc'.");
+            }
+            // URI Validation
             if (string.IsNullOrWhiteSpace(collectorUri))
             {
                 errorMessages.Add("No URI for the OpenTelemetry Collector is configured.");
@@ -48,7 +61,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                     errorMessages.Add($"Configured URI ({collectorUri}) for the OpenTelemetry Collector is not a valid URI.");
                 }
             }
-
+          
             return errorMessages.Any() ? ValidationResult.Failure(ComponentName, errorMessages) : ValidationResult.Successful(ComponentName);
         }
     }
