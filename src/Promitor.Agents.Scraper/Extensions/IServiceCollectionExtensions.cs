@@ -4,6 +4,7 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Promitor.Agents.Core.Configuration.Server;
@@ -110,7 +111,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             Guard.NotNull(services, nameof(services));
-            
+
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IAzureScrapingSystemMetricsPublisher, AzureScrapingSystemMetricsPublisher>();
             services.AddTransient<MetricScraperFactory>();
@@ -198,7 +199,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
                 && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
             {
-                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, agentVersion, services, metricSinkAsciiTable);
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector, agentVersion, services, metricSinkAsciiTable);
             }
 
             AnsiConsole.Write(metricSinkAsciiTable);
@@ -224,9 +225,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
         const string OpenTelemetryServiceName = "promitor-scraper";
 
-        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
+        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
-            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {collectorUri}.");
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {otelConfiguration.CollectorUri}.");
 
             var resourceBuilder = ResourceBuilder.CreateDefault()
                 .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
@@ -237,9 +238,11 @@ namespace Microsoft.Extensions.DependencyInjection
                         metricsBuilder.SetResourceBuilder(resourceBuilder)
                                       .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
                                       .AddOtlpExporter(options =>
-                                            options.Endpoint = new Uri(collectorUri),
-                                            options.Protocol = (metricSinkConfiguration.OpenTelemetryCollector.CollectorProtocol.StartsWith("http")) ? OtlpExportProtocol.HttpProtobuf : OtlpExportProtocol.Grpc
-                                        );
+                                          {
+                                              options.Endpoint = new Uri(otelConfiguration.CollectorUri);
+                                              options.Protocol = (otelConfiguration.CollectorProtocol.StartsWith("http")) ? OtlpExportProtocol.HttpProtobuf : OtlpExportProtocol.Grpc;
+                                          }
+                                      );
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();
@@ -247,7 +250,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)
-        {            
+        {
             metricSinkAsciiTable.AddRow("StatsD", $"Url: {statsdConfiguration.Host}:{statsdConfiguration.Port}.");
             metricSinkAsciiTable.AddRow("", $"Format: {statsdConfiguration.MetricFormat}.");
 
@@ -311,9 +314,9 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
-            
+
             services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(_ => ScrapingMutexBuilder(serverConfiguration)));
-            
+
             return services;
         }
 
