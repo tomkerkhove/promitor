@@ -1,10 +1,8 @@
-﻿using System;
-using GuardNet;
+﻿using GuardNet;
 using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Promitor.Agents.Core.Configuration.Server;
@@ -45,6 +43,7 @@ using Promitor.Integrations.Sinks.Prometheus.Extensions;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Spectre.Console;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -64,7 +63,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var resourceDiscoveryConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
-            if(resourceDiscoveryConfiguration?.ResourceDiscovery?.IsConfigured == true)
+            if (resourceDiscoveryConfiguration?.ResourceDiscovery?.IsConfigured == true)
             {
                 services.AddHttpClient<ResourceDiscoveryClient>(client =>
                 {
@@ -197,9 +196,9 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
-                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo.CollectorUri) == false)
+                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
             {
-                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo, agentVersion, services, metricSinkAsciiTable);
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector, agentVersion, services, metricSinkAsciiTable);
             }
 
             AnsiConsole.Write(metricSinkAsciiTable);
@@ -225,7 +224,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         const string OpenTelemetryServiceName = "promitor-scraper";
 
-        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration.CollectorInfoConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
+        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {otelConfiguration.CollectorUri}.");
             metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Protocol: {otelConfiguration.Protocol}.");

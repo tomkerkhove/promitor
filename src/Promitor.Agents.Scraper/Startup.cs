@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +13,8 @@ using Promitor.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Serilog;
+using System;
+using System.Text;
 using Version = Promitor.Core.Version;
 
 namespace Promitor.Agents.Scraper
@@ -114,8 +114,8 @@ namespace Promitor.Agents.Scraper
 
             if (metricSinkConfiguration.OpenTelemetryCollector != null)
             {
-                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector located on {metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo.CollectorUri}</li>");
-                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector Protocol selected: {metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo.Protocol}</li>");
+                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector located on {metricSinkConfiguration.OpenTelemetryCollector.CollectorUri}</li>");
+                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector Protocol selected: {metricSinkConfiguration.OpenTelemetryCollector.Protocol}</li>");
             }
 
             if (metricSinkConfiguration.Statsd != null)

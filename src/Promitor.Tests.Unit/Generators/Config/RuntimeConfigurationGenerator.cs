@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+﻿using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Exporter;
@@ -16,6 +11,11 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.OpenTelemetry.Configuration;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 
 namespace Promitor.Tests.Unit.Generators.Config
@@ -73,12 +73,12 @@ namespace Promitor.Tests.Unit.Generators.Config
 
                 if (metricUnavailableValue != null)
                 {
-                    prometheusSinkConfiguration.MetricUnavailableValue = (double) metricUnavailableValue;
+                    prometheusSinkConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
                 }
 
                 if (enableMetricsTimestamp != null)
                 {
-                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
+                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
                 }
             }
 
@@ -93,12 +93,9 @@ namespace Promitor.Tests.Unit.Generators.Config
             {
                 _runtimeConfiguration.MetricSinks.OpenTelemetryCollector = new OpenTelemetryCollectorSinkConfiguration
                 {
-                    CollectorInfo = new Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration.CollectorInfoConfiguration
-                    {
-                        CollectorUri = collectorUri,
-                        Protocol = protocol
-                        // Todo: Headers
-                    }
+                    CollectorUri = collectorUri,
+                    Protocol = protocol
+                    // Todo: Headers
                 };
             }
 
@@ -208,7 +205,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 };
 
             _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
-_runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
+            _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
 
             return this;
         }
@@ -291,7 +288,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                         configurationBuilder.AppendLine($"      account: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Account}");
                         configurationBuilder.AppendLine($"      namespace: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Namespace}");
                     }
-                }               
+                }
                 if (_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint != null)
                 {
                     configurationBuilder.AppendLine("  prometheusScrapingEndpoint:");
@@ -302,7 +299,8 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                 if (_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector != null)
                 {
                     configurationBuilder.AppendLine("  openTelemetryCollector:");
-                    configurationBuilder.AppendLine($"    collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri}");
+                    configurationBuilder.AppendLine($"     collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorUri}");
+                    configurationBuilder.AppendLine($"     protocol: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.Protocol}");
                 }
             }
 

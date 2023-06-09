@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using Bogus;
+﻿using Bogus;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -11,6 +11,7 @@ using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
 using Promitor.Integrations.Sinks.OpenTelemetry.Configuration;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
+using System.Collections.Generic;
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
@@ -72,10 +73,10 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Port, faker => faker.Random.Int(min: 0))
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricPrefix, faker => faker.Person.FirstName)
                 .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.MetricFormat, _ => StatsdFormatterTypesEnum.Default)
-                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Geneva, faker => new GenevaConfiguration 
-                { 
-                    Account = faker.Person.FirstName, 
-                    Namespace = faker.Person.LastName 
+                .RuleFor(statsdSinkConfiguration => statsdSinkConfiguration.Geneva, faker => new GenevaConfiguration
+                {
+                    Account = faker.Person.FirstName,
+                    Namespace = faker.Person.LastName
                 })
                 .Generate();
             return statsDConfiguration;
@@ -131,13 +132,13 @@ namespace Promitor.Tests.Unit.Generators.Config
                 .Generate();
             return serverConfiguration;
         }
-        
+
         private static AtlassianStatusPageSinkConfiguration GenerateAtlassianStatusPageSinkConfiguration()
         {
             var atlassianStatusPageSinkConfiguration = new Faker<AtlassianStatusPageSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.PageId, faker => faker.Person.FirstName)
-                .RuleFor(promConfiguration => promConfiguration.SystemMetricMapping, _ => new List<SystemMetricMapping> {  GenerateAtlassianStatuspageSystemMetricMapping() })
+                .RuleFor(promConfiguration => promConfiguration.SystemMetricMapping, _ => new List<SystemMetricMapping> { GenerateAtlassianStatuspageSystemMetricMapping() })
                 .Generate();
             return atlassianStatusPageSinkConfiguration;
         }
@@ -155,7 +156,8 @@ namespace Promitor.Tests.Unit.Generators.Config
         {
             var openTelemetryCollectorSinkConfiguration = new Faker<OpenTelemetryCollectorSinkConfiguration>()
                 .StrictMode(true)
-                .RuleFor(promConfiguration => promConfiguration.CollectorInfo.CollectorUri, faker => faker.Internet.Url())
+                .RuleFor(promConfiguration => promConfiguration.CollectorUri, faker => faker.Internet.Url())
+                .RuleFor(promConfiguration => promConfiguration.Protocol, faker => OtlpExportProtocol.HttpProtobuf)
                 .Generate();
             return openTelemetryCollectorSinkConfiguration;
         }

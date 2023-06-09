@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Tests.Unit.Generators.Config;
+using System.ComponentModel;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
@@ -62,7 +62,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
@@ -81,7 +81,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
@@ -104,7 +104,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);

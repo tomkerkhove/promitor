@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Validation;
 using Promitor.Agents.Core.Validation.Interfaces;
 using Promitor.Agents.Core.Validation.Steps;
 using Promitor.Agents.Scraper.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
 {
@@ -33,8 +33,8 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             }
 
             var errorMessages = new List<string>();
-            var collectorUri = openTelemetryCollectorSinkConfiguration.CollectorInfo.CollectorUri;
-            var collectorProtocol = openTelemetryCollectorSinkConfiguration.CollectorInfo.Protocol;
+            var collectorUri = openTelemetryCollectorSinkConfiguration.CollectorUri;
+            var collectorProtocol = openTelemetryCollectorSinkConfiguration.Protocol;
 
             // URI Validation
             if (string.IsNullOrWhiteSpace(collectorUri))
