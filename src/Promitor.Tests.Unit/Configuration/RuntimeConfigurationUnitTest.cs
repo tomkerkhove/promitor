@@ -401,7 +401,7 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.MetricSinks);
             Assert.NotNull(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
-            Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorUri);
+            Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri);
         }
 
         [Fact]
@@ -418,7 +418,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.MetricSinks);
-            Assert.Null(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
+            Assert.Null(runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorInfo);
         }
 
         [Fact]

@@ -197,9 +197,9 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
-                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
+                && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo.CollectorUri) == false)
             {
-                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector, agentVersion, services, metricSinkAsciiTable);
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorInfo, agentVersion, services, metricSinkAsciiTable);
             }
 
             AnsiConsole.Write(metricSinkAsciiTable);
@@ -225,10 +225,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
         const string OpenTelemetryServiceName = "promitor-scraper";
 
-        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
+        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration.CollectorInfoConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
             metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {otelConfiguration.CollectorUri}.");
-            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Protocol: {otelConfiguration.Collector.CollectorProtocol}.");
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Protocol: {otelConfiguration.Protocol}.");
             var resourceBuilder = ResourceBuilder.CreateDefault()
                 .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
 
@@ -240,7 +240,7 @@ namespace Microsoft.Extensions.DependencyInjection
                                       .AddOtlpExporter(options =>
                                           {
                                               options.Endpoint = new Uri(otelConfiguration.CollectorUri);
-                                              options.Protocol = (otelConfiguration.Collector.CollectorProtocol.Equals("http")) ? OtlpExportProtocol.HttpProtobuf : OtlpExportProtocol.Grpc;
+                                              options.Protocol = otelConfiguration.Protocol;
                                           }
                                       );
                     });

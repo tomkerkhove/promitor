@@ -33,18 +33,9 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
             }
 
             var errorMessages = new List<string>();
-            var collectorUri = openTelemetryCollectorSinkConfiguration.CollectorUri;
-            var collectorProtocol = openTelemetryCollectorSinkConfiguration.Collector.CollectorProtocol;
+            var collectorUri = openTelemetryCollectorSinkConfiguration.CollectorInfo.CollectorUri;
+            var collectorProtocol = openTelemetryCollectorSinkConfiguration.CollectorInfo.Protocol;
 
-            // Protocol Validation
-            if (string.IsNullOrWhiteSpace(collectorProtocol))
-            {
-                errorMessages.Add("No Protocol for the OpenTelemetry Collector is configured.");
-            }
-            else if (collectorProtocol != "http" && collectorProtocol != "grpc")
-            {
-                errorMessages.Add($"Configured Protocol ({collectorProtocol}) for the OpenTelemetry Collector should be either 'http' or 'grpc'.");
-            }
             // URI Validation
             if (string.IsNullOrWhiteSpace(collectorUri))
             {
@@ -61,7 +52,13 @@ namespace Promitor.Agents.Scraper.Validation.Steps.Sinks
                     errorMessages.Add($"Configured URI ({collectorUri}) for the OpenTelemetry Collector is not a valid URI.");
                 }
             }
-          
+
+            // Protocol Validation
+            if (!Enum.IsDefined(typeof(OtlpExportProtocol), collectorProtocol))
+            {
+                errorMessages.Add($"Invalid Protocol ({collectorProtocol}) for the OpenTelemetry Collector is configured. Please check here for valid protocols: https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.OpenTelemetryProtocol/README.md#otlpexporteroptions");
+            }
+
             return errorMessages.Any() ? ValidationResult.Failure(ComponentName, errorMessages) : ValidationResult.Successful(ComponentName);
         }
     }

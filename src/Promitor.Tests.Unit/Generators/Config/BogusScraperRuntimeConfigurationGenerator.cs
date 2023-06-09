@@ -155,7 +155,7 @@ namespace Promitor.Tests.Unit.Generators.Config
         {
             var openTelemetryCollectorSinkConfiguration = new Faker<OpenTelemetryCollectorSinkConfiguration>()
                 .StrictMode(true)
-                .RuleFor(promConfiguration => promConfiguration.CollectorUri, faker => faker.Internet.Url())
+                .RuleFor(promConfiguration => promConfiguration.CollectorInfo.CollectorUri, faker => faker.Internet.Url())
                 .Generate();
             return openTelemetryCollectorSinkConfiguration;
         }

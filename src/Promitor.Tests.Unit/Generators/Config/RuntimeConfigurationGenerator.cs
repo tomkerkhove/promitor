@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -15,6 +16,7 @@ using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.OpenTelemetry.Configuration;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
+
 
 namespace Promitor.Tests.Unit.Generators.Config
 {
@@ -85,13 +87,18 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithOpenTelemetryCollectorMetricSink(string collectorUri = "https://opentelemetry-collector:8888")
+        public RuntimeConfigurationGenerator WithOpenTelemetryCollectorMetricSink(string collectorUri = "https://opentelemetry-collector:8888", OtlpExportProtocol protocol = OtlpExportProtocol.Grpc)
         {
             if (string.IsNullOrWhiteSpace(collectorUri) == false)
             {
                 _runtimeConfiguration.MetricSinks.OpenTelemetryCollector = new OpenTelemetryCollectorSinkConfiguration
                 {
-                    CollectorUri = collectorUri
+                    CollectorInfo = new Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration.CollectorInfoConfiguration
+                    {
+                        CollectorUri = collectorUri,
+                        Protocol = protocol
+                        // Todo: Headers
+                    }
                 };
             }
 
@@ -295,7 +302,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                 if (_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector != null)
                 {
                     configurationBuilder.AppendLine("  openTelemetryCollector:");
-                    configurationBuilder.AppendLine($"    collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorUri}");
+                    configurationBuilder.AppendLine($"    collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri}");
                 }
             }
 

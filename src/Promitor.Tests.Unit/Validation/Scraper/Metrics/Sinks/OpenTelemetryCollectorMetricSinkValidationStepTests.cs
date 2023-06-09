@@ -62,7 +62,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
@@ -81,7 +81,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
@@ -104,7 +104,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
         {
             // Arrange
             var runtimeConfiguration = CreateRuntimeConfiguration();
-            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorUri = collectorUri;
+            runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri = collectorUri;
 
             // Act
             var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
