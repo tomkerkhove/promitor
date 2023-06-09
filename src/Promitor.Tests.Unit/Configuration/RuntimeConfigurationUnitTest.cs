@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
+﻿using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using Xunit;
 using DefaultsCore = Promitor.Agents.Core.Configuration.Defaults;
 
@@ -364,7 +365,8 @@ namespace Promitor.Tests.Unit.Configuration
             var genevaAccountName = "abc";
             var genevaNamespace = "xyz";
 
-            var geneva = new GenevaConfiguration {
+            var geneva = new GenevaConfiguration
+            {
                 Account = genevaAccountName,
                 Namespace = genevaNamespace
             };
@@ -391,7 +393,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var collectorUri = "https://foo.bar";
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithOpenTelemetryCollectorMetricSink(collectorUri: collectorUri)
+                .WithOpenTelemetryCollectorMetricSink(collectorUri: collectorUri, protocol: OtlpExportProtocol.HttpProtobuf)
                 .GenerateAsync();
 
             // Act
@@ -401,7 +403,8 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.MetricSinks);
             Assert.NotNull(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
-            Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorInfo.CollectorUri);
+            Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorUri);
+            Assert.Equal(OtlpExportProtocol.HttpProtobuf, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.Protocol);
         }
 
         [Fact]
@@ -418,7 +421,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Assert
             Assert.NotNull(runtimeConfiguration);
             Assert.NotNull(runtimeConfiguration.MetricSinks);
-            Assert.Null(runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorInfo);
+            Assert.Null(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
         }
 
         [Fact]
