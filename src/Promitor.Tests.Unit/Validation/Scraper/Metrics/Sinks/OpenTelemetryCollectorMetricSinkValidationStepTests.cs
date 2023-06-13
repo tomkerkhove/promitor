@@ -57,7 +57,6 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
-
         [Theory]
         [InlineData(null)]
         [InlineData("")]
