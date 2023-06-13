@@ -11,6 +11,7 @@ metricSinks:
       promitorMetricName: promitor_demo_documentation_availability
   openTelemetryCollector:
     collectorUri: http://opentelemetry-collector:4317
+    protocol: grpc
   prometheusScrapingEndpoint:
     metricUnavailableValue: -1
     enableMetricTimestamps: true # true by default

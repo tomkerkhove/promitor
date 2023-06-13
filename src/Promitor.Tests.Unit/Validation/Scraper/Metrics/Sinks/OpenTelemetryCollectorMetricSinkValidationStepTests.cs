@@ -1,6 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Validation.Steps.Sinks;
 using Promitor.Tests.Unit.Generators.Config;
@@ -54,6 +57,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -70,6 +74,50 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
 
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Theory]
+        [InlineData("grpc")]
+        [InlineData("http")]
+        [InlineData("http/protobuf")]
+        [InlineData("httpprotobuf")]
+        public void Validate_OpenTelemetryCollectorWithValidProtocol_Success(string collectorProtocolString)
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+
+            if (OpenTelemetryCollectorMetricSinkValidationStep.TryParseProtocol(collectorProtocolString, out var collectorProtocol))
+            {
+                runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.Protocol = collectorProtocol;
+
+                // Act
+                var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
+                var validationResult = openTelemetryCollectorValidationStep.Run();
+
+                // Assert
+                PromitorAssert.ValidationIsSuccessful(validationResult);
+            }
+        }
+
+        [Theory]
+        [InlineData("badprotocol")]
+        [InlineData("https")]
+        public void Validate_OpenTelemetryCollectorWithValidProtocol_FailsToDefault(string collectorProtocolString)
+        {
+            // Arrange
+            var runtimeConfiguration = CreateRuntimeConfiguration();
+
+            if (!OpenTelemetryCollectorMetricSinkValidationStep.TryParseProtocol(collectorProtocolString, out var collectorProtocol))
+            {
+                runtimeConfiguration.Value.MetricSinks.OpenTelemetryCollector.Protocol = collectorProtocol;
+
+                // Act
+                var openTelemetryCollectorValidationStep = new OpenTelemetryCollectorMetricSinkValidationStep(runtimeConfiguration, NullLogger<OpenTelemetryCollectorMetricSinkValidationStep>.Instance);
+                var validationResult = openTelemetryCollectorValidationStep.Run();
+
+                // Assert
+                PromitorAssert.ValidationIsSuccessful(validationResult);
+            }
         }
 
         [Theory]

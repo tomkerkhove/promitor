@@ -198,7 +198,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (metricSinkConfiguration?.OpenTelemetryCollector != null
                 && string.IsNullOrWhiteSpace(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri) == false)
             {
-                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector.CollectorUri, agentVersion, services, metricSinkAsciiTable);
+                AddOpenTelemetryCollectorMetricSink(metricSinkConfiguration.OpenTelemetryCollector, agentVersion, services, metricSinkAsciiTable);
             }
 
             AnsiConsole.Write(metricSinkAsciiTable);
@@ -224,9 +224,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
         const string OpenTelemetryServiceName = "promitor-scraper";
 
-        private static void AddOpenTelemetryCollectorMetricSink(string collectorUri, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
+        private static void AddOpenTelemetryCollectorMetricSink(Promitor.Integrations.Sinks.OpenTelemetry.Configuration.OpenTelemetryCollectorSinkConfiguration otelConfiguration, string agentVersion, IServiceCollection services, Table metricSinkAsciiTable)
         {
-            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {collectorUri}.");
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Url: {otelConfiguration.CollectorUri}.");
+            metricSinkAsciiTable.AddRow("OpenTelemetry Collector", $"Protocol: {otelConfiguration.Protocol}.");
 
             var resourceBuilder = ResourceBuilder.CreateDefault()
                 .AddService(OpenTelemetryServiceName, serviceVersion: agentVersion);
@@ -236,7 +237,12 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         metricsBuilder.SetResourceBuilder(resourceBuilder)
                                       .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
-                                      .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
+                                      .AddOtlpExporter(options =>
+                                          {
+                                              options.Endpoint = new Uri(otelConfiguration.CollectorUri);
+                                              options.Protocol = otelConfiguration.Protocol;
+                                          }
+                                      );
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();

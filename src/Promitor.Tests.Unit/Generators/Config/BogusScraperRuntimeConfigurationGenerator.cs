@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Bogus;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -156,6 +157,7 @@ namespace Promitor.Tests.Unit.Generators.Config
             var openTelemetryCollectorSinkConfiguration = new Faker<OpenTelemetryCollectorSinkConfiguration>()
                 .StrictMode(true)
                 .RuleFor(promConfiguration => promConfiguration.CollectorUri, faker => faker.Internet.Url())
+                .RuleFor(promConfiguration => promConfiguration.Protocol, faker => OtlpExportProtocol.Grpc)
                 .Generate();
             return openTelemetryCollectorSinkConfiguration;
         }

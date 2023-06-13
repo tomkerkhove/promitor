@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Core.Configuration.Server;
 using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Configuration.Telemetry.Sinks;
@@ -71,12 +72,12 @@ namespace Promitor.Tests.Unit.Generators.Config
 
                 if (metricUnavailableValue != null)
                 {
-                    prometheusSinkConfiguration.MetricUnavailableValue = (double) metricUnavailableValue;
+                    prometheusSinkConfiguration.MetricUnavailableValue = (double)metricUnavailableValue;
                 }
 
                 if (enableMetricsTimestamp != null)
                 {
-                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool) enableMetricsTimestamp;
+                    prometheusSinkConfiguration.EnableMetricTimestamps = (bool)enableMetricsTimestamp;
                 }
             }
 
@@ -85,13 +86,14 @@ namespace Promitor.Tests.Unit.Generators.Config
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithOpenTelemetryCollectorMetricSink(string collectorUri = "https://opentelemetry-collector:8888")
+        public RuntimeConfigurationGenerator WithOpenTelemetryCollectorMetricSink(string collectorUri = "https://opentelemetry-collector:8888", OtlpExportProtocol protocol = OtlpExportProtocol.Grpc)
         {
             if (string.IsNullOrWhiteSpace(collectorUri) == false)
             {
                 _runtimeConfiguration.MetricSinks.OpenTelemetryCollector = new OpenTelemetryCollectorSinkConfiguration
                 {
-                    CollectorUri = collectorUri
+                    CollectorUri = collectorUri,
+                    Protocol = protocol
                 };
             }
 
@@ -201,7 +203,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                 };
 
             _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
-_runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
+            _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
 
             return this;
         }
@@ -296,6 +298,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                 {
                     configurationBuilder.AppendLine("  openTelemetryCollector:");
                     configurationBuilder.AppendLine($"    collectorUri: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.CollectorUri}");
+                    configurationBuilder.AppendLine($"    protocol: {_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector.Protocol}");
                 }
             }
 
