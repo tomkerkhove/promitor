@@ -30,7 +30,7 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
-        private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
+        private readonly AzureCredentialsFactory _azureCredentialsFactory = new();
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
 
@@ -189,8 +189,7 @@ namespace Promitor.Integrations.AzureMonitor
         private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
-                .OrderByDescending(metricValue => metricValue.TimeStamp)
-                .FirstOrDefault();
+                                                     .MaxBy(metricValue => metricValue.TimeStamp);
 
             if (relevantMetricValue == null)
             {

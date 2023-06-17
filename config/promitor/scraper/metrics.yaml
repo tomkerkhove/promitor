@@ -252,11 +252,11 @@ metrics:
         type: Average
     resources:
       # Application Insights with data in the service itself (classic, deprecated)
-    - name: promitor-automation-data-generation-we-telemetry-classic
-      resourceGroupName: promitor-automation-data-generation
+    - name: promitor-testing-resource-eu-telemetry-classic
+      resourceGroupName: promitor-testing-infrastructure-europe
       # Application Insights with data in Log Analytics
-    - name: promitor-automation-data-generation-we-telemetry
-      resourceGroupName: promitor-automation-data-generation
+    - name: promitor-testing-resource-eu-telemetry
+      resourceGroupName: promitor-testing-infrastructure-europe
   - name: promitor_demo_cdn_requests_discovered
     description: "Amount of requests sent to Azure CDN"
     resourceType: Cdn
@@ -310,7 +310,7 @@ metrics:
       aggregation:
         interval: 7:00:00:00
     resources:
-      - workspaceId: 1cf05fe4-96a8-4e14-9b57-13e7a200ecbb
+      - workspaceId: 7f07e0fe-36e7-44c8-b79c-7c7f65cb81a2
         workspaceName: promitor-testing-resource-eu-logs
   - name: azure_container_instance_cpu_usage_discovered
     description: "Average cpu usage of our container instance"

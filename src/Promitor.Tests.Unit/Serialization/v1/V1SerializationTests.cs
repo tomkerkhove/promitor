@@ -62,7 +62,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                 },
                 Metrics = new List<MetricDefinitionV1>
                 {
-                    new MetricDefinitionV1
+                    new()
                     {
                         Name = "promitor_demo_generic_queue_size",
                         Description = "Amount of active messages of the 'orders' queue (determined with Generic provider)",
@@ -93,7 +93,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                             }
                         }
                     },
-                    new MetricDefinitionV1
+                    new()
                     {
                         Name = "promitor_demo_servicebusqueue_queue_size",
                         Description = "Amount of active messages of the 'orders' queue (determined with ServiceBusNamespace provider)",
@@ -122,7 +122,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                         },
                         ResourceDiscoveryGroups = new List<AzureResourceDiscoveryGroupDefinitionV1>
                         {
-                            new AzureResourceDiscoveryGroupDefinitionV1
+                            new()
                             {
                                 Name="example-resource-collection"
                             }

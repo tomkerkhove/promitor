@@ -15,7 +15,7 @@ namespace Promitor.Agents.Scraper.Validation.Exceptions
             ValidationResults.AddRange(validationResults);
         }
 
-        public List<ValidationResult> ValidationResults { get; } = new List<ValidationResult>();
+        public List<ValidationResult> ValidationResults { get; } = new();
 
         private static string ListErrors(List<ValidationResult> validationResults)
         {

@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-    <RuntimeFrameworkVersion>7.0.4</RuntimeFrameworkVersion>
-    </PropertyGroup>
+<PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RuntimeFrameworkVersion>7.0.7</RuntimeFrameworkVersion>
+</PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Guard.Net" Version="3.0.0" />
-      <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    </ItemGroup>
+<ItemGroup>
+    <PackageReference Include="Guard.Net" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
+</ItemGroup>
 
 </Project>

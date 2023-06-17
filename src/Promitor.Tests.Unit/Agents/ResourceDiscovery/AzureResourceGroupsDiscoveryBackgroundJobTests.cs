@@ -27,12 +27,12 @@ namespace Promitor.Tests.Unit.Agents.ResourceDiscovery
             _firstPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
             {
                 PageInformation = new Promitor.Core.Contracts.PageInformation { CurrentPage = 1, PageSize = 1, TotalRecords = 1 },
-                Result = new List<AzureSubscriptionInformation>() { new AzureSubscriptionInformation { TenantId = "TenantId", Id = "ID", Name = "Name" } }
+                Result = new List<AzureSubscriptionInformation>() { new() { TenantId = "TenantId", Id = "ID", Name = "Name" } }
             };
             var secondPage = new Promitor.Core.Contracts.PagedPayload<AzureSubscriptionInformation>()
             {
                 PageInformation = new Promitor.Core.Contracts.PageInformation { CurrentPage = 2, PageSize = 1, TotalRecords = 1 },
-                Result = new List<AzureSubscriptionInformation>() { new AzureSubscriptionInformation { TenantId = "TenantId", Id = "ID", Name = "Name" } }
+                Result = new List<AzureSubscriptionInformation>() { new() { TenantId = "TenantId", Id = "ID", Name = "Name" } }
             };
             azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 1)).ReturnsAsync(_firstPage);
             azureResourceRepository.Setup(r => r.DiscoverAzureSubscriptionsAsync(1000, 2)).ReturnsAsync(secondPage);

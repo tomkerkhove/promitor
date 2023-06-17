@@ -20,7 +20,7 @@ namespace Promitor.Tests.Unit.Generators.Config
 {
     internal class RuntimeConfigurationGenerator
     {
-        private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new ScraperRuntimeConfiguration();
+        private readonly ScraperRuntimeConfiguration _runtimeConfiguration = new();
 
         private RuntimeConfigurationGenerator(ServerConfiguration serverConfiguration)
         {
@@ -200,12 +200,8 @@ namespace Promitor.Tests.Unit.Generators.Config
                     Verbosity = verbosity
                 };
 
-            if (_runtimeConfiguration.Telemetry == null)
-            {
-                _runtimeConfiguration.Telemetry = new TelemetryConfiguration();
-            }
-
-            _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
+            _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
+_runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
 
             return this;
         }
@@ -221,11 +217,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                     Verbosity = verbosity
                 };
 
-            if (_runtimeConfiguration.Telemetry == null)
-            {
-                _runtimeConfiguration.Telemetry = new TelemetryConfiguration();
-            }
-
+            _runtimeConfiguration.Telemetry ??= new TelemetryConfiguration();
             _runtimeConfiguration.Telemetry.ApplicationInsights = applicationInsightsTelemetry;
 
             return this;
@@ -233,11 +225,7 @@ namespace Promitor.Tests.Unit.Generators.Config
 
         public RuntimeConfigurationGenerator WithAzureMonitorLogging(bool isEnabled = true, HttpLoggingDelegatingHandler.Level informationLevel = HttpLoggingDelegatingHandler.Level.Headers)
         {
-            if (_runtimeConfiguration.AzureMonitor == null)
-            {
-                _runtimeConfiguration.AzureMonitor = new AzureMonitorConfiguration();
-            }
-
+            _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Logging = new AzureMonitorLoggingConfiguration
             {
                 IsEnabled = isEnabled,
@@ -292,7 +280,7 @@ namespace Promitor.Tests.Unit.Generators.Config
                     configurationBuilder.AppendLine($"    metricFormat: {_runtimeConfiguration?.MetricSinks.Statsd.MetricFormat}");
                     if (_runtimeConfiguration?.MetricSinks.Statsd.Geneva != null)
                     {
-                        configurationBuilder.AppendLine($"    geneva:");
+                        configurationBuilder.AppendLine("    geneva:");
                         configurationBuilder.AppendLine($"      account: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Account}");
                         configurationBuilder.AppendLine($"      namespace: {_runtimeConfiguration?.MetricSinks.Statsd.Geneva.Namespace}");
                     }

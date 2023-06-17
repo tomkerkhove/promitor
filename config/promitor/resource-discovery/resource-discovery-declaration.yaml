@@ -139,7 +139,7 @@ resourceDiscoveryGroups:
   criteria:
     include:
       subscriptions:
-      - 63c590b6-4947-4898-92a3-cae91a31b5e4
+      - 3566a5fa-878c-40fd-ac37-ef0ba0eee29d
 - name: one-tag-scenario
   type: LogicApp
   criteria:

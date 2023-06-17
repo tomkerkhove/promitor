@@ -15,7 +15,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly AzureMetricConfigurationDeserializer _deserializer;
         private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;
         private readonly Mock<IDeserializer<MetricAggregationV1>> _aggregationDeserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
 
         public AzureMetricConfigurationDeserializerTests()
         {

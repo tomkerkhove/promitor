@@ -88,7 +88,7 @@ namespace Promitor.Tests.Integration.Clients
 
             if (gauge == null)
             {
-                Logger.LogInformation($"No matching gauge was found.");
+                Logger.LogInformation("No matching gauge was found.");
                 if (foundMetrics.Any())
                 {
                     Logger.LogInformation($"Found metrics are: {string.Join(", ", foundMetrics.Select(x => x.Name))}");

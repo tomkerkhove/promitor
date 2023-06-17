@@ -12,7 +12,7 @@ namespace Promitor.Tests.Integration
     {
         protected IConfiguration Configuration { get; }
         protected XunitTestLogger Logger { get; }
-        public PrometheusClientFactory PrometheusClientFactory => new PrometheusClientFactory(Logger);
+        public PrometheusClientFactory PrometheusClientFactory => new(Logger);
 
         public IntegrationTest(ITestOutputHelper testOutput)
         {
