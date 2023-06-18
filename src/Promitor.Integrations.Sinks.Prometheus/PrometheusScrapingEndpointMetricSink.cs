@@ -9,7 +9,6 @@ using Prometheus.Client;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Core;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
