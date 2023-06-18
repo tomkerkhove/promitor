@@ -41,7 +41,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             {
                 var metricValue = measuredMetric.Value ?? 0;
                 
-                var metricLabels = base.DetermineLabels(metricName, scrapeResult, measuredMetric);
+                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
 
                 var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
                 reportMetricTasks.Add(reportMetricTask);
