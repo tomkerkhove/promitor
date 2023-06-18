@@ -31,7 +31,7 @@ namespace Promitor.Integrations.Sinks.Core
 
             var labels = new Dictionary<string, string>(scrapeResult.Labels.Select(label =>
             {
-                var labelName = DetermineLabelName(label.Value, mutateLabelName);
+                var labelName = DetermineLabelName(label.Key, mutateLabelName);
                 return new KeyValuePair<string, string>(labelName, label.Value);
             }));
 
