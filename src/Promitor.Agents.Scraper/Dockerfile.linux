@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0.304-alpine3.17 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0.304-cbl-mariner2.0 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
@@ -17,12 +17,60 @@ COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0.7-alpine3.17 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.7-cbl-mariner2.0-distroless AS runtime-base
+
+FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
+
+RUN tdnf install -y fdupes \
+    && tdnf clean all
+
+COPY --from=runtime-base / /staging1
+COPY --from=runtime-base / /staging2
+
+# See https://docs.microsoft.com/en-us/dotnet/core/runtime-config/globalization
+RUN tdnf install -y --releasever=2.0 --installroot /staging2 icu \
+    && tdnf clean all --releasever=2.0 --installroot /staging2
+
+# Prepare the staging2 directory to be copied to the final stage by removing unnecessary files
+# that will only cause extra image bloat.
+RUN \
+    # Remove duplicates from staging2 that exist in staging1
+    fdupes /staging1 /staging2 -rdpN \
+    \
+    # Delete duplicate symlinks
+    # Function to find and format symlinks w/o including root dir (format: /path/to/symlink /path/to/target)
+    && getsymlinks() { find $1 -type l -printf '%p %l\n' | sed -n "s/^\\$1\\(.*\\)/\\1/p"; } \
+    # Combine set of symlinks between staging1 and staging2
+    && (getsymlinks "/staging1"; getsymlinks "/staging2") \
+        # Sort them
+        | sort \
+        # Find the duplicates
+        | uniq -d \
+        # Extract just the path to the symlink
+        | cut -d' ' -f1 \
+        # Prepend the staging2 directory to the paths
+        | sed -e 's/^/\/staging2/' \
+        # Delete the files
+        | xargs rm \
+    \
+    # General cleanup
+    && rm -rf /staging2/etc/tdnf \
+    && rm -rf /staging2/run/* \
+    && rm -rf /staging2/var/cache/tdnf \
+    && rm -rf /staging2/var/lib/rpm \
+    && rm -rf /staging2/usr/share/doc \
+    && rm -rf /staging2/usr/share/man \
+    && find /staging2/var/log -type f -size +0 -delete \
+    \
+    # Delete empty directories
+    && find /staging2 -type d -empty -delete
+
+FROM runtime-base AS runtime
+COPY --from=installer /staging2/ /
+
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="/config/"
 
-# See https://docs.microsoft.com/en-us/dotnet/core/runtime-config/globalization
-RUN apk add --no-cache icu-libs
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 COPY --from=build /src/app .
