@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag changed %}} Switch to Mariner distroless base images
 
 #### Resource Discovery
 
-None.
+- {{% tag changed %}} Switch to Mariner distroless base images
