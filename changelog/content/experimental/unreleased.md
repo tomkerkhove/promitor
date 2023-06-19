@@ -8,7 +8,8 @@ version:
 
 - {{% tag added %}} Provide support for all label scenarios in StatsD & OpenTelemetry metric sink. This includes
 dimensions, customer & default labels.
+- {{% tag changed %}} Switch to Mariner distroless base images
 
 #### Resource Discovery
 
-None.
+- {{% tag changed %}} Switch to Mariner distroless base images
