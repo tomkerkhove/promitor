@@ -3,3 +3,5 @@ variables:
   value: metrics
 - name: Agent.ResourceDiscovery.Prometheus.ScrapeUri
   value: metrics
+- name: Agent.OpenTelemetry.Prometheus.ScrapeUri
+  value: metrics
