@@ -167,6 +167,10 @@ stages:
        parameters:
         agentName: 'Resource Discovery'
         url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'OpenTelemetry'
+        url: '$(OpenTelemetry.Collector.Uri)/$(Agent.OpenTelemetry.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/docker/push-image.yml
           parameters:
