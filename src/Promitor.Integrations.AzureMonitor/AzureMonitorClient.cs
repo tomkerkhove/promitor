@@ -7,6 +7,7 @@ using Microsoft.Azure.Management.Monitor.Fluent;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
+using Newtonsoft.Json;
 using GuardNet;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Caching.Memory;
@@ -81,14 +82,14 @@ namespace Promitor.Integrations.AzureMonitor
 
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId);
+            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId); // metrics available for specified resource 
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.Value.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
 
-            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
+            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities); // time interval 
 
             // Get the most recent metric
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, metricLimit, startQueryingTime);
@@ -108,9 +109,13 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
-
-                var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
-                measuredMetrics.Add(measuredMetric);
+                try {
+                    var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
+                    measuredMetrics.Add(measuredMetric);
+                } catch (ArgumentException) {
+                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, metricDimension); 
+                    _logger.LogDebug("The violating time series has content {}", JsonConvert.SerializeObject(timeseries)); 
+                }
             }
 
             return measuredMetrics;

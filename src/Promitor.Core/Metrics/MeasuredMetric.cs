@@ -63,9 +63,11 @@ namespace Promitor.Core.Metrics
         {
             Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
             Guard.NotNull(timeseries, nameof(timeseries));
-            Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
+            
+            var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);            
+            Guard.For<ArgumentException>(() => dimensionMetadataValue.Count() == 0);
 
-            var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);
+            var dimensionValue = dimensionMetadataValue.First();
             return CreateForDimension(value, dimensionName, dimensionValue.Value);
         }
 
