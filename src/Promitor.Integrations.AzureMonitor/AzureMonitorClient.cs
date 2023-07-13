@@ -82,14 +82,14 @@ namespace Promitor.Integrations.AzureMonitor
 
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId); // metrics available for specified resource 
+            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId);
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.Value.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
 
-            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities); // time interval 
+            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
             var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, metricLimit, startQueryingTime);
@@ -109,12 +109,15 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
-                try {
+                try 
+                {
                     var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                     measuredMetrics.Add(measuredMetric);
-                } catch (ArgumentException) {
+                } 
+                catch (ArgumentException) 
+                {
                     _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, metricDimension); 
-                    _logger.LogDebug("The violating time series has content {}", JsonConvert.SerializeObject(timeseries)); 
+                    _logger.LogDebug("The violating time series has content {TimeSeriesJson}}", JsonConvert.SerializeObject(timeseries)); 
                 }
             }
 
