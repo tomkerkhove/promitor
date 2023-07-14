@@ -23,6 +23,7 @@ using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
 using Promitor.Integrations.Azure.Authentication;
+using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -114,7 +115,7 @@ namespace Promitor.Integrations.AzureMonitor
                     var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                     measuredMetrics.Add(measuredMetric);
                 } 
-                catch (ArgumentException) 
+                catch (MissingDimensionException) 
                 {
                     _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, metricDimension); 
                     _logger.LogDebug("The violating time series has content {TimeSeriesJson}}", JsonConvert.SerializeObject(timeseries)); 

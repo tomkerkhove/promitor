@@ -2,6 +2,7 @@
 using System.Linq;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Core.Metrics
 {
@@ -65,7 +66,10 @@ namespace Promitor.Core.Metrics
             Guard.NotNull(timeseries, nameof(timeseries));
             
             var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);            
-            Guard.For<ArgumentException>(() => dimensionMetadataValue.Count() == 0);
+            if(!dimensionMetadataValue.Any())
+            {
+                throw new MissingDimensionException(dimensionName);
+            }
 
             var dimensionValue = dimensionMetadataValue.First();
             return CreateForDimension(value, dimensionName, dimensionValue.Value);
