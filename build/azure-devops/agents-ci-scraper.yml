@@ -151,6 +151,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
+        testRunTitle: 'scraper-linux'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
@@ -254,6 +255,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
+        testRunTitle: 'scraper-windows'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
