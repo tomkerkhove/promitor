@@ -112,13 +112,15 @@ namespace Promitor.Integrations.AzureMonitor
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
                 try 
                 {
-                    var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
+                    var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) 
+                                ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) 
+                                : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                     measuredMetrics.Add(measuredMetric);
                 } 
                 catch (MissingDimensionException) 
                 {
                     _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, metricDimension); 
-                    _logger.LogDebug("The violating time series has content {TimeSeriesJson}}", JsonConvert.SerializeObject(timeseries)); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(timeseries)); 
                 }
             }
 
