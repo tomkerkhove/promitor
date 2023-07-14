@@ -6,8 +6,10 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag changed %}} Switch to Mariner distroless base images
+- {{% tag security %}} Patch for [CVE-2023-29331](https://github.com/advisories/GHSA-555c-2p6r-68mm) (High)
 
 #### Resource Discovery
 
-None.
+- {{% tag changed %}} Switch to Mariner distroless base images
+- {{% tag security %}} Patch for [CVE-2023-29331](https://github.com/advisories/GHSA-555c-2p6r-68mm) (High)
