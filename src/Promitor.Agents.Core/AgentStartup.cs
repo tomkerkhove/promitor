@@ -6,6 +6,7 @@ using Promitor.Agents.Core.Configuration.Telemetry;
 using Promitor.Agents.Core.Observability;
 using Serilog;
 using Serilog.Configuration;
+using Serilog.Events;
 
 namespace Promitor.Agents.Core
 {
@@ -53,7 +54,9 @@ namespace Promitor.Agents.Core
         {
             var defaultLogLevel = SerilogFactory.DetermineSinkLogLevel(telemetryConfiguration.DefaultVerbosity);
             var loggerConfiguration = new LoggerConfiguration()
-                .MinimumLevel.Is(defaultLogLevel);
+                .MinimumLevel.Is(defaultLogLevel)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning);
 
             loggerConfiguration = EnrichTelemetry(componentName, serviceProvider, loggerConfiguration);
             loggerConfiguration = FilterTelemetry(loggerConfiguration);
