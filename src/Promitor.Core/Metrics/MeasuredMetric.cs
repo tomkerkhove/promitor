@@ -68,10 +68,10 @@ namespace Promitor.Core.Metrics
             var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);            
             if(!dimensionMetadataValue.Any())
             {
-                throw new MissingDimensionException(dimensionName);
+                throw new MissingDimensionException(dimensionName, timeseries.ToString());
             }
 
-            var dimensionValue = dimensionMetadataValue.First();
+            var dimensionValue = dimensionMetadataValue.Single();
             return CreateForDimension(value, dimensionName, dimensionValue.Value);
         }
 

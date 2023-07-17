@@ -28,7 +28,7 @@ namespace Promitor.Tests.Unit.Metrics
             var dimensionName = "dimTest";
             var timeSeries = new TimeSeriesElement(new List<MetadataValue> {});
             MissingDimensionException ex = Assert.Throws<MissingDimensionException>(() => MeasuredMetric.CreateForDimension(1, dimensionName, timeSeries));
-            Assert.Equal(ex.DimensionName, dimensionName)
+            Assert.Equal(ex.DimensionName, dimensionName);
         }
     }
     

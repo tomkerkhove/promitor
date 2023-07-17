@@ -117,10 +117,10 @@ namespace Promitor.Integrations.AzureMonitor
                                 : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
                     measuredMetrics.Add(measuredMetric);
                 } 
-                catch (MissingDimensionException) 
+                catch (MissingDimensionException e) 
                 {
-                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, metricDimension); 
-                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(timeseries)); 
+                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.timeSeries)); 
                 }
             }
 
