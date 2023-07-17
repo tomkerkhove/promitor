@@ -68,7 +68,7 @@ namespace Promitor.Core.Metrics
             var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);            
             if(!dimensionMetadataValue.Any())
             {
-                throw new MissingDimensionException(dimensionName, timeseries.ToString());
+                throw new MissingDimensionException(dimensionName, timeseries);
             }
 
             var dimensionValue = dimensionMetadataValue.Single();
