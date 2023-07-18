@@ -1,0 +1,32 @@
+name: 'Test Report'
+on:
+  workflow_run:
+    workflows: ['CI - Code']
+    types:
+      - completed
+
+permissions:
+  statuses: write
+  checks: write
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download artifact
+      id: download-artifact
+      uses: dawidd6/action-download-artifact@v2
+      with:
+        run_id: ${{ github.event.workflow_run.id }}
+        name: test-results
+
+    - name: Publish CI Test Results
+      uses: dorny/test-reporter@v1
+      with:
+        artifact: test-results
+        name: .NET Unit Tests
+        path: '**/*.trx'
+        reporter: dotnet-trx

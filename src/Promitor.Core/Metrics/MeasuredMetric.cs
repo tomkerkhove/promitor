@@ -59,13 +59,13 @@ namespace Promitor.Core.Metrics
             Guard.NotNull(timeseries, nameof(timeseries));
             Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
 
-            var dimensions = new List<MeasuredMetricDimension>(); 
+            var dimensions = new List<MeasuredMetricDimension>();
             foreach (var dimensionName in dimensionNames)
             {
                 var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value;
                 dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
-            
+
             return new MeasuredMetric(value, dimensions);
         }
 
@@ -78,7 +78,7 @@ namespace Promitor.Core.Metrics
             Guard.NotAny(dimensionNames, nameof(dimensionNames));
 
             var dimensions = dimensionNames.Select(name => new MeasuredMetricDimension(name, "unknown")).ToList();
-            
+
             return new MeasuredMetric(null, dimensions);
         }
     }

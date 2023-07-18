@@ -12,7 +12,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class AtlassianStatuspageMetricSinkTests : UnitTest
+    public class AtlassianStatuspageMetricSinkTests : MetricSinkTest
     {
         [Theory]
         [InlineData("")]
@@ -25,7 +25,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -44,7 +45,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -59,7 +61,8 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration();
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act & Assert
             // ReSharper disable once ExpressionIsAlwaysNull
@@ -74,11 +77,13 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var systemMetricId = BogusGenerator.Name.FirstName();
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricValue = BogusGenerator.Random.Double();
+            var metricName = BogusGenerator.Name.FirstName();
             var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act
             await metricSink.ReportMetricAsync(promitorMetricName, metricDescription, scrapeResult);
@@ -95,13 +100,15 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var promitorMetricName = BogusGenerator.Name.FirstName();
             var systemMetricId = BogusGenerator.Name.FirstName();
             var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(systemMetricId: systemMetricId, promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act
             await metricSink.ReportMetricAsync(promitorMetricName, metricDescription, scrapeResult);
@@ -118,13 +125,15 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var promitorMetricName = BogusGenerator.Name.FirstName();
             var systemMetricId = BogusGenerator.Name.FirstName();
             var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricName = BogusGenerator.Name.FirstName();
             double? metricValue = null;
             // ReSharper disable once ExpressionIsAlwaysNull
             var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var systemMetricConfigOptions = BogusAtlassianStatuspageMetricSinkConfigurationGenerator.GetSinkConfiguration(promitorMetricName: promitorMetricName);
             var atlassianStatuspageClientMock = new Mock<IAtlassianStatuspageClient>();
-            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var metricSink = new AtlassianStatuspageMetricSink(atlassianStatuspageClientMock.Object, metricsDeclarationProvider, systemMetricConfigOptions, NullLogger<AtlassianStatuspageMetricSink>.Instance);
 
             // Act
             await metricSink.ReportMetricAsync(promitorMetricName, metricDescription, scrapeResult);

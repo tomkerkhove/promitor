@@ -13,7 +13,7 @@ public class MeasuredMetricDimension
     ///     Value of dimension
     /// </summary>
     public string Value { get; }
-    
+
     public MeasuredMetricDimension(string dimensionName, string dimensionValue)
     {
         Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));

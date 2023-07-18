@@ -6,28 +6,28 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage.Configuration;
+using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
 {
-    public class AtlassianStatuspageMetricSink : IMetricSink
+    public class AtlassianStatuspageMetricSink : MetricSink, IMetricSink
     {
-        private readonly ILogger<AtlassianStatuspageMetricSink> _logger;
         private readonly IAtlassianStatuspageClient _atlassianStatusPageClient;
         private readonly IOptionsMonitor<AtlassianStatusPageSinkConfiguration> _sinkConfiguration;
 
-        public MetricSinkType Type { get; } = MetricSinkType.AtlassianStatuspage;
+        public MetricSinkType Type => MetricSinkType.AtlassianStatuspage;
 
-        public AtlassianStatuspageMetricSink(IAtlassianStatuspageClient atlassianStatusPageClient, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageMetricSink> logger)
+        public AtlassianStatuspageMetricSink(IAtlassianStatuspageClient atlassianStatusPageClient, IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<AtlassianStatusPageSinkConfiguration> sinkConfiguration, ILogger<AtlassianStatuspageMetricSink> logger)
+            : base(metricsDeclarationProvider, logger)
         {
             Guard.NotNull(atlassianStatusPageClient, nameof(atlassianStatusPageClient));
             Guard.NotNull(sinkConfiguration, nameof(sinkConfiguration));
             Guard.NotNull(sinkConfiguration.CurrentValue, nameof(sinkConfiguration.CurrentValue));
-            Guard.NotNull(logger, nameof(logger));
 
             _atlassianStatusPageClient = atlassianStatusPageClient;
             _sinkConfiguration = sinkConfiguration;
-            _logger = logger;
         }
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
@@ -59,7 +59,7 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
                 await _atlassianStatusPageClient.ReportMetricAsync(systemMetricMapping.Id, metricValue);
             }
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to Atlassian Statuspage", metricName, metricValue);
+            Logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to Atlassian Statuspage", metricName, metricValue);
         }
     }
 }

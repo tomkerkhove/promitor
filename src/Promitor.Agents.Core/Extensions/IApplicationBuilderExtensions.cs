@@ -62,24 +62,18 @@ namespace Microsoft.AspNetCore.Builder
         /// <param name="openApiConfigurationAction">Action to configure Open API</param>
         public static IApplicationBuilder ExposeOpenApiUi(this IApplicationBuilder app, string apiName, Action<SwaggerUIOptions> openApiUiConfigurationAction = null, Action<SwaggerOptions> openApiConfigurationAction = null)
         {
-            if (openApiConfigurationAction == null)
+            openApiConfigurationAction ??= setupAction =>
             {
-                openApiConfigurationAction = setupAction =>
-                {
-                    setupAction.RouteTemplate = "api/{documentName}/docs.json";
-                    setupAction.PreSerializeFilters.Add((swagger, request) => AutomaticallyBuildApiServerUrl(request, swagger));
-                };
-            }
+                setupAction.RouteTemplate = "api/{documentName}/docs.json";
+                setupAction.PreSerializeFilters.Add((swagger, request) => AutomaticallyBuildApiServerUrl(request, swagger));
+            };
 
-            if (openApiUiConfigurationAction == null)
+            openApiUiConfigurationAction ??= swaggerUiOptions =>
             {
-                openApiUiConfigurationAction = swaggerUiOptions =>
-                {
-                    swaggerUiOptions.ConfigureDefaultOptions(apiName);
-                    swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
-                    swaggerUiOptions.RoutePrefix = "api/docs";                    
-                };
-            }
+                swaggerUiOptions.ConfigureDefaultOptions(apiName);
+                swaggerUiOptions.SwaggerEndpoint("../v1/docs.json", apiName);
+                swaggerUiOptions.RoutePrefix = "api/docs";
+            };
 
             // New Swagger UI
             app.UseSwagger(openApiConfigurationAction);
@@ -91,12 +85,12 @@ namespace Microsoft.AspNetCore.Builder
         private static void AutomaticallyBuildApiServerUrl(HttpRequest request, OpenApiDocument swagger)
         {
             // Default to simple scenario
-            string serverUrl = $"{request.Scheme}://{request.Host}";
+            var serverUrl = $"{request.Scheme}://{request.Host}";
 
             // If request forwarding is used, we need to see if we need to adapt
             // Here we need to use the host and prefix, when specified
             // This is required when using reverse proxies such as Azure API Management, Traefik, NGINX, etc.
-            if (request.Headers.ContainsKey("X-Forwarded-Host"))
+            if (request.Headers.TryGetValue("X-Forwarded-Host", out var forwardedHost))
             {
                 var urlPrefix = string.Empty;
                 var prefixFromHeaders = request.Headers["X-Forwarded-Prefix"];
@@ -110,10 +104,10 @@ namespace Microsoft.AspNetCore.Builder
                     }
                 }
 
-                serverUrl = $"{request.Scheme}://{request.Headers["X-Forwarded-Host"]}{urlPrefix}";
+                serverUrl = $"{request.Scheme}://{forwardedHost}{urlPrefix}";
             }
 
-            swagger.Servers = new List<OpenApiServer> {new OpenApiServer {Url = serverUrl}};
+            swagger.Servers = new List<OpenApiServer> {new() {Url = serverUrl}};
         }
     }
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <RuntimeFrameworkVersion>7.0.3</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>7.0.8</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Promitor.Core.Scraping\Promitor.Core.Scraping.csproj" />
+    <ProjectReference Include="..\Promitor.Integrations.Sinks.Core\Promitor.Integrations.Sinks.Core.csproj" />
   </ItemGroup>
 
 </Project>

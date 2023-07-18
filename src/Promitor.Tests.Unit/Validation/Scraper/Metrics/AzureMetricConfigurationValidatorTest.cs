@@ -32,7 +32,7 @@ public class AzureMetricConfigurationValidatorTest
         // Assert
         Assert.NotEmpty(validationErrors);
     }
-    
+
     [Fact]
     public void OnlyDimension_Succeeds()
     {
@@ -56,7 +56,7 @@ public class AzureMetricConfigurationValidatorTest
         // Assert
         Assert.Empty(validationErrors);
     }
-    
+
     [Fact]
     public void OnlyDimensions_Succeeds()
     {

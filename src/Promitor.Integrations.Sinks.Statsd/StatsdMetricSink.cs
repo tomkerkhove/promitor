@@ -9,17 +9,19 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Integrations.Sinks.Core;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 
 namespace Promitor.Integrations.Sinks.Statsd
 {
-    public class StatsdMetricSink : IMetricSink
+    public class StatsdMetricSink : MetricSink, IMetricSink
     {
-        private readonly ILogger<StatsdMetricSink> _logger;
         private readonly IStatsDPublisher _statsDPublisher;
         private readonly IOptionsMonitor<StatsdSinkConfiguration> _statsDConfiguration;       
 
-        public StatsdMetricSink(IStatsDPublisher statsDPublisher, IOptionsMonitor<StatsdSinkConfiguration> configuration, ILogger<StatsdMetricSink> logger)
+        public StatsdMetricSink(IStatsDPublisher statsDPublisher, IMetricsDeclarationProvider metricsDeclarationProvider, IOptionsMonitor<StatsdSinkConfiguration> configuration, ILogger<StatsdMetricSink> logger)
+            : base(metricsDeclarationProvider, logger)
         {
             Guard.NotNull(statsDPublisher, nameof(statsDPublisher));
             Guard.NotNull(logger, nameof(logger));
@@ -27,7 +29,6 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             _statsDPublisher = statsDPublisher;
             _statsDConfiguration = configuration;
-            _logger = logger;
         }
 
         public MetricSinkType Type => MetricSinkType.StatsD;
@@ -96,7 +97,7 @@ namespace Promitor.Integrations.Sinks.Statsd
 
         private void LogMetricWritten(string metricName, double metricValue)
         {
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
+            Logger.LogTrace("Metric {MetricName} with value {MetricValue} was written to StatsD server", metricName, metricValue);
         }
     }
 }

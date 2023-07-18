@@ -30,7 +30,7 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
         private readonly IAzure _authenticatedAzureSubscription;
-        private readonly AzureCredentialsFactory _azureCredentialsFactory = new AzureCredentialsFactory();
+        private readonly AzureCredentialsFactory _azureCredentialsFactory = new();
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
 
@@ -189,8 +189,7 @@ namespace Promitor.Integrations.AzureMonitor
         private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
-                .OrderByDescending(metricValue => metricValue.TimeStamp)
-                .FirstOrDefault();
+                                                     .MaxBy(metricValue => metricValue.TimeStamp);
 
             if (relevantMetricValue == null)
             {
@@ -220,7 +219,7 @@ namespace Promitor.Integrations.AzureMonitor
                     throw new Exception($"Unable to determine the metrics value for aggregator '{metricAggregation}'");
             }
         }
-        
+
         private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, List<string> metricDimensions,
             int? metricLimit, IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
@@ -238,14 +237,14 @@ namespace Promitor.Integrations.AzureMonitor
                 metricQuery.WithOdataFilter(filter);
                 metricQuery.SelectTop(queryLimit);
             }
-            
+
             if (metricDimensions.Any())
             {
                 string metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
                 metricQuery.WithOdataFilter(metricDimensionsFilter);
                 metricQuery.SelectTop(queryLimit);
             }
-            
+
             return metricQuery;
         }
 
@@ -257,7 +256,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             var azureClientConfiguration = Microsoft.Azure.Management.Fluent.Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);
-            
+
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {

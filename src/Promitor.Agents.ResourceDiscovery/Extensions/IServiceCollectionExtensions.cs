@@ -78,13 +78,10 @@ namespace Promitor.Agents.ResourceDiscovery.Extensions
             {
                 var jobName = "Azure Resource Group Discovery";
                 builder.AddJob<AzureResourceGroupsDiscoveryBackgroundJob>(
-                    jobServices =>
-                    {
-                        return new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
-                            jobServices.GetRequiredService<IAzureResourceRepository>(),
-                            jobServices.GetRequiredService<ISystemMetricsPublisher>(),
-                            jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>());
-                    },
+                    jobServices => new AzureResourceGroupsDiscoveryBackgroundJob(jobName,
+                        jobServices.GetRequiredService<IAzureResourceRepository>(),
+                        jobServices.GetRequiredService<ISystemMetricsPublisher>(),
+                        jobServices.GetRequiredService<ILogger<AzureResourceGroupsDiscoveryBackgroundJob>>()),
                     schedulerOptions =>
                     {
                         schedulerOptions.CronSchedule = "*/15 * * * *";

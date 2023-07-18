@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
     [Category("Unit")]
     public class SqlElasticPoolDeserializerTests : ResourceDeserializerTest<SqlElasticPoolDeserializer>
     {
-        private readonly SqlElasticPoolDeserializer _deserializer = new SqlElasticPoolDeserializer(NullLogger.Instance);
+        private readonly SqlElasticPoolDeserializer _deserializer = new(NullLogger.Instance);
 
         [Fact]
         public void Deserialize_ServerNameSupplied_SetsServerName()

@@ -19,9 +19,9 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
     public class MetricsDeclarationBuilder
     {
         private readonly AzureMetadataV1 _azureMetadata;
-        private readonly List<MetricDefinitionV1> _metrics = new List<MetricDefinitionV1>();
+        private readonly List<MetricDefinitionV1> _metrics = new();
 
-        private MetricDefaultsV1 _metricDefaults = new MetricDefaultsV1
+        private MetricDefaultsV1 _metricDefaults = new()
         {
             Scraping = new ScrapingV1 { Schedule = @"0 * * ? * *" }
         };
@@ -974,6 +974,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithTrafficManagerMetric(string metricName = "promitor",
+            string metricDescription = "Description for a metric",
+            string name = "promitor-traffic-manager",
+            string azureMetricName = "QpsByEndpoint",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new TrafficManagerResourceV1
+            {
+                Name = name
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.TrafficManager, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithVirtualMachineMetric(string metricName = "promitor-virtual-machine",
             string metricDescription = "Description for a metric",
             string virtualMachineName = "promitor-virtual-machine-name",
@@ -1058,7 +1076,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
         {
             var azureMetricConfiguration = CreateAzureMetricConfiguration(azureMetricName, azureMetricLimit, metricDimensions);
             var logAnalyticsConfiguration = CreateLogAnalyticsConfiguration(query, interval);
-            
+
             var metric = new MetricDefinitionV1
             {
                 Name = metricName,

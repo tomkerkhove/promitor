@@ -9,17 +9,20 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.OpenTelemetry
 {
-    public class OpenTelemetryCollectorMetricSink : IMetricSink
+    public class OpenTelemetryCollectorMetricSink : MetricSink, IMetricSink
     {
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
-        private static readonly Meter azureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
+        private static readonly Meter azureMonitorMeter = new("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
         public MetricSinkType Type => MetricSinkType.OpenTelemetryCollector;
 
-        public OpenTelemetryCollectorMetricSink(ILogger<OpenTelemetryCollectorMetricSink> logger)
+        public OpenTelemetryCollectorMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger<OpenTelemetryCollectorMetricSink> logger)
+            : base(metricsDeclarationProvider, logger)
         {
             Guard.NotNull(logger, nameof(logger));
 
@@ -38,15 +41,17 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             {
                 var metricValue = measuredMetric.Value ?? 0;
                 
-                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels);
+                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
+
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
                 reportMetricTasks.Add(reportMetricTask);
             }
 
             await Task.WhenAll(reportMetricTasks);
         }
 
-        private readonly ConcurrentDictionary<string, ObservableGauge<double>> _gauges = new ConcurrentDictionary<string, ObservableGauge<double>>();
-        private readonly ConcurrentDictionary<string, Channel<Measurement<double>>> _measurements = new ConcurrentDictionary<string, Channel<Measurement<double>>>();
+        private readonly ConcurrentDictionary<string, ObservableGauge<double>> _gauges = new();
+        private readonly ConcurrentDictionary<string, Channel<Measurement<double>>> _measurements = new();
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
@@ -68,7 +73,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
 
         private void InitializeNewMetric(string metricName, string metricDescription)
         {
-            var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetricAsync(metricName).Result);
+            var gauge = azureMonitorMeter.CreateObservableGauge(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetricAsync(metricName).Result);
             _gauges.TryAdd(metricName, gauge);
 
             _measurements.TryAdd(metricName, CreateNewMeasurementChannel());

@@ -12,8 +12,8 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
     {
         private static readonly TimeSpan defaultInterval = TimeSpan.FromMinutes(5);
 
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
-        private readonly Mock<IDeserializer<object>> _childDeserializer = new Mock<IDeserializer<object>>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
+        private readonly Mock<IDeserializer<object>> _childDeserializer = new();
         private readonly RegistrationConfigDeserializer _deserializer;
 
         public DeserializationTests()

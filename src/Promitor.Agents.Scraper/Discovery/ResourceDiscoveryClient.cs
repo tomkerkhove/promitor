@@ -16,7 +16,7 @@ namespace Promitor.Agents.Scraper.Discovery
 {
     public class ResourceDiscoveryClient
     {
-        private readonly JsonSerializerSettings _serializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Objects };
+        private readonly JsonSerializerSettings _serializerSettings = new() { TypeNameHandling = TypeNameHandling.Objects };
         private readonly IOptionsMonitor<ResourceDiscoveryConfiguration> _configuration;
         private readonly ILogger<ResourceDiscoveryClient> _logger;
         private readonly HttpClient _httpClient;

@@ -17,11 +17,10 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly Mock<IDeserializer<AzureMetricConfigurationV1>> _azureMetricConfigurationDeserializer;
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
         private readonly Mock<IAzureResourceDeserializerFactory> _resourceDeserializerFactory;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
-        private readonly Mock<IDeserializer<LogAnalyticsConfigurationV1>> _logAnalyticsConfigurationDeserializer =
-            new Mock<IDeserializer<LogAnalyticsConfigurationV1>>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
+        private readonly Mock<IDeserializer<LogAnalyticsConfigurationV1>> _logAnalyticsConfigurationDeserializer = new();
         private readonly Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>> _resourceDiscoveryGroupDeserializer =
-            new Mock<IDeserializer<AzureResourceDiscoveryGroupDefinitionV1>>();
+            new();
 
         private readonly MetricDefinitionDeserializer _deserializer;
 
@@ -313,7 +312,7 @@ resources:
 
             var resources = new List<AzureResourceDefinitionV1>
             {
-                new AzureResourceDefinitionV1 { ResourceGroupName = "promitor-group" }
+                new() { ResourceGroupName = "promitor-group" }
             };
             resourceDeserializer.Setup(
                 d => d.Deserialize((YamlSequenceNode)node.Children["resources"], _errorReporter.Object))
@@ -474,7 +473,7 @@ resources:
 - resourceUri: Microsoft.ServiceBus/namespaces/promitor-messaging-2";
             var node = YamlUtils.CreateYamlNode(yamlText);
 
-            SetupResourceDeserializer(node, new List<AzureResourceDefinitionV1> { new AzureResourceDefinitionV1() });
+            SetupResourceDeserializer(node, new List<AzureResourceDefinitionV1> { new() });
 
             // Act
             _deserializer.Deserialize(node, _errorReporter.Object);
@@ -514,7 +513,7 @@ resourceDiscoveryGroups:
             var node = YamlUtils.CreateYamlNode(yamlText);
             var resourceDiscoveryGroups = new List<AzureResourceDiscoveryGroupDefinitionV1>
             {
-                new AzureResourceDiscoveryGroupDefinitionV1()
+                new()
             };
             _resourceDiscoveryGroupDeserializer.Setup(
                 d => d.Deserialize(It.IsAny<YamlSequenceNode>(), It.IsAny<IErrorReporter>())).Returns(resourceDiscoveryGroups);

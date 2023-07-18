@@ -2,6 +2,6 @@
 {
     public class AzureMonitorIntegrationConfiguration
     {
-        public AzureMonitorHistoryConfiguration History { get; set; } = new AzureMonitorHistoryConfiguration();
+        public AzureMonitorHistoryConfiguration History { get; set; } = new();
     }
 }

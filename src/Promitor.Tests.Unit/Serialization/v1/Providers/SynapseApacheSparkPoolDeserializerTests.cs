@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
     [Category("Unit")]
     public class SynapseApacheSparkPoolDeserializerTests : ResourceDeserializerTest<SynapseApacheSparkPoolDeserializer>
     {
-        private readonly SynapseApacheSparkPoolDeserializer _deserializer = new SynapseApacheSparkPoolDeserializer(NullLogger<SynapseApacheSparkPoolDeserializer>.Instance);
+        private readonly SynapseApacheSparkPoolDeserializer _deserializer = new(NullLogger<SynapseApacheSparkPoolDeserializer>.Instance);
 
         [Fact]
         public void Deserialize_PoolNameSupplied_SetsPoolName()

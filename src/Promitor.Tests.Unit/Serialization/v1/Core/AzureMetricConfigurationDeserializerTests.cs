@@ -16,7 +16,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly AzureMetricConfigurationDeserializer _deserializer;
         private readonly Mock<IDeserializer<MetricDimensionV1>> _dimensionDeserializer;
         private readonly Mock<IDeserializer<MetricAggregationV1>> _aggregationDeserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
 
         public AzureMetricConfigurationDeserializerTests()
         {
@@ -113,7 +113,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
 
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
-            
+
             // Assert
             Assert.Equal(dimension, config.Dimension);
         }
@@ -128,7 +128,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
   - name: Test";
             var node = YamlUtils.CreateYamlNode(yamlText);
             var dimensionsNode = (YamlSequenceNode)node.Children["dimensions"];
-            
+
             var dimensions = new List<MetricDimensionV1> { new(), new() };
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
 
@@ -155,13 +155,13 @@ dimensions:
 
             var dimension = new MetricDimensionV1();
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionNode, _errorReporter.Object)).Returns(dimension);
-            
+
             var dimensions = new List<MetricDimensionV1> { new(), new() };
             _dimensionDeserializer.Setup(d => d.Deserialize(dimensionsNode, _errorReporter.Object)).Returns(dimensions);
-            
+
             // Act
             var config = _deserializer.Deserialize(node, _errorReporter.Object);
-            
+
             // Assert
             Assert.Equal(dimension, config.Dimension);
             Assert.Same(dimensions, config.Dimensions);

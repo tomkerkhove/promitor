@@ -117,7 +117,7 @@ namespace Promitor.Tests.Integration.Services.Scraper.MetricSinks
                 Assert.NotEqual("unknown", gaugeMetric.Measurements[0].Labels[sanitizedDimensionName]);
             }
         }
-        
+
         public static IEnumerable<object[]> DimensionsData(){
             yield return new object[] { "promitor_demo_application_insights_availability_per_name", new List<string>{ "availabilityResult/name" } };
             yield return new object[] { "promitor_demo_application_insights_availability_per_name_and_location", new List<string>{ "availabilityResult/name", "availabilityResult/location" } };

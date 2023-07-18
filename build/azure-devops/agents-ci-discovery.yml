@@ -10,6 +10,7 @@ pr:
   paths:
     include:
     - src/*
+    - config/promitor/*
     - build/azure-devops/templates/*
     - build/azure-devops/agents-ci-discovery.yml
 variables:
@@ -104,6 +105,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Resource Discovery'
+        testRunTitle: 'resource-discovery-linux'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
@@ -163,6 +165,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Resource Discovery'
+        testRunTitle: 'resource-discovery-windows'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml

@@ -10,6 +10,7 @@ pr:
   paths:
     include:
     - src/*
+    - config/promitor/*
     - build/azure-devops/templates/*
     - build/azure-devops/agents-ci-scraper.yml
 variables:
@@ -150,6 +151,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
+        testRunTitle: 'scraper-linux'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml
@@ -166,6 +168,10 @@ stages:
        parameters:
         agentName: 'Resource Discovery'
         url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
+     - template: templates/prometheus/show-prometheus-metrics.yml
+       parameters:
+        agentName: 'OpenTelemetry'
+        url: '$(OpenTelemetry.Collector.Uri)/$(Agent.OpenTelemetry.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         - template: templates/docker/push-image.yml
           parameters:
@@ -249,6 +255,7 @@ stages:
      - template: templates/tests/run-integration-tests.yml
        parameters:
         agentName: 'Scraper'
+        testRunTitle: 'scraper-windows'
         dotnetVersion: '$(DotNet.Sdk.Version)'
         buildConfiguration: '$(DotNet.Configuration)'
      - template: templates/docker/show-container-logs.yml

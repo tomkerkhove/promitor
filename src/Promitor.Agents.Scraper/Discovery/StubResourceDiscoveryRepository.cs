@@ -8,8 +8,8 @@ namespace Promitor.Agents.Scraper.Discovery
 {
     public class StubResourceDiscoveryRepository : IResourceDiscoveryRepository
     {
-        private static readonly List<AzureResourceDefinition> emptyResourceDefinitions = new List<AzureResourceDefinition>();
-        private static readonly AgentHealthReport healthReport = new AgentHealthReport();
+        private static readonly List<AzureResourceDefinition> emptyResourceDefinitions = new();
+        private static readonly AgentHealthReport healthReport = new();
 
         public Task<List<AzureResourceDefinition>> GetResourceDiscoveryGroupAsync(string resourceDiscoveryGroupName)
         {

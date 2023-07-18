@@ -11,13 +11,14 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Integrations.Sinks.Statsd;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators;
+using Promitor.Tests.Unit.Metrics.Sinks;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
 
 namespace Promitor.Tests.Unit.Metrics
 {
     [Category("Unit")]
-    public class MetricSinkWriterTests : UnitTest
+    public class MetricSinkWriterTests : MetricSinkTest
     {
         [Theory]
         [InlineData("")]
@@ -159,9 +160,10 @@ namespace Promitor.Tests.Unit.Metrics
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var statsDPublisherMock = new Mock<IStatsDPublisher>();
             var statsDSinkConfiguration = CreateStatsDConfiguration();
-            var statsdMetricSink = new StatsdMetricSink(statsDPublisherMock.Object, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
+            var statsdMetricSink = new StatsdMetricSink(statsDPublisherMock.Object, metricsDeclarationProvider, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
             var metricSinkWriter = new MetricSinkWriter(new List<IMetricSink> { statsdMetricSink }, NullLogger<MetricSinkWriter>.Instance);
             
             // Act

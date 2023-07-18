@@ -23,7 +23,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             }
 
             var isEntityNameDimensionConfigured = metricDefinition.AzureMetricConfiguration?.HasDimension(EntityNameDimension) ?? false;
-            
+
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusNamespaceResourceDefinition>())
             {
                 if (string.IsNullOrWhiteSpace(resourceDefinition.Namespace))

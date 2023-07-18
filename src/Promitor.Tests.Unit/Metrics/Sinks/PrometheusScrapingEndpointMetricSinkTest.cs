@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Prometheus.Client;
 using Promitor.Core.Metrics;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
-using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Integrations.Sinks.Prometheus;
 using Promitor.Integrations.Sinks.Prometheus.Configuration;
-using Promitor.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Tests.Unit.Generators;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
@@ -22,7 +18,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Metrics.Sinks
 {
     [Category("Unit")]
-    public class PrometheusScrapingEndpointMetricSinkTests : UnitTest
+    public class PrometheusScrapingEndpointMetricSinkTest : MetricSinkTest
     {
         [Theory]
         [InlineData("")]
@@ -144,7 +140,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
-                Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
+                Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
             var firstMetric = MeasuredMetric.CreateForDimensions(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
             var secondMetric = MeasuredMetric.CreateWithoutDimensions(secondMetricValue);
@@ -256,7 +252,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var expectedDimensionName = dimensionName.ToLower();
             var timeSeries = new TimeSeriesElement
             {
-                Metadatavalues = new List<MetadataValue> { new MetadataValue(name: new LocalizableString(dimensionName), value: dimensionValue) }
+                Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
             var measuredMetric = MeasuredMetric.CreateForDimensions(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
@@ -392,29 +388,6 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             };
 
             return new OptionsMonitorStub<PrometheusScrapingEndpointSinkConfiguration>(prometheusScrapingEndpointSinkConfiguration);
-        }
-
-        private MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null, Dictionary<string, string> defaultLabels = null)
-        {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            var mapper = mapperConfiguration.CreateMapper();
-            var metricBuilder = MetricsDeclarationBuilder.WithMetadata();
-
-            if (defaultLabels != null)
-            {
-                var defaults = new MetricDefaultsV1
-                {
-                    Labels = defaultLabels
-                };
-                
-                metricBuilder.WithDefaults(defaults);
-            }
-
-            var rawDeclaration = metricBuilder.WithServiceBusMetric(metricName, labels: labels)
-                                                    .Build(mapper);
-
-            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, mapper);
-            return metricsDeclarationProvider;
         }
 
         private static (Mock<IMetricFactory> Factory, Mock<IMetricFamily<IGauge>> MetricFamily, Mock<IGauge> Gauge) CreatePrometheusMetricFactoryMock()

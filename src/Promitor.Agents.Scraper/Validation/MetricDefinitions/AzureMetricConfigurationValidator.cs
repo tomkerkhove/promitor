@@ -56,7 +56,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
             }
 
             if (azureMetricConfiguration.Dimension != null && azureMetricConfiguration.Dimensions.Any())
-            { 
+            {
                 errorMessages.Add("Only one of 'dimensions' and 'dimension' is allowed. Please use 'dimensions'.");
             }
 

@@ -7,7 +7,7 @@ namespace Promitor.Tests.Unit.Generators
 {
     public class ScrapeResultGenerator
     {
-        private static readonly Faker bogus = new Faker();
+        private static readonly Faker bogus = new();
 
         public static ScrapeResult GenerateFromMetric(MeasuredMetric measuredMetric)
         {

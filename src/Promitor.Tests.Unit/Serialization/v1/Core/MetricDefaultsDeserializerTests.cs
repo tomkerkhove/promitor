@@ -15,7 +15,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         private readonly MetricDefaultsDeserializer _deserializer;
         private readonly Mock<IDeserializer<AggregationV1>> _aggregationDeserializer;
         private readonly Mock<IDeserializer<ScrapingV1>> _scrapingDeserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
 
         public MetricDefaultsDeserializerTests()
         {

@@ -21,7 +21,7 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
             {
                 errorMessages.Add("At least one Dimension other than EntityName is defined.");
             }
-            
+
             var isEntityNameDimensionConfigured = metricDefinition.AzureMetricConfiguration?.HasDimension(EntityNameDimension) ?? false;
 
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<EventHubResourceDefinition>())

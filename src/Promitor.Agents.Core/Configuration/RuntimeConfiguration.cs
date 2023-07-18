@@ -6,8 +6,8 @@ namespace Promitor.Agents.Core.Configuration
 {
     public class RuntimeConfiguration
     {
-        public ServerConfiguration Server { get; set; } = new ServerConfiguration();
-        public AuthenticationConfiguration Authentication { get; set; } = new AuthenticationConfiguration();
-        public TelemetryConfiguration Telemetry { get; set; } = new TelemetryConfiguration();
+        public ServerConfiguration Server { get; set; } = new();
+        public AuthenticationConfiguration Authentication { get; set; } = new();
+        public TelemetryConfiguration Telemetry { get; set; } = new();
     }
 }

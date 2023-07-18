@@ -11,7 +11,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
     public class StorageQueueDeserializerTests : ResourceDeserializerTest<StorageQueueDeserializer>
     {
         private readonly Mock<IDeserializer<SecretV1>> _secretDeserializer;
-        private readonly Mock<IErrorReporter> _errorReporter = new Mock<IErrorReporter>();
+        private readonly Mock<IErrorReporter> _errorReporter = new();
 
         private readonly StorageQueueDeserializer _deserializer;
 
