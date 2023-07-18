@@ -31,5 +31,4 @@ namespace Promitor.Tests.Unit.Metrics
             Assert.Equal(ex.DimensionName, dimensionName);
         }
     }
-    
 }
