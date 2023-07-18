@@ -9,17 +9,20 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
+using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.OpenTelemetry
 {
-    public class OpenTelemetryCollectorMetricSink : IMetricSink
+    public class OpenTelemetryCollectorMetricSink : MetricSink, IMetricSink
     {
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
         private static readonly Meter azureMonitorMeter = new("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
         public MetricSinkType Type => MetricSinkType.OpenTelemetryCollector;
 
-        public OpenTelemetryCollectorMetricSink(ILogger<OpenTelemetryCollectorMetricSink> logger)
+        public OpenTelemetryCollectorMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger<OpenTelemetryCollectorMetricSink> logger)
+            : base(metricsDeclarationProvider, logger)
         {
             Guard.NotNull(logger, nameof(logger));
 
@@ -38,7 +41,9 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             {
                 var metricValue = measuredMetric.Value ?? 0;
                 
-                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels);
+                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
+
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
                 reportMetricTasks.Add(reportMetricTask);
             }
 

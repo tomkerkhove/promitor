@@ -8,7 +8,7 @@ exporters:
     endpoint: "0.0.0.0:8889"
     namespace: otel
     const_labels:
-      app: promitor
+      source_app: promitor
     send_timestamps: true
 
 processors:
