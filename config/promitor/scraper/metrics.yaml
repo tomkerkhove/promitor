@@ -271,7 +271,7 @@ metrics:
       - name: promitor-testing-resource-eu-telemetry-classic
         resourceGroupName: promitor-testing-infrastructure-europe
         # Application Insights with data in Log Analytics
-      - name: promitor-testing-infrastructure-europe-we-telemetry
+      - name: promitor-testing-resource-eu-telemetry
         resourceGroupName: promitor-testing-infrastructure-europe
   - name: promitor_demo_application_insights_availability_per_name_and_location
     description: "Availability (%) of promitor.io measured in Azure Application Insights per name and location"
