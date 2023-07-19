@@ -65,7 +65,7 @@ namespace Promitor.Core.Metrics
             Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
             Guard.NotNull(timeseries, nameof(timeseries));
             
-            var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);            
+            var dimensionMetadataValue = timeseries.Metadatavalues.Where(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).ToList();            
             if(!dimensionMetadataValue.Any())
             {
                 throw new MissingDimensionException(dimensionName, timeseries);

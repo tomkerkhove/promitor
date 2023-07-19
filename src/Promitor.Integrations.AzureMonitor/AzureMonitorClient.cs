@@ -120,7 +120,7 @@ namespace Promitor.Integrations.AzureMonitor
                 catch (MissingDimensionException e) 
                 {
                     _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
-                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.timeSeries)); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
                 }
             }
 

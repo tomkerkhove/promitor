@@ -8,7 +8,7 @@ using Promitor.Core.Metrics.Exceptions;
 namespace Promitor.Tests.Unit.Metrics
 {
     [Category("Unit")]
-    public class MeasuredMeticTest : UnitTest
+    public class MeasuredMetricTest : UnitTest
     {
         [Fact]
         public void Create_MeasuredMetric_With_Dimension_HappyPath_Succeeds()

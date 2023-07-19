@@ -9,12 +9,13 @@ namespace Promitor.Core.Metrics.Exceptions
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="metricName">Name of the dimension</param>
+        /// <param name="dimensionName">Name of the dimension</param>
         public MissingDimensionException(string dimensionName, TimeSeriesElement timeSeries) : base($"No value found for dimension '{dimensionName}'")
         {
             Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
 
             DimensionName = dimensionName;
+            TimeSeries = timeSeries; 
         }
 
         /// <summary>
@@ -25,6 +26,6 @@ namespace Promitor.Core.Metrics.Exceptions
         /// <summary>
         ///     Time series element producing the exception  
         /// </summary>
-        public TimeSeriesElement timeSeries { get; }
+        public TimeSeriesElement TimeSeries { get; }
     }
 }
