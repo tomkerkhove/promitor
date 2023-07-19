@@ -243,7 +243,7 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: data-factory-landscape
-  - name: promitor_demo_application_insights_availability
+  - name: application_insights_availability
     description: "Availability (%) of promitor.io measured in Azure Application Insights"
     resourceType: ApplicationInsights
     azureMetricConfiguration:
@@ -257,7 +257,7 @@ metrics:
       # Application Insights with data in Log Analytics
     - name: promitor-testing-resource-eu-telemetry
       resourceGroupName: promitor-testing-infrastructure-europe
-  - name: promitor_demo_application_insights_availability_per_name
+  - name: application_insights_availability_per_name
     description: "Availability (%) of promitor.io measured in Azure Application Insights per name"
     resourceType: ApplicationInsights
     azureMetricConfiguration:
@@ -273,7 +273,7 @@ metrics:
         # Application Insights with data in Log Analytics
       - name: promitor-testing-resource-eu-telemetry
         resourceGroupName: promitor-testing-infrastructure-europe
-  - name: promitor_demo_application_insights_availability_per_name_and_location
+  - name: application_insights_availability_per_name_and_location
     description: "Availability (%) of promitor.io measured in Azure Application Insights per name and location"
     resourceType: ApplicationInsights
     azureMetricConfiguration:
