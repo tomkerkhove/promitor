@@ -38,26 +38,25 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return $"{fieldName} eq '{entityName}'";
         }
 
-        protected override string DetermineMetricDimension(string metricName, DataShareResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected override List<string> DetermineMetricDimensions(string metricName, DataShareResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
             if (IsShareNameConfigured(resourceDefinition))
             {
-                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, configuration);
             }
 
             var dimensionName = GetMetricFilterFieldName(metricName);
             Logger.LogTrace($"Using '{dimensionName}' dimension since no share name was configured.");
 
-            return dimensionName;
+            return new List<string> { dimensionName };
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor dimension name to more representable value
-            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.DimensionName == "ShareName"
-                                                                             || metricValue.DimensionName == "ShareSubscriptionName"))
+            foreach (var dimension in metricValues.SelectMany(measuredMetric => measuredMetric.Dimensions.Where(dimension => (dimension.Name == "ShareName" || dimension.Name == "ShareSubscriptionName"))))
             {
-                measuredMetric.DimensionName = "share_name";
+                dimension.Name = "share_name";
             }
 
             return metricValues;

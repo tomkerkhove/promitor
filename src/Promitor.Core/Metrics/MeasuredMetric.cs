@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -13,14 +14,9 @@ namespace Promitor.Core.Metrics
         public double? Value { get; }
 
         /// <summary>
-        ///     Name of dimension for a metric
+        ///     Measured dimensions.
         /// </summary>
-        public string DimensionName { get; set; }
-
-        /// <summary>
-        ///     Name of dimension for a metric
-        /// </summary>
-        public string DimensionValue { get; }
+        public List<MeasuredMetricDimension> Dimensions { get; }
 
         /// <summary>
         ///     Indication whether or not the metric represents a dimension
@@ -32,55 +28,58 @@ namespace Promitor.Core.Metrics
             Value = value;
         }
 
-        private MeasuredMetric(double? value, string dimensionName, string dimensionValue)
+        private MeasuredMetric(double? value, List<MeasuredMetricDimension> dimensions)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
-            Guard.NotNullOrWhitespace(dimensionValue, nameof(dimensionValue));
+            Guard.NotAny(dimensions, nameof(dimensions));
 
             Value = value;
 
             IsDimensional = true;
-            DimensionName = dimensionName;
-            DimensionValue = dimensionValue;
+            Dimensions = dimensions;
         }
 
         /// <summary>
-        /// Create a measured metric without dimension
+        /// Create a measured metric without dimensions
         /// </summary>
         /// <param name="value">Measured metric value</param>
-        public static MeasuredMetric CreateWithoutDimension(double? value)
+        public static MeasuredMetric CreateWithoutDimensions(double? value)
         {
             return new MeasuredMetric(value);
         }
 
         /// <summary>
-        /// Create a measured metric for a given dimension
+        /// Create a measured metric for given dimensions
         /// </summary>
         /// <param name="value">Measured metric value</param>
-        /// <param name="dimensionName">Name of dimension that is being scraped</param>
+        /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
         /// <param name="timeseries">Timeseries representing one of the dimensions</param>
-        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, TimeSeriesElement timeseries)
+        public static MeasuredMetric CreateForDimensions(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
             Guard.NotNull(timeseries, nameof(timeseries));
             Guard.For<ArgumentException>(() => timeseries.Metadatavalues.Any() == false);
 
-            var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true);
-            return CreateForDimension(value, dimensionName, dimensionValue.Value);
+            var dimensions = new List<MeasuredMetricDimension>();
+            foreach (var dimensionName in dimensionNames)
+            {
+                var dimensionValue = timeseries.Metadatavalues.Single(metadataValue => metadataValue.Name?.Value.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value;
+                dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
+            }
+
+            return new MeasuredMetric(value, dimensions);
         }
 
         /// <summary>
-        /// Create a measured metric for a given dimension
+        /// Create a measured metric for given dimensions when no metric information was found
         /// </summary>
-        /// <param name="value">Measured metric value</param>
-        /// <param name="dimensionName">Name of dimension that is being scraped</param>
-        /// <param name="dimensionValue">Value of the dimension that is being scraped</param>
-        public static MeasuredMetric CreateForDimension(double? value, string dimensionName, string dimensionValue)
+        /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
+        public static MeasuredMetric CreateForDimensions(List<string> dimensionNames)
         {
-            Guard.NotNullOrWhitespace(dimensionName, nameof(dimensionName));
-            Guard.NotNullOrWhitespace(dimensionValue, nameof(dimensionValue));
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
 
-            return new MeasuredMetric(value, dimensionName, dimensionValue);
+            var dimensions = dimensionNames.Select(name => new MeasuredMetricDimension(name, "unknown")).ToList();
+
+            return new MeasuredMetric(null, dimensions);
         }
     }
 }

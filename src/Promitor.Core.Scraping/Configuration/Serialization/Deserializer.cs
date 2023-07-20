@@ -116,7 +116,12 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             if (fieldDeserializationInfo.Deserializer != null)
             {
-                return fieldDeserializationInfo.Deserializer.DeserializeObject((YamlMappingNode)fieldNodePair.Value, errorReporter);
+                return fieldNodePair.Value switch
+                {
+                    YamlMappingNode node => fieldDeserializationInfo.Deserializer.Deserialize(node, errorReporter),
+                    YamlSequenceNode node => fieldDeserializationInfo.Deserializer.Deserialize(node, errorReporter),
+                    _ => null
+                };
             }
 
             var propertyType = Nullable.GetUnderlyingType(fieldDeserializationInfo.PropertyInfo.PropertyType) ?? fieldDeserializationInfo.PropertyInfo.PropertyType;

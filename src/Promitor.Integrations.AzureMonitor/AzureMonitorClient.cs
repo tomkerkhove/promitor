@@ -66,14 +66,14 @@ namespace Promitor.Integrations.AzureMonitor
         ///     Queries Azure Monitor to get the latest value for a specific metric
         /// </summary>
         /// <param name="metricName">Name of the metric</param>
-        /// <param name="metricDimension">Name of dimension to split metric on</param>
+        /// <param name="metricDimensions">List of names of dimensions to split metric on</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         /// <param name="resourceId">Id of the resource to query</param>
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, string metricDimension, AggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, AggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null, int? metricLimit = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -91,10 +91,10 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimension, metricDefinition, metricLimit, startQueryingTime);
+            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
-                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimension);
+                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
             }
 
             var measuredMetrics = new List<MeasuredMetric>();
@@ -109,7 +109,7 @@ namespace Promitor.Integrations.AzureMonitor
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
 
-                var measuredMetric = string.IsNullOrWhiteSpace(metricDimension) ? MeasuredMetric.CreateWithoutDimension(requestedMetricAggregate) : MeasuredMetric.CreateForDimension(requestedMetricAggregate, metricDimension, timeseries);
+                var measuredMetric = metricDimensions.Any() ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                 measuredMetrics.Add(measuredMetric);
             }
 
@@ -171,9 +171,9 @@ namespace Promitor.Integrations.AzureMonitor
         }
 
         private async Task<IMetric> GetRelevantMetric(string metricName, AggregationType metricAggregation, TimeSpan metricInterval,
-            string metricFilter, string metricDimension, IMetricDefinition metricDefinition, int? metricLimit, DateTime recordDateTime)
+            string metricFilter, List<string> metricDimensions, IMetricDefinition metricDefinition, int? metricLimit, DateTime recordDateTime)
         {
-            var metricQuery = CreateMetricsQuery(metricAggregation, metricInterval, metricFilter, metricDimension, metricLimit, metricDefinition, recordDateTime);
+            var metricQuery = CreateMetricsQuery(metricAggregation, metricInterval, metricFilter, metricDimensions, metricLimit, metricDefinition, recordDateTime);
             var metrics = await metricQuery.ExecuteAsync();
 
             // We already filtered this out so only expect to have one
@@ -220,7 +220,7 @@ namespace Promitor.Integrations.AzureMonitor
             }
         }
 
-        private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, string metricDimension,
+        private IWithMetricsQueryExecute CreateMetricsQuery(AggregationType metricAggregation, TimeSpan metricsInterval, string metricFilter, List<string> metricDimensions,
             int? metricLimit, IMetricDefinition metricDefinition, DateTime recordDateTime)
         {
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
@@ -238,9 +238,10 @@ namespace Promitor.Integrations.AzureMonitor
                 metricQuery.SelectTop(queryLimit);
             }
 
-            if (string.IsNullOrWhiteSpace(metricDimension) == false)
+            if (metricDimensions.Any())
             {
-                metricQuery.WithOdataFilter($"{metricDimension} eq '*'");
+                string metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
+                metricQuery.WithOdataFilter(metricDimensionsFilter);
                 metricQuery.SelectTop(queryLimit);
             }
 
@@ -255,7 +256,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             var azureClientConfiguration = Microsoft.Azure.Management.Fluent.Azure.Configure()
                 .WithDelegatingHandler(monitorHandler);
-            
+
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GuardNet;
 
 namespace Promitor.Integrations.AzureMonitor.Exceptions
@@ -23,15 +24,15 @@ namespace Promitor.Integrations.AzureMonitor.Exceptions
         ///     Constructor
         /// </summary>
         /// <param name="name">Name of the metric</param>
-        /// <param name="dimension">Dimension of the metric</param>
         /// <param name="details">Details that provide more context about the scenario</param>
-        public MetricInformationNotFoundException(string name, string details, string dimension) : base($"No metric information was found for '{name}' with dimension '{dimension}'. Reason: '{details}'")
+        /// <param name="dimensions">Dimensions of the metric</param>
+        public MetricInformationNotFoundException(string name, string details, List<string> dimensions) : base($"No metric information was found for '{name}' with dimensions '{dimensions}'. Reason: '{details}'")
         {
             Guard.NotNullOrWhitespace(name, nameof(name));
             Guard.NotNullOrWhitespace(details, nameof(details));
 
             Name = name;
-            Dimension = dimension;
+            Dimensions = dimensions;
             Details = details;
         }
 
@@ -43,7 +44,7 @@ namespace Promitor.Integrations.AzureMonitor.Exceptions
         /// <summary>
         ///     Dimension of the metric
         /// </summary>
-        public string Dimension { get; }
+        public List<string> Dimensions { get; }
 
         /// <summary>
         ///     Details that provide more context about the scenario

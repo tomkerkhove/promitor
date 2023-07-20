@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
@@ -142,7 +143,7 @@ namespace Promitor.Core.Scraping
             {
                 if (measuredMetric.IsDimensional)
                 {
-                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension {DimensionValue} as part of {DimensionName} dimension with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.DimensionValue, measuredMetric.DimensionName, aggregationInterval);
+                    Logger.LogInformation("Found value {MetricValue} for metric {MetricName} with dimension values {DimensionValues} as part of the dimensions {DimensionNames} with aggregation interval {AggregationInterval}", measuredMetric.Value, scrapeDefinition.PrometheusMetricDefinition.Name, measuredMetric.Dimensions.Select(dimension => dimension.Value).ToList(), measuredMetric.Dimensions.Select(dimension => dimension.Name).ToList(), aggregationInterval);
                 }
                 else
                 {

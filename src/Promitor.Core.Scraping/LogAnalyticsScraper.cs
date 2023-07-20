@@ -34,7 +34,7 @@ namespace Promitor.Core.Scraping
 
             // Query Azure Log Analytics for result
             var result = await _logAnalyticsClient.RunKustoQueryAsync(workspaceId, query, aggregationInterval);
-            var measuredMetric = MeasuredMetric.CreateWithoutDimension(result);
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(result);
             measuredMetrics.Add(measuredMetric);
             var metricLabels = DetermineMetricLabels(resourceDefinition);
 

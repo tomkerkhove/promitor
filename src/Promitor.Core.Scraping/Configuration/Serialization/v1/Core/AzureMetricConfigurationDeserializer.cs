@@ -14,11 +14,13 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .IsRequired();
             Map(config => config.Limit)
                 .MapUsing(DetermineLimit);
-            Map(config => config.Dimension)
-                .MapUsingDeserializer(dimensionDeserializer);
             Map(config => config.Aggregation)
                 .IsRequired()
                 .MapUsingDeserializer(aggregationDeserializer);
+            Map(config => config.Dimensions)
+                .MapUsingDeserializer(dimensionDeserializer);
+            Map(config => config.Dimension)
+                .MapUsingDeserializer(dimensionDeserializer);
         }
 
         private object DetermineLimit(string rawLimit, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

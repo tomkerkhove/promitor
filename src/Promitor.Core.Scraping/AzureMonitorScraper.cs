@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
+using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Integrations.AzureMonitor.Exceptions;
-using MetricDimension = Promitor.Core.Scraping.Configuration.Model.MetricDimension;
 
 namespace Promitor.Core.Scraping
 {
@@ -45,19 +46,19 @@ namespace Promitor.Core.Scraping
             var metricLimit = DetermineMetricLimit(scrapeDefinition);
 
             // Determine the metric dimension to use, if any
-            var dimensionName = DetermineMetricDimension(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration?.Dimension);
+            var dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration);
 
-            List<MeasuredMetric> measuredMetrics = new List<MeasuredMetric>();
+            var measuredMetrics = new List<MeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionName, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
-                Logger.LogWarning("No metric information found for metric {MetricName} with dimension {MetricDimension}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimension, metricsNotFoundException.Details);
+                Logger.LogWarning("No metric information found for metric {MetricName} with dimensions {MetricDimensions}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimensions, metricsNotFoundException.Details);
                 
-                var measuredMetric = string.IsNullOrWhiteSpace(dimensionName) ? MeasuredMetric.CreateWithoutDimension(null) : MeasuredMetric.CreateForDimension(null, dimensionName, "unknown");
+                var measuredMetric = dimensionNames.Any() ? MeasuredMetric.CreateForDimensions(dimensionNames) : MeasuredMetric.CreateWithoutDimensions(null);
                 measuredMetrics.Add(measuredMetric);
             }
 
@@ -65,7 +66,7 @@ namespace Promitor.Core.Scraping
             var metricLabels = DetermineMetricLabels(resourceDefinition);
 
             // Enrich measured metrics, in case we need to
-            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionName, measuredMetrics);
+            var finalMetricValues = EnrichMeasuredMetrics(resourceDefinition, dimensionNames, measuredMetrics);
 
             // We're done!
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
@@ -84,10 +85,10 @@ namespace Promitor.Core.Scraping
         ///     metrics to align with others
         /// </remarks>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimensionName">Name of the specified dimension provided by the scraper</param>
+        /// <param name="dimensionNames">List of names of the specified dimensions provided by the scraper.</param>
         /// <param name="metricValues">Measured metric values that were found</param>
         /// <returns></returns>
-        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             return metricValues;
         }
@@ -107,10 +108,16 @@ namespace Promitor.Core.Scraping
         /// </summary>
         /// <param name="metricName">Name of the metric being queried</param>
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
-        /// <param name="dimension">Provides information concerning the configured metric dimension.</param>
-        protected virtual string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
+        /// <param name="configuration"></param>
+        protected virtual List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
-            return dimension?.Name;
+            if (configuration.Dimension != null)
+            {
+                Logger.LogWarning("AzureMetricConfiguration property 'dimension' has been deprecated and will be removed in a future update. Please use 'dimensions' instead.");
+                return string.IsNullOrWhiteSpace(configuration.Dimension.Name) ? new List<string>() : new List<string>{ configuration.Dimension.Name };
+            }
+
+            return configuration.Dimensions?.Select(dimension => dimension.Name).Where(dimensionName => !string.IsNullOrWhiteSpace(dimensionName)).Distinct().ToList();
         }
 
         /// <summary>
