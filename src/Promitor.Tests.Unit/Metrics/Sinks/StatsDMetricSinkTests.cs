@@ -158,7 +158,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
                 statsDSinkConfiguration.CurrentValue.Geneva.Account,
                 statsDSinkConfiguration.CurrentValue.Geneva.Namespace,
                 Metric = metricName,
-                Dims = scrapeResult.Labels
+                Dims = metricSink.DetermineLabels(metricName, scrapeResult, measuredMetric)
             });
 
             // Act
