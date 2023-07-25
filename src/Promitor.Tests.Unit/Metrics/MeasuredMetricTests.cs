@@ -11,24 +11,25 @@ namespace Promitor.Tests.Unit.Metrics
     public class MeasuredMetricTest : UnitTest
     {
         [Fact]
-        public void Create_MeasuredMetric_With_Dimension_HappyPath_Succeeds()
+        public void Create_MeasuredMetric_With_Single_Dimension_HappyPath_Succeeds()
         {
-            var dimensionName = "dimTest";
+            var dimensionNames = new List<string> { "dimTest"};
             var dimensionValue = "dimTest1";
-            var timeSeries = new TimeSeriesElement(new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue)});
-            var measuredMetric = MeasuredMetric.CreateForDimension(1, dimensionName, timeSeries);
-            Assert.Equal(measuredMetric.DimensionName, dimensionName);
-            Assert.Equal(measuredMetric.DimensionValue, dimensionValue);   
+            var timeSeries = new TimeSeriesElement(new List<MetadataValue> { new(name: new LocalizableString(dimensionNames[0]), value: dimensionValue)});
+            var measuredMetric = MeasuredMetric.CreateForDimensions(1, dimensionNames, timeSeries);
+            Assert.Equal(measuredMetric.Dimensions.Count, 1);
+            Assert.Equal(measuredMetric.Dimensions[0].Name, dimensionNames[0]);
+            Assert.Equal(measuredMetric.Dimensions[0].Value, dimensionValue);   
             Assert.Equal(measuredMetric.Value, 1);               
         }
 
         [Fact]
         public void Create_MeasuredMetric_Missing_Dimension_Throws_Targeted_Exception()
         {
-            var dimensionName = "dimTest";
+            var dimensionName = new List<string> { "dimTest"};
             var timeSeries = new TimeSeriesElement(new List<MetadataValue> {});
-            MissingDimensionException ex = Assert.Throws<MissingDimensionException>(() => MeasuredMetric.CreateForDimension(1, dimensionName, timeSeries));
-            Assert.Equal(ex.DimensionName, dimensionName);
+            MissingDimensionException ex = Assert.Throws<MissingDimensionException>(() => MeasuredMetric.CreateForDimensions(1, dimensionName, timeSeries));
+            Assert.Equal(ex.DimensionName, dimensionName[0]);
         }
     }
 }
