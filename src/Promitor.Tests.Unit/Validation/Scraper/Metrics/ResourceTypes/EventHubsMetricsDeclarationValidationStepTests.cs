@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
@@ -52,7 +53,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithEventHubsMetric(metricDimension: "EntityName", topicName: string.Empty)
+                .WithEventHubsMetric(metricDimensions: new List<string>{"EntityName"}, topicName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -69,7 +70,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithEventHubsMetric(metricDimension: "EntityName")
+                .WithEventHubsMetric(metricDimensions: new List<string>{"EntityName"})
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -86,7 +87,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithEventHubsMetric(metricDimension: "OperationResult")
+                .WithEventHubsMetric(metricDimensions: new List<string>{"OperationResult"})
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 

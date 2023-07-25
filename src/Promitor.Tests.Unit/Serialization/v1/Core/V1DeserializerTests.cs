@@ -89,7 +89,7 @@ azureMetadata:
             var yamlNode = YamlUtils.CreateYamlNode(config);
             var azureMetadata = new AzureMetadataV1();
             _metadataDeserializer.Setup(
-                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(azureMetadata);
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(azureMetadata);
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -104,7 +104,7 @@ azureMetadata:
             // Arrange
             var yamlNode = YamlUtils.CreateYamlNode("version: v1");
             _metadataDeserializer.Setup(
-                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new AzureMetadataV1());
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new AzureMetadataV1());
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -125,7 +125,7 @@ metricDefaults:
             var yamlNode = YamlUtils.CreateYamlNode(config);
             var metricDefaults = new MetricDefaultsV1();
             _defaultsDeserializer.Setup(
-                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(metricDefaults);
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(metricDefaults);
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
@@ -142,7 +142,7 @@ metricDefaults:
                 @"version: v1";
             var yamlNode = YamlUtils.CreateYamlNode(config);
             _defaultsDeserializer.Setup(
-                d => d.DeserializeObject(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new MetricDefaultsV1());
+                d => d.Deserialize(It.IsAny<YamlMappingNode>(), It.IsAny<IErrorReporter>())).Returns(new MetricDefaultsV1());
 
             // Act
             var declaration = _deserializer.Deserialize(yamlNode, _errorReporter.Object);

@@ -173,7 +173,7 @@ metrics:
     resources:
       - accountName: promitor-testing-resource-eu-automation-1
   - name: promitor_demo_frontdoor_backend_health_per_backend_pool
-    description: "Health percentage for a backed in Azure Front Door"
+    description: "Health percentage for a backend in Azure Front Door"
     resourceType: FrontDoor
     labels:
       app: promitor
@@ -243,13 +243,46 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: data-factory-landscape
-  - name: promitor_demo_application_insights_availability
+  - name: application_insights_availability
     description: "Availability (%) of promitor.io measured in Azure Application Insights"
     resourceType: ApplicationInsights
     azureMetricConfiguration:
       metricName: availabilityResults/availabilityPercentage
       aggregation:
         type: Average
+    resources:
+      # Application Insights with data in the service itself (classic, deprecated)
+    - name: promitor-testing-resource-eu-telemetry-classic
+      resourceGroupName: promitor-testing-infrastructure-europe
+      # Application Insights with data in Log Analytics
+    - name: promitor-testing-resource-eu-telemetry
+      resourceGroupName: promitor-testing-infrastructure-europe
+  - name: application_insights_availability_per_name
+    description: "Availability (%) of promitor.io measured in Azure Application Insights per name"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+      dimension:
+        name: availabilityResult/name
+    resources:
+      # Application Insights with data in the service itself (classic, deprecated)
+      - name: promitor-testing-resource-eu-telemetry-classic
+        resourceGroupName: promitor-testing-infrastructure-europe
+        # Application Insights with data in Log Analytics
+      - name: promitor-testing-resource-eu-telemetry
+        resourceGroupName: promitor-testing-infrastructure-europe
+  - name: application_insights_availability_per_name_and_location
+    description: "Availability (%) of promitor.io measured in Azure Application Insights per name and location"
+    resourceType: ApplicationInsights
+    azureMetricConfiguration:
+      metricName: availabilityResults/availabilityPercentage
+      aggregation:
+        type: Average
+      dimensions:
+        - name: availabilityResult/name
+        - name: availabilityResult/location
     resources:
       # Application Insights with data in the service itself (classic, deprecated)
     - name: promitor-testing-resource-eu-telemetry-classic

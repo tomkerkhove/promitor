@@ -16,12 +16,12 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, string dimensionName, List<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor Dimension name to more representable value
-            foreach (var measuredMetric in metricValues.Where(metricValue => string.IsNullOrWhiteSpace(metricValue.DimensionName) == false))
+            foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.Dimensions.Any()))
             {
-                measuredMetric.DimensionName = EntityNameLabel;
+                measuredMetric.Dimensions[0].Name = EntityNameLabel;
             }
 
             return metricValues;
@@ -40,16 +40,16 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return metricLabels;
         }
 
-        protected override string DetermineMetricDimension(string metricName, TResourceDefinition resourceDefinition, MetricDimension dimension)
+        protected override List<string> DetermineMetricDimensions(string metricName, TResourceDefinition resourceDefinition, AzureMetricConfiguration configuration)
         {
             if (IsEntityDeclared(resourceDefinition))
             {
-                return base.DetermineMetricDimension(metricName, resourceDefinition, dimension);
+                return base.DetermineMetricDimensions(metricName, resourceDefinition, configuration);
             }
 
             Logger.LogTrace("Using 'EntityName' dimension since no topic was configured.");
 
-            return "EntityName";
+            return new List<string> { "EntityName" };
         }
 
         protected override string DetermineMetricFilter(string metricName, TResourceDefinition resourceDefinition)

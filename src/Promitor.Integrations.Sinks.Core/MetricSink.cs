@@ -36,7 +36,10 @@ namespace Promitor.Integrations.Sinks.Core
 
             if (measuredMetric.IsDimensional)
             {
-                labels.Add(DetermineLabelName(measuredMetric.DimensionName, mutateLabelName), measuredMetric.DimensionValue);
+                foreach (var dimension in measuredMetric.Dimensions)
+                {
+                    labels.Add(DetermineLabelName(dimension.Name, mutateLabelName), dimension.Value);
+                }
             }
 
             if (metricDefinition?.Labels?.Any() == true)

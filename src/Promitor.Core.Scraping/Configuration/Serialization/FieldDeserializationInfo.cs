@@ -27,7 +27,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
             bool isRequired,
             object defaultValue,
             Func<string, KeyValuePair<YamlNode, YamlNode>, IErrorReporter, object> customMapperFunc,
-            IDeserializer deserializer,
+            IDeserializer<object> deserializer,
             IReadOnlyCollection<IFieldValidator> validators)
         {
             YamlFieldName = GetName(propertyInfo);
@@ -67,7 +67,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         /// <summary>
         /// Gets a deserializer to use when deserializing the field.
         /// </summary>
-        public IDeserializer Deserializer { get; }
+        public IDeserializer<object> Deserializer { get; }
 
         /// <summary>
         /// Gets the custom validators for the field.

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Kusto.Language;
+using System.Linq;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using ResourceType = Promitor.Core.Contracts.ResourceType;
@@ -52,6 +53,11 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions
                 {
                     errorMessages.Add("Limit has to be at least 1");
                 }
+            }
+
+            if (azureMetricConfiguration.Dimension != null && azureMetricConfiguration.Dimensions.Any())
+            {
+                errorMessages.Add("Only one of 'dimensions' and 'dimension' is allowed. Please use 'dimensions'.");
             }
 
             var metricAggregationValidator = new MetricAggregationValidator(_metricDefaults);

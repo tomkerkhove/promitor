@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GuardNet;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -18,8 +17,12 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 
             var errorMessages = new List<string>();
 
-            var configuredDimension = metricDefinition.AzureMetricConfiguration?.Dimension?.Name;
-            var isEntityNameDimensionConfigured = string.IsNullOrWhiteSpace(configuredDimension) == false && configuredDimension.Equals(EntityNameDimension, StringComparison.InvariantCultureIgnoreCase);
+            if (metricDefinition.AzureMetricConfiguration?.Dimensions?.Count > 1)
+            {
+                errorMessages.Add("At least one Dimension other than EntityName is defined.");
+            }
+
+            var isEntityNameDimensionConfigured = metricDefinition.AzureMetricConfiguration?.HasDimension(EntityNameDimension) ?? false;
 
             foreach (var resourceDefinition in metricDefinition.Resources.Cast<ServiceBusNamespaceResourceDefinition>())
             {
