@@ -22,7 +22,6 @@ using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
 using Promitor.Integrations.Azure.Authentication;
-using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
