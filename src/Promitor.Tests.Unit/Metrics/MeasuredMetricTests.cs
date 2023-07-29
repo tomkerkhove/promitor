@@ -17,7 +17,7 @@ namespace Promitor.Tests.Unit.Metrics
             var dimensionValue = "dimTest1";
             var timeSeries = new TimeSeriesElement(new List<MetadataValue> { new(name: new LocalizableString(dimensionNames[0]), value: dimensionValue)});
             var measuredMetric = MeasuredMetric.CreateForDimensions(1, dimensionNames, timeSeries);
-            Assert.Equal(1, measuredMetric.Dimensions.Count);
+            Assert.Single(measuredMetric.Dimensions);
             Assert.Equal(dimensionNames[0], measuredMetric.Dimensions[0].Name);
             Assert.Equal(dimensionValue, measuredMetric.Dimensions[0].Value);
             Assert.Equal(1, measuredMetric.Value);
