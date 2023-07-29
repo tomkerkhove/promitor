@@ -6,6 +6,7 @@ version:
 
 #### Scraper
 
+- {{% tag fixed %}} Improve handling of time series with missing dimensions that are requested ([#2331](https://github.com/tomkerkhove/promitor/issues/2331))
 - {{% tag added %}} Provide support for all label scenarios in StatsD & OpenTelemetry metric sink. This includes
 dimensions, customer & default labels.
 - {{% tag added %}} Provide support for scraping multiple metrics dimensions.
