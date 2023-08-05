@@ -22,6 +22,8 @@ using Promitor.Integrations.AzureMonitor.Exceptions;
 using Promitor.Integrations.AzureMonitor.Logging;
 using Promitor.Integrations.AzureMonitor.RequestHandlers;
 using Promitor.Integrations.Azure.Authentication;
+using Newtonsoft.Json;
+using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -108,11 +110,18 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
-
-                var measuredMetric = metricDimensions.Any() 
-                            ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
-                            : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
-                measuredMetrics.Add(measuredMetric);
+                try 
+                {
+                    var measuredMetric = metricDimensions.Any() 
+                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
+                                : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
+                    measuredMetrics.Add(measuredMetric);
+                } 
+                catch (MissingDimensionException e) 
+                {
+                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
+                }
             }
 
             return measuredMetrics;
