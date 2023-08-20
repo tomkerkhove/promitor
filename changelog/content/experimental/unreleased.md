@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide support for PowerBi Embedded ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-embedded.md))
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide support for PowerBi Embedded ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-embedded.md))
