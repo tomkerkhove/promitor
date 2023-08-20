@@ -691,6 +691,25 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithPowerBiEmbeddedMetric(string metricName = "promitor-powerbiembedded",
+            string metricDescription = "Description for a metric",
+            string capacityName = "promitor-powerbiembedded",
+            string azureMetricName = "TotalRequests",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new PowerBiEmbeddedResourceV1
+            {
+                CapacityName = capacityName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PowerBiEmbedded, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
+
         public MetricsDeclarationBuilder WithPublicIpAddressMetric(string metricName = "promitor-ip-address",
             string metricDescription = "Description for a metric",
             string publicIpAddressName = "promitor-ip-address-name",

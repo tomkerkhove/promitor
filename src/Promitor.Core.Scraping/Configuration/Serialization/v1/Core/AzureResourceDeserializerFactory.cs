@@ -120,6 +120,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.PostgreSql:
                     var postgreSqlLogger = _loggerFactory.CreateLogger<PostgreSqlDeserializer>();
                     return new PostgreSqlDeserializer(postgreSqlLogger);
+                case ResourceType.PowerBiEmbedded:
+                    var powerBiEmbeddedLogger = _loggerFactory.CreateLogger<PowerBiEmbeddedDeserializer>();
+                    return new PowerBiEmbeddedDeserializer(powerBiEmbeddedLogger);
                 case ResourceType.PublicIpAddress:
                     var publicIpAddressLogger = _loggerFactory.CreateLogger<PublicIpAddressDeserializer>();
                     return new PublicIpAddressDeserializer(publicIpAddressLogger);

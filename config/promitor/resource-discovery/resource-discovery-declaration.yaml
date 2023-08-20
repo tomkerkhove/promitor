@@ -53,6 +53,8 @@ resourceDiscoveryGroups:
   type: NetworkInterface
 - name: postgres-databases
   type: PostgreSql
+- name: powerbi-embedded
+  type: PowerBiEmbedded
 - name: public-ip-addresses
   type: PublicIpAddress
 - name: redis-caches
