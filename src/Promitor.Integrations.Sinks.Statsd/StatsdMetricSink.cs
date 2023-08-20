@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Core;
+using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Core;
@@ -42,17 +43,20 @@ namespace Promitor.Integrations.Sinks.Statsd
             var reportMetricTasks = new List<Task>();
             var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypesEnum.Default;
 
+
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
                 var metricValue = measuredMetric.Value ?? 0;
 
+                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
+
                 switch (formatterType)
                 {
                     case StatsdFormatterTypesEnum.Default:
-                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels));
                         break;
                     case StatsdFormatterTypesEnum.Geneva:
-                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, metricLabels));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(formatterType), $"{formatterType} is not supported as formatting type.");
