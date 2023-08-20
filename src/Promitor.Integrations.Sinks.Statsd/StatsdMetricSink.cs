@@ -42,7 +42,6 @@ namespace Promitor.Integrations.Sinks.Statsd
             var reportMetricTasks = new List<Task>();
             var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypesEnum.Default;
 
-
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
                 var metricValue = measuredMetric.Value ?? 0;
