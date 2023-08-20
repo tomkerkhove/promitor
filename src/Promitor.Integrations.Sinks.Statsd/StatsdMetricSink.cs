@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Promitor.Core;
-using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Integrations.Sinks.Core;
