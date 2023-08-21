@@ -4,7 +4,6 @@
     <TargetFramework>net7.0</TargetFramework>
     <RuntimeFrameworkVersion>7.0.8</RuntimeFrameworkVersion>
     <LangVersion>8</LangVersion>
-    <Configurations>Release;Debug</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
