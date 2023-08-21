@@ -11,4 +11,3 @@
         public string CapacityName { get; }
     }
 }
-

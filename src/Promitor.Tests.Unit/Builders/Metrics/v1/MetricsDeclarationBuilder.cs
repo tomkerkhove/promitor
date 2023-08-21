@@ -709,7 +709,6 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-
         public MetricsDeclarationBuilder WithPublicIpAddressMetric(string metricName = "promitor-ip-address",
             string metricDescription = "Description for a metric",
             string publicIpAddressName = "promitor-ip-address-name",

@@ -5,7 +5,6 @@ using Promitor.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
 
-
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
