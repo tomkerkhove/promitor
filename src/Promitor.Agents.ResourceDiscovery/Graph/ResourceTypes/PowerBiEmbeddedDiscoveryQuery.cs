@@ -12,7 +12,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
         {
-            var resource = new PowerBiEmbeddedResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[3]?.ToString());
+            Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
+
+            var resource = new PowerBiEmbeddedResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[2]?.ToString());
             return resource;
         }
     }

@@ -394,11 +394,11 @@ metrics:
     description: percentage of cpu used by powerbi embedded
     resourceType: PowerBiEmbedded
     azureMetricConfiguration:
-        metricName: CPUUsage
+        metricName: cpu_metric
         aggregation:
             type: Average
     resourceDiscoveryGroups:
-        - name: powerbi-embeddeds
+        - name: powerbi-embedded
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
