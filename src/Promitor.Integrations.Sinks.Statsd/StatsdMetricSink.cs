@@ -46,13 +46,15 @@ namespace Promitor.Integrations.Sinks.Statsd
             {
                 var metricValue = measuredMetric.Value ?? 0;
 
+                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
+
                 switch (formatterType)
                 {
                     case StatsdFormatterTypesEnum.Default:
-                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        reportMetricTasks.Add(ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels));
                         break;
                     case StatsdFormatterTypesEnum.Geneva:
-                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, scrapeResult.Labels));
+                        reportMetricTasks.Add(ReportMetricWithGenevaFormattingAsync(metricName, metricDescription, metricValue, metricLabels));
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(formatterType), $"{formatterType} is not supported as formatting type.");
