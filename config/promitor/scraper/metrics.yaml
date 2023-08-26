@@ -392,13 +392,13 @@ metrics:
       - name: traffic-managers
   - name: azure_powerbi_embedded_cpu_usage
     description: percentage of cpu used by powerbi embedded
-    resourceType: PowerBiEmbedded
+    resourceType: PowerBiDedicated
     azureMetricConfiguration:
         metricName: cpu_metric
         aggregation:
             type: Average
     resourceDiscoveryGroups:
-        - name: powerbi-embedded
+        - name: powerbi-dedicated
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

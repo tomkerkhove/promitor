@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-	public class PowerBiEmbeddedDiscoveryQuery : ResourceDiscoveryQuery
+	public class PowerBiDedicatedDiscoveryQuery : ResourceDiscoveryQuery
 	{
             public override string[] ResourceTypes => new[] { "microsoft.powerbidedicated/capacities" };
             public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name", "id" };
@@ -14,7 +14,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var resource = new PowerBiEmbeddedResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[2]?.ToString());
+            var resource = new PowerBiDedicatedResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), resultRowEntry[2]?.ToString());
             return resource;
         }
     }

@@ -54,6 +54,6 @@
         NatGateway = 49,
         PublicIpAddress = 50,
         TrafficManager = 51,
-        PowerBiEmbedded = 52,
+        PowerBiDedicated = 52,
     }
 }

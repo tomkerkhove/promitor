@@ -1,12 +1,12 @@
 ﻿namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes
 {
     /// <summary>
-    /// Contains the configuration required to scrape PowerBi Embedded
+    /// Contains the configuration required to scrape PowerBI Dedicated
     /// </summary>
-    public class PowerBiEmbeddedResourceV1 : AzureResourceDefinitionV1
+    public class PowerBiDedicatedResourceV1 : AzureResourceDefinitionV1
 	{
         /// <summary>
-        /// The name of the PowerBi Embedded Capacity to get metrics for.
+        /// The name of the PowerBI Dedicated Capacity to get metrics for.
         /// </summary>
         public string CapacityName { get; set; }
 	}

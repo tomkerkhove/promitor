@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-	public class PowerBiEmbeddedMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+	public class PowerBiDedicatedMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void PowerBiEmbedded_DeclarationWithoutAzureMetricName_Fails()
+        public void PowerBiDedicated_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(azureMetricName: string.Empty)
+                .WithPowerBiDedicatedMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -31,11 +31,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void PowerBiEmbeddedDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void PowerBiDedicatedDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(azureMetricLimit: metricLimit)
+                .WithPowerBiDedicatedMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -51,11 +51,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void PowerBiEmbeddedMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void PowerBiDedicatedMetricsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(azureMetricLimit: metricLimit)
+                .WithPowerBiDedicatedMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -68,11 +68,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbedded_DeclarationWithoutMetricDescription_Succeeded()
+        public void PowerBiDedicated_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(metricDescription: string.Empty)
+                .WithPowerBiDedicatedMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -85,11 +85,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbedded_DeclarationWithoutMetricName_Fails()
+        public void PowerBiDedicated_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(string.Empty)
+                .WithPowerBiDedicatedMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -102,11 +102,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbeddedMetricsDeclaration_DeclarationWithoutCapacityName_Fails()
+        public void PowerBiDedicatedMetricsDeclaration_DeclarationWithoutCapacityName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(capacityName: string.Empty)
+                .WithPowerBiDedicatedMetric(capacityName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -119,11 +119,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbeddedMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void PowerBiDedicatedMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(omitResource: true)
+                .WithPowerBiDedicatedMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -136,11 +136,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbeddedMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void PowerBiDedicatedMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric(omitResource: true, resourceDiscoveryGroupName: "sample-collection")
+                .WithPowerBiDedicatedMetric(omitResource: true, resourceDiscoveryGroupName: "sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -153,11 +153,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void PowerBiEmbeddedMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void PowerBiDedicatedMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithPowerBiEmbeddedMetric()
+                .WithPowerBiDedicatedMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

@@ -691,20 +691,20 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithPowerBiEmbeddedMetric(string metricName = "promitor-powerbiembedded",
+        public MetricsDeclarationBuilder WithPowerBiDedicatedMetric(string metricName = "promitor-PowerBiDedicated",
             string metricDescription = "Description for a metric",
-            string capacityName = "promitor-powerbiembedded",
+            string capacityName = "promitor-PowerBiDedicated",
             string azureMetricName = "TotalRequests",
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
             bool omitResource = false)
         {
-            var resource = new PowerBiEmbeddedResourceV1
+            var resource = new PowerBiDedicatedResourceV1
             {
                 CapacityName = capacityName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.PowerBiEmbedded, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+            CreateAndAddMetricDefinition(ResourceType.PowerBiDedicated, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
 
             return this;
         }

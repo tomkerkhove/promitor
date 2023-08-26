@@ -58,7 +58,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>();
             CreateMap<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>();
             CreateMap<PostgreSqlResourceV1, PostgreSqlResourceDefinition>();
-            CreateMap<PowerBiEmbeddedResourceV1, PowerBiEmbeddedResourceDefinition>();
+            CreateMap<PowerBiDedicatedResourceV1, PowerBiDedicatedResourceDefinition>();
             CreateMap<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
@@ -117,7 +117,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<NetworkGatewayResourceV1, NetworkGatewayResourceDefinition>()
                 .Include<NetworkInterfaceResourceV1, NetworkInterfaceResourceDefinition>()
                 .Include<PostgreSqlResourceV1, PostgreSqlResourceDefinition>()
-                .Include<PowerBiEmbeddedResourceV1, PowerBiEmbeddedResourceDefinition>()
+                .Include<PowerBiDedicatedResourceV1, PowerBiDedicatedResourceDefinition>()
                 .Include<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>()

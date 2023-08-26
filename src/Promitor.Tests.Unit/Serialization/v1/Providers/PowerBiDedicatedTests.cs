@@ -9,19 +9,19 @@ using Xunit;
 namespace Promitor.Tests.Unit.Serialization.v1.Providers
 {
     [Category("Unit")]
-    public class PowerBiEmbeddedDeserializerTests : ResourceDeserializerTest<PowerBiEmbeddedDeserializer>
+    public class PowerBiDedicatedDeserializerTests : ResourceDeserializerTest<PowerBiDedicatedDeserializer>
 	{
-        private readonly PowerBiEmbeddedDeserializer _deserializer;
+        private readonly PowerBiDedicatedDeserializer _deserializer;
 
-		public PowerBiEmbeddedDeserializerTests()
+		public PowerBiDedicatedDeserializerTests()
 		{
-            _deserializer = new PowerBiEmbeddedDeserializer(Logger);
+            _deserializer = new PowerBiDedicatedDeserializer(Logger);
 		}
 
         [Fact]
         public void Deserialize_CapacityNameSupplied_SetsCapacityName()
         {
-            YamlAssert.PropertySet<PowerBiEmbeddedResourceV1, AzureResourceDefinitionV1, string>(
+            YamlAssert.PropertySet<PowerBiDedicatedResourceV1, AzureResourceDefinitionV1, string>(
                 _deserializer,
                 "capacityName: promitor-cap",
                 "promitor-cap",
@@ -31,7 +31,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
         [Fact]
         public void Deserialize_CapacityNameNotSupplied_Null()
         {
-            YamlAssert.PropertyNull<PowerBiEmbeddedResourceV1, AzureResourceDefinitionV1>(
+            YamlAssert.PropertyNull<PowerBiDedicatedResourceV1, AzureResourceDefinitionV1>(
                 _deserializer,
                 "resourceGroupName: promitor-cap",
                 r => r.CapacityName);
@@ -39,7 +39,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
 
         protected override IDeserializer<AzureResourceDefinitionV1> CreateDeserializer()
         {
-            return new PowerBiEmbeddedDeserializer(Logger);
+            return new PowerBiDedicatedDeserializer(Logger);
         }
     }
 }
