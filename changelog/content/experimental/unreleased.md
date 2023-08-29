@@ -6,7 +6,7 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag fixed %}} Provide missing functionality for multi-dimension scraping in StatsD sink.
 
 #### Resource Discovery
 
