@@ -7,6 +7,8 @@ version:
 #### Scraper
 
 - {{% tag added %}} Provide support for PowerBi Embedded ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))
+=======
+- {{% tag fixed %}} Provide missing functionality for multi-dimension scraping in StatsD sink.
 
 #### Resource Discovery
 
