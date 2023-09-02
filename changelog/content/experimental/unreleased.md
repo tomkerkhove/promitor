@@ -7,6 +7,8 @@ version:
 #### Scraper
 
 - {{% tag added %}} Provide support for Azure PowerBi Dedicated ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))
+=======
+- {{% tag fixed %}} Provide missing functionality for multi-dimension scraping in StatsD sink.
 
 #### Resource Discovery
 
