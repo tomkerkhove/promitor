@@ -11,14 +11,14 @@ namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 	{
 		public IEnumerable<string> Validate(MetricDefinition metricDefinition)
 		{
-            Guard.NotNull(metricDefinition, nameof(metricDefinition));
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<PowerBiDedicatedResourceDefinition>())
-            {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.CapacityName))
-                {
-                    yield return "No Power BI Dedicated capacity name is configured";
-                }
-            }
-        }
+            		Guard.NotNull(metricDefinition, nameof(metricDefinition));
+            		foreach (var resourceDefinition in metricDefinition.Resources.Cast<PowerBiDedicatedResourceDefinition>())
+            		{
+                		if (string.IsNullOrWhiteSpace(resourceDefinition.CapacityName))
+                		{
+                    			yield return "No Power BI Dedicated capacity name is configured";
+                		}
+            		}
+        	}
 	}
 }
