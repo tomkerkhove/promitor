@@ -13,10 +13,10 @@ namespace Promitor.Tests.Unit.Serialization.v1.Providers
 	{
         private readonly PowerBiDedicatedDeserializer _deserializer;
 
-		public PowerBiDedicatedDeserializerTests()
-		{
+	public PowerBiDedicatedDeserializerTests()
+	{
             _deserializer = new PowerBiDedicatedDeserializer(Logger);
-		}
+	}
 
         [Fact]
         public void Deserialize_CapacityNameSupplied_SetsCapacityName()
