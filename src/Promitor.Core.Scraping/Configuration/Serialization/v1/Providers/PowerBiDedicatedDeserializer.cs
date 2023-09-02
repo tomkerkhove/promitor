@@ -7,7 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Providers
 	{
 		public PowerBiDedicatedDeserializer(ILogger<PowerBiDedicatedDeserializer> logger) : base(logger)
 		{
-            Map(resource => resource.CapacityName)
+            		Map(resource => resource.CapacityName)
 				.IsRequired();
 		}
 	}
