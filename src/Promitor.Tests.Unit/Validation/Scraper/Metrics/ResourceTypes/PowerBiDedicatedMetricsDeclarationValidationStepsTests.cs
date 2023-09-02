@@ -8,7 +8,7 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-	public class PowerBiDedicatedMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class PowerBiDedicatedMetricsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
         public void PowerBiDedicated_DeclarationWithoutAzureMetricName_Fails()
