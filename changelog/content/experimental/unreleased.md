@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-- {{% tag added %}} Provide support for PowerBi Embedded ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))
+- {{% tag added %}} Provide support for Azure PowerBi Dedicated ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))
 
 #### Resource Discovery
 
-- {{% tag added %}} Provide support for PowerBi Embedded ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))
+- {{% tag added %}} Provide support for Azure PowerBi Dedicated ([docs](https://docs.promitor.io/unreleased/scraping/providers/powerbi-dedicated.md))

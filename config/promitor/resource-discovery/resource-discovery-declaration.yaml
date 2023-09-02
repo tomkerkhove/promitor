@@ -54,7 +54,7 @@ resourceDiscoveryGroups:
 - name: postgres-databases
   type: PostgreSql
 - name: powerbi-dedicated
-  type: PowerBiEmbedded
+  type: PowerbiDedicated
 - name: public-ip-addresses
   type: PublicIpAddress
 - name: redis-caches
