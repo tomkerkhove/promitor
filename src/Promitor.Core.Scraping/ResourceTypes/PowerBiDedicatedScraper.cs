@@ -1,4 +1,3 @@
-﻿using System;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
