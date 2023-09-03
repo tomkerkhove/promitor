@@ -390,6 +390,15 @@ metrics:
         type: Total
     resourceDiscoveryGroups:
       - name: traffic-managers
+  - name: azure_powerbi_dedicated_cpu_usage
+    description: percentage of cpu used by powerbi dedicated
+    resourceType: PowerBiDedicated
+    azureMetricConfiguration:
+        metricName: cpu_metric
+        aggregation:
+            type: Count
+    resourceDiscoveryGroups:
+        - name: powerbi-dedicated
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale
