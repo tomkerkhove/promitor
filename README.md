@@ -15,6 +15,8 @@
 <a href="https://github.com/users/tomkerkhove/sponsorship" rel="nofollow"><img src="https://img.shields.io/badge/Donate%20via-GitHub-blue.svg?style=flat-square" alt="Donate"></a> <a href="https://app.fossa.com/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftomkerkhove%2Fpromitor.svg?type=shield"/></a>
 </p>
 
+> ⚠️ Promitor heavily relies on the community to introduce new features or patch bugs as I cannot do this alone anymore, learn more [here](https://blog.tomkerkhove.be/2023/12/09/the-future-of-promitor/).
+
 **Promitor** is an Azure Monitor scraper which makes the metrics available through a scraping endpoint for Prometheus or push to a StatsD server.
 
 ## Documentation
