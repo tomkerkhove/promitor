@@ -1,0 +1,22 @@
+name: Issue Bot
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  pr_bot:
+    name: Issue Bot
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Comment on PR'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ github.event.number }},
+              body: 'Thank you for opening an issue! We rely on the community to maintain Promitor. ([Learn more](https://github.com/tomkerkhove/promitor/issues/2425)) Is this something you want to contribute?'
+            });
