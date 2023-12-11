@@ -18,5 +18,5 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ github.event.issue.number }},
-              body: 'Thank you for opening an issue! We rely on the community to maintain Promitor. ([Learn more](https://github.com/tomkerkhove/promitor/issues/2425)) Is this something you want to contribute?'
+              body: 'Thank you for opening an issue! We rely on the community to maintain Promitor. ([Learn more](https://github.com/tomkerkhove/promitor/issues/2425))\n\nIs this something you want to contribute?'
             });
