@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>7.0.12</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>7.0.16</RuntimeFrameworkVersion>
     <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
   </PropertyGroup>
 
