@@ -70,9 +70,9 @@ namespace Promitor.Agents.ResourceDiscovery.Controllers.v1
                     return NotFound(new {Information = "No resource discovery group was found with specified name"});
                 }
 
-                Response.Headers.Add("X-Paging-Page-Size", pagedDiscoveredResources.PageInformation.PageSize.ToString());
-                Response.Headers.Add("X-Paging-Current-Page", pagedDiscoveredResources.PageInformation.CurrentPage.ToString());
-                Response.Headers.Add("X-Paging-Total", pagedDiscoveredResources.PageInformation.TotalRecords.ToString());
+                Response.Headers.Append("X-Paging-Page-Size", pagedDiscoveredResources.PageInformation.PageSize.ToString());
+                Response.Headers.Append("X-Paging-Current-Page", pagedDiscoveredResources.PageInformation.CurrentPage.ToString());
+                Response.Headers.Append("X-Paging-Total", pagedDiscoveredResources.PageInformation.TotalRecords.ToString());
 
                 var serializedResources = JsonConvert.SerializeObject(pagedDiscoveredResources.Result, _serializerSettings);
 
