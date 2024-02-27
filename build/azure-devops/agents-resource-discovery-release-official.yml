@@ -153,7 +153,7 @@ stages:
   dependsOn: Init
   displayName: Windows Docker image
   pool:
-    vmImage: windows-2019
+    vmImage: windows-latest
   variables:
   - name: OS.Name
     value: 'windows'

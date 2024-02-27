@@ -198,7 +198,7 @@ stages:
    - job: BuildWindows
      displayName: Build Windows Docker image
      pool:
-       vmImage: windows-2019
+       vmImage: windows-latest
      variables:
        OS.Name: 'windows'
      steps:
