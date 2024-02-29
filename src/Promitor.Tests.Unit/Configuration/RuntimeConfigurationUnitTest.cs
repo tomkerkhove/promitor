@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Exporter;
 using Promitor.Agents.Scraper.Configuration;
 using Promitor.Integrations.Sinks.Statsd.Configuration;
 using Promitor.Tests.Unit.Generators.Config;
@@ -391,7 +392,7 @@ namespace Promitor.Tests.Unit.Configuration
             // Arrange
             var collectorUri = "https://foo.bar";
             var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
-                .WithOpenTelemetryCollectorMetricSink(collectorUri: collectorUri)
+                 .WithOpenTelemetryCollectorMetricSink(collectorUri: collectorUri, protocol: OtlpExportProtocol.Grpc)
                 .GenerateAsync();
 
             // Act
@@ -402,6 +403,7 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.MetricSinks);
             Assert.NotNull(runtimeConfiguration.MetricSinks.OpenTelemetryCollector);
             Assert.Equal(collectorUri, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.CollectorUri);
+            Assert.Equal(OtlpExportProtocol.Grpc, runtimeConfiguration.MetricSinks.OpenTelemetryCollector.Protocol);
         }
 
         [Fact]
