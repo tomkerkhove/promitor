@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-- {{% tag changed %}} Migrate to .NET 8
+None.
 
 #### Resource Discovery
 
-- {{% tag changed %}} Migrate to .NET 8
+None.
