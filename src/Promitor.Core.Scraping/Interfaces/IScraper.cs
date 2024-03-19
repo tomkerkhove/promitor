@@ -7,5 +7,6 @@ namespace Promitor.Core.Scraping.Interfaces
     public interface IScraper<TResourceDefinition> where TResourceDefinition : class, IAzureResourceDefinition
     {
         Task ScrapeAsync(ScrapeDefinition<TResourceDefinition> scrapeDefinition);
+        Task BatchScrapeAsync(BatchScrapeDefinition<TResourceDefinition> batchScrapeDefinition);
     }
 }

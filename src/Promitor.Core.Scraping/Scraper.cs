@@ -103,6 +103,15 @@ namespace Promitor.Core.Scraping
             }
         }
 
+        public async Task BatchScrapeAsync(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition)
+        {   // TODO for batch scrape logic:
+            // one request for all resources within the batch 
+            // process batched result 
+            // would the large volume of JSON be an issue? 
+            // record telemetry 
+            return null;
+        }
+
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
 

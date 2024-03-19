@@ -11,9 +11,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
+using Promitor.Core;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
@@ -133,7 +135,6 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
-
                 await ScrapeMetrics(scrapeDefinitions, cancellationToken);
             }
             catch (OperationCanceledException)
@@ -250,8 +251,19 @@ namespace Promitor.Agents.Scraper.Scheduling
         }
 
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
-        {
+        {   
             var tasks = new List<Task>();
+            var batchScrapingEnabled = this._metricsDeclaration.MetricBatchConfig?.Enabled ?? false;
+            if (batchScrapingEnabled) {
+                var batchScrapeDefinitions = groupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
+
+                foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
+                    var azureMetricName = batchScrapeDefinition.AzureMetricConfiguration.MetricName;
+                    var resourceType = batchScrapeDefinition.ResourceType;
+                    Logger.LogInformation("Batch scraping Azure Metric {AzureMetricName} for resource type {ResourceType}.", azureMetricName, resourceType);
+                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
+                }
+            }
 
             foreach (var scrapeDefinition in scrapeDefinitions)
             {
@@ -265,6 +277,9 @@ namespace Promitor.Agents.Scraper.Scheduling
             }
 
             await Task.WhenAll(tasks);
+        }
+        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
+
         }
 
         private async Task ScrapeMetric(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
@@ -284,6 +299,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.Cloud, tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
+                
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
             catch (Exception ex)
@@ -291,6 +307,18 @@ namespace Promitor.Agents.Scraper.Scheduling
                 Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource {ResourceName}.",
                     scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.Resource.ResourceName);
             }
+        }
+        
+        /// <summary>
+        /// groups scrape definitions based on following conditions:
+        /// 1. Definitions in a batch must target the same resource type 
+        /// 2. Definitions in a batch must target the same Azure metric with identical dimensions
+        /// 3. Definitions in a batch must have the same time granularity 
+        /// 4. Batch size cannot exceed configured maximum 
+        /// </summary>
+        private List<BatchScrapeDefinition<IAzureResourceDefinition>> groupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
+        {
+            return null;
         }
 
         /// <summary>
