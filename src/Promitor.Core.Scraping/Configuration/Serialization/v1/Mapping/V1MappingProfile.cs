@@ -14,6 +14,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
         {
             CreateMap<MetricsDeclarationV1, MetricsDeclaration>();
             CreateMap<AzureMetadataV1, AzureMetadata>();
+            CreateMap<MetricBatchScrapeConfigV1, MetricBatchScrapeConfig>();
             CreateMap<MetricDefaultsV1, MetricDefaults>();
             CreateMap<AggregationV1, Aggregation>();
             CreateMap<MetricDimensionV1, MetricDimension>();
