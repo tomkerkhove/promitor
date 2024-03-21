@@ -255,7 +255,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._metricsDeclaration.MetricBatchConfig?.Enabled ?? false;
             if (batchScrapingEnabled) {
-                var batchScrapeDefinitions = groupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
+                var batchScrapeDefinitions = GroupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
                     var azureMetricName = batchScrapeDefinition.AzureMetricConfiguration.MetricName;
@@ -316,10 +316,17 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// 3. Definitions in a batch must have the same time granularity 
         /// 4. Batch size cannot exceed configured maximum 
         /// </summary>
-        private List<BatchScrapeDefinition<IAzureResourceDefinition>> groupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
+        private List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
         {
+            // first pass to build batches that could exceed max 
+            Dictionary<ScrapeDefinitionBatchProperties, List<Item>> groupedItems = items.GroupBy(item => CalculateCompoundKey(item))
+                                                               .ToDictionary(group => group.Key, group => group.ToList());
+            // split to key: List<BatchScrapeDefinition>
+
+            // flatten to List<BatchScrapeDefinition>
             return null;
         }
+
 
         /// <summary>
         /// Run some task work in the thread pool, but only allow a limited number of threads to go at a time

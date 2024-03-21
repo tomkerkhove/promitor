@@ -25,24 +25,13 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// The name of the resource group containing the resource to scrape. This should contain the global
         /// resource group name if none is overridden at the resource level.
         /// </param>
-        public BatchScrapeDefinition(
-            List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions,
-            AzureMetricConfiguration azureMetricConfiguration,
-            Scraping scraping,
-            TimeSpan aggregationInterval,
-            string subscriptionId,
-            ResourceType resourceType)
+        public BatchScrapeDefinition(List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions, ScrapeDefinitionBatchProperties scrapeDefinitionBatchProperties)
         {
             Guard.NotNull(groupedScrapeDefinitions, nameof(groupedScrapeDefinitions));
-            Guard.NotNull(azureMetricConfiguration, nameof(azureMetricConfiguration));
-            Guard.NotNull(scraping, nameof(scraping));
-            Guard.NotNull(subscriptionId, nameof(subscriptionId));
-            Guard.NotNull(resourceGroupName, nameof(resourceGroupName));
+            Guard.NotNull(groupedScrapeDefinitions, nameof(scrapeDefinitionBatchProperties));
+
             ScrapeDefinitions = groupedScrapeDefinitions;
-            AggregationInterval = aggregationInterval;
-            Scraping = scraping;
-            SubscriptionId = subscriptionId;
-            ResourceType = resourceType;
+            ScrapeDefinitionBatchProperties = scrapeDefinitionBatchProperties;
         }
 
         /// <summary>
@@ -50,29 +39,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         public List<ScrapeDefinition<TResourceDefinition>> ScrapeDefinitions { get; set; } = new List<ScrapeDefinition<TResourceDefinition>>();
 
-        /// <summary>
-        /// Configuration about the Azure Monitor metric to scrape
-        /// </summary>
-        public AzureMetricConfiguration AzureMetricConfiguration { get; }
+        public ScrapeDefinitionBatchProperties ScrapeDefinitionBatchProperties { get; set; }
 
-
-        /// <summary>
-        /// The scraping model.
-        /// </summary>
-        public Scraping Scraping { get; }
-
-        /// <summary>
-        /// The Azure subscription to get the metric from. This should be used instead of using
-        /// the SubscriptionId from <see cref="Resource"/> because this property will contain
-        /// the global subscription id if none is overridden at the resource level.
-        /// </summary>
-        public string SubscriptionId { get; }
-
-         /// <summary>
-        /// The Azure resource type shared by all scrape definitions in the batch
-        /// </summary>
-        public ResourceType ResourceType { get; }
-
-        public TimeSpan AggregationInterval{ get; }
     }
 }
