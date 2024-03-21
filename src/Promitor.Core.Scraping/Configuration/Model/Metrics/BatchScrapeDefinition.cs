@@ -40,6 +40,5 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public List<ScrapeDefinition<TResourceDefinition>> ScrapeDefinitions { get; set; } = new List<ScrapeDefinition<TResourceDefinition>>();
 
         public ScrapeDefinitionBatchProperties ScrapeDefinitionBatchProperties { get; set; }
-
     }
 }

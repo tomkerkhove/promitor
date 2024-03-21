@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
+using Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes;
 using Promitor.Core;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics.Interfaces;
@@ -19,6 +20,7 @@ using Promitor.Core.Scraping;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.LogAnalytics;
@@ -318,13 +320,25 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// </summary>
         private List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
         {
-            // first pass to build batches that could exceed max 
-            Dictionary<ScrapeDefinitionBatchProperties, List<Item>> groupedItems = items.GroupBy(item => CalculateCompoundKey(item))
-                                                               .ToDictionary(group => group.Key, group => group.ToList());
-            // split to key: List<BatchScrapeDefinition>
+            
+            Dictionary<ScrapeDefinitionBatchProperties, List<ScrapeDefinition<IAzureResourceDefinition>>> groupedScrapeDefinitions = allScrapeDefinitions.GroupBy(def => def.buildPropertiesForBatch()) 
+                                                               .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
+                                                               .ToDictionary(group => group.Key, SplitScrapeDefinitionBatch(group.Value)) // split to right-sized batches 
+                                                               .SelectMany(group => group.Value.SelectMany(batch => new BatchScrapeDefinition(batch, group.Key))); // flatten 
+            return groupedScrapeDefinitions;
+        }
 
-            // flatten to List<BatchScrapeDefinition>
-            return null;
+        /// <summary>
+        /// splits the "raw" batch according to max batch size configured
+        /// </summary>
+        private List<List<BatchScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
+        {
+            int numNewGroups = (batchToSplit.Count - 1) / 50 + 1;
+
+            // Distribute items to new groups
+            return Enumerable.Range(0, batchToSplit)
+                .Select(i => batchToSplit.Skip(i * 50).Take(50).ToList())
+                .ToList();
         }
 
 
