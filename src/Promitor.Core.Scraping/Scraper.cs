@@ -104,18 +104,59 @@ namespace Promitor.Core.Scraping
         }
 
         public async Task BatchScrapeAsync(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition)
-        {   // TODO for batch scrape logic:
-            // one request for all resources within the batch 
-            // process batched result 
-            // would the large volume of JSON be an issue? 
-            // record telemetry 
+        {  
+            // would the large volume of JSON be an issue? Can it be handled by the SDK? 
+            if (batchScrapeDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(batchScrapeDefinition));
+            }
+
+            var aggregationInterval = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AggregationInterval;
+            if (aggregationInterval == null)
+            {
+                throw new ArgumentNullException(nameof(scrapeDefinition));
+            }
+
+            try
+            {
+                var aggregationType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Aggregation.Type;
+                var scrapeDefinitions = batchScrapeDefinition.ScrapeDefinitions;
+                var scrapedMetricResult = await BatchScrapeResourceAsync(
+                    batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId,
+                    batchScrapeDefinition,
+                    aggregationType,
+                    aggregationInterval.Value);
+                
+                foreach (int i in Enumerable.Range(0, scrapedMetricResult.Count))
+                {
+                    var scrapedMetricResult = scrapedMetricResult[i];
+                    var scrapeDefinition = scrapeDefinitions[i];
+                    LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
+
+                    await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
+
+                    await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true, isBatchJob: true) ;
+                }
+            }
+            catch (ErrorResponseException errorResponseException)
+            {
+                HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false, isBatchJob: true);
+            }
+            catch (Exception exception)
+            {
+                Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName);
+
+                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false, isBatchJob: true);
+            }
             return null;
         }
 
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
 
-        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
+        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful, bool isBatchJob = false)
         {
             // We reset all values, by default
             double successfulMetricValue = 0;
@@ -138,7 +179,8 @@ namespace Promitor.Core.Scraping
                 {"resource_group", scrapeDefinition.ResourceGroupName},
                 {"resource_name", scrapeDefinition.Resource.ResourceName},
                 {"resource_type", scrapeDefinition.Resource.ResourceType.ToString()},
-                {"subscription_id", scrapeDefinition.SubscriptionId}
+                {"subscription_id", scrapeDefinition.SubscriptionId},
+                {"is_batch", isBatchJob}
             };
 
             // Report!
@@ -224,6 +266,20 @@ namespace Promitor.Core.Scraping
             string subscriptionId,
             ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition,
             TResourceDefinition resourceDefinition,
+            AggregationType aggregationType,
+            TimeSpan aggregationInterval);
+        
+        /// <summary>
+        ///     Scrapes configured resource batch. Should return telemetry for all scrape definitions as a list
+        /// </summary>
+        /// <param name="subscriptionId">Metric subscription Id</param>
+        /// <param name="batchScrapeDefinition">Contains all scrape definitions in the batch and their shared properties(like resource type)</param>
+        /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
+        /// <param name="aggregationType">Aggregation for the metric to use</param>
+        /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
+        protected abstract Task<List<ScrapeResult>> BatchScrapeResourceAsync(
+            string subscriptionId,
+            BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition,
             AggregationType aggregationType,
             TimeSpan aggregationInterval);
 

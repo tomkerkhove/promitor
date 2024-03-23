@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Promitor.Core.Contracts;
 
 namespace Promitor.Core.Scraping.Configuration.Model.Metrics
@@ -5,7 +7,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     /// <summary>
     /// Defines properties of a batch of scrape definitions 
     /// </summary>
-    public class ScrapeDefinitionBatchProperties 
+    public class ScrapeDefinitionBatchProperties : IEquatable<ScrapeDefinitionBatchProperties>
     { 
 
     }
@@ -41,10 +43,23 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     }
 
     /// <summary>
-    /// Builds a namespaced string key to satisfy batch restrictions 
+    /// Builds a namespaced string key to satisfy batch restrictions, in the format of
+    /// <AzureMetricAndDimensions>_<SubscriptionId>_<ResourceType>_<AggregationInterval> 
     /// </summary>
     private string BuildBatchHashKey()
     {
-        return "";
+        return string.Join("_",  [List.ofAzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString()]);
+    }
+
+    /// <summary>
+    /// Equality comparison override in case of hash collision
+    /// </summary>
+    public override bool Equals(object obj)
+    {
+        if (obj == null || !(obj is MyClass))
+            return false;
+
+        MyClass other = (MyClass)obj;
+        return this.Id == other.Id && this.Name == other.Name;
     }
 }

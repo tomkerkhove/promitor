@@ -45,5 +45,20 @@ namespace Promitor.Core.Scraping.Configuration.Model
             }
             return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase));
         }
+
+         // A unique string to represent this Azure metric and its configured dimensions
+        public string ToUniqueStringRepresentation()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Name);
+
+            foreach (var dimension in Dimensions)
+            {
+                sb.Append("_");
+                sb.Append(dimension.ToString());
+            }
+
+            return sb.ToString();
+        }
     }
 }

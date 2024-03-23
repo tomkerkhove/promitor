@@ -281,7 +281,26 @@ namespace Promitor.Agents.Scraper.Scheduling
             await Task.WhenAll(tasks);
         }
         private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
+            try
+            {
+                var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                    resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
+                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
+                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(_metricsDeclaration.AzureMetadata.Cloud.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.Cloud, tokenCredential);
+
+                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
+                
+                await scraper.BatchScrapeAsync(batchScrapeDefinition);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource batch {ResourceName}.",
+                    scrapeDefinition.PrometheusMetricDefinition.Name, batchScrapeDefinition.ScrapeDefinitionBatchProperties);
+            }
         }
 
         private async Task ScrapeMetric(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
@@ -335,7 +354,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             int numNewGroups = (batchToSplit.Count - 1) / 50 + 1;
 
-            // Distribute items to new groups
             return Enumerable.Range(0, batchToSplit)
                 .Select(i => batchToSplit.Skip(i * 50).Take(50).ToList())
                 .ToList();
