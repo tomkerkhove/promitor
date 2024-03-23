@@ -94,5 +94,14 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             }
             return AzureMetricConfiguration?.Aggregation?.Interval;
         }
+
+        public ScrapeDefinitionBatchProperties buildPropertiesForBatch() { 
+            return new ScrapeDefinitionBatchProperties(
+                this.AzureMetricConfiguration,
+                this.SubscriptionId,
+                this.Resource.ResourceType,
+                this.GetAggregationInterval
+            ); 
+         }
     }
 }
