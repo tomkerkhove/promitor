@@ -48,7 +48,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     /// </summary>
     private string BuildBatchHashKey()
     {
-        return string.Join("_",  [List.ofAzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString()]);
+        return string.Join("_",  [List.ofAzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString]);
     }
 
     /// <summary>
@@ -56,10 +56,10 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     /// </summary>
     public override bool Equals(object obj)
     {
-        if (obj == null || !(obj is MyClass))
+        if (obj == null || !(obj is ScrapeDefinitionBatchProperties))
             return false;
 
-        MyClass other = (MyClass)obj;
-        return this.Id == other.Id && this.Name == other.Name;
+        MyClass other = (ScrapeDefinitionBatchProperties)obj;
+        return this.ResourceType == other.ResourceType && this.AzureMetricConfiguration.ToUniqueStringRepresentation() == other.ToUniqueStringRepresentation() && this.SubscriptionId == other.SubscriptionId && this.AggregationInterval.Equals(other.AggregationDeserializer);
     }
 }
