@@ -27,7 +27,7 @@ using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
-    public class AzureMonitorClient
+    public class AzureMonitorClientLegacy : IAzureMonitorClient
     {
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
@@ -49,7 +49,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
-        public AzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public AzureMonitorClientLegacy(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -60,8 +60,8 @@ namespace Promitor.Integrations.AzureMonitor
 
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
-            _logger = loggerFactory.CreateLogger<AzureMonitorClient>();
-            _authenticatedAzureSubscription = CreateAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
+            _logger = loggerFactory.CreateLogger<AzureMonitorClientLegacy>();
+            _authenticatedAzureSubscription = CreateLegacyAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, AggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, MetricAggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null, int? metricLimit = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -259,7 +259,10 @@ namespace Promitor.Integrations.AzureMonitor
             return metricQuery;
         }
 
-        private IAzure CreateAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        /// <summary>
+        ///     Creates authenticated client under the now deprecated Azure Management SDK
+        /// </summary>
+        private IAzure CreateLegacyAzureClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             var credentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, tenantId, azureAuthenticationInfo, _azureCredentialsFactory);
             var throttlingLogger = loggerFactory.CreateLogger<AzureResourceManagerThrottlingRequestHandler>();

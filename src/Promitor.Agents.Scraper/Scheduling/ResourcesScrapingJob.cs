@@ -275,7 +275,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var resourceSubscriptionId = !string.IsNullOrWhiteSpace(scrapeDefinition.Resource.SubscriptionId)
                     ? scrapeDefinition.Resource.SubscriptionId
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.UseAzureMonitorSdk, _metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
 

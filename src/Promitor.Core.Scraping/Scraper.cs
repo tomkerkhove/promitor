@@ -42,7 +42,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Client to interact with Azure Monitor
         /// </summary>
-        protected AzureMonitorClient AzureMonitorClient { get; }
+        protected IAzureMonitorClient AzureMonitorClient { get; }
 
         /// <summary>
         ///     Collector to send metrics related to the runtime

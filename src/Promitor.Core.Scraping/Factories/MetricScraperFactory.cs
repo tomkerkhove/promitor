@@ -31,7 +31,7 @@ namespace Promitor.Core.Scraping.Factories
         /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="azureMonitorClient">Client to interact with Azure Monitor</param>
         /// <param name="logAnalyticsClient">Client to interact with Log Analytics</param>
-        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, AzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient)
+        public IScraper<IAzureResourceDefinition> CreateScraper(ResourceType metricDefinitionResourceType, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IAzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient)
         {
             var scraperConfiguration = new ScraperConfiguration(azureMonitorClient, logAnalyticsClient, metricSinkWriter, azureScrapingSystemMetricsPublisher, _logger);
 
