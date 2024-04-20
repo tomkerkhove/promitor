@@ -6,7 +6,6 @@ using GuardNet;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Rest;
 using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Interfaces;
@@ -20,9 +19,10 @@ using Azure.Monitor.Query;
 using Azure.Identity;
 using Promitor.Core.Serialization.Enum;
 using Azure.Monitor.Query.Models;
-using Microsoft.Extensions.Azure;
-using Azure;
 using Microsoft.OpenApi.Extensions;
+using Azure;
+using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
+using Azure.Core;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -34,7 +34,6 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly MetricsQueryClient _metricsQueryClient;
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly IMemoryCache _metricNamespaceMemoryCache;
-
         private readonly ILogger _logger;
 
         /// <summary>
@@ -234,9 +233,18 @@ namespace Promitor.Integrations.AzureMonitor
                 TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
             };
             var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, new [] {metricName}, queryOptions);
+            await ReportArmRateLimitingMetricsAsync(metricsQueryResponse);
             return metricsQueryResponse;
         }
 
+        /// <summary>
+        ///    Records ARM rate limiting metrics from Response header.
+        /// </summary>
+        private async Task ReportArmRateLimitingMetricsAsync(Response<MetricsQueryResult> metricsQueryResponse)
+        { 
+            var http = metricsQueryResponse.GetRawResponse();
+            
+        }
         private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Values.Where(metricValue => metricValue.TimeStamp < recordDateTime)
@@ -276,8 +284,13 @@ namespace Promitor.Integrations.AzureMonitor
         /// </summary>
         private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var metricsQueryClientOptions = new MetricsQueryClientOptions{
-                Audience = DetermineMetricsClientAudience(azureCloud)
+                Audience = DetermineMetricsClientAudience(azureCloud),
             }; 
+            var azureRateLimitPolicy = new RecordArmRateLimitMetricsPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher);
+            var addPromitorUserAgentPolicy = new RegisterPromitorAgentPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter);
+            metricsQueryClientOptions.AddPolicy(azureRateLimitPolicy, HttpPipelinePosition.PerCall);
+            metricsQueryClientOptions.AddPolicy(addPromitorUserAgentPolicy, HttpPipelinePosition.BeforeTransport);
+
             if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal) {
                 return new MetricsQueryClient(new DefaultAzureCredential(), metricsQueryClientOptions);
             } else {
@@ -298,7 +311,7 @@ namespace Promitor.Integrations.AzureMonitor
                 case AzureCloud.China:
                     return MetricsQueryAudience.AzureChina;
                 default:
-                    throw new CloudNotSupportedException(azureCloud.GetDisplayName());
+                    throw new CloudNotSupportedException(azureCloud.GetDisplayName()); // Azure.Monitory.Query package does not support any other sovereign regions
             }
         }
     }
