@@ -75,7 +75,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, MetricAggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null, int? metricLimit = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -93,7 +93,7 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, startQueryingTime);
+            var relevantMetric = await GetRelevantMetric(metricName, MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, startQueryingTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
                 throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
@@ -109,7 +109,7 @@ namespace Promitor.Integrations.AzureMonitor
                 var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
 
                 // Get the metric value according to the requested aggregation type
-                var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
+                var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), mostRecentMetricValue);
                 try 
                 {
                     var measuredMetric = metricDimensions.Any() 

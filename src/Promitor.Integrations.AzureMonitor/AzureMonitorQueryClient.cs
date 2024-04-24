@@ -76,7 +76,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
         /// <returns>Latest representation of the metric</returns>
-        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, MetricAggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null, int? metricLimit = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -100,7 +100,7 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var metricResult = await GetRelevantMetric(metricName, aggregationType, closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, startQueryingTime);
+            var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
             
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count() < 1)
@@ -118,7 +118,7 @@ namespace Promitor.Integrations.AzureMonitor
                 var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
 
                 // Get the metric value according to the requested aggregation type
-                var requestedMetricAggregate = InterpretMetricValue(aggregationType, mostRecentMetricValue);
+                var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
                 try 
                 {
                     var measuredMetric = metricDimensions.Any() 
@@ -233,18 +233,9 @@ namespace Promitor.Integrations.AzureMonitor
                 TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
             };
             var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, new [] {metricName}, queryOptions);
-            await ReportArmRateLimitingMetricsAsync(metricsQueryResponse);
             return metricsQueryResponse;
         }
 
-        /// <summary>
-        ///    Records ARM rate limiting metrics from Response header.
-        /// </summary>
-        private async Task ReportArmRateLimitingMetricsAsync(Response<MetricsQueryResult> metricsQueryResponse)
-        { 
-            var http = metricsQueryResponse.GetRawResponse();
-            
-        }
         private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTime recordDateTime)
         {
             var relevantMetricValue = timeSeries.Values.Where(metricValue => metricValue.TimeStamp < recordDateTime)

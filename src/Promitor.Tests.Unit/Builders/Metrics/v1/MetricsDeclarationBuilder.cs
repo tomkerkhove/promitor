@@ -6,6 +6,7 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes.Enums;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -1130,7 +1131,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                 Limit = azureMetricLimit,
                 Aggregation = new MetricAggregationV1
                 {
-                    Type = AggregationType.Average
+                    Type = PromitorMetricAggregationType.Average
                 }
             };
 

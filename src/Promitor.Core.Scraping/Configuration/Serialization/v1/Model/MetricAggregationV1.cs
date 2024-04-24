@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
+using Promitor.Core.Metrics;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
@@ -16,6 +17,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         /// <summary>
         /// Type of aggregation to query the Azure Monitor metric.
         /// </summary>
-        public AggregationType? Type { get; set; }
+        public PromitorMetricAggregationType? Type { get; set; }
     }
 }
