@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Azure.Monitor.Query.Models;
 using GuardNet;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Metrics.Exceptions;
@@ -49,12 +50,12 @@ namespace Promitor.Core.Metrics
         }
 
         /// <summary>
-        /// Create a measured metric for given dimensions
+        /// Create a measured metric for given dimensions under legacy SDK model
         /// </summary>
         /// <param name="value">Measured metric value</param>
         /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
         /// <param name="timeseries">Timeseries representing one of the dimensions</param>
-        public static MeasuredMetric CreateForDimensions(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
+        public static MeasuredMetric CreateForDimensionsLegacy(double? value, List<string> dimensionNames, TimeSeriesElement timeseries)
         {
             Guard.NotAny(dimensionNames, nameof(dimensionNames));
             Guard.NotNull(timeseries, nameof(timeseries));
@@ -68,6 +69,30 @@ namespace Promitor.Core.Metrics
                     throw new MissingDimensionException(dimensionName, timeseries);
                 }
                 var dimensionValue = dimensionMetadataValue.Single().Value;
+                dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
+            }
+
+            return new MeasuredMetric(value, dimensions);
+        }
+
+        /// <summary>
+        /// Create a measured metric for given dimensions
+        /// </summary>
+        /// <param name="value">Measured metric value</param>
+        /// <param name="dimensionNames">List of names of dimensions that are being scraped</param>
+        /// <param name="timeseries">Timeseries representing one of the dimensions</param>
+        public static MeasuredMetric CreateForDimensions(double? value, List<string> dimensionNames, MetricTimeSeriesElement timeseries)
+        {
+            Guard.NotAny(dimensionNames, nameof(dimensionNames));
+            Guard.NotNull(timeseries, nameof(timeseries));
+            
+            var dimensions = new List<MeasuredMetricDimension>();
+            foreach (var dimensionName in dimensionNames)
+            {
+                if (!timeseries.Metadata.ContainsKey(dimensionName)) {
+                    //throw new MissingDimensionException(dimensionName, timeseries);
+                }
+                var dimensionValue = timeseries.Metadata.GetValueOrDefault(dimensionName);    
                 dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
 

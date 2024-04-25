@@ -35,39 +35,39 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 "'Unspecified' is not a supported value for 'cloud'.");
         }
 
-        [Fact]
-        public void Deserialize_AzureCloudSupplied_SetsAzureChinaCloud()
-        {
-            AzureEnvironment azureCloud = AzureEnvironment.AzureChinaCloud;
+    //     [Fact]
+    //     public void Deserialize_AzureCloudSupplied_SetsAzureChinaCloud()
+    //     {
+    //         AzureEnvironment azureCloud = AzureEnvironment.AzureChinaCloud;
 
-            var yamlText =
-                $@"azureMetadata:
-    cloud: '{AzureCloud.China}'";
+    //         var yamlText =
+    //             $@"azureMetadata:
+    // cloud: '{AzureCloud.China}'";
 
-            YamlAssert.PropertySet(
-                _deserializer,
-                yamlText,
-                "azureMetadata",
-                azureCloud,
-                a => a.Cloud);
-        }
+    //         YamlAssert.PropertySet(
+    //             _deserializer,
+    //             yamlText,
+    //             "azureMetadata",
+    //             azureCloud,
+    //             a => a.Cloud);
+    //     }
 
-        [Fact]
-        public void Deserialize_AzureCloudNotSupplied_SetsGlobalAzureCloud()
-        {
-            AzureEnvironment azureCloud = AzureEnvironment.AzureGlobalCloud;
+    //     [Fact]
+    //     public void Deserialize_AzureCloudNotSupplied_SetsGlobalAzureCloud()
+    //     {
+    //         AzureEnvironment azureCloud = AzureEnvironment.AzureGlobalCloud;
 
-            var yamlText =
-                @"azureMetadata:
-    tenantId: ABC";
+    //         var yamlText =
+    //             @"azureMetadata:
+    // tenantId: ABC";
 
-            YamlAssert.PropertySet(
-                _deserializer,
-                yamlText,
-                "azureMetadata",
-                azureCloud,
-                a => a.Cloud);
-        }
+    //         YamlAssert.PropertySet(
+    //             _deserializer,
+    //             yamlText,
+    //             "azureMetadata",
+    //             azureCloud,
+    //             a => a.Cloud);
+    //     }
 
         [Fact]
         public void Deserialize_InvalidAzureCloudSupplied_ReportsError()

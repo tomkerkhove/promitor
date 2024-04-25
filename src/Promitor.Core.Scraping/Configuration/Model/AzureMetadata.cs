@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Management.ResourceManager.Fluent;
+﻿using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {
@@ -7,6 +7,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public string ResourceGroupName { get; set; }
         public string SubscriptionId { get; set; }
         public string TenantId { get; set; }
-        public AzureEnvironment Cloud { get; set; }
+        public AzureCloud Cloud { get; set; }
     }
 }

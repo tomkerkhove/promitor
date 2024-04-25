@@ -21,7 +21,7 @@ namespace Promitor.Core.Scraping
             _logAnalyticsClient = scraperConfiguration.LogAnalyticsClient;
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, LogAnalyticsResourceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, LogAnalyticsResourceDefinition resourceDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.LogAnalyticsConfiguration, nameof(scrapeDefinition.LogAnalyticsConfiguration));

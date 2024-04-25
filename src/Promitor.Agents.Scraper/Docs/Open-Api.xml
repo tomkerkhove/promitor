@@ -4,7 +4,7 @@
         <name>Promitor.Agents.Scraper</name>
     </assembly>
     <members>
-        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(Microsoft.Azure.Management.ResourceManager.Fluent.AzureEnvironment,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
+        <member name="M:Promitor.Agents.Scraper.AzureMonitorClientFactory.CreateIfNotExists(System.Boolean,Promitor.Core.Serialization.Enum.AzureCloud,System.String,System.String,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory)">
             <summary>
             Provides an Azure Monitor client
             </summary>

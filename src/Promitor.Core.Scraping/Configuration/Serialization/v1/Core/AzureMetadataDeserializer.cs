@@ -20,18 +20,20 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(metadata => metadata.ResourceGroupName)
                 .IsRequired();
             Map(metadata => metadata.Cloud)
-                .WithDefault(AzureEnvironment.AzureGlobalCloud)
+                .WithDefault(AzureCloud.Global)
                 .MapUsing(DetermineAzureCloud);
         }
 
+        // TODO: validate cloud configuration in a SDK-agnostic way
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
             if (Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
             {
                 try
                 {
-                    var azureEnvironment = azureCloud.GetAzureEnvironment();
-                    return azureEnvironment;
+                    // var azureEnvironment = azureCloud.GetAzureEnvironment();
+                    // return azureEnvironment;
+                    return azureCloud;
                 }
                 catch (ArgumentOutOfRangeException)
                 {

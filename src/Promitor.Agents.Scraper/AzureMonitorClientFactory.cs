@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Promitor.Core.Extensions;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Serialization.Enum;
@@ -30,7 +31,7 @@ namespace Promitor.Agents.Scraper
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        public IAzureMonitorClient CreateIfNotExists(bool useAzureMonitorSdk, AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
+        public IAzureMonitorClient CreateIfNotExists(bool useAzureMonitorSdk, AzureCloud cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {   
             if (_azureMonitorClients.TryGetValue(subscriptionId, out var value))
             {
@@ -41,7 +42,7 @@ namespace Promitor.Agents.Scraper
             if(useAzureMonitorSdk) {
                 azureMonitorClient = CreateNewAzureMonitorQueryClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);
             } else {
-                azureMonitorClient = CreateNewLegacyAzureMonitorClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);
+                azureMonitorClient = CreateNewLegacyAzureMonitorClient(cloud.GetAzureEnvironment(), tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);
             }
             _azureMonitorClients.TryAdd(subscriptionId, azureMonitorClient);
 

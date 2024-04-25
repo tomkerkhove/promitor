@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Promitor.Core.Contracts;
+using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -215,7 +216,7 @@ namespace Promitor.Core.Scraping
             string subscriptionId,
             ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition,
             TResourceDefinition resourceDefinition,
-            AggregationType aggregationType,
+            PromitorMetricAggregationType aggregationType,
             TimeSpan aggregationInterval);
 
         /// <summary>

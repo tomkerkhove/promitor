@@ -113,7 +113,7 @@ namespace Promitor.Integrations.AzureMonitor
                 try 
                 {
                     var measuredMetric = metricDimensions.Any() 
-                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
+                                ? MeasuredMetric.CreateForDimensionsLegacy(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);
                 } 

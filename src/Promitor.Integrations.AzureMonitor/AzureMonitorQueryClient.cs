@@ -19,10 +19,9 @@ using Azure.Monitor.Query;
 using Azure.Identity;
 using Promitor.Core.Serialization.Enum;
 using Azure.Monitor.Query.Models;
-using Microsoft.OpenApi.Extensions;
-using Azure;
 using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
 using Azure.Core;
+using Promitor.Core.Extensions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -33,7 +32,6 @@ namespace Promitor.Integrations.AzureMonitor
         private readonly TimeSpan _metricNamespaceCacheDuration = TimeSpan.FromHours(1);
         private readonly MetricsQueryClient _metricsQueryClient;
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
-        private readonly IMemoryCache _metricNamespaceMemoryCache;
         private readonly ILogger _logger;
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
-        public AzureMonitorQueryClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IMemoryCache metricNamespaceMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public AzureMonitorQueryClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -59,7 +57,6 @@ namespace Promitor.Integrations.AzureMonitor
             Guard.NotNull(resourceMetricDefinitionMemoryCache, nameof(resourceMetricDefinitionMemoryCache));
 
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
-            _metricNamespaceMemoryCache = metricNamespaceMemoryCache; 
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorClientLegacy>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
@@ -157,8 +154,9 @@ namespace Promitor.Integrations.AzureMonitor
 
         private async Task<List<string>> GetMetricNamespacesAsync(string resourceId)
         {
-            // Get cached metric definitions
-            if (_metricNamespaceMemoryCache.TryGetValue(resourceId, out List<string> metricNamespaces))
+            // Get cached metric namespaces 
+            var namespaceKey = $"{resourceId}_namespace";
+            if (_resourceMetricDefinitionMemoryCache.TryGetValue(namespaceKey, out List<string> metricNamespaces))
             {
                 return metricNamespaces;
             }
@@ -169,7 +167,7 @@ namespace Promitor.Integrations.AzureMonitor
             }
             
             // Get from API and cache it
-            _resourceMetricDefinitionMemoryCache.Set(resourceId, foundMetricNamespaces, _metricDefinitionCacheDuration);
+            _resourceMetricDefinitionMemoryCache.Set(namespaceKey, foundMetricNamespaces, _metricDefinitionCacheDuration);
 
             return foundMetricNamespaces;
         }
@@ -232,8 +230,14 @@ namespace Promitor.Integrations.AzureMonitor
                 Size = querySizeLimit, 
                 TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
             };
-            var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, new [] {metricName}, queryOptions);
-            return metricsQueryResponse;
+            var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, [metricName], queryOptions);
+            var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
+            if (relevantMetric == null)
+            {
+                throw new MetricNotFoundException(metricName);
+            }
+
+            return relevantMetric;
         }
 
         private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTime recordDateTime)
@@ -275,7 +279,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// </summary>
         private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var metricsQueryClientOptions = new MetricsQueryClientOptions{
-                Audience = DetermineMetricsClientAudience(azureCloud),
+                Audience = azureCloud.DetermineMetricsClientAudience(),
             }; 
             var azureRateLimitPolicy = new RecordArmRateLimitMetricsPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher);
             var addPromitorUserAgentPolicy = new RegisterPromitorAgentPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter);
@@ -286,23 +290,6 @@ namespace Promitor.Integrations.AzureMonitor
                 return new MetricsQueryClient(new DefaultAzureCredential(), metricsQueryClientOptions);
             } else {
                 return new MetricsQueryClient(new DefaultAzureCredential(), metricsQueryClientOptions);
-            }
-        }
-
-        /// <summary>
-        ///     Creates authenticated client under the now deprecated Azure Management SDK
-        /// </summary>
-        private MetricsQueryAudience DetermineMetricsClientAudience(AzureCloud azureCloud) {
-            switch (azureCloud) 
-            {   case AzureCloud.Unspecified:
-                case AzureCloud.Global:
-                    return MetricsQueryAudience.AzurePublicCloud;
-                case AzureCloud.UsGov:
-                    return MetricsQueryAudience.AzureGovernment;
-                case AzureCloud.China:
-                    return MetricsQueryAudience.AzureChina;
-                default:
-                    throw new CloudNotSupportedException(azureCloud.GetDisplayName()); // Azure.Monitory.Query package does not support any other sovereign regions
             }
         }
     }

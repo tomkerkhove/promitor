@@ -29,7 +29,7 @@ namespace Promitor.Core.Scraping
         }
 
         /// <inheritdoc />
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resourceDefinition, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, TResourceDefinition resourceDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));

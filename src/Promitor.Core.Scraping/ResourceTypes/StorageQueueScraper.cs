@@ -21,7 +21,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             _azureStorageQueueClient = new AzureStorageQueueClient(scraperConfiguration.Logger);
         }
 
-        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, AggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<ScrapeResult> ScrapeResourceAsync(string subscriptionId, ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, StorageQueueResourceDefinition resource, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
         {
             Guard.NotNull(scrapeDefinition, nameof(scrapeDefinition));
             Guard.NotNull(scrapeDefinition.AzureMetricConfiguration, nameof(scrapeDefinition.AzureMetricConfiguration));

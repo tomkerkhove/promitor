@@ -142,7 +142,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             {
                 Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var firstMetric = MeasuredMetric.CreateForDimensions(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var firstMetric = MeasuredMetric.CreateForDimensionsLegacy(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
             var secondMetric = MeasuredMetric.CreateWithoutDimensions(secondMetricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(firstMetric);
             scrapeResult.MetricValues.Add(secondMetric);
@@ -254,7 +254,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             {
                 Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var measuredMetric = MeasuredMetric.CreateForDimensions(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var measuredMetric = MeasuredMetric.CreateForDimensionsLegacy(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
