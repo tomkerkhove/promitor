@@ -38,8 +38,8 @@ namespace Promitor.Agents.Scraper
                 return value;
             }
 
-            IAzureMonitorClient azureMonitorClient = null;
-            if(useAzureMonitorSdk) {
+            IAzureMonitorClient azureMonitorClient;
+            if (useAzureMonitorSdk) {
                 azureMonitorClient = CreateNewAzureMonitorQueryClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);
             } else {
                 azureMonitorClient = CreateNewLegacyAzureMonitorClient(cloud.GetAzureEnvironment(), tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);
