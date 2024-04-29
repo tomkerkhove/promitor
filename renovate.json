@@ -48,6 +48,11 @@
 				"NuGet",
 				".NET"
 			]
+		},
+		{
+			"groupName": "Moq",
+			"matchPackageNames": ["Moq"],
+			"enabled": false
 		}
 	],
 	"extends": [
