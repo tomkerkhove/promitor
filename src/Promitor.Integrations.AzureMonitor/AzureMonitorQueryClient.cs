@@ -60,7 +60,7 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
-            _logger.LogInformation("Creating query client");
+            _logger.LogWarning("Creating query client");
         }
 
         /// <summary>
