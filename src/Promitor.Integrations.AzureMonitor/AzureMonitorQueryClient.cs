@@ -58,9 +58,9 @@ namespace Promitor.Integrations.AzureMonitor
 
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
-            _logger = loggerFactory.CreateLogger<AzureMonitorClientLegacy>();
+            _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
-            _logger.LogInformation("Createing query client");
+            _logger.LogInformation("Creating query client");
         }
 
         /// <summary>
