@@ -286,11 +286,13 @@ namespace Promitor.Integrations.AzureMonitor
             var addPromitorUserAgentPolicy = new RegisterPromitorAgentPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter);
             metricsQueryClientOptions.AddPolicy(azureRateLimitPolicy, HttpPipelinePosition.PerCall);
             metricsQueryClientOptions.AddPolicy(addPromitorUserAgentPolicy, HttpPipelinePosition.BeforeTransport);
-
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
+            
+            
             if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal) {
-                return new MetricsQueryClient(new DefaultAzureCredential(), metricsQueryClientOptions);
+                return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
             } else {
-                return new MetricsQueryClient(new DefaultAzureCredential(), metricsQueryClientOptions);
+                return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
             }
         }
     }
