@@ -43,7 +43,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: locmai
+          username: hkfgo
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push preview image
