@@ -52,5 +52,5 @@ jobs:
           build-args: VERSION="${{ env.artifact_full_version }}"
           context: ./src/
           file: ./src/${{ inputs.project_name }}/Dockerfile.linux
-          tags: ghcr.io/locmai/${{ env.image_commit_uri }},ghcr.io/locmai/${{ env.image_latest_uri }}
+          tags: ghcr.io/hkfgo/${{ env.image_commit_uri }},ghcr.io/hkfgo/${{ env.image_latest_uri }}
           push: true
