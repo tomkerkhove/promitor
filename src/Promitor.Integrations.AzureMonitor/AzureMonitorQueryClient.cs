@@ -227,7 +227,7 @@ namespace Promitor.Integrations.AzureMonitor
                     }, 
                     Filter = metricDimensionsFilter,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime), new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)))
                 };
             } 
             else 
