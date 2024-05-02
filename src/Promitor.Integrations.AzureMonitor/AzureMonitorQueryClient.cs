@@ -215,22 +215,32 @@ namespace Promitor.Integrations.AzureMonitor
         private async Task<MetricResult> GetRelevantMetric(string resourceId, string metricName, MetricAggregationType metricAggregation, TimeSpan metricInterval,
             string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime)
         {   
-            var metricDimensionsFilter = "";
+            MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             if (metricDimensions.Any())
             {
-                metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
-    
+                var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
+                queryOptions = new MetricsQueryOptions {
+                    Aggregations= {
+                        metricAggregation
+                    }, 
+                    Filter = metricDimensionsFilter,
+                    Size = querySizeLimit, 
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                };
+            } 
+            else 
+            {
+                queryOptions = new MetricsQueryOptions {
+                    Aggregations= {
+                        metricAggregation
+                    }, 
+                    Size = querySizeLimit, 
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                };
             }
-            var queryOptions = new MetricsQueryOptions {
-                Aggregations= {
-                    metricAggregation
-                }, 
-                Filter = metricDimensionsFilter,
-                Size = querySizeLimit, 
-                TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
-            };
+            
             var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, [metricName], queryOptions);
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
             if (relevantMetric == null)
