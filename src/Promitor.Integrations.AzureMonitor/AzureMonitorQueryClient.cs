@@ -221,6 +221,7 @@ namespace Promitor.Integrations.AzureMonitor
             if (metricDimensions.Any())
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
+                _logger.LogInformation("metricDimensionsFilter");
                 queryOptions = new MetricsQueryOptions {
                     Aggregations= {
                         metricAggregation
