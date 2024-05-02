@@ -1,5 +1,6 @@
+name: Build and Push (Linux)
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       image_name:
         required: true
@@ -15,6 +16,8 @@ jobs:
   linux:
     name: Build & Push (Linux)
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -40,7 +43,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: tomkerkhove
+          username: locmai
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push preview image
@@ -49,5 +52,5 @@ jobs:
           build-args: VERSION="${{ env.artifact_full_version }}"
           context: ./src/
           file: ./src/${{ inputs.project_name }}/Dockerfile.linux
-          tags: ${{ env.image_commit_uri }},${{ env.image_latest_uri }}
+          tags: ghcr.io/locmai/${{ env.image_commit_uri }},ghcr.io/locmai/${{ env.image_latest_uri }}
           push: true
