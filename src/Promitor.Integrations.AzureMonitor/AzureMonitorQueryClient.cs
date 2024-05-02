@@ -16,7 +16,6 @@ using Promitor.Integrations.Azure.Authentication;
 using Newtonsoft.Json;
 using Promitor.Core.Metrics.Exceptions;
 using Azure.Monitor.Query;
-using Azure.Identity;
 using Promitor.Core.Serialization.Enum;
 using Azure.Monitor.Query.Models;
 using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;

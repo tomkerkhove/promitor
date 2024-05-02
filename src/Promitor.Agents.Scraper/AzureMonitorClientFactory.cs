@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -16,7 +17,7 @@ namespace Promitor.Agents.Scraper
 {
     public class AzureMonitorClientFactory
     {
-        private readonly Dictionary<string, IAzureMonitorClient> _azureMonitorClients = new();
+        private readonly ConcurrentDictionary<string, IAzureMonitorClient> _azureMonitorClients = new();
 
         /// <summary>
         /// Provides an Azure Monitor client
