@@ -245,6 +245,14 @@ namespace Promitor.Integrations.AzureMonitor
             }
             
             var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, [metricName], queryOptions);
+            foreach (MetricResult metric in metricsQueryResponse.Value.Metrics)
+            {
+                foreach (MetricTimeSeriesElement element in metric.TimeSeries)
+                {
+                    string labels = string.Join(" ", element.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
+                    _logger.LogWarning("Returned series with name {name} and dimension value {value}", metric.Name, element.Metadata.);
+                }
+            }
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
             if (relevantMetric == null)
             {
