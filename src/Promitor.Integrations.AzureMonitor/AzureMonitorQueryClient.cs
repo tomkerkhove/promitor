@@ -112,7 +112,8 @@ namespace Promitor.Integrations.AzureMonitor
                 // We need to shift the time to ensure that the time series is finalized and not report invalid values
                 var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
 
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);\
+                _logger.LogWarning("{metadata} labels found", timeseries.Metadata.ToString());
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);

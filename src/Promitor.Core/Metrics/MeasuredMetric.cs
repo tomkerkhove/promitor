@@ -92,7 +92,7 @@ namespace Promitor.Core.Metrics
                 if (!timeseries.Metadata.ContainsKey(dimensionName)) {
                     //throw new MissingDimensionException(dimensionName, timeseries);
                 }
-                var dimensionValue = timeseries.Metadata.GetValueOrDefault(dimensionName);    
+                var dimensionValue = timeseries.Metadata.GetValueOrDefault(dimensionName.ToLower());    
                 dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
 
