@@ -113,7 +113,8 @@ namespace Promitor.Integrations.AzureMonitor
                 var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
 
                 var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
-                _logger.LogWarning("{metadata} labels found", timeseries.Metadata.ToString());
+                string labels = string.Join(" ", timeseries.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
+                _logger.LogWarning("{labels} labels found", labels);
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
