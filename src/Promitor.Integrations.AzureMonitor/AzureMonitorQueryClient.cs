@@ -217,11 +217,11 @@ namespace Promitor.Integrations.AzureMonitor
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            _logger.LogInformation("metric dimensions: {metricDimensions}", metricDimensions);
+            _logger.LogWarning("metric dimensions: {metricDimensions}", metricDimensions);
             if (metricDimensions.Any())
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
-                _logger.LogInformation("metricDimensionsFilter {metricDimensionsFilter}", metricDimensionsFilter);
+                _logger.LogWarning("metricDimensionsFilter {metricDimensionsFilter}", metricDimensionsFilter);
                 queryOptions = new MetricsQueryOptions {
                     Aggregations= {
                         metricAggregation
