@@ -250,7 +250,7 @@ namespace Promitor.Integrations.AzureMonitor
                 foreach (MetricTimeSeriesElement element in metric.TimeSeries)
                 {
                     string labels = string.Join(" ", element.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
-                    _logger.LogWarning("Returned series with name {name} and dimension value {value}", metric.Name, element.Metadata.);
+                    _logger.LogWarning("Returned series with name {name} and dimension values {value}", metric.Name, labels);
                 }
             }
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
