@@ -117,7 +117,7 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
-                _logger.LogWarning("{labels} labels found with value {value}", labels, mostRecentMetricValue);
+                _logger.LogWarning("{labels} labels found with value {value}", labels, requestedMetricAggregate);
                 try 
                 {
                     var measuredMetric = metricDimensions.Any() 
