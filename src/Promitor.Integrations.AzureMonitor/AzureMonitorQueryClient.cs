@@ -117,7 +117,7 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
-                _logger.LogWarning("{labels} labels found with value {value}", labels, requestedMetricAggregate);
+                _logger.LogWarning("{labels} labels found for metric {metric} with value {value}", labels, metricName, mostRecentMetricValue.ToString());
                 try 
                 {
                     var measuredMetric = metricDimensions.Any() 
@@ -250,7 +250,7 @@ namespace Promitor.Integrations.AzureMonitor
                 foreach (MetricTimeSeriesElement element in metric.TimeSeries)
                 {
                     string labels = string.Join(" ", element.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
-                    _logger.LogWarning("Returned series with name {name} and dimension values {value}", metric.Name, labels);
+                    _logger.LogWarning("Returned series with name {name} and dimensions {value}", metric.Name, labels);
                 }
             }
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
