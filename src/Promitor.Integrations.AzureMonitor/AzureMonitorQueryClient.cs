@@ -219,7 +219,7 @@ namespace Promitor.Integrations.AzureMonitor
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime), new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)));
+            _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
             if (metricDimensions.Any())
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
@@ -230,7 +230,7 @@ namespace Promitor.Integrations.AzureMonitor
                     }, 
                     Filter = metricDimensionsFilter,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime), new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             } 
             else 
@@ -240,7 +240,7 @@ namespace Promitor.Integrations.AzureMonitor
                         metricAggregation
                     }, 
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime), new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
             
