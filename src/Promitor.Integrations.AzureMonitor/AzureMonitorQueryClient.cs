@@ -250,7 +250,7 @@ namespace Promitor.Integrations.AzureMonitor
                 foreach (MetricTimeSeriesElement element in metric.TimeSeries)
                 {
                     string labels = string.Join(" ", element.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
-                    _logger.LogWarning("Returned series with name {name} and dimensions {value}", metric.Name, labels);
+                    _logger.LogWarning("Returned series with name {name} and dimensions {labels} and latest values {values}", metric.Name, labels, element.Values.MaxBy(metricValue => metricValue.TimeStamp).ToString());
                 }
             }
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
