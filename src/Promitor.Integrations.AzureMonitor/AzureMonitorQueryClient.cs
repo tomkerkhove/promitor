@@ -110,9 +110,9 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 // Get the most recent value for that metric, that has a finished time series
                 // We need to shift the time to ensure that the time series is finalized and not report invalid values
-                var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
+                //var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
 
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, startQueryingTime);
                 string labels = string.Join(" ", timeseries.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
 
                 // Get the metric value according to the requested aggregation type
@@ -219,7 +219,7 @@ namespace Promitor.Integrations.AzureMonitor
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            _logger.LogWarning("metric dimensions: {metricDimensions}", metricDimensions);
+            _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime), new DateTimeOffset(recordDateTime.AddHours(historyStartingFromInHours)));
             if (metricDimensions.Any())
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
@@ -262,7 +262,7 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetric;
         }
 
-        private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTime recordDateTime)
+        private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTimeOffset recordDateTime)
         {
             var relevantMetricValue = timeSeries.Values.Where(metricValue => metricValue.TimeStamp < recordDateTime)
                                                      .MaxBy(metricValue => metricValue.TimeStamp);
