@@ -100,7 +100,7 @@ namespace Promitor.Integrations.AzureMonitor
             var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
             
             var seriesForMetric = metricResult.TimeSeries;
-            if (seriesForMetric.Count() < 1)
+            if (seriesForMetric.Count < 1)
             {
                 throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
             } 
@@ -114,7 +114,7 @@ namespace Promitor.Integrations.AzureMonitor
 
                 var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
                 string labels = string.Join(" ", timeseries.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
-                _logger.LogWarning("{labels} labels found", labels);
+                _logger.LogWarning("{labels} labels found with value {value}", labels, mostRecentMetricValue);
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
