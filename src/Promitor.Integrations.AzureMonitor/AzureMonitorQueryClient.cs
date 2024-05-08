@@ -23,7 +23,7 @@ using Azure.Core;
 using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
-ß
+
 namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorQueryClient : IAzureMonitorClient
