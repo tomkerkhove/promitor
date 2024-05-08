@@ -21,11 +21,9 @@ using Azure.Monitor.Query.Models;
 using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
 using Azure.Core;
 using Promitor.Core.Extensions;
-using System.Text;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
+ß
 namespace Promitor.Integrations.AzureMonitor
 {
     public class AzureMonitorQueryClient : IAzureMonitorClient
@@ -232,7 +230,7 @@ namespace Promitor.Integrations.AzureMonitor
                         metricAggregation
                     }, 
                     Granularity = metricInterval,
-                    Filter = filter.ToString(),
+                    Filter = filter,
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
