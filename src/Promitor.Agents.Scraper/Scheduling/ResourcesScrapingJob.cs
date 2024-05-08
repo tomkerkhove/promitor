@@ -277,9 +277,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                     ? scrapeDefinition.Resource.SubscriptionId
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
                 Logger.LogInformation("Parsed SDK Config {UseAzureMonitorSdk}", _metricsDeclaration.UseAzureMonitorSdk);
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.UseAzureMonitorSdk, _metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
-                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
+                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory, _metricsDeclaration.UseAzureMonitorSdk);
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
                     AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));

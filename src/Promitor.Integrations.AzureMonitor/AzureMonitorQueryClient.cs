@@ -110,9 +110,9 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 // Get the most recent value for that metric, that has a finished time series
                 // We need to shift the time to ensure that the time series is finalized and not report invalid values
-                //var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
+                var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
 
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, startQueryingTime);
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
                 string labels = string.Join(" ", timeseries.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
 
                 // Get the metric value according to the requested aggregation type
