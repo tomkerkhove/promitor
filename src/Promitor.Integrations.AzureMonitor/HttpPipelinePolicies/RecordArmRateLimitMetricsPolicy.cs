@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Core.Pipeline;
 using GuardNet;
-using Promitor.Agents.Core.Middleware;
 using Promitor.Core;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
