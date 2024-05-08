@@ -50,10 +50,10 @@ namespace Promitor.Agents.Scraper
             return azureMonitorClient;
         }
 
-        private static AzureMonitorClientLegacy CreateNewLegacyAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
+        private static LegacyAzureMonitorClient CreateNewLegacyAzureMonitorClient(AzureEnvironment cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {
             var azureCredentials = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(configuration);
-            var azureMonitorClientLegacy = new AzureMonitorClientLegacy(cloud, tenantId, subscriptionId, azureCredentials, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, loggerFactory, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
+            var azureMonitorClientLegacy = new LegacyAzureMonitorClient(cloud, tenantId, subscriptionId, azureCredentials, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, loggerFactory, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
             return azureMonitorClientLegacy;
         }
 

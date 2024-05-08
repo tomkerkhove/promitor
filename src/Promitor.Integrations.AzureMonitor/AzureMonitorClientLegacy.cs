@@ -27,7 +27,7 @@ using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
-    public class AzureMonitorClientLegacy : IAzureMonitorClient
+    public class LegacyAzureMonitorClient : IAzureMonitorClient
     {
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
@@ -49,7 +49,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
-        public AzureMonitorClientLegacy(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public LegacyAzureMonitorClient(AzureEnvironment azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -60,7 +60,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
-            _logger = loggerFactory.CreateLogger<AzureMonitorClientLegacy>();
+            _logger = loggerFactory.CreateLogger<LegacyAzureMonitorClient>();
             _logger.LogInformation("Using legacy scraper");
             _authenticatedAzureSubscription = CreateLegacyAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
