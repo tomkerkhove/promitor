@@ -309,7 +309,7 @@ namespace Promitor.Integrations.AzureMonitor
                 var filterConditions = filter.Split(" and ").ToList();
                 foreach (string condition in filterConditions) 
                 {
-                    string[] parts = filter.Split(" eq ", StringSplitOptions.None);
+                    string[] parts = condition.Split(" eq ", StringSplitOptions.None);
                     if (filterDictionary.ContainsKey(parts[0]))
                     {
                         filterDictionary[parts[0]] = parts[1];
