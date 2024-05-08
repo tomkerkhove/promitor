@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GuardNet;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;

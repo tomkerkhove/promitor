@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes.Enums;
