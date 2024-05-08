@@ -113,7 +113,7 @@ namespace Promitor.Integrations.AzureMonitor
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), mostRecentMetricValue);
                 try 
                 {
-                    var measuredMetric = metricDimensions.Any() 
+                    var measuredMetric = metricDimensions.Count == 0
                                 ? MeasuredMetric.CreateForDimensionsLegacy(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);
@@ -250,7 +250,7 @@ namespace Promitor.Integrations.AzureMonitor
                 metricQuery.SelectTop(queryLimit);
             }
 
-            if (metricDimensions.Any())
+            if (metricDimensions.Count < 1)
             {
                 string metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
                 metricQuery.WithOdataFilter(metricDimensionsFilter);

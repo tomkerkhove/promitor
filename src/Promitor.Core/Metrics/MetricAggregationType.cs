@@ -59,4 +59,3 @@ public static class MetricAggregationTypeConverter
         }
     } 
 }
-

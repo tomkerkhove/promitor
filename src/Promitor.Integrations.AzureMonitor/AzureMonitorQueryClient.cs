@@ -120,7 +120,7 @@ namespace Promitor.Integrations.AzureMonitor
                 _logger.LogWarning("{labels} labels found for metric {metric} with value {value}", labels, metricName, mostRecentMetricValue.ToString());
                 try 
                 {
-                    var measuredMetric = metricDimensions.Any() 
+                    var measuredMetric = metricDimensions.Count < 1 
                                 ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);
@@ -220,7 +220,7 @@ namespace Promitor.Integrations.AzureMonitor
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
-            if (metricDimensions.Any())
+            if (metricDimensions.Count < 1)
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
                 _logger.LogWarning("metricDimensionsFilter {metricDimensionsFilter}", metricDimensionsFilter);
