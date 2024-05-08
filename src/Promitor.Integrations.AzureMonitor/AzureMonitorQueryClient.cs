@@ -59,7 +59,6 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
-            _logger.LogWarning("Creating query client");
         }
 
         /// <summary>
@@ -235,7 +234,6 @@ namespace Promitor.Integrations.AzureMonitor
 
             if (queryFilter.Length > 1)
             {
-                var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
                 _logger.LogWarning("using query filter {queryFilter}", queryFilter);
                 queryOptions = new MetricsQueryOptions {
                     Aggregations = {

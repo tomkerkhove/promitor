@@ -37,7 +37,7 @@ namespace Promitor.Core.Extensions
         /// <returns>Azure environment information for specified cloud</returns>
         public static MetricsQueryAudience DetermineMetricsClientAudience(this AzureCloud azureCloud) {
             switch (azureCloud) 
-            {   case AzureCloud.Unspecified:
+            {   
                 case AzureCloud.Global:
                     return MetricsQueryAudience.AzurePublicCloud;
                 case AzureCloud.UsGov:

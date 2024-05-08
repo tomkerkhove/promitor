@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
+using Promitor.Core.Extensions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Serialization.Enum;
 using YamlDotNet.RepresentationModel;
@@ -29,8 +31,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             {
                 try
                 {
-                    // var azureEnvironment = azureCloud.GetAzureEnvironment();
-                    // return azureEnvironment;
+                    azureCloud.DetermineMetricsClientAudience();
                     return azureCloud;
                 }
                 catch (ArgumentOutOfRangeException)
