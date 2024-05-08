@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Promitor.Core.Metrics;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model

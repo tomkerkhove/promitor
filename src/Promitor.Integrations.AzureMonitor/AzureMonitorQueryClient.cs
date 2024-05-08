@@ -28,7 +28,6 @@ namespace Promitor.Integrations.AzureMonitor
     {
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
-        private readonly TimeSpan _metricNamespaceCacheDuration = TimeSpan.FromHours(1);
         private readonly MetricsQueryClient _metricsQueryClient;
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
@@ -225,9 +224,10 @@ namespace Promitor.Integrations.AzureMonitor
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
                 _logger.LogWarning("metricDimensionsFilter {metricDimensionsFilter}", metricDimensionsFilter);
                 queryOptions = new MetricsQueryOptions {
-                    Aggregations= {
+                    Aggregations = {
                         metricAggregation
                     }, 
+                    Granularity = metricInterval,
                     Filter = metricDimensionsFilter,
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
@@ -239,6 +239,7 @@ namespace Promitor.Integrations.AzureMonitor
                     Aggregations= {
                         metricAggregation
                     }, 
+                    Granularity = metricInterval,
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
