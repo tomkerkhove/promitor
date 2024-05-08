@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Core.Pipeline;
 using GuardNet;
+using Promitor.Agents.Core.Middleware;
 using Promitor.Core;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
@@ -60,17 +61,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
 
         public override void Process(HttpMessage message, ReadOnlyMemory<HttpPipelinePolicy> pipeline)
         {
-            Process(message, pipeline);
-            // Source: https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-manager-request-limits
-            if (message.Response.Headers.Contains(ThrottlingHeaderName))
-            {   
-                message.Response.Headers.TryGetValue(ThrottlingHeaderName, out string remainingApiCallsStr);
-                var subscriptionReadLimit = Convert.ToInt16(remainingApiCallsStr);
-                
-                // Report metric
-                _metricSinkWriter.ReportMetricAsync(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
-                _azureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.RateLimitingForArm, AvailableCallsMetricDescription, subscriptionReadLimit, _metricLabels);
-            }
+            throw new NotSupportedException("Synchronous HTTP path is not supported");
         }
 
         private string DetermineApplicationId(AzureAuthenticationInfo azureAuthenticationInfo)

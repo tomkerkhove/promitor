@@ -19,8 +19,6 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             Guard.NotNull(azureAuthenticationInfo, nameof(azureAuthenticationInfo));
 
             _metricSinkWriter = metricSinkWriter;
-
-            var id = DetermineApplicationId(azureAuthenticationInfo);
         }
 
         public override async ValueTask ProcessAsync(HttpMessage message, ReadOnlyMemory<HttpPipelinePolicy> pipeline)
@@ -35,28 +33,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
 
         public override void Process(HttpMessage message, ReadOnlyMemory<HttpPipelinePolicy> pipeline)
         {
-            var request = message.Request;
-            string agentVersion = Version.Get();
-            var promitorUserAgent = ArmUserAgent.Generate(agentVersion, _metricSinkWriter.EnabledMetricSinks);
-            request.Headers.Remove(HttpHeader.Names.UserAgent);
-            request.Headers.Add(HttpHeader.Names.UserAgent, promitorUserAgent);
-            ProcessNext(message, pipeline);
-        }
-
-        private string DetermineApplicationId(AzureAuthenticationInfo azureAuthenticationInfo)
-        {
-            switch (azureAuthenticationInfo.Mode)
-            {
-                case AuthenticationMode.ServicePrincipal:
-                    Guard.NotNullOrWhitespace(azureAuthenticationInfo.IdentityId, nameof(azureAuthenticationInfo.IdentityId));
-                    return azureAuthenticationInfo.IdentityId;
-                case AuthenticationMode.UserAssignedManagedIdentity:
-                    return azureAuthenticationInfo.GetIdentityIdOrDefault("externally-configured-user-assigned-identity");
-                case AuthenticationMode.SystemAssignedManagedIdentity:
-                    return "system-assigned-identity";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
-            }
+            throw new NotSupportedException("Synchronous HTTP request path is not supported");
         }
     }
 }   
