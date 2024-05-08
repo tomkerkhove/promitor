@@ -22,6 +22,8 @@ using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
 using Azure.Core;
 using Promitor.Core.Extensions;
 using System.Text;
+using Azure.Core.Diagnostics;
+using System.Diagnostics.Tracing;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -58,7 +60,7 @@ namespace Promitor.Integrations.AzureMonitor
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
-            _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
+            _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
 
         /// <summary>
@@ -287,6 +289,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             return relevantMetricValue;
         }
+
         private static double? InterpretMetricValue(MetricAggregationType metricAggregation, MetricValue relevantMetricValue)
         {
             switch (metricAggregation)
@@ -311,7 +314,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Creates authenticated client to query for metrics
         /// </summary>
-        private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, ILoggerFactory loggerFactory, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+        private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var metricsQueryClientOptions = new MetricsQueryClientOptions{
                 Audience = azureCloud.DetermineMetricsClientAudience(),
             }; 
@@ -321,6 +324,12 @@ namespace Promitor.Integrations.AzureMonitor
             metricsQueryClientOptions.AddPolicy(addPromitorUserAgentPolicy, HttpPipelinePosition.BeforeTransport);
             var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
             
+            var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
+            if (azureMonitorLogging.IsEnabled)
+            {
+                using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
+                metricsQueryClientOptions.Diagnostics.IsLoggingEnabled = true;
+            }
             
             if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal) {
                 return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
