@@ -222,7 +222,7 @@ namespace Promitor.Integrations.AzureMonitor
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
-            var filter = buildFilter(metricDimensions, metricFilter);
+            var filter = BuildFilter(metricDimensions, metricFilter);
 
             if (!string.IsNullOrEmpty(filter))
             {
@@ -301,10 +301,9 @@ namespace Promitor.Integrations.AzureMonitor
             }
         }
 
-        private static string buildFilter(List<String> metricDimensions, string? metricFilter)
+        private static string BuildFilter(List<String> metricDimensions, string metricFilter)
         {
             var filterDictionary = new Dictionary<string, string>();
-            StringBuilder queryFilter = new StringBuilder();
             metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "*"));
             
             if (string.IsNullOrWhiteSpace(metricFilter) == false) {
