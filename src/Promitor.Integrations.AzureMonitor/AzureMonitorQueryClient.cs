@@ -21,6 +21,7 @@ using Azure.Monitor.Query.Models;
 using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
 using Azure.Core;
 using Promitor.Core.Extensions;
+using System.Text;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -219,16 +220,29 @@ namespace Promitor.Integrations.AzureMonitor
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
-            if (metricDimensions.Count < 1)
+            StringBuilder queryFilter = new StringBuilder();
+            if (metricDimensions.Count > 0) {
+                var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
+                queryFilter.Append(metricDimensionsFilter);
+            } 
+            if (string.IsNullOrWhiteSpace(metricFilter) == false) {
+                if (queryFilter.Length > 0) {
+                    queryFilter.Append(" and ");
+                }
+                var filter = metricFilter.Replace("/", "%2F");
+                queryFilter.Append(filter);
+            }
+
+            if (queryFilter.Length > 1)
             {
                 var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
-                _logger.LogWarning("metricDimensionsFilter {metricDimensionsFilter}", metricDimensionsFilter);
+                _logger.LogWarning("using query filter {queryFilter}", queryFilter);
                 queryOptions = new MetricsQueryOptions {
                     Aggregations = {
                         metricAggregation
                     }, 
                     Granularity = metricInterval,
-                    Filter = metricDimensionsFilter,
+                    Filter = queryFilter.ToString(),
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
