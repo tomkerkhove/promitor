@@ -4,7 +4,6 @@ using Microsoft.Azure.Management.Monitor.Fluent.Models;
 
 namespace Promitor.Core.Metrics;
 
-
 public enum PromitorMetricAggregationType
 {
     None,
