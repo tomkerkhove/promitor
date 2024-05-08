@@ -24,6 +24,7 @@ using Promitor.Core.Extensions;
 using System.Text;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -221,28 +222,17 @@ namespace Promitor.Integrations.AzureMonitor
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
-            StringBuilder queryFilter = new StringBuilder();
-            if (metricDimensions.Count > 0) {
-                var metricDimensionsFilter = string.Join(" and ", metricDimensions.Select(metricDimension => $"{metricDimension} eq '*'"));
-                queryFilter.Append(metricDimensionsFilter);
-            } 
-            if (string.IsNullOrWhiteSpace(metricFilter) == false) {
-                if (queryFilter.Length > 0) {
-                    queryFilter.Append(" and ");
-                }
-                var filter = metricFilter.Replace("/", "%2F");
-                queryFilter.Append(filter);
-            }
+            var filter = buildFilter(metricDimensions, metricFilter);
 
-            if (queryFilter.Length > 1)
+            if (!string.IsNullOrEmpty(filter))
             {
-                _logger.LogWarning("using query filter {queryFilter}", queryFilter);
+                _logger.LogWarning("using query filter {queryFilter}", filter);
                 queryOptions = new MetricsQueryOptions {
                     Aggregations = {
                         metricAggregation
                     }, 
                     Granularity = metricInterval,
-                    Filter = queryFilter.ToString(),
+                    Filter = filter.ToString(),
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
@@ -309,6 +299,36 @@ namespace Promitor.Integrations.AzureMonitor
                 default:
                     throw new Exception($"Unable to determine the metrics value for aggregator '{metricAggregation}'");
             }
+        }
+
+        private static string buildFilter(List<String> metricDimensions, string? metricFilter)
+        {
+            var filterDictionary = new Dictionary<string, string>();
+            StringBuilder queryFilter = new StringBuilder();
+            metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "*"));
+            
+            if (string.IsNullOrWhiteSpace(metricFilter) == false) {
+                var filter = metricFilter.Replace("/", "%2F");
+                var filterConditions = filter.Split(" and ").ToList();
+                foreach (string condition in filterConditions) 
+                {
+                    string[] parts = filter.Split(" eq ", StringSplitOptions.None);
+                    if (filterDictionary.ContainsKey(parts[0]))
+                    {
+                        filterDictionary[parts[0]] = parts[1];
+                    } 
+                    else 
+                    {
+                        filterDictionary.Add(parts[0].Trim(), parts[1]);
+                    }
+                }
+            }
+
+            if (filterDictionary.Count > 1) 
+            {
+                return string.Join(" and ", filterDictionary.Select(kvp => $"{kvp.Key} eq '{kvp.Value}'"));
+            }
+            return null;
         }
 
         /// <summary>
