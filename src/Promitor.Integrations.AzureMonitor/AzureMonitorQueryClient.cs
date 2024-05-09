@@ -305,8 +305,7 @@ namespace Promitor.Integrations.AzureMonitor
             metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "'*'"));
             
             if (string.IsNullOrWhiteSpace(metricFilter) == false) {
-                var filter = metricFilter.Replace("/", "%2F");
-                var filterConditions = filter.Split(" and ").ToList();
+                var filterConditions = metricFilter.Split(" and ").ToList();
                 foreach (string condition in filterConditions) 
                 {
                     string[] parts = condition.Split(" eq ", StringSplitOptions.None);
