@@ -323,7 +323,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             if (filterDictionary.Count > 0) 
             {
-                return string.Join(" and ", filterDictionary.Select(kvp => $"{kvp.Key} eq '{kvp.Value}'"));
+                return string.Join(" and ", filterDictionary.Select(kvp => $"{kvp.Key} eq {kvp.Value}"));
             }
             return null;
         }
