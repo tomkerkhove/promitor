@@ -302,7 +302,7 @@ namespace Promitor.Integrations.AzureMonitor
         private static string BuildFilter(List<String> metricDimensions, string metricFilter)
         {
             var filterDictionary = new Dictionary<string, string>();
-            metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "*"));
+            metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "'*'"));
             
             if (string.IsNullOrWhiteSpace(metricFilter) == false) {
                 var filter = metricFilter.Replace("/", "%2F");
