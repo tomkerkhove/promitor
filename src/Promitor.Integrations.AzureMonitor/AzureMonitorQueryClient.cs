@@ -120,7 +120,7 @@ namespace Promitor.Integrations.AzureMonitor
                 _logger.LogWarning("{labels} labels found for metric {metric} with value {value}", labels, metricName, mostRecentMetricValue.ToString());
                 try 
                 {
-                    var measuredMetric = metricDimensions.Count < 1 
+                    var measuredMetric = metricDimensions.Count > 0 
                                 ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);

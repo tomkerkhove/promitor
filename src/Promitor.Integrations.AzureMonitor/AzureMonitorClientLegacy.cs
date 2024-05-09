@@ -113,7 +113,7 @@ namespace Promitor.Integrations.AzureMonitor
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), mostRecentMetricValue);
                 try 
                 {
-                    var measuredMetric = metricDimensions.Count == 0
+                    var measuredMetric = metricDimensions.Count > 1
                                 ? MeasuredMetric.CreateForDimensionsLegacy(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);
