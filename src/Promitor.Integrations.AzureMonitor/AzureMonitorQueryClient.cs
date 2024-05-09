@@ -78,7 +78,7 @@ namespace Promitor.Integrations.AzureMonitor
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotNullOrWhitespace(resourceId, nameof(resourceId));
-
+                
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
             var metricNamespaces = await GetMetricNamespacesAsync(resourceId);
@@ -87,7 +87,7 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 throw new MetricNotFoundException(metricName);
             }
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId, metricNamespace);
+            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId, metricNamespace); 
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
@@ -98,12 +98,12 @@ namespace Promitor.Integrations.AzureMonitor
 
             // Get the most recent metric
             var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
-
+            
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count < 1)
             {
                 throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
-            }
+            } 
 
             var measuredMetrics = new List<MeasuredMetric>();
             foreach (var timeseries in seriesForMetric)
@@ -118,17 +118,17 @@ namespace Promitor.Integrations.AzureMonitor
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
                 _logger.LogWarning("{labels} labels found for metric {metric} with value {value}", labels, metricName, mostRecentMetricValue.ToString());
-                try
+                try 
                 {
-                    var measuredMetric = metricDimensions.Count > 0
-                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries)
+                    var measuredMetric = metricDimensions.Count > 0 
+                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
                                 : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
                     measuredMetrics.Add(measuredMetric);
-                }
-                catch (MissingDimensionException e)
+                } 
+                catch (MissingDimensionException e) 
                 {
-                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName);
-                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries));
+                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
                 }
             }
 
@@ -142,12 +142,12 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 return metricDefinitions;
             }
-            var metricsDefinitions = new List<MetricDefinition>();
+            var metricsDefinitions = new List<MetricDefinition>(); 
             await foreach (var definition in _metricsQueryClient.GetMetricDefinitionsAsync(resourceId, metricNamespace))
             {
                 metricsDefinitions.Add(definition);
             }
-
+            
             // Get from API and cache it
             _resourceMetricDefinitionMemoryCache.Set(resourceId, metricsDefinitions, _metricDefinitionCacheDuration);
 
@@ -162,12 +162,12 @@ namespace Promitor.Integrations.AzureMonitor
             {
                 return metricNamespaces;
             }
-            var foundMetricNamespaces = new List<string>();
+            var foundMetricNamespaces = new List<string>(); 
             await foreach (var metricNamespace in _metricsQueryClient.GetMetricNamespacesAsync(resourceId))
             {
                 foundMetricNamespaces.Add(metricNamespace.FullyQualifiedName);
             }
-
+            
             // Get from API and cache it
             _resourceMetricDefinitionMemoryCache.Set(namespaceKey, foundMetricNamespaces, _metricDefinitionCacheDuration);
 
@@ -215,7 +215,7 @@ namespace Promitor.Integrations.AzureMonitor
 
         private async Task<MetricResult> GetRelevantMetric(string resourceId, string metricName, MetricAggregationType metricAggregation, TimeSpan metricInterval,
             string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime)
-        {
+        {   
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
@@ -225,30 +225,28 @@ namespace Promitor.Integrations.AzureMonitor
             if (!string.IsNullOrEmpty(filter))
             {
                 _logger.LogWarning("using query filter {queryFilter}", filter);
-                queryOptions = new MetricsQueryOptions
-                {
+                queryOptions = new MetricsQueryOptions {
                     Aggregations = {
                         metricAggregation
-                    },
+                    }, 
                     Granularity = metricInterval,
                     Filter = filter,
-                    Size = querySizeLimit,
-                    TimeRange = new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    Size = querySizeLimit, 
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
-            }
-            else
+            } 
+            else 
             {
-                queryOptions = new MetricsQueryOptions
-                {
-                    Aggregations = {
+                queryOptions = new MetricsQueryOptions {
+                    Aggregations= {
                         metricAggregation
-                    },
+                    }, 
                     Granularity = metricInterval,
-                    Size = querySizeLimit,
-                    TimeRange = new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    Size = querySizeLimit, 
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
-
+            
             var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, [metricName], queryOptions);
             foreach (MetricResult metric in metricsQueryResponse.Value.Metrics)
             {
@@ -305,26 +303,25 @@ namespace Promitor.Integrations.AzureMonitor
         {
             var filterDictionary = new Dictionary<string, string>();
             metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "*"));
-
-            if (string.IsNullOrWhiteSpace(metricFilter) == false)
-            {
+            
+            if (string.IsNullOrWhiteSpace(metricFilter) == false) {
                 var filter = metricFilter.Replace("/", "%2F");
                 var filterConditions = filter.Split(" and ").ToList();
-                foreach (string condition in filterConditions)
+                foreach (string condition in filterConditions) 
                 {
                     string[] parts = condition.Split(" eq ", StringSplitOptions.None);
                     if (filterDictionary.ContainsKey(parts[0]))
                     {
                         filterDictionary[parts[0]] = parts[1];
-                    }
-                    else
+                    } 
+                    else 
                     {
                         filterDictionary.Add(parts[0].Trim(), parts[1]);
                     }
                 }
             }
 
-            if (filterDictionary.Count > 1)
+            if (filterDictionary.Count > 0) 
             {
                 return string.Join(" and ", filterDictionary.Select(kvp => $"{kvp.Key} eq '{kvp.Value}'"));
             }
@@ -334,31 +331,26 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Creates authenticated client to query for metrics
         /// </summary>
-        private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
-        {
-            var metricsQueryClientOptions = new MetricsQueryClientOptions
-            {
+        private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+            var metricsQueryClientOptions = new MetricsQueryClientOptions{
                 Audience = azureCloud.DetermineMetricsClientAudience(),
-            };
+            }; 
             var azureRateLimitPolicy = new RecordArmRateLimitMetricsPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher);
             var addPromitorUserAgentPolicy = new RegisterPromitorAgentPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter);
             metricsQueryClientOptions.AddPolicy(azureRateLimitPolicy, HttpPipelinePosition.PerCall);
             metricsQueryClientOptions.AddPolicy(addPromitorUserAgentPolicy, HttpPipelinePosition.BeforeTransport);
             var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
-
+            
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsQueryClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-
-            if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal)
-            {
+            
+            if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal) {
                 return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
-            }
-            else
-            {
+            } else {
                 return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
             }
         }
