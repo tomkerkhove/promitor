@@ -89,10 +89,7 @@ namespace Promitor.Core.Metrics
             var dimensions = new List<MeasuredMetricDimension>();
             foreach (var dimensionName in dimensionNames)
             {
-                if (!timeseries.Metadata.ContainsKey(dimensionName)) {
-                    //throw new MissingDimensionException(dimensionName, timeseries);
-                }
-                var dimensionValue = timeseries.Metadata.GetValueOrDefault(dimensionName.ToLower());    
+                var dimensionValue = timeseries.Metadata.FirstOrDefault(kvp => kvp.Key.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value;    
                 dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
 
