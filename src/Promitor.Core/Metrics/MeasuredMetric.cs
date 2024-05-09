@@ -89,7 +89,7 @@ namespace Promitor.Core.Metrics
             var dimensions = new List<MeasuredMetricDimension>();
             foreach (var dimensionName in dimensionNames)
             {
-                var dimensionValue = timeseries.Metadata.FirstOrDefault(kvp => kvp.Key.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase) == true).Value;    
+                var dimensionValue = timeseries.Metadata.FirstOrDefault(kvp => kvp.Key.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase)).Value;    
                 dimensions.Add(new MeasuredMetricDimension(dimensionName, dimensionValue));
             }
 
