@@ -346,12 +346,7 @@ namespace Promitor.Integrations.AzureMonitor
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsQueryClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-            
-            if (azureAuthenticationInfo.Mode == AuthenticationMode.ServicePrincipal) {
-                return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
-            } else {
-                return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
-            }
+            return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
         }
     }
 }
