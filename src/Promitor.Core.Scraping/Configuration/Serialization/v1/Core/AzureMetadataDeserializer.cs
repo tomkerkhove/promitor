@@ -22,8 +22,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 .WithDefault(AzureCloud.Global)
                 .MapUsing(DetermineAzureCloud);
         }
-
-        // TODO: validate cloud configuration in a SDK-agnostic way
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
             if (Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
