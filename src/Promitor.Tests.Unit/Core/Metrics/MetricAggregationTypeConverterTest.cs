@@ -29,6 +29,7 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         private readonly Dictionary<PromitorMetricAggregationType, MetricAggregationType> _expectedAggregationTypeMapping = new Dictionary<PromitorMetricAggregationType, MetricAggregationType>
         {
             { PromitorMetricAggregationType.Average, MetricAggregationType.Average },
+            { PromitorMetricAggregationType.Count, MetricAggregationType.Count },
             { PromitorMetricAggregationType.Maximum, MetricAggregationType.Maximum },
             { PromitorMetricAggregationType.Minimum, MetricAggregationType.Minimum },
             { PromitorMetricAggregationType.None, MetricAggregationType.None },
