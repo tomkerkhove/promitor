@@ -117,7 +117,6 @@ namespace Promitor.Integrations.AzureMonitor
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
-                _logger.LogWarning("{labels} labels found for metric {metric} with value {value}", labels, metricName, mostRecentMetricValue.ToString());
                 try 
                 {
                     var measuredMetric = metricDimensions.Count > 0 
@@ -219,12 +218,10 @@ namespace Promitor.Integrations.AzureMonitor
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
             var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            _logger.LogWarning("Querying range {start}, {finish}", new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime));
             var filter = BuildFilter(metricDimensions, metricFilter);
 
             if (!string.IsNullOrEmpty(filter))
             {
-                _logger.LogWarning("using query filter {queryFilter}", filter);
                 queryOptions = new MetricsQueryOptions {
                     Aggregations = {
                         metricAggregation
@@ -253,7 +250,6 @@ namespace Promitor.Integrations.AzureMonitor
                 foreach (MetricTimeSeriesElement element in metric.TimeSeries)
                 {
                     string labels = string.Join(" ", element.Metadata.Select(kv => $"{kv.Key}: {kv.Value}"));
-                    _logger.LogWarning("Returned series with name {name} and dimensions {labels} and latest values {values}", metric.Name, labels, element.Values.MaxBy(metricValue => metricValue.TimeStamp).ToString());
                 }
             }
             var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
