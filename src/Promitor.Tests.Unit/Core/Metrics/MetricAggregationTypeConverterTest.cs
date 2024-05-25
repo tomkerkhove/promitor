@@ -37,7 +37,6 @@ namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
         };
 
 
-
         [Fact]
         public void ConvertAggregationType_Legacy()
         {
