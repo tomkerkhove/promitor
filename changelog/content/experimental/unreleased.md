@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-- {{% tag added %}} Migrate default Azure Monitor scraping path to use Azure.Monitor package.
-
+- {{% tag changes %}} Migrate to latest Azure.Monitor SDK.
+  
 #### Resource Discovery
 
 None.
