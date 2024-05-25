@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using Azure.Monitor.Query.Models;
 using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Promitor.Core.Contracts;
-using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;
-using Promitor.Core.Scraping.Configuration.Model;
-using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Xunit;
 
-namespace Promitor.Tests.Unit.Core.Scraping.Configuration.Model.Metrics
+namespace Promitor.Tests.Unit.Core.Metrics
 {
     [Category("Unit")]
     public class MetricAggregationTypeConverterTest
