@@ -16,7 +16,7 @@ namespace Promitor.Tests.Unit.Metrics
             var dimensionNames = new List<string> { "dimTest"};
             var dimensionValue = "dimTest1";
             var timeSeries = new TimeSeriesElement(new List<MetadataValue> { new(name: new LocalizableString(dimensionNames[0]), value: dimensionValue)});
-            var measuredMetric = MeasuredMetric.CreateForDimensions(1, dimensionNames, timeSeries);
+            var measuredMetric = MeasuredMetric.CreateForDimensionsLegacy(1, dimensionNames, timeSeries);
             Assert.Single(measuredMetric.Dimensions);
             Assert.Equal(dimensionNames[0], measuredMetric.Dimensions[0].Name);
             Assert.Equal(dimensionValue, measuredMetric.Dimensions[0].Value);
@@ -28,7 +28,7 @@ namespace Promitor.Tests.Unit.Metrics
         {
             var dimensionName = new List<string> { "dimTest"};
             var timeSeries = new TimeSeriesElement(new List<MetadataValue>());
-            MissingDimensionException ex = Assert.Throws<MissingDimensionException>(() => MeasuredMetric.CreateForDimensions(1, dimensionName, timeSeries));
+            MissingDimensionException ex = Assert.Throws<MissingDimensionException>(() => MeasuredMetric.CreateForDimensionsLegacy(1, dimensionName, timeSeries));
             Assert.Equal(ex.DimensionName, dimensionName[0]);
         }
     }

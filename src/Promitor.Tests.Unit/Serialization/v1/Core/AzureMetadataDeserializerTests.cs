@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Linq;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Serialization.Enum;
@@ -38,7 +37,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_AzureCloudSupplied_SetsAzureChinaCloud()
         {
-            AzureEnvironment azureCloud = AzureEnvironment.AzureChinaCloud;
+            AzureCloud azureCloud = AzureCloud.China;
 
             var yamlText =
                 $@"azureMetadata:
@@ -55,7 +54,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         [Fact]
         public void Deserialize_AzureCloudNotSupplied_SetsGlobalAzureCloud()
         {
-            AzureEnvironment azureCloud = AzureEnvironment.AzureGlobalCloud;
+            AzureCloud azureCloud = AzureCloud.Global;
 
             var yamlText =
                 @"azureMetadata:

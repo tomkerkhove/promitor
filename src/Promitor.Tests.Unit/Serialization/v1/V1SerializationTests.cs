@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using AutoMapper;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -76,7 +76,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                             MetricName = "ActiveMessages",
                             Aggregation = new MetricAggregationV1
                             {
-                                Type = AggregationType.Average
+                                Type = PromitorMetricAggregationType.Average
                             }
                         },
                         Resources = new List<AzureResourceDefinitionV1>
@@ -103,7 +103,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
                             MetricName = "ActiveMessages",
                             Aggregation = new MetricAggregationV1
                             {
-                                Type = AggregationType.Average,
+                                Type = PromitorMetricAggregationType.Average,
                                 Interval = TimeSpan.FromMinutes(15)
                             }
                         },
@@ -159,7 +159,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
             Assert.Equal(ResourceType.Generic, deserializedModel.Metrics.ElementAt(0).ResourceType);
             Assert.Equal(new Dictionary<string, string> { { "app", "promitor" } }, deserializedModel.Metrics.ElementAt(0).Labels);
             Assert.Equal("ActiveMessages", deserializedModel.Metrics.ElementAt(0).AzureMetricConfiguration.MetricName);
-            Assert.Equal(AggregationType.Average, deserializedModel.Metrics.ElementAt(0).AzureMetricConfiguration.Aggregation.Type);
+            Assert.Equal(PromitorMetricAggregationType.Average, deserializedModel.Metrics.ElementAt(0).AzureMetricConfiguration.Aggregation.Type);
             Assert.Equal(2, deserializedModel.Metrics.ElementAt(0).Resources.Count);
 
             var genericResource1 = Assert.IsType<GenericResourceV1>(deserializedModel.Metrics.ElementAt(0).Resources.ElementAt(0));

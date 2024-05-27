@@ -36,7 +36,7 @@ namespace Promitor.Agents.Scraper.Usability
         {
             var asciiTable = CreateAzureMetadataAsciiTable();
 
-            asciiTable.AddRow(metadata.TenantId, metadata.SubscriptionId, metadata.ResourceGroupName, metadata.Cloud.Name.Humanize(LetterCasing.Title));
+            asciiTable.AddRow(metadata.TenantId, metadata.SubscriptionId, metadata.ResourceGroupName, metadata.Cloud.Humanize(LetterCasing.Title));
 
             AnsiConsole.Write(asciiTable);
         }

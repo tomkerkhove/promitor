@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Extensions;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -20,18 +19,17 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(metadata => metadata.ResourceGroupName)
                 .IsRequired();
             Map(metadata => metadata.Cloud)
-                .WithDefault(AzureEnvironment.AzureGlobalCloud)
+                .WithDefault(AzureCloud.Global)
                 .MapUsing(DetermineAzureCloud);
         }
-
         private object DetermineAzureCloud(string rawAzureCloud, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
             if (Enum.TryParse<AzureCloud>(rawAzureCloud, out var azureCloud))
             {
                 try
                 {
-                    var azureEnvironment = azureCloud.GetAzureEnvironment();
-                    return azureEnvironment;
+                    azureCloud.DetermineMetricsClientAudience();
+                    return azureCloud;
                 }
                 catch (ArgumentOutOfRangeException)
                 {
