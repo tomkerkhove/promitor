@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
 using Microsoft.Extensions.Logging.Abstractions;
+using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 
@@ -23,7 +23,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             YamlAssert.PropertySet(
                 _deserializer,
                 "type: Maximum",
-                AggregationType.Maximum,
+                PromitorMetricAggregationType.Maximum,
                 a => a.Type);
         }
 

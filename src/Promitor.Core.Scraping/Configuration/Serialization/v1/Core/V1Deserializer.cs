@@ -20,6 +20,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(definition => definition.Version)
                 .IsRequired()
                 .MapUsing(GetVersion);
+            Map(definition => definition.UseAzureMonitorSdk)
+                .WithDefault(true);
             Map(definition => definition.AzureMetadata)
                 .IsRequired()
                 .MapUsingDeserializer(azureMetadataDeserializer);

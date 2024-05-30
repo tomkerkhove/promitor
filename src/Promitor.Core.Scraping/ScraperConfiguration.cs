@@ -12,7 +12,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     Client to interact with Azure Monitor
         /// </summary>
-        public AzureMonitorClient AzureMonitorClient { get; }
+        public IAzureMonitorClient AzureMonitorClient { get; }
 
         /// <summary>
         ///     Client to interact with Log Analytics
@@ -42,7 +42,7 @@ namespace Promitor.Core.Scraping
         /// <param name="metricSinkWriter">Writer to send metrics to all configured sinks</param>
         /// <param name="azureScrapingSystemMetricsPublisher">Collector to send metrics related to the runtime</param>
         /// <param name="logger">General logger</param>
-        public ScraperConfiguration(AzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, ILogger logger)
+        public ScraperConfiguration(IAzureMonitorClient azureMonitorClient, LogAnalyticsClient logAnalyticsClient, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, ILogger logger)
         {
             Guard.NotNull(azureMonitorClient, nameof(azureMonitorClient));
             Guard.NotNull(logger, nameof(logger));

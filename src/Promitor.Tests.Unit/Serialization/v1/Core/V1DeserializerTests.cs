@@ -187,5 +187,30 @@ metrics:
             // Assert
             Assert.Null(declaration.Metrics);
         }
+
+          [Fact]
+        public void Deserialize_NoSDKFlag_DefaultsToTrue()
+        {
+            // Arrange
+            var node = YamlUtils.CreateYamlNode(
+@"azureMetadata:
+    tenantId: '123'");
+            var builder = _deserializer.Deserialize(node, _errorReporter.Object);
+
+            Assert.True(builder.UseAzureMonitorSdk);
+        }
+
+         [Fact]
+        public void Deserialize_SdkSpecified_SetsCorrectFlag()
+        {
+            // Arrange
+            var yamlNode = YamlUtils.CreateYamlNode("useAzureMonitorSdk: false");
+
+            // Act
+            var builder = _deserializer.Deserialize(yamlNode, _errorReporter.Object);
+
+            // Assert
+            Assert.False(builder.UseAzureMonitorSdk);
+        }
     }
 }
