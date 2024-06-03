@@ -31,14 +31,14 @@ namespace Promitor.Agents.Scraper
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
         /// <param name="loggerFactory">Factory to create loggers with</param>
-        /// <param name="useAzureMonitorSdk">Whether to use the new Azure.Monitor.Query package for queries</param>
-        public IAzureMonitorClient CreateIfNotExists(AzureCloud cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory, bool useAzureMonitorSdk)
+        public IAzureMonitorClient CreateIfNotExists(AzureCloud cloud, string tenantId, string subscriptionId, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, IConfiguration configuration, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, ILoggerFactory loggerFactory)
         {   
             if (_azureMonitorClients.TryGetValue(subscriptionId, out var value))
             {
                 return value;
             }
-
+            
+            var useAzureMonitorSdk = azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk;
             IAzureMonitorClient azureMonitorClient;
             if (useAzureMonitorSdk) {
                 azureMonitorClient = CreateNewAzureMonitorQueryClient(cloud, tenantId, subscriptionId, metricSinkWriter, azureScrapingSystemMetricsPublisher, resourceMetricDefinitionMemoryCache, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory);

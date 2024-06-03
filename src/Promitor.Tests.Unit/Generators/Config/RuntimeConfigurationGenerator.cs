@@ -235,7 +235,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100)
+        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true)
         {
             _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Integration ??= new AzureMonitorIntegrationConfiguration();
@@ -245,6 +245,11 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             if (startingFromInHours != null)
             {
                 _runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours = startingFromInHours.Value;
+            }
+
+            if (useAzureMonitorSdk != null)
+            {
+                _runtimeConfiguration.AzureMonitor.Integration.UseAzureMonitorSdk = useAzureMonitorSdk.Value;
             }
 
             return this;
@@ -340,6 +345,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                 if (_runtimeConfiguration?.AzureMonitor.Integration?.History != null)
                 {
                     configurationBuilder.AppendLine("  integration:");
+                    configurationBuilder.AppendLine($"    useAzureMonitorSdk: {_runtimeConfiguration?.AzureMonitor.Integration.UseAzureMonitorSdk}");
                     configurationBuilder.AppendLine("    history:");
                     configurationBuilder.AppendLine($"      startingFromInHours: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInHours}");
                 }
