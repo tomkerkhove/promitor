@@ -18,7 +18,7 @@ jobs:
     steps:
     - name: Download artifact
       id: download-artifact
-      uses: dawidd6/action-download-artifact@v3
+      uses: dawidd6/action-download-artifact@v4
       with:
         run_id: ${{ github.event.workflow_run.id }}
         name: test-results
