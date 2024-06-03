@@ -61,7 +61,7 @@ namespace Promitor.Integrations.AzureMonitor
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<LegacyAzureMonitorClient>();
-            _logger.LogInformation("Using legacy scraper");
+            _logger.LogWarning("Will use deprecated Azure Management Libraries for Metric Scraping");
             _authenticatedAzureSubscription = CreateLegacyAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
 
