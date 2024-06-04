@@ -96,6 +96,43 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.Equal(expectedStartingFromInHours, runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours);
         }
 
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoNewSdkFlagForAzureMonitorIntegration_DefaultsToTrue()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(useAzureMonitorSdk: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.True(runtimeConfiguration.AzureMonitor.Integration.UseAzureMonitorSdk);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_OverrideNewSdkFlagForAzureMonitorIntegration_BecomesFalse()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(useAzureMonitorSdk: false)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.False(runtimeConfiguration.AzureMonitor.Integration.UseAzureMonitorSdk);
+        }
+
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
