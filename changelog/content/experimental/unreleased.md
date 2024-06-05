@@ -6,7 +6,7 @@ version:
 
 #### Scraper
 
-- {{% tag changes %}} Migrate to latest Azure.Monitor SDK.
+None.
   
 #### Resource Discovery
 
