@@ -5,7 +5,6 @@ namespace Promitor.Core.Scraping.Configuration.Model
 {
     public class MetricsDeclaration
     {
-        public bool UseAzureMonitorSdk { get; set; } = true;
         public AzureMetadata AzureMetadata { get; set; }
         public MetricBatchScrapeConfig? MetricBatchConfig { get; set; } 
         public MetricDefaults MetricDefaults { get; set; } = new MetricDefaults();
