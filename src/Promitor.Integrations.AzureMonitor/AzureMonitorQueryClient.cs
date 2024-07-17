@@ -30,7 +30,8 @@ namespace Promitor.Integrations.AzureMonitor
     {
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
-        private readonly MetricsQueryClient _metricsQueryClient;
+        private readonly MetricsQueryClient _metricsQueryClient; // for single resource queries 
+        private readonly MetricsClient _metricsBatchQueryClient; // for batch queries
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
 
@@ -60,6 +61,7 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
+            _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorLoggingConfiguration);
         }
 
         /// <summary>
@@ -132,6 +134,13 @@ namespace Promitor.Integrations.AzureMonitor
 
             return measuredMetrics;
         }
+
+        public Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+            List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
+        {
+            return null;
+        }    
+        
 
         private async Task<IReadOnlyList<MetricDefinition>> GetMetricDefinitionsAsync(string resourceId, string metricNamespace)
         {
@@ -335,6 +344,31 @@ namespace Promitor.Integrations.AzureMonitor
                 metricsQueryClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
             return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
+        }
+
+         /// <summary>
+        ///     Creates authenticated client to query for metrics
+        /// </summary>
+        private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+            var metricsClientOptions = new MetricsClientOptions{
+                Audience = azureCloud.DetermineMetricsClientBatchQueryAudience(),
+                Retry =
+                {
+                    Mode = RetryMode.Exponential,
+                    MaxRetries = 3,
+                    Delay = TimeSpan.FromSeconds(1), 
+                    MaxDelay = TimeSpan.FromSeconds(30), 
+                }
+            }; // retry policy as suggested in the documentation: https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/migrate-to-batch-api?tabs=individual-response#529-throttling-errors
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
+            
+            var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
+            if (azureMonitorLogging.IsEnabled)
+            {
+                using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
+                metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
+            }
+            return new MetricsClient(new Uri(azureCloud.DetermineMetricsClientBatchQueryAudience().ToString()), tokenCredential, metricsClientOptions);
         }
     }
 }

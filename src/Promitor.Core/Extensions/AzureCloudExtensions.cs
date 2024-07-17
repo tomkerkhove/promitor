@@ -31,7 +31,7 @@ namespace Promitor.Core.Extensions
         }
 
         /// <summary>
-        ///     Get Azure environment information under legacy SDK model
+        ///     Get Azure environment information for Azure.Monitor SDK single resource queries
         /// </summary>
         /// <param name="azureCloud">Microsoft Azure cloud</param>
         /// <returns>Azure environment information for specified cloud</returns>
@@ -49,6 +49,26 @@ namespace Promitor.Core.Extensions
             }
         }
 
+        /// <summary>
+        ///     Get Azure environment information for Azure.Monitor SDK batch queries
+        /// </summary>
+        /// <param name="azureCloud">Microsoft Azure cloud</param>
+        /// <returns>Azure environment information for specified cloud</returns>
+        public static MetricsClientAudience DetermineMetricsClientBatchQueryAudience(this AzureCloud azureCloud) {
+            switch (azureCloud) 
+            {   
+                case AzureCloud.Global:
+                    return MetricsClientAudience.AzurePublicCloud;
+                case AzureCloud.UsGov:
+                    return MetricsClientAudience.AzureGovernment;
+                case AzureCloud.China:
+                    return MetricsClientAudience.AzureChina;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for"); // Azure.Monitory.Query package does not support any other sovereign regions
+            }
+        }
+
+        
         public static Uri GetAzureAuthorityHost(this AzureCloud azureCloud)
         {
             switch (azureCloud)
