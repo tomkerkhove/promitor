@@ -23,6 +23,7 @@ using Azure.Core;
 using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
+using Promitor.Integrations.AzureMonitor.Extensions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -83,13 +84,13 @@ namespace Promitor.Integrations.AzureMonitor
                 
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricNamespaces = await GetMetricNamespacesAsync(resourceId);
+            var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceId, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
             var metricNamespace = metricNamespaces.SingleOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId, metricNamespace); 
+            var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceId, metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
@@ -135,52 +136,68 @@ namespace Promitor.Integrations.AzureMonitor
             return measuredMetrics;
         }
 
-        public Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
         {
-            return null;
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
+                
+            // Get all metrics
+            var startQueryingTime = DateTime.UtcNow;
+            var metricNamespaces = await GetMetricNamespacesAsync(resourceIds.First());
+            var metricNamespace = metricNamespaces.SingleOrDefault();
+            if (metricNamespace == null)
+            {
+                throw new MetricNotFoundException(metricName);
+            }
+            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceIds.First(), metricNamespace); 
+            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
+            if (metricDefinition == null)
+            {
+                throw new MetricNotFoundException(metricName);
+            }
+
+            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
+
+            // Get the most recent metric
+            var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
+            
+            var seriesForMetric = metricResult.TimeSeries;
+            if (seriesForMetric.Count < 1)
+            {
+                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
+            } 
+
+            var measuredMetrics = new List<MeasuredMetric>();
+            foreach (var timeseries in seriesForMetric)
+            {
+                // Get the most recent value for that metric, that has a finished time series
+                // We need to shift the time to ensure that the time series is finalized and not report invalid values
+                var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
+
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
+
+                // Get the metric value according to the requested aggregation type
+                var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
+                try 
+                {
+                    var measuredMetric = metricDimensions.Count > 0 
+                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
+                                : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
+                    measuredMetrics.Add(measuredMetric);
+                } 
+                catch (MissingDimensionException e) 
+                {
+                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
+                }
+            }
+
+            return measuredMetrics;
         }    
         
 
-        private async Task<IReadOnlyList<MetricDefinition>> GetMetricDefinitionsAsync(string resourceId, string metricNamespace)
-        {
-            // Get cached metric definitions
-            if (_resourceMetricDefinitionMemoryCache.TryGetValue(resourceId, out IReadOnlyList<MetricDefinition> metricDefinitions))
-            {
-                return metricDefinitions;
-            }
-            var metricsDefinitions = new List<MetricDefinition>(); 
-            await foreach (var definition in _metricsQueryClient.GetMetricDefinitionsAsync(resourceId, metricNamespace))
-            {
-                metricsDefinitions.Add(definition);
-            }
-            
-            // Get from API and cache it
-            _resourceMetricDefinitionMemoryCache.Set(resourceId, metricsDefinitions, _metricDefinitionCacheDuration);
-
-            return metricsDefinitions;
-        }
-
-        private async Task<List<string>> GetMetricNamespacesAsync(string resourceId)
-        {
-            // Get cached metric namespaces 
-            var namespaceKey = $"{resourceId}_namespace";
-            if (_resourceMetricDefinitionMemoryCache.TryGetValue(namespaceKey, out List<string> metricNamespaces))
-            {
-                return metricNamespaces;
-            }
-            var foundMetricNamespaces = new List<string>(); 
-            await foreach (var metricNamespace in _metricsQueryClient.GetMetricNamespacesAsync(resourceId))
-            {
-                foundMetricNamespaces.Add(metricNamespace.FullyQualifiedName);
-            }
-            
-            // Get from API and cache it
-            _resourceMetricDefinitionMemoryCache.Set(namespaceKey, foundMetricNamespaces, _metricDefinitionCacheDuration);
-
-            return foundMetricNamespaces;
-        }
-
+        
         private TimeSpan DetermineAggregationInterval(string metricName, TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
         {
             // Get perfect match

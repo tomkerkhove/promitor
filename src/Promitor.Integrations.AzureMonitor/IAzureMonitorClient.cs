@@ -9,5 +9,8 @@ namespace Promitor.Integrations.AzureMonitor
     {
         public Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             string resourceId, string metricFilter = null, int? metricLimit = null); 
+
+        public Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+            List<string >resourceIds, string metricFilter = null, int? metricLimit = null);     
     }
 }
