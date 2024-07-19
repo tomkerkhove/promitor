@@ -6,7 +6,6 @@ using GuardNet;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
@@ -102,38 +101,7 @@ namespace Promitor.Integrations.AzureMonitor
             // Get the most recent metric
             var metricResult = await _metricsQueryClient.GetRelevantMetricSingleResource(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration);
             
-            var seriesForMetric = metricResult.TimeSeries;
-            if (seriesForMetric.Count < 1)
-            {
-                throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
-            } 
-
-            var measuredMetrics = new List<MeasuredMetric>();
-            foreach (var timeseries in seriesForMetric)
-            {
-                // Get the most recent value for that metric, that has a finished time series
-                // We need to shift the time to ensure that the time series is finalized and not report invalid values
-                var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
-
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
-
-                // Get the metric value according to the requested aggregation type
-                var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
-                try 
-                {
-                    var measuredMetric = metricDimensions.Count > 0 
-                                ? MeasuredMetric.CreateForDimensions(requestedMetricAggregate, metricDimensions, timeseries) 
-                                : MeasuredMetric.CreateWithoutDimensions(requestedMetricAggregate);
-                    measuredMetrics.Add(measuredMetric);
-                } 
-                catch (MissingDimensionException e) 
-                {
-                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
-                    _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
-                }
-            }
-
-            return measuredMetrics;
+            return ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions);
         }
 
         public async Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
@@ -142,15 +110,15 @@ namespace Promitor.Integrations.AzureMonitor
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
                 
-            // Get all metrics
+           // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricNamespaces = await _metricsQueryClient.GetMetricNamespacesAsync(resourceIds.First());
+            var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
             var metricNamespace = metricNamespaces.SingleOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceIds.First(), metricNamespace); 
+            var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
@@ -160,8 +128,20 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
+            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResourçes(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration);
             
+            //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
+            return metricResultsList
+                .Select(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions))
+                .SelectMany(measureMetricsList => measureMetricsList)
+                .ToList();
+        }
+
+        /// <summary>
+        ///     Process metrics query response as time series values using the Promitor data model(MeasuredMetric)
+        /// </summary>
+        private List<MeasuredMetric> ProcessMetricResult(MetricResult metricResult, string metricName, DateTime startQueryingTime, TimeSpan closestAggregationInterval, PromitorMetricAggregationType aggregationType, List<string> metricDimensions)
+        {
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count < 1)
             {
@@ -290,8 +270,8 @@ namespace Promitor.Integrations.AzureMonitor
             return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
         }
 
-         /// <summary>
-        ///     Creates authenticated client to query for metrics
+        /// <summary>
+        ///     Creates authenticated client for metrics batch queries
         /// </summary>
         private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var metricsClientOptions = new MetricsClientOptions{
