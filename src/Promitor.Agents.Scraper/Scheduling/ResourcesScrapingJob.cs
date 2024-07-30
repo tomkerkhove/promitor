@@ -301,7 +301,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             catch (Exception ex)
             {
                 Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource batch {ResourceName}.",
-                    scrapeDefinition.PrometheusMetricDefinition.Name, batchScrapeDefinition.ScrapeDefinitionBatchProperties);
+                    batchScrapeDefinition.ScrapeDefinitionBatchProperties.PrometheusMetricDefinition.Name, batchScrapeDefinition.ScrapeDefinitionBatchProperties);
             }
         }
 
