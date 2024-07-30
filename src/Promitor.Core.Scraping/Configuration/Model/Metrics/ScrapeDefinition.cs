@@ -98,9 +98,10 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public ScrapeDefinitionBatchProperties buildPropertiesForBatch() { 
             return new ScrapeDefinitionBatchProperties(
                 this.AzureMetricConfiguration,
-                this.SubscriptionId,
+                this.PrometheusMetricDefinition,    
                 this.Resource.ResourceType,
-                this.GetAggregationInterval
+                this.Scraping,
+                this.SubscriptionId
             ); 
          }
     }

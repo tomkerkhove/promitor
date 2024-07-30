@@ -25,13 +25,13 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// The name of the resource group containing the resource to scrape. This should contain the global
         /// resource group name if none is overridden at the resource level.
         /// </param>
-        public BatchScrapeDefinition(List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions, ScrapeDefinitionBatchProperties scrapeDefinitionBatchProperties)
+        public BatchScrapeDefinition(ScrapeDefinitionBatchProperties scrapeDefinitionBatchProperties, List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions)
         {
-            Guard.NotNull(groupedScrapeDefinitions, nameof(groupedScrapeDefinitions));
             Guard.NotNull(groupedScrapeDefinitions, nameof(scrapeDefinitionBatchProperties));
-
-            ScrapeDefinitions = groupedScrapeDefinitions;
+            Guard.NotNull(groupedScrapeDefinitions, nameof(groupedScrapeDefinitions));
+                        
             ScrapeDefinitionBatchProperties = scrapeDefinitionBatchProperties;
+            ScrapeDefinitions = groupedScrapeDefinitions;
         }
 
         /// <summary>

@@ -261,8 +261,8 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var batchScrapeDefinitions = GroupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
-                    var azureMetricName = batchScrapeDefinition.AzureMetricConfiguration.MetricName;
-                    var resourceType = batchScrapeDefinition.ResourceType;
+                    var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
+                    var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
                     Logger.LogInformation("Batch scraping Azure Metric {AzureMetricName} for resource type {ResourceType}.", azureMetricName, resourceType);
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
@@ -288,12 +288,13 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
+                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
 
-                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(_metricsDeclaration.AzureMetadata.Cloud.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.Cloud, tokenCredential);
+                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
 
-                var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
+                var scraper = _metricScraperFactory.CreateScraper(batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 
                 await scraper.BatchScrapeAsync(batchScrapeDefinition);
             }
@@ -343,21 +344,21 @@ namespace Promitor.Agents.Scraper.Scheduling
         private List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
         {
             
-            Dictionary<ScrapeDefinitionBatchProperties, List<ScrapeDefinition<IAzureResourceDefinition>>> groupedScrapeDefinitions = allScrapeDefinitions.GroupBy(def => def.buildPropertiesForBatch()) 
-                                                               .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
-                                                               .ToDictionary(group => group.Key, SplitScrapeDefinitionBatch(group.Value)) // split to right-sized batches 
-                                                               .SelectMany(group => group.Value.SelectMany(batch => new BatchScrapeDefinition(batch, group.Key))); // flatten 
-            return groupedScrapeDefinitions;
+            return  allScrapeDefinitions.GroupBy(def => def.buildPropertiesForBatch()) 
+                        .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
+                        .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize, cancellationToken)) // split to right-sized batches 
+                        .SelectMany(group => group.Value.Select(batch => new BatchScrapeDefinition<IAzureResourceDefinition>(group.Key, batch)))
+                        .ToList(); // flatten 
         }
 
         /// <summary>
         /// splits the "raw" batch according to max batch size configured
         /// </summary>
-        private List<List<BatchScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
+        private List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
         {
             int numNewGroups = (batchToSplit.Count - 1) / 50 + 1;
 
-            return Enumerable.Range(0, batchToSplit)
+            return Enumerable.Range(0, numNewGroups)
                 .Select(i => batchToSplit.Skip(i * 50).Take(50).ToList())
                 .ToList();
         }
