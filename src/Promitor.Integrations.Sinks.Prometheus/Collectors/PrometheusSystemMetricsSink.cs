@@ -36,5 +36,23 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             return Task.CompletedTask;
         }
+        
+        /// <summary>
+        ///     Records measurement for a histogram instrument 
+        /// </summary>
+        /// <param name="name">Name of the metric</param>
+        /// <param name="description">Description of the metric</param>
+        /// <param name="value">New measured value</param>
+        /// <param name="labels">Labels that are applicable for this measurement</param>
+        /// <param name="includeTimestamp">Indication whether or not a timestamp should be reported</param>
+        public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            // TODO: are histogram instruments created on every invocation? Would that interfere with correctness? 
+            var histogram = _metricFactory.CreateHistogram(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray());
+            histogram.WithLabels(orderedLabels.Values.ToArray()).Observe(value);
+            return Task.CompletedTask;
+        }
     }
 }

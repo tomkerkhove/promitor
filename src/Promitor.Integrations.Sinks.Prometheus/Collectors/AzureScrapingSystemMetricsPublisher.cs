@@ -48,5 +48,14 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         {
             await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
+        
+        public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels)
+        {
+            throw new System.NotImplementedException();
+        }
+        public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

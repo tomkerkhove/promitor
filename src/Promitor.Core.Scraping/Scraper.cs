@@ -156,8 +156,9 @@ namespace Promitor.Core.Scraping
 
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
+        private const string BatvhSizeMetricDescription = "Provides an indication that the scraping of the resource has failed";
 
-        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful, bool isBatchJob = false)
+        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful, int batchSize = 0)
         {
             // We reset all values, by default
             double successfulMetricValue = 0;
@@ -181,12 +182,23 @@ namespace Promitor.Core.Scraping
                 {"resource_name", scrapeDefinition.Resource.ResourceName},
                 {"resource_type", scrapeDefinition.Resource.ResourceType.ToString()},
                 {"subscription_id", scrapeDefinition.SubscriptionId},
-                {"is_batch", isBatchJob}
             };
+            if (batchSize > 0) 
+            {
+                await AzureScrapingSystemMetricsPublisher.WriteHistogramMeasurementAsync(RuntimeMetricNames.BatchSize, BatvhSizeMetricDescription, batchSize, labels);
+                labels.Add("is_batch", "1");
+            } else {
+                labels.Add("is_batch", "0");
+            }
 
             // Report!
             await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
             await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+
+            if (batchSize > 0) 
+            {
+                await AzureScrapingSystemMetricsPublisher.WriteHistogramMeasurementAsync(RuntimeMetricNames.BatchSize, BatvhSizeMetricDescription, batchSize, labels);
+            }
         }
 
         private void LogMeasuredMetrics(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, ScrapeResult scrapedMetricResult, TimeSpan? aggregationInterval)
