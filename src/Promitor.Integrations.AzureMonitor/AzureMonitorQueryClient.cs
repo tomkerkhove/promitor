@@ -104,7 +104,7 @@ namespace Promitor.Integrations.AzureMonitor
             return ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions);
         }
 
-        public async Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+        public async Task<List<ResourceAssociatedMeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
@@ -132,8 +132,8 @@ namespace Promitor.Integrations.AzureMonitor
             
             //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
             return metricResultsList
-                .Select(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions))
-                .SelectMany(measureMetricsList => measureMetricsList)
+                .SelectMany(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
+                                                .Select(measuredMetric => measuredMetric.WithResourceIdAssociation(metricResult.ParseResourceIdFromResultId()))) 
                 .ToList();
         }
 
@@ -142,7 +142,6 @@ namespace Promitor.Integrations.AzureMonitor
         /// </summary>
         private List<MeasuredMetric> ProcessMetricResult(MetricResult metricResult, string metricName, DateTime startQueryingTime, TimeSpan closestAggregationInterval, PromitorMetricAggregationType aggregationType, List<string> metricDimensions)
         {
-            metricResult.Id
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count < 1)
             {

@@ -290,7 +290,7 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
-        protected abstract Task<ScrapeResult> BatchScrapeResourceAsync(
+        protected abstract Task<List<ScrapeResult>> BatchScrapeResourceAsync(
             string subscriptionId,
             BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition,
             PromitorMetricAggregationType aggregationType,

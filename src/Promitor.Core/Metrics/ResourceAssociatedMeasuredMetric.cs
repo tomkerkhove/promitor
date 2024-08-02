@@ -1,11 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Azure.Monitor.Query.Models;
-using GuardNet;
-using Microsoft.Azure.Management.Monitor.Fluent.Models;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
-using Promitor.Core.Metrics.Exceptions;
 
 namespace Promitor.Core.Metrics
 {

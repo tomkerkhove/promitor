@@ -65,7 +65,7 @@ namespace Promitor.Integrations.AzureMonitor
             _authenticatedAzureSubscription = CreateLegacyAzureClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, loggerFactory, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
         }
 
-        public Task<List<MeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+        public Task<List<ResourceAssociatedMeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
             List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
         {
             throw new NotSupportedException("Legacy SDK does not support batch queries. Consider migrating to the new Azure.Monitor SDK instead");
