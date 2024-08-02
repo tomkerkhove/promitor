@@ -142,6 +142,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// </summary>
         private List<MeasuredMetric> ProcessMetricResult(MetricResult metricResult, string metricName, DateTime startQueryingTime, TimeSpan closestAggregationInterval, PromitorMetricAggregationType aggregationType, List<string> metricDimensions)
         {
+            metricResult.Id
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count < 1)
             {

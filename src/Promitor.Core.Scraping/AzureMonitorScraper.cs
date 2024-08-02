@@ -73,6 +73,52 @@ namespace Promitor.Core.Scraping
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
         }
 
+        protected override async Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
+        {
+            Guard.NotNull(batchScrapeDefinition, nameof(batchScrapeDefinition));
+            Guard.NotLessThan(batchScrapeDefinition.ScrapeDefinitions.Count(), 1, nameof(batchScrapeDefinition));
+            Guard.NotNull(batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration, nameof(batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration));
+
+            var metricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
+
+            // Build list of resource URIs based on definitions in the batch 
+            var resourceUriList = new List<string>();
+            foreach (ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition in batchScrapeDefinition.ScrapeDefinitions)
+            {
+                var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource);
+                resourceUriList.Add(resourceUri);
+            }
+
+            var metricFilter = DetermineMetricFilter(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
+            var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
+            var dimensionNames = DetermineMetricDimensions(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration); // TODO: resource definition doesn't seem to be used, can we remove it from function signature?  
+
+            var measuredMetrics = new List<MeasuredMetric>();
+            try
+            {
+                // Query Azure Monitor for metrics
+                measuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
+            }
+            catch (MetricInformationNotFoundException metricsNotFoundException)
+            {
+                Logger.LogWarning("No metric information found for metric {MetricName} with dimensions {MetricDimensions}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimensions, metricsNotFoundException.Details);
+                
+                var measuredMetric = dimensionNames.Any() 
+                            ? MeasuredMetric.CreateForDimensions(dimensionNames) 
+                            : MeasuredMetric.CreateWithoutDimensions(null);
+                measuredMetrics.Add(measuredMetric);
+            }
+
+            // Provide more metric labels, if we need to
+            var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
+
+            // Enrich measured metrics, in case we need to
+            var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, measuredMetrics);
+
+            // We're done!
+            return new ScrapeResult(subscriptionId, batchScrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
+        }
+
         private int? DetermineMetricLimit(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
         {
             return scrapeDefinition.AzureMetricConfiguration.Limit;

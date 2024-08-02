@@ -115,7 +115,7 @@ namespace Promitor.Core.Scraping
             var aggregationInterval = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AggregationInterval;
             if (aggregationInterval == null)
             {
-                throw new ArgumentNullException(nameof(scrapeDefinition));
+                throw new ArgumentNullException(nameof(batchScrapeDefinition));
             }
 
             try
@@ -126,7 +126,7 @@ namespace Promitor.Core.Scraping
                     batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId,
                     batchScrapeDefinition,
                     aggregationType,
-                    aggregationInterval.Value);
+                    aggregationInterval);
                 
                 foreach (int i in Enumerable.Range(0, scrapedMetricResult.Count))
                 {
@@ -136,7 +136,7 @@ namespace Promitor.Core.Scraping
 
                     await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
 
-                    await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true, isBatchJob: true) ;
+                    await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true, batchScrapeDefinition.ScrapeDefinitions.Count) ;
                 }
             }
             catch (ErrorResponseException errorResponseException)
@@ -290,10 +290,10 @@ namespace Promitor.Core.Scraping
         /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
-        protected abstract Task<List<ScrapeResult>> BatchScrapeResourceAsync(
+        protected abstract Task<ScrapeResult> BatchScrapeResourceAsync(
             string subscriptionId,
             BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition,
-            AggregationType aggregationType,
+            PromitorMetricAggregationType aggregationType,
             TimeSpan aggregationInterval);
 
         /// <summary>

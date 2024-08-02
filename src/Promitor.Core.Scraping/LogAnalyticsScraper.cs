@@ -49,5 +49,10 @@ namespace Promitor.Core.Scraping
         {
             return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"workspace_name", resourceDefinition.WorkspaceName} };
         }
+
+        protected override Task<ScrapeResult> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
+        {
+            throw new NotImplementedException("Batch scraping not yet implemented for log analytics");
+        }
     }
 }
