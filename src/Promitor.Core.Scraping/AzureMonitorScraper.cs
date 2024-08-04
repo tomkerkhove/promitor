@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
+using Promitor.Core.Extensions;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -18,13 +21,19 @@ namespace Promitor.Core.Scraping
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class AzureMonitorScraper<TResourceDefinition> : Scraper<TResourceDefinition>
         where TResourceDefinition : class, IAzureResourceDefinition
-    {
+    {   
+        /// <summary>
+        ///     A cache to store resource definitions. Used to hydrate resource info from resource ID, when processing batch query results
+        /// </summary>
+        private readonly ConcurrentDictionary<string, IAzureResourceDefinition> _resourceDefinitions; // using a dictionary for now since IMemoryCache involves layers of injection
+
         /// <summary>
         ///     Constructor
         /// </summary>
         protected AzureMonitorScraper(ScraperConfiguration scraperConfiguration) :
             base(scraperConfiguration)
         {
+            _resourceDefinitions = new ConcurrentDictionary<string, IAzureResourceDefinition>();
         }
 
         /// <inheritdoc />
@@ -87,17 +96,22 @@ namespace Promitor.Core.Scraping
             {
                 var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource);
                 resourceUriList.Add(resourceUri);
+                // cache resource info 
+                if (!_resourceDefinitions.ContainsKey(resourceUri))
+                {
+                    _resourceDefinitions.TryAdd(resourceUri, scrapeDefinition.Resource);
+                }
             }
 
             var metricFilter = DetermineMetricFilter(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
             var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
             var dimensionNames = DetermineMetricDimensions(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration); // TODO: resource definition doesn't seem to be used, can we remove it from function signature?  
 
-            var measuredMetrics = new List<MeasuredMetric>();
+            var resourceIdTaggedMeasuredMetrics = new List<ResourceAssociatedMeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
+                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
@@ -106,17 +120,22 @@ namespace Promitor.Core.Scraping
                 var measuredMetric = dimensionNames.Any() 
                             ? MeasuredMetric.CreateForDimensions(dimensionNames) 
                             : MeasuredMetric.CreateWithoutDimensions(null);
-                measuredMetrics.Add(measuredMetric);
+                resourceIdTaggedMeasuredMetrics.Add(measuredMetric.WithResourceIdAssociation(null));
             }
 
-            // Provide more metric labels, if we need to
-            var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
+            var scrapeResults = new List<ScrapeResult>();
+            // group based on resource, then to enrichment per group
+            var groupedMeasuredMetrics = resourceIdTaggedMeasuredMetrics.GroupBy(measureMetric => measureMetric.ResourceId);
+            foreach (List<ResourceAssociatedMeasuredMetric> resourceMetrics in groupedMeasuredMetrics) 
+            {
+                var resourceId = resourceMetrics[0].ResourceId; 
+                _resourceDefinitions.TryGetValue(resourceId, out IAzureResourceDefinition resourceDefinition);
+                var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
+                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetrics.ToImmutableList());
+                scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
+            }
 
-            // Enrich measured metrics, in case we need to
-            var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, measuredMetrics);
-
-            // We're done!
-            return new ScrapeResult(subscriptionId, batchScrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
+            return scrapeResults;
         }
 
         private int? DetermineMetricLimit(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
@@ -135,9 +154,9 @@ namespace Promitor.Core.Scraping
         /// <param name="dimensionNames">List of names of the specified dimensions provided by the scraper.</param>
         /// <param name="metricValues">Measured metric values that were found</param>
         /// <returns></returns>
-        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
+        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, IReadOnlyList<MeasuredMetric> metricValues)
         {
-            return metricValues;
+            return metricValues.ToList();
         }
 
         /// <summary>

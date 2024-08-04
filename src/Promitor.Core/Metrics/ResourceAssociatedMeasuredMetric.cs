@@ -12,6 +12,7 @@ namespace Promitor.Core.Metrics
         ///     resourceId associated with this metric
         /// </summary>
         public string ResourceId { get; }
+
         
         public ResourceAssociatedMeasuredMetric(double? value, string resourceId) : base(value)
         {
