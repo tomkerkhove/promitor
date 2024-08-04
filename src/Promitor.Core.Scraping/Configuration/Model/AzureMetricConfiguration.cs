@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {
@@ -50,7 +51,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public string ToUniqueStringRepresentation()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Name);
+            sb.Append(MetricName);
 
             foreach (var dimension in Dimensions)
             {

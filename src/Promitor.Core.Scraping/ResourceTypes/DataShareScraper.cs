@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
@@ -51,7 +52,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
             return new List<string> { dimensionName };
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(DataShareResourceDefinition resourceDefinition, List<string> dimensionNames, IReadOnlyList<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor dimension name to more representable value
             foreach (var dimension in metricValues.SelectMany(measuredMetric => measuredMetric.Dimensions.Where(dimension => (dimension.Name == "ShareName" || dimension.Name == "ShareSubscriptionName"))))
@@ -59,7 +60,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 dimension.Name = "share_name";
             }
 
-            return metricValues;
+            return metricValues.ToList();
         }
 
         private static string GetMetricFilterFieldName(string metricName)

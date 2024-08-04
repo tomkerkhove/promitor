@@ -122,43 +122,42 @@ namespace Promitor.Core.Scraping
             {
                 var aggregationType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Aggregation.Type;
                 var scrapeDefinitions = batchScrapeDefinition.ScrapeDefinitions;
-                var scrapedMetricResult = await BatchScrapeResourceAsync(
+                var scrapedMetricResults = await BatchScrapeResourceAsync(
                     batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId,
                     batchScrapeDefinition,
                     aggregationType,
                     aggregationInterval);
                 
-                foreach (int i in Enumerable.Range(0, scrapedMetricResult.Count))
+                foreach (int i in Enumerable.Range(0, scrapedMetricResults.Count))
                 {
-                    var scrapedMetricResult = scrapedMetricResult[i];
+                    var scrapedMetricResult = scrapedMetricResults[i];
                     var scrapeDefinition = scrapeDefinitions[i];
                     LogMeasuredMetrics(scrapeDefinition, scrapedMetricResult, aggregationInterval);
 
                     await _metricSinkWriter.ReportMetricAsync(scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.PrometheusMetricDefinition.Description, scrapedMetricResult);
 
-                    await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: true, batchScrapeDefinition.ScrapeDefinitions.Count) ;
+                    await ReportBatchScrapingOutcomeAsync(batchScrapeDefinition, isSuccessful: true, batchScrapeDefinition.ScrapeDefinitions.Count) ;
                 }
             }
             catch (ErrorResponseException errorResponseException)
             {
-                HandleErrorResponseException(errorResponseException, scrapeDefinition.PrometheusMetricDefinition.Name);
+                HandleErrorResponseException(errorResponseException, batchScrapeDefinition.ScrapeDefinitionBatchProperties.PrometheusMetricDefinition.Name);
 
-                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false, isBatchJob: true);
+                await ReportBatchScrapingOutcomeAsync(batchScrapeDefinition, isSuccessful: false, batchScrapeDefinition.ScrapeDefinitions.Count);
             }
             catch (Exception exception)
             {
                 Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName);
 
-                await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false, isBatchJob: true);
+                await ReportBatchScrapingOutcomeAsync(batchScrapeDefinition, isSuccessful: false, batchScrapeDefinition.ScrapeDefinitions.Count);
             }
-            return null;
         }
 
         private const string ScrapeSuccessfulMetricDescription = "Provides an indication that the scraping of the resource was successful";
         private const string ScrapeErrorMetricDescription = "Provides an indication that the scraping of the resource has failed";
         private const string BatvhSizeMetricDescription = "Provides an indication that the scraping of the resource has failed";
 
-        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful, int batchSize = 0)
+        private async Task ReportScrapingOutcomeAsync(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition, bool isSuccessful)
         {
             // We reset all values, by default
             double successfulMetricValue = 0;
@@ -183,14 +182,36 @@ namespace Promitor.Core.Scraping
                 {"resource_type", scrapeDefinition.Resource.ResourceType.ToString()},
                 {"subscription_id", scrapeDefinition.SubscriptionId},
             };
-            if (batchSize > 0) 
+
+            // Report!
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
+            await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);
+        }
+
+        private async Task ReportBatchScrapingOutcomeAsync(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, bool isSuccessful, int batchSize)
+        {
+            // We reset all values, by default
+            double successfulMetricValue = 0;
+            double unsuccessfulMetricValue = 0;
+
+            // Based on the result, we reflect that in the metric
+            if (isSuccessful)
             {
-                await AzureScrapingSystemMetricsPublisher.WriteHistogramMeasurementAsync(RuntimeMetricNames.BatchSize, BatvhSizeMetricDescription, batchSize, labels);
-                labels.Add("is_batch", "1");
-            } else {
-                labels.Add("is_batch", "0");
+                successfulMetricValue = 1;
+            }
+            else
+            {
+                unsuccessfulMetricValue = 1;
             }
 
+            // Enrich with context
+            var labels = new Dictionary<string, string>
+            {
+                {"metric_name", batchScrapeDefinition.ScrapeDefinitionBatchProperties.PrometheusMetricDefinition.Name},
+                {"resource_type", batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType.ToString()},
+                {"subscription_id", batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId},
+                {"is_batch", "1"},
+            };
             // Report!
             await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeSuccessful, ScrapeSuccessfulMetricDescription, successfulMetricValue, labels);
             await AzureScrapingSystemMetricsPublisher.WriteGaugeMeasurementAsync(RuntimeMetricNames.ScrapeError, ScrapeErrorMetricDescription, unsuccessfulMetricValue, labels);

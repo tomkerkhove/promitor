@@ -20,5 +20,10 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry.Collectors
         {
             await _metricSink.ReportMetricAsync(name, description, value, labels);
         }
+
+        public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            throw new System.NotImplementedException("Histogram measurement not yet supported in OpenTelemetry sink");
+        }
     }
 }

@@ -83,7 +83,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         private string BuildBatchHashKey()
         {
-            return string.Join("_",  [List.ofAzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString]);
+            return string.Join("_", new List<String>{AzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString()});
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
                 return false;
 
             ScrapeDefinitionBatchProperties other = (ScrapeDefinitionBatchProperties)obj;
-            return this.ResourceType == other.ResourceType && this.AzureMetricConfiguration.ToUniqueStringRepresentation() == other.ToUniqueStringRepresentation() && this.SubscriptionId == other.SubscriptionId && this.AggregationInterval.Equals(other.AggregationDeserializer);
+            return this.ResourceType == other.ResourceType && this.AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && this.SubscriptionId == other.SubscriptionId && this.AggregationInterval.Equals(other.AggregationInterval);
         }
 
     }
