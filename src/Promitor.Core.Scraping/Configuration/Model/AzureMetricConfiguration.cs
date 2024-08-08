@@ -52,11 +52,12 @@ namespace Promitor.Core.Scraping.Configuration.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(MetricName);
-
-            foreach (var dimension in Dimensions)
-            {
-                sb.Append("_");
-                sb.Append(dimension.ToString());
+            if (Dimensions != null) {
+                 foreach (var dimension in Dimensions)
+                {
+                    sb.Append("_");
+                    sb.Append(dimension.ToString());
+                }
             }
 
             return sb.ToString();

@@ -269,6 +269,20 @@
             <param name="loggerFactory">means to obtain a logger</param>
             <param name="logger">logger to use for scraping detail</param>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.GroupScrapeDefinitions(System.Collections.Generic.IEnumerable{Promitor.Core.Scraping.Configuration.Model.Metrics.ScrapeDefinition{Promitor.Core.Contracts.IAzureResourceDefinition}},System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            groups scrape definitions based on following conditions:
+            1. Definitions in a batch must target the same resource type 
+            2. Definitions in a batch must target the same Azure metric with identical dimensions
+            3. Definitions in a batch must have the same time granularity 
+            4. Batch size cannot exceed configured maximum 
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.SplitScrapeDefinitionBatch(System.Collections.Generic.List{Promitor.Core.Scraping.Configuration.Model.Metrics.ScrapeDefinition{Promitor.Core.Contracts.IAzureResourceDefinition}},System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            splits the "raw" batch according to max batch size configured
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.ScheduleLimitedConcurrencyAsyncTask(System.Collections.Generic.ICollection{System.Threading.Tasks.Task},System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)">
             <summary>
             Run some task work in the thread pool, but only allow a limited number of threads to go at a time
