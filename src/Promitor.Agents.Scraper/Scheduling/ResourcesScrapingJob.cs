@@ -15,6 +15,7 @@ using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
+using Promitor.Core.Scraping.Batching;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
@@ -255,7 +256,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._metricsDeclaration.MetricBatchConfig?.Enabled ?? false;
             if (batchScrapingEnabled) {
-                var batchScrapeDefinitions = GroupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
+                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
@@ -330,36 +331,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                     scrapeDefinition.PrometheusMetricDefinition.Name, scrapeDefinition.Resource.ResourceName);
             }
         }
-        
-        /// <summary>
-        /// groups scrape definitions based on following conditions:
-        /// 1. Definitions in a batch must target the same resource type 
-        /// 2. Definitions in a batch must target the same Azure metric with identical dimensions
-        /// 3. Definitions in a batch must have the same time granularity 
-        /// 4. Batch size cannot exceed configured maximum 
-        /// </summary>
-        private List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
-        {
-            
-            return  allScrapeDefinitions.GroupBy(def => def.buildPropertiesForBatch()) 
-                        .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
-                        .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize, cancellationToken)) // split to right-sized batches 
-                        .SelectMany(group => group.Value.Select(batch => new BatchScrapeDefinition<IAzureResourceDefinition>(group.Key, batch)))
-                        .ToList(); // flatten 
-        }
-
-        /// <summary>
-        /// splits the "raw" batch according to max batch size configured
-        /// </summary>
-        private List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
-        {
-            int numNewGroups = (batchToSplit.Count - 1) / 50 + 1;
-
-            return Enumerable.Range(0, numNewGroups)
-                .Select(i => batchToSplit.Skip(i * 50).Take(50).ToList())
-                .ToList();
-        }
-
 
         /// <summary>
         /// Run some task work in the thread pool, but only allow a limited number of threads to go at a time
