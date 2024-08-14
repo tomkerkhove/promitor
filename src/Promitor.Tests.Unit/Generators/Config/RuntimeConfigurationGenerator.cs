@@ -235,7 +235,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true, int? batchSize = 0)
+        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true, int? batchSize = null)
         {
             _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Integration ??= new AzureMonitorIntegrationConfiguration();
