@@ -111,6 +111,7 @@ namespace Promitor.Core.Scraping
             try
             {
                 // Query Azure Monitor for metrics
+                Logger.LogWarning("Querying Azure Monitor for metric {MetricName} with batch size {BatchSize}", metricName, resourceUriList.Count);
                 resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
@@ -133,6 +134,7 @@ namespace Promitor.Core.Scraping
                 var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
                 var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetrics.ToImmutableList());
                 scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
+                Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
             }
 
             return scrapeResults;
