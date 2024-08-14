@@ -15,6 +15,9 @@ telemetry:
     verbosity: trace
   defaultVerbosity: trace
 azureMonitor:
+  metricsBatching:
+    enabled: true 
+    maxBatchSize: 2 
   logging:
     isEnabled: false
 resourceDiscovery:
