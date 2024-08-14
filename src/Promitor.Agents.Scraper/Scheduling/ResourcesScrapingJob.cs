@@ -254,9 +254,9 @@ namespace Promitor.Agents.Scraper.Scheduling
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
         {   
             var tasks = new List<Task>();
-            var batchScrapingEnabled = this._metricsDeclaration.MetricBatchConfig?.Enabled ?? false;
+            var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
             if (batchScrapingEnabled) {
-                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._metricsDeclaration.MetricBatchConfig.MaxBatchSize, cancellationToken);
+                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize, cancellationToken);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
