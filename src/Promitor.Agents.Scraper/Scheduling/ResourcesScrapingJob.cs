@@ -255,26 +255,27 @@ namespace Promitor.Agents.Scraper.Scheduling
         {   
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
+            Logger.LogInformation("Parsed batch config: {Enabled}, {BatchSize}",  this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
             if (batchScrapingEnabled) {
                 var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize, cancellationToken);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
                     var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
-                    Logger.LogInformation("Batch scraping Azure Metric {AzureMetricName} for resource type {ResourceType}.", azureMetricName, resourceType);
+                    Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
-            }
+            } else {
+                foreach (var scrapeDefinition in scrapeDefinitions)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
 
-            foreach (var scrapeDefinition in scrapeDefinitions)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
+                    var metricName = scrapeDefinition.PrometheusMetricDefinition.Name;
+                    var resourceType = scrapeDefinition.Resource.ResourceType;
+                    Logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}.", metricName, resourceType);
 
-                var metricName = scrapeDefinition.PrometheusMetricDefinition.Name;
-                var resourceType = scrapeDefinition.Resource.ResourceType;
-                Logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}.", metricName, resourceType);
-
-                await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetric(scrapeDefinition), cancellationToken);
+                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetric(scrapeDefinition), cancellationToken);
+                }
             }
 
             await Task.WhenAll(tasks);
