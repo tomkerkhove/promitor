@@ -129,7 +129,8 @@ namespace Promitor.Integrations.AzureMonitor
 
             // Get the most recent metric
             var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResourçes(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration);
-            
+            _logger.LogWarning("Azure monitor has returned {ResultsCount} results for metric {MetricName}", metricResultsList.Count, metricName); 
+
             //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
             return metricResultsList
                 .SelectMany(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
@@ -168,7 +169,7 @@ namespace Promitor.Integrations.AzureMonitor
                 } 
                 catch (MissingDimensionException e) 
                 {
-                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogWarning("{MetricName} has returned a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
                     _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
                 }
             }
