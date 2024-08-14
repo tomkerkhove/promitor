@@ -98,7 +98,7 @@ namespace Promitor.Core.Scraping
             }
             catch (Exception exception)
             {
-                Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'", scrapeDefinition.PrometheusMetricDefinition.Name);
+                Logger.LogCritical(exception, "Failed to scrape resource for metric '{MetricName}'. Details: {Details}", scrapeDefinition.PrometheusMetricDefinition.Name, exception.ToString());
 
                 await ReportScrapingOutcomeAsync(scrapeDefinition, isSuccessful: false);
             }
