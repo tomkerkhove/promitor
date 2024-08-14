@@ -19,7 +19,6 @@ using Promitor.Core.Scraping.Batching;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
-using Promitor.Core.Scraping.ResourceTypes;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.LogAnalytics;
@@ -256,6 +255,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
             Logger.LogInformation("Parsed batch config: {Enabled}, {BatchSize}",  this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
+            Logger.LogInformation("Parsed SDK runtime config {Enabled}",  this._azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
             if (batchScrapingEnabled) {
                 var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize, cancellationToken);
 
