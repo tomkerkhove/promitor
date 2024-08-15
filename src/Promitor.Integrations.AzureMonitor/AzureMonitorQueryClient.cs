@@ -128,7 +128,7 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResourçes(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration);
+            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResourçes(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration, _logger);
             _logger.LogWarning("Azure monitor has returned {ResultsCount} results for metric {MetricName}", metricResultsList.Count, metricName); 
 
             //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism

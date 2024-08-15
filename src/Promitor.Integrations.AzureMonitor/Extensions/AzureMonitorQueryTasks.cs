@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Azure.Core;
 using Azure.Monitor.Query;
 using Azure.Monitor.Query.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Promitor.Core;
 using Promitor.Integrations.AzureMonitor.Configuration;
@@ -51,7 +52,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         }
 
         public static async Task<List<MetricResult>> GetRelevantMetricForResourçes(this MetricsClient metricsClient, List<string> resourceIds, string metricName, string metricNamespace, MetricAggregationType metricAggregation, TimeSpan metricInterval,
-            string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration)
+            string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, ILogger logger)
         {   
             MetricsQueryResourcesOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
@@ -78,9 +79,11 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
+            logger.LogWarning("Batch query options: {Options}", queryOptions);
             
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
+            logger.LogWarning("Got response");
             return metricsQueryResults.Values
                 .Select(result => GetRelevantMetricResultOrThrow(result, metricName))
                 .ToList();
