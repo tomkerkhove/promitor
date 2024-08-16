@@ -294,8 +294,21 @@ namespace Promitor.Integrations.AzureMonitor
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-            _logger.LogWarning("Using batch scraping API URL: {URL}", $"{azureRegion}.{azureCloud.DetermineMetricsClientBatchQueryAudience()}");
-            return new MetricsClient(new Uri($"{azureRegion}.{azureCloud.DetermineMetricsClientBatchQueryAudience()}"), tokenCredential, metricsClientOptions);
+            _logger.LogWarning("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString()));
+            return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
+        }
+
+        private static string InsertRegionIntoUrl(string region, string baseUrl)
+        {
+            // Find the position where ".metrics" starts in the URL
+            int metricsIndex = baseUrl.IndexOf(".metrics");
+
+            // Split the base URL into two parts: before and after the ".metrics"
+            string beforeMetrics = baseUrl.Substring(0, metricsIndex);
+            string afterMetrics = baseUrl.Substring(metricsIndex);
+
+            // Concatenate the region between the two parts
+            return $"{beforeMetrics}.{region}{afterMetrics}";
         }
     }
 }
