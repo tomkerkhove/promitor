@@ -61,7 +61,7 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
-            _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorLoggingConfiguration);
+            _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
         }
 
         /// <summary>
@@ -274,7 +274,8 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Creates authenticated client for metrics batch queries
         /// </summary>
-        private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+        private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+            var azureRegion = azureMonitorIntegrationConfiguration.Value.MetricsBatching.AzureRegion;
             var metricsClientOptions = new MetricsClientOptions{
                 Audience = azureCloud.DetermineMetricsClientBatchQueryAudience(),
                 Retry =
@@ -293,7 +294,8 @@ namespace Promitor.Integrations.AzureMonitor
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-            return new MetricsClient(new Uri(azureCloud.DetermineMetricsClientBatchQueryAudience().ToString()), tokenCredential, metricsClientOptions);
+            _logger.LogWarning("Using batch scraping API URL: {URL}", $"{azureRegion}.{azureCloud.DetermineMetricsClientBatchQueryAudience()}");
+            return new MetricsClient(new Uri($"{azureRegion}.{azureCloud.DetermineMetricsClientBatchQueryAudience()}"), tokenCredential, metricsClientOptions);
         }
     }
 }

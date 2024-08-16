@@ -79,7 +79,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
-            logger.LogWarning("Batch query options: {Options}", queryOptions);
+            logger.LogWarning("Batch query options: {Options}", queryOptions.ToString());
             
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
