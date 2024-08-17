@@ -76,7 +76,6 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                 queryOptions = new MetricsQueryResourcesOptions {
                     Aggregations = { metricAggregation.ToString().ToLower() },
                     Granularity = metricInterval,
-                    Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(TimeSpan.FromHours(historyStartingFromInHours))
                 };
             }
