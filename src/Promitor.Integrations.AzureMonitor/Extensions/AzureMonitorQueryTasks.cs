@@ -56,7 +56,8 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         {   
             MetricsQueryResourcesOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
-            var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
+            //var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
+            var historyStartingFromInHours = 2;
             var filter = BuildFilter(metricDimensions, metricFilter);
             List<ResourceIdentifier> resourceIdentifiers = resourceIds.Select(id => new ResourceIdentifier(id)).ToList(); 
 
@@ -79,7 +80,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
-            logger.LogWarning("Batch query options: {Options}", queryOptions.ToString());
+            logger.LogWarning("Batch query range: {Range}", queryOptions.TimeRange);
             
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
