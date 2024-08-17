@@ -64,7 +64,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             if (!string.IsNullOrEmpty(filter))
             {
                 queryOptions = new MetricsQueryResourcesOptions {
-                    Aggregations = { metricAggregation.ToString() }, 
+                    Aggregations = { metricAggregation.ToString().ToLower() }, 
                     Granularity = metricInterval,
                     Filter = filter,
                     Size = querySizeLimit, 
@@ -74,13 +74,13 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             else 
             {
                 queryOptions = new MetricsQueryResourcesOptions {
-                    Aggregations = { metricAggregation.ToString() },
+                    Aggregations = { metricAggregation.ToString().ToLower() },
                     Granularity = metricInterval,
                     Size = querySizeLimit, 
                     TimeRange= new QueryTimeRange(TimeSpan.FromHours(historyStartingFromInHours))
                 };
             }
-            logger.LogWarning("Batch query range: {Range}, size: {Size}, granularity: {Interval}, aggregation: {Aggregation}", queryOptions.TimeRange, querySizeLimit, metricInterval, metricAggregation);
+            logger.LogWarning("Batch query range: {Range}, size: {Size}, granularity: {Interval}, aggregation: {Aggregation}", queryOptions.TimeRange, querySizeLimit, metricInterval, queryOptions.Aggregations);
             
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
