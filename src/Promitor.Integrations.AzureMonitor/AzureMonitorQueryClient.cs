@@ -23,6 +23,7 @@ using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
 using Promitor.Integrations.AzureMonitor.Extensions;
+using System.Globalization;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -287,7 +288,7 @@ namespace Promitor.Integrations.AzureMonitor
                 }
             }; // retry policy as suggested in the documentation: https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/migrate-to-batch-api?tabs=individual-response#529-throttling-errors
             var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
-            
+            metricsClientOptions.AddPolicy(new LogOutgoingRequestsPolicy(_logger), HttpPipelinePosition.BeforeTransport); 
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
             {
