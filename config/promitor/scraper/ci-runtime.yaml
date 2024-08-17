@@ -19,7 +19,7 @@ azureMonitor:
     metricsBatching:
       enabled: true 
       maxBatchSize: 2 
-      azureRegion: europe
+      azureRegion: westeurope
   logging:
     isEnabled: false
 resourceDiscovery:
