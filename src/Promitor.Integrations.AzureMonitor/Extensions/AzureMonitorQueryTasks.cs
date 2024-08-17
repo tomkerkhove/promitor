@@ -51,7 +51,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             return GetRelevantMetricResultOrThrow(metricsQueryResponse.Value, metricName); 
         }
 
-        public static async Task<List<MetricResult>> GetRelevantMetricForResourçes(this MetricsClient metricsClient, List<string> resourceIds, string metricName, string metricNamespace, MetricAggregationType metricAggregation, TimeSpan metricInterval,
+        public static async Task<List<MetricResult>> GetRelevantMetricForResources(this MetricsClient metricsClient, List<string> resourceIds, string metricName, string metricNamespace, MetricAggregationType metricAggregation, TimeSpan metricInterval,
             string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, ILogger logger)
         {   
             MetricsQueryResourcesOptions queryOptions;
@@ -80,7 +80,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     TimeRange= new QueryTimeRange(TimeSpan.FromHours(historyStartingFromInHours))
                 };
             }
-            logger.LogWarning("Batch query range: {Range}", queryOptions.TimeRange);
+            logger.LogWarning("Batch query range: {Range}, size: {Size}, granularity: {Interval}, aggregation: {Aggregation}", queryOptions.TimeRange, querySizeLimit, metricInterval, metricAggregation);
             
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
