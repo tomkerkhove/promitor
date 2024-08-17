@@ -15,7 +15,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             Match match = resourceIdRegex.Match(metricResult.Id);
             if (!match.Success || string.IsNullOrEmpty(match.Groups[1].Value))
             {
-                throw new InvalidOperationException("The expected resource ID pattern was not found in the input string.");
+                throw new InvalidOperationException($"The expected resource ID pattern was not found in the input string {metricResult.Id}");
             }
 
             string resourceId = match.Groups[1].Value;
