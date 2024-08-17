@@ -68,7 +68,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     Granularity = metricInterval,
                     Filter = filter,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(TimeSpan.FromHours(historyStartingFromInHours))
                 };
             } 
             else 
@@ -77,7 +77,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     Aggregations = { metricAggregation.ToString() },
                     Granularity = metricInterval,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(TimeSpan.FromHours(historyStartingFromInHours))
                 };
             }
             logger.LogWarning("Batch query range: {Range}", queryOptions.TimeRange);
