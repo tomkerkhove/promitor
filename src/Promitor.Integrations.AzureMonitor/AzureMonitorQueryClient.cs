@@ -298,17 +298,17 @@ namespace Promitor.Integrations.AzureMonitor
             return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
         }
 
-        private static string InsertRegionIntoUrl(string region, string baseUrl)
+        public static string InsertRegionIntoUrl(string region, string baseUrl)
         {
             // Find the position where ".metrics" starts in the URL
-            int metricsIndex = baseUrl.IndexOf(".metrics");
+            int metricsIndex = baseUrl.IndexOf("metrics");
 
             // Split the base URL into two parts: before and after the ".metrics"
             string beforeMetrics = baseUrl.Substring(0, metricsIndex);
             string afterMetrics = baseUrl.Substring(metricsIndex);
 
             // Concatenate the region between the two parts
-            return $"{beforeMetrics}.{region}{afterMetrics}";
+            return $"{beforeMetrics}{region}.{afterMetrics}";
         }
     }
 }
