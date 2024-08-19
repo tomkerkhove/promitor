@@ -127,12 +127,12 @@ namespace Promitor.Core.Scraping
             var scrapeResults = new List<ScrapeResult>();
             // group based on resource, then to enrichment per group
             var groupedMeasuredMetrics = resourceIdTaggedMeasuredMetrics.GroupBy(measureMetric => measureMetric.ResourceId);
-            foreach (List<ResourceAssociatedMeasuredMetric> resourceMetrics in groupedMeasuredMetrics) 
+            foreach (IGrouping<string, ResourceAssociatedMeasuredMetric> resourceMetricsGroup in groupedMeasuredMetrics) 
             {
-                var resourceId = resourceMetrics[0].ResourceId; 
+                var resourceId = resourceMetricsGroup.Key; 
                 _resourceDefinitions.TryGetValue(resourceId, out IAzureResourceDefinition resourceDefinition);
                 var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
-                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetrics.ToImmutableList());
+                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetricsGroup.ToImmutableList());
                 scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
                 Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
             }
