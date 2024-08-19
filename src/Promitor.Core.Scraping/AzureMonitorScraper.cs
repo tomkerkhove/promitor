@@ -99,6 +99,7 @@ namespace Promitor.Core.Scraping
                 // cache resource info 
                 if (!_resourceDefinitions.ContainsKey(resourceUri))
                 {
+                    Logger.LogWarning("Caching resource definition {Definition} for {ResourceId}",  scrapeDefinition.Resource, resourceUri);
                     _resourceDefinitions.TryAdd(resourceUri, scrapeDefinition.Resource);
                 }
             }
