@@ -264,9 +264,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                     var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
                     Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
                     Logger.LogInformation("Logging individual definitions batch: Azure Metric {AzureMetricName} and resource type {ResourceType}.", azureMetricName, resourceType);
-                    foreach (IAzureResourceDefinition definition in batchScrapeDefinition.ScrapeDefinitions)
+                    foreach (ScrapeDefinition<IAzureResourceDefinition> definition in batchScrapeDefinition.ScrapeDefinitions)
                     {
-                        Logger.LogInformation("ResourceID: {ResoureceID}, ResourceGroup: {ResourceGroup}", definition.ResourceName, definition.ResourceGroupName);
+                        Logger.LogInformation("ResourceID: {ResoureceID}, ResourceGroup: {ResourceGroup}", definition.Azu, definition.ResourceGroupName);
                     }
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }

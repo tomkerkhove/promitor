@@ -99,8 +99,15 @@ namespace Promitor.Core.Scraping
                 // cache resource info 
                 if (!_resourceDefinitions.ContainsKey(resourceUri))
                 {
-                    Logger.LogWarning("Caching resource group {Group} for {ResourceId}",  scrapeDefinition.Resource.ResourceGroupName, resourceUri);
-                    _resourceDefinitions.TryAdd(resourceUri, scrapeDefinition.Resource);
+                    var resourceDefinitionToCache = new AzureResourceDefinition
+                    (
+                        resourceType: scrapeDefinition.Resource.ResourceType, 
+                        resourceGroupName:  scrapeDefinition.ResourceGroupName, 
+                        subscriptionId: scrapeDefinition.SubscriptionId, 
+                        resourceName: scrapeDefinition.Resource.ResourceName
+                    ); // the resource definition attached is missing some attributes, filling them in here
+                    Logger.LogWarning("Caching resource group {Group} for {ResourceId}",  resourceDefinitionToCache.ResourceGroupName, resourceUri);
+                    _resourceDefinitions.TryAdd(resourceUri, resourceDefinitionToCache);
                 }
             }
 
