@@ -7,7 +7,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
     public static class MetricResultExtension 
     {   
         // hacky to to get resource ID since it's not available directly through the SDK model
-        static string resourceIdPattern = @"^(/subscriptions/[^/]+/resourceGroups/[^/]+/providers/[^/]+/[^/]+/[^/]+)";     
+        static string resourceIdPattern = @"^(subscriptions\/[^\/]+\/resourceGroups\/[^\/]+\/providers\/[^\/]+\/[^\/]+\/[^\/]+)";     
         static Regex resourceIdRegex = new Regex(resourceIdPattern, RegexOptions.Compiled);
         
         public static string ParseResourceIdFromResultId(this MetricResult metricResult) 
