@@ -112,7 +112,7 @@ namespace Promitor.Core.Scraping
                 throw new ArgumentNullException(nameof(batchScrapeDefinition));
             }
 
-            var aggregationInterval = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AggregationInterval;
+            var aggregationInterval = batchScrapeDefinition.ScrapeDefinitionBatchProperties.GetAggregationInterval();
             if (aggregationInterval == null)
             {
                 throw new ArgumentNullException(nameof(batchScrapeDefinition));
@@ -126,7 +126,7 @@ namespace Promitor.Core.Scraping
                     batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId,
                     batchScrapeDefinition,
                     aggregationType,
-                    aggregationInterval);
+                    aggregationInterval.Value);
                 
                 foreach (int i in Enumerable.Range(0, scrapedMetricResults.Count))
                 {

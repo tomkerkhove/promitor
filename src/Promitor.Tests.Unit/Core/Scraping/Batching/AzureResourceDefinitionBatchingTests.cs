@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -94,6 +95,31 @@ namespace Promitor.Tests.Unit.Core.Metrics
             Assert.Equal(10, groupedScrapeDefinitions[0].ScrapeDefinitions.Count);
             Assert.Equal(10, groupedScrapeDefinitions[1].ScrapeDefinitions.Count);
         }
+
+        [Fact]
+        public void DifferentAggregationIntervalsShouldBatchSeparately()
+        {
+            var azureMetricConfiguration5mInterval = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationBase);
+            azureMetricConfiguration5mInterval.Aggregation.Interval = TimeSpan.FromMinutes(5);
+            var azureMetricConfiguration2mInterval = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationBase);
+            azureMetricConfiguration5mInterval.Aggregation.Interval = TimeSpan.FromMinutes(2);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(_scrapingBase);
+            var logAnalyticsConfiguration = new LogAnalyticsConfiguration();
+            var scrapeDefinitions5m = BuildScrapeDefinitionBatch(
+                azureMetricConfiguration: azureMetricConfiguration5mInterval, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: _prometheusMetricDefinition, scraping: scraping, 
+                resourceType:  ResourceType.StorageAccount, subscriptionId: _subscriptionId, resourceGroupName: _resourceGroupName, 10
+            );
+            var differentScrapeDefinitions2m = BuildScrapeDefinitionBatch(
+                azureMetricConfiguration: azureMetricConfiguration2mInterval, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: _prometheusMetricDefinition, scraping: scraping, 
+                resourceType:  ResourceType.BlobStorage, subscriptionId: _subscriptionId, resourceGroupName: _resourceGroupName, 10
+            );
+            var groupedScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions([.. scrapeDefinitions5m, .. differentScrapeDefinitions2m], maxBatchSize: _batchSize, CancellationToken.None);
+            // expect two batch of 10 each
+            Assert.Equal(2, groupedScrapeDefinitions.Count);
+            Assert.Equal(10, groupedScrapeDefinitions[0].ScrapeDefinitions.Count);
+            Assert.Equal(10, groupedScrapeDefinitions[1].ScrapeDefinitions.Count);
+        }
+
 
         [Fact]
         public void MixedBatchShouldSplitAccordingToConfiguredBatchSize()

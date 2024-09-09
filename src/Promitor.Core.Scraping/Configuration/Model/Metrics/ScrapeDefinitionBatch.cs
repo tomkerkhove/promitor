@@ -65,8 +65,6 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         public ResourceType ResourceType { get; }
 
-        public TimeSpan AggregationInterval{ get; }
-
         public TimeSpan? GetAggregationInterval()
         {
             return AzureMetricConfiguration?.Aggregation?.Interval;
@@ -83,7 +81,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         private string BuildBatchHashKey()
         {
-            return string.Join("_", new List<string> {AzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), AggregationInterval.ToString()});
+            return string.Join("_", new List<string> {AzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), GetAggregationInterval().ToString()});
         }
 
         /// <summary>
@@ -95,7 +93,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
                 return false;
 
             ScrapeDefinitionBatchProperties other = obj;
-            return ResourceType == other.ResourceType && AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && SubscriptionId == other.SubscriptionId && AggregationInterval.Equals(other.AggregationInterval);
+            return ResourceType == other.ResourceType && AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && SubscriptionId == other.SubscriptionId && GetAggregationInterval().Equals(other.GetAggregationInterval());
         }
 
     }
