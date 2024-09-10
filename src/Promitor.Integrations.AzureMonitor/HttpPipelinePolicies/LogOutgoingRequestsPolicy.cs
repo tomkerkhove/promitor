@@ -37,11 +37,13 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
             foreach (var param in paramNames)
             {
-                if (DateTime.TryParseExact(query[param], "MM/dd/yyyy HH:mm:ss",  CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+                _logger.LogWarning("Original URI param {param} is {value}", param, query[param]);
+
+                if (DateTimeOffset.TryParseExact(query[param], "MM/dd/yyyy HH:mm:ss zzz",  CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTime))
                 {
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
                     query[param] = dateTime.ToString("o", CultureInfo.InvariantCulture);
-                    _logger.LogWarning("Modified URI param {param} to be {value}", param, message.Request.Uri.ToString());
+                    _logger.LogWarning("Modified URI param {param} to be {value}", param, query[param]);
                     // Update the message with the modified URI
                 }
             }
