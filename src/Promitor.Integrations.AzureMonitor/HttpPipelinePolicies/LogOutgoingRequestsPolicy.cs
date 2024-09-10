@@ -42,7 +42,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                 if (DateTimeOffset.TryParseExact(query[param], "MM/dd/yyyy HH:mm:ss zzz",  CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTime))
                 {
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
-                    query[param] = dateTime.ToString("o", CultureInfo.InvariantCulture);
+                    query[param] = dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
                     _logger.LogWarning("Modified URI param {param} to be {value}", param, query[param]);
                     // Update the message with the modified URI
                 }
