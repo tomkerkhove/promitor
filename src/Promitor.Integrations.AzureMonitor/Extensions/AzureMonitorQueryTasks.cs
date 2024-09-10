@@ -90,7 +90,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                 .ToList();
         }
 
-        private static string BuildFilter(List<String> metricDimensions, string metricFilter)
+        private static string BuildFilter(List<string> metricDimensions, string metricFilter)
         {
             var filterDictionary = new Dictionary<string, string>();
             metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "'*'"));
