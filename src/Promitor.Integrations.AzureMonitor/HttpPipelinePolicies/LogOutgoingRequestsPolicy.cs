@@ -30,7 +30,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             throw new NotSupportedException("Synchronous HTTP request path is not supported");
         }
 
-        private static void ModifyDateTimeParam(List<string> paramNames, HttpMessage message) 
+        private void ModifyDateTimeParam(List<string> paramNames, HttpMessage message) 
         {
             // Modify the request URL by updating or adding a query parameter
             var uriBuilder = new UriBuilder(message.Request.Uri.ToString());
@@ -41,6 +41,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                 {
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
                     query[param] = dateTime.ToString("o", CultureInfo.InvariantCulture);
+                    _logger.LogWarning("Modified URI param {param} to be {value}", param, message.Request.Uri.ToString());
                     // Update the message with the modified URI
                 }
             }
