@@ -65,6 +65,8 @@ namespace Promitor.Core.Scraping.Configuration.Model
                     sb.Append(dimension.Name);
                 }
             }
+            sb.Append($"_limit{Limit}");
+
 
             return sb.ToString();
         }
