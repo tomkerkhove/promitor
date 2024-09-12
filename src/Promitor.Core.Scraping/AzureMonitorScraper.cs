@@ -134,7 +134,7 @@ namespace Promitor.Core.Scraping
 
             var scrapeResults = new List<ScrapeResult>();
             // group based on resource, then to enrichment per group
-            var groupedMeasuredMetrics = resourceIdTaggedMeasuredMetrics.GroupBy(measureMetric => measureMetric.ResourceId);
+            var groupedMeasuredMetrics = resourceIdTaggedMeasuredMetrics.GroupBy(measuredMetric => measuredMetric.ResourceId);
             foreach (IGrouping<string, ResourceAssociatedMeasuredMetric> resourceMetricsGroup in groupedMeasuredMetrics) 
             {
                 var resourceId = resourceMetricsGroup.Key; 
