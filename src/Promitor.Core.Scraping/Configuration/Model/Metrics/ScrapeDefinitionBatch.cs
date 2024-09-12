@@ -21,6 +21,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </param>
         public ScrapeDefinitionBatchProperties(
             AzureMetricConfiguration azureMetricConfiguration,
+            LogAnalyticsConfiguration logAnalyticsConfiguration,
             PrometheusMetricDefinition prometheusMetricDefinition,
             ResourceType resourceType,
             Scraping scraping,
@@ -32,6 +33,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             Guard.NotNull(subscriptionId, nameof(subscriptionId));
 
             AzureMetricConfiguration = azureMetricConfiguration;
+            LogAnalyticsConfiguration = logAnalyticsConfiguration;
             PrometheusMetricDefinition = prometheusMetricDefinition;
             Scraping = scraping;
             SubscriptionId = subscriptionId;
@@ -42,6 +44,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// Configuration about the Azure Monitor metric to scrape
         /// </summary>
         public AzureMetricConfiguration AzureMetricConfiguration { get; }
+
+        /// <summary>
+        /// Configuration about the Azure Monitor log analytics resource to scrape
+        /// </summary>
+        public LogAnalyticsConfiguration LogAnalyticsConfiguration { get; }
 
         /// <summary>
         /// The details of the prometheus metric that will be created.
@@ -67,6 +74,10 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
 
         public TimeSpan? GetAggregationInterval()
         {
+            if (ResourceType == ResourceType.LogAnalytics)
+            {
+                return LogAnalyticsConfiguration?.Aggregation?.Interval;
+            }
             return AzureMetricConfiguration?.Aggregation?.Interval;
         }
 

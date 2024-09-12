@@ -98,6 +98,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public ScrapeDefinitionBatchProperties buildPropertiesForBatch() { 
             return new ScrapeDefinitionBatchProperties(
                 this.AzureMetricConfiguration,
+                this.LogAnalyticsConfiguration,
                 this.PrometheusMetricDefinition,    
                 this.Resource.ResourceType,
                 this.Scraping,
