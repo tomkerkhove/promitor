@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GuardNet;
+using Microsoft.VisualBasic;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Metrics;
@@ -50,9 +53,13 @@ namespace Promitor.Core.Scraping
             return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"workspace_name", resourceDefinition.WorkspaceName} };
         }
 
-        protected override Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
+        protected override async Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
         {
-            throw new NotImplementedException("Batch scraping not yet implemented for log analytics");
+            // TODO: these just dispatch and await on tasks that do single-resource scraping. Implement integration with Log Analytics batch endpoint  
+            var logScrapingTasks = batchScrapeDefinition.ScrapeDefinitions.Select(definition => ScrapeResourceAsync(subscriptionId, definition, (LogAnalyticsResourceDefinition) definition.Resource, aggregationType, aggregationInterval)).ToList();
+
+            var resultsList = await Task.WhenAll(logScrapingTasks);
+            return resultsList.ToList();
         }
     }
 }
