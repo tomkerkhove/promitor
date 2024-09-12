@@ -30,6 +30,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<ApplicationInsightsResourceV1, ApplicationInsightsResourceDefinition>();
             CreateMap<AppPlanResourceV1, AppPlanResourceDefinition>();
             CreateMap<AutomationAccountResourceV1, AutomationAccountResourceDefinition>();
+            CreateMap<AzureFirewallResourceV1, AzureFirewallResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<CdnResourceV1, CdnResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
@@ -89,6 +90,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ApplicationInsightsResourceV1, ApplicationInsightsResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
+                .Include<AzureFirewallResourceV1, AzureFirewallResourceDefinition>(),
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
