@@ -121,6 +121,10 @@ namespace Promitor.Core.Scraping
                 // Query Azure Monitor for metrics
                 Logger.LogWarning("Querying Azure Monitor for metric {MetricName} with batch size {BatchSize}", metricName, resourceUriList.Count);
                 resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
+                foreach (var resourceMetric in resourceIdTaggedMeasuredMetrics) 
+                {
+                    Logger.LogWarning("Discovered value {Value} for metric {Metric} and resource ID {ResourceID}", resourceMetric.Value, metricName, resourceMetric.ResourceId);
+                }
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
