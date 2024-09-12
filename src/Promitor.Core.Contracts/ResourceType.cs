@@ -55,5 +55,6 @@
         PublicIpAddress = 50,
         TrafficManager = 51,
         PowerBiDedicated = 52,
+        AzureFirewall = 53,
     }
 }
