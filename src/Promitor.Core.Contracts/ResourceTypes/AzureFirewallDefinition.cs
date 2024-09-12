@@ -3,7 +3,7 @@ namespace Promitor.Core.Contracts.ResourceTypes
     public class AzureFirewallDefinition : AzureResourceDefinition
     {
         public AzureFirewallDefinition(string subscriptionId, string resourceGroupName, string azureFirewallName)
-            : base(ResourceType.VirtualMachine, subscriptionId, resourceGroupName, azureFirewallName)
+            : base(ResourceType.AzureFirewall, subscriptionId, resourceGroupName, azureFirewallName)
         {
             AzureFirewallName = azureFirewallName;
         }
