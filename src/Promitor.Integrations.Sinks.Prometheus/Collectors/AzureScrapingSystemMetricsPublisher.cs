@@ -58,11 +58,11 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
 
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
+            await _systemMetricsPublisher.WriteHistogramMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }
         public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
+            await _systemMetricsPublisher.WriteHistogramMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
     }
 }
