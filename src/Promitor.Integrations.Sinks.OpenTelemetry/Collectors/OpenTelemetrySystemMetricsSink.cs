@@ -23,7 +23,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry.Collectors
 
         public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
-            return null;
+            return Task.CompletedTask;
         }
     }
 }
