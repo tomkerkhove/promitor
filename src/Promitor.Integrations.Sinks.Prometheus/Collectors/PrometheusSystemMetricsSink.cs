@@ -50,7 +50,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             // TODO: are histogram instruments created on every invocation? Would that interfere with correctness? 
-            var histogram = _metricFactory.CreateHistogram(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray());
+            var histogram = _metricFactory.CreateHistogram(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray(), buckets: [1, 2, 4, 8, 16, 32, 64]);
             histogram.WithLabels(orderedLabels.Values.ToArray()).Observe(value);
             return Task.CompletedTask;
         }
