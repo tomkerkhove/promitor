@@ -90,7 +90,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// Builds a namespaced string key to satisfy batch restrictions, in the format of
         /// <AzureMetricAndDimensions>_<SubscriptionId>_<ResourceType>_<AggregationInterval> 
         /// </summary>
-        private string BuildBatchHashKey()
+        public string BuildBatchHashKey()
         {
             return string.Join("_", new List<string> {AzureMetricConfiguration.ToUniqueStringRepresentation(), SubscriptionId, ResourceType.ToString(), GetAggregationInterval().ToString()});
         }

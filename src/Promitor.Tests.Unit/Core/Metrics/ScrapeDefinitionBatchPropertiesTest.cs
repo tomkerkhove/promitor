@@ -169,5 +169,41 @@ namespace Promitor.Tests.Unit.Core.Metrics
             var hashCode2 = batchProperties2.GetHashCode();
             Assert.NotEqual(hashCode1, hashCode2);
         }
+
+        [Fact]
+        public void BuildBatchHashKeyTest()
+        {
+            AzureMetricConfigurationV1 _azureMetricConfigurationTest1 = new AzureMetricConfigurationV1 
+            {
+                MetricName = "availabilityResults/availabilityPercentage",
+                Aggregation = new MetricAggregationV1
+                {
+                    Type = PromitorMetricAggregationType.Average
+                },
+            };
+            AzureMetricConfigurationV1 _azureMetricConfigurationTest2 = new AzureMetricConfigurationV1 
+            {
+                MetricName = "availabilityResults/availabilityPercentage",
+                Dimensions = [new MetricDimensionV1{Name = "availabilityResult/name"}],
+                Aggregation = new MetricAggregationV1
+                {
+                    Type = PromitorMetricAggregationType.Average
+                },
+            };
+            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationTest1);
+            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationTest2);
+
+            var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(_scrapingBase);
+            var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(_scrapingBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(_logAnalyticsConfigurationBase);
+
+
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: _prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping1, subscriptionId: _subscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: _prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping2, subscriptionId: _subscriptionId);
+
+            var hashCode1 = batchProperties.GetHashCode();
+            var hashCode2 = batchProperties2.GetHashCode();
+            Assert.NotEqual(hashCode1, hashCode2);
+        }
     }
 }
