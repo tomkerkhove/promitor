@@ -94,7 +94,7 @@ namespace Promitor.Core.Scraping
             var resourceUriList = new List<string>();
             foreach (ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition in batchScrapeDefinition.ScrapeDefinitions)
             {
-                var resourceUri = BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource);
+                var resourceUri = $"/{BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource)}";
                 resourceUriList.Add(resourceUri);
                 // cache resource info 
                 if (!_resourceDefinitions.ContainsKey(resourceUri))
