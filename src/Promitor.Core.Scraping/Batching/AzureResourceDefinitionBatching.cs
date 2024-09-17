@@ -29,10 +29,10 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
         {
-            int numNewGroups = (batchToSplit.Count - 1) / 50 + 1;
+            int numNewGroups = (batchToSplit.Count - 1) / maxBatchSize + 1;
 
             return Enumerable.Range(0, numNewGroups)
-                .Select(i => batchToSplit.Skip(i * 50).Take(50).ToList())
+                .Select(i => batchToSplit.Skip(i * maxBatchSize).Take(maxBatchSize).ToList())
                 .ToList();
         }
     }

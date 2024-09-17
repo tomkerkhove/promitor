@@ -72,16 +72,17 @@ namespace Promitor.Tests.Unit.Core.Metrics
         {
             var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationBase);
             var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(_logAnalyticsConfigurationBase);
+            var testBatchSize = 10;
 
             var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(_scrapingBase);
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: _prometheusMetricDefinition, scraping: scraping, 
-                resourceType:  ResourceType.StorageAccount, subscriptionId: _subscriptionId, resourceGroupName: _resourceGroupName, 130
+                resourceType:  ResourceType.StorageAccount, subscriptionId: _subscriptionId, resourceGroupName: _resourceGroupName, 25
             );
-            var groupedScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, maxBatchSize: _batchSize, CancellationToken.None);
+            var groupedScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, maxBatchSize: testBatchSize, CancellationToken.None);
             // expect three batches adding up to total size
             Assert.Equal(3, groupedScrapeDefinitions.Count);
-            Assert.Equal(130, CountTotalScrapeDefinitions(groupedScrapeDefinitions));
+            Assert.Equal(25, CountTotalScrapeDefinitions(groupedScrapeDefinitions));
         }
 
         [Fact]
