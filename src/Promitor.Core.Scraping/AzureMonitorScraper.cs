@@ -106,7 +106,7 @@ namespace Promitor.Core.Scraping
                         subscriptionId: scrapeDefinition.SubscriptionId, 
                         resourceName: scrapeDefinition.Resource.ResourceName
                     ); // the resource definition attached is missing some attributes, filling them in here
-                    Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, resource group {ResourceGroup}, for {ResourceId}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceDefinitionToCache.ResourceGroupName, resourceUri);
+                    Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, resource group {ResourceGroup}, for {ResourceId}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceDefinitionToCache, resourceUri);
                     _resourceDefinitions.TryAdd(resourceUri, resourceDefinitionToCache);
                 }
             }
@@ -143,9 +143,9 @@ namespace Promitor.Core.Scraping
             {
                 var resourceId = resourceMetricsGroup.Key; 
                 _resourceDefinitions.TryGetValue(resourceId, out IAzureResourceDefinition resourceDefinition);
-                var metricLabels = DetermineMetricLabels((TResourceDefinition) resourceDefinition);
-                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) resourceDefinition, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                Logger.LogWarning("Processing {MetricsCount} measured metrics for Metric {MetricName}, resourceID {ResourceId} with name {ResourceName}, of resource group {ResourceGroup}", finalMetricValues.Count, metricName, resourceId, resourceDefinition.ResourceName, resourceDefinition.ResourceGroupName);
+                var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
+                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetricsGroup.ToImmutableList());
+                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId}", finalMetricValues.Count, metricName, resourceId, resourceDefinition.ResourceName, resourceDefinition.ResourceGroupName);
                 scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
                 Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
             }
