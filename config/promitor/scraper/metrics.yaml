@@ -173,7 +173,7 @@ metrics:
     resources:
       - accountName: promitor-testing-resource-eu-automation-1
   - name: azure_firewall_application_rule_hits
-    description: number of times Application rules were hit	percentage of cpu used by powerbi dedicated
+    description: number of times Application rules were hit
     resourceType: AzureFirewall
     azureMetricConfiguration:
         metricName: ApplicationRuleHit
