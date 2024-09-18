@@ -145,7 +145,7 @@ namespace Promitor.Core.Scraping
                 _resourceDefinitions.TryGetValue(resourceId, out IAzureResourceDefinition resourceDefinition);
                 var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
                 var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId}", finalMetricValues.Count, metricName, resourceId, resourceDefinition.ResourceName, resourceDefinition.ResourceGroupName);
+                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId}", finalMetricValues.Count, resourceId);
                 scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
                 Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
             }
