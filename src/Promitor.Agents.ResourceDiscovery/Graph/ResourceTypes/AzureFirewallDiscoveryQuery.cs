@@ -7,7 +7,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
     public class AzureFirewallDiscoveryQuery : ResourceDiscoveryQuery
     {
-        public override string[] ResourceTypes => new[] { "microsoft.network/azureFirewalls" };
+        public override string[] ResourceTypes => new[] { "microsoft.network/azurefirewalls" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name" };
 
         public override AzureResourceDefinition ParseResults(JToken resultRowEntry)
