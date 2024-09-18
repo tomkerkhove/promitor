@@ -4,7 +4,7 @@ using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
 namespace Promitor.Core.Scraping.ResourceTypes
 {
-    internal class AzureFirewallScraper : AzureMonitorScraper<AzureFirewallDefinition>
+    internal class AzureFirewallScraper : AzureMonitorScraper<AzureFirewallResourceDefinition>
     {
         private const string ResourceUriTemplate = "subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Network/azureFirewalls/{2}";
 

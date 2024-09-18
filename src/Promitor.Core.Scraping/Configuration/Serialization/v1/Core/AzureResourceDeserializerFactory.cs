@@ -37,7 +37,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                     var automationLogger = _loggerFactory.CreateLogger<AutomationAccountDeserializer>();
                     return new AutomationAccountDeserializer(automationLogger);
                 case ResourceType.AzureFirewall:
-                     var azureFirewallLogger = _loggerFactory.CreateLogger<AzureFirewallDeserializer>();
+                    var azureFirewallLogger = _loggerFactory.CreateLogger<AzureFirewallDeserializer>();
+                    return new AzureFirewallDeserializer(azureFirewallLogger);
                 case ResourceType.BlobStorage:
                     var blobStorageLogger = _loggerFactory.CreateLogger<BlobStorageDeserializer>();
                     return new BlobStorageDeserializer(blobStorageLogger);

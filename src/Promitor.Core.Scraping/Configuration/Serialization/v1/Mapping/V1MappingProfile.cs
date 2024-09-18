@@ -90,7 +90,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<ApplicationInsightsResourceV1, ApplicationInsightsResourceDefinition>()
                 .Include<AppPlanResourceV1, AppPlanResourceDefinition>()
                 .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
-                .Include<AzureFirewallResourceV1, AzureFirewallResourceDefinition>(),
+                .Include<AzureFirewallResourceV1, AzureFirewallResourceDefinition>()
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
