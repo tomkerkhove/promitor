@@ -308,7 +308,6 @@ namespace Promitor.Core.Scraping
         /// </summary>
         /// <param name="subscriptionId">Metric subscription Id</param>
         /// <param name="batchScrapeDefinition">Contains all scrape definitions in the batch and their shared properties(like resource type)</param>
-        /// <param name="resourceDefinition">Contains the resource cast to the specific resource type.</param>
         /// <param name="aggregationType">Aggregation for the metric to use</param>
         /// <param name="aggregationInterval">Interval that is used to aggregate metrics</param>
         protected abstract Task<List<ScrapeResult>> BatchScrapeResourceAsync(
