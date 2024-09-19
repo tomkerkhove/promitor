@@ -25,7 +25,7 @@ namespace Promitor.Core.Scraping
         /// <summary>
         ///     A cache to store resource definitions. Used to hydrate resource info from resource ID, when processing batch query results
         /// </summary>
-        private readonly ConcurrentDictionary<string, IAzureResourceDefinition> _resourceDefinitions; // using a dictionary for now since IMemoryCache involves layers of injection
+        private readonly ConcurrentDictionary<string, Tuple<IAzureResourceDefinition, TResourceDefinition>> _resourceDefinitions; // using a dictionary for now since IMemoryCache involves layers of injection
 
         /// <summary>
         ///     Constructor
@@ -33,7 +33,7 @@ namespace Promitor.Core.Scraping
         protected AzureMonitorScraper(ScraperConfiguration scraperConfiguration) :
             base(scraperConfiguration)
         {
-            _resourceDefinitions = new ConcurrentDictionary<string, IAzureResourceDefinition>();
+            _resourceDefinitions = new ConcurrentDictionary<string, Tuple<IAzureResourceDefinition, TResourceDefinition>>();
         }
 
         /// <inheritdoc />
@@ -99,15 +99,16 @@ namespace Promitor.Core.Scraping
                 // cache resource info 
                 if (!_resourceDefinitions.ContainsKey(resourceUri))
                 {
+                    // the TResourceDefinition resource definition attached to scrape definition can sometimes missing some attributes, need to them in here 
                     var resourceDefinitionToCache = new AzureResourceDefinition
                     (
                         resourceType: scrapeDefinition.Resource.ResourceType, 
                         resourceGroupName:  scrapeDefinition.ResourceGroupName, 
                         subscriptionId: scrapeDefinition.SubscriptionId, 
                         resourceName: scrapeDefinition.Resource.ResourceName
-                    ); // the resource definition attached is missing some attributes, filling them in here
-                    Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, resource group {ResourceGroup}, for {ResourceId}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceDefinitionToCache, resourceUri);
-                    _resourceDefinitions.TryAdd(resourceUri, resourceDefinitionToCache);
+                    ); 
+                    Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, for {ResourceId}, of resource type {ResourceType}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceUri, resourceDefinitionToCache.ResourceType);
+                    _resourceDefinitions.TryAdd(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource));
                 }
             }
 
@@ -142,10 +143,11 @@ namespace Promitor.Core.Scraping
             foreach (IGrouping<string, ResourceAssociatedMeasuredMetric> resourceMetricsGroup in groupedMeasuredMetrics) 
             {
                 var resourceId = resourceMetricsGroup.Key; 
-                _resourceDefinitions.TryGetValue(resourceId, out IAzureResourceDefinition resourceDefinition);
-                var metricLabels = DetermineMetricLabels((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
-                var finalMetricValues = EnrichMeasuredMetrics((TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId}", finalMetricValues.Count, resourceId);
+                _resourceDefinitions.TryGetValue(resourceId, out Tuple<IAzureResourceDefinition, TResourceDefinition> resourceDefinitionTuple);
+                var resourceDefinition = resourceDefinitionTuple.Item1;
+                var metricLabels = DetermineMetricLabels(resourceDefinitionTuple.Item2);
+                var finalMetricValues = EnrichMeasuredMetrics(resourceDefinitionTuple.Item2, dimensionNames, resourceMetricsGroup.ToImmutableList());
+                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId} of resource group {ResourceGroup}", finalMetricValues.Count, resourceId, resourceDefinition.ResourceGroupName);
                 scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
                 Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
             }
