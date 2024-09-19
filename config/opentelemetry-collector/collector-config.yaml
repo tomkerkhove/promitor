@@ -2,10 +2,11 @@ receivers:
   otlp:
     protocols:
       grpc:
-
+    tls:
+      insecure: true
 exporters:
   prometheus:
-    endpoint: "localhost:8889"
+    endpoint: "0.0.0.0:8889"
     namespace: otel
     const_labels:
       source_app: promitor
