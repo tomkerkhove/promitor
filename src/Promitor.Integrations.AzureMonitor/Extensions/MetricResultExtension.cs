@@ -12,14 +12,31 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         
         public static string ParseResourceIdFromResultId(this MetricResult metricResult) 
         {
-            Match match = resourceIdRegex.Match(metricResult.Id);
-            if (!match.Success || string.IsNullOrEmpty(match.Groups[1].Value))
+            // Match match = resourceIdRegex.Match(metricResult.Id);
+            // if (!match.Success || string.IsNullOrEmpty(match.Groups[1].Value))
+            // {
+            //     throw new InvalidOperationException($"The expected resource ID pattern was not found in the input string {metricResult.Id}");
+            // }
+
+            // string resourceId = match.Groups[1].Value;
+            // return resourceId;
+            return ExtractResourceId(metricResult.Id);
+        }
+
+        private static string ExtractResourceId(string fullId)
+        {
+            // Find the index of the second occurrence of "/providers/"
+            int firstIndex = fullId.IndexOf("/providers/");
+            int secondIndex = fullId.IndexOf("/providers/", firstIndex + 1);
+
+            // If the second "/providers/" is found, slice the string up to that point
+            if (secondIndex != -1)
             {
-                throw new InvalidOperationException($"The expected resource ID pattern was not found in the input string {metricResult.Id}");
+                return fullId.Substring(0, secondIndex);
             }
 
-            string resourceId = match.Groups[1].Value;
-            return resourceId;
+            // If not found, return the full string
+            return fullId;
         }
 
     }
