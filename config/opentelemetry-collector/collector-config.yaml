@@ -5,7 +5,7 @@ receivers:
 
 exporters:
   prometheus:
-    endpoint: "0.0.0.0:8889"
+    endpoint: "localhost:8889"
     namespace: otel
     const_labels:
       source_app: promitor
