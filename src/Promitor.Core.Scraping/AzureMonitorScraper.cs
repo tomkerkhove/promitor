@@ -97,22 +97,18 @@ namespace Promitor.Core.Scraping
                 var resourceUri = $"/{BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource)}";
                 resourceUriList.Add(resourceUri);
                 // cache resource info 
-                if (!_resourceDefinitions.ContainsKey(resourceUri))
-                {
-                    // the TResourceDefinition resource definition attached to scrape definition can sometimes missing some attributes, need to them in here 
-                    var resourceDefinitionToCache = new AzureResourceDefinition
-                    (
-                        resourceType: scrapeDefinition.Resource.ResourceType, 
-                        resourceGroupName:  scrapeDefinition.ResourceGroupName, 
-                        subscriptionId: scrapeDefinition.SubscriptionId, 
-                        resourceName: scrapeDefinition.Resource.ResourceName
-                    ); 
-                    Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, for {ResourceId}, of resource type {ResourceType}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceUri, resourceDefinitionToCache.ResourceType);
-                    _resourceDefinitions.TryAdd(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource));
-                }
+                // the TResourceDefinition resource definition attached to scrape definition can sometimes missing some attributes, need to them in here 
+                var resourceDefinitionToCache = new AzureResourceDefinition
+                (
+                    resourceType: scrapeDefinition.Resource.ResourceType, 
+                    resourceGroupName:  scrapeDefinition.ResourceGroupName, 
+                    subscriptionId: scrapeDefinition.SubscriptionId, 
+                    resourceName: scrapeDefinition.Resource.ResourceName
+                ); 
+                Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, for {ResourceId}, of resource type {ResourceType}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceUri, resourceDefinitionToCache.ResourceType);
+                _resourceDefinitions.AddOrUpdate(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource), (uri, oldTuple) => oldTuple);
             }
 
-            var metricFilter = DetermineMetricFilter(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource);
             var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
             var dimensionNames = DetermineMetricDimensions(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration); // TODO: resource definition doesn't seem to be used, can we remove it from function signature?  
 
@@ -121,7 +117,7 @@ namespace Promitor.Core.Scraping
             {
                 // Query Azure Monitor for metrics
                 Logger.LogWarning("Querying Azure Monitor for metric {MetricName} with batch size {BatchSize}", metricName, resourceUriList.Count);
-                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, metricFilter, metricLimit);
+                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, null, metricLimit);
                 foreach (var resourceMetric in resourceIdTaggedMeasuredMetrics) 
                 {
                     Logger.LogWarning("Discovered value {Value} for metric {Metric} and resource ID {ResourceID}", resourceMetric.Value, metricName, resourceMetric.ResourceId);
