@@ -21,6 +21,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new AppPlanMetricValidator();
                 case ResourceType.AutomationAccount:
                     return new AutomationAccountMetricValidator();
+                 case ResourceType.AzureFirewall:
+                    return new AzureFirewallMetricValidator();
                 case ResourceType.BlobStorage:
                     return new BlobStorageMetricValidator();
                 case ResourceType.Cdn:

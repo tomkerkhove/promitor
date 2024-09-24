@@ -20,6 +20,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AppPlanDiscoveryQuery();
                 case ResourceType.AutomationAccount:
                     return new AutomationAccountResourceDiscoveryQuery();
+                case ResourceType.AzureFirewall:
+                    return new AzureFirewallDiscoveryQuery();
                 case ResourceType.Cdn:
                     return new CdnDiscoveryQuery();
                 case ResourceType.ContainerInstance:
