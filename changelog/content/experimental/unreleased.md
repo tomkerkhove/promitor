@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
-  
+- {{% tag added %}} Provide support for Azure Firewall ([docs](https://docs.promitor.io/scraping/providers/azure-firewall/))
+
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide support for Azure Firewall ([docs](https://docs.promitor.io/scraping/providers/azure-firewall/))

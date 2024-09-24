@@ -167,6 +167,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithAzureFirewallMetric(string metricName = "promitor-AzureFirewall",
+            string metricDescription = "Description for a metric",
+            string azureFirewallName = "promitor-AzureFirewall",
+            string azureMetricName = "ApplicationRuleHit",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new AzureFirewallResourceV1
+            {
+                AzureFirewallName = azureFirewallName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.AzureFirewall, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+    
         public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor",
             string metricDescription = "Description for a metric",
             string accountName = "promitor-account",

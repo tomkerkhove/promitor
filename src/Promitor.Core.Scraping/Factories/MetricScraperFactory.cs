@@ -47,6 +47,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new AppPlanScraper(scraperConfiguration);
                 case ResourceType.AutomationAccount:
                     return new AutomationAccountScraper(scraperConfiguration);
+                case ResourceType.AzureFirewall:
+                    return new AzureFirewallScraper(scraperConfiguration);
                 case ResourceType.BlobStorage:
                     return new BlobStorageScraper(scraperConfiguration);
                 case ResourceType.Cdn:
