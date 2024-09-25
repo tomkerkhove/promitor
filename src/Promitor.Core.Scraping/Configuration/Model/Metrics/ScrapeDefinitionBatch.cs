@@ -11,14 +11,11 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     public class ScrapeDefinitionBatchProperties : IEquatable<ScrapeDefinitionBatchProperties>
     { 
         /// <param name="azureMetricConfiguration">Configuration about the Azure Monitor metric to scrape</param>
+        /// <param name="logAnalyticsConfiguration">Configuration about the LogAnalytics resource to scrape</param>
         /// <param name="prometheusMetricDefinition">The details of the prometheus metric that will be created.</param>
         /// <param name="scraping">The scraping model.</param>
-        /// <param name="resource">The resource to scrape.</param>
+        /// <param name="resourceType">Resource type of the batch</param>
         /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
-        /// <param name="resourceGroupName">
-        /// The name of the resource group containing the resource to scrape. This should contain the global
-        /// resource group name if none is overridden at the resource level.
-        /// </param>
         public ScrapeDefinitionBatchProperties(
             AzureMetricConfiguration azureMetricConfiguration,
             LogAnalyticsConfiguration logAnalyticsConfiguration,
@@ -61,9 +58,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         public Scraping Scraping { get; }
 
         /// <summary>
-        /// The Azure subscription to get the metric from. This should be used instead of using
-        /// the SubscriptionId from <see cref="Resource"/> because this property will contain
-        /// the global subscription id if none is overridden at the resource level.
+        /// The Azure subscription to get the metric from.
         /// </summary>
         public string SubscriptionId { get; }
 
@@ -106,6 +101,5 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
             ScrapeDefinitionBatchProperties other = obj;
             return ResourceType == other.ResourceType && AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && SubscriptionId == other.SubscriptionId && GetAggregationInterval().Equals(other.GetAggregationInterval());
         }
-
     }
 }

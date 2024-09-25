@@ -54,14 +54,14 @@ namespace Promitor.Core.Scraping.Configuration.Model
             sb.Append(MetricName);
             if (Dimension != null) 
             {
-                sb.Append("_");
+                sb.Append('_');
                 sb.Append(Dimension.Name);
             }
             else if (Dimensions != null) 
             {
                 foreach (var dimension in Dimensions)
                 {
-                    sb.Append("_");
+                    sb.Append('_');
                     sb.Append(dimension.Name);
                 }
             }

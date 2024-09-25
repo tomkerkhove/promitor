@@ -17,7 +17,7 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
         {
-            return  allScrapeDefinitions.GroupBy(def => def.buildPropertiesForBatch()) 
+            return  allScrapeDefinitions.GroupBy(def => def.BuildPropertiesForBatch()) 
                         .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
                         .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize, cancellationToken)) // split to right-sized batches 
                         .SelectMany(group => group.Value.Select(batch => new BatchScrapeDefinition<IAzureResourceDefinition>(group.Key, batch)))
@@ -29,7 +29,7 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
         {
-            int numNewGroups = (batchToSplit.Count - 1) / maxBatchSize + 1;
+            int numNewGroups = ((batchToSplit.Count - 1) / maxBatchSize) + 1;
 
             return Enumerable.Range(0, numNewGroups)
                 .Select(i => batchToSplit.Skip(i * maxBatchSize).Take(maxBatchSize).ToList())

@@ -11,20 +11,15 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
     /// 1. The same resource type 
     /// 2. The same Azure metric scrape target with identical dimensions
     /// 3. The same time granularity 
+    /// 4. The same filters
     /// </summary>
     public class BatchScrapeDefinition<TResourceDefinition> where TResourceDefinition : class, IAzureResourceDefinition
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="ScrapeDefinition{TResourceDefinition}"/> class.
+        /// Creates a new instance of the <see cref="BatchScrapeDefinition{TResourceDefinition}"/> class.
         /// </summary>
-        /// <param name="azureMetricConfiguration">Configuration about the Azure Monitor metric to scrape</param>
-        /// <param name="azureMetricConfiguration">Configuration about the Azure Monitor metric to scrape</param>
-        /// <param name="scraping">The scraping model.</param>
-        /// <param name="subscriptionId">Specify a subscription to scrape that defers from the default subscription.</param>
-        /// <param name="resourceGroupName">
-        /// The name of the resource group containing the resource to scrape. This should contain the global
-        /// resource group name if none is overridden at the resource level.
-        /// </param>
+        /// <param name="scrapeDefinitionBatchProperties">Shared Properties Among ScrapeDefinition's in the batch</param>
+        /// <param name="groupedScrapeDefinitions">Scape definitions in the batch</param>
         public BatchScrapeDefinition(ScrapeDefinitionBatchProperties scrapeDefinitionBatchProperties, List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions)
         {
             Guard.NotNull(groupedScrapeDefinitions, nameof(scrapeDefinitionBatchProperties));

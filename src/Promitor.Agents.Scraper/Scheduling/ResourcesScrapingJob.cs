@@ -266,7 +266,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     Logger.LogInformation("Logging individual definitions batch: Azure Metric {AzureMetricName} and resource type {ResourceType}.", azureMetricName, resourceType);
                     foreach (ScrapeDefinition<IAzureResourceDefinition> definition in batchScrapeDefinition.ScrapeDefinitions)
                     {
-                        Logger.LogInformation("ResourceID: {ResoureceID}, ResourceGroup: {ResourceGroup}, Prometheus metric name: {MetricName}, Batch Key: {BatchKey}", definition.Resource.ResourceName, definition.ResourceGroupName, definition.PrometheusMetricDefinition.Name, definition.buildPropertiesForBatch().BuildBatchHashKey());
+                        Logger.LogInformation("ResourceID: {ResoureceID}, ResourceGroup: {ResourceGroup}, Prometheus metric name: {MetricName}, Batch Key: {BatchKey}", definition.Resource.ResourceName, definition.ResourceGroupName, definition.PrometheusMetricDefinition.Name, definition.BuildPropertiesForBatch().BuildBatchHashKey());
                     }
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
