@@ -29,6 +29,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         public Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
             Guard.NotNull(labels, nameof(labels));
+
             // Order labels alphabetically
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
