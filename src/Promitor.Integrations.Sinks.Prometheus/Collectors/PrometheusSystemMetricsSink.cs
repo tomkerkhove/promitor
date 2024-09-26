@@ -28,6 +28,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         /// <param name="includeTimestamp">Indication whether or not a timestamp should be reported</param>
         public Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
+            Guard.NotNull(labels, nameof(labels));
             // Order labels alphabetically
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
@@ -47,6 +48,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         /// <param name="includeTimestamp">Indication whether or not a timestamp should be reported</param>
         public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
+            Guard.NotNull(labels, nameof(labels));
             var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var histogram = _metricFactory.CreateHistogram(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray(), buckets: [1, 2, 4, 8, 16, 32, 64]);

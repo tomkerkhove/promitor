@@ -2,8 +2,8 @@ namespace Promitor.Integrations.AzureMonitor.Configuration
 {
     public class AzureMonitorMetricBatchScrapeConfig
     {
-        public bool Enabled { get; set; } = false;
-        public int MaxBatchSize { get; set; }
-        public string AzureRegion { get; set; } // Batch scrape endpoints are deployed by region 
+        public bool Enabled { get; } = false;
+        public int MaxBatchSize { get; }
+        public string AzureRegion { get; } // Batch scrape endpoints are deployed by region 
     }
 }
