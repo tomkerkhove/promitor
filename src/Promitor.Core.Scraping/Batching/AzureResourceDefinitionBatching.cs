@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
@@ -24,7 +23,7 @@ namespace Promitor.Core.Scraping.Batching
                         .ToList(); // flatten 
         }
 
-        /// <summary>
+    /// <summary>
         /// splits the "raw" batch according to max batch size configured
         /// </summary>
         private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize) 
