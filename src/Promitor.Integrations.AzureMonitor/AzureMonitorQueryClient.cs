@@ -302,7 +302,7 @@ namespace Promitor.Integrations.AzureMonitor
         public static string InsertRegionIntoUrl(string region, string baseUrl)
         {
             // Find the position where ".metrics" starts in the URL
-            int metricsIndex = baseUrl.IndexOf("metrics");
+            int metricsIndex = baseUrl.IndexOf("metrics", System.StringComparison.Ordinal);
 
             // Split the base URL into two parts: before and after the ".metrics"
             string beforeMetrics = baseUrl.Substring(0, metricsIndex);

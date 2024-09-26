@@ -15,11 +15,11 @@ namespace Promitor.Core.Scraping.Batching
         /// 3. Definitions in a batch must have the same time granularity 
         /// 4. Batch size cannot exceed configured maximum 
         /// </summary>
-        public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize, CancellationToken cancellationToken) 
+        public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize) 
         {
             return  allScrapeDefinitions.GroupBy(def => def.BuildScrapingBatchInfo()) 
                         .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
-                        .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize, cancellationToken)) // split to right-sized batches 
+                        .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize)) // split to right-sized batches 
                         .SelectMany(group => group.Value.Select(batch => new BatchScrapeDefinition<IAzureResourceDefinition>(group.Key, batch)))
                         .ToList(); // flatten 
         }
@@ -27,7 +27,7 @@ namespace Promitor.Core.Scraping.Batching
         /// <summary>
         /// splits the "raw" batch according to max batch size configured
         /// </summary>
-        private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize, CancellationToken cancellationToken) 
+        private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize) 
         {
             int numNewGroups = ((batchToSplit.Count - 1) / maxBatchSize) + 1;
 

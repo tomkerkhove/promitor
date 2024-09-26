@@ -257,7 +257,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Logger.LogInformation("Parsed batch config: {Enabled}, {BatchSize}",  this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
             Logger.LogInformation("Parsed SDK runtime config {Enabled}",  this._azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
             if (batchScrapingEnabled) {
-                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize, cancellationToken);
+                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;

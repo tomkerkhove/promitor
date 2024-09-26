@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using GuardNet;
 using Promitor.Core.Contracts;
@@ -33,7 +32,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <summary>
         /// A batch of scrape job definitions to be executed as a single request 
         /// </summary>
-        public List<ScrapeDefinition<TResourceDefinition>> ScrapeDefinitions { get; set; } = new List<ScrapeDefinition<TResourceDefinition>>();
+        public List<ScrapeDefinition<TResourceDefinition>> ScrapeDefinitions { get; set; }
 
         public ScrapeDefinitionBatchProperties ScrapeDefinitionBatchProperties { get; set; }
     }

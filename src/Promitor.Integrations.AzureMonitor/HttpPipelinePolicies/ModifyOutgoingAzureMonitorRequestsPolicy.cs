@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
     /// <summary>
-    ///     Work around to make sure range queries work properly. <see cref="https://github.com/Azure/azure-sdk-for-net/issues/40047">
+    ///     Work around to make sure range queries work properly. <see cref="https://github.com/Azure/azure-sdk-for-net/issues/40047"/>
     /// </summary>
     public class ModifyOutgoingAzureMonitorRequestsPolicy : HttpPipelinePolicy
     {   
@@ -50,7 +50,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                     // Update the message with the modified URI
                 }
             }
-             message.Request.Uri.Query = query.ToString();
+            message.Request.Uri.Query = query.ToString();
         }
     }
 }   

@@ -15,8 +15,8 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         private static string ExtractResourceId(string fullId)
         {
             // Find the index of the second occurrence of "/providers/"
-            int firstIndex = fullId.IndexOf("/providers/");
-            int secondIndex = fullId.IndexOf("/providers/", firstIndex + 1);
+            int firstIndex = fullId.IndexOf("/providers/", System.StringComparison.Ordinal);
+            int secondIndex = fullId.IndexOf("/providers/", firstIndex + 1, System.StringComparison.Ordinal);
 
             // If the second "/providers/" is found, slice the string up to that point
             if (secondIndex != -1)
