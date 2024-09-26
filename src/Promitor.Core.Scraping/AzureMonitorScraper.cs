@@ -106,7 +106,7 @@ namespace Promitor.Core.Scraping
                     resourceName: scrapeDefinition.Resource.ResourceName
                 ); 
                 Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, for {ResourceId}, of resource type {ResourceType}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceUri, resourceDefinitionToCache.ResourceType);
-                _resourceDefinitions.AddOrUpdate(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource), (uri, oldTuple) => oldTuple);
+                _resourceDefinitions.AddOrUpdate(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource), (newTuple, oldTuple) => oldTuple);
             }
 
             var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
@@ -139,13 +139,15 @@ namespace Promitor.Core.Scraping
             foreach (IGrouping<string, ResourceAssociatedMeasuredMetric> resourceMetricsGroup in groupedMeasuredMetrics) 
             {
                 var resourceId = resourceMetricsGroup.Key; 
-                _resourceDefinitions.TryGetValue(resourceId, out Tuple<IAzureResourceDefinition, TResourceDefinition> resourceDefinitionTuple);
-                var resourceDefinition = resourceDefinitionTuple.Item1;
-                var metricLabels = DetermineMetricLabels(resourceDefinitionTuple.Item2);
-                var finalMetricValues = EnrichMeasuredMetrics(resourceDefinitionTuple.Item2, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId} of resource group {ResourceGroup}", finalMetricValues.Count, resourceId, resourceDefinition.ResourceGroupName);
-                scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
-                Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
+                if (_resourceDefinitions.TryGetValue(resourceId, out Tuple<IAzureResourceDefinition, TResourceDefinition> resourceDefinitionTuple))
+                {
+                    var resourceDefinition = resourceDefinitionTuple.Item1;
+                    var metricLabels = DetermineMetricLabels(resourceDefinitionTuple.Item2);
+                    var finalMetricValues = EnrichMeasuredMetrics(resourceDefinitionTuple.Item2, dimensionNames, resourceMetricsGroup.ToImmutableList());
+                    Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId} of resource group {ResourceGroup}", finalMetricValues.Count, resourceId, resourceDefinition.ResourceGroupName);
+                    scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
+                    Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
+                }
             }
 
             return scrapeResults;
