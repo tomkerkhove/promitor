@@ -93,12 +93,8 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <summary>
         /// Equality comparison override in case of hash collision
         /// </summary>
-        public bool Equals(ScrapeDefinitionBatchProperties obj)
+        public bool Equals(ScrapeDefinitionBatchProperties other)
         {
-            if (!(obj is ScrapeDefinitionBatchProperties))
-                return false;
-
-            ScrapeDefinitionBatchProperties other = obj;
             return ResourceType == other.ResourceType && AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && SubscriptionId == other.SubscriptionId && GetAggregationInterval().Equals(other.GetAggregationInterval());
         }
     }
