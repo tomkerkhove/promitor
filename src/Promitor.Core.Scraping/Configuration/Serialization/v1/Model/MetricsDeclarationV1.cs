@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model

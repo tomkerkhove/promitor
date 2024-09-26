@@ -169,7 +169,7 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeyTest()
         {
-            AzureMetricConfigurationV1 _azureMetricConfigurationTest1 = new AzureMetricConfigurationV1 
+            AzureMetricConfigurationV1 azureMetricConfigurationTest1 = new AzureMetricConfigurationV1 
             {
                 MetricName = "availabilityResults/availabilityPercentage",
                 Aggregation = new MetricAggregationV1
@@ -177,7 +177,7 @@ namespace Promitor.Tests.Unit.Core.Metrics
                     Type = PromitorMetricAggregationType.Average
                 },
             };
-            AzureMetricConfigurationV1 _azureMetricConfigurationTest2 = new AzureMetricConfigurationV1 
+            AzureMetricConfigurationV1 azureMetricConfigurationTest2 = new AzureMetricConfigurationV1 
             {
                 MetricName = "availabilityResults/availabilityPercentage",
                 Dimensions = [new MetricDimensionV1{Name = "availabilityResult/name"}],
@@ -186,8 +186,8 @@ namespace Promitor.Tests.Unit.Core.Metrics
                     Type = PromitorMetricAggregationType.Average
                 },
             };
-            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationTest1);
-            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(_azureMetricConfigurationTest2);
+            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationTest1);
+            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationTest2);
 
             var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
             var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);

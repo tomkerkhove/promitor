@@ -95,7 +95,7 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         public bool Equals(ScrapeDefinitionBatchProperties obj)
         {
-            if (obj is null || !(obj is ScrapeDefinitionBatchProperties))
+            if (!(obj is ScrapeDefinitionBatchProperties))
                 return false;
 
             ScrapeDefinitionBatchProperties other = obj;

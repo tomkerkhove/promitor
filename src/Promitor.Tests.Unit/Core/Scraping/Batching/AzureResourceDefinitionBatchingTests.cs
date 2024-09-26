@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using AutoMapper;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
@@ -12,7 +11,7 @@ using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Xunit;
 
-namespace Promitor.Tests.Unit.Core.Metrics
+namespace Promitor.Tests.Unit.Core.Scraping.Batching
 {
     [Category("Unit")]
     public class AzureResourceDefinitionBatchingTests
