@@ -256,7 +256,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
             if (batchScrapingEnabled) {
                 Logger.LogInformation("Promitor Scraper with operate in batch scraping mode, with max batch size {BatchSize}", this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
-                Logger.LogWarning("");
+                Logger.LogWarning("Batch scraping is an experimental feature. See Promitor.io for its limitations and cost considerations");
 
                 var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
 
@@ -264,11 +264,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
                     var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
                     Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
-                    Logger.LogInformation("Logging individual definitions batch: Azure Metric {AzureMetricName} and resource type {ResourceType}.", azureMetricName, resourceType);
-                    foreach (ScrapeDefinition<IAzureResourceDefinition> definition in batchScrapeDefinition.ScrapeDefinitions)
-                    {
-                        Logger.LogInformation("ResourceID: {ResourceID}, ResourceGroup: {ResourceGroup}, Prometheus metric name: {MetricName}, Batch Key: {BatchKey}", definition.Resource.ResourceName, definition.ResourceGroupName, definition.PrometheusMetricDefinition.Name, definition.BuildScrapingBatchInfo().BuildBatchHashKey());
-                    }
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
             } else {

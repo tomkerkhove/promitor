@@ -105,7 +105,6 @@ namespace Promitor.Core.Scraping
                     subscriptionId: scrapeDefinition.SubscriptionId, 
                     resourceName: scrapeDefinition.Resource.ResourceName
                 ); 
-                Logger.LogWarning("Caching resource group {Group}, resource name {ResourceName}, subscription ID {SubscriptionID}, for {ResourceId}, of resource type {ResourceType}", resourceDefinitionToCache.ResourceGroupName, resourceDefinitionToCache.ResourceName, resourceDefinitionToCache.SubscriptionId, resourceUri, resourceDefinitionToCache.ResourceType);
                 _resourceDefinitions.AddOrUpdate(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource), (newTuple, oldTuple) => oldTuple);
             }
 
@@ -116,12 +115,7 @@ namespace Promitor.Core.Scraping
             try
             {
                 // Query Azure Monitor for metrics
-                Logger.LogWarning("Querying Azure Monitor for metric {MetricName} with batch size {BatchSize}", metricName, resourceUriList.Count);
                 resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, null, metricLimit);
-                foreach (var resourceMetric in resourceIdTaggedMeasuredMetrics) 
-                {
-                    Logger.LogWarning("Discovered value {Value} for metric {Metric} and resource ID {ResourceID}", resourceMetric.Value, metricName, resourceMetric.ResourceId);
-                }
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
@@ -144,9 +138,7 @@ namespace Promitor.Core.Scraping
                     var resourceDefinition = resourceDefinitionTuple.Item1;
                     var metricLabels = DetermineMetricLabels(resourceDefinitionTuple.Item2);
                     var finalMetricValues = EnrichMeasuredMetrics(resourceDefinitionTuple.Item2, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                    Logger.LogWarning("Processing {MetricsCount} measured metrics for resourceID {ResourceId} of resource group {ResourceGroup}", finalMetricValues.Count, resourceId, resourceDefinition.ResourceGroupName);
                     scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
-                    Logger.LogWarning("Processed {MetricsCount} measured metrics for Metric {MetricName} and resource {ResourceName}", finalMetricValues.Count, metricName, resourceId);
                 }
             }
 
