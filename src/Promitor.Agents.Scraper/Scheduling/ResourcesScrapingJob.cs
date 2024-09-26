@@ -254,9 +254,10 @@ namespace Promitor.Agents.Scraper.Scheduling
         {   
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
-            Logger.LogInformation("Parsed batch config: {Enabled}, {BatchSize}",  this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
-            Logger.LogInformation("Parsed SDK runtime config {Enabled}",  this._azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
             if (batchScrapingEnabled) {
+                Logger.LogInformation("Promitor Scraper with operate in batch scraping mode, with max batch size {BatchSize}", this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
+                Logger.LogWarning("");
+
                 var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
 
                 foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
@@ -266,7 +267,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     Logger.LogInformation("Logging individual definitions batch: Azure Metric {AzureMetricName} and resource type {ResourceType}.", azureMetricName, resourceType);
                     foreach (ScrapeDefinition<IAzureResourceDefinition> definition in batchScrapeDefinition.ScrapeDefinitions)
                     {
-                        Logger.LogInformation("ResourceID: {ResoureceID}, ResourceGroup: {ResourceGroup}, Prometheus metric name: {MetricName}, Batch Key: {BatchKey}", definition.Resource.ResourceName, definition.ResourceGroupName, definition.PrometheusMetricDefinition.Name, definition.BuildScrapingBatchInfo().BuildBatchHashKey());
+                        Logger.LogInformation("ResourceID: {ResourceID}, ResourceGroup: {ResourceGroup}, Prometheus metric name: {MetricName}, Batch Key: {BatchKey}", definition.Resource.ResourceName, definition.ResourceGroupName, definition.PrometheusMetricDefinition.Name, definition.BuildScrapingBatchInfo().BuildBatchHashKey());
                     }
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
