@@ -1,12 +1,12 @@
-using System;
-using System.Text.RegularExpressions;
 using Azure.Monitor.Query.Models;
 
 namespace Promitor.Integrations.AzureMonitor.Extensions
 {
     public static class MetricResultExtension 
     {   
-        // hacky to to get resource ID since it's not available directly through the SDK model
+        /// <summary>
+        ///     hacky to to get resource ID since it's not available directly through the SDK model, because the MetricResult model does not have the ResourceID attribute that comes with Response JSON 
+        /// </summary>
         public static string ParseResourceIdFromResultId(this MetricResult metricResult) 
         {
             return ExtractResourceId(metricResult.Id);

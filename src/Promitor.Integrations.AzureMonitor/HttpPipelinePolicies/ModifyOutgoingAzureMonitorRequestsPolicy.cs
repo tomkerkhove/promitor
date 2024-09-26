@@ -9,6 +9,9 @@ using GuardNet;
 using Microsoft.Extensions.Logging;
 
 namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
+    /// <summary>
+    ///     Work around to make sure range queries work properly. <see cref="https://github.com/Azure/azure-sdk-for-net/issues/40047">
+    /// </summary>
     public class ModifyOutgoingAzureMonitorRequestsPolicy : HttpPipelinePolicy
     {   
         private readonly ILogger _logger;

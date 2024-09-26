@@ -22,8 +22,9 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// <param name="groupedScrapeDefinitions">Scape definitions in the batch</param>
         public BatchScrapeDefinition(ScrapeDefinitionBatchProperties scrapeDefinitionBatchProperties, List<ScrapeDefinition<TResourceDefinition>> groupedScrapeDefinitions)
         {
-            Guard.NotNull(groupedScrapeDefinitions, nameof(scrapeDefinitionBatchProperties));
             Guard.NotNull(groupedScrapeDefinitions, nameof(groupedScrapeDefinitions));
+            Guard.NotLessThan(groupedScrapeDefinitions.Count, 1, nameof(groupedScrapeDefinitions));
+            Guard.NotNull(scrapeDefinitionBatchProperties, nameof(scrapeDefinitionBatchProperties));
                         
             ScrapeDefinitionBatchProperties = scrapeDefinitionBatchProperties;
             ScrapeDefinitions = groupedScrapeDefinitions;
