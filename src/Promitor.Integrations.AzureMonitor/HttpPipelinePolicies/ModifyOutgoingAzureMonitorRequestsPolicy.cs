@@ -36,21 +36,21 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             // Modify the request URL by updating or adding a query parameter
             var uriBuilder = new UriBuilder(message.Request.Uri.ToString());
             var query = System.Web.HttpUtility.ParseQueryString(uriBuilder.Query);
+            bool queryModified = false;
+
             foreach (var param in paramNames)
             {
-                _logger.LogWarning("Original URI param {param} is {value}", param, query[param]);
-
                 if (DateTimeOffset.TryParseExact(query[param], "MM/dd/yyyy HH:mm:ss zzz",  CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTime))
                 {
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
                     query[param] = dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
-                    _logger.LogWarning("Modified URI param {param} to be {value}", param, query[param]);
-                    // Update the message with the modified URI
+                    queryModified = true;
                 }
             }
-            if (message?.Request?.Uri != null && query != null)
-            {
-                message.Request.Uri.Query = query.ToString();
+            if (queryModified) {
+                message.Request.Uri.Query = uriBuilder.Query;
+            } else {
+                _logger.LogWarning("Failed to modify parameters {Parms}", string.Join("and ", paramNames));
             }
         }
     }
