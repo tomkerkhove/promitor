@@ -95,6 +95,10 @@ namespace Promitor.Core.Scraping.Configuration.Model.Metrics
         /// </summary>
         public bool Equals(ScrapeDefinitionBatchProperties other)
         {
+            if (other is null) {
+                return false;
+            }
+            
             return ResourceType == other.ResourceType && AzureMetricConfiguration.ToUniqueStringRepresentation() == other.AzureMetricConfiguration.ToUniqueStringRepresentation() && SubscriptionId == other.SubscriptionId && GetAggregationInterval().Equals(other.GetAggregationInterval());
         }
     }
