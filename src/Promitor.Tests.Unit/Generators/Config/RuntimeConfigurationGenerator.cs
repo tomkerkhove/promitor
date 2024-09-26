@@ -349,11 +349,6 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
 
                 if (_runtimeConfiguration?.AzureMonitor.Integration?.History != null)
                 {
-                    // configurationBuilder.AppendLine("  integration:");
-            
-                    // configurationBuilder.AppendLine($"   useAzureMonitorSdk: {_runtimeConfiguration?.AzureMonitor.Integration.UseAzureMonitorSdk}");
-                    // configurationBuilder.AppendLine("    history:");
-                    // configurationBuilder.AppendLine($"      startingFromInHours: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInHours}");
                     configurationBuilder.AppendLine("  integration:");
                     configurationBuilder.AppendLine($"    useAzureMonitorSdk: {_runtimeConfiguration?.AzureMonitor.Integration.UseAzureMonitorSdk}");
                     configurationBuilder.AppendLine("    history:");

@@ -13,6 +13,7 @@ namespace Promitor.Core.Scraping.Batching
         /// 2. Definitions in a batch must target the same Azure metric with identical dimensions
         /// 3. Definitions in a batch must have the same time granularity 
         /// 4. Batch size cannot exceed configured maximum 
+        /// <see href="https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/migrate-to-batch-api?tabs=individual-response#batching-restrictions"> 
         /// </summary>
         public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize) 
         {

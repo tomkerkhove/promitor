@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.ComponentModel;
-using Azure.Monitor.Query.Models;
 using Promitor.Core.Extensions;
 using Promitor.Core.Metrics;
 using Xunit;
