@@ -61,7 +61,10 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
-            _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
+            if (_azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled)
+            {
+                _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
+            }
         }
 
         /// <summary>
@@ -109,6 +112,7 @@ namespace Promitor.Integrations.AzureMonitor
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
+            Guard.NotNull(_metricsBatchQueryClient, nameof(_metricsBatchQueryClient));
                 
            // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
