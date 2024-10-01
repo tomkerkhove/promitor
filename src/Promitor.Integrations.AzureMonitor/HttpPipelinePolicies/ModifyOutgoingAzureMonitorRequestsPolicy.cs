@@ -31,6 +31,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             throw new NotSupportedException("Synchronous HTTP request path is not supported");
         }
 
+        // ReSharper disable once AssignNullToNotNullAttribute
         private void ModifyDateTimeParam(List<string> paramNames, HttpMessage message) 
         {
             // Modify the request URL by updating or adding a query parameter
