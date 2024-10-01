@@ -49,7 +49,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                 } 
             }
             if (queryModified) {
-                message.Request.Uri.Query = uriBuilder.Query;
+                message.Request.Uri.Query = query.ToString();
             } else {
                 _logger.LogWarning("Failed to modify parameters {Parms}", string.Join("and ", paramNames));
             }
