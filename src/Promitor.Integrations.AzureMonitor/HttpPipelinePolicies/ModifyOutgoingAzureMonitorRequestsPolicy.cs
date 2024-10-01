@@ -45,13 +45,13 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
                     query[param] = dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
                     queryModified = true;
+                    _logger.LogWarning("Modified {param} to modify parameters to be value {Value}", param, dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ"));
                 } 
-
-                if (queryModified) {
-                    message.Request.Uri.Query = uriBuilder.Query;
-                } else {
-                    _logger.LogWarning("Failed to modify parameters {Parms}", string.Join("and ", paramNames));
-                }
+            }
+            if (queryModified) {
+                message.Request.Uri.Query = uriBuilder.Query;
+            } else {
+                _logger.LogWarning("Failed to modify parameters {Parms}", string.Join("and ", paramNames));
             }
            
         }
