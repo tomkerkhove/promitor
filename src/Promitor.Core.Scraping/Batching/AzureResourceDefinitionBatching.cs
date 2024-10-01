@@ -18,7 +18,7 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize) 
         {
-            // ReSharper disable once PossibleMultipleEnumeration
+            // ReSharper disable PossibleMultipleEnumeration
             Guard.NotNull(allScrapeDefinitions, nameof(allScrapeDefinitions));
 
             return  allScrapeDefinitions.GroupBy(def => def.BuildScrapingBatchInfo()) 
@@ -33,7 +33,7 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize) 
         {
-            // ReSharper disable once PossibleMultipleEnumeration
+            // ReSharper disable PossibleMultipleEnumeration
             Guard.NotNull(batchToSplit, nameof(batchToSplit));
             
             int numNewGroups = ((batchToSplit.Count - 1) / maxBatchSize) + 1;
