@@ -79,8 +79,6 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
                 };
             }
-            logger.LogWarning("Batch query range: {Range}, size: {Size}, granularity: {Interval}, aggregation: {Aggregation}, filter: {Filter}", queryOptions.TimeRange, queryOptions.Size, queryOptions.Granularity, queryOptions.Aggregations,  queryOptions.Filter);
-            logger.LogWarning("Resource IDs: {IDs}", resourceIds);
 
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
