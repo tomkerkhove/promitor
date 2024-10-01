@@ -84,7 +84,6 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
 
             var metricsBatchQueryResponse = await metricsClient.QueryResourcesAsync(resourceIdentifiers, [metricName], metricNamespace, queryOptions);
             var metricsQueryResults = metricsBatchQueryResponse.Value;
-            logger.LogWarning("Got response");
             return metricsQueryResults.Values
                 .Select(result => GetRelevantMetricResultOrThrow(result, metricName))
                 .ToList();

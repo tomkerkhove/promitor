@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using GuardNet;
 using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 
@@ -17,6 +18,9 @@ namespace Promitor.Core.Scraping.Batching
         /// </summary>
         public static List<BatchScrapeDefinition<IAzureResourceDefinition>> GroupScrapeDefinitions(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> allScrapeDefinitions, int maxBatchSize) 
         {
+            Guard.NotNull(allScrapeDefinitions, nameof(allScrapeDefinitions));
+            Guard.NotLessThan(allScrapeDefinitions.Count(), 1, nameof(allScrapeDefinitions));
+
             return  allScrapeDefinitions.GroupBy(def => def.BuildScrapingBatchInfo()) 
                         .ToDictionary(group => group.Key, group => group.ToList()) // first pass to build batches that could exceed max 
                         .ToDictionary(group => group.Key, group => SplitScrapeDefinitionBatch(group.Value, maxBatchSize)) // split to right-sized batches 
@@ -24,11 +28,14 @@ namespace Promitor.Core.Scraping.Batching
                         .ToList(); // flatten 
         }
 
-    /// <summary>
+        /// <summary>
         /// splits the "raw" batch according to max batch size configured
         /// </summary>
         private static List<List<ScrapeDefinition<IAzureResourceDefinition>>> SplitScrapeDefinitionBatch(List<ScrapeDefinition<IAzureResourceDefinition>> batchToSplit, int maxBatchSize) 
         {
+            Guard.NotNull(batchToSplit, nameof(batchToSplit));
+            Guard.NotLessThan(batchToSplit.Count(), 1, nameof(batchToSplit));
+            
             int numNewGroups = ((batchToSplit.Count - 1) / maxBatchSize) + 1;
 
             return Enumerable.Range(0, numNewGroups)
