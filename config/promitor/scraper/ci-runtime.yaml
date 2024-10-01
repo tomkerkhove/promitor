@@ -15,6 +15,11 @@ telemetry:
     verbosity: trace
   defaultVerbosity: trace
 azureMonitor:
+  integration:
+    metricsBatching:
+      enabled: true 
+      maxBatchSize: 2 
+      azureRegion: westeurope
   logging:
     isEnabled: false
 resourceDiscovery:
