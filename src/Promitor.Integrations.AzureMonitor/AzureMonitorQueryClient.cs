@@ -113,7 +113,7 @@ namespace Promitor.Integrations.AzureMonitor
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
             Guard.NotNull(_metricsBatchQueryClient, nameof(_metricsBatchQueryClient));
-                
+            
            // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
             var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
