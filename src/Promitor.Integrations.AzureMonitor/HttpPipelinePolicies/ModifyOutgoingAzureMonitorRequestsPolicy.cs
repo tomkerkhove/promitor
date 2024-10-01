@@ -53,6 +53,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
             } else {
                 _logger.LogWarning("Failed to modify parameters {Parms}", string.Join("and ", paramNames));
             }
+            _logger.LogWarning("Final url is {URI}", message.Request.Uri.ToString());
            
         }
     }
