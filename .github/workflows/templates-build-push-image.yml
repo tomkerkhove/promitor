@@ -51,4 +51,3 @@ jobs:
           file: ./src/${{ inputs.project_name }}/Dockerfile.linux
           tags: ${{ env.image_commit_uri }},${{ env.image_latest_uri }}
           push: true
-          
