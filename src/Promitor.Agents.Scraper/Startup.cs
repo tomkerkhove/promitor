@@ -115,6 +115,7 @@ namespace Promitor.Agents.Scraper
             if (metricSinkConfiguration.OpenTelemetryCollector != null)
             {
                 openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector located on {metricSinkConfiguration.OpenTelemetryCollector.CollectorUri}</li>");
+                openApiDescriptionBuilder.AppendLine($"<li>OpenTelemetry Collector Protocol selected: {metricSinkConfiguration.OpenTelemetryCollector.Protocol}</li>");
             }
 
             if (metricSinkConfiguration.Statsd != null)
