@@ -30,5 +30,23 @@ namespace Promitor.Core.Metrics
                 await metricCollector.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
             }
         }
+
+        public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            if (_metricSinks == null)
+            {
+                return;
+            }
+
+            foreach (var metricCollector in _metricSinks)
+            {
+                if (metricCollector == null)
+                {
+                    continue;
+                }
+
+                await metricCollector.WriteHistogramMeasurementAsync(name, description, value, labels, includeTimestamp);
+            }
+        }
     }
 }

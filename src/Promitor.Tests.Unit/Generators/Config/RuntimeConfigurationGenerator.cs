@@ -235,7 +235,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true)
+        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true, int? batchSize = null)
         {
             _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Integration ??= new AzureMonitorIntegrationConfiguration();
@@ -250,6 +250,11 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             if (useAzureMonitorSdk != null)
             {
                 _runtimeConfiguration.AzureMonitor.Integration.UseAzureMonitorSdk = useAzureMonitorSdk.Value;
+            }
+
+            if (batchSize != null)
+            {
+                _runtimeConfiguration.AzureMonitor.Integration.MetricsBatching = new AzureMonitorMetricBatchScrapeConfig {Enabled = true, MaxBatchSize = batchSize.Value};
             }
 
             return this;
@@ -348,6 +353,9 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                     configurationBuilder.AppendLine($"    useAzureMonitorSdk: {_runtimeConfiguration?.AzureMonitor.Integration.UseAzureMonitorSdk}");
                     configurationBuilder.AppendLine("    history:");
                     configurationBuilder.AppendLine($"      startingFromInHours: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInHours}");
+                    configurationBuilder.AppendLine("    metricsBatching:");
+                    configurationBuilder.AppendLine($"      enabled: {_runtimeConfiguration?.AzureMonitor.Integration.MetricsBatching.Enabled}");
+                    configurationBuilder.AppendLine($"      maxBatchSize: {_runtimeConfiguration?.AzureMonitor.Integration.MetricsBatching.MaxBatchSize}");
                 }
 
                 if (_runtimeConfiguration?.AzureMonitor.Logging != null)

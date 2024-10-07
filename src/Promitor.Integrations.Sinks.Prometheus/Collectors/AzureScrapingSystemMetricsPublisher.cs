@@ -48,5 +48,21 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         {
             await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, labels, includeTimestamp);
         }
+        
+        public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels)
+        {
+            var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
+
+            var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
+            labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
+
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            await _systemMetricsPublisher.WriteHistogramMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
+        }
+        public async Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
+        {
+            await _systemMetricsPublisher.WriteHistogramMeasurementAsync(name, description, value, labels, includeTimestamp);
+        }
     }
 }

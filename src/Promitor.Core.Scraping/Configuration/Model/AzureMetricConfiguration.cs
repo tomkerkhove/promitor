@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {
@@ -44,6 +45,30 @@ namespace Promitor.Core.Scraping.Configuration.Model
                 return Dimension?.Name?.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase);
             }
             return Dimensions?.Any(dimension => dimension.Name.Equals(dimensionName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+         // A unique string to represent this Azure metric and its configured dimensions
+        public string ToUniqueStringRepresentation()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(MetricName);
+            if (Dimension != null) 
+            {
+                sb.Append('_');
+                sb.Append(Dimension.Name);
+            }
+            else if (Dimensions != null) 
+            {
+                foreach (var dimension in Dimensions)
+                {
+                    sb.Append('_');
+                    sb.Append(dimension.Name);
+                }
+            }
+            sb.Append($"_limit{Limit}");
+
+
+            return sb.ToString();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Promitor.Core.Contracts;
@@ -48,6 +49,14 @@ namespace Promitor.Core.Scraping
         private Dictionary<string, string> DetermineMetricLabels(LogAnalyticsResourceDefinition resourceDefinition)
         {
             return new Dictionary<string, string> { { "workspace_id", resourceDefinition.WorkspaceId }, {"workspace_name", resourceDefinition.WorkspaceName} };
+        }
+
+        protected override async Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
+        {
+            var logScrapingTasks = batchScrapeDefinition.ScrapeDefinitions.Select(definition => ScrapeResourceAsync(subscriptionId, definition, (LogAnalyticsResourceDefinition) definition.Resource, aggregationType, aggregationInterval)).ToList();
+
+            var resultsList = await Task.WhenAll(logScrapingTasks);
+            return resultsList.ToList();
         }
     }
 }

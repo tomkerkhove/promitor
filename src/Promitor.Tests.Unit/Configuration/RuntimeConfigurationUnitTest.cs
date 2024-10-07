@@ -132,6 +132,43 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.False(runtimeConfiguration.AzureMonitor.Integration.UseAzureMonitorSdk);
         }
 
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoBatchingConfigurationForAzureMonitorIntegration_DefaultsToDisabled()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(useAzureMonitorSdk: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.False(runtimeConfiguration.AzureMonitor.Integration.MetricsBatching.Enabled);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_BatchingConfigurationForAzureMonitorIntegration_UsesConfigured()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(batchSize: 50)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.True(runtimeConfiguration.AzureMonitor.Integration.MetricsBatching.Enabled);
+            Assert.Equal(50, runtimeConfiguration.AzureMonitor.Integration.MetricsBatching.MaxBatchSize);
+        }
+
 
         [Theory]
         [InlineData(true)]

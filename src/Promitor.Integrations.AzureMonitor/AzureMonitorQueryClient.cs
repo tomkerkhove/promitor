@@ -6,7 +6,6 @@ using GuardNet;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Promitor.Core;
 using Promitor.Core.Metrics;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
@@ -23,6 +22,7 @@ using Azure.Core;
 using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
+using Promitor.Integrations.AzureMonitor.Extensions;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -30,7 +30,8 @@ namespace Promitor.Integrations.AzureMonitor
     {
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly TimeSpan _metricDefinitionCacheDuration = TimeSpan.FromHours(1);
-        private readonly MetricsQueryClient _metricsQueryClient;
+        private readonly MetricsQueryClient _metricsQueryClient; // for single resource queries 
+        private readonly MetricsClient _metricsBatchQueryClient; // for batch queries
         private readonly IMemoryCache _resourceMetricDefinitionMemoryCache;
         private readonly ILogger _logger;
 
@@ -60,6 +61,10 @@ namespace Promitor.Integrations.AzureMonitor
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
             _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
+            if (_azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled)
+            {
+                _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
+            }
         }
 
         /// <summary>
@@ -81,13 +86,13 @@ namespace Promitor.Integrations.AzureMonitor
                 
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
-            var metricNamespaces = await GetMetricNamespacesAsync(resourceId);
+            var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceId, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
             var metricNamespace = metricNamespaces.SingleOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
-            var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId, metricNamespace); 
+            var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceId, metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
             {
@@ -97,8 +102,50 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var metricResult = await GetRelevantMetric(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime);
+            var metricResult = await _metricsQueryClient.GetRelevantMetricSingleResource(resourceId, metricName, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration);
             
+            return ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions);
+        }
+
+        public async Task<List<ResourceAssociatedMeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
+            List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
+        {
+            Guard.NotNullOrWhitespace(metricName, nameof(metricName));
+            Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
+            Guard.NotNull(_metricsBatchQueryClient, nameof(_metricsBatchQueryClient));
+            
+           // Get all metrics
+            var startQueryingTime = DateTime.UtcNow;
+            var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
+            var metricNamespace = metricNamespaces.SingleOrDefault();
+            if (metricNamespace == null)
+            {
+                throw new MetricNotFoundException(metricName);
+            }
+            var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
+            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
+            if (metricDefinition == null)
+            {
+                throw new MetricNotFoundException(metricName);
+            }
+
+            var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
+
+            // Get the most recent metric
+            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResources(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration, _logger);
+
+            //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
+            return metricResultsList
+                .SelectMany(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
+                                                .Select(measuredMetric => measuredMetric.WithResourceIdAssociation(metricResult.ParseResourceIdFromResultId()))) 
+                .ToList();
+        }
+
+        /// <summary>
+        ///     Process metrics query response as time series values using the Promitor data model(MeasuredMetric)
+        /// </summary>
+        private List<MeasuredMetric> ProcessMetricResult(MetricResult metricResult, string metricName, DateTime startQueryingTime, TimeSpan closestAggregationInterval, PromitorMetricAggregationType aggregationType, List<string> metricDimensions)
+        {
             var seriesForMetric = metricResult.TimeSeries;
             if (seriesForMetric.Count < 1)
             {
@@ -125,53 +172,14 @@ namespace Promitor.Integrations.AzureMonitor
                 } 
                 catch (MissingDimensionException e) 
                 {
-                    _logger.LogWarning("{MetricName} has return a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
+                    _logger.LogWarning("{MetricName} has returned a time series with empty value for {Dimension} and the measurements will be dropped", metricName, e.DimensionName); 
                     _logger.LogDebug("The violating time series has content {Details}", JsonConvert.SerializeObject(e.TimeSeries)); 
                 }
             }
 
             return measuredMetrics;
-        }
-
-        private async Task<IReadOnlyList<MetricDefinition>> GetMetricDefinitionsAsync(string resourceId, string metricNamespace)
-        {
-            // Get cached metric definitions
-            if (_resourceMetricDefinitionMemoryCache.TryGetValue(resourceId, out IReadOnlyList<MetricDefinition> metricDefinitions))
-            {
-                return metricDefinitions;
-            }
-            var metricsDefinitions = new List<MetricDefinition>(); 
-            await foreach (var definition in _metricsQueryClient.GetMetricDefinitionsAsync(resourceId, metricNamespace))
-            {
-                metricsDefinitions.Add(definition);
-            }
-            
-            // Get from API and cache it
-            _resourceMetricDefinitionMemoryCache.Set(resourceId, metricsDefinitions, _metricDefinitionCacheDuration);
-
-            return metricsDefinitions;
-        }
-
-        private async Task<List<string>> GetMetricNamespacesAsync(string resourceId)
-        {
-            // Get cached metric namespaces 
-            var namespaceKey = $"{resourceId}_namespace";
-            if (_resourceMetricDefinitionMemoryCache.TryGetValue(namespaceKey, out List<string> metricNamespaces))
-            {
-                return metricNamespaces;
-            }
-            var foundMetricNamespaces = new List<string>(); 
-            await foreach (var metricNamespace in _metricsQueryClient.GetMetricNamespacesAsync(resourceId))
-            {
-                foundMetricNamespaces.Add(metricNamespace.FullyQualifiedName);
-            }
-            
-            // Get from API and cache it
-            _resourceMetricDefinitionMemoryCache.Set(namespaceKey, foundMetricNamespaces, _metricDefinitionCacheDuration);
-
-            return foundMetricNamespaces;
-        }
-
+        }    
+         
         private TimeSpan DetermineAggregationInterval(string metricName, TimeSpan requestedAggregationInterval, IReadOnlyList<MetricAvailability> availableMetricPeriods)
         {
             // Get perfect match
@@ -211,48 +219,6 @@ namespace Promitor.Integrations.AzureMonitor
             return closestAggregationInterval;
         }
 
-        private async Task<MetricResult> GetRelevantMetric(string resourceId, string metricName, MetricAggregationType metricAggregation, TimeSpan metricInterval,
-            string metricFilter, List<string> metricDimensions, int? metricLimit, DateTime recordDateTime)
-        {   
-            MetricsQueryOptions queryOptions;
-            var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
-            var historyStartingFromInHours = _azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            var filter = BuildFilter(metricDimensions, metricFilter);
-
-            if (!string.IsNullOrEmpty(filter))
-            {
-                queryOptions = new MetricsQueryOptions {
-                    Aggregations = {
-                        metricAggregation
-                    }, 
-                    Granularity = metricInterval,
-                    Filter = filter,
-                    Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
-                };
-            } 
-            else 
-            {
-                queryOptions = new MetricsQueryOptions {
-                    Aggregations= {
-                        metricAggregation
-                    }, 
-                    Granularity = metricInterval,
-                    Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
-                };
-            }
-            
-            var metricsQueryResponse = await _metricsQueryClient.QueryResourceAsync(resourceId, [metricName], queryOptions);
-            var relevantMetric = metricsQueryResponse.Value.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
-            if (relevantMetric == null)
-            {
-                throw new MetricNotFoundException(metricName);
-            }
-
-            return relevantMetric;
-        }
-
         private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTimeOffset recordDateTime)
         {
             var relevantMetricValue = timeSeries.Values.Where(metricValue => metricValue.TimeStamp < recordDateTime)
@@ -286,35 +252,6 @@ namespace Promitor.Integrations.AzureMonitor
                     throw new Exception($"Unable to determine the metrics value for aggregator '{metricAggregation}'");
             }
         }
-
-        private static string BuildFilter(List<String> metricDimensions, string metricFilter)
-        {
-            var filterDictionary = new Dictionary<string, string>();
-            metricDimensions.ForEach(metricDimension => filterDictionary.Add(metricDimension, "'*'"));
-            
-            if (string.IsNullOrWhiteSpace(metricFilter) == false) {
-                var filterConditions = metricFilter.Split(" and ").ToList();
-                foreach (string condition in filterConditions) 
-                {
-                    string[] parts = condition.Split(" eq ", StringSplitOptions.None);
-                    if (filterDictionary.ContainsKey(parts[0]))
-                    {
-                        filterDictionary[parts[0]] = parts[1];
-                    } 
-                    else 
-                    {
-                        filterDictionary.Add(parts[0].Trim(), parts[1]);
-                    }
-                }
-            }
-
-            if (filterDictionary.Count > 0) 
-            {
-                return string.Join(" and ", filterDictionary.Select(kvp => $"{kvp.Key} eq {kvp.Value}"));
-            }
-            return null;
-        }
-
         /// <summary>
         ///     Creates authenticated client to query for metrics
         /// </summary>
@@ -335,6 +272,46 @@ namespace Promitor.Integrations.AzureMonitor
                 metricsQueryClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
             return new MetricsQueryClient(tokenCredential, metricsQueryClientOptions);
+        }
+
+        /// <summary>
+        ///     Creates authenticated client for metrics batch queries
+        /// </summary>
+        private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+            var azureRegion = azureMonitorIntegrationConfiguration.Value.MetricsBatching.AzureRegion;
+            var metricsClientOptions = new MetricsClientOptions{
+                Audience = azureCloud.DetermineMetricsClientBatchQueryAudience(),
+                Retry =
+                {
+                    Mode = RetryMode.Exponential,
+                    MaxRetries = 3,
+                    Delay = TimeSpan.FromSeconds(1), 
+                    MaxDelay = TimeSpan.FromSeconds(30), 
+                }
+            }; // retry policy as suggested in the documentation: https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/migrate-to-batch-api?tabs=individual-response#529-throttling-errors
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
+            metricsClientOptions.AddPolicy(new ModifyOutgoingAzureMonitorRequestsPolicy(_logger), HttpPipelinePosition.BeforeTransport); 
+            var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
+            if (azureMonitorLogging.IsEnabled)
+            {
+                using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
+                metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
+            }
+            _logger.LogWarning("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString()));
+            return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
+        }
+
+        public static string InsertRegionIntoUrl(string region, string baseUrl)
+        {
+            // Find the position where ".metrics" starts in the URL
+            int metricsIndex = baseUrl.IndexOf("metrics", StringComparison.Ordinal);
+
+            // Split the base URL into two parts: before and after the ".metrics"
+            string beforeMetrics = baseUrl.Substring(0, metricsIndex);
+            string afterMetrics = baseUrl.Substring(metricsIndex);
+
+            // Concatenate the region between the two parts
+            return $"{beforeMetrics}{region}.{afterMetrics}";
         }
     }
 }
