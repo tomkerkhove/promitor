@@ -75,7 +75,7 @@ stages:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
      condition: succeeded()
-     timeoutInMinutes: 180
+     timeoutInMinutes: 25
      pool:
        vmImage: ubuntu-latest
      variables:
@@ -263,6 +263,9 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
+     - template: templates/docker/show-container-logs.yml
+       parameters:
+        containerName: '$(Container.OpenTelemetryCollector.Name)'
      - template: templates/prometheus/show-prometheus-metrics.yml
        parameters:
         agentName: 'Scraper'

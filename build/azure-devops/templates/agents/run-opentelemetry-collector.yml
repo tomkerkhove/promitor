@@ -35,7 +35,7 @@ steps:
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
       docker run -d -p 8888:8888 -p 8889:8889 --name ${{ parameters.containerName }} $(networkArgument) --volume ${{ parameters.volumes }} otel/opentelemetry-collector:0.103.0 --config /etc/otel-collector-config.yaml
-      sleep 10
+      sleep 15
       docker logs ${{ parameters.containerName }}
   displayName: Run OpenTelemetry Collector as ${{ parameters.containerName }} container
   failOnStderr: false
