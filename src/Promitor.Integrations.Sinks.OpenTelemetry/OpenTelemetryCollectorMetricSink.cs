@@ -68,7 +68,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var channelWriter = _measurements[metricName].Writer;
             await channelWriter.WriteAsync(newMeasurement);
             
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
+            _logger.LogWarning("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
         }
 
         private void InitializeNewMetric(string metricName, string metricDescription)
