@@ -18,6 +18,11 @@ extensions:
 
 service:
   extensions: []
+  telemetry:
+    logs:
+      level: "DEBUG"
+      development: true
+      encoding: "json"
   pipelines:
     metrics:
       receivers: [otlp]
