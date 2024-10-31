@@ -83,7 +83,8 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
         {
             List<Measurement<double>> measurementsToReport = new List<Measurement<double>>();
             var channel = _measurements[metricName];
-            
+            _logger.LogWarning("Gauge observer callback triggered for {MetricName}", metricName);
+
             var totalCount = channel.Reader.Count;
             var readItems = 0;
             do
