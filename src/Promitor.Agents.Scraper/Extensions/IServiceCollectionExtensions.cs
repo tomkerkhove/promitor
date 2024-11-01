@@ -236,7 +236,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     {
                         metricsBuilder.SetResourceBuilder(resourceBuilder)
                                       .AddMeter("Promitor.Scraper.Metrics.AzureMonitor")
-                                      .AddOtlpExporter(options => options.Endpoint = new Uri(collectorUri));
+                                      .AddOtlpExporter((exporterOptions, metricReaderOptions) =>
+                                        {
+                                            exporterOptions.Endpoint = new Uri(collectorUri);
+                                            metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 15000;
+                                        });
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();
