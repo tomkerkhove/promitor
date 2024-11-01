@@ -4,6 +4,7 @@ using JustEat.StatsD;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using Promitor.Agents.Core.Configuration.Server;
@@ -240,7 +241,8 @@ namespace Microsoft.Extensions.DependencyInjection
                                         {
                                             exporterOptions.Endpoint = new Uri(collectorUri);
                                             metricReaderOptions.PeriodicExportingMetricReaderOptions.ExportIntervalMilliseconds = 15000;
-                                        });
+                                        })
+                                        .AddConsoleExporter();
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
             services.AddTransient<OpenTelemetryCollectorMetricSink>();
