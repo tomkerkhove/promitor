@@ -25,8 +25,11 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             : base(metricsDeclarationProvider, logger)
         {
             Guard.NotNull(logger, nameof(logger));
-
             _logger = logger;
+            azureMonitorMeter.CreateObservableGauge<double>("test_gauge", description: "test", observeValues: () => {
+               _logger.LogWarning("Reporting test gauge");
+               return [new Measurement<double>(1.0, [new KeyValuePair<string, object?>("tag1", "value1")])];
+            });
         }
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
