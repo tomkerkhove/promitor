@@ -160,6 +160,9 @@ stages:
         containerName: '$(Container.Scraper.Name)'
      - template: templates/docker/show-container-logs.yml
        parameters:
+        containerName: '$(Container.OpenTelemetryCollector.Name)'
+     - template: templates/docker/show-container-logs.yml
+       parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
      - template: templates/prometheus/show-prometheus-metrics.yml
        parameters:
@@ -263,9 +266,6 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: templates/docker/show-container-logs.yml
-       parameters:
-        containerName: '$(Container.OpenTelemetryCollector.Name)'
      - template: templates/prometheus/show-prometheus-metrics.yml
        parameters:
         agentName: 'Scraper'
