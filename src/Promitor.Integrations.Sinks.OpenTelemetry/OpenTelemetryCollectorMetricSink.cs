@@ -3,33 +3,27 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
-using System.Threading.Channels;
+using System.Threading;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core;
 using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
-using Promitor.Integrations.Sinks.Core;
 
 namespace Promitor.Integrations.Sinks.OpenTelemetry
 {
-    public class OpenTelemetryCollectorMetricSink : MetricSink, IMetricSink
+    public class OpenTelemetryCollectorMetricSink : IMetricSink
     {
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
-        private static readonly Meter azureMonitorMeter = new("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
+        private static readonly Meter azureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
         public MetricSinkType Type => MetricSinkType.OpenTelemetryCollector;
 
-        public OpenTelemetryCollectorMetricSink(IMetricsDeclarationProvider metricsDeclarationProvider, ILogger<OpenTelemetryCollectorMetricSink> logger)
-            : base(metricsDeclarationProvider, logger)
+        public OpenTelemetryCollectorMetricSink(ILogger<OpenTelemetryCollectorMetricSink> logger)
         {
             Guard.NotNull(logger, nameof(logger));
+
             _logger = logger;
-            azureMonitorMeter.CreateObservableGauge<double>("test_gauge", description: "test", observeValues: () => {
-               _logger.LogWarning("Reporting test gauge");
-               return [new Measurement<double>(1.0, [new KeyValuePair<string, object?>("tag1", "value1")])];
-            });
         }
 
         public async Task ReportMetricAsync(string metricName, string metricDescription, ScrapeResult scrapeResult)
@@ -44,23 +38,21 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             {
                 var metricValue = measuredMetric.Value ?? 0;
                 
-                var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);
-
-                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, metricLabels);
+                var reportMetricTask = ReportMetricAsync(metricName, metricDescription, metricValue, scrapeResult.Labels);
                 reportMetricTasks.Add(reportMetricTask);
             }
 
             await Task.WhenAll(reportMetricTasks);
         }
 
-        private readonly ConcurrentDictionary<string, ObservableGauge<double>> _gauges = new();
-        private readonly ConcurrentDictionary<string, Channel<Measurement<double>>> _measurements = new();
+        private readonly ConcurrentDictionary<string, ObservableGauge<double>> _gauges = new ConcurrentDictionary<string, ObservableGauge<double>>();
+        private readonly ConcurrentDictionary<string, HashSet<Measurement<double>>> _measurements = new ConcurrentDictionary<string, HashSet<Measurement<double>>>();
 
-        public async Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
+        public Task ReportMetricAsync(string metricName, string metricDescription, double metricValue, Dictionary<string, string> labels)
         {
             Guard.NotNullOrEmpty(metricName, nameof(metricName));
 
-            // TODO: Move to factory instead? 
+            // TODO: Move to factory instead?
             if (_gauges.ContainsKey(metricName) == false)
             {
                 InitializeNewMetric(metricName, metricDescription);
@@ -68,42 +60,28 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
 
             var composedTags = labels.Select(kvp => new KeyValuePair<string, object?>(kvp.Key, kvp.Value)).ToArray();
             var newMeasurement = new Measurement<double>(metricValue, composedTags);
-            var channelWriter = _measurements[metricName].Writer;
-            await channelWriter.WriteAsync(newMeasurement);
-            
-            _logger.LogWarning("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
+            _measurements[metricName].Add(newMeasurement);
+
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
+
+            return Task.CompletedTask;
         }
 
         private void InitializeNewMetric(string metricName, string metricDescription)
         {
-            var gauge = azureMonitorMeter.CreateObservableGauge(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetricAsync(metricName).Result);
+            var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
             _gauges.TryAdd(metricName, gauge);
 
-            _measurements.TryAdd(metricName, CreateNewMeasurementChannel());
+            _measurements.TryAdd(metricName, new HashSet<Measurement<double>>());
         }
 
-        private async Task<IEnumerable<Measurement<double>>> ReportMeasurementsForMetricAsync(string metricName)
+        private IEnumerable<Measurement<double>> ReportMeasurementsForMetric(string metricName)
         {
-            List<Measurement<double>> measurementsToReport = new List<Measurement<double>>();
-            var channel = _measurements[metricName];
-            _logger.LogWarning("Gauge observer callback triggered for {MetricName}", metricName);
+            var recordedMeasurements = _measurements[metricName];
 
-            var totalCount = channel.Reader.Count;
-            var readItems = 0;
-            do
-            {
-                var item = await channel.Reader.ReadAsync();
-                measurementsToReport.Add(item);
-                readItems++;
-            }
-            while (readItems < totalCount);
+            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, new HashSet<Measurement<double>>());
 
             return measurementsToReport;
-        }
-
-        static Channel<Measurement<double>> CreateNewMeasurementChannel()
-        {
-            return Channel.CreateUnbounded<Measurement<double>>();
         }
     }
 }
