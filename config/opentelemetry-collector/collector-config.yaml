@@ -10,7 +10,6 @@ exporters:
     const_labels:
       source_app: promitor
     send_timestamps: true
-    metric_expiration: 10m
 
 processors:
   batch:

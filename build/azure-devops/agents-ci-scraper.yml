@@ -75,7 +75,7 @@ stages:
    - job: DockerBuildLinux
      displayName: Build Docker Image (Linux)
      condition: succeeded()
-     timeoutInMinutes: 10
+     timeoutInMinutes: 30
      pool:
        vmImage: ubuntu-latest
      variables:

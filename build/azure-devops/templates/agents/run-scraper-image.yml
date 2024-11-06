@@ -66,7 +66,7 @@ steps:
 - script: |
       echo Mounting volumes: ${{ parameters.volumes }}
       docker run -d -p ${{ parameters.containerPort }}:88 --name ${{ parameters.containerName }} $(networkArgument) --env PROMITOR_AUTH_APPID=${{ parameters.activeDirectoryAppId }} --env PROMITOR_AUTH_APPKEY=${{ parameters.activeDirectoryAppSecret }} --volume ${{ parameters.volumes }} ${{ parameters.imageName }}
-      sleep 70
+      sleep 10
       docker logs ${{ parameters.containerName }}
   displayName: Run Scraper image as ${{ parameters.containerName }} container on ${{ parameters.os }}
   failOnStderr: true
