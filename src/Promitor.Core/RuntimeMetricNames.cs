@@ -8,6 +8,5 @@
         public static string ResourceGraphThrottled => "promitor_ratelimit_resource_graph_throttled";
         public static string ScrapeSuccessful => "promitor_scrape_success";
         public static string ScrapeError => "promitor_scrape_error";
-        public static string BatchSize => "promitor_batch_size";
     }
 }

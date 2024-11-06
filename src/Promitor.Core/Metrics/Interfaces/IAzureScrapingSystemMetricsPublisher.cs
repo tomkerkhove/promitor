@@ -13,14 +13,5 @@ namespace Promitor.Core.Metrics.Interfaces
         /// <param name="value">New measured value</param>
         /// <param name="labels">Labels that are applicable for this measurement</param>
         Task WriteGaugeMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels);
-
-        /// <summary>
-        ///     Records a histogram value
-        /// </summary>
-        /// <param name="name">Name of the metric</param>
-        /// <param name="description">Description of the metric</param>
-        /// <param name="value">New measured value</param>
-        /// <param name="labels">Labels that are applicable for this measurement</param>
-        Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels);
     }
 }

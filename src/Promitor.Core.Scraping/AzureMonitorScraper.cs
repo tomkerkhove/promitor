@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
-using Promitor.Core.Extensions;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
@@ -21,19 +18,13 @@ namespace Promitor.Core.Scraping
     /// <typeparam name="TResourceDefinition">Type of metric definition that is being used</typeparam>
     public abstract class AzureMonitorScraper<TResourceDefinition> : Scraper<TResourceDefinition>
         where TResourceDefinition : class, IAzureResourceDefinition
-    {   
-        /// <summary>
-        ///     A cache to store resource definitions. Used to hydrate resource info from resource ID, when processing batch query results
-        /// </summary>
-        private readonly ConcurrentDictionary<string, Tuple<IAzureResourceDefinition, TResourceDefinition>> _resourceDefinitions; // using a dictionary for now since IMemoryCache involves layers of injection
-
+    {
         /// <summary>
         ///     Constructor
         /// </summary>
         protected AzureMonitorScraper(ScraperConfiguration scraperConfiguration) :
             base(scraperConfiguration)
         {
-            _resourceDefinitions = new ConcurrentDictionary<string, Tuple<IAzureResourceDefinition, TResourceDefinition>>();
         }
 
         /// <inheritdoc />
@@ -82,69 +73,6 @@ namespace Promitor.Core.Scraping
             return new ScrapeResult(subscriptionId, scrapeDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceUri, finalMetricValues, metricLabels);
         }
 
-        protected override async Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
-        {
-            Guard.NotNull(batchScrapeDefinition, nameof(batchScrapeDefinition));
-            Guard.NotLessThan(batchScrapeDefinition.ScrapeDefinitions.Count(), 1, nameof(batchScrapeDefinition));
-            Guard.NotNull(batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration, nameof(batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration));
-
-            var metricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
-
-            // Build list of resource URIs based on definitions in the batch 
-            var resourceUriList = new List<string>();
-            foreach (ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition in batchScrapeDefinition.ScrapeDefinitions)
-            {
-                var resourceUri = $"/{BuildResourceUri(subscriptionId, scrapeDefinition, (TResourceDefinition) scrapeDefinition.Resource)}";
-                resourceUriList.Add(resourceUri);
-                // cache resource info 
-                // the TResourceDefinition resource definition attached to scrape definition can sometimes missing some attributes, need to them in here 
-                var resourceDefinitionToCache = new AzureResourceDefinition
-                (
-                    resourceType: scrapeDefinition.Resource.ResourceType, 
-                    resourceGroupName:  scrapeDefinition.ResourceGroupName, 
-                    subscriptionId: scrapeDefinition.SubscriptionId, 
-                    resourceName: scrapeDefinition.Resource.ResourceName
-                ); 
-                _resourceDefinitions.AddOrUpdate(resourceUri, new Tuple<IAzureResourceDefinition, TResourceDefinition>(resourceDefinitionToCache, (TResourceDefinition)scrapeDefinition.Resource), (newTuple, oldTuple) => oldTuple);
-            }
-
-            var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
-            var dimensionNames = DetermineMetricDimensions(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration); // TODO: resource definition doesn't seem to be used, can we remove it from function signature?  
-
-            var resourceIdTaggedMeasuredMetrics = new List<ResourceAssociatedMeasuredMetric>();
-            try
-            {
-                // Query Azure Monitor for metrics
-                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, null, metricLimit);
-            }
-            catch (MetricInformationNotFoundException metricsNotFoundException)
-            {
-                Logger.LogWarning("No metric information found for metric {MetricName} with dimensions {MetricDimensions}. Details: {Details}", metricsNotFoundException.Name, metricsNotFoundException.Dimensions, metricsNotFoundException.Details);
-                
-                var measuredMetric = dimensionNames.Count > 0
-                            ? MeasuredMetric.CreateForDimensions(dimensionNames) 
-                            : MeasuredMetric.CreateWithoutDimensions(null);
-                resourceIdTaggedMeasuredMetrics.Add(measuredMetric.WithResourceIdAssociation(null));
-            }
-
-            var scrapeResults = new List<ScrapeResult>();
-            // group based on resource, then do enrichment per group
-            var groupedMeasuredMetrics = resourceIdTaggedMeasuredMetrics.GroupBy(measuredMetric => measuredMetric.ResourceId);
-            foreach (IGrouping<string, ResourceAssociatedMeasuredMetric> resourceMetricsGroup in groupedMeasuredMetrics) 
-            {
-                var resourceId = resourceMetricsGroup.Key; 
-                if (_resourceDefinitions.TryGetValue(resourceId, out Tuple<IAzureResourceDefinition, TResourceDefinition> resourceDefinitionTuple))
-                {
-                    var resourceDefinition = resourceDefinitionTuple.Item1;
-                    var metricLabels = DetermineMetricLabels(resourceDefinitionTuple.Item2);
-                    var finalMetricValues = EnrichMeasuredMetrics(resourceDefinitionTuple.Item2, dimensionNames, resourceMetricsGroup.ToImmutableList());
-                    scrapeResults.Add(new ScrapeResult(subscriptionId, resourceDefinition.ResourceGroupName, resourceDefinition.ResourceName, resourceId, finalMetricValues, metricLabels));
-                }
-            }
-
-            return scrapeResults;
-        }
-
         private int? DetermineMetricLimit(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
         {
             return scrapeDefinition.AzureMetricConfiguration.Limit;
@@ -161,9 +89,9 @@ namespace Promitor.Core.Scraping
         /// <param name="dimensionNames">List of names of the specified dimensions provided by the scraper.</param>
         /// <param name="metricValues">Measured metric values that were found</param>
         /// <returns></returns>
-        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, IReadOnlyList<MeasuredMetric> metricValues)
+        protected virtual List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
-            return metricValues.ToList();
+            return metricValues;
         }
 
         /// <summary>
