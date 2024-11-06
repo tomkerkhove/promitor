@@ -245,7 +245,7 @@ namespace Microsoft.Extensions.DependencyInjection
                                         .AddConsoleExporter();
                     });
             services.AddTransient<IMetricSink, OpenTelemetryCollectorMetricSink>();
-            services.AddOpenTelemetrySystemMetrics();
+            //services.AddOpenTelemetrySystemMetrics();
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)
