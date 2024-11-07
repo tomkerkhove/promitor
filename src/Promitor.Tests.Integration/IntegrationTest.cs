@@ -1,4 +1,4 @@
-﻿using Arcus.Testing.Logging;
+﻿using Arcus.Testing;
 using Microsoft.Extensions.Configuration;
 using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Infrastructure;
