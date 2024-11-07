@@ -12,11 +12,12 @@ namespace Promitor.Tests.Integration
     {
         protected IConfiguration Configuration { get; }
         protected XunitTestLogger Logger { get; }
-        public PrometheusClientFactory PrometheusClientFactory => new(Logger);
+        public PrometheusClientFactory PrometheusClientFactory;
 
         public IntegrationTest(ITestOutputHelper testOutput)
         {
             Logger = new XunitTestLogger(testOutput);
+            PrometheusClientFactory =  new(Logger);
 
             // The appsettings.local.json allows users to override (gitignored) settings locally for testing purposes
             Configuration = ConfigurationFactory.Create();
