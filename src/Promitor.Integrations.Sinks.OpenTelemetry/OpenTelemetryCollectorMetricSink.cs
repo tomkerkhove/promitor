@@ -62,7 +62,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var newMeasurement = new Measurement<double>(metricValue, composedTags);
             _measurements[metricName].Add(newMeasurement);
 
-            _logger.LogTrace("Metric {MetricName} with value {MetricValue} was pushed to OpenTelemetry Collector", metricName, metricValue);
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} and labels {Labels} was pushed to OpenTelemetry Collector", metricName, metricValue, composedTags);
 
             return Task.CompletedTask;
         }
