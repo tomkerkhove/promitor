@@ -158,9 +158,9 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.Scraper.Name)'
-     - template: templates/docker/show-container-logs.yml
-       parameters:
-        containerName: '$(Container.OpenTelemetryCollector.Name)'
+    #  - template: templates/docker/show-container-logs.yml
+    #    parameters:
+    #     containerName: '$(Container.OpenTelemetryCollector.Name)'
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
