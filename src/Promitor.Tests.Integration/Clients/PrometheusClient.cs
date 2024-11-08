@@ -49,7 +49,7 @@ namespace Promitor.Tests.Integration.Clients
         public async Task<Gauge> WaitForPrometheusMetricAsync(string expectedMetricName)
         {
             var computedExpectedMetricName = string.IsNullOrWhiteSpace(MetricNamespace) ? expectedMetricName : $"{MetricNamespace}_{expectedMetricName}";
-            Logger.LogWarning($"Starting to look for metric with name '{computedExpectedMetricName}'.");
+            Logger.LogInformation($"Starting to look for metric with name '{computedExpectedMetricName}'.");
             return await WaitForPrometheusMetricAsync(x => x.Name.Equals(computedExpectedMetricName, StringComparison.InvariantCultureIgnoreCase));
         }
 
