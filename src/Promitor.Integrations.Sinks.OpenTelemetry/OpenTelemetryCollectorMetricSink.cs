@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#nullable enable
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
@@ -66,7 +67,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var newMeasurement = new Measurement<double>(metricValue, composedTags);
             _measurements[metricName].Add(newMeasurement);
 
-            _logger.LogWarning("Metric {MetricName} with value {MetricValue} and labels {Labels} was pushed to OpenTelemetry Collector", metricName, metricValue, composedTags);
+            _logger.LogTrace("Metric {MetricName} with value {MetricValue} and labels {Labels} was pushed to OpenTelemetry Collector", metricName, metricValue, composedTags);
 
             return Task.CompletedTask;
         }
@@ -76,14 +77,14 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
             var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
             _gauges.TryAdd(metricName, gauge);
 
-            _measurements.TryAdd(metricName, new HashSet<Measurement<double>>());
+            _measurements.TryAdd(metricName, []);
         }
 
         private IEnumerable<Measurement<double>> ReportMeasurementsForMetric(string metricName)
         {
             var recordedMeasurements = _measurements[metricName];
 
-            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, new HashSet<Measurement<double>>());
+            var measurementsToReport = Interlocked.Exchange(ref recordedMeasurements, []);
 
             return measurementsToReport;
         }
