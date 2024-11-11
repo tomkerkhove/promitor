@@ -1,4 +1,4 @@
-﻿using Arcus.Testing;
+﻿using Arcus.Testing.Logging;
 using Microsoft.Extensions.Configuration;
 using Promitor.Tests.Integration.Clients;
 using Promitor.Tests.Integration.Infrastructure;
@@ -12,12 +12,11 @@ namespace Promitor.Tests.Integration
     {
         protected IConfiguration Configuration { get; }
         protected XunitTestLogger Logger { get; }
-        public PrometheusClientFactory PrometheusClientFactory;
+        public PrometheusClientFactory PrometheusClientFactory => new(Logger);
 
         public IntegrationTest(ITestOutputHelper testOutput)
         {
             Logger = new XunitTestLogger(testOutput);
-            PrometheusClientFactory =  new(Logger);
 
             // The appsettings.local.json allows users to override (gitignored) settings locally for testing purposes
             Configuration = ConfigurationFactory.Create();
