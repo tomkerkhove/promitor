@@ -17,7 +17,7 @@ namespace Promitor.Tests.Integration.Clients
             var baseUri = configuration["OpenTelemetry:Collector:Uri"];
             var metricNamespace = configuration["OpenTelemetry:Collector:MetricNamespace"];
 
-            _logger.LogInformation("Creating Prometheus client for {BaseUri}/metrics with metric namespace {metricNamespace}", baseUri, metricNamespace);
+            _logger.LogWarning("Creating Prometheus client for {BaseUri}/metrics with metric namespace {metricNamespace}", baseUri, metricNamespace);
 
             return new PrometheusClient(baseUri, "/metrics", metricNamespace, _logger);
         }
