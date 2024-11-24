@@ -97,6 +97,8 @@ namespace Promitor.Integrations.AzureMonitor.RequestHandlers
                     return azureAuthenticationInfo.GetIdentityIdOrDefault("externally-configured-user-assigned-identity");
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     return "system-assigned-identity";
+                case AuthenticationMode.DefaultAzureCredential:
+                    return "default-azure-credentials";                    
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
             }

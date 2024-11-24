@@ -5,5 +5,6 @@
         ServicePrincipal = 0,
         UserAssignedManagedIdentity = 1,
         SystemAssignedManagedIdentity = 2,
+        DefaultAzureCredential = 3
     }
 }
