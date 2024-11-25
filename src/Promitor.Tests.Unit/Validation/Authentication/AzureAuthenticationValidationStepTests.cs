@@ -311,7 +311,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             // Arrange
             var inMemoryConfiguration = new Dictionary<string, string>
             {
-                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.DefaultAzureCredential.ToString()},
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.SdkDefault.ToString()},
             };
 
             var config = CreateConfiguration(inMemoryConfiguration);

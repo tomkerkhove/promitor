@@ -39,7 +39,7 @@ namespace Promitor.Tests.Unit.Azure
         public void GetConfiguredAzureAuthentication_DefaultAzureCredentialIsValid_Succeeds()
         {
             // Arrange
-            var expectedAuthenticationMode = AuthenticationMode.DefaultAzureCredential;
+            var expectedAuthenticationMode = AuthenticationMode.SdkDefault;
             var inMemoryConfiguration = new Dictionary<string, string>
             {
                 {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
@@ -337,7 +337,7 @@ namespace Promitor.Tests.Unit.Azure
             var azureCloud = AzureEnvironment.AzureChinaCloud;
             var azureAuthenticationInfo = new AzureAuthenticationInfo
             {
-                Mode = AuthenticationMode.DefaultAzureCredential
+                Mode = AuthenticationMode.SdkDefault
             };
             var azureCredentialFactory = new AzureCredentialsFactory();
 
