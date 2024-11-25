@@ -306,7 +306,7 @@ namespace Promitor.Tests.Unit.Validation.Authentication
 
 
         [Fact]
-        public void DefaultAzureCredential_ValidWithoutApplicationKey_Succeeds()
+        public void SdkDefault_ValidWithoutApplicationKey_Succeeds()
         {
             // Arrange
             var inMemoryConfiguration = new Dictionary<string, string>

@@ -36,7 +36,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void GetConfiguredAzureAuthentication_DefaultAzureCredentialIsValid_Succeeds()
+        public void GetConfiguredAzureAuthentication_SdkDefaultIsValid_Succeeds()
         {
             // Arrange
             var expectedAuthenticationMode = AuthenticationMode.SdkDefault;
@@ -330,7 +330,7 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
-        public void CreateAzureAuthentication_DefaultAzureCredentialIsValid_Succeeds()
+        public void CreateAzureAuthentication_SdkDefaultIsValid_Succeeds()
         {
             // Arrange
             var expectedTenantId = Guid.NewGuid().ToString();
