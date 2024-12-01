@@ -15,19 +15,19 @@ namespace Promitor.Tests.Unit.Core.Metrics
     public class ScrapeDefinitionBatchPropertiesTest
     {
         private readonly IMapper _mapper; // to model instantiation happen
-        private readonly static string azureMetricNameBase = "promitor_batch_test_metric";
-        private readonly static PrometheusMetricDefinition prometheusMetricDefinition =
+        private readonly static string AzureMetricNameBase = "promitor_batch_test_metric";
+        private readonly static PrometheusMetricDefinition PrometheusMetricDefinition =
             new("promitor_batch_test", "test", new Dictionary<string, string>());
-        private readonly static string subscriptionId = "subscription";
-        private readonly static AzureMetricConfigurationV1 azureMetricConfigurationBase = new AzureMetricConfigurationV1 
+        private readonly static string SubscriptionId = "subscription";
+        private readonly static AzureMetricConfigurationV1 AzureMetricConfigurationBase = new AzureMetricConfigurationV1 
             {
-                MetricName = azureMetricNameBase,
+                MetricName = AzureMetricNameBase,
                 Aggregation = new MetricAggregationV1
                 {
                     Type = PromitorMetricAggregationType.Average
                 },
             };
-        private readonly static LogAnalyticsConfigurationV1 logAnalyticsConfigurationBase = new LogAnalyticsConfigurationV1 
+        private readonly static LogAnalyticsConfigurationV1 LogAnalyticsConfigurationBase = new LogAnalyticsConfigurationV1 
             {
                 Query = "A eq B",
                 Aggregation = new AggregationV1
@@ -35,7 +35,7 @@ namespace Promitor.Tests.Unit.Core.Metrics
                     Interval = TimeSpan.FromMinutes(60)
                 },
             };
-        private readonly static ScrapingV1 scrapingBase = new ScrapingV1
+        private readonly static ScrapingV1 ScrapingBase = new ScrapingV1
             {
                 Schedule = "5 4 3 2 1"
             };
@@ -49,12 +49,12 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeySameResultNoDimensions()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -64,14 +64,14 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeySameResultIdenticalDimensions()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
             azureMetricConfiguration.Dimensions = [new MetricDimension{Name = "Dimension1"},  new MetricDimension{Name = "Dimension2"}];
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -81,16 +81,16 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentDimensions()
         {
-            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
             azureMetricConfiguration1.Dimensions = [new MetricDimension{Name = "Dimension1"},  new MetricDimension{Name = "Dimension2"}];
-            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
             azureMetricConfiguration2.Dimensions = [new MetricDimension{Name = "DiffDimension1"},  new MetricDimension{Name = "DiffDimension2"}];
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -100,17 +100,17 @@ namespace Promitor.Tests.Unit.Core.Metrics
          [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentMetricName()
         {
-            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
             azureMetricConfiguration1.Dimensions = [new MetricDimension{Name = "Dimension1"},  new MetricDimension{Name = "Dimension2"}];
-            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
             azureMetricConfiguration2.Dimensions = [new MetricDimension{Name = "Dimension1"},  new MetricDimension{Name = "Dimension2"}];
             azureMetricConfiguration2.MetricName = "diffName";
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -120,13 +120,13 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentSubscription()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: "subscription2");
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: "subscription2");
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -136,12 +136,12 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentResourceType()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.LoadBalancer, scraping: scraping, subscriptionId: "subscription2");
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.LoadBalancer, scraping: scraping, SubscriptionId: "subscription2");
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -151,15 +151,15 @@ namespace Promitor.Tests.Unit.Core.Metrics
         [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentSchedule()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(AzureMetricConfigurationBase);
+            var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
             scraping2.Schedule = "6 4 3 2 1";
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping1, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping2, subscriptionId: "subscription2");
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping1, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping2, SubscriptionId: "subscription2");
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
@@ -189,13 +189,13 @@ namespace Promitor.Tests.Unit.Core.Metrics
             var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationTest1);
             var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationTest2);
 
-            var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var scraping1 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var scraping2 = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(ScrapingBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(LogAnalyticsConfigurationBase);
 
 
-            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping1, subscriptionId: subscriptionId);
-            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping2, subscriptionId: subscriptionId);
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping1, SubscriptionId: SubscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, PrometheusMetricDefinition: PrometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.ApplicationInsights, scraping: scraping2, SubscriptionId: SubscriptionId);
 
             var hashCode1 = batchProperties.GetHashCode();
             var hashCode2 = batchProperties2.GetHashCode();
