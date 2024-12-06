@@ -10,7 +10,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
 {
     public class DeserializationTests : UnitTest
     {
-        private static readonly TimeSpan defaultInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan DefaultInterval = TimeSpan.FromMinutes(5);
 
         private readonly Mock<IErrorReporter> _errorReporter = new();
         private readonly Mock<IDeserializer<object>> _childDeserializer = new();
@@ -171,7 +171,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
             var result = _deserializer.Deserialize(node, _errorReporter.Object);
 
             // Assert
-            Assert.Equal(defaultInterval, result.DefaultedInterval);
+            Assert.Equal(DefaultInterval, result.DefaultedInterval);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace Promitor.Tests.Unit.Serialization.DeserializerTests
                 Map(t => t.Classes).IsRequired();
                 Map(t => t.Town);
                 Map(t => t.Interval);
-                Map(t => t.DefaultedInterval).WithDefault(defaultInterval);
+                Map(t => t.DefaultedInterval).WithDefault(DefaultInterval);
                 Map(t => t.NullableInterval);
                 Map(t => t.InvertedProperty)
                     .MapUsing(InvertBooleanString);

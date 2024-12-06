@@ -36,6 +36,26 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
+        public void GetConfiguredAzureAuthentication_SdkDefaultIsValid_Succeeds()
+        {
+            // Arrange
+            var expectedAuthenticationMode = AuthenticationMode.SdkDefault;
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, expectedAuthenticationMode.ToString()},
+            };
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act
+            var authenticationInfo = AzureAuthenticationFactory.GetConfiguredAzureAuthentication(config);
+
+            // Assert
+            Assert.Equal(expectedAuthenticationMode, authenticationInfo.Mode);
+            Assert.Null(authenticationInfo.IdentityId);
+            Assert.Null(authenticationInfo.Secret);
+        }
+
+        [Fact]
         public void GetConfiguredAzureAuthentication_UserAssignedManagedIdentityIsValid_Succeeds()
         {
             // Arrange
@@ -308,6 +328,27 @@ namespace Promitor.Tests.Unit.Azure
             Assert.Equal(azureCloud, azureCredentials.Environment);
             Assert.Null(azureCredentials.ClientId);
         }
+
+        [Fact]
+        public void CreateAzureAuthentication_SdkDefaultIsValid_Succeeds()
+        {
+            // Arrange
+            var expectedTenantId = Guid.NewGuid().ToString();
+            var azureCloud = AzureEnvironment.AzureChinaCloud;
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = AuthenticationMode.SdkDefault
+            };
+            var azureCredentialFactory = new AzureCredentialsFactory();
+
+            // Act
+            var azureCredentials = AzureAuthenticationFactory.CreateAzureAuthentication(azureCloud, expectedTenantId, azureAuthenticationInfo, azureCredentialFactory);
+
+            // Assert
+            Assert.Equal(expectedTenantId, azureCredentials.TenantId);
+            Assert.Equal(azureCloud, azureCredentials.Environment);
+            Assert.Null(azureCredentials.ClientId);
+        }        
 
         [Fact]
         public void CreateAzureAuthentication_UserAssignedManagedIdentityIsValid_Succeeds()
