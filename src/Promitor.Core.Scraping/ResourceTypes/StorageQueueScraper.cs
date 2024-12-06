@@ -60,10 +60,5 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
             return string.Format(ResourceUriTemplate, subscriptionId, scrapeDefinition.ResourceGroupName, resource.AccountName);
         }
-
-        protected override Task<List<ScrapeResult>> BatchScrapeResourceAsync(string subscriptionId, BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval)
-        {
-            throw new NotImplementedException("Batch scaping is not possible for storage queue resources");
-        }
     }
 }

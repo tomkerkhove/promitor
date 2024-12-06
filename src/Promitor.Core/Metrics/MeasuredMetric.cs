@@ -25,12 +25,12 @@ namespace Promitor.Core.Metrics
         /// </summary>
         public bool IsDimensional { get; }
 
-        protected MeasuredMetric(double? value)
+        private MeasuredMetric(double? value)
         {
             Value = value;
         }
 
-        protected MeasuredMetric(double? value, List<MeasuredMetricDimension> dimensions)
+        private MeasuredMetric(double? value, List<MeasuredMetricDimension> dimensions)
         {
             Guard.NotAny(dimensions, nameof(dimensions));
 

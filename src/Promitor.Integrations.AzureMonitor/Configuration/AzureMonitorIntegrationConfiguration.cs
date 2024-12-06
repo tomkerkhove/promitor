@@ -4,6 +4,5 @@
     {
         public AzureMonitorHistoryConfiguration History { get; set; } = new();
         public bool UseAzureMonitorSdk { get; set; } = true;
-        public AzureMonitorMetricBatchScrapeConfig MetricsBatching { get; set; } = new();
     }
 }

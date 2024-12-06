@@ -20,10 +20,5 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry.Collectors
         {
             await _metricSink.ReportMetricAsync(name, description, value, labels);
         }
-
-        public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
-        {
-            return Task.CompletedTask;
-        }
     }
 }

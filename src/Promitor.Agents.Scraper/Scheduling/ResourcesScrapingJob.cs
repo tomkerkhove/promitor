@@ -15,7 +15,6 @@ using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
 using Promitor.Core.Metrics.Interfaces;
 using Promitor.Core.Metrics.Sinks;
-using Promitor.Core.Scraping.Batching;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Model.Metrics;
 using Promitor.Core.Scraping.Factories;
@@ -135,6 +134,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
+
                 await ScrapeMetrics(scrapeDefinitions, cancellationToken);
             }
             catch (OperationCanceledException)
@@ -251,58 +251,21 @@ namespace Promitor.Agents.Scraper.Scheduling
         }
 
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
-        {   
+        {
             var tasks = new List<Task>();
-            var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
-            if (batchScrapingEnabled) {
-                Logger.LogInformation("Promitor Scraper with operate in batch scraping mode, with max batch size {BatchSize}", this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
-                Logger.LogWarning("Batch scraping is an experimental feature. See Promitor.io for its limitations and cost considerations");
 
-                var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
+            foreach (var scrapeDefinition in scrapeDefinitions)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-                foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
-                    var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
-                    var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
-                    Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
-                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
-                }
-            } else {
-                foreach (var scrapeDefinition in scrapeDefinitions)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
+                var metricName = scrapeDefinition.PrometheusMetricDefinition.Name;
+                var resourceType = scrapeDefinition.Resource.ResourceType;
+                Logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}.", metricName, resourceType);
 
-                    var metricName = scrapeDefinition.PrometheusMetricDefinition.Name;
-                    var resourceType = scrapeDefinition.Resource.ResourceType;
-                    Logger.LogInformation("Scraping {MetricName} for resource type {ResourceType}.", metricName, resourceType);
-
-                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetric(scrapeDefinition), cancellationToken);
-                }
+                await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetric(scrapeDefinition), cancellationToken);
             }
 
             await Task.WhenAll(tasks);
-        }
-        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
-            try
-            {
-                var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
-                    resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
-                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
-                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
-
-                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
-
-                var scraper = _metricScraperFactory.CreateScraper(batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
-                
-                await scraper.BatchScrapeAsync(batchScrapeDefinition);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Failed to scrape metric {MetricName} for resource batch {ResourceName}. Details: {Details}",
-                    batchScrapeDefinition.ScrapeDefinitionBatchProperties.PrometheusMetricDefinition.Name, batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, ex.ToString());
-            }
         }
 
         private async Task ScrapeMetric(ScrapeDefinition<IAzureResourceDefinition> scrapeDefinition)
@@ -324,7 +287,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
-                
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
             catch (Exception ex)
