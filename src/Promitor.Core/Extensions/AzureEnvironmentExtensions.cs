@@ -1,5 +1,6 @@
 ﻿using Humanizer;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using System;
 
 namespace Promitor.Core.Extensions
 {
@@ -14,5 +15,16 @@ namespace Promitor.Core.Extensions
         {
             return azureCloud.Name.Replace("Azure", "").Replace("Cloud", "").Humanize(LetterCasing.Title);
         }
+
+        public static AzureEnvironment AzureCustomCloud = new AzureEnvironment()
+        {
+            Name = nameof(AzureCustomCloud),
+            AuthenticationEndpoint = Environment.GetEnvironmentVariable("PROMITOR_AUTH_ENDPOINT"),
+            ResourceManagerEndpoint = Environment.GetEnvironmentVariable("PROMITOR_RESOURCE_MANAGER_ENDPOINT"),
+            ManagementEndpoint = Environment.GetEnvironmentVariable("PROMITOR_MANAGEMENT_ENDPOINT"),
+            GraphEndpoint = Environment.GetEnvironmentVariable("PROMITOR_GRAPH_ENDPOINT"),
+            StorageEndpointSuffix = Environment.GetEnvironmentVariable("PROMITOR_STORAGE_ENDPOINT_SUFFIX"),
+            KeyVaultSuffix = Environment.GetEnvironmentVariable("PROMITOR_KEY_VAULT_SUFFIX")
+        };
     }
 }

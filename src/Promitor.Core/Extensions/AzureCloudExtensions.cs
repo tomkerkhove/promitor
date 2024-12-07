@@ -25,6 +25,8 @@ namespace Promitor.Core.Extensions
                     return AzureEnvironment.AzureGermanCloud;
                 case AzureCloud.UsGov:
                     return AzureEnvironment.AzureUSGovernment;
+                case AzureCloud.Custom:
+                    return AzureEnvironmentExtensions.AzureCustomCloud;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for in legacy SDK");
             }
@@ -81,6 +83,8 @@ namespace Promitor.Core.Extensions
                     return AzureAuthorityHosts.AzureGermany;
                 case AzureCloud.UsGov:
                     return AzureAuthorityHosts.AzureGovernment;
+                case AzureCloud.Custom:
+                    return new Uri(Environment.GetEnvironmentVariable("PROMITOR_AZURE_AUTH_ENDPOINT"));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for");
             }
