@@ -17,7 +17,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
     public class OpenTelemetryCollectorMetricSink : MetricSink, IMetricSink
     {
         private readonly ILogger<OpenTelemetryCollectorMetricSink> _logger;
-        private static readonly Meter AzureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
+        private static readonly Meter azureMonitorMeter = new Meter("Promitor.Scraper.Metrics.AzureMonitor", "1.0");
 
         public MetricSinkType Type => MetricSinkType.OpenTelemetryCollector;
 
@@ -74,7 +74,7 @@ namespace Promitor.Integrations.Sinks.OpenTelemetry
 
         private void InitializeNewMetric(string metricName, string metricDescription)
         {
-            var gauge = AzureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
+            var gauge = azureMonitorMeter.CreateObservableGauge<double>(metricName, description: metricDescription, observeValues: () => ReportMeasurementsForMetric(metricName));
             _gauges.TryAdd(metricName, gauge);
 
             _measurements.TryAdd(metricName, []);

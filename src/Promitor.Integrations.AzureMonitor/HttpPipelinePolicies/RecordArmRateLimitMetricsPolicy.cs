@@ -75,7 +75,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                 case AuthenticationMode.SystemAssignedManagedIdentity:
                     return "system-assigned-identity";
                 case AuthenticationMode.SdkDefault:
-                    return "default-azure-credentials";                    
+                    return "default-azure-credentials";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureAuthenticationInfo.Mode));
             }

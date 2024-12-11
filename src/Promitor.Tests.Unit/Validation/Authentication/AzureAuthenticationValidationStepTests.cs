@@ -304,7 +304,6 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
-
         [Fact]
         public void SdkDefault_ValidWithoutApplicationKey_Succeeds()
         {
