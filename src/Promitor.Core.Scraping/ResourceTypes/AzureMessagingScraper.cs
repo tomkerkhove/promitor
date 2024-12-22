@@ -16,7 +16,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
         {
         }
 
-        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, IReadOnlyList<MeasuredMetric> metricValues)
+        protected override List<MeasuredMetric> EnrichMeasuredMetrics(TResourceDefinition resourceDefinition, List<string> dimensionNames, List<MeasuredMetric> metricValues)
         {
             // Change Azure Monitor Dimension name to more representable value
             foreach (var measuredMetric in metricValues.Where(metricValue => metricValue.Dimensions.Any()))
@@ -24,7 +24,7 @@ namespace Promitor.Core.Scraping.ResourceTypes
                 measuredMetric.Dimensions[0].Name = EntityNameLabel;
             }
 
-            return metricValues.ToList();
+            return metricValues;
         }
 
         protected override Dictionary<string, string> DetermineMetricLabels(TResourceDefinition resourceDefinition)
