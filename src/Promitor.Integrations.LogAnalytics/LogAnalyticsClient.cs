@@ -15,6 +15,7 @@ namespace Promitor.Integrations.LogAnalytics
         public readonly string ColumnNameResult = "result";
         private readonly Uri _defaultEndpoint = new("https://api.loganalytics.io");
         private readonly Uri _govEndpoint = new("https://api.loganalytics.us");
+        private readonly Uri _customEndpoint = new (Environment.GetEnvironmentVariable("PROMITOR_LOG_ANALYTICS_ENDPOINT"));
 
         private readonly LogsQueryClient _logsQueryClient;
 
@@ -31,6 +32,7 @@ namespace Promitor.Integrations.LogAnalytics
             {
                 nameof(AzureEnvironment.AzureGlobalCloud) => _defaultEndpoint,
                 nameof(AzureEnvironment.AzureUSGovernment) => _govEndpoint,
+                "AzureCustomCloud" => _customEndpoint,
                 _ => throw new NotSupportedException($"Environment {azureEnvironment.Name} is not supported for scraping Azure Log Analytics resource(s)")
             };
 
