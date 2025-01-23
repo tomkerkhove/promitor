@@ -304,6 +304,25 @@ namespace Promitor.Tests.Unit.Validation.Authentication
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
 
+        [Fact]
+        public void SdkDefault_ValidWithoutApplicationKey_Succeeds()
+        {
+            // Arrange
+            var inMemoryConfiguration = new Dictionary<string, string>
+            {
+                {ConfigurationKeys.Authentication.Mode, AuthenticationMode.SdkDefault.ToString()},
+            };
+
+            var config = CreateConfiguration(inMemoryConfiguration);
+
+            // Act
+            var azureAuthenticationValidationStep = new AzureAuthenticationValidationStep(config, NullLogger<AzureAuthenticationValidationStep>.Instance);
+            var validationResult = azureAuthenticationValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
         private IConfigurationRoot CreateConfiguration(Dictionary<string, string> inMemoryConfiguration)
         {
             return new ConfigurationBuilder()
