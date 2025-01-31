@@ -53,6 +53,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new BlobStorageScraper(scraperConfiguration);
                 case ResourceType.Cdn:
                     return new CdnScraper(scraperConfiguration);
+                case ResourceType.CognitiveServicesAccounts:
+                    return new CognitiveServicesAccountsScraper(scraperConfiguration);
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceScraper(scraperConfiguration);
                 case ResourceType.ContainerRegistry:
