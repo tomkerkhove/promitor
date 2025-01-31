@@ -19,6 +19,8 @@ resourceDiscoveryGroups:
   type: AzureFirewall
 - name: cdn-landscape
   type: Cdn
+- name: cognitive-services-accounts
+  type: CognitiveServicesAccounts
 - name: container-instances
   type: ContainerInstance
 - name: container-registry-landscape
