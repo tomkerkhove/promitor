@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
+﻿namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
 {
     public class AzureEndpointsV1
     {

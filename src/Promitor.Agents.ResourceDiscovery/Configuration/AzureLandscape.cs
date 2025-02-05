@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Azure.Management.Storage.Fluent.Models;
 using Promitor.Core.Configuration;
 using Promitor.Core.Serialization.Enum;
 

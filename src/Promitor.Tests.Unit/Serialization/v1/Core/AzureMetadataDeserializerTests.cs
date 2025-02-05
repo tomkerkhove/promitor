@@ -2,8 +2,6 @@
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using Promitor.Agents.Core.Configuration;
-using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
