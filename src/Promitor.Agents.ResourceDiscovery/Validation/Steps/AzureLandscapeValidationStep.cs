@@ -41,7 +41,7 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
                 errorMessages.AddRange(ValidateCustomCloud());
             }
             
-            if (_azureLandscape.Subscriptions == null || _azureLandscape.Subscriptions.Any() == false)
+            if (_azureLandscape.Subscriptions == null || _azureLandscape.Subscriptions.Count == 0)
             {
                 errorMessages.Add("No subscription id(s) were configured to query");
             }

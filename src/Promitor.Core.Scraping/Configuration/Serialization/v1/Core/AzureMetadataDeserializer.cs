@@ -58,7 +58,6 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
 
         private object DeserializeEndpoints(string rawEndpoints, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
-
             if (_azureCloud == AzureCloud.Custom)
             {
                 return _azureEndpointsDeserializer.Deserialize((YamlMappingNode)nodePair.Value, errorReporter);

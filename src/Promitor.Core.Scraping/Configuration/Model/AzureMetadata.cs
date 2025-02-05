@@ -10,6 +10,5 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public string TenantId { get; set; }
         public AzureCloud Cloud { get; set; }
         public AzureEndpoints Endpoints { get; set; }
-
     }
 }
