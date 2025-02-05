@@ -1,4 +1,5 @@
-﻿using Promitor.Core.Serialization.Enum;
+﻿using Promitor.Core.Configuration;
+using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Core.Scraping.Configuration.Model
 {
@@ -8,5 +9,7 @@ namespace Promitor.Core.Scraping.Configuration.Model
         public string SubscriptionId { get; set; }
         public string TenantId { get; set; }
         public AzureCloud Cloud { get; set; }
+        public AzureEndpoints Endpoints { get; set; }
+
     }
 }

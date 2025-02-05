@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using Azure.Identity;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Promitor.Core.Configuration;
 using Promitor.Core.Extensions;
 using Promitor.Core.Serialization.Enum;
 using Xunit;
@@ -19,7 +20,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedEnvironment = AzureEnvironment.AzureGlobalCloud;
 
             // Act
-            var azureEnvironment = azureCloud.GetAzureEnvironment();
+            var azureEnvironment = azureCloud.GetAzureEnvironment(null);
 
             // Assert
             PromitorAssert.ContainsSameAzureEnvironmentInfo(expectedEnvironment, azureEnvironment);
@@ -33,7 +34,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedEnvironment = AzureEnvironment.AzureChinaCloud;
 
             // Act
-            var azureEnvironment = azureCloud.GetAzureEnvironment();
+            var azureEnvironment = azureCloud.GetAzureEnvironment(null);
 
             // Assert
             PromitorAssert.ContainsSameAzureEnvironmentInfo(expectedEnvironment, azureEnvironment);
@@ -47,7 +48,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedEnvironment = AzureEnvironment.AzureGermanCloud;
 
             // Act
-            var azureEnvironment = azureCloud.GetAzureEnvironment();
+            var azureEnvironment = azureCloud.GetAzureEnvironment(null);
 
             // Assert
             PromitorAssert.ContainsSameAzureEnvironmentInfo(expectedEnvironment, azureEnvironment);
@@ -61,7 +62,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedEnvironment = AzureEnvironment.AzureUSGovernment;
 
             // Act
-            var azureEnvironment = azureCloud.GetAzureEnvironment();
+            var azureEnvironment = azureCloud.GetAzureEnvironment(null);
 
             // Assert
             PromitorAssert.ContainsSameAzureEnvironmentInfo(expectedEnvironment, azureEnvironment);
@@ -74,7 +75,7 @@ namespace Promitor.Tests.Unit.Azure
             var azureCloud = AzureCloud.Unspecified;
 
             // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(()=> azureCloud.GetAzureEnvironment());
+            Assert.Throws<ArgumentOutOfRangeException>(()=> azureCloud.GetAzureEnvironment(null));
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedAuthorityHost = AzureAuthorityHosts.AzurePublicCloud;
 
             // Act
-            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost(null);
 
             // Assert
             Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
@@ -99,7 +100,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedAuthorityHost = AzureAuthorityHosts.AzureChina;
 
             // Act
-            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost(null);
 
             // Assert
             Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
@@ -113,7 +114,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedAuthorityHost = AzureAuthorityHosts.AzureGermany;
 
             // Act
-            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost(null);
 
             // Assert
             Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
@@ -127,7 +128,7 @@ namespace Promitor.Tests.Unit.Azure
             var expectedAuthorityHost = AzureAuthorityHosts.AzureGovernment;
 
             // Act
-            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost();
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost(null);
 
             // Assert
             Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
@@ -140,7 +141,7 @@ namespace Promitor.Tests.Unit.Azure
             var azureCloud = AzureCloud.Unspecified;
 
             // Act & Assert
-            Assert.Throws<ArgumentOutOfRangeException>(() => azureCloud.GetAzureAuthorityHost());
+            Assert.Throws<ArgumentOutOfRangeException>(() => azureCloud.GetAzureAuthorityHost(null));
         }
     }
 }

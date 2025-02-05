@@ -111,13 +111,14 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
         private IOptions<AzureLandscape> CreateLandscapeConfiguration()
         {
             var allAzureCloudValues = Enum.GetValues(typeof(AzureCloud));
-            var allowedAzureClouds = allAzureCloudValues.OfType<AzureCloud>().Where(entry => entry != AzureCloud.Unspecified).ToList();
+            var allowedAzureClouds = allAzureCloudValues.OfType<AzureCloud>().Where(entry => (entry != AzureCloud.Unspecified && entry != AzureCloud.Custom)).ToList();
 
             var azureLandscape = new Faker<AzureLandscape>()
                 .StrictMode(true)
                 .RuleFor(landscape => landscape.Subscriptions, faker => new List<string> { faker.Name.FirstName(), faker.Name.FirstName() })
                 .RuleFor(landscape => landscape.TenantId, faker => faker.Name.FirstName())
                 .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom(allowedAzureClouds))
+                .RuleFor(landscape => landscape.Endpoints, faker => null)
                 .Generate();
 
             return Options.Create(azureLandscape);

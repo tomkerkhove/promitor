@@ -10,6 +10,7 @@ using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
 using ValidationResult = Promitor.Agents.Core.Validation.ValidationResult;
+using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
 {
@@ -124,6 +125,11 @@ namespace Promitor.Agents.Scraper.Validation.Steps
                 errorMessages.Add("No resource group name is not configured");
             }
 
+            if (azureMetadata.Cloud == AzureCloud.Custom)
+            {
+                errorMessages.AddRange(ValidateCustomCloud(azureMetadata));
+            }
+
             return errorMessages;
         }
 
@@ -144,6 +150,27 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             // Detect duplicate metric names
             var duplicateMetrics = DetectDuplicateMetrics(metrics);
             errorMessages.AddRange(duplicateMetrics.Select(duplicateMetricName => $"Metric name '{duplicateMetricName}' is declared multiple times"));
+
+            return errorMessages;
+        }
+
+        private static IEnumerable<string> ValidateCustomCloud(AzureMetadata azureMetadata)
+        {
+            var errorMessages = new List<string>();
+
+            if (azureMetadata.Endpoints == null)
+            {
+                errorMessages.Add("Endpoints are not configured for Azure Custom cloud");
+            }
+            else if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.AuthenticationEndpoint) ||
+                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ResourceManagerEndpoint) ||
+                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ManagementEndpoint) ||
+                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.GraphEndpoint) ||
+                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.StorageEndpointSuffix) ||
+                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.KeyVaultSuffix))
+            {
+                errorMessages.Add("All Azure Custom cloud endpoints were not configured to query");
+            }
 
             return errorMessages;
         }

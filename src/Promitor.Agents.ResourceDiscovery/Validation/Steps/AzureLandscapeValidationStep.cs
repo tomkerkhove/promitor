@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -34,7 +35,12 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
             {
                 errorMessages.Add("No Azure cloud was configured");
             }
-
+            
+            if (_azureLandscape.Cloud == AzureCloud.Custom)
+            {
+                errorMessages.AddRange(ValidateCustomCloud());
+            }
+            
             if (_azureLandscape.Subscriptions == null || _azureLandscape.Subscriptions.Any() == false)
             {
                 errorMessages.Add("No subscription id(s) were configured to query");
@@ -53,6 +59,27 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
             }
 
             return errorMessages.Any() ? ValidationResult.Failure(ComponentName, errorMessages) : ValidationResult.Successful(ComponentName);
+        }
+
+        private IEnumerable<string> ValidateCustomCloud()
+        {
+            var errorMessages = new List<string>();
+
+            if(_azureLandscape.Endpoints == null)
+            {
+                errorMessages.Add("Endpoints are not configured for Azure Custom cloud");
+            }
+            else if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.AuthenticationEndpoint) || 
+                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ResourceManagerEndpoint) ||
+                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ManagementEndpoint) ||
+                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.GraphEndpoint) ||
+                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.StorageEndpointSuffix) ||
+                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.KeyVaultSuffix))
+            {
+                errorMessages.Add("All Azure Custom cloud endpoints were not configured to query");
+            }
+
+            return errorMessages;
         }
     }
 }
