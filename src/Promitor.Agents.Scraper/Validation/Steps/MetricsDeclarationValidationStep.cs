@@ -162,14 +162,40 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             {
                 errorMessages.Add("Endpoints are not configured for Azure Custom cloud");
             }
-            else if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.AuthenticationEndpoint) ||
-                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ResourceManagerEndpoint) ||
-                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ManagementEndpoint) ||
-                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.GraphEndpoint) ||
-                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.StorageEndpointSuffix) ||
-                string.IsNullOrWhiteSpace(azureMetadata.Endpoints.KeyVaultSuffix))
+            else
             {
-                errorMessages.Add("All Azure Custom cloud endpoints were not configured to query");
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.AuthenticationEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud authentication endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ResourceManagerEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud resource management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ManagementEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud service management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.GraphEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud graph endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.StorageEndpointSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud storage service url suffix was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.KeyVaultSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud Key Vault service url suffix was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.MetricsClientAudience))
+                {
+                    errorMessages.Add("Azure Custom cloud metric client audiences endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.MetricsQueryAudience))
+                {
+                    errorMessages.Add("Azure Custom cloud metric query audiences endpoint was not configured to query");
+                }
             }
 
             return errorMessages;

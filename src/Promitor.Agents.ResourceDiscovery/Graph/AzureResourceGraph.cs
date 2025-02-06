@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Polly;
 using Promitor.Agents.ResourceDiscovery.Configuration;
+using Promitor.Agents.ResourceDiscovery.Extensions;
 using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.Interfaces;
 using Promitor.Agents.ResourceDiscovery.Graph.Model;
@@ -267,8 +268,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
 
         private async Task<ResourceGraphClient> CreateClientAsync()
         {
-            var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureEnvironment(_resourceDeclarationMonitor.CurrentValue.AzureLandscape.Endpoints);
-            var azureAuthorityHost = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.Cloud.GetAzureAuthorityHost(_resourceDeclarationMonitor.CurrentValue.AzureLandscape.Endpoints);
+            var azureEnvironment = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.GetAzureEnvironment();
+            var azureAuthorityHost = _resourceDeclarationMonitor.CurrentValue.AzureLandscape.GetAzureAuthorityHost();
 
             var credentials = await AzureAuthenticationFactory.GetTokenCredentialsAsync(azureEnvironment.ManagementEndpoint, TenantId, _azureAuthenticationInfo, azureAuthorityHost);
             var resourceManagerBaseUri = new Uri(azureEnvironment.ResourceManagerEndpoint);

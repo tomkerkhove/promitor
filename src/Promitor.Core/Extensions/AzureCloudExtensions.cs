@@ -13,6 +13,7 @@ namespace Promitor.Core.Extensions
         ///     Get Azure environment information under legacy SDK model
         /// </summary>
         /// <param name="azureCloud">Microsoft Azure cloud</param>
+        /// <param name="endpoints">Azure endpoints</param>
         /// <returns>Azure environment information for specified cloud</returns>
         public static AzureEnvironment GetAzureEnvironment(this AzureCloud azureCloud, AzureEndpoints endpoints)
         {
@@ -27,7 +28,7 @@ namespace Promitor.Core.Extensions
                 case AzureCloud.UsGov:
                     return AzureEnvironment.AzureUSGovernment;
                 case AzureCloud.Custom:
-                    return AzureEnvironmentExtensions.GetAzureEnvironment(azureCloud, endpoints);
+                    return AzureEnvironmentExtensions.GetCustomAzureEnvironment(azureCloud, endpoints);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for in legacy SDK");
             }
@@ -37,6 +38,7 @@ namespace Promitor.Core.Extensions
         ///     Get Azure environment information for Azure.Monitor SDK single resource queries
         /// </summary>
         /// <param name="azureCloud">Microsoft Azure cloud</param>
+        /// <param name="endpoints">Azure endpoints</param>
         /// <returns>Azure environment information for specified cloud</returns>
         public static MetricsQueryAudience DetermineMetricsClientAudience(this AzureCloud azureCloud, AzureEndpoints endpoints) {
             switch (azureCloud) 
@@ -58,6 +60,7 @@ namespace Promitor.Core.Extensions
         ///     Get Azure environment information for Azure.Monitor SDK batch queries
         /// </summary>
         /// <param name="azureCloud">Microsoft Azure cloud</param>
+        /// <param name="endpoints">Azure endpoints</param>
         /// <returns>Azure environment information for specified cloud</returns>
         public static MetricsClientAudience DetermineMetricsClientBatchQueryAudience(this AzureCloud azureCloud, AzureEndpoints endpoints) {
             switch (azureCloud) 
@@ -72,6 +75,32 @@ namespace Promitor.Core.Extensions
                     return new MetricsClientAudience(endpoints.MetricsClientAudience);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for"); // Azure.Monitory.Query package does not support any other sovereign regions
+            }
+        }
+
+        /// <summary>
+        ///    Get Azure environment information for Azure.Identity SDK
+        /// </summary>
+        /// <param name="azureCloud"></param>
+        /// <param name="endpoints"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static Uri GetAzureAuthorityHost(this AzureCloud azureCloud, AzureEndpoints endpoints)
+        {
+            switch (azureCloud)
+            {
+                case AzureCloud.Global:
+                    return AzureAuthorityHosts.AzurePublicCloud;
+                case AzureCloud.China:
+                    return AzureAuthorityHosts.AzureChina;
+                case AzureCloud.Germany:
+                    return AzureAuthorityHosts.AzureGermany;
+                case AzureCloud.UsGov:
+                    return AzureAuthorityHosts.AzureGovernment;
+                case AzureCloud.Custom:
+                    return new Uri(endpoints.AuthenticationEndpoint);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for");
             }
         }
 
@@ -92,25 +121,6 @@ namespace Promitor.Core.Extensions
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for"); // Azure.Monitory.Query package does not support any other sovereign regions
-            }
-        }
-
-        public static Uri GetAzureAuthorityHost(this AzureCloud azureCloud, AzureEndpoints endpoints)
-        {
-            switch (azureCloud)
-            {
-                case AzureCloud.Global:
-                    return AzureAuthorityHosts.AzurePublicCloud;
-                case AzureCloud.China:
-                    return AzureAuthorityHosts.AzureChina;
-                case AzureCloud.Germany:
-                    return AzureAuthorityHosts.AzureGermany;
-                case AzureCloud.UsGov:
-                    return AzureAuthorityHosts.AzureGovernment;
-                case AzureCloud.Custom:
-                    return new Uri(endpoints.AuthenticationEndpoint);
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(azureCloud), "No Azure environment is known for");
             }
         }
     }

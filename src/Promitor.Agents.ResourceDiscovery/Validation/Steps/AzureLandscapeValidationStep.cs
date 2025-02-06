@@ -69,14 +69,32 @@ namespace Promitor.Agents.ResourceDiscovery.Validation.Steps
             {
                 errorMessages.Add("Endpoints are not configured for Azure Custom cloud");
             }
-            else if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.AuthenticationEndpoint) || 
-                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ResourceManagerEndpoint) ||
-                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ManagementEndpoint) ||
-                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.GraphEndpoint) ||
-                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.StorageEndpointSuffix) ||
-                string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.KeyVaultSuffix))
+            else
             {
-                errorMessages.Add("All Azure Custom cloud endpoints were not configured to query");
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.AuthenticationEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud authentication endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ResourceManagerEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud resource management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.ManagementEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud service management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.GraphEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud graph endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.StorageEndpointSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud storage service url suffix was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(_azureLandscape.Endpoints.KeyVaultSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud Key Vault service url suffix was not configured to query");
+                }
             }
 
             return errorMessages;

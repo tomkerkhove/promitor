@@ -17,7 +17,13 @@ namespace Promitor.Core.Extensions
             return azureCloud.Name.Replace("Azure", "").Replace("Cloud", "").Humanize(LetterCasing.Title);
         }
 
-        public static AzureEnvironment GetAzureEnvironment(AzureCloud azureCloud, AzureEndpoints endpoints)
+        /// <summary>
+        ///    Get Azure environment information for custom cloud
+        /// </summary>
+        /// <param name="azureCloud"></param>
+        /// <param name="endpoints"></param>
+        /// <returns></returns>
+        public static AzureEnvironment GetCustomAzureEnvironment(AzureCloud azureCloud, AzureEndpoints endpoints)
         {
             return new AzureEnvironment
             {

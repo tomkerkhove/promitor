@@ -69,6 +69,31 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
+        public void GetAzureEnvironment_ForAzureCustomCloud_ProvidesCorrectEnvironmentInfo()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Custom;
+            var azureEndpoints = new AzureEndpoints
+            {
+                AuthenticationEndpoint = "https://login.microsoftonline.com",
+                ManagementEndpoint = "https://management.azure.com",
+                ResourceManagerEndpoint = "https://management.azure.com",
+                GraphEndpoint = "https://graph.windows.net",
+                StorageEndpointSuffix = "core.windows.net",
+                KeyVaultSuffix = "vault.azure.net"
+            };
+            // Act
+            var azureEnvironment = azureCloud.GetAzureEnvironment(azureEndpoints);
+            // Assert
+            Assert.NotNull(azureEnvironment);
+            Assert.Equal("Custom", azureEnvironment.Name);
+            Assert.Equal(azureEndpoints.AuthenticationEndpoint, azureEnvironment.AuthenticationEndpoint);
+            Assert.Equal(azureEndpoints.ManagementEndpoint, azureEnvironment.ManagementEndpoint);
+            Assert.Equal(azureEndpoints.ResourceManagerEndpoint, azureEnvironment.ResourceManagerEndpoint);
+            Assert.Equal(azureEndpoints.GraphEndpoint, azureEnvironment.GraphEndpoint);
+        }
+
+        [Fact]
         public void GetAzureEnvironment_ForUnspecifiedAzureCloud_ThrowsException()
         {
             // Arrange
@@ -135,6 +160,24 @@ namespace Promitor.Tests.Unit.Azure
         }
 
         [Fact]
+        public void GetAzureAuthorityHost_ForAzureCustomCloud_ProvidesCorrectAuthorityHost()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Custom;
+            var azureEndpoints = new AzureEndpoints
+            {
+                AuthenticationEndpoint = "https://login.microsoftonline.com",
+            };
+            var expectedAuthorityHost = new Uri(azureEndpoints.AuthenticationEndpoint);
+
+            // Act
+            var actualAuthorityHost = azureCloud.GetAzureAuthorityHost(azureEndpoints);
+            
+            // Assert
+            Assert.True(expectedAuthorityHost.Equals(actualAuthorityHost));
+        }
+
+        [Fact]
         public void GetAzureAuthorityHost_ForUnspecifiedAzureCloud_ThrowsException()
         {
             // Arrange
@@ -142,6 +185,42 @@ namespace Promitor.Tests.Unit.Azure
 
             // Act & Assert
             Assert.Throws<ArgumentOutOfRangeException>(() => azureCloud.GetAzureAuthorityHost(null));
+        }
+
+        [Fact]
+        public void DetermineMetricsClientAudience_ForAzureCustomCloud_ProvidesCorrectMetricsClientAudience()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Custom;
+            var expectedMetricsClientAudience = "https://custom.client.endpoint.com/";
+            var azureEndpoints = new AzureEndpoints
+            {
+                MetricsClientAudience = expectedMetricsClientAudience
+            };
+
+            // Act
+            var actualMetricsClientAudience = azureCloud.DetermineMetricsClientAudience(azureEndpoints);
+
+            // Assert
+            Assert.Equal(expectedMetricsClientAudience, actualMetricsClientAudience.ToString());
+        }
+        
+        [Fact]
+        public void DetermineMetricsClientBatchQueryAudience_ForAzureCustomCloud_ProvidesCorrectMetricsClientAudience()
+        {
+            // Arrange
+            var azureCloud = AzureCloud.Custom;
+            var expectedMetricsClientAudience = "https://custom.client.endpoint.com/";
+            var azureEndpoints = new AzureEndpoints
+            {
+                MetricsClientAudience = expectedMetricsClientAudience
+            };
+
+            // Act
+            var actualMetricsClientAudience = azureCloud.DetermineMetricsClientBatchQueryAudience(azureEndpoints);
+            
+            // Assert
+            Assert.Equal(expectedMetricsClientAudience, actualMetricsClientAudience.ToString());
         }
     }
 }

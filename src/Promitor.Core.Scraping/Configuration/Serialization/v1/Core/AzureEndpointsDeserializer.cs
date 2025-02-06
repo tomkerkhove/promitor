@@ -30,16 +30,18 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(endpoints => endpoints.KeyVaultSuffix)
                 .IsRequired();
             Map(endpoints => endpoints.MetricsQueryAudience)
-                .MapUsing(ValidateUrl); // Should this be required?
+                .IsRequired()
+                .MapUsing(ValidateUrl);
             Map(endpoints => endpoints.MetricsClientAudience)
-                .MapUsing(ValidateUrl); // Should this be required?
+                .IsRequired()
+                .MapUsing(ValidateUrl);
         }
 
         private object ValidateUrl(string url, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out _))
             {
-                errorReporter.ReportError(nodePair.Value, $"'{url}' is not a valid URL.");
+                errorReporter.ReportError(nodePair.Value, $"'{url}' is not a valid URL for {nodePair.Key}.");
                 return null;
             }
 

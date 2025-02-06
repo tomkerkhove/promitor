@@ -285,9 +285,9 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
-                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory, _metricsDeclaration.AzureMetadata.Endpoints);
+                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
                 var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment(_metricsDeclaration.AzureMetadata.Endpoints);
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
@@ -315,9 +315,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
                 var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment(_metricsDeclaration.AzureMetadata.Endpoints);
                 Logger.LogInformation("Parsed SDK Config {UseAzureMonitorSdk}", _azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
-                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory, _metricsDeclaration.AzureMetadata.Endpoints);
+                    _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
                     AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment(_metricsDeclaration.AzureMetadata.Endpoints).AuthenticationEndpoint));
