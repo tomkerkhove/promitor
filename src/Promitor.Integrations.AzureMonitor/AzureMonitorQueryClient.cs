@@ -49,6 +49,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
+        /// <param name="azureEndpoints">Azure custom environment endpoints</param>
         public AzureMonitorQueryClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration, AzureEndpoints azureEndpoints)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));

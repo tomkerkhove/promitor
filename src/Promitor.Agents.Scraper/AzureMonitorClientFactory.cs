@@ -40,7 +40,6 @@ namespace Promitor.Agents.Scraper
             {
                 return value;
             }
-
             var useAzureMonitorSdk = azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk;
             IAzureMonitorClient azureMonitorClient;
             if (useAzureMonitorSdk)

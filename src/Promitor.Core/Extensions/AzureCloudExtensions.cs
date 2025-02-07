@@ -79,7 +79,7 @@ namespace Promitor.Core.Extensions
         }
 
         /// <summary>
-        ///    Get Azure environment information for Azure.Identity SDK
+        ///    Get well known authority hosts for the Azure cloud
         /// </summary>
         /// <param name="azureCloud"></param>
         /// <param name="endpoints"></param>
@@ -105,7 +105,7 @@ namespace Promitor.Core.Extensions
         }
 
         /// <summary>
-        ///    Validates if the Azure cloud is supported for metric scraping by the Azure Monitor SDK.
+        ///    Validates if Azure cloud is supported for metric scraping by the Azure Monitor SDK.
         /// </summary>
         /// <param name="azureCloud"></param>
         /// <exception cref="ArgumentOutOfRangeException"></exception>

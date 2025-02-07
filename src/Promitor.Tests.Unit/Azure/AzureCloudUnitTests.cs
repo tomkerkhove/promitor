@@ -82,8 +82,10 @@ namespace Promitor.Tests.Unit.Azure
                 StorageEndpointSuffix = "core.windows.net",
                 KeyVaultSuffix = "vault.azure.net"
             };
+
             // Act
             var azureEnvironment = azureCloud.GetAzureEnvironment(azureEndpoints);
+
             // Assert
             Assert.NotNull(azureEnvironment);
             Assert.Equal("Custom", azureEnvironment.Name);
