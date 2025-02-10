@@ -1,4 +1,3 @@
-
 using System;
 using Azure.Identity;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
@@ -223,18 +222,5 @@ namespace Promitor.Tests.Unit.Azure
             // Assert
             Assert.Equal(expectedMetricsClientAudience, actualMetricsClientAudience.ToString());
         }
-    }
-
-    // Minimal test class implementing IAzureCloudEndpoints
-    internal class TestCloudEndpoints : IAzureCloudEndpoints
-    {
-        public TestCloudEndpoints(AzureCloud cloud, AzureEndpoints endpoints)
-        {
-            Cloud = cloud;
-            Endpoints = endpoints;
-        }
-
-        public AzureCloud Cloud { get; }
-        public AzureEndpoints Endpoints { get; }
     }
 }
