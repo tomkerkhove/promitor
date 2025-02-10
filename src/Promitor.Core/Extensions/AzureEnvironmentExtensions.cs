@@ -20,10 +20,9 @@ namespace Promitor.Core.Extensions
         /// <summary>
         ///    Get Azure environment information for custom cloud
         /// </summary>
-        /// <param name="azureCloud"></param>
-        /// <param name="endpoints"></param>
-        /// <returns></returns>
-        public static AzureEnvironment GetCustomAzureEnvironment(AzureCloud azureCloud, AzureEndpoints endpoints)
+        /// <param name="azureCloud">Microsoft Azure cloud</param>
+        /// <param name="endpoints">Endpoints for custom environment</param>
+        public static AzureEnvironment GetCustomAzureEnvironment(AzureEndpoints endpoints)
         {
             return new AzureEnvironment
             {

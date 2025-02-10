@@ -1,15 +1,18 @@
-
 using System;
 using Azure.Identity;
 using Azure.Monitor.Query;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
-using Promitor.Core.Configuration;
 using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Core.Extensions
 {
     public static class AzureCloudEndpointsExtensions
     {
+        /// <summary>
+        ///     Get Azure environment information under legacy SDK model
+        /// </summary>
+        /// <param name="cloudEndpoints">Azure Cloud and endpoints information.</param>
+        /// <returns>Azure environment information for specified cloud</returns>
         public static AzureEnvironment GetAzureEnvironment(this IAzureCloudEndpoints cloudEndpoints)
         {
             switch (cloudEndpoints.Cloud)
@@ -23,12 +26,17 @@ namespace Promitor.Core.Extensions
                 case AzureCloud.UsGov:
                     return AzureEnvironment.AzureUSGovernment;
                 case AzureCloud.Custom:
-                    return AzureEnvironmentExtensions.GetCustomAzureEnvironment(cloudEndpoints.Cloud, cloudEndpoints.Endpoints);
+                    return AzureEnvironmentExtensions.GetCustomAzureEnvironment(cloudEndpoints.Endpoints);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(cloudEndpoints.Cloud), "No Azure environment is known for in legacy SDK");
             }
         }
 
+        /// <summary>
+        ///     Get Azure environment information for Azure.Monitor SDK single resource queries
+        /// </summary>
+        /// <param name="cloudEndpoints">Azure Cloud and endpoints information.</param>
+        /// <returns>Azure environment information for specified cloud</returns>
         public static MetricsQueryAudience DetermineMetricsClientAudience(this IAzureCloudEndpoints cloudEndpoints)
         {
             switch (cloudEndpoints.Cloud)
@@ -46,6 +54,11 @@ namespace Promitor.Core.Extensions
             }
         }
 
+        /// <summary>
+        ///     Get Azure environment information for Azure.Monitor SDK batch queries
+        /// </summary>
+        /// <param name="cloudEndpoints">Cloud endpoints describing the configuration.</param>
+        /// <returns>Azure environment information for specified cloud</returns>
         public static MetricsClientAudience DetermineMetricsClientBatchQueryAudience(this IAzureCloudEndpoints cloudEndpoints)
         {
             switch (cloudEndpoints.Cloud)
@@ -63,6 +76,11 @@ namespace Promitor.Core.Extensions
             }
         }
 
+        /// <summary>
+        ///     Get the Azure authority host URI for the specified cloud endpoints.
+        /// </summary>
+        /// <param name="cloudEndpoints">Cloud endpoints describing the configuration.</param>
+        /// <returns>Uri that represents the authority host.</returns>
         public static Uri GetAzureAuthorityHost(this IAzureCloudEndpoints cloudEndpoints)
         {
             switch (cloudEndpoints.Cloud)
