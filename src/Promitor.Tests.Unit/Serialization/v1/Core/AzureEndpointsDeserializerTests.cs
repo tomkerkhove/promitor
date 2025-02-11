@@ -67,7 +67,23 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
         }
 
         [Fact]
-        public void Deserialize_AzureEndpointsSuppliedWithInvalidUrl_Fails()
+        public void Deserialize_NotSuppliedWithOptionalProperty_Succeeds()
+        {
+            // Arrange
+            var yamlNode = YamlUtils.CreateYamlNode(
+                $@"endpoints:
+    authenticationEndpoint: https://ab.core.windows.net");
+            var endpointsNode = (YamlMappingNode)yamlNode.Children.Single(c => c.Key.ToString() == "endpoints").Value;
+
+            // Act / Assert
+            YamlAssert.ReportsNoErrorForProperty(
+                _deserializer,
+                endpointsNode,
+                "logAnalyticsEndpoint");
+        }
+
+        [Fact]
+        public void Deserialize_SuppliedWithInvalidUrl_Fails()
         {
             // Arrange
             var authEndpoint = "test_auth";
@@ -76,6 +92,7 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var graphEndpoint = "test_graph";
             var metricsQueryAudience = "test_metrics_query";
             var metricsClientAudience = "test_metrics_client";
+            var logAnalyticsEndpoint = "test_log_analytics";
 
             var yamlNode = YamlUtils.CreateYamlNode(
                 $@"endpoints:
@@ -84,7 +101,8 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     resourceManagerEndpoint: '{resourceManagerEndpoint}'
     graphEndpoint: '{graphEndpoint}'
     metricsQueryAudience: '{metricsQueryAudience}'
-    metricsClientAudience: '{metricsClientAudience}'");
+    metricsClientAudience: '{metricsClientAudience}'
+    logAnalyticsEndpoint: '{logAnalyticsEndpoint}'");
 
             var endpointsNode = (YamlMappingNode)yamlNode.Children["endpoints"];
 
@@ -119,10 +137,15 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 endpointsNode,
                 endpointsNode.Children["metricsClientAudience"],
                 $"'{metricsClientAudience}' is not a valid URL for metricsClientAudience.");
+            YamlAssert.ReportsError(
+                _deserializer,
+                endpointsNode,
+                endpointsNode.Children["logAnalyticsEndpoint"],
+                $"'{logAnalyticsEndpoint}' is not a valid URL for logAnalyticsEndpoint.");
         }
 
         [Fact]
-        public void Deserialize_AzureEndpointsSuppliedWithValidUrl_SetsProperty() 
+        public void Deserialize_SuppliedWithValidValues_SetsProperty() 
         {
             // Arrange
             var authEndpoint = "https://auth.endpoint.com/";
@@ -131,6 +154,9 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
             var graphEndpoint = "https://graph.endpoint.com/";
             var metricsQueryAudience = "https://metric.query.endpoint.com/";
             var metricsClientAudience = "https://metric.client.endpoint.com/";
+            var storageEndpointSuffix = "core.windows.net";
+            var keyVaultSuffix = "vault.azure.net";
+            var logAnalyticsEndpoint = "https://loganalytics.endpoint.com/";
 
             var yamlText =
                 $@"endpoints:
@@ -140,7 +166,9 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     graphEndpoint: '{graphEndpoint}'
     metricsQueryAudience: '{metricsQueryAudience}'
     metricsClientAudience: '{metricsClientAudience}'
-    ";
+    storageEndpointSuffix: '{storageEndpointSuffix}'
+    keyVaultSuffix: '{keyVaultSuffix}'
+    logAnalyticsEndpoint: '{logAnalyticsEndpoint}'";
 
             // Act / Assert
             YamlAssert.PropertySet(
@@ -185,20 +213,6 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 metricsClientAudience,
                 a => a.MetricsClientAudience
                 );
-        }
-
-        [Fact]
-        public void Deserialize_AzureEndpointsForSuffixesWithoutValidUrl_SetsProperty()
-        {
-            // Arrange
-            var storageEndpointSuffix = "core.windows.net";
-            var keyVaultSuffix = "vault.azure.net";
-            var yamlText =
-                $@"endpoints:
-        storageEndpointSuffix: '{storageEndpointSuffix}'
-        keyVaultSuffix: '{keyVaultSuffix}'";
-
-            // Act / Assert
             YamlAssert.PropertySet(
                _deserializer,
                yamlText,
@@ -212,6 +226,13 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 "endpoints",
                 keyVaultSuffix,
                 a => a.KeyVaultSuffix
+                );
+            YamlAssert.PropertySet(
+                _deserializer,
+                yamlText,
+                "endpoints",
+                logAnalyticsEndpoint,
+                a => a.LogAnalyticsEndpoint
                 );
         }
     }

@@ -50,13 +50,38 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return new MetricsDeclarationBuilder(azureMetadata: null);
         }
 
+        public static MetricsDeclarationBuilder WithCustomCloudAndLogAnalyticsEndpoint(AzureCloud cloud, string logAnalyticsEndpoint)
+        {
+            var azureMetadata = new AzureMetadataV1
+            {
+                TenantId = "tenantId",
+                SubscriptionId = "subscriptionId",
+                ResourceGroupName = "resourceGroupName",
+                Cloud = cloud,
+                Endpoints = new AzureEndpointsV1
+                {
+                    AuthenticationEndpoint = "https://auth.endpoint.com/",
+                    ManagementEndpoint = "https://management.endpoint.net/",
+                    ResourceManagerEndpoint = "https://management.endpoint.com/",
+                    GraphEndpoint = "https://graph.endpoint.com/",
+                    MetricsQueryAudience = "https://metric.query.endpoint.com/",
+                    MetricsClientAudience = "https://metric.client.endpoint.com/",
+                    StorageEndpointSuffix = "core.windows.net",
+                    KeyVaultSuffix = "vault.azure.net",
+                    LogAnalyticsEndpoint = logAnalyticsEndpoint
+                }
+            };
+
+            return new MetricsDeclarationBuilder(azureMetadata);
+        }
+
         public MetricsDeclarationBuilder WithDefaults(MetricDefaultsV1 defaults)
         {
             _metricDefaults = defaults;
 
             return this;
         }
-
+        
         public string Build(IMapper mapper)
         {
             var metricsDeclaration = new MetricsDeclarationV1

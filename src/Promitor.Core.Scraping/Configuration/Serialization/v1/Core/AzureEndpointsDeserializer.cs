@@ -35,6 +35,8 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(endpoints => endpoints.MetricsClientAudience)
                 .IsRequired()
                 .MapUsing(ValidateUrl);
+            Map(endpoints => endpoints.LogAnalyticsEndpoint)
+                .MapUsing(ValidateUrl);
         }
 
         private object ValidateUrl(string url, KeyValuePair<YamlNode, YamlNode> nodePair, IErrorReporter errorReporter)

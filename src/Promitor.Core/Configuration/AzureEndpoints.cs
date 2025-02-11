@@ -10,5 +10,6 @@
         public string KeyVaultSuffix { get; set; }
         public string MetricsQueryAudience { get; set; }
         public string MetricsClientAudience { get; set; }
+        public string LogAnalyticsEndpoint { get; set; }
     }
 }

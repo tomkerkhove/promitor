@@ -11,6 +11,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
 using ValidationResult = Promitor.Agents.Core.Validation.ValidationResult;
 using Promitor.Core.Serialization.Enum;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
 {
@@ -42,7 +43,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             }
 
             var validationErrors = new List<string>();
-            var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
+            var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata, metricsDeclaration.Metrics);
             validationErrors.AddRange(azureMetadataErrorMessages);
 
             var metricDefaultErrorMessages = ValidateMetricDefaults(metricsDeclaration.MetricDefaults);
@@ -100,7 +101,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             return duplicateMetricNames;
         }
 
-        private static IEnumerable<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
+        private static IEnumerable<string> ValidateAzureMetadata(AzureMetadata azureMetadata, List<MetricDefinition> metrics)
         {
             var errorMessages = new List<string>();
 
@@ -127,7 +128,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
             if (azureMetadata.Cloud == AzureCloud.Custom)
             {
-                errorMessages.AddRange(ValidateCustomCloud(azureMetadata));
+                errorMessages.AddRange(ValidateCustomCloud(azureMetadata, metrics));
             }
 
             return errorMessages;
@@ -154,7 +155,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             return errorMessages;
         }
 
-        private static IEnumerable<string> ValidateCustomCloud(AzureMetadata azureMetadata)
+        private static IEnumerable<string> ValidateCustomCloud(AzureMetadata azureMetadata, List<MetricDefinition> metrics)
         {
             var errorMessages = new List<string>();
 
@@ -195,6 +196,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps
                 if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.MetricsQueryAudience))
                 {
                     errorMessages.Add("Azure Custom cloud metric query audiences endpoint was not configured to query");
+                }
+
+                var usesLogAnalytics = metrics?.Any(m => m.ResourceType == ResourceType.LogAnalytics) ?? false;
+                if (usesLogAnalytics && string.IsNullOrWhiteSpace(azureMetadata.Endpoints.LogAnalyticsEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud Log Analytics endpoint was not configured when Log Analytics resource type was used");
                 }
             }
 

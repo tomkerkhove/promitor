@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
+using Promitor.Core.Serialization.Enum;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
 using Promitor.Tests.Unit.Stubs;
 using Xunit;
@@ -101,6 +102,40 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithLogAnalytics(query: "ABC | take 1 | project result")
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
+        [Fact]
+        public void LogAnalyticsDeclaration_CustomCloudWithoutLogAnalyticsEndpoint_Fails()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithCustomCloudAndLogAnalyticsEndpoint(AzureCloud.Custom, "")
+                .WithLogAnalytics()
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Fact]
+        public void LogAnalyticsDeclaration_CustomCloudWithLogAnalyticsEndpoint_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithCustomCloudAndLogAnalyticsEndpoint(AzureCloud.Custom, "https://custom.loganalytics.endpoint")
+                .WithLogAnalytics()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 

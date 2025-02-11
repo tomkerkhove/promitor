@@ -99,5 +99,20 @@ namespace Promitor.Core.Extensions
                     throw new ArgumentOutOfRangeException(nameof(cloudEndpoints.Cloud), "No Azure environment is known for");
             }
         }
+
+        public static Uri GetLogAnalyticsEndpoint(this IAzureCloudEndpoints cloudEndpoints)
+        {
+            switch(cloudEndpoints.Cloud)
+            {
+                case AzureCloud.Global:
+                    return new Uri("https://api.loganalytics.io");
+                case AzureCloud.UsGov:
+                    return new Uri("https://api.loganalytics.us");
+                case AzureCloud.Custom:
+                    return new Uri(cloudEndpoints.Endpoints.LogAnalyticsEndpoint);
+                default:
+                    throw new NotSupportedException($"Environment {cloudEndpoints.Cloud} is not supported for scraping Azure Log Analytics resource(s)");
+            }
+        }
     }
 }

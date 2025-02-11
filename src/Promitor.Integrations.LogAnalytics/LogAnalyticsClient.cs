@@ -13,8 +13,6 @@ namespace Promitor.Integrations.LogAnalytics
     {
         private readonly ILogger _logger;
         public readonly string ColumnNameResult = "result";
-        private readonly Uri _defaultEndpoint = new("https://api.loganalytics.io");
-        private readonly Uri _govEndpoint = new("https://api.loganalytics.us");
 
         private readonly LogsQueryClient _logsQueryClient;
 
@@ -24,17 +22,10 @@ namespace Promitor.Integrations.LogAnalytics
             _logsQueryClient = new LogsQueryClient(new DefaultAzureCredential());
         }
 
-        public LogAnalyticsClient(ILoggerFactory loggerFactory, AzureEnvironment azureEnvironment, TokenCredential tokenCredentials)
+        public LogAnalyticsClient(ILoggerFactory loggerFactory, Uri logAnalyticsEndpoint, TokenCredential tokenCredentials)
         {
             _logger = loggerFactory.CreateLogger<LogAnalyticsClient>();
-            var uri = azureEnvironment.Name switch
-            {
-                nameof(AzureEnvironment.AzureGlobalCloud) => _defaultEndpoint,
-                nameof(AzureEnvironment.AzureUSGovernment) => _govEndpoint,
-                _ => throw new NotSupportedException($"Environment {azureEnvironment.Name} is not supported for scraping Azure Log Analytics resource(s)")
-            };
-
-            _logsQueryClient = new LogsQueryClient(uri, tokenCredentials);
+            _logsQueryClient = new LogsQueryClient(logAnalyticsEndpoint, tokenCredentials);
         }
 
         public async Task<double> RunKustoQueryAsync(string workspaceId, string query, TimeSpan aggregationInterval)
