@@ -15,7 +15,6 @@ using Promitor.Integrations.Azure.Authentication;
 using Newtonsoft.Json;
 using Promitor.Core.Metrics.Exceptions;
 using Azure.Monitor.Query;
-using Promitor.Core.Serialization.Enum;
 using Azure.Monitor.Query.Models;
 using Promitor.Integrations.AzureMonitor.HttpPipelinePolicies;
 using Azure.Core;
@@ -38,7 +37,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Constructor
         /// </summary>
-        /// <param name="azureCloud">Name of the Azure cloud to interact with</param>
+        /// <param name="cloudEndpoints">Azure cloud and endpoints to interact with</param>
         /// <param name="tenantId">Id of the tenant that owns the Azure subscription</param>
         /// <param name="subscriptionId">Id of the Azure subscription</param>
         /// <param name="azureAuthenticationInfo">Information regarding authentication with Microsoft Azure</param>
@@ -48,7 +47,7 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="loggerFactory">Factory to create loggers with</param>
         /// <param name="azureMonitorIntegrationConfiguration">Options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
-        public AzureMonitorQueryClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
+        public AzureMonitorQueryClient(IAzureCloudEndpoints cloudEndpoints, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IMemoryCache resourceMetricDefinitionMemoryCache, ILoggerFactory loggerFactory, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration)
         {
             Guard.NotNullOrWhitespace(tenantId, nameof(tenantId));
             Guard.NotNullOrWhitespace(subscriptionId, nameof(subscriptionId));
@@ -60,10 +59,10 @@ namespace Promitor.Integrations.AzureMonitor
             _resourceMetricDefinitionMemoryCache = resourceMetricDefinitionMemoryCache;
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _logger = loggerFactory.CreateLogger<AzureMonitorQueryClient>();
-            _metricsQueryClient = CreateAzureMonitorMetricsClient(azureCloud, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
+            _metricsQueryClient = CreateAzureMonitorMetricsClient(cloudEndpoints, tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher, azureMonitorLoggingConfiguration);
             if (_azureMonitorIntegrationConfiguration.Value.MetricsBatching.Enabled)
             {
-                _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(azureCloud, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
+                _metricsBatchQueryClient = CreateAzureMonitorMetricsBatchClient(cloudEndpoints, tenantId, azureAuthenticationInfo, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration);
             }
         }
 
@@ -255,15 +254,15 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Creates authenticated client to query for metrics
         /// </summary>
-        private MetricsQueryClient CreateAzureMonitorMetricsClient(AzureCloud azureCloud, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+        private MetricsQueryClient CreateAzureMonitorMetricsClient(IAzureCloudEndpoints cloudEndpoints, string tenantId, string subscriptionId, AzureAuthenticationInfo azureAuthenticationInfo, MetricSinkWriter metricSinkWriter, IAzureScrapingSystemMetricsPublisher azureScrapingSystemMetricsPublisher, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var metricsQueryClientOptions = new MetricsQueryClientOptions{
-                Audience = azureCloud.DetermineMetricsClientAudience(),
+                Audience = cloudEndpoints.DetermineMetricsClientAudience(),
             }; 
             var azureRateLimitPolicy = new RecordArmRateLimitMetricsPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter, azureScrapingSystemMetricsPublisher);
             var addPromitorUserAgentPolicy = new RegisterPromitorAgentPolicy(tenantId, subscriptionId, azureAuthenticationInfo, metricSinkWriter);
             metricsQueryClientOptions.AddPolicy(azureRateLimitPolicy, HttpPipelinePosition.PerCall);
             metricsQueryClientOptions.AddPolicy(addPromitorUserAgentPolicy, HttpPipelinePosition.BeforeTransport);
-            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(cloudEndpoints.Cloud), tenantId, azureAuthenticationInfo, cloudEndpoints.GetAzureAuthorityHost());
             
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
@@ -277,10 +276,10 @@ namespace Promitor.Integrations.AzureMonitor
         /// <summary>
         ///     Creates authenticated client for metrics batch queries
         /// </summary>
-        private MetricsClient CreateAzureMonitorMetricsBatchClient(AzureCloud azureCloud, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
+        private MetricsClient CreateAzureMonitorMetricsBatchClient(IAzureCloudEndpoints cloudEndpoints, string tenantId, AzureAuthenticationInfo azureAuthenticationInfo, IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration, IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration) {
             var azureRegion = azureMonitorIntegrationConfiguration.Value.MetricsBatching.AzureRegion;
             var metricsClientOptions = new MetricsClientOptions{
-                Audience = azureCloud.DetermineMetricsClientBatchQueryAudience(),
+                Audience = cloudEndpoints.DetermineMetricsClientBatchQueryAudience(),
                 Retry =
                 {
                     Mode = RetryMode.Exponential,
@@ -289,7 +288,7 @@ namespace Promitor.Integrations.AzureMonitor
                     MaxDelay = TimeSpan.FromSeconds(30), 
                 }
             }; // retry policy as suggested in the documentation: https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/migrate-to-batch-api?tabs=individual-response#529-throttling-errors
-            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(azureCloud), tenantId, azureAuthenticationInfo, azureCloud.GetAzureAuthorityHost());
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(nameof(cloudEndpoints.Cloud), tenantId, azureAuthenticationInfo, cloudEndpoints.GetAzureAuthorityHost());
             metricsClientOptions.AddPolicy(new ModifyOutgoingAzureMonitorRequestsPolicy(_logger), HttpPipelinePosition.BeforeTransport); 
             var azureMonitorLogging = azureMonitorLoggingConfiguration.Value;
             if (azureMonitorLogging.IsEnabled)
@@ -297,8 +296,8 @@ namespace Promitor.Integrations.AzureMonitor
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-            _logger.LogWarning("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString()));
-            return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, azureCloud.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
+            _logger.LogWarning("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, cloudEndpoints.DetermineMetricsClientBatchQueryAudience().ToString()));
+            return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, cloudEndpoints.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
         }
 
         public static string InsertRegionIntoUrl(string region, string baseUrl)

@@ -285,14 +285,14 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
-                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
+                var azureEnvironment = _metricsDeclaration.AzureMetadata.GetAzureEnvironment();
 
-                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
+                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironment.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri (_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 
@@ -313,15 +313,15 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var resourceSubscriptionId = !string.IsNullOrWhiteSpace(scrapeDefinition.Resource.SubscriptionId)
                     ? scrapeDefinition.Resource.SubscriptionId
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
-                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
+                var azureEnvironent = _metricsDeclaration.AzureMetadata.GetAzureEnvironment();
                 Logger.LogInformation("Parsed SDK Config {UseAzureMonitorSdk}", _azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 

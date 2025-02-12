@@ -1,5 +1,7 @@
 ﻿using Humanizer;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
+using Promitor.Core.Configuration;
+using Promitor.Core.Serialization.Enum;
 
 namespace Promitor.Core.Extensions
 {
@@ -13,6 +15,24 @@ namespace Promitor.Core.Extensions
         public static string GetDisplayName(this AzureEnvironment azureCloud)
         {
             return azureCloud.Name.Replace("Azure", "").Replace("Cloud", "").Humanize(LetterCasing.Title);
+        }
+
+        /// <summary>
+        ///    Get Azure environment information for custom cloud
+        /// </summary>
+        /// <param name="endpoints">Endpoints for custom environment</param>
+        public static AzureEnvironment GetCustomAzureEnvironment(AzureEndpoints endpoints)
+        {
+            return new AzureEnvironment
+            {
+                Name = nameof(AzureCloud.Custom),
+                AuthenticationEndpoint = endpoints.AuthenticationEndpoint,
+                ResourceManagerEndpoint = endpoints.ResourceManagerEndpoint,
+                GraphEndpoint = endpoints.GraphEndpoint,
+                ManagementEndpoint = endpoints.ManagementEndpoint,
+                StorageEndpointSuffix = endpoints.StorageEndpointSuffix,
+                KeyVaultSuffix = endpoints.KeyVaultSuffix,
+            };
         }
     }
 }
