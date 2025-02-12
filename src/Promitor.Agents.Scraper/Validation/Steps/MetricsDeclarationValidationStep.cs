@@ -123,7 +123,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(azureMetadata.ResourceGroupName))
             {
-                errorMessages.Add("No resource group name is not configured");
+                errorMessages.Add("No resource group name is configured");
             }
 
             if (azureMetadata.Cloud == AzureCloud.Custom)

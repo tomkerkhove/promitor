@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Xunit;
 using YamlDotNet.RepresentationModel;
-using Microsoft.Azure.Management.ResourceManager.Fluent.Core.DAG;
 
 namespace Promitor.Tests.Unit.Serialization.v1.Core
 {

@@ -68,7 +68,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
                     MetricsClientAudience = "https://metric.client.endpoint.com/",
                     StorageEndpointSuffix = "core.windows.net",
                     KeyVaultSuffix = "vault.azure.net",
-                    LogAnalyticsEndpoint = logAnalyticsEndpoint
+                    LogAnalyticsEndpoint = string.IsNullOrWhiteSpace(logAnalyticsEndpoint) ? null : logAnalyticsEndpoint
                 }
             };
 

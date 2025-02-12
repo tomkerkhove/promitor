@@ -1,8 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using Azure.Identity;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
-using Promitor.Core.Configuration;
 using Promitor.Core.Extensions;
 using Promitor.Core.Serialization.Enum;
 using Xunit;

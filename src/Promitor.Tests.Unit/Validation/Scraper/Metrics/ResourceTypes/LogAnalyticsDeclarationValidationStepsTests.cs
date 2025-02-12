@@ -146,5 +146,22 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             // Assert
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
+
+        [Fact]
+        public void CustomCloudWithoutLogAnalyticsResourceAndWithoutLogAnalyticsEndpoint_Succeeds()
+        {
+            // Arrange
+            var rawDeclaration = MetricsDeclarationBuilder.WithCustomCloudAndLogAnalyticsEndpoint(AzureCloud.Custom, string.Empty)
+                .Build(Mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            PromitorAssert.ValidationIsSuccessful(validationResult);
+        }
+
     }
 }

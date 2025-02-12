@@ -4,7 +4,6 @@ using Azure.Core;
 using Azure.Identity;
 using Azure.Monitor.Query;
 using GuardNet;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Extensions.Logging;
 
 namespace Promitor.Integrations.LogAnalytics
