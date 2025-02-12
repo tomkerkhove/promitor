@@ -162,6 +162,5 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
             // Assert
             PromitorAssert.ValidationIsSuccessful(validationResult);
         }
-
     }
 }
