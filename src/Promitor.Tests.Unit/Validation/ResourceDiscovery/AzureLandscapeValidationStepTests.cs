@@ -208,7 +208,7 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
                 .RuleFor(landscape => landscape.Subscriptions, faker => new List<string> { faker.Name.FirstName(), faker.Name.FirstName() })
                 .RuleFor(landscape => landscape.TenantId, faker => faker.Name.FirstName())
                 .RuleFor(landscape => landscape.Cloud, faker => faker.PickRandom(allowedAzureClouds))
-                .RuleFor(landscape => landscape.Endpoints, faker => null)
+                .RuleFor(landscape => landscape.Endpoints, _ => null)
                 .Generate();
 
             return Options.Create(azureLandscape);
@@ -220,8 +220,8 @@ namespace Promitor.Tests.Unit.Validation.ResourceDiscovery
                 .StrictMode(true)
                 .RuleFor(landscape => landscape.Subscriptions, faker => new List<string> { faker.Name.FirstName(), faker.Name.FirstName() })
                 .RuleFor(landscape => landscape.TenantId, faker => faker.Name.FirstName())
-                .RuleFor(landscape => landscape.Cloud, faker => AzureCloud.Custom)
-                .RuleFor(landscape => landscape.Endpoints, faker => new AzureEndpoints 
+                .RuleFor(landscape => landscape.Cloud, _ => AzureCloud.Custom)
+                .RuleFor(landscape => landscape.Endpoints, _ => new AzureEndpoints 
                 {
                     AuthenticationEndpoint = "https://auth.com/",
                     ResourceManagerEndpoint = "https://resource.com/",
