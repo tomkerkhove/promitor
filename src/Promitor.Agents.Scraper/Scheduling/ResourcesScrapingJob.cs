@@ -134,8 +134,12 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             try
             {
-                var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
-                await ScrapeMetrics(scrapeDefinitions, cancellationToken);
+                var timeoutCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+                // to enforce timeout in addition to cancellationToken passed down by .NET 
+                var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
+
+                var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
+                await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -288,7 +292,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 {
                     await Task.Delay(2000);
                 }
-                
+
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
