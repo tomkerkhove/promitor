@@ -22,6 +22,7 @@ using Promitor.Core.Scraping.Factories;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.LogAnalytics;
+using Serilog;
 
 namespace Promitor.Agents.Scraper.Scheduling
 {
@@ -134,7 +135,9 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             try
             {
-                var timeoutCancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+                var timeoutCancellationTokenSource = new CancellationTokenSource();
+                timeoutCancellationTokenSource.CancelAfter(10000);
+                Logger.LogWarning("Init timeout token");
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
 
