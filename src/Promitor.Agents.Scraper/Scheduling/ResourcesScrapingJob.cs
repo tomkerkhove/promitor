@@ -354,11 +354,14 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             if (_scrapingTaskMutex == null)
             {
+                Logger.LogWarning("Run with unlimited concurrency");
                 tasks.Add(Task.Run(asyncWork, cancellationToken));
                 return;
             }
+            Logger.LogWarning("Waiting to acquire mutex");
 
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
+            Logger.LogWarning("Acquired mutex");
 
             tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));
         }
@@ -367,6 +370,8 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             try
             {
+                var timeoutCancellationTokenSource = new CancellationTokenSource();
+                timeoutCancellationTokenSource.CancelAfter(10000);
                 await work();
             }
             finally
