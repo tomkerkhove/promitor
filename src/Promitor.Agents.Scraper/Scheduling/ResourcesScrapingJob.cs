@@ -361,6 +361,10 @@ namespace Promitor.Agents.Scraper.Scheduling
             Logger.LogWarning("Init timeout token");
             // to enforce timeout in addition to cancellationToken passed down by .NET 
             var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
+            composedCancellationTokenSource.Token.Register(() => {
+               Logger.LogWarning("Exited via cancellation token");
+                _scrapingTaskMutex.Release();
+            });
 
             tasks.Add(Task.Run(() => WorkWrapper(asyncWork), composedCancellationTokenSource.Token));
         }
