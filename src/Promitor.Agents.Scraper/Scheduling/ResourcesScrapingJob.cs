@@ -135,8 +135,16 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             try
             {
-                var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
-                await ScrapeMetrics(scrapeDefinitions, cancellationToken);
+                var timeoutCancellationTokenSource = new CancellationTokenSource();
+                timeoutCancellationTokenSource.CancelAfter(10000);
+                Logger.LogWarning("Init timeout token");
+                // to enforce timeout in addition to cancellationToken passed down by .NET 
+                var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
+                composedCancellationTokenSource.Token.Register(() => {
+                    Logger.LogWarning("Exited via cancellation token");
+                });
+                var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
+                await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -356,17 +364,8 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
             Logger.LogWarning("Acquired mutex");
-            var timeoutCancellationTokenSource = new CancellationTokenSource();
-            timeoutCancellationTokenSource.CancelAfter(10000);
-            Logger.LogWarning("Init timeout token");
-            // to enforce timeout in addition to cancellationToken passed down by .NET 
-            var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
-            composedCancellationTokenSource.Token.Register(() => {
-               Logger.LogWarning("Exited via cancellation token");
-                _scrapingTaskMutex.Release();
-            });
 
-            tasks.Add(Task.Run(() => WorkWrapper(asyncWork), composedCancellationTokenSource.Token));
+            tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));
         }
 
         private async Task WorkWrapper(Func<Task> work)
