@@ -369,14 +369,19 @@ namespace Promitor.Agents.Scraper.Scheduling
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
             Logger.LogWarning("Acquired mutex");
 
-            tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));
+            tasks.Add(Task.Run(() => WorkWrapper(asyncWork, cancellationToken), cancellationToken));
         }
 
-        private async Task WorkWrapper(Func<Task> work)
+        private async Task WorkWrapper(Func<Task> work, CancellationToken cancellationToken)
         {
             try
             {
-                await work();
+                var tcs = new TaskCompletionSource<object>();
+                cancellationToken.Register(() => {
+                    Logger.LogWarning("Marking timeout task complete");
+                    tcs.TrySetResult(null);
+                });
+                await Task.WhenAny(work(), tcs.Task);
             }
             finally
             {
