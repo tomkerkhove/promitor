@@ -342,6 +342,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<AzureMonitorConfiguration>(configuration.GetSection("azureMonitor"));
             services.Configure<AzureMonitorIntegrationConfiguration>(configuration.GetSection("azureMonitor:integration"));
             services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
+            services.Configure<ConcurrencyConfiguration>(configuration.GetSection("concurrency"));
 
             return services;
         }

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
@@ -44,7 +45,9 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IConfiguration _configuration;
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
+        private readonly IOptions<ConcurrencyConfiguration> _concurrencyConfiguration;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly CancellationTokenSource _timeoutCancellationTokenSource = new CancellationTokenSource();
 
         private int runNum = 0;
 
@@ -79,6 +82,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             IConfiguration configuration,
             IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration,
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
+            IOptions<ConcurrencyConfiguration> concurrencyConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<ResourcesScrapingJob> logger)
             : base(jobName, logger)
@@ -96,6 +100,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(azureMonitorIntegrationConfiguration, nameof(azureMonitorIntegrationConfiguration));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
+            Guard.NotNull(concurrencyConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
             // all metrics must have the same scraping schedule or it is not possible for them to share the same job
@@ -113,6 +118,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
+            _concurrencyConfiguration = concurrencyConfiguration;
         }
 
         private static void VerifyAllMetricsHaveSameScrapingSchedule(MetricsDeclaration metricsDeclaration)
@@ -134,24 +140,31 @@ namespace Promitor.Agents.Scraper.Scheduling
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             Logger.LogDebug("Started scraping job {JobName}.", Name);
+            var cancelledDueToTimeout = false;
 
             try
             {
+                var mutexReleasedAfterSeconds = _concurrencyConfiguration.Value.MutexTimeoutSeconds;
                 runNum += 1;
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
-                timeoutCancellationTokenSource.CancelAfter(10000);
+                timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
+                timeoutCancellationTokenSource.Token.Register(() => {
+                    cancelledDueToTimeout = true;
+                });
+
                 Logger.LogWarning("Init timeout token");
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
-                composedCancellationTokenSource.Token.Register(() => {
-                    Logger.LogWarning("Exited via cancellation token");
-                });
                 var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
                 await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token, runNum);
             }
             catch (OperationCanceledException)
             {
                 Logger.LogWarning("Cancelled scraping metrics for job {JobName}.", Name);
+                if (cancelledDueToTimeout) 
+                {
+                    Logger.LogError("Scrape job was cancelled due to timeout. However, dangling async tasks may be executing for an unbounded amount of ");
+                }
             }
             catch (Exception ex)
             {
@@ -360,14 +373,11 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             if (_scrapingTaskMutex == null)
             {
-                Logger.LogWarning("Run with unlimited concurrency");
                 tasks.Add(Task.Run(asyncWork, cancellationToken));
                 return;
             }
-            Logger.LogWarning("Waiting to acquire mutex");
 
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
-            Logger.LogWarning("Acquired mutex");
 
             tasks.Add(Task.Run(() => WorkWrapper(asyncWork, cancellationToken), cancellationToken));
         }
@@ -378,7 +388,6 @@ namespace Promitor.Agents.Scraper.Scheduling
             {
                 var tcs = new TaskCompletionSource<object>();
                 cancellationToken.Register(() => {
-                    Logger.LogWarning("Marking timeout task complete");
                     tcs.TrySetResult(null);
                 });
                 await Task.WhenAny(work(), tcs.Task);

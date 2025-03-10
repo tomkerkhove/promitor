@@ -15,6 +15,7 @@ using Promitor.Core.Metrics.Sinks;
 using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Agents.Scraper.Configuration;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -42,6 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
             
             var metricSinkWriter = serviceProviderToCreateJobsWith.GetRequiredService<MetricSinkWriter>();
             var azureMonitorIntegrationConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorIntegrationConfiguration>>();
+            var concurrencyConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<ConcurrencyConfiguration>>();
             var azureMonitorLoggingConfiguration = serviceProviderToCreateJobsWith.GetService<IOptions<AzureMonitorLoggingConfiguration>>();
             var resourceMetricDefinitionMemoryCache = serviceProviderToCreateJobsWith.GetService<IMemoryCache>();
             var configuration = serviceProviderToCreateJobsWith.GetService<IConfiguration>();
@@ -55,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var metricsForScrapingInterval in metricsGroupedByScrapingInterval)
             {
                 ScheduleResourcesScraping(metricsForScrapingInterval, metricSinkWriter, azureMonitorClientFactory, runtimeMetricCollector, resourceMetricDefinitionMemoryCache, 
-                    scrapingTaskMutex, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services);
+                    scrapingTaskMutex, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services, concurrencyConfiguration);
             }
 
             return services;
@@ -94,7 +96,8 @@ namespace Microsoft.Extensions.DependencyInjection
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<Startup> logger,
-            IServiceCollection services)
+            IServiceCollection services,
+            ConcurrencyConfiguration concurrencyConfiguration)
         {
             var jobName = GenerateResourceScrapingJobName(metricsDeclaration, logger);
             
