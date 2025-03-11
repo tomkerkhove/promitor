@@ -57,7 +57,7 @@ namespace Microsoft.Extensions.DependencyInjection
             foreach (var metricsForScrapingInterval in metricsGroupedByScrapingInterval)
             {
                 ScheduleResourcesScraping(metricsForScrapingInterval, metricSinkWriter, azureMonitorClientFactory, runtimeMetricCollector, resourceMetricDefinitionMemoryCache, 
-                    scrapingTaskMutex, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, loggerFactory, startupLogger, services, concurrencyConfiguration);
+                    scrapingTaskMutex, configuration, azureMonitorIntegrationConfiguration, azureMonitorLoggingConfiguration, concurrencyConfiguration, loggerFactory, startupLogger, services);
             }
 
             return services;
@@ -94,10 +94,10 @@ namespace Microsoft.Extensions.DependencyInjection
             IConfiguration configuration,
             IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration,
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
+            IOptions<ConcurrencyConfiguration> concurrencyConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<Startup> logger,
-            IServiceCollection services,
-            ConcurrencyConfiguration concurrencyConfiguration)
+            IServiceCollection services)
         {
             var jobName = GenerateResourceScrapingJobName(metricsDeclaration, logger);
             
@@ -116,6 +116,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             configuration,
                             azureMonitorIntegrationConfiguration,
                             azureMonitorLoggingConfiguration,
+                            concurrencyConfiguration,
                             loggerFactory,
                             jobServices.GetService<ILogger<ResourcesScrapingJob>>()),
                     schedulerOptions =>

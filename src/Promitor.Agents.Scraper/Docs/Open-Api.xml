@@ -248,7 +248,7 @@
             the same scraping schedule.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.Interfaces.IResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.Interfaces.IResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Agents.Scraper.Configuration.ConcurrencyConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
             <summary>
             Create a metrics scraping job for one or more resources, either enumerated specifically or
             identified via resource definition groups. All metrics included are expected to have
@@ -266,6 +266,7 @@
             <param name="configuration">Promitor configuration</param>
             <param name="azureMonitorIntegrationConfiguration">options for Azure Monitor integration</param>
             <param name="azureMonitorLoggingConfiguration">options for Azure Monitor logging</param>
+            <param name="concurrencyConfiguration">options for concurrent scrape job execution</param>
             <param name="loggerFactory">means to obtain a logger</param>
             <param name="logger">logger to use for scraping detail</param>
         </member>

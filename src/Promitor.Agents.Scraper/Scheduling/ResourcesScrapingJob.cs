@@ -68,6 +68,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="configuration">Promitor configuration</param>
         /// <param name="azureMonitorIntegrationConfiguration">options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">options for Azure Monitor logging</param>
+        /// <param name="concurrencyConfiguration">options for concurrent scrape job execution</param>
         /// <param name="loggerFactory">means to obtain a logger</param>
         /// <param name="logger">logger to use for scraping detail</param>
         public ResourcesScrapingJob(string jobName,
@@ -163,7 +164,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                 Logger.LogWarning("Cancelled scraping metrics for job {JobName}.", Name);
                 if (cancelledDueToTimeout) 
                 {
-                    Logger.LogError("Scrape job was cancelled due to timeout. However, dangling async tasks may be executing for an unbounded amount of ");
+                    Logger.LogError("Scrape job was cancelled due to timeout. However, dangling async tasks " +
+                                    "may be running for an unbounded amount of time. In the rare case where " +
+                                    "many such timeouts occur, consider restarting the Scraper Agent.");                
                 }
             }
             catch (Exception ex)
