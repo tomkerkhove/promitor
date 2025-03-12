@@ -316,7 +316,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 while (true) 
                 {
                     Logger.LogWarning("Run number {runNum}", runNum.ToString());
-                    await Task.Delay(2000);
+                    await Task.Delay(10000);
                 }
 
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
