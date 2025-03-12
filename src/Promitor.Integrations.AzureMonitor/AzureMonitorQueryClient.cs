@@ -22,6 +22,7 @@ using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
 using Promitor.Integrations.AzureMonitor.Extensions;
+using Serilog;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -135,8 +136,25 @@ namespace Promitor.Integrations.AzureMonitor
 
             //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
             return metricResultsList
-                .SelectMany(metricResult => ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
-                                                .Select(measuredMetric => measuredMetric.WithResourceIdAssociation(metricResult.ParseResourceIdFromResultId()))) 
+                .SelectMany(metricResult => 
+                {
+                    try 
+                    {
+                        return ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
+                                                .Select(measuredMetric => measuredMetric.WithResourceIdAssociation(metricResult.ParseResourceIdFromResultId()));
+                    }
+                    catch (MetricInformationNotFoundException e) 
+                    {
+                        _logger.LogError("Azure Monitor returned no data for metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
+                        return Enumerable.Empty<MeasuredMetric>();
+                    }
+                    catch (Exception e) 
+                    {
+                        _logger.LogError("Encountered unknown exception when processing metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
+                        return Enumerable.Empty<MeasuredMetric>();
+                    } 
+
+                }) 
                 .ToList();
         }
 
@@ -296,7 +314,7 @@ namespace Promitor.Integrations.AzureMonitor
                 using AzureEventSourceListener traceListener = AzureEventSourceListener.CreateTraceLogger(EventLevel.Informational);
                 metricsClientOptions.Diagnostics.IsLoggingEnabled = true;
             }
-            _logger.LogWarning("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, cloudEndpoints.DetermineMetricsClientBatchQueryAudience().ToString()));
+            _logger.LogInformation("Using batch scraping API URL: {URL}", InsertRegionIntoUrl(azureRegion, cloudEndpoints.DetermineMetricsClientBatchQueryAudience().ToString()));
             return new MetricsClient(new Uri(InsertRegionIntoUrl(azureRegion, cloudEndpoints.DetermineMetricsClientBatchQueryAudience().ToString())), tokenCredential, metricsClientOptions);
         }
 
