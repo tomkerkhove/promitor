@@ -177,6 +177,10 @@ namespace Promitor.Agents.Scraper.Scheduling
                                     "may be running for an unbounded amount of time. In the rare case where " +
                                     "many such timeouts occur, consider restarting the Scraper Agent.", Name);                
                 }
+                else
+                {
+                    Logger.LogWarning("Ended scraping job 2 {JobName}.", Name);
+                }
             }
         }
 
