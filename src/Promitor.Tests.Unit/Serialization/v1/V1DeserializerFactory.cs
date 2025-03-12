@@ -12,14 +12,16 @@ namespace Promitor.Tests.Unit.Serialization.v1
         public static V1Deserializer CreateDeserializer()
         {
             return new V1Deserializer(
-                new AzureMetadataDeserializer(NullLogger<AzureMetadataDeserializer>.Instance),
+                new AzureMetadataDeserializer(
+                    new AzureEndpointsDeserializer(NullLogger<AzureEndpointsDeserializer>.Instance),
+                    NullLogger<AzureMetadataDeserializer>.Instance),
                 new MetricDefaultsDeserializer(
                     new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance),
                     new ScrapingDeserializer(NullLogger<ScrapingDeserializer>.Instance),
                     NullLogger<MetricDefaultsDeserializer>.Instance),
                 new MetricDefinitionDeserializer(
                     new AzureMetricConfigurationDeserializer(
-                        new MetricDimensionDeserializer(NullLogger<MetricDimensionDeserializer>.Instance), 
+                        new MetricDimensionDeserializer(NullLogger<MetricDimensionDeserializer>.Instance),
                         new MetricAggregationDeserializer(NullLogger<MetricAggregationDeserializer>.Instance),
                         NullLogger<AzureMetricConfigurationDeserializer>.Instance),
                     new LogAnalyticsConfigurationDeserializer(new AggregationDeserializer(NullLogger<AggregationDeserializer>.Instance), NullLogger<LogAnalyticsConfigurationDeserializer>.Instance),

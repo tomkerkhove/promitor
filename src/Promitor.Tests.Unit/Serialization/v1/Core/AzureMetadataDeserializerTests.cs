@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Serialization.Enum;
 using Xunit;
 using YamlDotNet.RepresentationModel;
@@ -12,10 +15,13 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
     public class AzureMetadataDeserializerTests : UnitTest
     {
         private readonly AzureMetadataDeserializer _deserializer;
+        private readonly Mock<IErrorReporter> _errorReporter = new();
+        private readonly Mock<IDeserializer<AzureEndpointsV1>> _azureEndpointsDeserializer;
 
         public AzureMetadataDeserializerTests()
         {
-            _deserializer = new AzureMetadataDeserializer(NullLogger<AzureMetadataDeserializer>.Instance);
+            _azureEndpointsDeserializer = new Mock<IDeserializer<AzureEndpointsV1>>();
+            _deserializer = new AzureMetadataDeserializer(_azureEndpointsDeserializer.Object, NullLogger<AzureMetadataDeserializer>.Instance);
         }
 
         [Fact]
@@ -224,5 +230,26 @@ $@"azureMetadata:
                 metaDataNode,
                 "resourceGroupName");
         }
+
+        [Fact]
+        public void Deserialize_Endpoints_UsesDeserializer()
+        {
+            // Arrange
+            var yamlNode = YamlUtils.CreateYamlNode(
+                $@"azureMetadata:
+    cloud: '{AzureCloud.Custom}'
+    endpoints: 
+        authenticationEndpoint: testAuth.com");
+            var azureMetadataNode = (YamlMappingNode)yamlNode.Children["azureMetadata"];
+            var endpointNode = (YamlMappingNode)azureMetadataNode.Children["endpoints"];
+            var azureEndpoints = new AzureEndpointsV1();
+            _azureEndpointsDeserializer.Setup(d => d.Deserialize(endpointNode,_errorReporter.Object)).Returns(azureEndpoints);
+
+            // Act
+            var definition = _deserializer.Deserialize(azureMetadataNode, _errorReporter.Object);
+
+            // Assert
+            Assert.Same(azureEndpoints, definition.Endpoints);
+        } 
     }
 }

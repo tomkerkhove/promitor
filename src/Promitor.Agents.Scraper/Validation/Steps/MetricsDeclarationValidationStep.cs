@@ -10,6 +10,8 @@ using Promitor.Core.Scraping.Configuration.Providers.Interfaces;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions;
 using ValidationResult = Promitor.Agents.Core.Validation.ValidationResult;
+using Promitor.Core.Serialization.Enum;
+using Promitor.Core.Contracts;
 
 namespace Promitor.Agents.Scraper.Validation.Steps
 {
@@ -41,7 +43,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             }
 
             var validationErrors = new List<string>();
-            var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata);
+            var azureMetadataErrorMessages = ValidateAzureMetadata(metricsDeclaration.AzureMetadata, metricsDeclaration.Metrics);
             validationErrors.AddRange(azureMetadataErrorMessages);
 
             var metricDefaultErrorMessages = ValidateMetricDefaults(metricsDeclaration.MetricDefaults);
@@ -99,7 +101,7 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             return duplicateMetricNames;
         }
 
-        private static IEnumerable<string> ValidateAzureMetadata(AzureMetadata azureMetadata)
+        private static IEnumerable<string> ValidateAzureMetadata(AzureMetadata azureMetadata, List<MetricDefinition> metrics)
         {
             var errorMessages = new List<string>();
 
@@ -121,7 +123,12 @@ namespace Promitor.Agents.Scraper.Validation.Steps
 
             if (string.IsNullOrWhiteSpace(azureMetadata.ResourceGroupName))
             {
-                errorMessages.Add("No resource group name is not configured");
+                errorMessages.Add("No resource group name is configured");
+            }
+
+            if (azureMetadata.Cloud == AzureCloud.Custom)
+            {
+                errorMessages.AddRange(ValidateCustomCloud(azureMetadata, metrics));
             }
 
             return errorMessages;
@@ -144,6 +151,59 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             // Detect duplicate metric names
             var duplicateMetrics = DetectDuplicateMetrics(metrics);
             errorMessages.AddRange(duplicateMetrics.Select(duplicateMetricName => $"Metric name '{duplicateMetricName}' is declared multiple times"));
+
+            return errorMessages;
+        }
+
+        private static IEnumerable<string> ValidateCustomCloud(AzureMetadata azureMetadata, List<MetricDefinition> metrics)
+        {
+            var errorMessages = new List<string>();
+
+            if (azureMetadata.Endpoints == null)
+            {
+                errorMessages.Add("Endpoints are not configured for Azure Custom cloud");
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.AuthenticationEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud authentication endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ResourceManagerEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud resource management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.ManagementEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud service management endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.GraphEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud graph endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.StorageEndpointSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud storage service url suffix was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.KeyVaultSuffix))
+                {
+                    errorMessages.Add("Azure Custom cloud Key Vault service url suffix was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.MetricsClientAudience))
+                {
+                    errorMessages.Add("Azure Custom cloud metric client audiences endpoint was not configured to query");
+                }
+                if (string.IsNullOrWhiteSpace(azureMetadata.Endpoints.MetricsQueryAudience))
+                {
+                    errorMessages.Add("Azure Custom cloud metric query audiences endpoint was not configured to query");
+                }
+
+                var usesLogAnalytics = metrics?.Any(m => m.ResourceType == ResourceType.LogAnalytics) ?? false;
+                if (usesLogAnalytics && string.IsNullOrWhiteSpace(azureMetadata.Endpoints.LogAnalyticsEndpoint))
+                {
+                    errorMessages.Add("Azure Custom cloud Log Analytics endpoint was not configured when Log Analytics resource type was used");
+                }
+            }
 
             return errorMessages;
         }

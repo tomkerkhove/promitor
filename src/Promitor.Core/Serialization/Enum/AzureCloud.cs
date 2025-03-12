@@ -6,6 +6,7 @@
         Global,
         China,
         UsGov,
-        Germany
+        Germany,
+        Custom
     }
 }
