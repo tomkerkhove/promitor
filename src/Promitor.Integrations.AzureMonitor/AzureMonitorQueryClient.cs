@@ -116,19 +116,37 @@ namespace Promitor.Integrations.AzureMonitor
             
            // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
+            var resourceIdsWithMetricDefined = new List<string>();
+            
+
             var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
             var metricNamespace = metricNamespaces.SingleOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
             }
-            var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
-            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
-            if (metricDefinition == null)
+
+            MetricDefinition metricDefinition = null;
+            resourceIds.Select(async resourceId => 
             {
+                var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
+                var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
+                if (metricDefinition == null)
+                {
+                    _logger.LogWarning("Metric {MetricName} is not defined for Resource {ResourceID}. Check Azure Monitor documentation for possible misconfiguration", metricName, resourceId);
+                }
+                else 
+                {
+                    resourceIdsWithMetricDefined.Add(resourceId);
+                }
+            });
+
+            if (resourceIdsWithMetricDefined.Count < 1) 
+            {
+                _logger.LogError("Metric {MetricName} is undefined for all resources within batch. Aborting batch job", metricName);
                 throw new MetricNotFoundException(metricName);
             }
-
+            
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
