@@ -22,7 +22,7 @@ using Promitor.Core.Extensions;
 using Azure.Core.Diagnostics;
 using System.Diagnostics.Tracing;
 using Promitor.Integrations.AzureMonitor.Extensions;
-using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Promitor.Integrations.AzureMonitor
 {
@@ -146,14 +146,13 @@ namespace Promitor.Integrations.AzureMonitor
                     catch (MetricInformationNotFoundException e) 
                     {
                         _logger.LogError("Azure Monitor returned no data for metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
-                        return Enumerable.Empty<MeasuredMetric>();
+                        return [];
                     }
                     catch (Exception e) 
                     {
                         _logger.LogError("Encountered unknown exception when processing metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
-                        return Enumerable.Empty<MeasuredMetric>();
+                        return [];
                     } 
-
                 }) 
                 .ToList();
         }
