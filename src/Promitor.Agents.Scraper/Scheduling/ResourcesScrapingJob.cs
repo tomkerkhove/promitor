@@ -170,7 +170,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             }
             finally
             {
-                Logger.LogDebug("Ended scraping job {JobName}.", Name);
+                Logger.LogWarning("Ended scraping job {JobName}.", Name);
                 if (cancelledDueToTimeout) 
                 {
                     Logger.LogWarning("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
