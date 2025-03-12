@@ -150,6 +150,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
                 timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
                 timeoutCancellationTokenSource.Token.Register(() => {
+                    Logger.LogWarning("Returned top level timeout");
                     cancelledDueToTimeout = true;
                 });
 
