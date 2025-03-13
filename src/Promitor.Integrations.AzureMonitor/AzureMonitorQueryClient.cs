@@ -161,12 +161,12 @@ namespace Promitor.Integrations.AzureMonitor
                         return ProcessMetricResult(metricResult, metricName, startQueryingTime, closestAggregationInterval, aggregationType, metricDimensions)
                                                 .Select(measuredMetric => measuredMetric.WithResourceIdAssociation(metricResult.ParseResourceIdFromResultId()));
                     }
-                    catch (MetricInformationNotFoundException e) 
+                    catch (MetricInformationNotFoundException) 
                     {
                         _logger.LogError("Azure Monitor returned no data for metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
                         return [];
                     }
-                    catch (Exception e) 
+                    catch (Exception) 
                     {
                         _logger.LogError("Encountered unknown exception when processing metric {MetricName} for resource {ResourceId} ", metricName, metricResult.ParseResourceIdFromResultId());
                         return [];
