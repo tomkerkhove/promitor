@@ -150,8 +150,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
                 timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
                 timeoutCancellationTokenSource.Token.Register(() => {
-                    Logger.LogWarning("Returned top level timeout");
-                    cancelledDueToTimeout = true;
+                    Logger.LogError("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
+                                    "may be running for an unbounded amount of time. In the rare case where " +
+                                    "many such timeouts occur, consider restarting the Scraper Agent.", Name);     
                 });
 
                 Logger.LogWarning("Init timeout token");
@@ -171,12 +172,6 @@ namespace Promitor.Agents.Scraper.Scheduling
             finally
             {
                 Logger.LogDebug("Ended scraping job {JobName}.", Name);
-                if (cancelledDueToTimeout) 
-                {
-                    Logger.LogWarning("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
-                                    "may be running for an unbounded amount of time. In the rare case where " +
-                                    "many such timeouts occur, consider restarting the Scraper Agent.", Name);                
-                }
             }
         }
 
