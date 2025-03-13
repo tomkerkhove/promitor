@@ -308,12 +308,15 @@ namespace Promitor.Agents.Scraper.Scheduling
         private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, int? runNum) {
             try
             {
-                while (true) 
+                if (runNum > 1)
                 {
-                    Logger.LogWarning("Run number {runNum}", runNum.ToString());
-                    await Task.Delay(10000);
+                    while (true) 
+                    {
+                        Logger.LogWarning("Run number {runNum}", runNum.ToString());
+                        await Task.Delay(10000);
+                    }
                 }
-
+                
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
