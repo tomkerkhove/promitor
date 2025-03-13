@@ -127,7 +127,7 @@ namespace Promitor.Integrations.AzureMonitor
             }
 
             MetricDefinition metricDefinition = null;
-            resourceIds.Select(async resourceId => 
+            await Task.WhenAll(resourceIds.Select(async resourceId => 
             {
                 var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
                 var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
@@ -139,7 +139,7 @@ namespace Promitor.Integrations.AzureMonitor
                 {
                     resourceIdsWithMetricDefined.Add(resourceId);
                 }
-            });
+            }));
 
             if (resourceIdsWithMetricDefined.Count < 1) 
             {
@@ -150,7 +150,7 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResources(resourceIds, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration, _logger);
+            var metricResultsList = await _metricsBatchQueryClient.GetRelevantMetricForResources(resourceIdsWithMetricDefined, metricName, metricNamespace, MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricLimit, startQueryingTime, _azureMonitorIntegrationConfiguration, _logger);
 
             //TODO: This is potentially a lot of results to process in a single thread. Think of ways to utilize additional parallelism
             return metricResultsList
