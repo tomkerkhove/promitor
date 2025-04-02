@@ -24,7 +24,7 @@ jobs:
         name: test-results
 
     - name: Publish CI Test Results
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v2
       with:
         artifact: test-results
         name: .NET Unit Tests
