@@ -6,7 +6,7 @@ version:
 
 #### Scraper
 
-- {{% tag fixed %}} Make Batch Scrape Job Resilient to Single Failures 
+- {{% tag fixed %}} Make Batch Scrape Job Resilient to Single Failures
 
 #### Resource Discovery
 
