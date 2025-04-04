@@ -23,7 +23,6 @@ using Promitor.Core.Scraping.Factories;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.LogAnalytics;
-using Serilog;
 
 namespace Promitor.Agents.Scraper.Scheduling
 {
@@ -47,9 +46,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly IOptions<ConcurrencyConfiguration> _concurrencyConfiguration;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly CancellationTokenSource _timeoutCancellationTokenSource = new CancellationTokenSource();
-
-        private int runNum = 0;
 
         /// <summary>
         /// Create a metrics scraping job for one or more resources, either enumerated specifically or
@@ -141,12 +137,10 @@ namespace Promitor.Agents.Scraper.Scheduling
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             Logger.LogDebug("Started scraping job {JobName}.", Name);
-            var cancelledDueToTimeout = false;
 
             try
             {
                 var mutexReleasedAfterSeconds = _concurrencyConfiguration.Value.MutexTimeoutSeconds;
-                runNum += 1;
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
                 timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
                 timeoutCancellationTokenSource.Token.Register(() => {
@@ -159,7 +153,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
                 var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
-                await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token, runNum);
+                await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -274,7 +268,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             scrapeDefinitions.Add(scrapeDefinition);
         }
 
-        private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken, int? runNum)
+        private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
         {   
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
@@ -288,7 +282,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
                     var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
                     Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
-                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition, runNum), cancellationToken);
+                    await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
             } else {
                 foreach (var scrapeDefinition in scrapeDefinitions)
@@ -305,18 +299,9 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             await Task.WhenAll(tasks);
         }
-        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition, int? runNum) {
+        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
             try
-            {
-                if (runNum > 1)
-                {
-                    while (true) 
-                    {
-                        Logger.LogWarning("Run number {runNum}", runNum.ToString());
-                        await Task.Delay(10000);
-                    }
-                }
-                
+            {   
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
