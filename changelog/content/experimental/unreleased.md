@@ -5,8 +5,7 @@ version:
 ---
 
 #### Scraper
-
-None.
+- {{% tag fixed %}} Enforce timeout-based mutex release on scrape jobs to avoid resource exhaustion
 
 #### Resource Discovery
 
