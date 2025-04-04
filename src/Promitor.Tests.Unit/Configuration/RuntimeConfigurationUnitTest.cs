@@ -601,6 +601,41 @@ namespace Promitor.Tests.Unit.Configuration
         }
 
         [Fact]
+        public async Task RuntimeConfiguration_HasNoMutexTimeout_UsesDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithConcurrency(mutexTimeoutSeconds: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Concurrency);
+            Assert.Equal(DefaultsCore.Concurrency.MutexTimeoutSeconds, runtimeConfiguration.Concurrency.MutexTimeoutSeconds);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_MutexTimeout_UsesConfigured()
+        {
+            // Arrange
+            var configuredTimeoutSeconds = 45;
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithConcurrency(mutexTimeoutSeconds: configuredTimeoutSeconds)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.Concurrency);
+            Assert.Equal(configuredTimeoutSeconds, runtimeConfiguration.Concurrency.MutexTimeoutSeconds);
+        }
+
+        [Fact]
         public async Task RuntimeConfiguration_HasNoResourceDiscoveryPortConfigured_UsesDefault()
         {
             // Arrange

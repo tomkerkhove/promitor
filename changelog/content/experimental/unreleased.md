@@ -6,6 +6,7 @@ version:
 
 #### Scraper
 
+- {{% tag fixed %}} Enforce timeout-based mutex release on scrape jobs to avoid resource exhaustion
 - {{% tag fixed %}} Make Batch Scrape Job Resilient to Single Failures
 
 #### Resource Discovery
