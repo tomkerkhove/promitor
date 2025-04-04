@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
     <PackageReference Include="Fastenshtein" Version="1.0.10" />
     <PackageReference Include="Cronos" Version="0.9.0" />
     <PackageReference Include="Guard.Net" Version="3.0.0" />
