@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Promitor.Agents.Core.Configuration;
+﻿using Promitor.Agents.Core.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Core.Scraping.Configuration.Runtime;
 using Promitor.Integrations.AzureMonitor.Configuration;
