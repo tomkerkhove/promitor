@@ -35,7 +35,7 @@ jobs:
           echo "image_latest_uri=${{ inputs.image_name }}:${{ inputs.version }}" >> $GITHUB_ENV
 
       - name: Determine container image metadata
-        uses: docker/metadata-action@v5.5.1
+        uses: docker/metadata-action@v5.7.0
         with:
           images: ${{ inputs.image_name }}
 
@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push preview image
-        uses: docker/build-push-action@v5.3.0
+        uses: docker/build-push-action@v6.15.0
         with:
           build-args: VERSION="${{ env.artifact_full_version }}"
           context: ./src/
