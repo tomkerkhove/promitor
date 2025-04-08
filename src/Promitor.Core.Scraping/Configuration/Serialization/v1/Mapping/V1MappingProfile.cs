@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Promitor.Core.Configuration;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
 using Promitor.Core.Scraping.Configuration.Model;
@@ -14,6 +15,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
         {
             CreateMap<MetricsDeclarationV1, MetricsDeclaration>();
             CreateMap<AzureMetadataV1, AzureMetadata>();
+            CreateMap<AzureEndpointsV1, AzureEndpoints>();
             CreateMap<MetricDefaultsV1, MetricDefaults>();
             CreateMap<AggregationV1, Aggregation>();
             CreateMap<MetricDimensionV1, MetricDimension>();

@@ -18,13 +18,13 @@ jobs:
     steps:
     - name: Download artifact
       id: download-artifact
-      uses: dawidd6/action-download-artifact@v7
+      uses: dawidd6/action-download-artifact@v9
       with:
         run_id: ${{ github.event.workflow_run.id }}
         name: test-results
 
     - name: Publish CI Test Results
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@v2
       with:
         artifact: test-results
         name: .NET Unit Tests

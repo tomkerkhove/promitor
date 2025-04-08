@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
 using Promitor.Core.Contracts;
 using Promitor.Core.Extensions;
@@ -43,6 +44,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IConfiguration _configuration;
         private readonly IOptions<AzureMonitorIntegrationConfiguration> _azureMonitorIntegrationConfiguration;
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
+        private readonly IOptions<ConcurrencyConfiguration> _concurrencyConfiguration;
         private readonly ILoggerFactory _loggerFactory;
 
         /// <summary>
@@ -62,6 +64,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="configuration">Promitor configuration</param>
         /// <param name="azureMonitorIntegrationConfiguration">options for Azure Monitor integration</param>
         /// <param name="azureMonitorLoggingConfiguration">options for Azure Monitor logging</param>
+        /// <param name="concurrencyConfiguration">options for concurrent scrape job execution</param>
         /// <param name="loggerFactory">means to obtain a logger</param>
         /// <param name="logger">logger to use for scraping detail</param>
         public ResourcesScrapingJob(string jobName,
@@ -76,6 +79,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             IConfiguration configuration,
             IOptions<AzureMonitorIntegrationConfiguration> azureMonitorIntegrationConfiguration,
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
+            IOptions<ConcurrencyConfiguration> concurrencyConfiguration,
             ILoggerFactory loggerFactory,
             ILogger<ResourcesScrapingJob> logger)
             : base(jobName, logger)
@@ -93,6 +97,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             Guard.NotNull(configuration, nameof(configuration));
             Guard.NotNull(azureMonitorIntegrationConfiguration, nameof(azureMonitorIntegrationConfiguration));
             Guard.NotNull(azureMonitorLoggingConfiguration, nameof(azureMonitorLoggingConfiguration));
+            Guard.NotNull(concurrencyConfiguration, nameof(azureMonitorLoggingConfiguration));
             Guard.NotNull(loggerFactory, nameof(loggerFactory));
 
             // all metrics must have the same scraping schedule or it is not possible for them to share the same job
@@ -110,6 +115,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _azureMonitorIntegrationConfiguration = azureMonitorIntegrationConfiguration;
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
+            _concurrencyConfiguration = concurrencyConfiguration;
         }
 
         private static void VerifyAllMetricsHaveSameScrapingSchedule(MetricsDeclaration metricsDeclaration)
@@ -134,8 +140,20 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             try
             {
-                var scrapeDefinitions = await GetAllScrapeDefinitions(cancellationToken);
-                await ScrapeMetrics(scrapeDefinitions, cancellationToken);
+                var mutexReleasedAfterSeconds = _concurrencyConfiguration.Value.MutexTimeoutSeconds;
+                var timeoutCancellationTokenSource = new CancellationTokenSource();
+                timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
+                timeoutCancellationTokenSource.Token.Register(() => {
+                    Logger.LogError("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
+                                    "may be running for an unbounded amount of time. In the rare case where " +
+                                    "many such timeouts occur, consider restarting the Scraper Agent.", Name);     
+                });
+
+                Logger.LogWarning("Init timeout token");
+                // to enforce timeout in addition to cancellationToken passed down by .NET 
+                var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
+                var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
+                await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
             }
             catch (OperationCanceledException)
             {
@@ -283,16 +301,16 @@ namespace Promitor.Agents.Scraper.Scheduling
         }
         private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
             try
-            {
+            {   
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
-                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
+                var azureEnvironment = _metricsDeclaration.AzureMetadata.GetAzureEnvironment();
 
-                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
+                var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironment.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri (_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 
@@ -313,15 +331,15 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var resourceSubscriptionId = !string.IsNullOrWhiteSpace(scrapeDefinition.Resource.SubscriptionId)
                     ? scrapeDefinition.Resource.SubscriptionId
                     : _metricsDeclaration.AzureMetadata.SubscriptionId;
-                var azureEnvironent = _metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment();
+                var azureEnvironent = _metricsDeclaration.AzureMetadata.GetAzureEnvironment();
                 Logger.LogInformation("Parsed SDK Config {UseAzureMonitorSdk}", _azureMonitorIntegrationConfiguration.Value.UseAzureMonitorSdk);
-                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata.Cloud, _metricsDeclaration.AzureMetadata.TenantId,
+                var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
                     _azureMonitorIntegrationConfiguration, _azureMonitorLoggingConfiguration, _loggerFactory);
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironent.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.Cloud.GetAzureEnvironment().AuthenticationEndpoint));
-                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, azureEnvironent, tokenCredential);
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
+                var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
                 
@@ -348,17 +366,22 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             await _scrapingTaskMutex.WaitAsync(cancellationToken);
 
-            tasks.Add(Task.Run(() => WorkWrapper(asyncWork), cancellationToken));
+            tasks.Add(Task.Run(() => WorkWrapper(asyncWork, cancellationToken), cancellationToken));
         }
 
-        private async Task WorkWrapper(Func<Task> work)
+        private async Task WorkWrapper(Func<Task> work, CancellationToken cancellationToken)
         {
             try
             {
-                await work();
+                var tcs = new TaskCompletionSource<object>();
+                cancellationToken.Register(() => {
+                    tcs.TrySetResult(null);
+                });
+                await Task.WhenAny(work(), tcs.Task);
             }
             finally
             {
+                Logger.LogWarning("release lock");
                 _scrapingTaskMutex.Release();
             }
         }

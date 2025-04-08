@@ -16,6 +16,16 @@ namespace Promitor.Agents.Core.Configuration
             /// </summary>
             public static int MaxDegreeOfParallelism { get; } = Environment.ProcessorCount * 8;
         }
+
+        public static class Concurrency
+        {
+            /// <summary>
+            /// Context: Promitor uses a mutex to ensure certain number of scrape jobs run at single point in time <see cref="Server.MaxDegreeOfParallelism"/>.
+            /// On rare occasions, scrape jobs can hang and subsequent jobs cannot run, as they cannot acquire a mutex. 
+            ///  MutexTimeoutSeconds setting ensures scraping mutex is released.  
+            /// </summary>
+            public static int MutexTimeoutSeconds { get; } = 30;
+        }
         
         public class Telemetry
         {

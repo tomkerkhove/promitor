@@ -260,6 +260,18 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             return this;
         }
 
+        public RuntimeConfigurationGenerator WithConcurrency(int? mutexTimeoutSeconds = null)
+        {
+            _runtimeConfiguration.Concurrency ??= new ConcurrencyConfiguration();
+
+            if (mutexTimeoutSeconds != null)
+            {
+                _runtimeConfiguration.Concurrency.MutexTimeoutSeconds = mutexTimeoutSeconds.Value;
+            }
+
+            return this;
+        }
+
         public async Task<IConfiguration> GenerateAsync()
         {
             var configurationBuilder = new StringBuilder();
@@ -269,6 +281,12 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                 configurationBuilder.AppendLine("server:");
                 configurationBuilder.AppendLine($"  httpPort: {_runtimeConfiguration?.Server.HttpPort}");
                 configurationBuilder.AppendLine($"  maxDegreeOfParallelism: {_runtimeConfiguration?.Server.MaxDegreeOfParallelism}");
+            }
+
+            if (_runtimeConfiguration?.Concurrency != null)
+            {
+                configurationBuilder.AppendLine("concurrency:");
+                configurationBuilder.AppendLine($"  mutexTimeoutSeconds: {_runtimeConfiguration?.Concurrency.MutexTimeoutSeconds}");
             }
 
             if (_runtimeConfiguration?.ResourceDiscovery != null)

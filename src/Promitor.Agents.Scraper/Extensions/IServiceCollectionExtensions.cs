@@ -119,6 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
+            services.AddSingleton<IDeserializer<AzureEndpointsV1>, AzureEndpointsDeserializer>();
             services.AddSingleton<IDeserializer<MetricDefaultsV1>, MetricDefaultsDeserializer>();
             services.AddSingleton<IDeserializer<MetricDefinitionV1>, MetricDefinitionDeserializer>();
             services.AddSingleton<IDeserializer<AggregationV1>, AggregationDeserializer>();
@@ -341,6 +342,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<AzureMonitorConfiguration>(configuration.GetSection("azureMonitor"));
             services.Configure<AzureMonitorIntegrationConfiguration>(configuration.GetSection("azureMonitor:integration"));
             services.Configure<AzureMonitorLoggingConfiguration>(configuration.GetSection("azureMonitor:logging"));
+            services.Configure<ConcurrencyConfiguration>(configuration.GetSection("concurrency"));
 
             return services;
         }
