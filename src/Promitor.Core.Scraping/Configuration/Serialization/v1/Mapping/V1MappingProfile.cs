@@ -33,7 +33,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<AzureFirewallResourceV1, AzureFirewallResourceDefinition>();
             CreateMap<BlobStorageResourceV1, BlobStorageResourceDefinition>();
             CreateMap<CdnResourceV1, CdnResourceDefinition>();
-            CreateMap<CognitiveServicesAccountsResourceV1, CognitiveServicesAccountsResourceDefinition>();
+            CreateMap<CognitiveServicesAccountResourceV1, CognitiveServicesAccountResourceDefinition>();
             CreateMap<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>();
             CreateMap<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>();
             CreateMap<DataExplorerClusterResourceV1, DataExplorerClusterResourceDefinition>();
@@ -93,7 +93,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<AutomationAccountResourceV1, AutomationAccountResourceDefinition>()
                 .Include<AzureFirewallResourceV1, AzureFirewallResourceDefinition>()
                 .Include<BlobStorageResourceV1, BlobStorageResourceDefinition>()
-                .Include<CognitiveServicesAccountsResourceV1, CognitiveServicesAccountsResourceDefinition>()
+                .Include<CognitiveServicesAccountResourceV1, CognitiveServicesAccountResourceDefinition>()
                 .Include<ContainerInstanceResourceV1, ContainerInstanceResourceDefinition>()
                 .Include<ContainerRegistryResourceV1, ContainerRegistryResourceDefinition>()
                 .Include<CdnResourceV1, CdnResourceDefinition>()

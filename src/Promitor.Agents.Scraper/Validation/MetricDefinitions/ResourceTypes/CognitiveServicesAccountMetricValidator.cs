@@ -7,17 +7,17 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes
 {
-    internal class CognitiveServicesAccountsMetricValidator : IMetricValidator
+    internal class CognitiveServicesAccountMetricValidator : IMetricValidator
     {
         public IEnumerable<string> Validate(MetricDefinition metricDefinition)
         {
             Guard.NotNull(metricDefinition, nameof(metricDefinition));
 
-            foreach (var resourceDefinition in metricDefinition.Resources.Cast<CognitiveServicesAccountsResourceDefinition>())
+            foreach (var resourceDefinition in metricDefinition.Resources.Cast<CognitiveServicesAccountResourceDefinition>())
             {
-                if (string.IsNullOrWhiteSpace(resourceDefinition.CognitiveServicesAccountsName))
+                if (string.IsNullOrWhiteSpace(resourceDefinition.CognitiveServicesAccountName))
                 {
-                    yield return "No cognitive services accounts name is configured";
+                    yield return "No cognitive services account name is configured";
                 }
             }
         }

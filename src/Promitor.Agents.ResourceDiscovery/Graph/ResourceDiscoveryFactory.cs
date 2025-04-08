@@ -24,8 +24,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new AzureFirewallDiscoveryQuery();
                 case ResourceType.Cdn:
                     return new CdnDiscoveryQuery();
-                case ResourceType.CognitiveServicesAccounts:
-                    return new CognitiveServicesAccountsDiscoveryQuery();
+                case ResourceType.CognitiveServicesAccount:
+                    return new CognitiveServicesAccountDiscoveryQuery();
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceDiscoveryQuery();
                 case ResourceType.ContainerRegistry:

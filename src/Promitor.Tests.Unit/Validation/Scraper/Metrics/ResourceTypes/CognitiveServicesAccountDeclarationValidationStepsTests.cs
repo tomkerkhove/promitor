@@ -8,14 +8,14 @@ using Xunit;
 namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
 {
     [Category("Unit")]
-    public class CognitiveServicesAccountsDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
+    public class CognitiveServicesAccountDeclarationValidationStepsTests : MetricsDeclarationValidationStepsTests
     {
         [Fact]
-        public void CognitiveServicesAccounts_DeclarationWithoutAzureMetricName_Fails()
+        public void CognitiveServicesAccount_DeclarationWithoutAzureMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(azureMetricName: string.Empty)
+                .WithCognitiveServicesAccountMetric(azureMetricName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -31,11 +31,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         [InlineData(-1)]
         [InlineData(0)]
         [InlineData(10001)]
-        public void CognitiveServicesAccountsDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
+        public void CognitiveServicesAccountDeclaration_DeclarationWithInvalidMetricLimit_Fails(int metricLimit)
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(azureMetricLimit: metricLimit)
+                .WithCognitiveServicesAccountMetric(azureMetricLimit: metricLimit)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -48,11 +48,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccounts_DeclarationWithoutMetricDescription_Succeeded()
+        public void CognitiveServicesAccount_DeclarationWithoutMetricDescription_Succeeded()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(metricDescription: string.Empty)
+                .WithCognitiveServicesAccountMetric(metricDescription: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -65,11 +65,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccounts_DeclarationWithoutMetricName_Fails()
+        public void CognitiveServicesAccount_DeclarationWithoutMetricName_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(string.Empty)
+                .WithCognitiveServicesAccountMetric(string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -82,11 +82,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccountsMetricsDeclaration_DeclarationWithoutCognitiveServicesAccounts_Fails()
+        public void CognitiveServicesAccountMetricsDeclaration_DeclarationWithoutCognitiveServicesAccount_Fails()
         {
             // Arrange
             var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(cognitiveServicesAccountsName: string.Empty)
+                .WithCognitiveServicesAccountMetric(cognitiveServicesAccountName: string.Empty)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, Mapper);
 
@@ -99,11 +99,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccountsMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
+        public void CognitiveServicesAccountMetricsDeclaration_DeclarationWithoutResourceAndResourceDiscoveryGroupInfo_Fails()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(omitResource: true)
+                .WithCognitiveServicesAccountMetric(omitResource: true)
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -116,11 +116,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccountsMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
+        public void CognitiveServicesAccountMetricsDeclaration_DeclarationWithoutResourceButWithResourceDiscoveryGroupInfo_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric(omitResource: true, resourceDiscoveryGroupName: "sample-collection")
+                .WithCognitiveServicesAccountMetric(omitResource: true, resourceDiscoveryGroupName: "sample-collection")
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 
@@ -133,11 +133,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         }
 
         [Fact]
-        public void CognitiveServicesAccountsMetricsDeclaration_ValidDeclaration_Succeeds()
+        public void CognitiveServicesAccountMetricsDeclaration_ValidDeclaration_Succeeds()
         {
             // Arrange
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
-                .WithCognitiveServicesAccountsMetric()
+                .WithCognitiveServicesAccountMetric()
                 .Build(Mapper);
             var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawMetricsDeclaration, Mapper);
 

@@ -5,7 +5,7 @@ using Promitor.Core.Contracts.ResourceTypes;
 
 namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 {
-    public class CognitiveServicesAccountsDiscoveryQuery : ResourceDiscoveryQuery
+    public class CognitiveServicesAccountDiscoveryQuery : ResourceDiscoveryQuery
     {
         public override string[] ResourceTypes => new[] { "microsoft.cognitiveservices/accounts" };
         public override string[] ProjectedFieldNames => new[] { "subscriptionId", "resourceGroup", "name" };
@@ -14,9 +14,9 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
         {
             Guard.NotNull(resultRowEntry, nameof(resultRowEntry));
 
-            var cognitiveServicesAccountslName = resultRowEntry[2]?.ToString();
+            var cognitiveServicesAccountName = resultRowEntry[2]?.ToString();
 
-            var resource = new CognitiveServicesAccountsResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), cognitiveServicesAccountslName);
+            var resource = new CognitiveServicesAccountResourceDefinition(resultRowEntry[0]?.ToString(), resultRowEntry[1]?.ToString(), cognitiveServicesAccountName);
             return resource;
         }
     }

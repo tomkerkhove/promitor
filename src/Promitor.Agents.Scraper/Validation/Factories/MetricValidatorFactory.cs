@@ -27,8 +27,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new BlobStorageMetricValidator();
                 case ResourceType.Cdn:
                     return new CdnMetricValidator();
-                case ResourceType.CognitiveServicesAccounts:
-                    return new CognitiveServicesAccountsMetricValidator();
+                case ResourceType.CognitiveServicesAccount:
+                    return new CognitiveServicesAccountMetricValidator();
                 case ResourceType.ContainerInstance:
                     return new ContainerInstanceMetricValidator();
                 case ResourceType.ContainerRegistry:

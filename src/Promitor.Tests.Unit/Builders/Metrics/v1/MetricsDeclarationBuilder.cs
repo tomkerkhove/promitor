@@ -185,20 +185,20 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
-        public MetricsDeclarationBuilder WithCognitiveServicesAccountsMetric(string metricName = "promitor-CognitiveServicesAccounts",
+        public MetricsDeclarationBuilder WithCognitiveServicesAccountMetric(string metricName = "promitor-CognitiveServicesAccount",
             string metricDescription = "Description for a metric",
-            string cognitiveServicesAccountsName = "promitor-CognitiveServicesAccounts",
+            string cognitiveServicesAccountName = "promitor-CognitiveServicesAccount",
             string azureMetricName = "Total",
             string resourceDiscoveryGroupName = "",
             int? azureMetricLimit = null,
             bool omitResource = false)
         {
-            var resource = new CognitiveServicesAccountsResourceV1
+            var resource = new CognitiveServicesAccountResourceV1
             {
-                CognitiveServicesAccountsName = cognitiveServicesAccountsName
+                CognitiveServicesAccountName = cognitiveServicesAccountName
             };
 
-            CreateAndAddMetricDefinition(ResourceType.CognitiveServicesAccounts, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+            CreateAndAddMetricDefinition(ResourceType.CognitiveServicesAccount, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
 
             return this;
         }

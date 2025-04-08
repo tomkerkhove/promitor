@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide support for Cognitive Services Account ([docs](https://docs.promitor.io/scraping/providers/cognitive-services-account/))
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide support for Cognitive Services Account ([docs](https://docs.promitor.io/scraping/providers/cognitive-services-account/))
