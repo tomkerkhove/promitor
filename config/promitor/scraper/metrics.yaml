@@ -183,6 +183,17 @@ metrics:
           name: Status
     resourceDiscoveryGroups:
         - name: azure-firewall
+  - name: cognitive_services_account_application_rule_hits
+    description: number of times Application rules were hit
+    resourceType: CognitiveServicesAccount
+    azureMetricConfiguration:
+        metricName: ApplicationRuleHit
+        aggregation:
+            type: Count
+        dimension:
+          name: Status
+    resourceDiscoveryGroups:
+        - name: cognitive-services-account
   - name: promitor_demo_frontdoor_backend_health_per_backend_pool
     description: "Health percentage for a backend in Azure Front Door"
     resourceType: FrontDoor

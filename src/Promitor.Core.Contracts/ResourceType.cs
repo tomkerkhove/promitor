@@ -56,5 +56,6 @@
         TrafficManager = 51,
         PowerBiDedicated = 52,
         AzureFirewall = 53,
+        CognitiveServicesAccount = 54,
     }
 }

@@ -209,6 +209,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
             return this;
         }
+
+        public MetricsDeclarationBuilder WithCognitiveServicesAccountMetric(string metricName = "promitor-CognitiveServicesAccount",
+            string metricDescription = "Description for a metric",
+            string cognitiveServicesAccountName = "promitor-CognitiveServicesAccount",
+            string azureMetricName = "Total",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new CognitiveServicesAccountResourceV1
+            {
+                CognitiveServicesAccountName = cognitiveServicesAccountName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.CognitiveServicesAccount, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
     
         public MetricsDeclarationBuilder WithBlobStorageMetric(string metricName = "promitor",
             string metricDescription = "Description for a metric",

@@ -45,6 +45,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.Cdn:
                     var cdnLogger = _loggerFactory.CreateLogger<CdnDeserializer>();
                     return new CdnDeserializer(cdnLogger);
+                case ResourceType.CognitiveServicesAccount:
+                    var cognitiveServicesAccountLogger = _loggerFactory.CreateLogger<CognitiveServicesAccountDeserializer>();
+                    return new CognitiveServicesAccountDeserializer(cognitiveServicesAccountLogger);
                 case ResourceType.ContainerInstance:
                     var containerInstanceLogger = _loggerFactory.CreateLogger<ContainerInstanceDeserializer>();
                     return new ContainerInstanceDeserializer(containerInstanceLogger);
