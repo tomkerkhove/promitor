@@ -6,5 +6,4 @@ version:
 
 #### Scraper
 
-
 #### Resource Discovery
