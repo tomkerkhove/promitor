@@ -142,6 +142,8 @@ namespace Promitor.Agents.Scraper.Scheduling
             {
                 var mutexReleasedAfterSeconds = _concurrencyConfiguration.Value.MutexTimeoutSeconds;
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
+                Logger.LogInformation("Timeout after {Timeout}", mutexReleasedAfterSeconds);
+
                 timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
 
                 Logger.LogInformation("Init timeout token");
