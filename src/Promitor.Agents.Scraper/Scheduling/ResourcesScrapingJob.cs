@@ -379,7 +379,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 {
                     Logger.LogError("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
                           "may be running for an unbounded amount of time. In the rare case where " +
-                          "many such timeouts occur, consider restarting the Scraper Agent.", Name);
+                          "many such timeouts occur, consider restarting the Scraper Agent or tuning the mutex timeout configuration.", Name);
                     throw new OperationCanceledException(cancellationToken);
                 }
             }
