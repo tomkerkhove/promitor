@@ -142,14 +142,11 @@ namespace Promitor.Agents.Scraper.Scheduling
             {
                 var mutexReleasedAfterSeconds = _concurrencyConfiguration.Value.MutexTimeoutSeconds;
                 var timeoutCancellationTokenSource = new CancellationTokenSource();
-                timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
-                timeoutCancellationTokenSource.Token.Register(() => {
-                    Logger.LogError("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
-                                    "may be running for an unbounded amount of time. In the rare case where " +
-                                    "many such timeouts occur, consider restarting the Scraper Agent.", Name);     
-                });
+                Logger.LogInformation("Timeout after {Timeout}", mutexReleasedAfterSeconds);
 
-                Logger.LogWarning("Init timeout token");
+                timeoutCancellationTokenSource.CancelAfter(mutexReleasedAfterSeconds * 1000);
+
+                Logger.LogInformation("Init timeout token");
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
                 var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
@@ -377,7 +374,14 @@ namespace Promitor.Agents.Scraper.Scheduling
                 cancellationToken.Register(() => {
                     tcs.TrySetResult(null);
                 });
-                await Task.WhenAny(work(), tcs.Task);
+                var completedTask = await Task.WhenAny(work(), tcs.Task);
+                if (completedTask == tcs.Task)
+                {
+                    Logger.LogError("Scrape job {JobName} was cancelled due to timeout. However, dangling async tasks " +
+                          "may be running for an unbounded amount of time. In the rare case where " +
+                          "many such timeouts occur, consider restarting the Scraper Agent or tuning the mutex timeout configuration.", Name);
+                    throw new OperationCanceledException(cancellationToken);
+                }
             }
             finally
             {
