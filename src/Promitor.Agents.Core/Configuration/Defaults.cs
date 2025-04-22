@@ -24,7 +24,7 @@ namespace Promitor.Agents.Core.Configuration
             /// On rare occasions, scrape jobs can hang and subsequent jobs cannot run, as they cannot acquire a mutex. 
             ///  MutexTimeoutSeconds setting ensures scraping mutex is released.  
             /// </summary>
-            public static int MutexTimeoutSeconds { get; } = 30;
+            public static int MutexTimeoutSeconds { get; } = 90;
         }
         
         public class Telemetry
