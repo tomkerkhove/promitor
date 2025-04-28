@@ -44,6 +44,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<DeviceProvisioningServiceResourceV1, DeviceProvisioningServiceResourceDefinition>();
             CreateMap<CosmosDbResourceV1, CosmosDbResourceDefinition>();
             CreateMap<EventHubsResourceV1, EventHubResourceDefinition>();
+            CreateMap<EventHubClusterResourceV1, EventHubClusterResourceDefinition>();
             CreateMap<ExpressRouteCircuitResourceV1, ExpressRouteCircuitResourceDefinition>();
             CreateMap<FileStorageResourceV1, FileStorageResourceDefinition>();
             CreateMap<FrontDoorResourceV1, FrontDoorResourceDefinition>();

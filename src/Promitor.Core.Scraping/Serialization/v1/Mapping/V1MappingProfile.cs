@@ -1,0 +1,1 @@
+using Promitor.Core.Scraping.ResourceTypes;

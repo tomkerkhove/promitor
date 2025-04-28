@@ -72,6 +72,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.EventHubs:
                     var eventHubsLogger = _loggerFactory.CreateLogger<EventHubsDeserializer>();
                     return new EventHubsDeserializer(eventHubsLogger);
+                case ResourceType.EventHubCluster:
+                    var eventHubClusterLogger = _loggerFactory.CreateLogger<EventHubClusterDeserializer>();
+                    return new EventHubClusterDeserializer(eventHubClusterLogger);
                 case ResourceType.ExpressRouteCircuit:
                     var expressRouteCircuitLogger = _loggerFactory.CreateLogger<ExpressRouteCircuitDeserializer>();
                     return new ExpressRouteCircuitDeserializer(expressRouteCircuitLogger);

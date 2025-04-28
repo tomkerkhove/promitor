@@ -71,6 +71,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new DeviceProvisioningServiceScraper(scraperConfiguration);
                 case ResourceType.EventHubs:
                     return new EventHubsScraper(scraperConfiguration);
+                case ResourceType.EventHubCluster:
+                    return new EventHubClusterScraper(scraperConfiguration);
                 case ResourceType.ExpressRouteCircuit:
                     return new ExpressRouteCircuitScraper(scraperConfiguration);
                 case ResourceType.FileStorage:
