@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Monitor.Query" Version="1.4.0" />
+    <PackageReference Include="Azure.Monitor.Query" Version="1.6.0" />
     <PackageReference Include="Guard.NET" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.1" />
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.5" />
