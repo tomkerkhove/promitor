@@ -87,7 +87,13 @@ namespace Promitor.Integrations.AzureMonitor
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
             var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceId, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
-            var metricNamespace = metricNamespaces.SingleOrDefault();
+            // Remove duplicates
+            var uniqueMetricNamespaces = metricNamespaces.Distinct().ToList();
+            if (uniqueMetricNamespaces.Count > 1)
+            {
+                _logger.LogWarning("Azure Monitor returned multiple metric namespaces for resource {ResourceId}: {Namespaces}. Using the first one.", resourceId, string.Join(", ", uniqueMetricNamespaces));
+            }
+            var metricNamespace = uniqueMetricNamespaces.FirstOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
@@ -120,7 +126,13 @@ namespace Promitor.Integrations.AzureMonitor
             
 
             var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
-            var metricNamespace = metricNamespaces.SingleOrDefault();
+            // Remove duplicates
+            var uniqueMetricNamespaces = metricNamespaces.Distinct().ToList();
+            if (uniqueMetricNamespaces.Count > 1)
+            {
+                _logger.LogWarning("Azure Monitor returned multiple metric namespaces for resource {ResourceId}: {Namespaces}. Using the first one.", resourceIds.First(), string.Join(", ", uniqueMetricNamespaces));
+            }
+            var metricNamespace = uniqueMetricNamespaces.FirstOrDefault();
             if (metricNamespace == null)
             {
                 throw new MetricNotFoundException(metricName);
