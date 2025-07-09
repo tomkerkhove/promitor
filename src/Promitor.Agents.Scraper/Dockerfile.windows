@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.409-nanoserver-ltsc2022 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.411-nanoserver-ltsc2022 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
@@ -18,7 +18,7 @@ COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=%VERSION%
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.16-nanoserver-ltsc2022 as runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.18-nanoserver-ltsc2022 as runtime
 WORKDIR /app
 ENV PROMITOR_CONFIG_FOLDER="c:/config/"
 

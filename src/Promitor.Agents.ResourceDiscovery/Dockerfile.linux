@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.409-cbl-mariner2.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.411-cbl-mariner2.0 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
@@ -14,7 +14,7 @@ COPY Promitor.Integrations.Sinks.Core/* Promitor.Integrations.Sinks.Core/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.16-cbl-mariner2.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.18-cbl-mariner2.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
 
