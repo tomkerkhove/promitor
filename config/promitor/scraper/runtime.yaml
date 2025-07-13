@@ -2,7 +2,7 @@ server:
   httpPort: 88
 authentication:
   mode: ServicePrincipal
-  identityId: bd16d14f-7161-432b-86ad-0c31dfef44ac
+  identityId: a2282f2d-c090-4123-85c3-44b122b8db8d
 metricSinks:
   atlassianStatuspage:
     pageId: 4mwc0ny6bgw1
