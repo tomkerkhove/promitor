@@ -365,7 +365,7 @@ metrics:
       aggregation:
         interval: 7:00:00:00
     resources:
-      - workspaceId: 7f07e0fe-36e7-44c8-b79c-7c7f65cb81a2
+      - workspaceId: 2c4a3924-d005-4d30-bc8e-d794050375c0
         workspaceName: promitor-testing-resource-eu-logs
   - name: azure_container_instance_cpu_usage_discovered
     description: "Average cpu usage of our container instance"
