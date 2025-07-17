@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0.18-nanoserver-ltsc2022 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-ltsc2022 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
 COPY Promitor.Core/* Promitor.Core/
