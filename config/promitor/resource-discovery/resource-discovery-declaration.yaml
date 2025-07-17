@@ -1,6 +1,6 @@
 version: v1
 azureLandscape:
-  tenantId: 56c6cf98-bd87-4684-ad83-f3b41dfdcb21
+  tenantId: 84b51e0a-2749-4060-bb46-111141978ee6
   subscriptions:
   - 3566a5fa-878c-40fd-ac37-ef0ba0eee29d
   cloud: Global
