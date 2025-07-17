@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RuntimeFrameworkVersion>8.0.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.18</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
