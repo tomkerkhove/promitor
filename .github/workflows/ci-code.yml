@@ -63,7 +63,7 @@ jobs:
         run: dotnet restore src/Promitor.sln
 
       - name: R# Code Quality
-        uses: muno92/resharper_inspectcode@1.12.12
+        uses: muno92/resharper_inspectcode@1.13.0
         with:
           solutionPath: src/Promitor.sln
           minimumSeverity: warning

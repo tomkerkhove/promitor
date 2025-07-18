@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>8.0.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.18</RuntimeFrameworkVersion>
     <!--<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>-->
   </PropertyGroup>
 
@@ -37,8 +37,8 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="CronExpressionDescriptor" Version="2.39.0" />
-    <PackageReference Include="Microsoft.Azure.Kusto.Language" Version="11.7.6" />
+    <PackageReference Include="CronExpressionDescriptor" Version="2.44.0" />
+    <PackageReference Include="Microsoft.Azure.Kusto.Language" Version="12.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="YamlDotNet" Version="15.1.6" />
     

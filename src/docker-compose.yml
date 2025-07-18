@@ -45,7 +45,7 @@ services:
       - promitor.agents.scraper
   # Infrastructure containers to test Promitor with
   reverse-proxy:
-    image: traefik:v3.3
+    image: traefik:v3.4
     container_name: traefik-reverse-proxy
     command:
       - --providers.docker
