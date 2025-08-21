@@ -141,7 +141,7 @@ namespace Promitor.Integrations.AzureMonitor
             MetricDefinition metricDefinition = null;
             await Task.WhenAll(resourceIds.Select(async resourceId => 
             {
-                var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceIds.First(), metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
+                var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceId, metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
                 metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
                 if (metricDefinition == null)
                 {
