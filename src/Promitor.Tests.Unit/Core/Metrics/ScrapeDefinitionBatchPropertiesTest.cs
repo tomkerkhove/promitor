@@ -167,6 +167,25 @@ namespace Promitor.Tests.Unit.Core.Metrics
         }
 
         [Fact]
+        public void BuildBatchHashKeyDifferentResultDifferentAggregation()
+        {
+            var azureMetricConfiguration1 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            azureMetricConfiguration1.Aggregation = new MetricAggregation{Type = PromitorMetricAggregationType.Count};
+            var azureMetricConfiguration2 = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            azureMetricConfiguration2.Aggregation = new MetricAggregation{Type = PromitorMetricAggregationType.Average};
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+
+            var hashCode1 = batchProperties.GetHashCode();
+            var hashCode2 = batchProperties2.GetHashCode();
+            Assert.NotEqual(hashCode1, hashCode2);
+        }
+
+        [Fact]
         public void BuildBatchHashKeyTest()
         {
             AzureMetricConfigurationV1 azureMetricConfigurationTest1 = new AzureMetricConfigurationV1 

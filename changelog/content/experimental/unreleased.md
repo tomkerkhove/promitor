@@ -6,7 +6,7 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag fixed %}} Azure Monitor Scraper: batch based on aggregation in addition to existing criteria
 
 #### Resource Discovery
 

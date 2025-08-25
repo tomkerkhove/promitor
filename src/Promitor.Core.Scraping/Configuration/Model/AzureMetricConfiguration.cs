@@ -67,6 +67,17 @@ namespace Promitor.Core.Scraping.Configuration.Model
             }
             sb.Append($"_limit{Limit}");
 
+            if (Aggregation != null)
+            {
+                sb.Append("_agg");
+                sb.Append(Aggregation.Type.ToString());
+
+                if (Aggregation.Interval.HasValue)
+                {
+                    sb.Append("_interval");
+                    sb.Append(Aggregation.Interval.Value.ToString("c"));
+                }
+            }
 
             return sb.ToString();
         }
