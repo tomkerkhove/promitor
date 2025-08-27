@@ -56,8 +56,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         {   
             MetricsQueryResourcesOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
-            //var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            var historyStartingFromInHours = 2;
+            var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
             var filter = BuildFilter(metricDimensions, metricFilter);
             List<ResourceIdentifier> resourceIdentifiers = resourceIds.Select(id => new ResourceIdentifier(id)).ToList(); 
 
