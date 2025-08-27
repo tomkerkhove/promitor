@@ -23,7 +23,7 @@ parameters:
 - name: createGithubRelease
   displayName: Create GitHub Release
   type: boolean
-  default: true
+  default: false
 
 variables:
   - template: ./variables/tests.yml
