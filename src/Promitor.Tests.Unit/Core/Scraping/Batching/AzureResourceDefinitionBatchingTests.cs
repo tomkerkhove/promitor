@@ -169,6 +169,30 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
             Assert.Single(groupedScrapeDefinitions);
             Assert.Equal(20, groupedScrapeDefinitions[0].ScrapeDefinitions.Count);
         }
+
+        [Fact]
+        public void DifferentAggregationShouldBatchSeparately()
+        {
+            var azureMetricConfigurationMax = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            azureMetricConfigurationMax.Aggregation.Type = PromitorMetricAggregationType.Maximum;
+            var azureMetricConfigurationAverage = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+
+            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase); 
+            var scrapeDefinitions = BuildScrapeDefinitionBatch(
+                azureMetricConfiguration: azureMetricConfigurationMax, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
+                resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
+            );
+            var differentScrapeDefinitions = BuildScrapeDefinitionBatch(
+                azureMetricConfiguration: azureMetricConfigurationAverage, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
+                resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
+            );
+            var groupedScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions([.. scrapeDefinitions, .. differentScrapeDefinitions], maxBatchSize: batchSize);
+            // expect two batch of 10 each
+            Assert.Equal(2, groupedScrapeDefinitions.Count);
+            Assert.Equal(10, groupedScrapeDefinitions[0].ScrapeDefinitions.Count);
+            Assert.Equal(10, groupedScrapeDefinitions[1].ScrapeDefinitions.Count);
+        }
     
         private static List<ScrapeDefinition<IAzureResourceDefinition>> BuildScrapeDefinitionBatch(
             AzureMetricConfiguration azureMetricConfiguration,
@@ -190,6 +214,7 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
             } 
             return batch;
         }
+
 
         private static int CountTotalScrapeDefinitions(List<BatchScrapeDefinition<IAzureResourceDefinition>> groupedScrapeDefinitions) 
         {
