@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Extensions.Configuration;
@@ -94,6 +95,66 @@ namespace Promitor.Tests.Unit.Configuration
             Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
             Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
             Assert.Equal(expectedStartingFromInHours, runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasHistoryStartingFromOffsetConfigured_TakesPriorityOverHours()
+        {
+            // Arrange
+            var expectedOffset = TimeSpan.FromMinutes(5);
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(startingFromInHours: 24, historyStartingFromOffset: expectedOffset)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
+            Assert.Equal(expectedOffset, runtimeConfiguration.AzureMonitor.Integration.History.HistoryStartingFromOffset);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasOnlyHistoryStartingFromOffsetConfigured_SetsOffset()
+        {
+            // Arrange
+            var expectedOffset = TimeSpan.FromMinutes(15);
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(startingFromInHours: null, historyStartingFromOffset: expectedOffset)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
+            Assert.Equal(expectedOffset, runtimeConfiguration.AzureMonitor.Integration.History.HistoryStartingFromOffset);
+        }
+
+        [Fact]
+        public async Task RuntimeConfiguration_HasNoOffsetConfigured_FallsBackToStartingFromInHoursDefault()
+        {
+            // Arrange
+            var configuration = await RuntimeConfigurationGenerator.WithServerConfiguration()
+                .WithAzureMonitorIntegration(startingFromInHours: null, historyStartingFromOffset: null)
+                .GenerateAsync();
+
+            // Act
+            var runtimeConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
+
+            // Assert
+            Assert.NotNull(runtimeConfiguration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration);
+            Assert.NotNull(runtimeConfiguration.AzureMonitor.Integration.History);
+            Assert.Equal(12, runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours);
+            Assert.Null(runtimeConfiguration.AzureMonitor.Integration.History.HistoryStartingFromOffset);
         }
 
         [Fact]

@@ -235,7 +235,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             return this;
         }
 
-        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true, int? batchSize = null)
+        public RuntimeConfigurationGenerator WithAzureMonitorIntegration(int? startingFromInHours = 100, bool? useAzureMonitorSdk = true, int? batchSize = null, TimeSpan? historyStartingFromOffset = null)
         {
             _runtimeConfiguration.AzureMonitor ??= new AzureMonitorConfiguration();
             _runtimeConfiguration.AzureMonitor.Integration ??= new AzureMonitorIntegrationConfiguration();
@@ -245,6 +245,11 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
             if (startingFromInHours != null)
             {
                 _runtimeConfiguration.AzureMonitor.Integration.History.StartingFromInHours = startingFromInHours.Value;
+            }
+
+            if (historyStartingFromOffset != null)
+            {
+                _runtimeConfiguration.AzureMonitor.Integration.History.HistoryStartingFromOffset = historyStartingFromOffset;
             }
 
             if (useAzureMonitorSdk != null)
@@ -371,6 +376,10 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                     configurationBuilder.AppendLine($"    useAzureMonitorSdk: {_runtimeConfiguration?.AzureMonitor.Integration.UseAzureMonitorSdk}");
                     configurationBuilder.AppendLine("    history:");
                     configurationBuilder.AppendLine($"      startingFromInHours: {_runtimeConfiguration?.AzureMonitor.Integration.History.StartingFromInHours}");
+                    if (_runtimeConfiguration?.AzureMonitor.Integration.History.HistoryStartingFromOffset != null)
+                    {
+                        configurationBuilder.AppendLine($"      historyStartingFromOffset: {_runtimeConfiguration?.AzureMonitor.Integration.History.HistoryStartingFromOffset}");
+                    }
                     configurationBuilder.AppendLine("    metricsBatching:");
                     configurationBuilder.AppendLine($"      enabled: {_runtimeConfiguration?.AzureMonitor.Integration.MetricsBatching.Enabled}");
                     configurationBuilder.AppendLine($"      maxBatchSize: {_runtimeConfiguration?.AzureMonitor.Integration.MetricsBatching.MaxBatchSize}");
