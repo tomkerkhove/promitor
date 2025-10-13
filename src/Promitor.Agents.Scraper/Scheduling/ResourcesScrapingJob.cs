@@ -23,6 +23,7 @@ using Promitor.Core.Scraping.Factories;
 using Promitor.Integrations.Azure.Authentication;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.LogAnalytics;
+using Promitor.Agents.Scraper.Runtime;
 
 namespace Promitor.Agents.Scraper.Scheduling
 {
@@ -46,6 +47,8 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly IOptions<ConcurrencyConfiguration> _concurrencyConfiguration;
         private readonly ILoggerFactory _loggerFactory;
+        private volatile bool _anyScrapeErrors;
+        private readonly ILastSuccessfulScrapeStore _lastSuccessfulScrapeStore;
 
         /// <summary>
         /// Create a metrics scraping job for one or more resources, either enumerated specifically or
@@ -67,6 +70,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         /// <param name="concurrencyConfiguration">options for concurrent scrape job execution</param>
         /// <param name="loggerFactory">means to obtain a logger</param>
         /// <param name="logger">logger to use for scraping detail</param>
+        /// <param name="lastSuccessfulScrapeStore">store to track last successful scrape completion</param>
         public ResourcesScrapingJob(string jobName,
             MetricsDeclaration metricsDeclaration,
             IResourceDiscoveryRepository resourceDiscoveryRepository,
@@ -81,6 +85,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             IOptions<AzureMonitorLoggingConfiguration> azureMonitorLoggingConfiguration,
             IOptions<ConcurrencyConfiguration> concurrencyConfiguration,
             ILoggerFactory loggerFactory,
+            ILastSuccessfulScrapeStore lastSuccessfulScrapeStore,
             ILogger<ResourcesScrapingJob> logger)
             : base(jobName, logger)
         {
@@ -116,6 +121,7 @@ namespace Promitor.Agents.Scraper.Scheduling
             _azureMonitorLoggingConfiguration = azureMonitorLoggingConfiguration;
             _loggerFactory = loggerFactory;
             _concurrencyConfiguration = concurrencyConfiguration;
+            _lastSuccessfulScrapeStore = lastSuccessfulScrapeStore;
         }
 
         private static void VerifyAllMetricsHaveSameScrapingSchedule(MetricsDeclaration metricsDeclaration)
@@ -150,7 +156,9 @@ namespace Promitor.Agents.Scraper.Scheduling
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
                 var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
+                _anyScrapeErrors = false;
                 await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
+                _lastSuccessfulScrapeStore.MarkNow();
             }
             catch (OperationCanceledException)
             {
@@ -266,22 +274,26 @@ namespace Promitor.Agents.Scraper.Scheduling
         }
 
         private async Task ScrapeMetrics(IEnumerable<ScrapeDefinition<IAzureResourceDefinition>> scrapeDefinitions, CancellationToken cancellationToken)
-        {   
+        {
             var tasks = new List<Task>();
             var batchScrapingEnabled = this._azureMonitorIntegrationConfiguration.Value.MetricsBatching?.Enabled ?? false;
-            if (batchScrapingEnabled) {
+            if (batchScrapingEnabled)
+            {
                 Logger.LogInformation("Promitor Scraper with operate in batch scraping mode, with max batch size {BatchSize}", this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
                 Logger.LogWarning("Batch scraping is an experimental feature. See Promitor.io for its limitations and cost considerations");
 
                 var batchScrapeDefinitions = AzureResourceDefinitionBatching.GroupScrapeDefinitions(scrapeDefinitions, this._azureMonitorIntegrationConfiguration.Value.MetricsBatching.MaxBatchSize);
 
-                foreach(var batchScrapeDefinition in batchScrapeDefinitions) {
+                foreach (var batchScrapeDefinition in batchScrapeDefinitions)
+                {
                     var azureMetricName = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.MetricName;
                     var resourceType = batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType;
                     Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
-            } else {
+            }
+            else
+            {
                 foreach (var scrapeDefinition in scrapeDefinitions)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
@@ -296,9 +308,10 @@ namespace Promitor.Agents.Scraper.Scheduling
 
             await Task.WhenAll(tasks);
         }
-        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition) {
+        private async Task ScrapeMetricBatched(BatchScrapeDefinition<IAzureResourceDefinition> batchScrapeDefinition)
+        {
             try
-            {   
+            {
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
@@ -306,11 +319,11 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var azureEnvironment = _metricsDeclaration.AzureMetadata.GetAzureEnvironment();
 
                 var tokenCredential = AzureAuthenticationFactory.GetTokenCredential(azureEnvironment.ManagementEndpoint, _metricsDeclaration.AzureMetadata.TenantId,
-                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri (_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
+                    AzureAuthenticationFactory.GetConfiguredAzureAuthentication(_configuration), new Uri(_metricsDeclaration.AzureMetadata.GetAzureEnvironment().AuthenticationEndpoint));
                 var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(batchScrapeDefinition.ScrapeDefinitionBatchProperties.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
-                
+
                 await scraper.BatchScrapeAsync(batchScrapeDefinition);
             }
             catch (Exception ex)
@@ -339,7 +352,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 var logAnalyticsClient = new LogAnalyticsClient(_loggerFactory, _metricsDeclaration.AzureMetadata.GetLogAnalyticsEndpoint(), tokenCredential);
 
                 var scraper = _metricScraperFactory.CreateScraper(scrapeDefinition.Resource.ResourceType, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, azureMonitorClient, logAnalyticsClient);
-                
+
                 await scraper.ScrapeAsync(scrapeDefinition);
             }
             catch (Exception ex)
@@ -371,7 +384,8 @@ namespace Promitor.Agents.Scraper.Scheduling
             try
             {
                 var tcs = new TaskCompletionSource<object>();
-                cancellationToken.Register(() => {
+                cancellationToken.Register(() =>
+                {
                     tcs.TrySetResult(null);
                 });
                 var completedTask = await Task.WhenAny(work(), tcs.Task);

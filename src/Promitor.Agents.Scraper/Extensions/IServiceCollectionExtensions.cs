@@ -31,6 +31,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Agents.Scraper.Runtime;
 using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
@@ -116,6 +117,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
+            services.AddSingleton<ILastSuccessfulScrapeStore, LastSuccessfulScrapeStore>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();

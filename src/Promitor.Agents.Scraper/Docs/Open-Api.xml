@@ -65,6 +65,21 @@
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
         </member>
+        <member name="M:Promitor.Agents.Scraper.Runtime.ILastSuccessfulScrapeStore.MarkNow">
+            <summary>
+            Records the current UTC time as the most recent successful scrape completion time.
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Runtime.ILastSuccessfulScrapeStore.GetLast">
+            <summary>
+            Retrieves the last successful scrape completion time in UTC, or null if none recorded.
+            </summary>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Runtime.LastSuccessfulScrapeStore">
+            <summary>
+            Thread-safe in-memory store for the last successful scrape completion timestamp.
+            </summary>
+        </member>
         <member name="T:Promitor.Agents.Scraper.Scheduling.IScrapingMutex">
             <summary>
             Limits the number of threads for scraping tasks that can access the thread pool concurrently.
@@ -248,7 +263,7 @@
             the same scraping schedule.
             </summary>
         </member>
-        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.Interfaces.IResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Agents.Scraper.Configuration.ConcurrencyConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
+        <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.#ctor(System.String,Promitor.Core.Scraping.Configuration.Model.MetricsDeclaration,Promitor.Agents.Scraper.Discovery.Interfaces.IResourceDiscoveryRepository,Promitor.Core.Metrics.Sinks.MetricSinkWriter,Promitor.Core.Scraping.Factories.MetricScraperFactory,Promitor.Agents.Scraper.AzureMonitorClientFactory,Promitor.Core.Metrics.Interfaces.IAzureScrapingSystemMetricsPublisher,Microsoft.Extensions.Caching.Memory.IMemoryCache,Promitor.Agents.Scraper.Scheduling.IScrapingMutex,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorIntegrationConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Integrations.AzureMonitor.Configuration.AzureMonitorLoggingConfiguration},Microsoft.Extensions.Options.IOptions{Promitor.Agents.Scraper.Configuration.ConcurrencyConfiguration},Microsoft.Extensions.Logging.ILoggerFactory,Promitor.Agents.Scraper.Runtime.ILastSuccessfulScrapeStore,Microsoft.Extensions.Logging.ILogger{Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob})">
             <summary>
             Create a metrics scraping job for one or more resources, either enumerated specifically or
             identified via resource definition groups. All metrics included are expected to have
@@ -269,6 +284,7 @@
             <param name="concurrencyConfiguration">options for concurrent scrape job execution</param>
             <param name="loggerFactory">means to obtain a logger</param>
             <param name="logger">logger to use for scraping detail</param>
+            <param name="lastSuccessfulScrapeStore">store to track last successful scrape completion</param>
         </member>
         <member name="M:Promitor.Agents.Scraper.Scheduling.ResourcesScrapingJob.ScheduleLimitedConcurrencyAsyncTask(System.Collections.Generic.ICollection{System.Threading.Tasks.Task},System.Func{System.Threading.Tasks.Task},System.Threading.CancellationToken)">
             <summary>
@@ -337,6 +353,12 @@
             <param name="healthChecksBuilder">Builder for adding health checks</param>
             <param name="configuration">Configuration of Promitor</param>
             <returns></returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.IHealthChecksBuilderExtensions.AddScraperFreshnessHealthCheck(Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder)">
+            <summary>
+                Add health check to validate the scraper has completed a scrape recently
+            </summary>
+            <param name="healthChecksBuilder">Builder for adding health checks</param>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddResourceDiscoveryClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>

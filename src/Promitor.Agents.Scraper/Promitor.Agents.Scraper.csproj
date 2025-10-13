@@ -30,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+		<!-- No explicit Compile includes needed; SDK implicitly includes .cs files -->
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Discovery\Interfaces\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
