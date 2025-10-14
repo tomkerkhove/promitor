@@ -23,17 +23,17 @@ namespace Promitor.Agents.Scraper.Runtime
         {
             var timestamp = DateTimeOffset.UtcNow;
             _memoryCache.Set(CacheKey, timestamp);
-            _logger.LogInformation("Set last successful scrape timestamp to {Timestamp:o}.", timestamp);
+            _logger.LogDebug("Set last successful scrape timestamp to {Timestamp:o}.", timestamp);
         }
 
         public DateTimeOffset? GetLast()
         {
             if (_memoryCache.TryGetValue(CacheKey, out DateTimeOffset last))
             {
-                _logger.LogInformation("Retrieved last successful scrape timestamp {Timestamp:o}.", last);
+                _logger.LogDebug("Retrieved last successful scrape timestamp {Timestamp:o}.", last);
                 return last;
             }
-            _logger.LogInformation("No last successful scrape timestamp found.");
+            _logger.LogDebug("No last successful scrape timestamp found.");
             return null;
         }
     }
