@@ -314,7 +314,7 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             try
             {
-                if (_scrapeCount > 1)
+                if (_scrapeCount > 5)
                 {
                     Logger.LogInformation("Deliberately hanging scrape job for testing");
                     while (true)
