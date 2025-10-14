@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Promitor.Agents.Scraper.Runtime
 {
@@ -10,23 +11,29 @@ namespace Promitor.Agents.Scraper.Runtime
     {
         private const string CacheKey = "LastSuccessfulScrapeUtc";
         private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<LastSuccessfulScrapeStore> _logger;
 
-        public LastSuccessfulScrapeStore(IMemoryCache memoryCache)
+        public LastSuccessfulScrapeStore(IMemoryCache memoryCache, ILogger<LastSuccessfulScrapeStore> logger)
         {
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void MarkNow()
         {
-            _memoryCache.Set(CacheKey, DateTimeOffset.UtcNow);
+            var timestamp = DateTimeOffset.UtcNow;
+            _memoryCache.Set(CacheKey, timestamp);
+            _logger.LogInformation("Set last successful scrape timestamp to {Timestamp:o}.", timestamp);
         }
 
         public DateTimeOffset? GetLast()
         {
             if (_memoryCache.TryGetValue(CacheKey, out DateTimeOffset last))
             {
+                _logger.LogInformation("Retrieved last successful scrape timestamp {Timestamp:o}.", last);
                 return last;
             }
+            _logger.LogInformation("No last successful scrape timestamp found.");
             return null;
         }
     }

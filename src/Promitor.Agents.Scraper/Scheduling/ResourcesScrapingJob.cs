@@ -160,6 +160,7 @@ namespace Promitor.Agents.Scraper.Scheduling
                 _anyScrapeErrors = false;
                 await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
                 _lastSuccessfulScrapeStore.MarkNow();
+                _scrapeCount++;
             }
             catch (OperationCanceledException)
             {
@@ -292,7 +293,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                     Logger.LogInformation("Executing batch scrape job of size {BatchSize} for Azure Metric {AzureMetricName} for resource type {ResourceType}.", batchScrapeDefinition.ScrapeDefinitions.Count, azureMetricName, resourceType);
                     await ScheduleLimitedConcurrencyAsyncTask(tasks, () => ScrapeMetricBatched(batchScrapeDefinition), cancellationToken);
                 }
-                _scrapeCount++;
             }
             else
             {
