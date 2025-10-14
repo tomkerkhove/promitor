@@ -49,7 +49,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly ILoggerFactory _loggerFactory;
         private volatile bool _anyScrapeErrors;
         private readonly ILastSuccessfulScrapeStore _lastSuccessfulScrapeStore;
-        private int _scrapeCount;
 
         /// <summary>
         /// Create a metrics scraping job for one or more resources, either enumerated specifically or
@@ -160,7 +159,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                 _anyScrapeErrors = false;
                 await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
                 _lastSuccessfulScrapeStore.MarkNow();
-                _scrapeCount++;
             }
             catch (OperationCanceledException)
             {
@@ -314,14 +312,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         {
             try
             {
-                if (_scrapeCount > 5)
-                {
-                    Logger.LogInformation("Deliberately hanging scrape job for testing");
-                    while (true)
-                    {
-                        await Task.Delay(1000);
-                    }
-                }
                 var resourceSubscriptionId = batchScrapeDefinition.ScrapeDefinitionBatchProperties.SubscriptionId;
                 var azureMonitorClient = _azureMonitorClientFactory.CreateIfNotExists(_metricsDeclaration.AzureMetadata, _metricsDeclaration.AzureMetadata.TenantId,
                     resourceSubscriptionId, _metricSinkWriter, _azureScrapingSystemMetricsPublisher, _resourceMetricDefinitionMemoryCache, _configuration,
