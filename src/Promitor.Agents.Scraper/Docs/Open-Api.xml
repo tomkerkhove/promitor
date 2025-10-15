@@ -65,6 +65,26 @@
             <typeparam name="TObject">Type of the object to be cloned</typeparam>
             <param name="initialObject">Initial object to clone</param>
         </member>
+        <member name="T:Promitor.Agents.Scraper.Health.IScrapeScheduleProvider">
+            <summary>
+            Provides information about the configured scrape schedules
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Health.IScrapeScheduleProvider.GetMinimumScrapeInterval">
+            <summary>
+            Gets the minimum scrape interval across all configured metrics
+            </summary>
+        </member>
+        <member name="T:Promitor.Agents.Scraper.Health.ScrapeScheduleProvider">
+            <summary>
+            Provides information about the configured scrape schedules
+            </summary>
+        </member>
+        <member name="M:Promitor.Agents.Scraper.Health.ScrapeScheduleProvider.GetMinimumScrapeInterval">
+            <summary>
+            Gets the minimum scrape interval across all configured metrics
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Runtime.ILastSuccessfulScrapeStore.MarkNow">
             <summary>
             Records the current UTC time as the most recent successful scrape completion time.
