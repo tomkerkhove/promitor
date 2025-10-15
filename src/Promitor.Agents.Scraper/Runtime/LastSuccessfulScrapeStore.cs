@@ -17,6 +17,8 @@ namespace Promitor.Agents.Scraper.Runtime
         {
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            var timestamp = DateTimeOffset.UtcNow;
+            _memoryCache.Set(CacheKey, timestamp);
         }
 
         public void MarkNow()
