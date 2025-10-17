@@ -47,7 +47,6 @@ namespace Promitor.Agents.Scraper.Scheduling
         private readonly IOptions<AzureMonitorLoggingConfiguration> _azureMonitorLoggingConfiguration;
         private readonly IOptions<ConcurrencyConfiguration> _concurrencyConfiguration;
         private readonly ILoggerFactory _loggerFactory;
-        private volatile bool _anyScrapeErrors;
         private readonly ILastSuccessfulScrapeStore _lastSuccessfulScrapeStore;
 
         /// <summary>
@@ -156,7 +155,6 @@ namespace Promitor.Agents.Scraper.Scheduling
                 // to enforce timeout in addition to cancellationToken passed down by .NET 
                 var composedCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCancellationTokenSource.Token);
                 var scrapeDefinitions = await GetAllScrapeDefinitions(composedCancellationTokenSource.Token);
-                _anyScrapeErrors = false;
                 await ScrapeMetrics(scrapeDefinitions, composedCancellationTokenSource.Token);
                 _lastSuccessfulScrapeStore.MarkNow();
             }
