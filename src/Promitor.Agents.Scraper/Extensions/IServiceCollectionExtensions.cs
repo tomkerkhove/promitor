@@ -337,6 +337,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
+            services.Configure<HealthCheckConfiguration>(configuration.GetSection("healthCheck"));
             services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheusScrapingEndpoint"));
             services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
             services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));

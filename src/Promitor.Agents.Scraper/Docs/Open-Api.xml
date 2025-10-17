@@ -19,6 +19,13 @@
             <param name="azureMonitorLoggingConfiguration">Options for Azure Monitor logging</param>
             <param name="loggerFactory">Factory to create loggers with</param>
         </member>
+        <member name="P:Promitor.Agents.Scraper.Configuration.HealthCheckConfiguration.EnableScraperFreshnessHealthCheck">
+            <summary>
+            Indicates whether the scraper freshness health check is enabled.
+            This health check monitors whether scrapes have been completed recently.
+            Defaults to true.
+            </summary>
+        </member>
         <member name="M:Promitor.Agents.Scraper.Controllers.v1.ConfigurationController.GetMetricDeclaration">
             <summary>
                 Get Metrics Declaration
@@ -374,11 +381,12 @@
             <param name="configuration">Configuration of Promitor</param>
             <returns></returns>
         </member>
-        <member name="M:Microsoft.Extensions.DependencyInjection.IHealthChecksBuilderExtensions.AddScraperFreshnessHealthCheck(Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder)">
+        <member name="M:Microsoft.Extensions.DependencyInjection.IHealthChecksBuilderExtensions.AddScraperFreshnessHealthCheck(Microsoft.Extensions.DependencyInjection.IHealthChecksBuilder,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
                 Add health check to validate the scraper has completed a scrape recently
             </summary>
             <param name="healthChecksBuilder">Builder for adding health checks</param>
+            <param name="configuration">Configuration of Promitor</param>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.AddResourceDiscoveryClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
