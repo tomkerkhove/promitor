@@ -67,7 +67,7 @@ namespace Promitor.Agents.Scraper.Health
         {
             try
             {
-                var cron = CronExpression.Parse(cronExpression);
+                var cron = CronExpression.Parse(cronExpression, CronFormat.IncludeSeconds);
                 var baseTime = DateTimeOffset.UtcNow;
                 var next1 = cron.GetNextOccurrence(baseTime, TimeZoneInfo.Utc);
 
