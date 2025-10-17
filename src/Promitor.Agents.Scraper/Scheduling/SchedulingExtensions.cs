@@ -16,6 +16,7 @@ using Promitor.Core.Scraping.Configuration.Model;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Agents.Scraper.Configuration;
+using Promitor.Agents.Scraper.Runtime;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -118,6 +119,7 @@ namespace Microsoft.Extensions.DependencyInjection
                             azureMonitorLoggingConfiguration,
                             concurrencyConfiguration,
                             loggerFactory,
+                            jobServices.GetRequiredService<ILastSuccessfulScrapeStore>(),
                             jobServices.GetService<ILogger<ResourcesScrapingJob>>()),
                     schedulerOptions =>
                     {

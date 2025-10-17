@@ -17,6 +17,7 @@ using Promitor.Agents.Scraper.Configuration;
 using Promitor.Agents.Scraper.Configuration.Sinks;
 using Promitor.Agents.Scraper.Discovery;
 using Promitor.Agents.Scraper.Discovery.Interfaces;
+using Promitor.Agents.Scraper.Health;
 using Promitor.Agents.Scraper.Scheduling;
 using Promitor.Agents.Scraper.Usability;
 using Promitor.Agents.Scraper.Validation.Steps;
@@ -31,6 +32,7 @@ using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Factories;
+using Promitor.Agents.Scraper.Runtime;
 using Promitor.Integrations.Azure.Authentication.Configuration;
 using Promitor.Integrations.AzureMonitor.Configuration;
 using Promitor.Integrations.Sinks.Atlassian.Statuspage;
@@ -63,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             var resourceDiscoveryConfiguration = configuration.Get<ScraperRuntimeConfiguration>();
 
-            if(resourceDiscoveryConfiguration?.ResourceDiscovery?.IsConfigured == true)
+            if (resourceDiscoveryConfiguration?.ResourceDiscovery?.IsConfigured == true)
             {
                 services.AddHttpClient<ResourceDiscoveryClient>(client =>
                 {
@@ -110,12 +112,14 @@ namespace Microsoft.Extensions.DependencyInjection
         public static IServiceCollection DefineDependencies(this IServiceCollection services)
         {
             Guard.NotNull(services, nameof(services));
-            
+
             services.AddTransient<IMetricsDeclarationProvider, MetricsDeclarationProvider>();
             services.AddTransient<IAzureScrapingSystemMetricsPublisher, AzureScrapingSystemMetricsPublisher>();
             services.AddTransient<MetricScraperFactory>();
             services.AddTransient<ConfigurationSerializer>();
             services.AddSingleton<AzureMonitorClientFactory>();
+            services.AddSingleton<ILastSuccessfulScrapeStore, LastSuccessfulScrapeStore>();
+            services.AddSingleton<IScrapeScheduleProvider, ScrapeScheduleProvider>();
 
             services.AddSingleton<IDeserializer<MetricsDeclarationV1>, V1Deserializer>();
             services.AddSingleton<IDeserializer<AzureMetadataV1>, AzureMetadataDeserializer>();
@@ -245,7 +249,7 @@ namespace Microsoft.Extensions.DependencyInjection
         }
 
         private static void AddStatsdMetricSink(IServiceCollection services, StatsdSinkConfiguration statsdConfiguration, Table metricSinkAsciiTable)
-        {            
+        {
             metricSinkAsciiTable.AddRow("StatsD", $"Url: {statsdConfiguration.Host}:{statsdConfiguration.Port}.");
             metricSinkAsciiTable.AddRow("", $"Format: {statsdConfiguration.MetricFormat}.");
 
@@ -309,9 +313,9 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 
             var serverConfiguration = configuration.GetSection("server").Get<ServerConfiguration>();
-            
+
             services.TryAdd(ServiceDescriptor.Singleton<IScrapingMutex, ScrapingMutex>(_ => ScrapingMutexBuilder(serverConfiguration)));
-            
+
             return services;
         }
 
@@ -333,6 +337,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure<TelemetryConfiguration>(configuration.GetSection("telemetry"));
             services.Configure<ServerConfiguration>(configuration.GetSection("server"));
             services.Configure<AuthenticationConfiguration>(configuration.GetSection("authentication"));
+            services.Configure<HealthCheckConfiguration>(configuration.GetSection("healthCheck"));
             services.Configure<PrometheusScrapingEndpointSinkConfiguration>(configuration.GetSection("metricSinks:prometheusScrapingEndpoint"));
             services.Configure<StatsdSinkConfiguration>(configuration.GetSection("metricSinks:statsd"));
             services.Configure<AtlassianStatusPageSinkConfiguration>(configuration.GetSection("metricSinks:atlassianStatuspage"));

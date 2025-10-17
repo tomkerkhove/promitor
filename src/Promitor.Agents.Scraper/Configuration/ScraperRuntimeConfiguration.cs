@@ -12,5 +12,6 @@ namespace Promitor.Agents.Scraper.Configuration
         public MetricsConfiguration MetricsConfiguration { get; set; } = new();
         public MetricSinkConfiguration MetricSinks { get; set; } = new();
         public ResourceDiscoveryConfiguration ResourceDiscovery { get; set; }
+        public HealthCheckConfiguration HealthCheck { get; set; } = new();
     }
 }
