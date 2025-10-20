@@ -57,5 +57,6 @@
         PowerBiDedicated = 52,
         AzureFirewall = 53,
         CognitiveServicesAccount = 54,
+        DnsZone = 55,
     }
 }

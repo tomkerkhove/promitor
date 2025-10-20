@@ -38,6 +38,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new DataFactoryDiscoveryQuery();
                 case ResourceType.DataShare:
                     return new DataShareDiscoveryQuery();
+                case ResourceType.DnsZone:
+                    return new DnsZoneDiscoveryQuery();
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceDiscoveryQuery();
                 case ResourceType.EventHubs:
