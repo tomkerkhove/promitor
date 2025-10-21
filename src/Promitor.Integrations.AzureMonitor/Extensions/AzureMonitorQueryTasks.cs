@@ -20,7 +20,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         {   
             MetricsQueryOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
-            var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
+            var effectiveStartingFrom = azureMonitorIntegrationConfiguration.Value.History.ResolveEffectiveStartingFrom();
             var filter = BuildFilter(metricDimensions, metricFilter);
 
             if (!string.IsNullOrEmpty(filter))
@@ -32,7 +32,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     Granularity = metricInterval,
                     Filter = filter,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.Subtract(effectiveStartingFrom)), new DateTimeOffset(recordDateTime))
                 };
             } 
             else 
@@ -43,7 +43,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     }, 
                     Granularity = metricInterval,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.Subtract(effectiveStartingFrom)), new DateTimeOffset(recordDateTime))
                 };
             }
             
@@ -56,8 +56,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
         {   
             MetricsQueryResourcesOptions queryOptions;
             var querySizeLimit = metricLimit ?? Defaults.MetricDefaults.Limit;
-            //var historyStartingFromInHours = azureMonitorIntegrationConfiguration.Value.History.StartingFromInHours;
-            var historyStartingFromInHours = 2;
+            var effectiveStartingFrom = azureMonitorIntegrationConfiguration.Value.History.ResolveEffectiveStartingFrom();
             var filter = BuildFilter(metricDimensions, metricFilter);
             List<ResourceIdentifier> resourceIdentifiers = resourceIds.Select(id => new ResourceIdentifier(id)).ToList(); 
 
@@ -68,7 +67,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                     Granularity = metricInterval,
                     Filter = filter,
                     Size = querySizeLimit, 
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.Subtract(effectiveStartingFrom)), new DateTimeOffset(recordDateTime))
                 };
             } 
             else 
@@ -76,7 +75,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
                 queryOptions = new MetricsQueryResourcesOptions {
                     Aggregations = { metricAggregation.ToString().ToLower() },
                     Granularity = metricInterval,
-                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.AddHours(-historyStartingFromInHours)), new DateTimeOffset(recordDateTime))
+                    TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.Subtract(effectiveStartingFrom)), new DateTimeOffset(recordDateTime))
                 };
             }
 

@@ -7,6 +7,7 @@ version:
 #### Scraper
 
 - {{% tag fixed %}} Azure Monitor Scraper: batch based on aggregation in addition to existing criteria
+- {{% tag feature %}} Azure Monitor Scraper: make query lookback range configurable in minutes
 
 #### Resource Discovery
 
