@@ -31,7 +31,7 @@ namespace Promitor.Agents.Scraper.Health
             _minimumInterval = scrapeScheduleProvider.GetMinimumScrapeInterval();
             _unhealthyThreshold = TimeSpan.FromTicks(_minimumInterval.Ticks * 2);
 
-            _logger.LogInformation("Health check unhealthy threshold calculated as {ThresholdSeconds}s (2x the minimum scrape interval of {MinimumIntervalSeconds}s)",
+            _logger.LogInformation("Added Scraper Freshness Health Check with unhealthy threshold calculated as {ThresholdSeconds}s (2x the minimum scrape interval of {MinimumIntervalSeconds}s)",
                 _unhealthyThreshold.TotalSeconds, _minimumInterval.TotalSeconds);
         }
 

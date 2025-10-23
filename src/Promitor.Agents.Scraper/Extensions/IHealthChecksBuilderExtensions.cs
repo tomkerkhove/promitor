@@ -41,12 +41,12 @@ namespace Microsoft.Extensions.DependencyInjection
             Guard.NotNull(configuration, nameof(configuration));
 
             var healthCheckConfiguration = configuration.GetSection("healthCheck").Get<HealthCheckConfiguration>() ?? new HealthCheckConfiguration();
-            
+
             if (healthCheckConfiguration.EnableScraperFreshnessHealthCheck)
             {
-                healthChecksBuilder.AddCheck<ScraperResultFreshnessHealthCheck>("Promitor Scraper Freshness", HealthStatus.Unhealthy);
+                healthChecksBuilder.AddCheck<ScraperResultFreshnessHealthCheck>("Promitor Scraper Data Freshness", HealthStatus.Unhealthy);
             }
-            
+
             return healthChecksBuilder;
         }
     }
