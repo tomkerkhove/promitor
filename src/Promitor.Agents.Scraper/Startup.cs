@@ -52,7 +52,8 @@ namespace Promitor.Agents.Scraper
                 .UseOpenApiSpecifications("Promitor - Scraper API v1", openApiDescription, 1);
 
             services.AddHealthChecks()
-                   .AddResourceDiscoveryHealthCheck(Configuration);
+                   .AddResourceDiscoveryHealthCheck(Configuration)
+                   .AddScraperFreshnessHealthCheck(Configuration);
 
             services.UseMetricSinks(Configuration, agentVersion, _logger)
                 .AddSystemMetrics()

@@ -29,5 +29,25 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return healthChecksBuilder;
         }
+
+        /// <summary>
+        ///     Add health check to validate the scraper has completed a scrape recently
+        /// </summary>
+        /// <param name="healthChecksBuilder">Builder for adding health checks</param>
+        /// <param name="configuration">Configuration of Promitor</param>
+        public static IHealthChecksBuilder AddScraperFreshnessHealthCheck(this IHealthChecksBuilder healthChecksBuilder, IConfiguration configuration)
+        {
+            Guard.NotNull(healthChecksBuilder, nameof(healthChecksBuilder));
+            Guard.NotNull(configuration, nameof(configuration));
+
+            var healthCheckConfiguration = configuration.GetSection("healthCheck").Get<HealthCheckConfiguration>() ?? new HealthCheckConfiguration();
+
+            if (healthCheckConfiguration.EnableScraperFreshnessHealthCheck)
+            {
+                healthChecksBuilder.AddCheck<ScraperResultFreshnessHealthCheck>("Promitor Scraper Data Freshness", HealthStatus.Unhealthy);
+            }
+
+            return healthChecksBuilder;
+        }
     }
 }
