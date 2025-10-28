@@ -67,6 +67,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new DataFactoryScraper(scraperConfiguration);
                 case ResourceType.DataShare:
                     return new DataShareScraper(scraperConfiguration);
+                case ResourceType.DnsZone:
+                    return new DnsZoneScraper(scraperConfiguration);
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceScraper(scraperConfiguration);
                 case ResourceType.EventHubs:

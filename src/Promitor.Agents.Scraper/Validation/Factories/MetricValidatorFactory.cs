@@ -41,6 +41,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new DataFactoryMetricValidator();
                 case ResourceType.DataShare:
                     return new DataShareMetricValidator();
+                case ResourceType.DnsZone:
+                    return new DnsZoneMetricValidator();
                 case ResourceType.DeviceProvisioningService:
                     return new DeviceProvisioningServiceMetricValidator();
                 case ResourceType.EventHubs:

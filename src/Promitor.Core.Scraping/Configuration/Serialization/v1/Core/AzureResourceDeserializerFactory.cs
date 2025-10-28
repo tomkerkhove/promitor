@@ -66,6 +66,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.DataShare:
                     var dataShareLogger = _loggerFactory.CreateLogger<DataShareDeserializer>();
                     return new DataShareDeserializer(dataShareLogger);
+                case ResourceType.DnsZone:
+                    var dnsZoneLogger = _loggerFactory.CreateLogger<DnsZoneDeserializer>();
+                    return new DnsZoneDeserializer(dnsZoneLogger);
                 case ResourceType.DeviceProvisioningService:
                     var deviceProvisioningServiceLogger = _loggerFactory.CreateLogger<DeviceProvisioningServiceDeserializer>();
                     return new DeviceProvisioningServiceDeserializer(deviceProvisioningServiceLogger);

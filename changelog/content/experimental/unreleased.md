@@ -8,8 +8,9 @@ version:
 
 - {{% tag fixed %}} Azure Monitor Scraper: batch based on aggregation in addition to existing criteria
 - {{% tag feature %}} Azure Monitor Scraper: make query lookback range configurable in minutes
+- {{% tag feature %}} Azure DNS Zone: support for scraping DNS zone metrics
 - {{% tag feature %}} Azure Monitor Scraper: add health check based on data freshness
 
 #### Resource Discovery
 
-None.
+- {{% tag feature %}} Azure DNS Zone: support for discovering DNS zones

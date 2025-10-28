@@ -421,6 +421,15 @@ metrics:
             type: Count
     resourceDiscoveryGroups:
         - name: powerbi-dedicated
+  - name: azure_dns_zone_record_capacity_utilization_discovered
+    description: "Record set capacity utilization percentage for discovered DNS zones"
+    resourceType: DnsZone
+    azureMetricConfiguration:
+      metricName: RecordSetCapacityUtilization
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: dns-zones
 
   # This uses our large-scale data set containing 1000+ Azure Logic App instances
   # Uncomment if you want to test with this scale

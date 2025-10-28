@@ -376,6 +376,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithDnsZoneMetric(string metricName = "promitor-dns-zone",
+            string metricDescription = "Description for a metric",
+            string zoneName = "promitor-dns-zone.com",
+            string azureMetricName = "RecordSetCapacityUtilization",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new DnsZoneResourceV1
+            {
+                ZoneName = zoneName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.DnsZone, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithDeviceProvisioningServiceMetric(string metricName = "promitor-dps",
             string metricDescription = "Description for a metric",
             string deviceProvisioningServiceName = "promitor-dps",

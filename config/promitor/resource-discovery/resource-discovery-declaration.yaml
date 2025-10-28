@@ -31,6 +31,8 @@ resourceDiscoveryGroups:
   type: DataFactory
 - name: data-share-landscape
   type: DataShare
+- name: dns-zones
+  type: DnsZone
 - name: dps
   type: DeviceProvisioningService
 - name: event-hubs-landscape
