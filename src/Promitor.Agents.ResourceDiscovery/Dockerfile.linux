@@ -1,6 +1,8 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-azurelinux3.0 AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-azurelinux3.0 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
+ARG TARGETARCH
+
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
 COPY Promitor.Core.Contracts/* Promitor.Core.Contracts/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
@@ -12,12 +14,16 @@ COPY Promitor.Integrations.AzureStorage/* Promitor.Integrations.AzureStorage/
 COPY Promitor.Integrations.LogAnalytics/* Promitor.Integrations.LogAnalytics/
 COPY Promitor.Integrations.Sinks.Core/* Promitor.Integrations.Sinks.Core/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
-RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=$VERSION
+
+RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj \
+    --configuration release \
+    --output /app \
+    --arch $TARGETARCH \
+    /p:Version=$VERSION
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0.20-cbl-mariner2.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
-
 RUN tdnf install -y fdupes \
     && tdnf clean all
 
@@ -39,16 +45,16 @@ RUN \
     && getsymlinks() { find $1 -type l -printf '%p %l\n' | sed -n "s/^\\$1\\(.*\\)/\\1/p"; } \
     # Combine set of symlinks between staging1 and staging2
     && (getsymlinks "/staging1"; getsymlinks "/staging2") \
-        # Sort them
-        | sort \
-        # Find the duplicates
-        | uniq -d \
-        # Extract just the path to the symlink
-        | cut -d' ' -f1 \
-        # Prepend the staging2 directory to the paths
-        | sed -e 's/^/\/staging2/' \
-        # Delete the files
-        | xargs rm \
+    # Sort them
+    | sort \
+    # Find the duplicates
+    | uniq -d \
+    # Extract just the path to the symlink
+    | cut -d' ' -f1 \
+    # Prepend the staging2 directory to the paths
+    | sed -e 's/^/\/staging2/' \
+    # Delete the files
+    | xargs rm \
     \
     # General cleanup
     && rm -rf /staging2/etc/tdnf \
@@ -66,9 +72,9 @@ FROM runtime-base AS runtime
 COPY --from=installer /staging2/ /
 
 WORKDIR /app
-ENV PROMITOR_CONFIG_FOLDER="/config/"
-COPY --from=build /app .
+ENV PROMITOR_CONFIG_FOLDER="/config/" \
+    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+COPY --from=build /app .
 
 ENTRYPOINT ["dotnet", "Promitor.Agents.ResourceDiscovery.dll"]
