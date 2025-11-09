@@ -14,7 +14,7 @@ COPY Promitor.Integrations.Sinks.Core/* Promitor.Integrations.Sinks.Core/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.20-cbl-mariner2.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.21-cbl-mariner2.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
 
