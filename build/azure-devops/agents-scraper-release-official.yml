@@ -28,10 +28,9 @@ parameters:
 variables:
   - template: ./variables/tests.yml
   - template: ./variables/build.yml
-  - name: 'Image.Name'
-    value: 'ghcr.io/tomkerkhove/promitor-agent-scraper'
-  - name: 'Image.TaggedName'
-    value: '$(Image.Name):$(Image.Version)'
+  - template: ./variables/containers.yml
+  - name: 'Image.Scraper.TaggedName'
+    value: '$(Image.Scraper.Full):$(Image.Version)'
   - name: 'Release.TagName'
     value: 'Scraper-v$(Build.BuildNumber)'
   - name: 'Image.Version'
@@ -74,7 +73,7 @@ stages:
     value: '999'
   - name: Container.Network.Name
     value: 'ci-network'
-  - name: Image.ResourceDiscovery.Name
+  - name: Image.ResourceDiscovery.Local
     value: 'local/promitor-resource-discovery:dev'
   - name: Agent.Scraper.Version
     value: $(Image.Version)
@@ -91,12 +90,16 @@ stages:
        vmImage: ubuntu-latest
      variables:
        OS.Name: 'linux'
+       Docker.Builder.Name: 'promitor-multiarch'
      steps:
      - download: current
        artifact: variables
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
+     - template: templates/docker/linux-create-builder.yml
+       parameters:
+        builderName: '$(Docker.Builder.Name)'
      - template: templates/build/install-sdk.yml
        parameters:
         dotnetVersion: '$(DotNet.SDK.Version)'
@@ -105,18 +108,26 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: templates/build-scraper-image.yml
+     - template: templates/docker/linux-build-image.yml
        parameters:
-        imageName: '$(Image.TaggedName)'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        tags: '--tag $(Image.Name):latest --tag $(Image.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
-        os: '$(OS.Name)'
-     - template: templates/build-discovery-image.yml
+        builderName: '$(Docker.Builder.Name)'
+        tags: >
+          --tag $(Image.Scraper.TaggedName)
+          --tag $(Image.Scraper.TaggedName)-$(OS.Name)
+          --tag $(Image.Scraper.Full):$(Image.MajorMinorVersion)
+          --tag $(Image.Scraper.Full):$(Image.MajorMinorVersion)-$(OS.Name)
+          --tag $(Image.Scraper.Full):latest
+          --tag $(Image.Scraper.Full):latest-$(OS.Name)
+        dockerFile: './src/Promitor.Agents.Scraper/Dockerfile.$(OS.Name)'
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
+     - template: templates/docker/linux-build-image.yml
        parameters:
-        imageName: '$(Image.ResourceDiscovery.Name)'
-        tags: '--tag dev'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        os: '$(OS.Name)'
+        builderName: '$(Docker.Builder.Name)'
+        tags: >
+          --tag $(Image.ResourceDiscovery.Local)
+        platforms: 'linux/amd64'
+        dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
      - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
@@ -141,7 +152,7 @@ stages:
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
-          imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
+          imageName: '$(Image.Scraper.Full):$(Image.MajorMinorVersion)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/scraper/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/scraper/metrics.yaml:/config/metrics-declaration.yaml'
           activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
@@ -149,7 +160,7 @@ stages:
           os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
        parameters:
-          imageName: '$(Image.ResourceDiscovery.Name)'
+          imageName: '$(Image.ResourceDiscovery.Local)'
           containerName: '$(Container.ResourceDiscovery.Name)'
           containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
@@ -170,31 +181,28 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/docker/push-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}'''
-        imageName: '$(Image.TaggedName)'
-     - template: templates/docker/push-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/docker/push-image.yml
+        - template: templates/docker/linux-push-image.yml
           parameters:
-            imageDisplayName: '''{major}.{minor}'''
-            imageName: '$(Image.Name):$(Image.MajorMinorVersion)'
-        - template: templates/docker/push-image.yml
+            builderName: '$(Docker.Builder.Name)'
+            tags: >
+              --tag $(Image.Scraper.TaggedName)
+              --tag $(Image.Scraper.TaggedName)-$(OS.Name)
+              --tag $(Image.Scraper.Full):$(Image.MajorMinorVersion)
+              --tag $(Image.Scraper.Full):$(Image.MajorMinorVersion)-$(OS.Name)
+              --tag $(Image.Scraper.Full):latest
+              --tag $(Image.Scraper.Full):latest-$(OS.Name)
+            dockerFile: './src/Promitor.Agents.Scraper/Dockerfile.$(OS.Name)'
+            buildArgs: '--build-arg VERSION="$(Image.Version)"'
+     - ${{ if eq(parameters['releaseType'], 'Preview') }}:
+        - template: templates/docker/linux-push-image.yml
           parameters:
-            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-            imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/docker/push-image.yml
-          parameters:
-            imageDisplayName: '''latest'''
-            imageName: '$(Image.Name):latest'
-        - template: templates/docker/push-image.yml
-          parameters:
-            imageDisplayName: '''latest-$(OS.Name)'''
-            imageName: '$(Image.Name):latest-$(OS.Name)'
+            builderName: '$(Docker.Builder.Name)'
+            tags: >
+              --tag $(Image.Scraper.TaggedName)
+              --tag $(Image.Scraper.TaggedName)-$(OS.Name)
+            dockerFile: './src/Promitor.Agents.Scraper/Dockerfile.$(OS.Name)'
+            buildArgs: '--build-arg VERSION="$(Image.Version)"'
    - job: BuildWindows
      displayName: Build Windows Docker image
      pool:
@@ -213,18 +221,23 @@ stages:
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
      - template: templates/agents/prepare-scraper-ci-config.yml
      - template: templates/agents/prepare-discovery-ci-config.yml
-     - template: templates/build-discovery-image.yml
+     - template: templates/docker/windows-build-image.yml
        parameters:
-        imageName: '$(Image.ResourceDiscovery.Name)'
-        tags: '--tag dev'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        os: '$(OS.Name)'
-     - template: templates/build-scraper-image.yml
+        imageDisplayName: '$(Image.ResourceDiscovery.Local)'
+        dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+        repository: 'local/promitor-resource-discovery'
+        tags: 'dev'
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
+     - template: templates/docker/windows-build-image.yml
        parameters:
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        tags: '--tag $(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.Name):latest-$(OS.Name)'
-        os: '$(OS.Name)'
+        imageDisplayName: '$(Image.Scraper.TaggedName)-$(OS.Name)'
+        dockerFile: './src/Promitor.Agents.Scraper/Dockerfile.$(OS.Name)'
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
+        repository: '$(Image.Scraper.Full)'
+        tags: |
+          $(Image.Version)-$(OS.Name)
+          $(Image.MajorMinorVersion)-$(OS.Name)
+          latest-$(OS.Name)
      - template: templates/docker/create-network.yml
        parameters:
         networkName: '$(Container.Network.Name)'
@@ -245,7 +258,7 @@ stages:
        parameters:
           containerName: '$(Container.Scraper.Name)'
           containerPort: '$(Container.Scraper.Port)'
-          imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
+          imageName: '$(Image.Scraper.Full):$(Image.MajorMinorVersion)-$(OS.Name)'
           volumes: '$(Pipeline.Workspace)\s\config\promitor\scraper\:c:\config\'
           activeDirectoryAppId: '$(Agent.Scraper.Auth.AppId)'
           activeDirectoryAppSecret: '$(Agent.Scraper.Auth.AppSecret)'
@@ -275,19 +288,25 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/docker/push-image.yml
+     - template: templates/docker/windows-push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
+        repository: '$(Image.Scraper.Repository)'
+        tags: | 
+          '$(Image.Version)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/docker/push-image.yml
+        - template: templates/docker/windows-push-image.yml
           parameters:
             imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-            imageName: '$(Image.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/docker/push-image.yml
+            repository: '$(Image.Scraper.Repository)'
+            tags: | 
+              '$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/windows-push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
-            imageName: '$(Image.Name):latest-$(OS.Name)'
+            repository: '$(Image.Scraper.Repository)'
+            tags: | 
+              'latest-$(OS.Name)'
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub

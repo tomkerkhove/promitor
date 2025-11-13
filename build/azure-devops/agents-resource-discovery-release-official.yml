@@ -33,8 +33,8 @@ variables:
     value: '${{ parameters.imageVersion }}'
   - name: 'Release.Title'
     value: '${{ parameters.githubReleaseTitle }}'
-  - name: 'Image.TaggedName'
-    value: '$(Image.ResourceDiscovery.Name):$(Image.Version)'
+  - name: 'Image.ResourceDiscovery.TaggedName'
+    value: '$(Image.ResourceDiscovery.Full):$(Image.Version)'
   - name: 'Release.TagName'
     value: 'ResourceDiscovery-v$(Build.BuildNumber)'
   # Required for all our build stages
@@ -82,6 +82,8 @@ stages:
   variables:
   - name: OS.Name
     value: 'linux'
+  - name: Docker.Builder.Name
+    value: 'promitor-multiarch'
   jobs:
    - job: BuildLinux
      displayName: Build Linux Docker image
@@ -91,6 +93,9 @@ stages:
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.MajorMinorVersion'
+     - template: templates/docker/linux-create-builder.yml
+       parameters:
+        builderName: '$(Docker.Builder.Name)'
      - template: templates/build/install-sdk.yml
        parameters:
         dotnetVersion: '$(DotNet.SDK.Version)'
@@ -99,12 +104,18 @@ stages:
        inputs:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
-     - template: templates/build-discovery-image.yml
+     - template: templates/docker/linux-build-image.yml
        parameters:
-        imageName: '$(Image.TaggedName)'
-        tags: '--tag $(Image.ResourceDiscovery.Name):latest --tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion) --tag $(Image.TaggedName)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        os: '$(OS.Name)'
+        builderName: '$(Docker.Builder.Name)'
+        tags: >
+          --tag $(Image.ResourceDiscovery.TaggedName)
+          --tag $(Image.ResourceDiscovery.TaggedName)-$(OS.Name)
+          --tag $(Image.ResourceDiscovery.Full):$(Image.MajorMinorVersion)
+          --tag $(Image.ResourceDiscovery.Full):$(Image.MajorMinorVersion)-$(OS.Name)
+          --tag $(Image.ResourceDiscovery.Full):latest
+          --tag $(Image.ResourceDiscovery.Full):latest-$(OS.Name)
+        dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name)'
@@ -124,31 +135,30 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/docker/push-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}'''
-        imageName: '$(Image.TaggedName)'
-     - template: templates/docker/push-image.yml
-       parameters:
-        imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/docker/push-image.yml
+        - template: templates/docker/linux-push-image.yml
           parameters:
-            imageDisplayName: '''{major}.{minor}'''
-            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)'
-        - template: templates/docker/push-image.yml
+            builderName: '$(Docker.Builder.Name)'
+            tags: >
+              --tag $(Image.ResourceDiscovery.TaggedName)
+              --tag $(Image.ResourceDiscovery.TaggedName)-$(OS.Name)
+              --tag $(Image.ResourceDiscovery.Full):$(Image.MajorMinorVersion)
+              --tag $(Image.ResourceDiscovery.Full):$(Image.MajorMinorVersion)-$(OS.Name)
+              --tag $(Image.ResourceDiscovery.Full):latest
+              --tag $(Image.ResourceDiscovery.Full):latest-$(OS.Name)
+            dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+            buildArgs: '--build-arg VERSION="$(Image.Version)"'
+            platforms: 'linux/amd64,linux/arm64'
+     - ${{ if eq(parameters['releaseType'], 'Preview') }}:
+        - template: templates/docker/linux-push-image.yml
           parameters:
-            imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/docker/push-image.yml
-          parameters:
-            imageDisplayName: '''latest'''
-            imageName: '$(Image.ResourceDiscovery.Name):latest'
-        - template: templates/docker/push-image.yml
-          parameters:
-            imageDisplayName: '''latest-$(OS.Name)'''
-            imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+            builderName: '$(Docker.Builder.Name)'
+            tags: >
+              --tag $(Image.ResourceDiscovery.TaggedName)
+              --tag $(Image.ResourceDiscovery.TaggedName)-$(OS.Name)
+            dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+            buildArgs: '--build-arg VERSION="$(Image.Version)"'
+            platforms: 'linux/amd64,linux/arm64'
 - stage: BuildWindows
   dependsOn: Init
   displayName: Windows Docker image
@@ -171,12 +181,16 @@ stages:
         command: test
         projects: src/Promitor.Tests.Unit/Promitor.Tests.Unit.csproj
      - template: templates/agents/prepare-discovery-ci-config.yml
-     - template: templates/build-discovery-image.yml
+     - template: templates/docker/windows-build-image.yml
        parameters:
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
-        tags: '--tag $(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name) --tag $(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
-        buildArgs: 'VERSION="$(Image.Version)"'
-        os: '$(OS.Name)'
+        imageDisplayName: '$(Image.ResourceDiscovery.TaggedName)-$(OS.Name)'
+        dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
+        repository: '$(Image.ResourceDiscovery.Full)'
+        tags: |
+          $(Image.Version)-$(OS.Name)
+          $(Image.MajorMinorVersion)-$(OS.Name)
+          latest-$(OS.Name)
+        buildArgs: '--build-arg VERSION="$(Image.Version)"'
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
@@ -196,19 +210,25 @@ stages:
      - template: templates/docker/show-container-logs.yml
        parameters:
         containerName: '$(Container.ResourceDiscovery.Name)'
-     - template: templates/docker/push-image.yml
+     - template: templates/docker/windows-push-image.yml
        parameters:
         imageDisplayName: '''{major}.{minor}.{patch}-$(OS.Name)'''
-        imageName: '$(Image.TaggedName)-$(OS.Name)'
+        repository: '$(Image.ResourceDiscovery.Repository)'
+        tags: | 
+          '$(Image.Version)-$(OS.Name)'
      - ${{ if eq(parameters['releaseType'], 'Full') }}:
-        - template: templates/docker/push-image.yml
+        - template: templates/docker/windows-push-image.yml
           parameters:
             imageDisplayName: '''{major}.{minor}-$(OS.Name)'''
-            imageName: '$(Image.ResourceDiscovery.Name):$(Image.MajorMinorVersion)-$(OS.Name)'
-        - template: templates/docker/push-image.yml
+            repository: '$(Image.ResourceDiscovery.Repository)'
+            tags: | 
+              '$(Image.MajorMinorVersion)-$(OS.Name)'
+        - template: templates/docker/windows-push-image.yml
           parameters:
             imageDisplayName: '''latest-$(OS.Name)'''
-            imageName: '$(Image.ResourceDiscovery.Name):latest-$(OS.Name)'
+            repository: '$(Image.ResourceDiscovery.Repository)'
+            tags: | 
+              'latest-$(OS.Name)'
 - ${{ if eq(parameters['createGitHubRelease'], true) }}:
   - stage: ReleaseGitHub
     displayName: Release on GitHub
