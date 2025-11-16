@@ -14,25 +14,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="3.0.0" />
-    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="3.0.0" />
-    <PackageReference Include="Arcus.WebApi.Logging" Version="2.0.0" />
-    <PackageReference Include="CronScheduler.AspNetCore" Version="3.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
-    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-    <PackageReference Include="Prometheus.Client" Version="5.2.0" />
-    <PackageReference Include="Prometheus.Client.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Prometheus.Client.HttpRequestDurations" Version="4.0.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-    <PackageReference Include="Spectre.Console" Version="0.50.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0" />
-    <PackageReference Include="Humanizer" Version="2.14.1" />
+    <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" />
+    <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" />
+    <PackageReference Include="Arcus.WebApi.Logging" />
+    <PackageReference Include="CronScheduler.AspNetCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" />
+    <PackageReference Include="Prometheus.Client" />
+    <PackageReference Include="Prometheus.Client.AspNetCore" />
+    <PackageReference Include="Prometheus.Client.HttpRequestDurations" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Spectre.Console" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" />
+    <PackageReference Include="Humanizer" />
   </ItemGroup>
 
   <ItemGroup>
