@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-ltsc2022 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
+COPY Directory.Packages.props .
 COPY Promitor.Core/* Promitor.Core/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
 COPY Promitor.Core.Scraping/* Promitor.Core.Scraping/

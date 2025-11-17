@@ -35,18 +35,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="CronExpressionDescriptor" Version="2.44.0" />
-    <PackageReference Include="Microsoft.Azure.Kusto.Language" Version="12.2.0" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-    <PackageReference Include="YamlDotNet" Version="15.1.6" />
+    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="CronExpressionDescriptor" />
+    <PackageReference Include="Microsoft.Azure.Kusto.Language" />
+    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Text.RegularExpressions" />
+    <PackageReference Include="YamlDotNet" />
     
     <!-- Explicitly pin dependencies on container project to mitigate security vulnerabilities -->
-    <PackageReference Include="System.Drawing.Common" Version="9.0.10" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.10" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="9.0.10" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
+    <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
 
   <ItemGroup>
