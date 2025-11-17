@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-azurelinux3.0 AS build
 WORKDIR /src
 ARG VERSION="UNSET-VERSION"
+COPY Directory.Packages.props .
 COPY Promitor.Agents.ResourceDiscovery/* Promitor.Agents.ResourceDiscovery/
 COPY Promitor.Core.Contracts/* Promitor.Core.Contracts/
 COPY Promitor.Agents.Core/* Promitor.Agents.Core/
