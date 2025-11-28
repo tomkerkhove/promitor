@@ -71,6 +71,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new LogicAppMetricValidator();
                 case ResourceType.MariaDb:
                     return new MariaDbMetricValidator();
+                case ResourceType.MongoCluster:
+                    return new MongoClusterMetricValidator();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleMetricValidator();
                 case ResourceType.MySql:
