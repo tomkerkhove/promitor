@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
 
 #### Resource Discovery
 
-None.
+- {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
