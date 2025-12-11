@@ -658,6 +658,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithMongoClusterMetric(string metricName = "promitor-mongo-cluster",
+            string metricDescription = "Description for a metric",
+            string clusterName = "promitor-mongo-cluster-name",
+            string azureMetricName = "MongoRequestCharge",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new MongoClusterResourceV1
+            {
+                ClusterName = clusterName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.MongoCluster, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithMonitorAutoscaleMetric(string metricName = "promitor-autoscale",
             string metricDescription = "Description for a metric",
             string autoscaleSettingsName = "promitor-autoscale-rules",

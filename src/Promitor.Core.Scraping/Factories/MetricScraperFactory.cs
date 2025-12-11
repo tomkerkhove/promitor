@@ -97,6 +97,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new LogicAppScraper(scraperConfiguration);
                 case ResourceType.MariaDb:
                     return new MariaDbScraper(scraperConfiguration);
+                case ResourceType.MongoCluster:
+                    return new MongoClusterScraper(scraperConfiguration);
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleScraper(scraperConfiguration);
                 case ResourceType.MySql:

@@ -57,6 +57,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>();
             CreateMap<LogicAppResourceV1, LogicAppResourceDefinition>();
             CreateMap<MariaDbResourceV1, MariaDbResourceDefinition>();
+            CreateMap<MongoClusterResourceV1, MongoClusterResourceDefinition>();
             CreateMap<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>();
             CreateMap<MySqlResourceV1, MySqlResourceDefinition>();
             CreateMap<NatGatewayResourceV1, NatGatewayResourceDefinition>();
@@ -119,6 +120,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<LogAnalyticsResourceV1, LogAnalyticsResourceDefinition>()
                 .Include<LogicAppResourceV1, LogicAppResourceDefinition>()
                 .Include<MariaDbResourceV1, MariaDbResourceDefinition>()
+                .Include<MongoClusterResourceV1, MongoClusterResourceDefinition>()
                 .Include<MonitorAutoscaleResourceV1, MonitorAutoscaleResourceDefinition>()
                 .Include<MySqlResourceV1, MySqlResourceDefinition>()
                 .Include<NatGatewayResourceV1, NatGatewayResourceDefinition>()
