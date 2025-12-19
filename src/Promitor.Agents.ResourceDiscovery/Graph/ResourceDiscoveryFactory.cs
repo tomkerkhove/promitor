@@ -62,6 +62,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new LogicAppDiscoveryQuery();
                 case ResourceType.MariaDb:
                     return new MariaDbDiscoveryQuery();
+                case ResourceType.MongoCluster:
+                    return new MongoClusterDiscoveryQuery();
                 case ResourceType.MonitorAutoscale:
                     return new MonitorAutoscaleDiscoveryQuery();
                 case ResourceType.MySql:

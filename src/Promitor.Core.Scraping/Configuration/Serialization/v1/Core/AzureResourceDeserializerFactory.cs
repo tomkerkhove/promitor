@@ -111,6 +111,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.MariaDb:
                     var mariaDbLogger = _loggerFactory.CreateLogger<MariaDbDeserializer>();
                     return new MariaDbDeserializer(mariaDbLogger);
+                case ResourceType.MongoCluster:
+                    var mongoClusterLogger = _loggerFactory.CreateLogger<MongoClusterDeserializer>();
+                    return new MongoClusterDeserializer(mongoClusterLogger);
                 case ResourceType.MonitorAutoscale:
                     var monitorAutoscaleLogger = _loggerFactory.CreateLogger<MonitorAutoscaleDeserializer>();
                     return new MonitorAutoscaleDeserializer(monitorAutoscaleLogger);
