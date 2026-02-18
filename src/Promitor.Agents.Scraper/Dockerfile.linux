@@ -25,7 +25,7 @@ RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj \
     --arch $TARGETARCH \
     /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.21-cbl-mariner2.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.24-cbl-mariner2.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
 RUN tdnf install -y fdupes \

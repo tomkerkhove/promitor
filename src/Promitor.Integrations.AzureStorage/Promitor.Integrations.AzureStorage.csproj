@@ -1,14 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RuntimeFrameworkVersion>8.0.21</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.24</RuntimeFrameworkVersion>
 </PropertyGroup>
 
 <ItemGroup>
     <PackageReference Include="Guard.Net" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
+    
+    <!-- Explicitly pin transitive dependency to mitigate security vulnerability -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 </ItemGroup>
 
 </Project>
