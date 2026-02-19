@@ -7,7 +7,9 @@ version:
 #### Scraper
 
 - {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
+- {{% tag added %}} Provide support for Azure AI Search ([docs](https://docs.promitor.io/scraping/providers/search-service/))
 
 #### Resource Discovery
 
 - {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
+- {{% tag added %}} Provide support for Azure AI Search ([docs](https://docs.promitor.io/scraping/providers/search-service/))

@@ -1,4 +1,4 @@
-﻿namespace Promitor.Core.Contracts
+namespace Promitor.Core.Contracts
 {
     public enum ResourceType
     {
@@ -59,5 +59,6 @@
         CognitiveServicesAccount = 54,
         DnsZone = 55,
         MongoCluster = 56,
+        SearchService = 57,
     }
 }

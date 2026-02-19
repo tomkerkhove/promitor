@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
@@ -144,6 +144,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.RedisEnterpriseCache:
                     var redisEnterpriseCacheLogger = _loggerFactory.CreateLogger<RedisEnterpriseCacheDeserializer>();
                     return new RedisEnterpriseCacheDeserializer(redisEnterpriseCacheLogger);
+                case ResourceType.SearchService:
+                    var searchServiceLogger = _loggerFactory.CreateLogger<SearchServiceDeserializer>();
+                    return new SearchServiceDeserializer(searchServiceLogger);
                 case ResourceType.ServiceBusNamespace:
                     var serviceBusLogger = _loggerFactory.CreateLogger<ServiceBusNamespaceDeserializer>();
                     return new ServiceBusNamespaceDeserializer(serviceBusLogger);

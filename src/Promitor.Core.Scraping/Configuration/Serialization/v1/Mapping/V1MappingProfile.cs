@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Promitor.Core.Configuration;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
@@ -68,6 +68,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             CreateMap<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>();
             CreateMap<RedisCacheResourceV1, RedisCacheResourceDefinition>();
             CreateMap<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>();
+            CreateMap<SearchServiceResourceV1, SearchServiceResourceDefinition>();
             CreateMap<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>();
             CreateMap<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>();
             CreateMap<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>();
@@ -131,6 +132,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
                 .Include<PublicIpAddressResourceV1, PublicIpAddressResourceDefinition>()
                 .Include<RedisCacheResourceV1, RedisCacheResourceDefinition>()
                 .Include<RedisEnterpriseCacheResourceV1, RedisEnterpriseCacheResourceDefinition>()
+                .Include<SearchServiceResourceV1, SearchServiceResourceDefinition>()
                 .Include<ServiceBusNamespaceResourceV1, ServiceBusNamespaceResourceDefinition>()
                 .Include<SqlDatabaseResourceV1, SqlDatabaseResourceDefinition>()
                 .Include<SqlElasticPoolResourceV1, SqlElasticPoolResourceDefinition>()

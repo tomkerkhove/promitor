@@ -67,6 +67,8 @@ resourceDiscoveryGroups:
   type: RedisCache
 - name: redis-enterprise-caches
   type: RedisEnterpriseCache
+- name: search-services
+  type: SearchService
 - name: sql-databases
   type: SqlDatabase
 - name: sql-managed-instances
