@@ -1,4 +1,4 @@
-﻿using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
+using Promitor.Agents.ResourceDiscovery.Graph.Exceptions;
 using Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes;
 using Promitor.Core.Contracts;
 
@@ -84,6 +84,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new RedisCacheDiscoveryQuery();
                 case ResourceType.RedisEnterpriseCache:
                     return new RedisEnterpriseCacheDiscoveryQuery();
+                case ResourceType.SearchService:
+                    return new SearchServiceDiscoveryQuery();
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceDiscoveryQuery();
                 case ResourceType.SqlDatabase:

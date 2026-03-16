@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions.Interfaces;
 using Promitor.Agents.Scraper.Validation.MetricDefinitions.ResourceTypes;
 using Promitor.Core.Contracts;
@@ -93,6 +93,8 @@ namespace Promitor.Agents.Scraper.Validation.Factories
                     return new RedisCacheMetricValidator();
                 case ResourceType.RedisEnterpriseCache:
                     return new RedisEnterpriseCacheMetricValidator();
+                case ResourceType.SearchService:
+                    return new SearchServiceMetricValidator();
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceMetricValidator();
                 case ResourceType.SqlDatabase:

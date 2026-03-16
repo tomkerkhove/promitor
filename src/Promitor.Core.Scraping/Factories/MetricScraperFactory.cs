@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GuardNet;
 using Microsoft.Extensions.Logging;
 using Promitor.Core.Contracts;
@@ -119,6 +119,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new RedisCacheScraper(scraperConfiguration);
                 case ResourceType.RedisEnterpriseCache:
                     return new RedisEnterpriseCacheScraper(scraperConfiguration);
+                case ResourceType.SearchService:
+                    return new SearchServiceScraper(scraperConfiguration);
                 case ResourceType.ServiceBusNamespace:
                     return new ServiceBusNamespaceScraper(scraperConfiguration);
                 case ResourceType.SqlDatabase:

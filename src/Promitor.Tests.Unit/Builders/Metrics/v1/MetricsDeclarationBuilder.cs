@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
@@ -856,6 +856,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             };
 
             CreateAndAddMetricDefinition(ResourceType.RedisEnterpriseCache, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
+        public MetricsDeclarationBuilder WithSearchServiceMetric(string metricName = "promitor-search-service",
+            string metricDescription = "Description for a metric",
+            string searchServiceName = "promitor-search-service",
+            string azureMetricName = "SearchLatency",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new SearchServiceResourceV1
+            {
+                SearchServiceName = searchServiceName
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.SearchService, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
 
             return this;
         }
