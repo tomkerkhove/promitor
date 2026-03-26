@@ -1,7 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using AutoMapper;
 using Promitor.Core.Contracts;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Batching;
@@ -16,7 +15,7 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
     [Category("Unit")]
     public class AzureResourceDefinitionBatchingTests
     {
-        private readonly IMapper _mapper; // to model instantiation happen
+        private readonly V1ConfigurationMapper _mapper; // to model instantiation happen
         private readonly static string azureMetricNameBase = "promitor_batch_test_metric";
         private readonly static PrometheusMetricDefinition prometheusMetricDefinitionTest =
             new("promitor_batch_test", "test", new Dictionary<string, string>());
@@ -46,16 +45,15 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
 
         public AzureResourceDefinitionBatchingTests()
         {
-            var config = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            _mapper = config.CreateMapper();
+            _mapper = new V1ConfigurationMapper();
         }
 
         [Fact]
         public void IdenticalBatchPropertiesShouldBatchTogether()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase);
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
                 resourceType: ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
@@ -69,11 +67,11 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
         [Fact]
         public void BatchShouldSplitAccordingToConfiguredBatchSize()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase);
             var testBatchSize = 10;
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
                 resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 25
@@ -87,9 +85,9 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
         [Fact]
         public void DifferentBatchPropertiesShouldBatchSeparately()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
+            var azureMetricConfiguration = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase);
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
                 resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
@@ -108,12 +106,12 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
         [Fact]
         public void DifferentAggregationIntervalsShouldBatchSeparately()
         {
-            var azureMetricConfiguration5MInterval = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration5MInterval = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
             azureMetricConfiguration5MInterval.Aggregation.Interval = TimeSpan.FromMinutes(5);
-            var azureMetricConfiguration2MInterval = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfiguration2MInterval = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
             azureMetricConfiguration5MInterval.Aggregation.Interval = TimeSpan.FromMinutes(2);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
             var scrapeDefinitions5M = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration5MInterval, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
                 resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
@@ -129,12 +127,11 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
             Assert.Equal(10, groupedScrapeDefinitions[1].ScrapeDefinitions.Count);
         }
 
-
         [Fact]
         public void MixedBatchShouldSplitAccordingToConfiguredBatchSize()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var azureMetricConfiguration = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
             var logAnalyticsConfiguration = new LogAnalyticsConfiguration();
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
@@ -153,8 +150,8 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
         [Fact]
         public void BatchConstructionShouldBeAgnosticToResourceGroup()
         {
-            var azureMetricConfiguration = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
+            var azureMetricConfiguration = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var scraping = _mapper.MapScraping(scrapingBase);
             var logAnalyticsConfiguration = new LogAnalyticsConfiguration();
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfiguration, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
@@ -173,12 +170,12 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
         [Fact]
         public void DifferentAggregationShouldBatchSeparately()
         {
-            var azureMetricConfigurationMax = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfigurationMax = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
             azureMetricConfigurationMax.Aggregation.Type = PromitorMetricAggregationType.Maximum;
-            var azureMetricConfigurationAverage = _mapper.Map<AzureMetricConfiguration>(azureMetricConfigurationBase);
+            var azureMetricConfigurationAverage = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
 
-            var scraping = _mapper.Map<Promitor.Core.Scraping.Configuration.Model.Scraping>(scrapingBase);
-            var logAnalyticsConfiguration = _mapper.Map<LogAnalyticsConfiguration>(logAnalyticsConfigurationBase); 
+            var scraping = _mapper.MapScraping(scrapingBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase); 
             var scrapeDefinitions = BuildScrapeDefinitionBatch(
                 azureMetricConfiguration: azureMetricConfigurationMax, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinitionTest, scraping: scraping, 
                 resourceType:  ResourceType.StorageAccount, subscriptionId: subscriptionIdTest, resourceGroupName: resourceGroupNameTest, 10
@@ -208,15 +205,14 @@ namespace Promitor.Tests.Unit.Core.Scraping.Batching
             var batch = new List<ScrapeDefinition<IAzureResourceDefinition>>();
             for (var resoureceIdCounter = 0; resoureceIdCounter <  size; resoureceIdCounter++)
             {
-                var resourceName = "resource" + resoureceIdCounter.ToString();
+                var resourceName = "resource" + resoureceIdCounter;
                 var resourceDefinition = new AzureResourceDefinition(resourceType, subscriptionId, resourceGroupName, resourceName: resourceName, uniqueName: resourceName);
                 batch.Add(new ScrapeDefinition<IAzureResourceDefinition>(azureMetricConfiguration, logAnalyticsConfiguration, prometheusMetricDefinition, scraping, resourceDefinition, subscriptionId, resourceGroupName));
             } 
             return batch;
         }
 
-
-        private static int CountTotalScrapeDefinitions(List<BatchScrapeDefinition<IAzureResourceDefinition>> groupedScrapeDefinitions) 
+        private static int CountTotalScrapeDefinitions(List<BatchScrapeDefinition<IAzureResourceDefinition>> groupedScrapeDefinitions)
         {
             var count = 0;
             groupedScrapeDefinitions.ForEach(batch => count += batch.ScrapeDefinitions.Count);

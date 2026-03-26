@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RuntimeFrameworkVersion>8.0.24</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.25</RuntimeFrameworkVersion>
     <LangVersion>8</LangVersion>
   </PropertyGroup>
 
@@ -15,7 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="Fastenshtein" Version="1.0.10" />
     <PackageReference Include="Cronos" Version="0.9.0" />
     <PackageReference Include="Guard.Net" Version="3.0.0" />
@@ -26,6 +25,7 @@
     <!-- Explicitly pin transitive dependencies to mitigate security vulnerabilities -->
     <PackageReference Include="System.Drawing.Common" Version="10.0.3" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.3" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>

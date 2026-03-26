@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes.Enums;
 using Promitor.Core.Metrics;
 using Promitor.Core.Scraping.Configuration.Serialization;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Core;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model.ResourceTypes;
 using Promitor.Core.Serialization.Enum;
@@ -82,7 +82,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
         
-        public string Build(IMapper mapper)
+        public string Build(V1ConfigurationMapper mapper)
         {
             var metricsDeclaration = new MetricsDeclarationV1
             {

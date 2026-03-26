@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using AutoMapper;
 using Bogus;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -19,12 +18,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.Sinks
     [Category("Unit")]
     public class AtlassianStatuspageMetricSinkValidationStepTests : UnitTest
     {
-        private readonly IMapper _mapper;
+        private readonly V1ConfigurationMapper _mapper;
 
         public AtlassianStatuspageMetricSinkValidationStepTests()
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            _mapper = mapperConfiguration.CreateMapper();
+            _mapper = new V1ConfigurationMapper();
         }
 
         [Fact]
