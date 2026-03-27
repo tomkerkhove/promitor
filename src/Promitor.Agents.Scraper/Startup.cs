@@ -45,7 +45,7 @@ namespace Promitor.Agents.Scraper
                 .AddAtlassianStatuspageClient(promitorUserAgent, Configuration)
                 .AddUsability()
                 .AddHttpCorrelation(options => options.UpstreamService.ExtractFromRequest = true)
-                .AddAutoMapper(typeof(V1MappingProfile).Assembly)
+                .AddSingleton<V1ConfigurationMapper>()
                 .DefineDependencies()
                 .AddValidationRules()
                 .ConfigureYamlConfiguration(Configuration)

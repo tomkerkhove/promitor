@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
 using Promitor.Core.Contracts.ResourceTypes;
@@ -31,8 +30,7 @@ namespace Promitor.Tests.Unit.Serialization.v1
 
         public V1SerializationTests()
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            var mapper = mapperConfiguration.CreateMapper();
+            var mapper = new V1ConfigurationMapper();
 
             _v1Deserializer = V1DeserializerFactory.CreateDeserializer();
             _configurationSerializer = new ConfigurationSerializer(NullLogger<ConfigurationSerializer>.Instance, mapper, _v1Deserializer);

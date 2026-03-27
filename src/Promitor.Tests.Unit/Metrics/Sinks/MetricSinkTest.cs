@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using AutoMapper;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Model;
 using Promitor.Tests.Unit.Builders.Metrics.v1;
@@ -13,8 +12,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
     {
         protected MetricsDeclarationProviderStub CreateMetricsDeclarationProvider(string metricName,  Dictionary<string, string> labels = null, Dictionary<string, string> defaultLabels = null)
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            var mapper = mapperConfiguration.CreateMapper();
+            var mapper = new V1ConfigurationMapper();
             var metricBuilder = MetricsDeclarationBuilder.WithMetadata();
 
             if (defaultLabels != null)

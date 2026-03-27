@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Scraping.Configuration.Providers;
 using Promitor.Core.Scraping.Configuration.Serialization;
+using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
 using Promitor.Tests.Unit.Serialization.v1;
 
 namespace Promitor.Tests.Unit.Stubs
@@ -10,7 +10,7 @@ namespace Promitor.Tests.Unit.Stubs
     {
         private readonly string _rawMetricsDeclaration;
 
-        public MetricsDeclarationProviderStub(string rawMetricsDeclaration, IMapper mapper) : base(null, new ConfigurationSerializer(NullLogger<ConfigurationSerializer>.Instance, mapper, V1DeserializerFactory.CreateDeserializer()))
+        public MetricsDeclarationProviderStub(string rawMetricsDeclaration, V1ConfigurationMapper mapper) : base(null, new ConfigurationSerializer(NullLogger<ConfigurationSerializer>.Instance, mapper, V1DeserializerFactory.CreateDeserializer()))
         {
             _rawMetricsDeclaration = rawMetricsDeclaration;
         }

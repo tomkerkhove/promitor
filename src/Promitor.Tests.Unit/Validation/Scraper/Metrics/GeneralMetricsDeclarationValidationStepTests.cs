@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -13,12 +12,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics
     [Category("Unit")]
     public class GeneralMetricsDeclarationValidationStepTests : UnitTest
     {
-        private readonly IMapper _mapper;
+        private readonly V1ConfigurationMapper _mapper;
 
         public GeneralMetricsDeclarationValidationStepTests()
         {
-            var mapperConfiguration = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            _mapper = mapperConfiguration.CreateMapper();
+            _mapper = new V1ConfigurationMapper();
         }
 
         [Fact]

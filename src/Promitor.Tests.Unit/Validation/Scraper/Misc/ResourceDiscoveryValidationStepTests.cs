@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using AutoMapper;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Promitor.Agents.Scraper.Configuration;
@@ -15,12 +14,11 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Misc
     [Category("Unit")]
     public class AzureLandscapeValidationStepTests : UnitTest
     {
-        private readonly IMapper _mapper;
+        private readonly V1ConfigurationMapper _mapper;
 
         public AzureLandscapeValidationStepTests()
         {
-            var config = new MapperConfiguration(c => c.AddProfile<V1MappingProfile>());
-            _mapper = config.CreateMapper();
+            _mapper = new V1ConfigurationMapper();
         }
 
         [Fact]
