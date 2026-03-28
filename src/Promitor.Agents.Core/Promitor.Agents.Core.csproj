@@ -21,7 +21,7 @@
     <PackageReference Include="Arcus.Observability.Telemetry.AspNetCore" Version="3.0.0" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Enrichers" Version="3.0.0" />
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="3.0.0" />
-    <PackageReference Include="Arcus.WebApi.Logging" Version="2.0.0" />
+    <PackageReference Include="Arcus.WebApi.Logging" Version="3.0.1" />
     <PackageReference Include="CronScheduler.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
