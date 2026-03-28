@@ -155,7 +155,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             {
                 MetricName = source.MetricName,
                 Limit = source.Limit,
-                Dimensions = source.Dimensions?.Select(MapMetricDimension).ToList(),
+                Dimensions = source.Dimensions?.Select(MapMetricDimension).ToList() ?? new List<MetricDimension>(),
 #pragma warning disable CS0618 // Type or member is obsolete
                 Dimension = MapMetricDimension(source.Dimension),
 #pragma warning restore CS0618
