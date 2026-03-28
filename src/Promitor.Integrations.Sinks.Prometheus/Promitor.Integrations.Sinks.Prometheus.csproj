@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Prometheus.Client.DependencyInjection" Version="1.5.1" />
+    <PackageReference Include="Prometheus.Client.DependencyInjection" Version="1.6.0" />
     
     <!-- Explicitly pin transitive dependencies to mitigate security vulnerabilities -->
     <PackageReference Include="System.Drawing.Common" Version="10.0.3" />
