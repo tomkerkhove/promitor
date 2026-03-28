@@ -25,9 +25,9 @@
     <PackageReference Include="CronScheduler.AspNetCore" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-    <PackageReference Include="Prometheus.Client" Version="5.2.0" />
-    <PackageReference Include="Prometheus.Client.AspNetCore" Version="5.0.0" />
-    <PackageReference Include="Prometheus.Client.HttpRequestDurations" Version="4.0.0" />
+    <PackageReference Include="Prometheus.Client" Version="6.3.0" />
+    <PackageReference Include="Prometheus.Client.AspNetCore" Version="6.0.0" />
+    <PackageReference Include="Prometheus.Client.HttpRequestDurations" Version="4.1.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
