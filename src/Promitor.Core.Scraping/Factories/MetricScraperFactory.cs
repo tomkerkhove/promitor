@@ -113,6 +113,8 @@ namespace Promitor.Core.Scraping.Factories
                     return new PostgreSqlScraper(scraperConfiguration);
                 case ResourceType.PowerBiDedicated:
                     return new PowerBiDedicatedScraper(scraperConfiguration);
+                case ResourceType.PrivateLinkService:
+                    return new PrivateLinkServiceScraper(scraperConfiguration);
                 case ResourceType.PublicIpAddress:
                     return new PublicIpAddressScraper(scraperConfiguration);
                 case ResourceType.RedisCache:

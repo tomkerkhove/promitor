@@ -824,6 +824,24 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
             return this;
         }
 
+        public MetricsDeclarationBuilder WithPrivateLinkServiceMetric(string metricName = "promitor-private-link-service",
+            string metricDescription = "Description for a metric",
+            string privateLinkServiceName = "promitor-private-link-service-name",
+            string azureMetricName = "ByteCount",
+            string resourceDiscoveryGroupName = "",
+            int? azureMetricLimit = null,
+            bool omitResource = false)
+        {
+            var resource = new PrivateLinkServiceResourceV1
+            {
+                PrivateLinkServiceName = privateLinkServiceName,
+            };
+
+            CreateAndAddMetricDefinition(ResourceType.PrivateLinkService, metricName, metricDescription, resourceDiscoveryGroupName, omitResource, azureMetricName, azureMetricLimit, resource);
+
+            return this;
+        }
+
         public MetricsDeclarationBuilder WithRedisCacheMetric(string metricName = "promitor-redis",
             string metricDescription = "Description for a metric",
             string cacheName = "promitor-redis",
