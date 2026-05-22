@@ -78,6 +78,8 @@ namespace Promitor.Agents.ResourceDiscovery.Graph
                     return new PostgreSqlDiscoveryQuery();
                 case ResourceType.PowerBiDedicated:
                     return new PowerBiDedicatedDiscoveryQuery();
+                case ResourceType.PrivateLinkService:
+                    return new PrivateLinkServiceDiscoveryQuery();
                 case ResourceType.PublicIpAddress:
                     return new PublicIpAddressDiscoveryQuery();
                 case ResourceType.RedisCache:

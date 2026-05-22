@@ -135,6 +135,9 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
                 case ResourceType.PowerBiDedicated:
                     var powerBiDedicatedLogger = _loggerFactory.CreateLogger<PowerBiDedicatedDeserializer>();
                     return new PowerBiDedicatedDeserializer(powerBiDedicatedLogger);
+                case ResourceType.PrivateLinkService:
+                    var privateLinkServiceLogger = _loggerFactory.CreateLogger<PrivateLinkServiceDeserializer>();
+                    return new PrivateLinkServiceDeserializer(privateLinkServiceLogger);
                 case ResourceType.PublicIpAddress:
                     var publicIpAddressLogger = _loggerFactory.CreateLogger<PublicIpAddressDeserializer>();
                     return new PublicIpAddressDeserializer(publicIpAddressLogger);

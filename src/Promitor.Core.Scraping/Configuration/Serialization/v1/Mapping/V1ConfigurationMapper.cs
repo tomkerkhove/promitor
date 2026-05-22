@@ -59,6 +59,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             [typeof(NetworkInterfaceResourceV1)] = (s, _) => { var r = (NetworkInterfaceResourceV1)s; return new NetworkInterfaceResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.NetworkInterfaceName); },
             [typeof(PostgreSqlResourceV1)] = (s, _) => { var r = (PostgreSqlResourceV1)s; return new PostgreSqlResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.ServerName, r.Type); },
             [typeof(PowerBiDedicatedResourceV1)] = (s, _) => { var r = (PowerBiDedicatedResourceV1)s; return new PowerBiDedicatedResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.CapacityName); },
+            [typeof(PrivateLinkServiceResourceV1)] = (s, _) => { var r = (PrivateLinkServiceResourceV1)s; return new PrivateLinkServiceResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.PrivateLinkServiceName); },
             [typeof(PublicIpAddressResourceV1)] = (s, _) => { var r = (PublicIpAddressResourceV1)s; return new PublicIpAddressResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.PublicIpAddressName); },
             [typeof(RedisCacheResourceV1)] = (s, _) => { var r = (RedisCacheResourceV1)s; return new RedisCacheResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.CacheName); },
             [typeof(RedisEnterpriseCacheResourceV1)] = (s, _) => { var r = (RedisEnterpriseCacheResourceV1)s; return new RedisEnterpriseCacheResourceDefinition(r.SubscriptionId, r.ResourceGroupName, r.CacheName); },
