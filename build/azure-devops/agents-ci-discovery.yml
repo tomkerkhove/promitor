@@ -16,15 +16,10 @@ pr:
 variables:
   - template: ./variables/build.yml
   - template: ./variables/tests.yml
-  - template: ./variables/containers.yml
   - name: Image.Name
-    value: 'promitor-agent-resource-discovery-ci'
-  - name: Image.Repository
-    value: '$(Image.Organization)/$(Image.Name)'
-  - name: Image.Name.Full
-    value: '$(Image.Registry)/$(Image.Repository)'
+    value: 'ghcr.io/tomkerkhove/promitor-agent-resource-discovery-ci'
   - name: Image.TaggedName
-    value: '$(Image.Name.Full):$(Tags.PR)'
+    value: '$(Image.Name):$(Tags.PR)'
   - name: Container.Name
     value: 'promitor-discovery-agent'
   - name: App.Version
@@ -55,7 +50,7 @@ stages:
   variables:
   - group: 'Agent Authentication'
   - name: Image.TaggedName.OSAgnostic
-    value: '$(Image.Name.Full):$(Image.Tag)'
+    value: '$(Image.Name):$(Image.Tag)'
   - name: Tags.PR
     value: '$(Image.Tag)-$(OS.Name)'
   - name: Container.Port
@@ -78,30 +73,26 @@ stages:
      variables:
        Tags.Experimental: 'experimental-$(OS.Name)'
        OS.Name: 'linux'
-       Docker.Builder.Name: 'promitor-multiarch'
      steps:
      - download: current
        artifact: variables
      - template: templates/utils/read-variable-on-linux.yml
        parameters:
         variableName: 'Image.Tag'
-     - template: templates/docker/linux-create-builder.yml
-       parameters:
-        builderName: '$(Docker.Builder.Name)'
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/docker/linux-build-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
-             builderName: '$(Docker.Builder.Name)'
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
-             tags: '--tag $(Image.TaggedName) --tag promitor-agent-resource-discovery-ci'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-resource-discovery-ci'
+             buildArgs: 'VERSION="$(App.Version)"'
+             os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/docker/linux-build-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
-             builderName: '$(Docker.Builder.Name)'
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
-             tags: '--tag $(Image.TaggedName) --tag promitor-agent-resource-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-resource-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             buildArgs: 'VERSION="$(App.Version)"'
+             os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
@@ -126,14 +117,12 @@ stages:
         agentName: 'Resource Discovery'
         url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/docker/linux-push-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
-              builderName: '$(Docker.Builder.Name)'
-              dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
-              tags: >
-                --tag $(Image.TaggedName)
-                --tag $(Image.TaggedName.OSAgnostic)
-              buildArgs: '--build-arg VERSION="$(App.Version)"'
+              imageName: '$(Image.TaggedName)'
+        - template: templates/docker/push-image.yml
+          parameters:
+              imageName: '$(Image.TaggedName.OSAgnostic)'
    - job: DockerBuildWindows
      displayName: Build Docker Image (Windows)
      condition: succeeded()
@@ -152,24 +141,19 @@ stages:
         - template: templates/versioning/determine-pr-version.yml
      - template: templates/agents/prepare-discovery-ci-config.yml
      - ${{ if not(eq(variables['Build.Reason'], 'PullRequest')) }}:
-        - template: templates/docker/windows-build-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
-             imageDisplayName: '$(Image.TaggedName)'
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
-             repository: '$(Image.Name.Full)'
-             tags: |
-               $(Tags.PR)
+             imageName: '$(Image.TaggedName)'
+             buildArgs: 'VERSION="$(App.Version)"'
+             tags: '--tag promitor-agent-resource-discovery-ci'
+             os: '$(OS.Name)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/docker/windows-build-image.yml
+        - template: templates/build-discovery-image.yml
           parameters:
-             imageDisplayName: '$(Image.TaggedName)'
-             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
-             buildArgs: '--build-arg VERSION="$(App.Version)"'
-             repository: '$(Image.Name.Full)'
-             tags: |
-               $(Tags.PR)
-               $(Image.Tag)
+             imageName: '$(Image.TaggedName)'
+             tags: '--tag promitor-agent-resource-discovery-ci --tag $(Image.TaggedName.OSAgnostic)'
+             buildArgs: 'VERSION="$(App.Version)"'
+             os: '$(OS.Name)'
      - template: templates/agents/run-discovery-image.yml
        parameters:
           imageName: '$(Image.TaggedName)'
@@ -194,8 +178,6 @@ stages:
         agentName: 'Resource Discovery'
         url: '$(Agent.ResourceDiscovery.BaseUrl)/$(Agent.ResourceDiscovery.Prometheus.ScrapeUri)'
      - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-        - template: templates/docker/windows-push-image.yml
+        - template: templates/docker/push-image.yml
           parameters:
-              imageDisplayName: '$(Image.TaggedName)'
-              repository: '$(Image.Repository)'
-              tags: '$(Tags.PR)'
+              imageName: '$(Image.TaggedName)'
