@@ -148,6 +148,7 @@ stages:
               --tag $(Image.ResourceDiscovery.Full):latest-$(OS.Name)
             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
             buildArgs: '--build-arg VERSION="$(Image.Version)"'
+            platforms: 'linux/amd64,linux/arm64'
      - ${{ if eq(parameters['releaseType'], 'Preview') }}:
         - template: templates/docker/linux-push-image.yml
           parameters:
@@ -157,6 +158,7 @@ stages:
               --tag $(Image.ResourceDiscovery.TaggedName)-$(OS.Name)
             dockerFile: './src/Promitor.Agents.ResourceDiscovery/Dockerfile.$(OS.Name)'
             buildArgs: '--build-arg VERSION="$(Image.Version)"'
+            platforms: 'linux/amd64,linux/arm64'
 - stage: BuildWindows
   dependsOn: Init
   displayName: Windows Docker image
