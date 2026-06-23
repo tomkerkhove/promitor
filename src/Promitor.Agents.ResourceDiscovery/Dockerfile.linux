@@ -14,9 +14,9 @@ COPY Promitor.Integrations.Sinks.Core/* Promitor.Integrations.Sinks.Core/
 COPY Promitor.Integrations.Sinks.Prometheus/* Promitor.Integrations.Sinks.Prometheus/
 RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDiscovery.csproj --configuration release --output /app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.28-cbl-mariner2.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.28-azurelinux3.0-distroless AS runtime-base
 
-FROM mcr.microsoft.com/cbl-mariner/base/core:2.0 AS installer
+FROM mcr.microsoft.com/azurelinux/base/core:3.0 AS installer
 
 RUN tdnf install -y fdupes \
     && tdnf clean all
@@ -25,8 +25,8 @@ COPY --from=runtime-base / /staging1
 COPY --from=runtime-base / /staging2
 
 # See https://docs.microsoft.com/en-us/dotnet/core/runtime-config/globalization
-RUN tdnf install -y --releasever=2.0 --installroot /staging2 icu \
-    && tdnf clean all --releasever=2.0 --installroot /staging2
+RUN tdnf install -y --releasever=3.0 --installroot /staging2 icu \
+    && tdnf clean all --releasever=3.0 --installroot /staging2
 
 # Prepare the staging2 directory to be copied to the final stage by removing unnecessary files
 # that will only cause extra image bloat.
