@@ -13,7 +13,7 @@
     <PackageReference Include="Microsoft.Azure.Storage.Queue" Version="11.2.3" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
     
-    <!-- Explicitly pin transitive dependencies to mitigate security vulnerabilities -->
+    <!-- Explicitly pin transitive dependencies to mitigate security vulnerabilities. -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
 </ItemGroup>
