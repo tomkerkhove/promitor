@@ -41,9 +41,16 @@ namespace Promitor.Integrations.Sinks.Statsd
 
             var reportMetricTasks = new List<Task>();
             var formatterType = _statsDConfiguration.CurrentValue?.MetricFormat ?? StatsdFormatterTypesEnum.Default;
+            var dropMetricsWithNoValue = _statsDConfiguration.CurrentValue?.DropMetricsWithNoValue ?? false;
 
             foreach (var measuredMetric in scrapeResult.MetricValues)
             {
+                if (measuredMetric.Value == null && dropMetricsWithNoValue)
+                {
+                    Logger.LogTrace("Metric {MetricName} has no value and is not written to StatsD as configured", metricName);
+                    continue;
+                }
+
                 var metricValue = measuredMetric.Value ?? 0;
 
                 var metricLabels = DetermineLabels(metricName, scrapeResult, measuredMetric);

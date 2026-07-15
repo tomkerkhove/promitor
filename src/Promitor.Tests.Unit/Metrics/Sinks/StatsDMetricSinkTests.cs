@@ -118,6 +118,49 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
         }
 
         [Fact]
+        public async Task ReportMetricAsync_GetsInputWithoutMetricValueAndDropIsConfigured_DoesNotWriteMetric()
+        {
+            // Arrange
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            double? metricValue = null;
+            // ReSharper disable once ExpressionIsAlwaysNull
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
+            var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
+            var statsDPublisherMock = new Mock<IStatsDPublisher>();
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var statsDSinkConfiguration = CreateStatsDConfiguration(dropMetricsWithNoValue: true);
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, metricsDeclarationProvider, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
+
+            // Act
+            await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
+
+            // Assert
+            statsDPublisherMock.Verify(mock => mock.Gauge(It.IsAny<double>(), It.IsAny<string>()), Times.Never());
+        }
+
+        [Fact]
+        public async Task ReportMetricAsync_GetsInputWithMetricValueAndDropIsConfigured_SuccessfullyWritesMetric()
+        {
+            // Arrange
+            var metricName = BogusGenerator.Name.FirstName();
+            var metricDescription = BogusGenerator.Lorem.Sentence();
+            var metricValue = BogusGenerator.Random.Double();
+            var measuredMetric = MeasuredMetric.CreateWithoutDimensions(metricValue);
+            var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
+            var statsDPublisherMock = new Mock<IStatsDPublisher>();
+            var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
+            var statsDSinkConfiguration = CreateStatsDConfiguration(dropMetricsWithNoValue: true);
+            var metricSink = new StatsdMetricSink(statsDPublisherMock.Object, metricsDeclarationProvider, statsDSinkConfiguration, NullLogger<StatsdMetricSink>.Instance);
+
+            // Act
+            await metricSink.ReportMetricAsync(metricName, metricDescription, scrapeResult);
+
+            // Assert
+            statsDPublisherMock.Verify(mock => mock.Gauge(metricValue, metricName), Times.Once());
+        }
+
+        [Fact]
         public async Task ReportMetricAsync_InputDoesNotContainGenevaSettingsUsingGenevaFormat_ThrowsException()
         {
             // Arrange
@@ -175,12 +218,14 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
 
         private IOptionsMonitor<StatsdSinkConfiguration> CreateStatsDConfiguration(
             StatsdFormatterTypesEnum formatterType = StatsdFormatterTypesEnum.Default,
-            GenevaConfiguration geneva = null)
+            GenevaConfiguration geneva = null,
+            bool dropMetricsWithNoValue = false)
         {
             var statsDConfiguration = new StatsdSinkConfiguration
             {   
                 MetricFormat = formatterType,
-                Geneva = geneva
+                Geneva = geneva,
+                DropMetricsWithNoValue = dropMetricsWithNoValue
             };
 
             return new OptionsMonitorStub<StatsdSinkConfiguration>(statsDConfiguration);
