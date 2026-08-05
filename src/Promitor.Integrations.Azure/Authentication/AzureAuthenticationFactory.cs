@@ -94,7 +94,6 @@ namespace Promitor.Integrations.Azure.Authentication
                     tokenCredential = new ManagedIdentityCredential(options:tokenCredentialOptions);
                     break;
                 default:
-                    // Without the authority host, DefaultAzureCredential falls back to public Azure and cannot authenticate against sovereign clouds.
                     tokenCredential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { AuthorityHost = azureAuthorityHost });
                     break;
             }
