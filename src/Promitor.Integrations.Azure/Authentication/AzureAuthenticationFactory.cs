@@ -94,7 +94,7 @@ namespace Promitor.Integrations.Azure.Authentication
                     tokenCredential = new ManagedIdentityCredential(options:tokenCredentialOptions);
                     break;
                 default:
-                    tokenCredential = new DefaultAzureCredential();
+                    tokenCredential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { AuthorityHost = azureAuthorityHost });
                     break;
             }
 

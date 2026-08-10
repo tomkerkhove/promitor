@@ -8,8 +8,10 @@ version:
 
 - {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
 - {{% tag added %}} Provide support for Private Link Service ([docs](https://docs.promitor.io/scraping/providers/private-link-service/))
+- {{% tag fixed %}} Use the configured Azure authority host when authenticating with `SdkDefault`
 
 #### Resource Discovery
 
 - {{% tag added %}} Provide support for DocumentDB MongoCluster ([docs](https://docs.promitor.io/scraping/providers/mongo-cluster/))
 - {{% tag added %}} Provide support for Private Link Service ([docs](https://docs.promitor.io/scraping/providers/private-link-service/))
+- {{% tag fixed %}} Use the configured Azure authority host when authenticating with `SdkDefault`

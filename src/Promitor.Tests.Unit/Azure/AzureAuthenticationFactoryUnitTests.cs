@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Security.Authentication;
+using Azure.Identity;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Authentication;
 using Microsoft.Extensions.Configuration;
@@ -422,6 +423,30 @@ namespace Promitor.Tests.Unit.Azure
             Assert.Equal(expectedTenantId, azureCredentials.TenantId);
             Assert.Equal(expectedIdentityId, azureCredentials.ClientId);
             Assert.Equal(azureCloud, azureCredentials.Environment);
+        }
+
+        [Theory]
+        [InlineData(AuthenticationMode.ServicePrincipal, typeof(ClientSecretCredential))]
+        [InlineData(AuthenticationMode.UserAssignedManagedIdentity, typeof(ManagedIdentityCredential))]
+        [InlineData(AuthenticationMode.SystemAssignedManagedIdentity, typeof(ManagedIdentityCredential))]
+        [InlineData(AuthenticationMode.SdkDefault, typeof(DefaultAzureCredential))]
+        public void GetTokenCredential_ForEveryAuthenticationMode_ProvidesCredentialForSovereignAuthorityHost(AuthenticationMode authenticationMode, Type expectedCredentialType)
+        {
+            // Arrange
+            var sovereignAuthorityHost = new Uri("https://login.sovcloud-identity.fr");
+            var azureAuthenticationInfo = new AzureAuthenticationInfo
+            {
+                Mode = authenticationMode,
+                IdentityId = Guid.NewGuid().ToString(),
+                Secret = Guid.NewGuid().ToString()
+            };
+
+            // Act
+            var tokenCredential = AzureAuthenticationFactory.GetTokenCredential("https://management.sovcloud-api.fr", Guid.NewGuid().ToString(), azureAuthenticationInfo, sovereignAuthorityHost);
+
+            // Assert
+            Assert.NotNull(tokenCredential);
+            Assert.IsType(expectedCredentialType, tokenCredential);
         }
 
         [Fact]
