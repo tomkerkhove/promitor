@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <RuntimeFrameworkVersion>8.0.28</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.29</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -23,7 +23,7 @@
     
     <!-- Explicitly pin transitive dependencies to mitigate security vulnerabilities -->
     <PackageReference Include="System.Drawing.Common" Version="10.0.3" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.7" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.10" />
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
