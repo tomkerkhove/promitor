@@ -18,7 +18,7 @@ COPY Promitor.Integrations.Sinks.Statsd/* Promitor.Integrations.Sinks.Statsd/
 COPY Promitor.Agents.Scraper/* Promitor.Agents.Scraper/
 RUN dotnet publish Promitor.Agents.Scraper/Promitor.Agents.Scraper.csproj --configuration release --output app /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.28-azurelinux3.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.29-azurelinux3.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/azurelinux/base/core:3.0 AS installer
 
