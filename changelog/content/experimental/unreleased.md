@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- {{% tag changed %}} Migrate to .NET 10
 
 #### Resource Discovery
 
-None.
+- {{% tag changed %}} Migrate to .NET 10
