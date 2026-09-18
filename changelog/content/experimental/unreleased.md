@@ -6,8 +6,8 @@ version:
 
 #### Scraper
 
-None.
+- Linux container images are published for both `amd64` and `arm64`.
 
 #### Resource Discovery
 
-None.
+- Linux container images are published for both `amd64` and `arm64`.

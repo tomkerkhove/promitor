@@ -1,5 +1,17 @@
 variables:
-- name: Image.Scraper.Name
-  value: 'ghcr.io/tomkerkhove/promitor-agent-scraper'
-- name: Image.ResourceDiscovery.Name
-  value: 'ghcr.io/tomkerkhove/promitor-agent-resource-discovery'
+  - name: Image.Registry
+    value: 'ghcr.io'
+  - name: Image.Organization
+    value: 'tomkerkhove'
+  - name: Image.Scraper.Name
+    value: 'promitor-agent-scraper'
+  - name: Image.ResourceDiscovery.Name
+    value: 'promitor-agent-resource-discovery'
+  - name: Image.Scraper.Repository
+    value: '$(Image.Organization)/$(Image.Scraper.Name)'
+  - name: Image.ResourceDiscovery.Repository
+    value: '$(Image.Organization)/$(Image.ResourceDiscovery.Name)'
+  - name: Image.Scraper.Full
+    value: '$(Image.Registry)/$(Image.Scraper.Repository)'
+  - name: Image.ResourceDiscovery.Full
+    value: '$(Image.Registry)/$(Image.ResourceDiscovery.Repository)'
