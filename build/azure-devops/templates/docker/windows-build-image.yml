@@ -1,0 +1,29 @@
+parameters:
+  - name: imageDisplayName
+    type: string
+  - name: dockerFile
+    type: string
+  - name: buildArgs
+    type: string
+    default: ''
+  - name: repository
+    type: string
+    default: ''
+  - name: tags
+    type: string
+    default: ''
+  - name: buildContext
+    type: string
+    default: './src/'
+
+steps:
+  - task: Docker@2
+    displayName: 'Build ${{ parameters.imageDisplayName }} image (windows)'
+    inputs:
+      command: 'build'
+      Dockerfile: ${{ parameters.dockerFile }}
+      arguments: '${{ parameters.buildArgs }} --no-cache'
+      buildContext: ${{ parameters.buildContext }}
+      repository: ${{ parameters.repository }}
+      tags: ${{ parameters.tags }}
+      addDefaultLabels: false
