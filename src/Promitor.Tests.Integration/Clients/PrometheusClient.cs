@@ -67,10 +67,11 @@ namespace Promitor.Tests.Integration.Clients
         {
             // Create retry to poll for metric to show up
             const int maxRetries = 10;
-            var pollPolicy = Policy.HandleResult<List<IMetric>>(metrics => metrics?.Find(x => filter((Gauge)x)) == null)
+            var pollPolicy = Policy<List<IMetric>>.Handle<HttpRequestException>()
+                                   .OrResult(metrics => metrics?.Find(x => filter((Gauge)x)) == null)
                                    .WaitAndRetryAsync(maxRetries,
                                                   retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                                                  (_, _, retryCount, _) =>
+                                                      (_, _, retryCount, _) =>
                                                   {
                                                       Logger.LogInformation($"Metric was not found, retrying ({retryCount}/{maxRetries}).");
                                                   });

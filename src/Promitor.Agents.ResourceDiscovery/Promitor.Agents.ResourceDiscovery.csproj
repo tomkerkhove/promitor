@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
-    <RuntimeFrameworkVersion>8.0.29</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>10.0.12</RuntimeFrameworkVersion>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DocumentationFile>Docs\Open-Api.xml</DocumentationFile>
     <UserSecretsId>159d036b-3697-40d4-bdc4-7d9736521375</UserSecretsId>
