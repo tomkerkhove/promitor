@@ -7,7 +7,9 @@ version:
 #### Scraper
 
 - {{% tag changed %}} Migrate to .NET 10
+- {{% tag added %}} Linux container images are published for both `amd64` and `arm64`.
 
 #### Resource Discovery
 
 - {{% tag changed %}} Migrate to .NET 10
+- {{% tag added %}} Linux container images are published for both `amd64` and `arm64`.
