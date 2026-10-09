@@ -10,4 +10,5 @@ version:
 
 #### Resource Discovery
 
+- {{% tag added %}} Provide support for Azure Blob Storage (`BlobStorage`)
 - {{% tag changed %}} Migrate to .NET 10
