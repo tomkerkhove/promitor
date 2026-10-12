@@ -1,0 +1,49 @@
+parameters:
+  - name: builderName
+    type: string
+  - name: tags
+    type: string
+  - name: dockerFile
+    type: string
+  - name: buildArgs
+    type: string
+    default: ''
+  - name: buildContext
+    type: string
+    default: './src/'
+
+steps:
+
+  - task: Docker@2
+    displayName: 'Login to GitHub Container Registry'
+    inputs:
+      command: login
+      containerRegistry: 'GitHub Container Registry'
+
+  - bash: |
+      set -euo pipefail
+
+      # Ensure builder is available
+      docker buildx inspect $BUILDER_NAME --bootstrap || {
+        echo "Builder $BUILDER_NAME not available, recreating..."
+        docker run --privileged --rm tonistiigi/binfmt --install arm64
+        docker buildx create --name $BUILDER_NAME --driver docker-container --use --bootstrap
+      }
+
+      # Build and push with cache enabled to reuse builds if available
+      docker buildx build \
+        --builder $BUILDER_NAME \
+        --platform linux/amd64,linux/arm64 \
+        $TAGS \
+        $BUILD_ARGS \
+        --file "$DOCKERFILE" \
+        --push \
+        "$BUILD_CONTEXT"
+
+    env:
+      TAGS: ${{ parameters.tags }}
+      BUILD_ARGS: ${{ parameters.buildArgs }}
+      DOCKERFILE: ${{ parameters.dockerFile }}
+      BUILD_CONTEXT: ${{ parameters.buildContext }}
+      BUILDER_NAME: ${{ parameters.builderName }}
+    displayName: 'Build and push multi-platform images (linux/amd64,linux/arm64)'

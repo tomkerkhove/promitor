@@ -1,0 +1,13 @@
+parameters:
+  - name: builderName
+    type: string
+
+
+steps:
+  - bash: |
+      set -euo pipefail
+      docker run --privileged --rm tonistiigi/binfmt --install arm64,amd64
+      docker buildx create --name $BUILDER_NAME --driver docker-container --use --bootstrap 2>/dev/null || docker buildx use $BUILDER_NAME
+    env:
+      BUILDER_NAME: ${{ parameters.builderName }}
+    displayName: 'Setup buildx for multi-platform builds (linux/amd64,linux/arm64)'

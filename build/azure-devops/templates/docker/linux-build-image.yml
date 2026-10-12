@@ -1,0 +1,58 @@
+parameters:
+  - name: builderName
+    type: string
+  - name: tags
+    type: string
+  - name: dockerFile
+    type: string
+  - name: buildArgs
+    type: string
+    default: ''
+  - name: platforms
+    type: string
+    default: 'linux/amd64,linux/arm64'
+  - name: buildContext
+    type: string
+    default: './src/'
+
+steps:
+
+  - bash: |
+      set -euo pipefail
+
+      docker buildx build \
+        --builder $BUILDER_NAME \
+        --platform $PLATFORMS \
+        $TAGS \
+        $BUILD_ARGS \
+        --file "$DOCKERFILE" \
+        --no-cache \
+        "$BUILD_CONTEXT"
+    env:
+      BUILDER_NAME: ${{ parameters.builderName }}
+      PLATFORMS: ${{ parameters.platforms }}
+      TAGS: ${{ parameters.tags }}
+      BUILD_ARGS: ${{ parameters.buildArgs }}
+      DOCKERFILE: ${{ parameters.dockerFile }}
+      BUILD_CONTEXT: ${{ parameters.buildContext }}
+    displayName: 'Build multi-platform images (${{ parameters.platforms }})'
+
+  - bash: |
+      set -euo pipefail
+
+      # Load amd64 image for integration testing
+      docker buildx build \
+        --builder $BUILDER_NAME \
+        --platform linux/amd64 \
+        $TAGS \
+        $BUILD_ARGS \
+        --file "$DOCKERFILE" \
+        --load \
+        "$BUILD_CONTEXT"
+    env:
+      BUILDER_NAME: ${{ parameters.builderName }}
+      TAGS: ${{ parameters.tags }}
+      BUILD_ARGS: ${{ parameters.buildArgs }}
+      DOCKERFILE: ${{ parameters.dockerFile }}
+      BUILD_CONTEXT: ${{ parameters.buildContext }}
+    displayName: 'Load amd64 image for integration testing'

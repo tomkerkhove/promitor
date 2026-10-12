@@ -1,0 +1,18 @@
+parameters:
+  - name: imageDisplayName
+    type: string
+    default: ''
+  - name: repository
+    type: string
+  - name: tags
+    type: string
+
+steps:
+
+  - task: Docker@2
+    displayName: 'Pushing image ${{ parameters.imageDisplayName }}'
+    inputs:
+      containerRegistry: 'GitHub Container Registry'
+      command: 'push'
+      repository: '${{ parameters.repository }}'
+      tags: '${{ parameters.tags }}'
