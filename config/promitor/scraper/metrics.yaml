@@ -89,6 +89,15 @@ metrics:
         type: Average
     resourceDiscoveryGroups:
       - name: storage-accounts
+  - name: azure_storage_blob_count_discovery
+    description: "The number of blobs stored in the storage account"
+    resourceType: BlobStorage
+    azureMetricConfiguration:
+      metricName: BlobCount
+      aggregation:
+        type: Average
+    resourceDiscoveryGroups:
+      - name: blob-storage
   - name: azure_sql_database_cpu_percent_discovery
     description: "The CPU percentage used by an Azure SQL Database."
     resourceType: SqlDatabase
