@@ -17,6 +17,8 @@ resourceDiscoveryGroups:
   type: AutomationAccount
 - name: azure-firewall
   type: AzureFirewall
+- name: blob-storage
+  type: BlobStorage
 - name: cdn-landscape
   type: Cdn
 - name: cognitive-services-account
