@@ -202,7 +202,7 @@ namespace Promitor.Integrations.AzureMonitor
             var measuredMetrics = new List<MeasuredMetric>();
             foreach (var timeseries in seriesForMetric)
             {
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, queryEndTime);
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, metricResult.Id, timeseries, queryEndTime);
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsMetricAggregationType(aggregationType), mostRecentMetricValue);
@@ -268,7 +268,7 @@ namespace Promitor.Integrations.AzureMonitor
             return MetricTimeGrainSelector.DetermineQueryEndTime(DateTime.UtcNow, aggregationOffset, historyWindow);
         }
 
-        private MetricValue GetMostRecentMetricValue(string metricName, MetricTimeSeriesElement timeSeries, DateTime queryEndTime)
+        private MetricValue GetMostRecentMetricValue(string metricName, string metricId, MetricTimeSeriesElement timeSeries, DateTime queryEndTime)
         {
             var relevantMetricValue = MetricTimeGrainSelector.SelectMostRecent(timeSeries.Values, metricValue => metricValue.TimeStamp, queryEndTime);
 
@@ -277,7 +277,7 @@ namespace Promitor.Integrations.AzureMonitor
                 throw new MetricInformationNotFoundException(metricName, $"No time series entry was found recorded before {queryEndTime}");
             }
 
-            _logger.LogDebug("Using time grain {TimeStamp} for metric {MetricName} with query end time {QueryEndTime}", relevantMetricValue.TimeStamp, metricName, queryEndTime);
+            _logger.LogDebug("Using time grain {TimeStamp} for metric {MetricId} with query end time {QueryEndTime}", relevantMetricValue.TimeStamp.ToString("o"), metricId, queryEndTime.ToString("o"));
 
             return relevantMetricValue;
         }
