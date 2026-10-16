@@ -140,7 +140,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
         }
 
         public Aggregation MapAggregation(AggregationV1 source)
-            => source == null ? null : new Aggregation { Interval = source.Interval };
+            => source == null ? null : new Aggregation { Interval = source.Interval, Offset = source.Offset };
 
         public ScrapingModel MapScraping(ScrapingV1 source)
             => source == null ? null : new ScrapingModel { Schedule = source.Schedule };
@@ -182,6 +182,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping
             return new MetricAggregation
             {
                 Interval = source.Interval,
+                Offset = source.Offset,
                 Type = source.Type.GetValueOrDefault()
             };
         }

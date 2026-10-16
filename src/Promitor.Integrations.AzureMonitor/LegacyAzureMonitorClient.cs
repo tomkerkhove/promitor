@@ -66,7 +66,7 @@ namespace Promitor.Integrations.AzureMonitor
         }
 
         public Task<List<ResourceAssociatedMeasuredMetric>> BatchQueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
-            List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
+            List<string >resourceIds, string metricFilter = null, int? metricLimit = null, TimeSpan? aggregationOffset = null) 
         {
             throw new NotSupportedException("Legacy SDK does not support batch queries. Consider migrating to the new Azure.Monitor SDK instead");
         }    
@@ -81,15 +81,17 @@ namespace Promitor.Integrations.AzureMonitor
         /// <param name="resourceId">Id of the resource to query</param>
         /// <param name="metricFilter">Optional filter to filter out metrics</param>
         /// <param name="metricLimit">Limit of resources to query metrics for when using filtering</param>
+        /// <param name="aggregationOffset">How far behind the most recent time grain the value should be read from</param>
         /// <returns>Latest representation of the metric</returns>
         public async Task<List<MeasuredMetric>> QueryMetricAsync(string metricName, List<string> metricDimensions, PromitorMetricAggregationType aggregationType, TimeSpan aggregationInterval,
-            string resourceId, string metricFilter = null, int? metricLimit = null)
+            string resourceId, string metricFilter = null, int? metricLimit = null, TimeSpan? aggregationOffset = null)
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
             Guard.NotNullOrWhitespace(resourceId, nameof(resourceId));
 
             // Get all metrics
-            var startQueryingTime = DateTime.UtcNow;
+            var historyWindow = _azureMonitorIntegrationConfiguration.Value.History.ResolveEffectiveStartingFrom();
+            var queryEndTime = MetricTimeGrainSelector.DetermineQueryEndTime(DateTime.UtcNow, aggregationOffset, historyWindow);
             var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId);
             var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.Value.ToUpper() == metricName.ToUpper());
             if (metricDefinition == null)
@@ -100,7 +102,7 @@ namespace Promitor.Integrations.AzureMonitor
             var closestAggregationInterval = DetermineAggregationInterval(metricName, aggregationInterval, metricDefinition.MetricAvailabilities);
 
             // Get the most recent metric
-            var relevantMetric = await GetRelevantMetric(metricName, MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, startQueryingTime);
+            var relevantMetric = await GetRelevantMetric(metricName, MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), closestAggregationInterval, metricFilter, metricDimensions, metricDefinition, metricLimit, queryEndTime);
             if (relevantMetric.Timeseries.Count < 1)
             {
                 throw new MetricInformationNotFoundException(metricName, "No time series was found", metricDimensions);
@@ -109,11 +111,7 @@ namespace Promitor.Integrations.AzureMonitor
             var measuredMetrics = new List<MeasuredMetric>();
             foreach (var timeseries in relevantMetric.Timeseries)
             {
-                // Get the most recent value for that metric, that has a finished time series
-                // We need to shift the time to ensure that the time series is finalized and not report invalid values
-                var maxTimeSeriesTime = startQueryingTime.AddMinutes(closestAggregationInterval.TotalMinutes);
-
-                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, maxTimeSeriesTime);
+                var mostRecentMetricValue = GetMostRecentMetricValue(metricName, timeseries, queryEndTime);
 
                 // Get the metric value according to the requested aggregation type
                 var requestedMetricAggregate = InterpretMetricValue(MetricAggregationTypeConverter.AsLegacyAggregationType(aggregationType), mostRecentMetricValue);
@@ -204,14 +202,13 @@ namespace Promitor.Integrations.AzureMonitor
             return relevantMetric;
         }
 
-        private MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime recordDateTime)
+        private static MetricValue GetMostRecentMetricValue(string metricName, TimeSeriesElement timeSeries, DateTime queryEndTime)
         {
-            var relevantMetricValue = timeSeries.Data.Where(metricValue => metricValue.TimeStamp < recordDateTime)
-                                                     .MaxBy(metricValue => metricValue.TimeStamp);
+            var relevantMetricValue = MetricTimeGrainSelector.SelectMostRecent(timeSeries.Data, metricValue => new DateTimeOffset(DateTime.SpecifyKind(metricValue.TimeStamp, DateTimeKind.Utc)), queryEndTime);
 
             if (relevantMetricValue == null)
             {
-                throw new MetricInformationNotFoundException(metricName, $"No time series entry was found recorded before {recordDateTime}");
+                throw new MetricInformationNotFoundException(metricName, $"No time series entry was found recorded before {queryEndTime}");
             }
 
             return relevantMetricValue;
