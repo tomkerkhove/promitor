@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Agents.Scraper.Validation.Steps;
 using Promitor.Core.Scraping.Configuration.Serialization.v1.Mapping;
@@ -170,6 +171,47 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics
 
             // Assert
             PromitorAssert.ValidationFailed(validationResult);
+        }
+
+        [Theory]
+        [InlineData("00:05:00", "00:10:00", true)]
+        [InlineData("00:01:00", "00:02:00", true)]
+        [InlineData("00:05:00", "00:07:00", false)]
+        [InlineData("00:05:00", "-00:05:00", false)]
+        public void MetricsDeclaration_WithDefaultAggregationOffset_ValidatesOffset(string interval, string offset, bool isValid)
+        {
+            // Arrange
+            var metricDefaults = new MetricDefaultsV1
+            {
+                Scraping = new ScrapingV1
+                {
+                    Schedule = @"0 * * ? * *"
+                },
+                Aggregation = new AggregationV1
+                {
+                    Interval = TimeSpan.Parse(interval),
+                    Offset = TimeSpan.Parse(offset)
+                }
+            };
+            var rawDeclaration = MetricsDeclarationBuilder.WithMetadata()
+                .WithDefaults(metricDefaults)
+                .WithServiceBusMetric()
+                .Build(_mapper);
+            var metricsDeclarationProvider = new MetricsDeclarationProviderStub(rawDeclaration, _mapper);
+
+            // Act
+            var scrapingScheduleValidationStep = new MetricsDeclarationValidationStep(metricsDeclarationProvider, NullLogger<MetricsDeclarationValidationStep>.Instance);
+            var validationResult = scrapingScheduleValidationStep.Run();
+
+            // Assert
+            if (isValid)
+            {
+                PromitorAssert.ValidationIsSuccessful(validationResult);
+            }
+            else
+            {
+                PromitorAssert.ValidationFailed(validationResult);
+            }
         }
     }
 }

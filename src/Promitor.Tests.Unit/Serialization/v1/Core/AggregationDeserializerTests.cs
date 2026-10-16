@@ -44,5 +44,32 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 TimeSpan.FromMinutes(5),
                 a => a.Interval);
         }
+
+        [Fact]
+        public void Deserialize_OffsetSupplied_SetsOffset()
+        {
+            const string yamlText =
+@"aggregation:
+    offset: 00:15:00";
+            YamlAssert.PropertySet(
+                _deserializer,
+                yamlText,
+                "aggregation",
+                TimeSpan.FromMinutes(15),
+                a => a.Offset);
+        }
+
+        [Fact]
+        public void Deserialize_OffsetNotSupplied_Null()
+        {
+            const string yamlText =
+@"aggregation:
+    interval: 00:05:00";
+            YamlAssert.PropertyNull(
+                _deserializer,
+                yamlText,
+                "aggregation",
+                a => a.Offset);
+        }
     }
 }

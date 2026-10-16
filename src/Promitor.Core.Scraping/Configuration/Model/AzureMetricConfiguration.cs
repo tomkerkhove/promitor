@@ -77,6 +77,12 @@ namespace Promitor.Core.Scraping.Configuration.Model
                     sb.Append("_interval");
                     sb.Append(Aggregation.Interval.Value.ToString("c"));
                 }
+
+                if (Aggregation.Offset.HasValue && Aggregation.Offset.Value != TimeSpan.Zero)
+                {
+                    sb.Append("_offset");
+                    sb.Append(Aggregation.Offset.Value.ToString("c"));
+                }
             }
 
             return sb.ToString();

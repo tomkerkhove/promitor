@@ -12,6 +12,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
         {
             Map(aggregation => aggregation.Interval)
                 .WithDefault(defaultAggregationInterval);
+            Map(aggregation => aggregation.Offset);
         }
     }
 }

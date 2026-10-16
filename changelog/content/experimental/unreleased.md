@@ -8,6 +8,8 @@ version:
 
 - {{% tag changed %}} Migrate to .NET 10
 - {{% tag added %}} Linux container images are published for both `amd64` and `arm64`.
+- {{% tag added %}} Azure Monitor Scraper: support `aggregation.offset` to read an older time grain and tolerate
+  Azure Monitor ingestion delays
 
 #### Resource Discovery
 
