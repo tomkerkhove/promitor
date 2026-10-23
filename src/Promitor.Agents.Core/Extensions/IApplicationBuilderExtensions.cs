@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Prometheus.Client.AspNetCore;
 using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Core.Middleware;
@@ -35,9 +35,6 @@ namespace Microsoft.AspNetCore.Builder
                 prometheusOptions.MapPath = baseUriPath;
                 prometheusOptions.UseDefaultCollectors = true;
                 prometheusOptions.MetricPrefixName = "promitor_runtime_";
-#pragma warning disable CS0618
-                prometheusOptions.AddLegacyMetrics = true;
-#pragma warning restore CS0618
             });
 
             return app;
