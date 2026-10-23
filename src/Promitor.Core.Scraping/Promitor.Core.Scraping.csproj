@@ -18,7 +18,7 @@
     <PackageReference Include="Fastenshtein" Version="1.0.12" />
     <PackageReference Include="Cronos" Version="0.13.0" />
     <PackageReference Include="Guard.Net" Version="4.0.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="3.2.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
     
