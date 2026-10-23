@@ -55,7 +55,7 @@ namespace Promitor.Agents.Core.Validation
                 validationResults.Add(validationResult);
             }
 
-            AnsiConsole.Render(asciiTable);
+            AnsiConsole.Write(asciiTable);
 
             return validationResults;
         }

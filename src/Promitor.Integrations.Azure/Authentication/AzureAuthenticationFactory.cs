@@ -88,10 +88,17 @@ namespace Promitor.Integrations.Azure.Authentication
                     break;
                 case AuthenticationMode.UserAssignedManagedIdentity:
                     var clientId = authenticationInfo.GetIdentityIdOrDefault();
-                    tokenCredential = new ManagedIdentityCredential(clientId, tokenCredentialOptions);
+                    tokenCredential = new ManagedIdentityCredential(
+                        new ManagedIdentityCredentialOptions(ManagedIdentityId.FromUserAssignedClientId(clientId))
+                        {
+                            AuthorityHost = azureAuthorityHost
+                        });
                     break;
                 case AuthenticationMode.SystemAssignedManagedIdentity:
-                    tokenCredential = new ManagedIdentityCredential(options:tokenCredentialOptions);
+                    tokenCredential = new ManagedIdentityCredential(new ManagedIdentityCredentialOptions
+                    {
+                        AuthorityHost = azureAuthorityHost
+                    });
                     break;
                 default:
                     tokenCredential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { AuthorityHost = azureAuthorityHost });

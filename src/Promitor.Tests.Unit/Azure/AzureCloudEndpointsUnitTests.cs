@@ -136,7 +136,7 @@ namespace Promitor.Tests.Unit.Azure
         {
             // Arrange
             var cloudEndpoint = new TestCloudEndpoints(AzureCloud.Germany, null);
-            var expectedAuthorityHost = AzureAuthorityHosts.AzureGermany;
+            var expectedAuthorityHost = new Uri("https://login.microsoftonline.de");
 
             // Act
             var actualAuthorityHost = cloudEndpoint.GetAzureAuthorityHost();
