@@ -90,7 +90,7 @@ namespace Promitor.Core.Extensions
                 case AzureCloud.China:
                     return AzureAuthorityHosts.AzureChina;
                 case AzureCloud.Germany:
-                    return new Uri("https://login.microsoftonline.de");
+                    return AzureAuthorityHosts.AzureGermany;
                 case AzureCloud.UsGov:
                     return AzureAuthorityHosts.AzureGovernment;
                 case AzureCloud.Custom:
