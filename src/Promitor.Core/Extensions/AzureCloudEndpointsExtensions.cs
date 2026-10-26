@@ -90,7 +90,10 @@ namespace Promitor.Core.Extensions
                 case AzureCloud.China:
                     return AzureAuthorityHosts.AzureChina;
                 case AzureCloud.Germany:
+                    // Preserve existing configuration behavior for the retired Germany cloud.
+#pragma warning disable CS0618
                     return AzureAuthorityHosts.AzureGermany;
+#pragma warning restore CS0618
                 case AzureCloud.UsGov:
                     return AzureAuthorityHosts.AzureGovernment;
                 case AzureCloud.Custom:

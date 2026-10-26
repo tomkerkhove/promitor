@@ -21,6 +21,7 @@ namespace Promitor.Tests.Unit.Agents.Core
         public async Task Scrape_RuntimeMetrics_PreservesExistingNamesAndValues()
         {
             using var host = new HostBuilder()
+                .ConfigureServices(services => services.AddHttpClient())
                 .ConfigureWebHost(webHost => webHost
                     .UseKestrel(options => options.Listen(IPAddress.Loopback, 0))
                     .Configure(app => app.UsePrometheusMetrics("/metrics", NullLogger.Instance)))
@@ -31,7 +32,7 @@ namespace Promitor.Tests.Unit.Agents.Core
             {
                 var address = host.Services.GetRequiredService<IServer>()
                     .Features.Get<IServerAddressesFeature>().Addresses.Single();
-                using var client = new HttpClient();
+                using var client = host.Services.GetRequiredService<IHttpClientFactory>().CreateClient();
                 var response = await client.GetStringAsync(new Uri(new Uri(address), "/metrics"));
                 var lines = response.Split('\n');
                 var expectedMetricNames = new[]
