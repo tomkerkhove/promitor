@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Prometheus.Client.AspNetCore;
 using Prometheus.Client.HttpRequestDurations;
 using Promitor.Agents.Core.Middleware;
