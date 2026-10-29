@@ -21,7 +21,7 @@ RUN dotnet publish Promitor.Agents.ResourceDiscovery/Promitor.Agents.ResourceDis
     --arch $TARGETARCH \
     /p:Version=$VERSION
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0.13-azurelinux3.0-distroless AS runtime-base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0.14-azurelinux3.0-distroless AS runtime-base
 
 FROM mcr.microsoft.com/azurelinux/base/core:3.0 AS installer
 RUN tdnf install -y fdupes \
