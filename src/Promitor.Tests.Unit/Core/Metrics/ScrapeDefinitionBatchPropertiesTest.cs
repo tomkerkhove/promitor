@@ -77,6 +77,22 @@ namespace Promitor.Tests.Unit.Core.Metrics
         }
 
         [Fact]
+        public void BuildBatchHashKeyDifferentResultDifferentAggregationOffset()
+        {
+            var azureMetricConfiguration1 = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            azureMetricConfiguration1.Aggregation.Offset = TimeSpan.FromMinutes(10);
+            var azureMetricConfiguration2 = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
+            var logAnalyticsConfiguration = _mapper.MapLogAnalyticsConfiguration(logAnalyticsConfigurationBase);
+
+            var scraping = _mapper.MapScraping(scrapingBase);
+
+            var batchProperties = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration1, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+            var batchProperties2 = new ScrapeDefinitionBatchProperties(azureMetricConfiguration: azureMetricConfiguration2, logAnalyticsConfiguration: logAnalyticsConfiguration, prometheusMetricDefinition: prometheusMetricDefinition, resourceType: Promitor.Core.Contracts.ResourceType.StorageAccount, scraping: scraping, subscriptionId: subscriptionId);
+
+            Assert.NotEqual(batchProperties.GetHashCode(), batchProperties2.GetHashCode());
+        }
+
+        [Fact]
         public void BuildBatchHashKeyDifferentResultDifferentDimensions()
         {
             var azureMetricConfiguration1 = _mapper.MapAzureMetricConfiguration(azureMetricConfigurationBase);
