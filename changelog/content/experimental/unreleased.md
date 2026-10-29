@@ -13,6 +13,7 @@ version:
 
 #### Resource Discovery
 
+- {{% tag added %}} Provide support for Azure Blob Storage (`BlobStorage`)
 - {{% tag changed %}} Migrate to .NET 10
 - {{% tag changed %}} Update .NET runtime to 10.0.14
 - {{% tag changed %}} Update NuGet dependencies
