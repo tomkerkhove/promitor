@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Arcus.Observability.Telemetry.Serilog.Sinks.ApplicationInsights" Version="3.1.1" />
     <PackageReference Include="Arcus.WebApi.Logging" Version="3.0.1" />
-    <PackageReference Include="CronScheduler.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="CronScheduler.AspNetCore" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.13" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
     <!-- Keep the compatible collector stack to preserve existing runtime metric names. -->
