@@ -27,7 +27,7 @@
     <PackageReference Include="Prometheus.Client" Version="5.2.0" />
     <PackageReference Include="Prometheus.Client.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Prometheus.Client.HttpRequestDurations" Version="3.6.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="11.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageReference Include="Spectre.Console" Version="0.57.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.0" />
