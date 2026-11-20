@@ -19,7 +19,7 @@
     <!-- CronScheduler 3.2.0 requires the unsigned Cronos assembly; 0.11+ is strong-named. -->
     <PackageReference Include="Cronos" Version="0.10.0" />
     <PackageReference Include="Guard.Net" Version="4.0.0" />
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.23.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Management.Fluent" Version="1.38.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
     
