@@ -118,7 +118,7 @@ stages:
         buildArgs: '--build-arg VERSION="$(Image.Version)"'
      - template: templates/agents/run-discovery-image.yml
        parameters:
-          imageName: '$(Image.ResourceDiscovery.Name)'
+          imageName: '$(Image.ResourceDiscovery.TaggedName)'
           containerName: '$(Container.ResourceDiscovery.Name)'
           containerPort: '$(Container.ResourceDiscovery.Port)'
           volumes: '$(Pipeline.Workspace)/s/config/promitor/resource-discovery/ci-runtime.yaml:/config/runtime.yaml --volume $(Pipeline.Workspace)/s/config/promitor/resource-discovery/resource-discovery-declaration.yaml:/config/resource-discovery-declaration.yaml'
