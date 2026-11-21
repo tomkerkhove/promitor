@@ -520,6 +520,27 @@ namespace Promitor.Tests.Integration.Services.ResourceDiscovery
             }
         }
 
+        [Fact]
+        public async Task ResourceDiscoveryV2_GetBlobStorage_ReturnsBlobStorageResources()
+        {
+            // Arrange
+            const string resourceDiscoveryGroupName = "blob-storage";
+            var resourceDiscoveryClient = new ResourceDiscoveryClient(Configuration, Logger);
+
+            // Act
+            var resources = await resourceDiscoveryClient.GetAllDiscoveredResourcesAsync(resourceDiscoveryGroupName);
+
+            // Assert
+            Assert.NotEmpty(resources);
+            Assert.All(resources, resource =>
+            {
+                Assert.Equal(ResourceType.BlobStorage, resource.ResourceType);
+                Assert.False(string.IsNullOrWhiteSpace(resource.SubscriptionId));
+                Assert.False(string.IsNullOrWhiteSpace(resource.ResourceGroupName));
+                Assert.False(string.IsNullOrWhiteSpace(resource.ResourceName));
+            });
+        }
+
         private async Task AssertV2PagedResult(HttpResponseMessage response, int expectedResourceCount, int? expectedPageSize = null, long? expectedTotalAmount = null)
         {
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
