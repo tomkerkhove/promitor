@@ -55,6 +55,7 @@ namespace Promitor.Core.Scraping.Configuration.Providers
                     metric.AzureMetricConfiguration ??= new AzureMetricConfiguration();
                     metric.AzureMetricConfiguration.Aggregation ??= new MetricAggregation();
                     metric.AzureMetricConfiguration.Aggregation.Interval ??= config.MetricDefaults.Aggregation?.Interval;
+                    metric.AzureMetricConfiguration.Aggregation.Offset ??= config.MetricDefaults.Aggregation?.Offset;
                     metric.AzureMetricConfiguration.Limit ??= config.MetricDefaults.Limit;
 
                     // Apply the default scraping interval if none is specified

@@ -10,6 +10,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Core
             Map(aggregation => aggregation.Type)
                 .IsRequired();
             Map(aggregation => aggregation.Interval);
+            Map(aggregation => aggregation.Offset);
         }
     }
 }

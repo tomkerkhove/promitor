@@ -67,5 +67,24 @@ namespace Promitor.Tests.Unit.Serialization.v1.Core
                 "type: Average",
                 a => a.Interval);
         }
+
+        [Fact]
+        public void Deserialize_OffsetSupplied_SetsOffset()
+        {
+            YamlAssert.PropertySet(
+                _deserializer,
+                "offset: 00:10:00",
+                TimeSpan.FromMinutes(10),
+                a => a.Offset);
+        }
+
+        [Fact]
+        public void Deserialize_OffsetNotSupplied_Null()
+        {
+            YamlAssert.PropertyNull(
+                _deserializer,
+                "type: Average",
+                a => a.Offset);
+        }
     }
 }

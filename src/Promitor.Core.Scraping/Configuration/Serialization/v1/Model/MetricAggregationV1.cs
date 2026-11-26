@@ -14,6 +14,11 @@ namespace Promitor.Core.Scraping.Configuration.Serialization.v1.Model
         public TimeSpan? Interval { get; set; }
 
         /// <summary>
+        /// How far behind the most recent time grain the reported value should be read from.
+        /// </summary>
+        public TimeSpan? Offset { get; set; }
+
+        /// <summary>
         /// Type of aggregation to query the Azure Monitor metric.
         /// </summary>
         public PromitorMetricAggregationType? Type { get; set; }

@@ -90,6 +90,11 @@ namespace Promitor.Agents.Scraper.Validation.Steps
             {
                 yield return @"Limit has to be at least 1";
             }
+
+            foreach (var offsetErrorMessage in MetricAggregationValidator.ValidateOffset(metricDefaults.Aggregation?.Offset, metricDefaults.Aggregation?.Interval))
+            {
+                yield return $"Metric defaults: {offsetErrorMessage}";
+            }
         }
 
         private static IEnumerable<string> DetectDuplicateMetrics(List<MetricDefinition> metrics)

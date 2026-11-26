@@ -56,11 +56,13 @@ namespace Promitor.Core.Scraping
             // Determine the metric dimension to use, if any
             var dimensionNames = DetermineMetricDimensions(metricName, resourceDefinition, scrapeDefinition.AzureMetricConfiguration);
 
+            var aggregationOffset = scrapeDefinition.AzureMetricConfiguration.Aggregation?.Offset;
+
             var measuredMetrics = new List<MeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
-                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit);
+                measuredMetrics = await AzureMonitorClient.QueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUri, metricFilter, metricLimit, aggregationOffset);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {
@@ -111,11 +113,13 @@ namespace Promitor.Core.Scraping
             var metricLimit = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Limit;
             var dimensionNames = DetermineMetricDimensions(metricName, (TResourceDefinition) batchScrapeDefinition.ScrapeDefinitions[0].Resource, batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration); // TODO: resource definition doesn't seem to be used, can we remove it from function signature?  
 
+            var aggregationOffset = batchScrapeDefinition.ScrapeDefinitionBatchProperties.AzureMetricConfiguration.Aggregation?.Offset;
+
             var resourceIdTaggedMeasuredMetrics = new List<ResourceAssociatedMeasuredMetric>();
             try
             {
                 // Query Azure Monitor for metrics
-                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, null, metricLimit);
+                resourceIdTaggedMeasuredMetrics = await AzureMonitorClient.BatchQueryMetricAsync(metricName, dimensionNames, aggregationType, aggregationInterval, resourceUriList, null, metricLimit, aggregationOffset);
             }
             catch (MetricInformationNotFoundException metricsNotFoundException)
             {

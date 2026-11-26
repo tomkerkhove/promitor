@@ -10,6 +10,8 @@ version:
 - {{% tag changed %}} Update .NET runtime to 10.0.14
 - {{% tag changed %}} Update NuGet dependencies
 - {{% tag added %}} Linux container images are published for both `amd64` and `arm64`.
+- {{% tag added %}} Azure Monitor Scraper: support `aggregation.offset` to read an older time grain and tolerate
+  Azure Monitor ingestion delays
 
 #### Resource Discovery
 
