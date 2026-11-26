@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
@@ -31,7 +32,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             Guard.NotNull(labels, nameof(labels));
 
             // Order labels alphabetically
-            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var gauge = _metricFactory.CreateGauge(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray());
             gauge.WithLabels(orderedLabels.Values.ToArray()).Set(value);
@@ -50,7 +51,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
         public Task WriteHistogramMeasurementAsync(string name, string description, double value, Dictionary<string, string> labels, bool includeTimestamp)
         {
             Guard.NotNull(labels, nameof(labels));
-            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var histogram = _metricFactory.CreateHistogram(name, help: description, includeTimestamp: includeTimestamp, labelNames: orderedLabels.Keys.ToArray(), buckets: [1, 2, 4, 8, 16, 32, 64]);
             histogram.WithLabels(orderedLabels.Values.ToArray()).Observe(value);

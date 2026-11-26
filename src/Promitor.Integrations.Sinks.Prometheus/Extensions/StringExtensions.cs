@@ -15,7 +15,7 @@ namespace System
                 return labelKey;
             }
 
-            return labelKey.Replace("/", "_").ToLower();
+            return labelKey.Replace("/", "_").ToLowerInvariant();
         }
     }
 }

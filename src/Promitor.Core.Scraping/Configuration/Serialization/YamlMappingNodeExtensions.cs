@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using YamlDotNet.RepresentationModel;
 
 namespace Promitor.Core.Scraping.Configuration.Serialization
@@ -83,7 +84,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
         {
             if (node.Children.TryGetValue(propertyName, out var propertyNode))
             {
-                return TimeSpan.Parse(propertyNode.ToString());
+                return TimeSpan.Parse(propertyNode.ToString(), CultureInfo.InvariantCulture);
             }
 
             return null;

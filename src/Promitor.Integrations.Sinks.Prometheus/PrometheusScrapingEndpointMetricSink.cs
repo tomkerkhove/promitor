@@ -66,7 +66,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
 
             var enableMetricTimestamps = _prometheusConfiguration.CurrentValue.EnableMetricTimestamps;
 
-            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             var gauge = CreateGauge(metricName, metricDescription, orderedLabels, enableMetricTimestamps);
             gauge.WithLabels(orderedLabels.Values.ToArray()).Set(metricValue);
@@ -92,7 +92,7 @@ namespace Promitor.Integrations.Sinks.Prometheus
                 labels = LabelTransformer.TransformLabels(_prometheusConfiguration.CurrentValue.Labels.Transformation,labels);
             }
 
-            var orderedLabels = labels.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderBy(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return orderedLabels;
         }

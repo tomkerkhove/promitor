@@ -40,7 +40,7 @@ namespace Promitor.Tests.Unit.Prometheus
             // Arrange
             var inputLabels = new Dictionary<string, string>
             {
-                {BogusGenerator.Name.FirstName(), BogusGenerator.Name.FirstName().ToUpper()},
+                {BogusGenerator.Name.FirstName(), BogusGenerator.Name.FirstName().ToUpperInvariant()},
                 {BogusGenerator.Name.FirstName(), BogusGenerator.Name.FirstName()},
                 {BogusGenerator.Name.FirstName(), BogusGenerator.Name.FirstName().ToUpperInvariant()}
             };
@@ -53,7 +53,7 @@ namespace Promitor.Tests.Unit.Prometheus
             foreach (var inputLabel in inputLabels)
             {
                 Assert.True(transformedLabels.ContainsKey(inputLabel.Key));
-                Assert.Equal(inputLabel.Value.ToLower(), transformedLabels[inputLabel.Key]);
+                Assert.Equal(inputLabel.Value.ToLowerInvariant(), transformedLabels[inputLabel.Key]);
             }
         }
     }

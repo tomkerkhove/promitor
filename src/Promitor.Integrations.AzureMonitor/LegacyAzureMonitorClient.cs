@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.Fluent;
@@ -91,7 +92,7 @@ namespace Promitor.Integrations.AzureMonitor
             // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
             var metricsDefinitions = await GetMetricDefinitionsAsync(resourceId);
-            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.Value.ToUpper() == metricName.ToUpper());
+            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => string.Equals(definition.Name.Value, metricName, StringComparison.OrdinalIgnoreCase));
             if (metricDefinition == null)
             {
                 throw new MetricNotFoundException(metricName);
@@ -159,7 +160,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             var closestAggregationInterval = GetClosestAggregationInterval(requestedAggregationInterval, availableMetricPeriods);
 
-            _logger.LogWarning("{MetricName} will be using {ClosestAggregationInterval} aggregation interval rather than {RequestedAggregationInterval} given it was not available", metricName, closestAggregationInterval.ToString("g"), requestedAggregationInterval.ToString("g"));
+            _logger.LogWarning("{MetricName} will be using {ClosestAggregationInterval} aggregation interval rather than {RequestedAggregationInterval} given it was not available", metricName, closestAggregationInterval.ToString("g", CultureInfo.InvariantCulture), requestedAggregationInterval.ToString("g", CultureInfo.InvariantCulture));
 
             return closestAggregationInterval;
         }
@@ -195,7 +196,7 @@ namespace Promitor.Integrations.AzureMonitor
             var metrics = await metricQuery.ExecuteAsync();
 
             // We already filtered this out so only expect to have one
-            var relevantMetric = metrics.Metrics.SingleOrDefault(var => var.Name.Value.ToUpper() == metricName.ToUpper());
+            var relevantMetric = metrics.Metrics.SingleOrDefault(var => string.Equals(var.Name.Value, metricName, StringComparison.OrdinalIgnoreCase));
             if (relevantMetric == null)
             {
                 throw new MetricNotFoundException(metricName);

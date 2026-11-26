@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
@@ -143,7 +144,7 @@ namespace Promitor.Core.Scraping.Configuration.Serialization
 
             if (propertyType == typeof(TimeSpan))
             {
-                var parseSucceeded = TimeSpan.TryParse(fieldNodePair.Value.ToString(), out var timeSpanValue);
+                var parseSucceeded = TimeSpan.TryParse(fieldNodePair.Value.ToString(), CultureInfo.InvariantCulture, out var timeSpanValue);
                 if (!parseSucceeded)
                 {
                     errorReporter.ReportError(fieldNodePair.Value, $"'{fieldNodePair.Value}' is not a valid value for '{fieldNodePair.Key}'. The value must be in the format 'hh:mm:ss'.");

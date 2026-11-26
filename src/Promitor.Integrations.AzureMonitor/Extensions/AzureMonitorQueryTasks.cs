@@ -63,7 +63,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             if (!string.IsNullOrEmpty(filter))
             {
                 queryOptions = new MetricsQueryResourcesOptions {
-                    Aggregations = { metricAggregation.ToString().ToLower() }, 
+                    Aggregations = { metricAggregation.ToString().ToLowerInvariant() },
                     Granularity = metricInterval,
                     Filter = filter,
                     Size = querySizeLimit, 
@@ -73,7 +73,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
             else 
             {
                 queryOptions = new MetricsQueryResourcesOptions {
-                    Aggregations = { metricAggregation.ToString().ToLower() },
+                    Aggregations = { metricAggregation.ToString().ToLowerInvariant() },
                     Granularity = metricInterval,
                     TimeRange= new QueryTimeRange(new DateTimeOffset(recordDateTime.Subtract(effectiveStartingFrom)), new DateTimeOffset(recordDateTime))
                 };
@@ -116,7 +116,7 @@ namespace Promitor.Integrations.AzureMonitor.Extensions
 
         private static MetricResult GetRelevantMetricResultOrThrow(MetricsQueryResult metricsQueryResult, string metricName)
         {
-            var relevantMetric = metricsQueryResult.Metrics.SingleOrDefault(var => var.Name.ToUpper() == metricName.ToUpper());
+            var relevantMetric = metricsQueryResult.Metrics.SingleOrDefault(var => string.Equals(var.Name, metricName, StringComparison.OrdinalIgnoreCase));
             if (relevantMetric == null)
             {
                 throw new MetricNotFoundException(metricName);

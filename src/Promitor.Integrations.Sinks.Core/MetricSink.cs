@@ -67,7 +67,7 @@ namespace Promitor.Integrations.Sinks.Core
             var metricsDeclaration = MetricsDeclarationProvider.Get(applyDefaults: true);
             labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
 
-            var orderedLabels = labels.OrderBy(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderBy(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return orderedLabels;
         }

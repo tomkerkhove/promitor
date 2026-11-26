@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
@@ -99,7 +100,7 @@ namespace Promitor.Integrations.AzureMonitor
                 throw new MetricNotFoundException(metricName);
             }
             var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceId, metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
-            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
+            var metricDefinition = metricsDefinitions.SingleOrDefault(definition => string.Equals(definition.Name, metricName, StringComparison.OrdinalIgnoreCase));
             if (metricDefinition == null)
             {
                 throw new MetricNotFoundException(metricName);
@@ -142,7 +143,7 @@ namespace Promitor.Integrations.AzureMonitor
             await Task.WhenAll(resourceIds.Select(async resourceId => 
             {
                 var metricsDefinitions = await _metricsQueryClient.GetAndCacheMetricDefinitionsAsync(resourceId, metricNamespace, _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration); 
-                metricDefinition = metricsDefinitions.SingleOrDefault(definition => definition.Name.ToUpper() == metricName.ToUpper());
+                metricDefinition = metricsDefinitions.SingleOrDefault(definition => string.Equals(definition.Name, metricName, StringComparison.OrdinalIgnoreCase));
                 if (metricDefinition == null)
                 {
                     _logger.LogWarning("Metric {MetricName} is not defined for Resource {ResourceID}. Check Azure Monitor documentation for possible misconfiguration", metricName, resourceId);
@@ -236,7 +237,7 @@ namespace Promitor.Integrations.AzureMonitor
 
             var closestAggregationInterval = GetClosestAggregationInterval(requestedAggregationInterval, availableMetricPeriods);
 
-            _logger.LogWarning("{MetricName} will be using {ClosestAggregationInterval} aggregation interval rather than {RequestedAggregationInterval} given it was not available", metricName, closestAggregationInterval.ToString("g"), requestedAggregationInterval.ToString("g"));
+            _logger.LogWarning("{MetricName} will be using {ClosestAggregationInterval} aggregation interval rather than {RequestedAggregationInterval} given it was not available", metricName, closestAggregationInterval.ToString("g", CultureInfo.InvariantCulture), requestedAggregationInterval.ToString("g", CultureInfo.InvariantCulture));
 
             return closestAggregationInterval;
         }
