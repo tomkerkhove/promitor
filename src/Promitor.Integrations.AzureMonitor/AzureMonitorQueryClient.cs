@@ -118,13 +118,12 @@ namespace Promitor.Integrations.AzureMonitor
             List<string >resourceIds, string metricFilter = null, int? metricLimit = null) 
         {
             Guard.NotNullOrWhitespace(metricName, nameof(metricName));
-            Guard.NotLessThan(resourceIds.Count(), 1, nameof(resourceIds));
+            Guard.NotLessThan(resourceIds.Count, 1, nameof(resourceIds));
             Guard.NotNull(_metricsBatchQueryClient, nameof(_metricsBatchQueryClient));
             
            // Get all metrics
             var startQueryingTime = DateTime.UtcNow;
             var resourceIdsWithMetricDefined = new List<string>();
-            
 
             var metricNamespaces = await _metricsQueryClient.GetAndCacheMetricNamespacesAsync(resourceIds.First(), _resourceMetricDefinitionMemoryCache, _metricDefinitionCacheDuration);
             // Remove duplicates
