@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Mime;
 using System.Text;
@@ -48,7 +49,7 @@ namespace Promitor.Integrations.Sinks.Atlassian.Statuspage
             var measurementTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
-                Content = new StringContent(string.Format(MetricRequestFormat, measurementTime, value), Encoding.UTF8, MediaTypeNames.Application.Json)
+                Content = new StringContent(string.Format(CultureInfo.InvariantCulture, MetricRequestFormat, measurementTime, value), Encoding.UTF8, MediaTypeNames.Application.Json)
             };
 
             var response = await _httpClient.SendAsync(request);

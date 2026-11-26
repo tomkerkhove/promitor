@@ -25,7 +25,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Labels
 
             foreach (KeyValuePair<string, string> label in labels)
             {
-                transformedLabels.Add(label.Key, label.Value.ToLower());
+                transformedLabels.Add(label.Key, label.Value.ToLowerInvariant());
             }
 
             return transformedLabels;

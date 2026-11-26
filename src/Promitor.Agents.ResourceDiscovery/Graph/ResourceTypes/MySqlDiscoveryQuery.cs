@@ -22,7 +22,7 @@ namespace Promitor.Agents.ResourceDiscovery.Graph.ResourceTypes
 
             var resourceType = resultRowEntry[2]?.ToString();
 
-            switch (resourceType?.ToLower())
+            switch (resourceType?.ToLowerInvariant())
             {
                 case SingleServerResourceType:
                     serverType = MySqlServerType.Single;

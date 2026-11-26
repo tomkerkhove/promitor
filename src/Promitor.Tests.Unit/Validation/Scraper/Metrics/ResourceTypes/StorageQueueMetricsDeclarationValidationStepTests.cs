@@ -156,7 +156,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         public void StorageQueuesMetricsDeclaration_ValidDeclarationWithAzureMetricNameInDifferentCasing_Succeeds()
         {
             // Arrange
-            var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpper();
+            var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpperInvariant();
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithStorageQueueMetric(azureMetricName: azureMetricName)
                 .Build(Mapper);

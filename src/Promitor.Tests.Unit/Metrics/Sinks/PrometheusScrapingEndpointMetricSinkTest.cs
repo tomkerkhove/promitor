@@ -137,12 +137,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var secondMetricValue = BogusGenerator.Random.Double();
             var dimensionName = BogusGenerator.Name.FirstName();
             var dimensionValue = BogusGenerator.Name.FirstName();
-            var expectedDimensionName = dimensionName.ToLower();
+            var expectedDimensionName = dimensionName.ToLowerInvariant();
             var timeSeries = new TimeSeriesElement
             {
                 Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var firstMetric = MeasuredMetric.CreateForDimensionsLegacy(firstMetricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var firstMetric = MeasuredMetric.CreateForDimensionsLegacy(firstMetricValue, new List<string>{ dimensionName.ToUpperInvariant() }, timeSeries);
             var secondMetric = MeasuredMetric.CreateWithoutDimensions(secondMetricValue);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(firstMetric);
             scrapeResult.MetricValues.Add(secondMetric);
@@ -171,9 +171,9 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricDescription = BogusGenerator.Lorem.Sentence();
             var metricValue = BogusGenerator.Random.Double();
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
-            var mutatedLabels = scrapeResult.Labels.ToDictionary(kvp => kvp.Key.ToUpper(), kvp => kvp.Value);
+            var mutatedLabels = scrapeResult.Labels.ToDictionary(kvp => kvp.Key.ToUpperInvariant(), kvp => kvp.Value);
             scrapeResult.Labels.Clear();
-            mutatedLabels.ForAll(kvp=> scrapeResult.Labels.Add(kvp.Key.ToUpper(),kvp.Value));
+            mutatedLabels.ForAll(kvp=> scrapeResult.Labels.Add(kvp.Key.ToUpperInvariant(),kvp.Value));
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
             var mocks = CreatePrometheusMetricFactoryMock();
@@ -249,12 +249,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var metricValue = BogusGenerator.Random.Double();
             var dimensionName = BogusGenerator.Name.FirstName();
             var dimensionValue = BogusGenerator.Name.FirstName();
-            var expectedDimensionName = dimensionName.ToLower();
+            var expectedDimensionName = dimensionName.ToLowerInvariant();
             var timeSeries = new TimeSeriesElement
             {
                 Metadatavalues = new List<MetadataValue> { new(name: new LocalizableString(dimensionName), value: dimensionValue) }
             };
-            var measuredMetric = MeasuredMetric.CreateForDimensionsLegacy(metricValue, new List<string>{ dimensionName.ToUpper() }, timeSeries);
+            var measuredMetric = MeasuredMetric.CreateForDimensionsLegacy(metricValue, new List<string>{ dimensionName.ToUpperInvariant() }, timeSeries);
             var scrapeResult = ScrapeResultGenerator.GenerateFromMetric(measuredMetric);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName);
             var prometheusConfiguration = CreatePrometheusConfiguration();
@@ -281,12 +281,12 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var secondLabelName = BogusGenerator.Name.FirstName();
             var firstLabelValue = BogusGenerator.Name.FirstName();
             var secondLabelValue = BogusGenerator.Name.FirstName();
-            var expectedFirstLabelName = firstLabelName.ToLower();
-            var expectedSecondLabelName = secondLabelName.ToLower();
+            var expectedFirstLabelName = firstLabelName.ToLowerInvariant();
+            var expectedSecondLabelName = secondLabelName.ToLowerInvariant();
             var configuredLabels = new Dictionary<string, string>
             {
-                {firstLabelName.ToUpper(), firstLabelValue},
-                {secondLabelName.ToUpper(), secondLabelValue}
+                {firstLabelName.ToUpperInvariant(), firstLabelValue},
+                {secondLabelName.ToUpperInvariant(), secondLabelValue}
             };
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             var metricsDeclarationProvider = CreateMetricsDeclarationProvider(metricName, configuredLabels);
@@ -313,10 +313,10 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
             var labelName = BogusGenerator.Name.FirstName();
             var scrapeResultLabelValue = BogusGenerator.Name.FirstName();
             var metricConfigLabelValue = BogusGenerator.Name.FirstName();
-            var expectedLabelName = labelName.ToLower();
+            var expectedLabelName = labelName.ToLowerInvariant();
             var configuredLabels = new Dictionary<string, string>
             {
-                {labelName.ToUpper(), metricConfigLabelValue}
+                {labelName.ToUpperInvariant(), metricConfigLabelValue}
             };
             var scrapeResult = ScrapeResultGenerator.Generate(metricValue);
             scrapeResult.Labels.Add(labelName, scrapeResultLabelValue);
@@ -341,7 +341,7 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
                 return false;
             }
 
-            var outcome = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            var outcome = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLowerInvariant()));
             return outcome;
         }
         
@@ -364,10 +364,10 @@ namespace Promitor.Tests.Unit.Metrics.Sinks
                 return false;
             }
 
-            var isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+            var isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLowerInvariant()));
             if(isSuccessful)
             {
-                isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLower()));
+                isSuccessful = Array.Exists(expectedMetricLabels, entry => specified.Contains(entry.ToLowerInvariant()));
             }
 
             if(isSuccessful)

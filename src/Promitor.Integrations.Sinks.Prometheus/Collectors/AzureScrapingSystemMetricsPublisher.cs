@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuardNet;
@@ -39,7 +40,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
             labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
 
-            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             await _systemMetricsPublisher.WriteGaugeMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }
@@ -56,7 +57,7 @@ namespace Promitor.Integrations.Sinks.Prometheus.Collectors
             var metricsDeclaration = _metricsDeclarationProvider.Get(applyDefaults: true);
             labels.TryAdd("tenant_id", metricsDeclaration.AzureMetadata.TenantId);
 
-            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var orderedLabels = labels.OrderByDescending(kvp => kvp.Key, StringComparer.Ordinal).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             await _systemMetricsPublisher.WriteHistogramMeasurementAsync(name, description, value, orderedLabels, enableMetricTimestamps);
         }

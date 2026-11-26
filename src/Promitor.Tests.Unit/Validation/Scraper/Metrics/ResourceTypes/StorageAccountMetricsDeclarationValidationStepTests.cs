@@ -103,7 +103,7 @@ namespace Promitor.Tests.Unit.Validation.Scraper.Metrics.ResourceTypes
         public void StorageAccountMetricsDeclaration_ValidDeclarationWithAzureMetricNameInDifferentCasing_Succeeds()
         {
             // Arrange
-            var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpper();
+            var azureMetricName = AzureStorageConstants.Queues.Metrics.MessageCount.ToUpperInvariant();
             var rawMetricsDeclaration = MetricsDeclarationBuilder.WithMetadata()
                 .WithStorageAccountMetric(azureMetricName: azureMetricName)
                 .Build(Mapper);

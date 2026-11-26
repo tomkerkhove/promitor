@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -323,7 +324,7 @@ _runtimeConfiguration.Telemetry.ContainerLogs = containerLogConfiguration;
                     configurationBuilder.AppendLine("  prometheusScrapingEndpoint:");
                     configurationBuilder.AppendLine($"    baseUriPath: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.BaseUriPath}");
                     configurationBuilder.AppendLine($"    enableMetricTimestamps: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.EnableMetricTimestamps}");
-                    configurationBuilder.AppendLine($"    metricUnavailableValue: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue}");
+                    configurationBuilder.AppendLine(CultureInfo.InvariantCulture, $"    metricUnavailableValue: {_runtimeConfiguration?.MetricSinks.PrometheusScrapingEndpoint.MetricUnavailableValue}");
                 }
                 if (_runtimeConfiguration?.MetricSinks.OpenTelemetryCollector != null)
                 {

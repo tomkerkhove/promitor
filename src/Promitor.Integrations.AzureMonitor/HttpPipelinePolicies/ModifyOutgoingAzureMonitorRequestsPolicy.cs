@@ -44,7 +44,7 @@ namespace Promitor.Integrations.AzureMonitor.HttpPipelinePolicies{
                 if (DateTimeOffset.TryParseExact(query[param], ["MM/dd/yyyy HH:mm:ss zzz", "M/d/yyyy h:mm:ss tt zzz"],  CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTimeOffset dateTime))
                 {
                     // Transform to ISO 8601 format (e.g., "2024-09-09T20:46:14")
-                    query[param] = dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+                    query[param] = dateTime.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ", CultureInfo.InvariantCulture);
                     queryModified = true;
                 } 
             }

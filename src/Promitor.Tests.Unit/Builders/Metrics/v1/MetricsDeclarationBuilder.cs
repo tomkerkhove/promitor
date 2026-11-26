@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Extensions.Logging.Abstractions;
 using Promitor.Core.Contracts;
@@ -1256,7 +1257,7 @@ namespace Promitor.Tests.Unit.Builders.Metrics.v1
 
         private LogAnalyticsConfigurationV1 CreateLogAnalyticsConfiguration(string query, string interval)
         {
-            var aggregation = new AggregationV1 { Interval = TimeSpan.Parse(interval) };
+            var aggregation = new AggregationV1 { Interval = TimeSpan.Parse(interval, CultureInfo.InvariantCulture) };
             var logAnalyticsConfig = new LogAnalyticsConfigurationV1 { Query = query, Aggregation = aggregation };
 
             return logAnalyticsConfig;
